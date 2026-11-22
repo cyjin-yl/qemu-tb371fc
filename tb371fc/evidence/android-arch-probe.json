@@ -1,0 +1,54 @@
+{
+  "command": [
+    "/data/data/com.termux/files/home/qemu-tb371fc-probe/arch-probe-0ed51cb6c6dd2468"
+  ],
+  "elf_sha256": "0ed51cb6c6dd24685beb3f77056d17d47c5c2f697df96d87eef4a678d4c5cb1b",
+  "elf_size": 2264,
+  "execution_mode": "Android Termux application process, EL0, unprivileged",
+  "exit_code": 0,
+  "finished_at_utc": "2026-11-22T22:11:47.684020+00:00",
+  "kind": "android-native-el0-counter-probe-run",
+  "probe_result": {
+    "counter_delta": 525,
+    "counter_end": 4723185778429,
+    "counter_frequency_hz": 19200000,
+    "counter_start": 4723185777904,
+    "increased": true,
+    "kind": "tb371fc-el0-counter-probe",
+    "loop_iterations": 65536,
+    "schema_version": 1,
+    "scope": "EL0 counter access only; not a performance benchmark"
+  },
+  "schema_version": 1,
+  "scope": "Direct architectural counter reads on the running Android kernel; no device/MMIO/power writes and no timing-equivalence claim",
+  "source_sha256": "b976d2cc83c8782d0832c27f42df3491459d01d4dd164c97e10b50d90147125f",
+  "started_at_utc": "2026-11-22T22:11:47.683265+00:00",
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"kind\":\"tb371fc-el0-counter-probe\",\"counter_frequency_hz\":19200000,\"counter_start\":4723185777904,\"counter_end\":4723185778429,\"counter_delta\":525,\"increased\":true,\"loop_iterations\":65536,\"scope\":\"EL0 counter access only; not a performance benchmark\"}\n",
+  "build": {
+    "command": "sh tb371fc/scripts/build_arch_probe.sh /work/arch-probe/arch-probe",
+    "source": "tb371fc/tests/arch-probe.S",
+    "script": "tb371fc/scripts/build_arch_probe.sh",
+    "architecture": "AArch64",
+    "elf_type": "ET_EXEC",
+    "libc": false,
+    "interpreter": false,
+    "load_segment_flags": "R E",
+    "stack_segment_flags": "RW (non-executable)",
+    "instruction_review": "MRS CNTFRQ_EL0/CNTVCT_EL0, ISB, bounded integer loop, process-stack accesses, write(1,...) and exit syscalls; no MSR, MMIO or open/read syscalls"
+  },
+  "checks": {
+    "exit_zero": true,
+    "counter_frequency_matches_live_dt": true,
+    "counter_increased": true,
+    "counter_delta_consistent": true,
+    "loop_iterations_expected": true,
+    "no_stderr": true
+  },
+  "passed": true,
+  "not_established": [
+    "Microarchitectural or cycle/timing equivalence",
+    "A working peripheral, GPU, display or power model",
+    "Mainline Linux or a new kernel boot on the physical tablet"
+  ]
+}

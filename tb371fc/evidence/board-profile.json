@@ -1,0 +1,336 @@
+{
+  "bus_cells": {
+    "cpus": [
+      2,
+      0
+    ],
+    "root": [
+      2,
+      2
+    ],
+    "soc": [
+      1,
+      1
+    ]
+  },
+  "capture_utc": "2026-11-22T21:54:30.897388+00:00",
+  "chosen_stdout_path": null,
+  "cpu_midr": {
+    "cpu0": {
+      "midr_el1": "0x51df805e"
+    },
+    "cpu1": {
+      "midr_el1": "0x51df805e"
+    },
+    "cpu2": {
+      "midr_el1": "0x51df805e"
+    },
+    "cpu3": {
+      "midr_el1": "0x51df805e"
+    },
+    "cpu4": {
+      "midr_el1": "0x411fd0d0"
+    },
+    "cpu5": {
+      "midr_el1": "0x411fd0d0"
+    },
+    "cpu6": {
+      "midr_el1": "0x411fd0d0"
+    },
+    "cpu7": {
+      "midr_el1": "0x411fd0d0"
+    }
+  },
+  "cpus": [
+    {
+      "compatible": [
+        "qcom,kryo"
+      ],
+      "enable_method": [
+        "psci"
+      ],
+      "mpidr": 0,
+      "source": "/cpus/cpu@0/reg"
+    },
+    {
+      "compatible": [
+        "qcom,kryo"
+      ],
+      "enable_method": [
+        "psci"
+      ],
+      "mpidr": 256,
+      "source": "/cpus/cpu@100/reg"
+    },
+    {
+      "compatible": [
+        "qcom,kryo"
+      ],
+      "enable_method": [
+        "psci"
+      ],
+      "mpidr": 512,
+      "source": "/cpus/cpu@200/reg"
+    },
+    {
+      "compatible": [
+        "qcom,kryo"
+      ],
+      "enable_method": [
+        "psci"
+      ],
+      "mpidr": 768,
+      "source": "/cpus/cpu@300/reg"
+    },
+    {
+      "compatible": [
+        "qcom,kryo"
+      ],
+      "enable_method": [
+        "psci"
+      ],
+      "mpidr": 1024,
+      "source": "/cpus/cpu@400/reg"
+    },
+    {
+      "compatible": [
+        "qcom,kryo"
+      ],
+      "enable_method": [
+        "psci"
+      ],
+      "mpidr": 1280,
+      "source": "/cpus/cpu@500/reg"
+    },
+    {
+      "compatible": [
+        "qcom,kryo"
+      ],
+      "enable_method": [
+        "psci"
+      ],
+      "mpidr": 1536,
+      "source": "/cpus/cpu@600/reg"
+    },
+    {
+      "compatible": [
+        "qcom,kryo"
+      ],
+      "enable_method": [
+        "psci"
+      ],
+      "mpidr": 1792,
+      "source": "/cpus/cpu@700/reg"
+    }
+  ],
+  "enabled_console_candidates": [
+    "/soc/qcom,qup_uart@a90000"
+  ],
+  "identity": {
+    "ro.board.platform": "kona",
+    "ro.product.device": "TB371FC",
+    "ro.product.model": "TB371FC",
+    "ro.soc.model": "SM8250",
+    "soc_id": "356"
+  },
+  "interrupt_controllers": [
+    {
+      "compatible": [
+        "arm,gic-v3"
+      ],
+      "redistributor_stride": 131072,
+      "regions": [
+        {
+          "address": 396361728,
+          "size": 65536
+        },
+        {
+          "address": 396754944,
+          "size": 1048576
+        }
+      ],
+      "source": "/soc/interrupt-controller@17a00000"
+    }
+  ],
+  "memory": [
+    {
+      "address": 2147483648,
+      "size": 1001390080,
+      "source": "/memory/reg"
+    },
+    {
+      "address": 3221225472,
+      "size": 7516192768,
+      "source": "/memory/reg"
+    }
+  ],
+  "psci": {
+    "compatible": [
+      "arm,psci-1.0"
+    ],
+    "method": [
+      "smc"
+    ]
+  },
+  "schema_version": 1,
+  "scope": "Observed hardware configuration; no emulation or hardware behavior attestation",
+  "soc_identity_range": {
+    "address": 0,
+    "size": 4294967295
+  },
+  "timers": [
+    {
+      "clock_frequency_hz": 19200000,
+      "interrupt_cells": [
+        1,
+        13,
+        65288,
+        1,
+        14,
+        65288,
+        1,
+        11,
+        65288,
+        1,
+        12,
+        65288
+      ],
+      "source": "/soc/timer"
+    }
+  ],
+  "uarts": [
+    {
+      "compatible": [
+        "qcom,msm-geni-serial-hs"
+      ],
+      "interrupts_extended_raw_cells": [
+        1,
+        0,
+        585,
+        4,
+        101,
+        55,
+        0
+      ],
+      "regions": [
+        {
+          "address": 8962048,
+          "size": 16384
+        }
+      ],
+      "source": "/soc/qcom,qup_uart@88c000",
+      "status": "disabled"
+    },
+    {
+      "compatible": [
+        "qcom,msm-geni-serial-hs"
+      ],
+      "interrupts_extended_raw_cells": [
+        1,
+        0,
+        586,
+        4,
+        101,
+        59,
+        0
+      ],
+      "regions": [
+        {
+          "address": 8978432,
+          "size": 16384
+        }
+      ],
+      "source": "/soc/qcom,qup_uart@890000",
+      "status": "disabled"
+    },
+    {
+      "compatible": [
+        "qcom,msm-geni-console"
+      ],
+      "interrupt": {
+        "flags": 4,
+        "number": 603,
+        "type": 0
+      },
+      "interrupt_parent_phandle": 1,
+      "regions": [
+        {
+          "address": 9994240,
+          "size": 16384
+        }
+      ],
+      "source": "/soc/qcom,qup_uart@988000",
+      "status": "disabled"
+    },
+    {
+      "compatible": [
+        "qcom,msm-geni-serial-hs"
+      ],
+      "interrupts_extended_raw_cells": [
+        1,
+        0,
+        607,
+        4,
+        101,
+        19,
+        0
+      ],
+      "regions": [
+        {
+          "address": 10059776,
+          "size": 16384
+        }
+      ],
+      "source": "/soc/qcom,qup_uart@998000",
+      "status": "ok"
+    },
+    {
+      "compatible": [
+        "qcom,msm-geni-console"
+      ],
+      "interrupt": {
+        "flags": 4,
+        "number": 357,
+        "type": 0
+      },
+      "interrupt_parent_phandle": 1,
+      "regions": [
+        {
+          "address": 11075584,
+          "size": 16384
+        }
+      ],
+      "source": "/soc/qcom,qup_uart@a90000",
+      "status": "okay"
+    },
+    {
+      "compatible": [
+        "qcom,msm-geni-serial-hs"
+      ],
+      "interrupts_extended_raw_cells": [
+        1,
+        0,
+        358,
+        4,
+        101,
+        39,
+        0
+      ],
+      "regions": [
+        {
+          "address": 11091968,
+          "size": 16384
+        }
+      ],
+      "source": "/soc/qcom,qup_uart@a94000",
+      "status": "disabled"
+    }
+  ],
+  "unresolved": [
+    "/soc/qcom,qup_uart@88c000: interrupts-extended retained as raw phandle tuples",
+    "/soc/qcom,qup_uart@890000: interrupts-extended retained as raw phandle tuples",
+    "/soc/qcom,qup_uart@998000: interrupts-extended retained as raw phandle tuples",
+    "/soc/qcom,qup_uart@a94000: interrupts-extended retained as raw phandle tuples"
+  ],
+  "visible_memory_bytes": 8517582848
+}

@@ -1,0 +1,10 @@
+FROM debian:trixie-slim
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    build-essential git ca-certificates python3 python3-venv python3-distlib ninja-build meson \
+    pkg-config libglib2.0-dev libpixman-1-dev zlib1g-dev libfdt-dev \
+    device-tree-compiler gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu \
+    libc6-dev-arm64-cross tmux \
+    && apt-get clean
+WORKDIR /src
+ENV BUILD_DIR=/work/build JOBS=4
+CMD ["sh", "tb371fc/scripts/build.sh"]
