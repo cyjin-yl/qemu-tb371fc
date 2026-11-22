@@ -1,0 +1,42 @@
+Subject: [PATCH] arm64: use the upstream early allocator on qemu,tb371fc
+
+Apply after the TB371FC Linux 6.12.114 handoff working-tree patch and
+0017-arm64-scope-tb371fc-early-page-table-pool.patch.
+
+The 256-page embedded pool is a workaround for the tablet's vendor-kernel
+kexec handoff. The tb371fc QEMU machine enters a Linux Image directly at
+EL2 and does not reproduce that handoff. Its root DT explicitly identifies
+qemu,tb371fc, with lenovo,tb371fc as a hardware-family fallback. Matching
+only the fallback incorrectly enables the workaround in the emulator.
+
+The recorded 8 GiB boot of kernel SHA256
+5b7dbf8ac810ef4b488d394f6b976d876e52372621428f751f02f8deac5667f5
+panics in paging_init(): "TB371FC embedded early page-table pool exhausted".
+Use the existing upstream memblock allocation path when the explicit QEMU
+compatible is present. Keep the real-tablet path and its exhaustion check.
+Do not enlarge the pool, alter the RAM map, or relax read-only protections.
+
+This patch is for the emulator's kernel input. It does not establish that
+the underlying physical-tablet handoff problem has been resolved.
+
+Status: proposed and unapplied; this patch has not been built or boot-tested.
+The passing smoke run uses a separate, unpatched upstream Linux kernel.
+
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -124,10 +124,13 @@ static phys_addr_t __init early_pgtable_alloc(int shift)
+ 
+ 	/*
+ 	 * The vendor-kernel handoff workaround is specific to this board.
++	 * qemu,tb371fc boots directly and has no vendor-kernel handoff,
++	 * even though it also advertises the lenovo,tb371fc fallback.
+ 	 * The live OF tree is not available at this early boot stage.
+ 	 */
+ 	if (!initial_boot_params ||
+-	    !of_flat_dt_is_compatible(of_get_flat_dt_root(), "lenovo,tb371fc")) {
++	    !of_flat_dt_is_compatible(of_get_flat_dt_root(), "lenovo,tb371fc") ||
++	    of_flat_dt_is_compatible(of_get_flat_dt_root(), "qemu,tb371fc")) {
+ 		phys = memblock_phys_alloc_range(PAGE_SIZE, PAGE_SIZE, 0,
+ 						 MEMBLOCK_ALLOC_NOLEAKTRACE);
+ 		if (!phys)
