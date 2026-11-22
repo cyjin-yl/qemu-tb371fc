@@ -14,39 +14,84 @@ concurrency:
   group: tb371fc-${{ github.ref }}
   cancel-in-progress: true
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   build-and-device-tests:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Install build dependencies
         run: |
+          mkdir -p "$RUNNER_TEMP/tb371fc-results"
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends build-essential git \
+          sudo apt-get install -y --no-install-recommends build-essential git ca-certificates \
             python3 python3-venv python3-distlib ninja-build meson pkg-config \
-            libglib2.0-dev libpixman-1-dev zlib1g-dev libfdt-dev device-tree-compiler
+            libglib2.0-dev libpixman-1-dev zlib1g-dev libfdt-dev device-tree-compiler \
+            gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu libc6-dev-arm64-cross \
+            curl xz-utils bc bison flex libssl-dev libelf-dev util-linux
       - name: Build the dedicated machine
-        run: BUILD_DIR="$RUNNER_TEMP/qemu-build" JOBS=2 sh tb371fc/scripts/build.sh
+        run: |
+          BUILD_DIR="$RUNNER_TEMP/qemu-build" JOBS=2 sh tb371fc/scripts/build.sh \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/qemu-build.log"
+          "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" --version \
+            > "$RUNNER_TEMP/tb371fc-results/qemu-version.txt"
+          sha256sum "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            > "$RUNNER_TEMP/tb371fc-results/qemu.sha256"
+          git rev-parse HEAD > "$RUNNER_TEMP/tb371fc-results/source-commit.txt"
       - name: Validate capture parsers and negative cases
         run: |
-          python3 tb371fc/scripts/test_board_profile.py
-          python3 tb371fc/scripts/test_validate_machine.py
-      - name: Compare running QEMU configuration with the real tablet capture
+          python3 tb371fc/scripts/test_board_profile.py \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/board-profile-tests.log"
+          python3 tb371fc/scripts/test_validate_machine.py \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/machine-validator-tests.log"
+      - name: Compare running QEMU with the real tablet capture
         run: |
           python3 tb371fc/scripts/validate_machine.py \
             --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
-            --output "$RUNNER_TEMP/machine-profile-validation.json"
-      - name: Exercise UART registers, interrupts, reset and migration
+            --output "$RUNNER_TEMP/tb371fc-results/machine-profile-validation.json" \
+            --dtb-output "$RUNNER_TEMP/tb371fc-results/tb371fc-generated.dtb"
+      - name: Exercise UART registers, interrupts and reset
         run: |
           python3 tb371fc/tests/test_geni_uart.py \
-            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64"
+            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            | tee "$RUNNER_TEMP/tb371fc-results/geni-qtest.json"
+      - name: Exercise real two-process QMP migration
+        run: |
           python3 tb371fc/tests/test_geni_migration.py \
-            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64"
+            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            | tee "$RUNNER_TEMP/tb371fc-results/geni-migration.json"
+      - name: Build the pinned unpatched Linux smoke kernel
+        run: |
+          SMOKE_JOBS=2 bash tb371fc/scripts/build_smoke_kernel.sh "$RUNNER_TEMP/clean-linux" \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/linux-build.log"
+      - name: Boot eight CPUs through normal GENI console into user space
+        run: |
+          python3 tb371fc/scripts/boot_smoke.py \
+            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            --kernel "$RUNNER_TEMP/clean-linux/artifacts/Image" \
+            --out "$RUNNER_TEMP/linux-smoke" --timeout 120
+      - name: Upload receipts and runnable smoke inputs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: tb371fc-smoke-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/tb371fc-results/
+            ${{ runner.temp }}/clean-linux/artifacts/
+            ${{ runner.temp }}/linux-smoke/
+            ${{ runner.temp }}/qemu-build/qemu-system-aarch64
       - name: State the validation boundary
         if: always()
         run: |
           printf '%s\n' 'This job tests the implemented board configuration and GENI FIFO model.' \
-            'It does not attest stock Android boot, Adreno rendering, or hardware equivalence.' \
-            'Linux boot evidence is recorded separately with the exact externally supplied kernel hash.' \
+            'It also boots a pinned unpatched Linux kernel with eight CPUs and an instrumented PID 1.' \
+            'Artifacts include input hashes, the generated DT, serial logs and actual verdicts.' \
+            'The CPU large-core model is an A76 substitute. Timing, stock Android and Adreno are unimplemented.' \
+            'A passing job does not attest complete-device or hardware equivalence.' \
             >> "$GITHUB_STEP_SUMMARY"

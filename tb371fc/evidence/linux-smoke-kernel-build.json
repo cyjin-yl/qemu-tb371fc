@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "completed_utc": "2026-11-22T22:41:01.815552+00:00",
+  "scope": "Independent upstream Linux input for QEMU tb371fc smoke; no tablet flash or boot",
+  "source_version": "6.12.114",
+  "source_url": "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.114.tar.xz",
+  "source_tar_sha256": "7a8589912bd7a8adb07fed074283652cf482a35facef8954554654f0154b4af3",
+  "patches_applied_by_script": [],
+  "config_fragment_path": "/src/tb371fc/configs/linux-smoke.config",
+  "config_fragment_sha256": "77f03f7facc6d9156d8082273eff93af90efe462ddae02aeb9fb49535dfbbe7c",
+  "effective_config_sha256": "377d1cc954f51e32901b996544b50de43e90d07c957343f213cca8b5d4bc22ed",
+  "image_path": "/work/clean-linux/artifacts/Image",
+  "image_bytes": 3446792,
+  "image_sha256": "0d5bb19ab2104c8352acb1fbaa2c66d76716ec2303bbceaa764c1b9715f628ee",
+  "cross_compiler": {
+    "command": "aarch64-linux-gnu-gcc",
+    "path": "/usr/bin/aarch64-linux-gnu-gcc-14",
+    "sha256": "fb743ca27a77466c91da66047eec879a615993feaabd860aaf3750e7b222b131",
+    "version": "aarch64-linux-gnu-gcc (Debian 14.2.0-19) 14.2.0"
+  },
+  "cross_linker": {
+    "command": "aarch64-linux-gnu-ld",
+    "path": "/usr/bin/aarch64-linux-gnu-ld.bfd",
+    "sha256": "bdb57a3334f460af5921b65de134f128642325a2087ff716dafd0adbfcc0778a",
+    "version": "GNU ld (GNU Binutils for Debian) 2.44"
+  },
+  "host_compiler": {
+    "command": "gcc",
+    "path": "/usr/bin/x86_64-linux-gnu-gcc-14",
+    "sha256": "a23ecab8ff08f09ad8c80602c2c5df7f49e09c25905cb8975902e101bf72635f",
+    "version": "gcc (Debian 14.2.0-19) 14.2.0"
+  },
+  "config_command": [
+    "make",
+    "-C",
+    "/work/clean-linux/source/linux-6.12.114",
+    "O=/work/clean-linux/build",
+    "ARCH=arm64",
+    "CROSS_COMPILE=aarch64-linux-gnu-",
+    "allnoconfig"
+  ],
+  "config_environment": {
+    "KCONFIG_ALLCONFIG": "/src/tb371fc/configs/linux-smoke.config"
+  },
+  "build_command": [
+    "make",
+    "-C",
+    "/work/clean-linux/source/linux-6.12.114",
+    "O=/work/clean-linux/build",
+    "ARCH=arm64",
+    "CROSS_COMPILE=aarch64-linux-gnu-",
+    "-j4",
+    "Image"
+  ],
+  "build_environment": {
+    "KBUILD_BUILD_TIMESTAMP": "2026-11-22 00:00:00 +0000",
+    "KBUILD_BUILD_USER": "tb371fc-qemu",
+    "KBUILD_BUILD_HOST": "isolated-builder",
+    "KBUILD_BUILD_VERSION": "1",
+    "SOURCE_DATE_EPOCH": "1795305600"
+  },
+  "build_completed": true,
+  "guest_boot_tested_by_this_script": false
+}

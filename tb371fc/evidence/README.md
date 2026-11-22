@@ -1,15 +1,22 @@
-# TB371FC passive ARM platform evidence
+# TB371FC hardware and emulation evidence
+
+Start with the [validation ledger](VALIDATION.md) for actual QEMU machine,
+GENI FIFO/IRQ, migration, native-counter and Linux-boot results. Their scopes
+are separate: a passing Linux smoke test does not establish complete tablet
+emulation. [SHA256SUMS](SHA256SUMS) records the exact published evidence bytes.
+
+## Passive hardware reference
 
 The reference was captured from the owner's running **Lenovo TB371FC** through
 the existing Android root shell at **2026-11-22 21:54:30 UTC** (2026-11-23 in
 Asia/Shanghai). It is a sequential configuration snapshot, not a successful
 QEMU boot, an MMIO behavioral trace, or a hardware performance measurement.
 
-`evidence/android-board.json` retains allowed DT property bytes as base64,
+[`android-board.json`](android-board.json) retains allowed DT property bytes as base64,
 SHA-256 hashes, big-endian cell interpretations, absent/read-error status and
 CPU identification registers already exposed by sysfs. The acquisition script
 was executed through standard input without writing a file to the tablet.
-`evidence/board-profile.json` is derived from those bytes by the validator.
+[`board-profile.json`](board-profile.json) is derived from those bytes by the validator.
 
 ## Important observations
 
@@ -40,11 +47,11 @@ it must distinguish that choice from the observed tablet configuration.
 
 ## Reproduce and check
 
-The scripts need only Python's standard library. In an existing authorized
-Android root shell:
+The passive capture and profile scripts need only Python's standard library.
+From the repository root in an existing authorized Android root shell:
 
 ```sh
-python3 scripts/collect_board.py > android-board.json
+python3 tb371fc/scripts/collect_board.py > android-board.json
 ```
 
 For a source-attributed capture, compute the exact script's SHA-256 on the
@@ -54,8 +61,8 @@ operator-supplied source digest; it is not a signed or remote attestation.
 On the development host:
 
 ```sh
-python3 scripts/board_profile.py evidence/android-board.json
-python3 scripts/test_board_profile.py
+python3 tb371fc/scripts/board_profile.py tb371fc/evidence/android-board.json
+python3 tb371fc/scripts/test_board_profile.py
 ```
 
 The validator verifies the bytes and hashes, DT cell widths, identity bus

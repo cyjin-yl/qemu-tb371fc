@@ -5,12 +5,13 @@ import copy
 import json
 from pathlib import Path
 import shutil
+import struct
 import subprocess
 import sys
 import tempfile
 import unittest
 
-from validate_machine import FdtReader, ValidationError, compare, observe_dt, parent, reg_entries
+from validate_machine import FdtReader, ValidationError, canonicalize_dtb, compare, observe_dt, parent, reg_entries
 
 ROOT = Path(__file__).resolve().parent.parent
 PROFILE = json.loads((ROOT / 'evidence/board-profile.json').read_text())
@@ -231,6 +232,24 @@ class CommandIntegrationTests(unittest.TestCase):
             observed = observe_dt(FdtReader(dtb))
             self.assertEqual(observed, observe_dt(fixture))
             self.assertTrue(compare(PROFILE, observed, synthetic_runtime())['passed'])
+
+            # Insert a legal FDT_NOP after the root BEGIN_NODE and update all
+            # affected DT header offsets/sizes. Some fdtget versions reject
+            # it while listing child nodes; dtc must preserve all properties.
+            raw = dtb.read_bytes()
+            header = list(struct.unpack('>10I', raw[:40]))
+            insertion = header[2] + 8
+            header[1] += 4
+            for field in (3, 4):
+                if header[field] >= insertion:
+                    header[field] += 4
+            header[9] += 4
+            with_nop = Path(temporary) / 'with-nop.dtb'
+            canonical = Path(temporary) / 'canonical.dtb'
+            with_nop.write_bytes(struct.pack('>10I', *header) + raw[40:insertion] + b'\x00\x00\x00\x04' + raw[insertion:])
+            metadata = canonicalize_dtb(with_nop, canonical)
+            self.assertNotEqual(metadata['source_sha256'], metadata['validation_sha256'])
+            self.assertEqual(observe_dt(FdtReader(canonical)), observed)
 
     def test_missing_emulator_returns_failed_json_not_a_pass(self):
         result = subprocess.run([sys.executable, str(ROOT / 'scripts/validate_machine.py'),

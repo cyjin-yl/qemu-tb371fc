@@ -4,7 +4,7 @@
 This checks the implemented platform's configuration. It never claims complete
 emulation, cycle accuracy, a booted Android image or physical-device behavior.
 The expected map comes from the checked-in passive capture, not C constants.
-Requires Python 3, fdtget and the newly built qemu-system-aarch64 binary.
+Requires Python 3, dtc/fdtget and the newly built qemu-system-aarch64 binary.
 """
 
 from __future__ import annotations
@@ -43,6 +43,31 @@ def parent(path: str) -> str:
     return path.rsplit('/', 1)[0] or '/'
 
 
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open('rb') as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def canonicalize_dtb(source: Path, destination: Path, dtc: str = 'dtc') -> dict:
+    """Preserve DT semantics while removing legal NOP tags fdtget -l may reject.
+
+    QEMU can leave FDT_NOPs after replacing memory/PSCI nodes. Some dtc releases'
+    fdtget traversal rejects these valid tags, even though dtc reads them. A
+    DTB-to-DTB round trip is used without -f; invalid trees still fail.
+    """
+    process = subprocess.run([dtc, '-I', 'dtb', '-O', 'dtb', '-o', str(destination), str(source)],
+                             capture_output=True, text=True, timeout=10)
+    if process.returncode:
+        raise ValidationError(f'dtc normalization exited {process.returncode}: {process.stderr.strip()}')
+    return {'method': 'dtc -I dtb -O dtb (without --force)',
+            'reason': 'Remove legal FDT_NOP tags unsupported by some fdtget -l versions; no property edits',
+            'source_sha256': file_sha256(source), 'validation_sha256': file_sha256(destination),
+            'dtc_stderr': process.stderr.strip()}
+
+
 class FdtReader:
     """Use libfdt's fdtget rather than parsing generated source or constants."""
 
@@ -57,7 +82,7 @@ class FdtReader:
             timeout=10,
         )
         if result.returncode:
-            raise ValidationError(f'fdtget failed: {result.stderr.strip()}')
+            raise ValidationError(f'fdtget {list(arguments)!r} exited {result.returncode}: {result.stderr.strip()}')
         return result.stdout
 
     def nodes(self) -> list[str]:
@@ -388,7 +413,7 @@ class QMP:
         self.socket.close()
 
 
-def runtime_capture(qemu: Path, fdtget: str, timeout: float, dtb_output: Path | None):
+def runtime_capture(qemu: Path, fdtget: str, timeout: float, dtb_output: Path | None, dtc: str = 'dtc'):
     with tempfile.TemporaryDirectory(prefix='tb371fc-qmp-') as temporary:
         directory = Path(temporary)
         socket_path, dtb = directory / 'qmp.sock', directory / 'machine.dtb'
@@ -408,12 +433,13 @@ def runtime_capture(qemu: Path, fdtget: str, timeout: float, dtb_output: Path | 
                 qmp.command('dumpdtb', {'filename': str(dtb)})
                 if not dtb.is_file():
                     raise ValidationError('QMP reported success but produced no DTB')
-                observed = observe_dt(FdtReader(dtb, fdtget))
-                dtb_hash = hashlib.sha256(dtb.read_bytes()).hexdigest()
                 if dtb_output:
                     dtb_output.parent.mkdir(parents=True, exist_ok=True)
                     shutil.copyfile(dtb, dtb_output)
-                return observed, runtime, dtb_hash
+                canonical = directory / 'validation.dtb'
+                normalization = canonicalize_dtb(dtb, canonical, dtc)
+                observed = observe_dt(FdtReader(canonical, fdtget))
+                return observed, runtime, normalization
             finally:
                 if qmp:
                     try:
@@ -441,6 +467,7 @@ def main() -> int:
     parser.add_argument('--profile', type=Path, default=ROOT / 'evidence/board-profile.json')
     parser.add_argument('--capture', type=Path, default=ROOT / 'evidence/android-board.json')
     parser.add_argument('--fdtget', default='fdtget')
+    parser.add_argument('--dtc', default='dtc')
     parser.add_argument('--output', type=Path)
     parser.add_argument('--dtb-output', type=Path)
     parser.add_argument('--timeout', type=float, default=30)
@@ -454,11 +481,17 @@ def main() -> int:
         profile = json.loads(profile_bytes)
         if profile != normalize(json.loads(capture_bytes)):
             raise ValidationError('board-profile.json differs from the verified raw hardware capture')
-        observed, runtime, dtb_hash = runtime_capture(args.qemu.resolve(), args.fdtget, args.timeout, args.dtb_output)
+        qemu_path = args.qemu.resolve()
+        qemu_sha256 = file_sha256(qemu_path)
+        observed, runtime, normalization = runtime_capture(qemu_path, args.fdtget, args.timeout, args.dtb_output, args.dtc)
+        if file_sha256(qemu_path) != qemu_sha256:
+            raise ValidationError('QEMU binary changed during validation')
         result = compare(profile, observed, runtime)
         result['sources'] = {'profile_sha256': hashlib.sha256(profile_bytes).hexdigest(),
                              'capture_sha256': hashlib.sha256(capture_bytes).hexdigest(),
-                             'qmp_dumpdtb_sha256': dtb_hash, 'qemu': str(args.qemu.resolve())}
+                             'qmp_dumpdtb_sha256': normalization['source_sha256'],
+                             'qemu_sha256': qemu_sha256, 'qemu': str(qemu_path)}
+        result['dtb_normalization'] = normalization
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError, ValidationError) as error:
         result['error'] = f'{type(error).__name__}: {error}'
     result['validated_at_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()

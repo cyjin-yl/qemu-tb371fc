@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "suite": "GENI actual QTest/chardev",
+  "success": true,
+  "qemu": "qemu-system-aarch64",
+  "checks": [
+    {
+      "test": "identity",
+      "status": "pass",
+      "seconds": 0.0048
+    },
+    {
+      "test": "exact_tx_and_padding",
+      "status": "pass",
+      "seconds": 0.0226
+    },
+    {
+      "test": "latched_masked_w1c_irq",
+      "status": "pass",
+      "seconds": 0.0027
+    },
+    {
+      "test": "global_gate",
+      "status": "pass",
+      "seconds": 0.0021
+    },
+    {
+      "test": "watermark_reassertion",
+      "status": "pass",
+      "seconds": 0.002
+    },
+    {
+      "test": "enable_aliases",
+      "status": "pass",
+      "seconds": 0.0017
+    },
+    {
+      "test": "cancel_abort_overrun",
+      "status": "pass",
+      "seconds": 0.0022
+    },
+    {
+      "test": "rx_partial_word_irq",
+      "status": "pass",
+      "seconds": 0.0109
+    },
+    {
+      "test": "rx_underflow",
+      "status": "pass",
+      "seconds": 0.0025
+    },
+    {
+      "test": "rx_backpressure",
+      "status": "pass",
+      "seconds": 0.0103
+    },
+    {
+      "test": "rx_abort",
+      "status": "pass",
+      "seconds": 0.0037
+    },
+    {
+      "test": "unsupported_commands",
+      "status": "pass",
+      "seconds": 0.0231
+    },
+    {
+      "test": "reset_clears_state",
+      "status": "pass",
+      "seconds": 0.0065
+    }
+  ],
+  "expected_checks": 13,
+  "test_ram": "128 MiB",
+  "scope": "FIFO behavioral model; no silicon timing or DMA validation",
+  "qemu_sha256": "baea240b28c1428dfd42a27ad9248455dc3095f18ddb0ab0e4c7261085282a5e",
+  "publication": {
+    "raw_result_sha256": "e19ce478aa7d088a24b0d42920f12ccb6160943093b13b1631999c55d788861b",
+    "transformations": [
+      "QEMU path reduced to executable basename"
+    ]
+  }
+}

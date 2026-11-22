@@ -1,0 +1,169 @@
+/* Generated from the actual QMP-exported DTB.
+ * Raw DTB SHA-256: 647dfa354a7436256101c813a4a9be973ced2e428283b2de3ad328294898c7a6
+ * This is an implemented subset with documented CPU/peripheral deviations.
+ */
+/dts-v1/;
+
+/ {
+	interrupt-parent = <0x8002>;
+	qemu,qup-model-note = "Synthetic fixed clocks and QUP 2.5 version; GENI UART FIFO only";
+	qemu,cpu-model-note = "CPU0-3 Cortex-A55; CPU4-7 Cortex-A76 surrogate for Cortex-A77; no timing fidelity";
+	model = "QEMU experimental Lenovo TB371FC functional subset";
+	compatible = "qemu,tb371fc", "lenovo,tb371fc", "qcom,sm8250";
+	#size-cells = <0x02>;
+	#address-cells = <0x02>;
+
+	psci {
+		migrate = <0xc4000005>;
+		cpu_on = <0xc4000003>;
+		cpu_off = <0x84000002>;
+		cpu_suspend = <0xc4000001>;
+		method = "smc";
+		compatible = "arm,psci-1.0", "arm,psci-0.2", "arm,psci";
+	};
+
+	memory@80000000 {
+		reg = <0x00 0x80000000 0x00 0x3bb00000 0x00 0xc0000000 0x01 0xc0000000>;
+		device_type = "memory";
+	};
+
+	reserved-memory {
+		ranges;
+		#size-cells = <0x02>;
+		#address-cells = <0x02>;
+
+		firmware-hole@bbb00000 {
+			no-map;
+			reg = <0x00 0xbbb00000 0x00 0x4500000>;
+		};
+	};
+
+	timer {
+		always-on;
+		interrupts = <0x01 0x0d 0x08 0x01 0x0e 0x08 0x01 0x0b 0x08 0x01 0x0c 0x08>;
+		clock-frequency = <0x124f800>;
+		compatible = "arm,armv8-timer";
+	};
+
+	soc {
+		ranges;
+		#size-cells = <0x02>;
+		#address-cells = <0x02>;
+		compatible = "simple-bus";
+
+		geniqup@ac0000 {
+			clocks = <0x8000 0x8000>;
+			clock-names = "m-ahb", "s-ahb";
+			ranges;
+			#size-cells = <0x02>;
+			#address-cells = <0x02>;
+			reg = <0x00 0xac0000 0x00 0x6000>;
+			compatible = "qcom,geni-se-qup";
+
+			serial@a90000 {
+				status = "okay";
+				current-speed = <0x1c200>;
+				clocks = <0x8001>;
+				clock-names = "se";
+				interrupts = <0x00 0x165 0x04>;
+				reg = <0x00 0xa90000 0x00 0x4000>;
+				compatible = "qcom,geni-debug-uart";
+			};
+		};
+
+		interrupt-controller@17a00000 {
+			interrupts = <0x01 0x09 0x04>;
+			reg = <0x00 0x17a00000 0x00 0x10000 0x00 0x17a60000 0x00 0x100000>;
+			phandle = <0x8002>;
+			redistributor-stride = <0x00 0x20000>;
+			#redistributor-regions = <0x01>;
+			#address-cells = <0x00>;
+			#interrupt-cells = <0x03>;
+			interrupt-controller;
+			compatible = "arm,gic-v3";
+		};
+	};
+
+	qemu-uart-clock {
+		phandle = <0x8001>;
+		clock-frequency = <0x708000>;
+		#clock-cells = <0x00>;
+		compatible = "fixed-clock";
+	};
+
+	qemu-ahb-clock {
+		phandle = <0x8000>;
+		clock-frequency = <0x124f800>;
+		#clock-cells = <0x00>;
+		compatible = "fixed-clock";
+	};
+
+	cpus {
+		#size-cells = <0x00>;
+		#address-cells = <0x02>;
+
+		cpu@700 {
+			enable-method = "psci";
+			reg = <0x00 0x700>;
+			compatible = "arm,cortex-a76";
+			device_type = "cpu";
+		};
+
+		cpu@600 {
+			enable-method = "psci";
+			reg = <0x00 0x600>;
+			compatible = "arm,cortex-a76";
+			device_type = "cpu";
+		};
+
+		cpu@500 {
+			enable-method = "psci";
+			reg = <0x00 0x500>;
+			compatible = "arm,cortex-a76";
+			device_type = "cpu";
+		};
+
+		cpu@400 {
+			enable-method = "psci";
+			reg = <0x00 0x400>;
+			compatible = "arm,cortex-a76";
+			device_type = "cpu";
+		};
+
+		cpu@300 {
+			enable-method = "psci";
+			reg = <0x00 0x300>;
+			compatible = "arm,cortex-a55";
+			device_type = "cpu";
+		};
+
+		cpu@200 {
+			enable-method = "psci";
+			reg = <0x00 0x200>;
+			compatible = "arm,cortex-a55";
+			device_type = "cpu";
+		};
+
+		cpu@100 {
+			enable-method = "psci";
+			reg = <0x00 0x100>;
+			compatible = "arm,cortex-a55";
+			device_type = "cpu";
+		};
+
+		cpu@0 {
+			enable-method = "psci";
+			reg = <0x00 0x00>;
+			compatible = "arm,cortex-a55";
+			device_type = "cpu";
+		};
+	};
+
+	aliases {
+		serial0 = "/soc/geniqup@ac0000/serial@a90000";
+	};
+
+	chosen {
+		stdout-path = "/soc/geniqup@ac0000/serial@a90000:115200n8";
+	};
+};

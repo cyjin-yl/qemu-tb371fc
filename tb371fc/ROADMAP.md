@@ -13,10 +13,31 @@ QEMU TCG 的执行速度不代表真实 CPU/GPU 性能；功耗、射频、电�
 - [x] 通过实机只读采集核对型号、MPIDR、RAM、GIC、timer 与启用的 UART。
 - [x] 实现 CPU/GIC/timer/PSCI/RAM 装配与生成的裁剪 DT。
 - [x] 实现有状态的 GENI FIFO 串口与针对寄存器行为的检查。
-- [ ] 运行 QEMU 与实机 profile 对照并保存回执。
-- [ ] 以明确来源的 Linux Image 启动 initramfs、八核在线并正常退出。
+- [x] 运行实际 QEMU，通过 20 项 QMP/生成 DT 与实机 profile 对照的必需检查；3 项已声明差异单独记录。
+- [x] 以独立官方 Linux 6.12.114 Image 在 8 GiB、八 CPU 配置下启动 initramfs，八项来宾检查通过并正常关机退出。
+- [x] 正式 GENI `ttyMSM0` 驱动探测成功；禁用 earlycon 后继续完成 PID 1 输出，未依赖 `keep_bootcon` 保留启动串口。
+- [x] 实际 GENI FIFO QTest 13 项及两个 QEMU 进程间的状态迁移 6 项检查通过。
 - [ ] CPU 精确功能特征模型：核对 Cortex-A77/Kryo 的架构寄存器、缓存描述与扩展。
-- [ ] 用同一份非破坏性探针在模拟器和实机上对照明确允许读取的接口。
+- [x] 用同一份 ELF 在模拟器与实机验证 EL0 架构计数器：频率 19.2 MHz、计数递增；对照范围仅为这两个性质。
+- [ ] 扩展 CPU 与具体设备行为的实机差分，逐项记录允许误差与尚未覆盖的语义。
+
+最近一次正式 console 交接验收始于 **2026-11-22 22:47:01 UTC**，QEMU 退出码为 0，
+宿主记录用时 3.554 秒。八项来宾检查涵盖 procfs、sysfs、AArch64 身份、八核在线、
+至少 20 ms 睡眠及单调时钟推进、fork/wait、设备树型号、计数器探针 ELF 执行。
+证据为 [Linux 结果](evidence/linux-smoke.json) 与 [完整串口日志](evidence/linux-smoke.log)；
+实现契约、哈希与逐项解释见 [machine.md](docs/machine.md)。这不是平板性能测试，
+没有验证 Linux 串口 RX、完整内存逐页读写、原厂内核或 Android userspace。
+
+已通过的内核是未打补丁的独立 upstream 输入。此前 research kernel 的 256 页早期页表池
+耗尽结果仍保留为 [失败记录](evidence/linux-research-kernel-failure.json) 与
+[失败日志](evidence/linux-research-kernel-failure.log)。仓库中的
+[可选 research-kernel 修正建议](patches/linux-6.12-qemu-early-pgtable.patch) **尚未应用**，
+其有效性和真实平板 handoff 问题都没有因 clean kernel 的成功而得到验证。
+
+日志仍保留 `nokaslr` 未知参数、测试配置关闭 Spectre-BHB mitigation、Linux 自动修复
+GIC self-dependency 的非致命提示。CPU 的 MPIDR 与模型对应正确，但 Linux 根据 DT
+枚举顺序分配的逻辑 CPU 编号与 QEMU CPU index 不同；进行实机对应时须按 MPIDR 匹配。
+这些限制和细节均见 machine 文档，不能将通过结果表述为完整硬件等价或零诊断信息。
 
 ## 2. Qualcomm 资源、时钟和固件契约
 
@@ -24,7 +45,8 @@ QEMU TCG 的执行速度不代表真实 CPU/GPU 性能；功耗、射频、电�
 - [ ] 最小 SCM/SMCCC 服务；每个支持的调用有参数、返回值及错误路径测试。
 - [ ] Kona cmd-db、RPMh RSC/TCS、GCC/GDSC/reset；不移植其他 SoC 的资源表后冒充。
 - [ ] TLMM、pinctrl、GPIO 中断和 PDC/wakeup 路由。
-- [ ] PSCI off/on/reset、热管理及 watchdog 的驱动可见行为。
+- [x] QEMU PSCI `CPU_ON` 使八核上线，`SYSTEM_OFF` 结束已记录的 Linux smoke。
+- [ ] 运行中的 CPU off/on 生命周期、`SYSTEM_RESET`、热管理及 watchdog 的驱动可见行为。
 
 验收：使用同一主线设备树和真实驱动完成初始化，验证失败与取消路径，
 将合成固定时钟替换为有状态的资源模型。合成固件服务仍须在输出中明确标识。

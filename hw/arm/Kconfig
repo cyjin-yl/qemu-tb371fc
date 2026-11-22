@@ -732,5 +732,8 @@ config LENOVO_TB371FC
     bool
     depends on TCG && AARCH64
     select ARM_GIC
+    # QEMU 11.1.3 links the ARM TCG GICv5 CPU interface unconditionally.
+    # This satisfies its symbols; the TB371FC board still creates GICv3.
+    select ARM_GICV5
     select DEVICE_TREE
     select QCOM_GENI_UART

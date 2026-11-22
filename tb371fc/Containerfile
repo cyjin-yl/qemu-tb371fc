@@ -3,7 +3,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     build-essential git ca-certificates python3 python3-venv python3-distlib ninja-build meson \
     pkg-config libglib2.0-dev libpixman-1-dev zlib1g-dev libfdt-dev \
     device-tree-compiler gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu \
-    libc6-dev-arm64-cross tmux \
+    libc6-dev-arm64-cross tmux curl xz-utils bc bison flex libssl-dev libelf-dev util-linux \
     && apt-get clean
 WORKDIR /src
 ENV BUILD_DIR=/work/build JOBS=4

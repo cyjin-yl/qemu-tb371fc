@@ -1,0 +1,24 @@
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x412fd050]
+[    0.000000] Linux version 6.12.114-tb371fc-research1 (tb371fc-research@isolated-builder) (Debian clang version 19.1.7 (3+b1), Debian LLD 19.1.7) #1 SMP PREEMPT 2026-11-23 00:00:00 +0000
+[    0.000000] Machine model: QEMU experimental Lenovo TB371FC functional subset
+[    0.000000] earlycon: qcom_geni0 at MMIO 0x0000000000a90000 (options '')
+[    0.000000] printk: legacy bootconsole [qcom_geni0] enabled
+[    0.000000] printk: debug: skip boot console de-registration.
+[    0.000000] Kernel panic - not syncing: TB371FC embedded early page-table pool exhausted
+[    0.000000] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.12.114-tb371fc-research1 #1
+[    0.000000] Hardware name: QEMU experimental Lenovo TB371FC functional subset (DT)
+[    0.000000] Call trace:
+[    0.000000]  dump_backtrace+0xfc/0x184
+[    0.000000]  show_stack+0x18/0x24
+[    0.000000]  dump_stack_lvl+0x40/0x84
+[    0.000000]  dump_stack+0x18/0x24
+[    0.000000]  panic+0x124/0x358
+[    0.000000]  declare_vma+0x0/0x74
+[    0.000000]  create_kpti_ng_temp_pgd+0x6c0/0x918
+[    0.000000]  __map_memblock+0x6c/0x8c
+[    0.000000]  map_mem+0xf0/0x188
+[    0.000000]  paging_init+0x10/0x28
+[    0.000000]  setup_arch+0x108/0x1dc
+[    0.000000]  start_kernel+0x60/0x374
+[    0.000000]  __primary_switched+0x80/0x88
+[    0.000000] Reboot failed -- System halted

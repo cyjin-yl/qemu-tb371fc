@@ -74,7 +74,7 @@ def main() -> int:
                "-m", "8G", "-smp", "8", "-display", "none", "-monitor", "none",
                "-serial", "stdio", "-no-reboot", "-kernel", str(kernel),
                "-initrd", str(initramfs), "-append",
-               "earlycon=qcom_geni,0xa90000 keep_bootcon console=ttyMSM0,115200n8 "
+               "earlycon=qcom_geni,0xa90000 console=ttyMSM0,115200n8 "
                "rdinit=/init loglevel=7 panic=-1 nokaslr"]
     start = time.monotonic()
     result = {

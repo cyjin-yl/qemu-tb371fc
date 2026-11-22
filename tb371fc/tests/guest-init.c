@@ -46,6 +46,8 @@ int main(void)
     struct timespec before = {0}, after = {0};
     struct timespec delay = {.tv_sec = 0, .tv_nsec = 20000000};
     int status = 0;
+    int before_result, sleep_result, after_result;
+    long long elapsed_ns;
     pid_t child;
 
     setvbuf(stdout, NULL, _IONBF, 0);
@@ -60,13 +62,15 @@ int main(void)
     check(read_text("/sys/devices/system/cpu/online", buf, sizeof(buf)) > 0 &&
           !strcmp(buf, "0-7\n"), "eight_online_cpus_psci");
     printf("TB371FC_CPUS %s", buf);
-    clock_gettime(CLOCK_MONOTONIC, &before);
-    while (nanosleep(&delay, &delay) != 0 && errno == EINTR) {
-    }
-    clock_gettime(CLOCK_MONOTONIC, &after);
-    check(after.tv_sec > before.tv_sec ||
-          (after.tv_sec == before.tv_sec && after.tv_nsec > before.tv_nsec),
-          "timer_and_scheduler_progress");
+    before_result = clock_gettime(CLOCK_MONOTONIC, &before);
+    do {
+        sleep_result = nanosleep(&delay, &delay);
+    } while (sleep_result != 0 && errno == EINTR);
+    after_result = clock_gettime(CLOCK_MONOTONIC, &after);
+    elapsed_ns = (after.tv_sec - before.tv_sec) * 1000000000LL +
+                 after.tv_nsec - before.tv_nsec;
+    check(before_result == 0 && sleep_result == 0 && after_result == 0 &&
+          elapsed_ns >= 20000000LL, "timer_and_scheduler_progress");
     child = fork();
     if (child == 0) {
         _exit(42);

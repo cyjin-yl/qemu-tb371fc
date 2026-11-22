@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "suite": "GENI QMP process-to-process migration",
+  "qemu": "qemu-system-aarch64",
+  "test_ram_per_process": "128 MiB",
+  "checks": [
+    {
+      "check": "source_active_tx_rx_and_pending_irq",
+      "status": "pass"
+    },
+    {
+      "check": "qmp_migration_completed",
+      "status": "pass"
+    },
+    {
+      "check": "registers_ram_and_pending_irq_preserved",
+      "status": "pass"
+    },
+    {
+      "check": "unfinished_tx_continues_without_duplicate_prefix",
+      "status": "pass"
+    },
+    {
+      "check": "unread_rx_partial_word_and_w1c_irq_restored",
+      "status": "pass"
+    },
+    {
+      "check": "destination_chardev_receives_and_interrupts",
+      "status": "pass"
+    }
+  ],
+  "scope": "Actual paused machine migration and GENI FIFO/IRQ continuation; no hardware timing equivalence",
+  "source_migration": {
+    "status": "completed",
+    "setup-time": 1,
+    "downtime": 2,
+    "total-time": 14,
+    "ram": {
+      "total": 134217728,
+      "postcopy-requests": 0,
+      "dirty-sync-count": 2,
+      "multifd-bytes": 0,
+      "pages-per-second": 0,
+      "downtime-bytes": 303122,
+      "page-size": 4096,
+      "remaining": 0,
+      "postcopy-bytes": 0,
+      "mbps": 271.59507692307693,
+      "transferred": 441342,
+      "dirty-sync-missed-zero-copy": 0,
+      "precopy-bytes": 0,
+      "duplicate": 32766,
+      "dirty-pages-rate": 0,
+      "normal-bytes": 8192,
+      "normal": 2
+    }
+  },
+  "target_migration": {
+    "status": "completed"
+  },
+  "success": true,
+  "qemu_sha256": "baea240b28c1428dfd42a27ad9248455dc3095f18ddb0ab0e4c7261085282a5e",
+  "publication": {
+    "raw_result_sha256": "7e4ab71e2802f8a1324d795deb820a1ea78c6099ad6b9a68ba4d9d8e63452522",
+    "transformations": [
+      "QEMU path reduced to executable basename"
+    ]
+  }
+}

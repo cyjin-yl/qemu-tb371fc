@@ -1,0 +1,124 @@
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x412fd050]
+[    0.000000] Linux version 6.12.114-tb371fc-qemu-smoke (tb371fc-qemu@isolated-builder) (aarch64-linux-gnu-gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44) #1 SMP 2026-11-22 00:00:00 +0000
+[    0.000000] Machine model: QEMU experimental Lenovo TB371FC functional subset
+[    0.000000] earlycon: qcom_geni0 at MMIO 0x0000000000a90000 (options '')
+[    0.000000] printk: legacy bootconsole [qcom_geni0] enabled
+[    0.000000] OF: reserved mem: 0x00000000bbb00000..0x00000000bfffffff (70656 KiB) nomap non-reusable firmware-hole@bbb00000
+[    0.000000] Zone ranges:
+[    0.000000]   Normal   [mem 0x0000000080000000-0x000000027fffffff]
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000080000000-0x00000000bbafffff]
+[    0.000000]   node   0: [mem 0x00000000c0000000-0x000000027fffffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000080000000-0x000000027fffffff]
+[    0.000000] On node 0, zone Normal: 17664 pages in unavailable ranges
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.1 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: Trusted OS migration not required
+[    0.000000] psci: SMC Calling Convention v1.0
+[    0.000000] percpu: Embedded 17 pages/cpu s37216 r0 d32416 u69632
+[    0.000000] Detected VIPT I-cache on CPU0
+[    0.000000] CPU features: detected: GIC system register CPU interface
+[    0.000000] CPU features: detected: Virtualization Host Extensions
+[    0.000000] alternatives: applying boot alternatives
+[    0.000000] Kernel command line: earlycon=qcom_geni,0xa90000 console=ttyMSM0,115200n8 rdinit=/init loglevel=7 panic=-1 nokaslr
+[    0.000000] Unknown kernel command line parameters "nokaslr", will be passed to user space.
+[    0.000000] Dentry cache hash table entries: 1048576 (order: 11, 8388608 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 524288 (order: 10, 4194304 bytes, linear)
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 2079488
+[    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+[    0.000000] software IO TLB: SWIOTLB bounce buffer size adjusted to 7MB
+[    0.000000] software IO TLB: area num 8.
+[    0.000000] software IO TLB: mapped [mem 0x0000000275b77000-0x0000000276377000] (8MB)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=8, Nodes=1
+[    0.000000] rcu: Hierarchical RCU implementation.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[    0.000000] GICv3: GIC: Using split EOI/Deactivate mode
+[    0.000000] GICv3: 960 SPIs implemented
+[    0.000000] GICv3: 0 Extended SPIs implemented
+[    0.000000] Root IRQ handler: 0xffff800080010088
+[    0.000000] GICv3: GICv3 features: 16 PPIs
+[    0.000000] GICv3: GICD_CTRL.DS=1, SCR_EL3.FIQ=0
+[    0.000000] GICv3: CPU0: found redistributor 0 region 0:0x0000000017a60000
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.000000] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.000000] arch_timer: cp15 timer(s) running at 19.20MHz (phys).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x46d987e47, max_idle_ns: 440795202767 ns
+[    0.000070] sched_clock: 56 bits at 19MHz, resolution 52ns, wraps every 4398046511078ns
+[    0.006829] Calibrating delay loop (skipped), value calculated using timer frequency.. 38.40 BogoMIPS (lpj=76800)
+[    0.007063] pid_max: default: 32768 minimum: 301
+[    0.008565] Mount-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.008830] Mountpoint-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.051642] rcu: Hierarchical SRCU implementation.
+[    0.051786] rcu: 	Max phase no-delay instances is 1000.
+[    0.057138] smp: Bringing up secondary CPUs ...
+[    0.062384] CPU features: detected: Spectre-v4
+[    0.062506] CPU features: detected: Spectre-BHB
+[    0.062573] Detected VIPT I-cache on CPU1
+[    0.065795] GICv3: CPU1: found redistributor 700 region 0:0x0000000017b40000
+[    0.066065] CPU1: Booted secondary processor 0x0000000700 [0x414fd0b1]
+[    0.076638] Detected VIPT I-cache on CPU2
+[    0.076974] GICv3: CPU2: found redistributor 600 region 0:0x0000000017b20000
+[    0.077205] CPU2: Booted secondary processor 0x0000000600 [0x414fd0b1]
+[    0.083004] Detected VIPT I-cache on CPU3
+[    0.083228] GICv3: CPU3: found redistributor 500 region 0:0x0000000017b00000
+[    0.083398] CPU3: Booted secondary processor 0x0000000500 [0x414fd0b1]
+[    0.085322] Detected VIPT I-cache on CPU4
+[    0.085524] GICv3: CPU4: found redistributor 400 region 0:0x0000000017ae0000
+[    0.085641] CPU4: Booted secondary processor 0x0000000400 [0x414fd0b1]
+[    0.087253] Detected VIPT I-cache on CPU5
+[    0.087474] GICv3: CPU5: found redistributor 300 region 0:0x0000000017ac0000
+[    0.087588] CPU5: Booted secondary processor 0x0000000300 [0x412fd050]
+[    0.089154] Detected VIPT I-cache on CPU6
+[    0.089482] GICv3: CPU6: found redistributor 200 region 0:0x0000000017aa0000
+[    0.089687] CPU6: Booted secondary processor 0x0000000200 [0x412fd050]
+[    0.091955] Detected VIPT I-cache on CPU7
+[    0.092198] GICv3: CPU7: found redistributor 100 region 0:0x0000000017a80000
+[    0.092355] CPU7: Booted secondary processor 0x0000000100 [0x412fd050]
+[    0.092843] smp: Brought up 1 node, 8 CPUs
+[    0.094386] SMP: Total of 8 processors activated.
+[    0.094485] CPU: All CPU(s) started at EL2
+[    0.094595] CPU features: detected: 32-bit EL0 Support
+[    0.094705] CPU features: detected: Data cache clean to the PoU not required for I/D coherence
+[    0.094799] CPU features: detected: CRC32 instructions
+[    0.094899] CPU features: detected: RCpc load-acquire (LDAPR)
+[    0.095014] CPU features: detected: Speculative Store Bypassing Safe (SSBS)
+[    0.109878] spectre-bhb mitigation disabled by compile time option
+[    0.109893] spectre-bhb mitigation disabled by compile time option
+[    0.128951] alternatives: applying system-wide alternatives
+[    0.197923] Memory: 8139892K/8317952K available (1664K kernel code, 998K rwdata, 268K rodata, 320K init, 337K bss, 173668K reserved, 0K cma-reserved)
+[    0.225493] devtmpfs: initialized
+[    0.244936] futex hash table entries: 2048 (order: 5, 131072 bytes, linear)
+[    0.245378] pinctrl core: initialized pinctrl subsystem
+[    0.252857] DMA: preallocated 1024 KiB GFP_KERNEL pool for atomic allocations
+[    0.258466] ASID allocator initialised with 65536 entries
+[    0.266332] /soc/interrupt-controller@17a00000: Fixed dependency cycle(s) with /soc/interrupt-controller@17a00000
+[    0.281039] clocksource: Switched to clocksource arch_sys_counter
+[    0.301624] Unpacking initramfs...
+[    0.316050] workingset: timestamp_bits=62 max_order=21 bucket_order=0
+[    0.346973] Freeing initrd memory: 292K
+[    0.358925] a90000.serial: ttyMSM0 at MMIO 0xa90000 (irq = 14, base_baud = 0) is a MSM
+[    0.366577] printk: legacy console [ttyMSM0] enabled
+[    0.366577] printk: legacy console [ttyMSM0] enabled
+[    0.367111] printk: legacy bootconsole [qcom_geni0] disabled
+[    0.367111] printk: legacy bootconsole [qcom_geni0] disabled
+[    0.406134] clk: Disabling unused clocks
+[    0.475689] Freeing unused kernel memory: 320K
+[    0.482542] Run /init as init process
+TB371FC_GUEST_BEGIN[    0.619550] reboot: Power down
+
+TB371FC_CHECK PASS procfs
+TB371FC_CHECK PASS sysfs
+TB371FC_CHECK PASS aarch64
+TB371FC_KERNEL 6.12.114-tb371fc-qemu-smoke
+TB371FC_CHECK PASS eight_online_cpus_psci
+TB371FC_CPUS 0-7
+TB371FC_CHECK PASS timer_and_scheduler_progress
+TB371FC_CHECK PASS fork_and_wait
+TB371FC_CHECK PASS board_model
+TB371FC_MODEL QEMU experimental Lenovo TB371FC functional subset
+{"schema_version":1,"kind":"tb371fc-el0-counter-probe","counter_frequency_hz":19200000,"counter_start":26445882,"counter_end":26450357,"counter_delta":4475,"increased":true,"loop_iterations":65536,"scope":"EL0 counter access only; not a performance benchmark"}
+TB371FC_CHECK PASS arch_counter_probe
+TB371FC_GUEST_RESULT PASS failures=0
