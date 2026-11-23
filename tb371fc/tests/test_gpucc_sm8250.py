@@ -12,6 +12,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 import time
@@ -97,7 +98,7 @@ class GpuRig(Rig):
         self.irq = {}
         command = [args.qemu, "-machine", args.machine, "-accel", accel,
                    "-m", "128M", "-display", "none", "-monitor", "none",
-                   "-serial", "null", "-S", "-d", "unimp,guest_errors",
+                   "-serial", "null", "-S", "-d", "unimp,guest_errors,invalid_mem",
                    "-qmp", f"unix:{self.socket_dir}/m,server=on,wait=off"]
         if accel == "qtest":
             command += ["-qtest", f"unix:{self.socket_dir}/t,server=on,wait=off",
@@ -557,15 +558,30 @@ def reserved_status_and_invalid_accesses_are_atomic(rig):
         rig.read(offset)
         assert rig.snapshot() == before
     assert rig.diagnostic_count(DIAGNOSTIC) - count == len(invalid) + 3
-    core_count = rig.diagnostic_count("Invalid ")
-    operations = (f"writeb {BASE + L:#x} 0", f"writew {BASE + L:#x} 0",
-                  f"writel {BASE + L + 1:#x} 0", f"readb {BASE + L:#x}",
-                  f"readw {BASE + L + 1:#x}")
-    for operation in operations:
+    # QTest's scalar commands use address_space_{read,write}. physmem.c
+    # memory_access_size splits unaligned requests into naturally aligned
+    # chunks. The callback's region starts at GPUCC +0x100, so L is local +4.
+    # Each resulting width is rejected by MemoryRegionOps.valid (4 bytes only),
+    # before gpucc_{read,write}; those diagnostics use LOG_INVALID_MEM.
+    operations = (
+        (f"writeb {BASE + L:#x} 0", [("write", 4, 1)]),
+        (f"writew {BASE + L:#x} 0", [("write", 4, 2)]),
+        (f"writel {BASE + L + 1:#x} 0", [("write", 5, 1), ("write", 6, 2), ("write", 8, 1)]),
+        (f"readb {BASE + L:#x}", [("read", 4, 1)]),
+        (f"readw {BASE + L + 1:#x}", [("read", 5, 1), ("read", 6, 1)]),
+    )
+    for operation, chunks in operations:
+        old_log = rig.log_path.read_text(errors="replace")
         rig.command(operation)
         assert rig.snapshot() == before, operation
-    # MemoryRegionOps rejects these sizes/alignment before the device callback.
-    assert rig.diagnostic_count("Invalid ") - core_count >= len(operations)
+        new_log = rig.log_path.read_text(errors="replace")[len(old_log):]
+        matches = re.findall(r"Invalid (read|write) at addr 0x([0-9a-fA-F]+), "
+                             r"size ([0-9]+), region '([^']+)', reason: ([^\n]+)", new_log)
+        actual = [(kind, int(address, 16), int(size), region, reason)
+                  for kind, address, size, region, reason in matches]
+        expected = [(kind, address, size, "gpucc-100", "invalid size (min:4 max:4)")
+                    for kind, address, size in chunks]
+        assert actual == expected, (operation, actual, expected, new_log)
 
 
 def read_only_feedback_cannot_be_forged_by_guest_writes(rig):

@@ -12,7 +12,7 @@
 
 ## 本次整板推进与统一验收（2026-11-23）
 
-GPUCC 后续增量已加入源码：显式启用的 PLL1、GMU root、15 路 branch、5 路 reset 和真实 GCC Clock 接线；[契约与边界](tb371fc/docs/gpucc-sm8250.md)。当前计划相应扩展为 **66 个 gate：62 个组件/解析检查和 4 次 Linux 启动**。新增 GPUCC 门禁要求 30 项检查、2 次完成迁移和 2 次配置拒绝；它必须取得自己的实际运行结果，下面的 `a813` 冻结回执只证明该旧提交。
+GPUCC 后续增量已加入源码：显式启用的 PLL1、GMU root、15 路 branch、5 路 reset 和真实 GCC Clock 接线；[契约与边界](tb371fc/docs/gpucc-sm8250.md)。当前计划相应扩展为 **66 个 gate：62 个组件/解析检查和 4 次 Linux 启动**。新增 GPUCC 门禁要求 30 项检查、2 次完成迁移和 2 次配置拒绝。首次 `db3ac11` 的组件结果为 61/62；唯一失败是测试遗漏 `invalid_mem` 日志类别，Linux 未运行。修正测试后，原样 CI 二进制已实际完成 **30/30、2 次完成迁移和 2 次配置拒绝**，见[失败与同二进制修正对照](tb371fc/evidence/wholeboard-20261123-a47/gpucc-fixture-fix.json)。完整 66 项回归仍需新提交自己的结果，下面的 `a813` 冻结回执只证明该旧提交。
 
 当前统一分支为 `tb371fc-verified-wholeboard-20261123-a47`。`a813` 冻结检查点的公开计划是 **65 个 gate：61 个组件/解析检查和 4 次 Linux 启动**，另有独立 A77 / 共享 UFS PCI job。新增内容包括 GPU CX/GX、SMEM 交接及生产驱动观察器、AOP 参考对端、Kona CPUSS 分支和两个 USB PIPE 时钟 mux。统一提交 `a8136d1b1871d5a90aced67cc269dfb312be5c65` 已实际通过 **61/61 组件 + 4/4 Linux，以及独立 A77/UFS job**；见[本次 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45179839601)及[按源码和二进制冻结的回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-a813.json)。
 
