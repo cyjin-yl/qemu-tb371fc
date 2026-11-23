@@ -22,6 +22,7 @@ struct QcomSm8250GccState {
     Clock *xo;
     Clock *sleep;
     Clock *audio;
+    Clock *test;
     Clock *external[GCC_EXTERNAL_PARENTS];
     Clock *clocks[GCC_CLOCKS];
     qemu_irq reset_out[GCC_RESETS];

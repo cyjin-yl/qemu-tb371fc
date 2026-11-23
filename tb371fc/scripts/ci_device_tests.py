@@ -107,11 +107,24 @@ def plan(args, runtime):
                output="--work-dir", verdict="success", count=5)
         device("gcc-cpuss-branch", "test_gcc_cpuss.py",
                output="--out", result="file", count=11,
-               expected={"expected_checks": 11, "vmstate_version": 2,
+               expected={"expected_checks": 11, "vmstate_version": 3,
                          "external_parent_inputs": 83,
                          "guest_cpu_executed": False,
                          "native_kernel_probe_observed": False},
                expected_lengths={"migrations": 2})
+        device("gcc-usb-pipe-mux", "test_gcc_usb_mux.py",
+               output="--out", result="file", count=15,
+               expected={"expected_checks": 15, "vmstate_version": 3,
+                         "external_parent_inputs": 83,
+                         "expected_completed_migrations": 1,
+                         "expected_rejected_migrations": 1,
+                         "completed_migrations": 1,
+                         "rejected_migration_attempts": 1,
+                         "binary_unchanged": True,
+                         "guest_cpu_executed": False,
+                         "usb_phy_emulated": False,
+                         "native_kernel_probe_observed": False},
+               expected_lengths={"migrations": 1, "rejected_migrations": 1})
         device("geni-clock-reset", "test_geni_clock_reset.py",
                output="--work-dir", verdict="success", count=6)
         device("geni-clock-migration", "test_geni_clock_reset.py",
