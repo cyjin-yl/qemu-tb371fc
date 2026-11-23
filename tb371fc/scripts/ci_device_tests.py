@@ -180,6 +180,12 @@ def plan(args, runtime):
                expected={"all_passed": True, "expected_checks": 10,
                          "output_interception_installed": False},
                expected_lengths={"migrations": 1})
+        device("gpu-gdsc", "test_gdsc.py",
+               output="--out", result="file", count=29,
+               expected={"all_passed": True, "success": True,
+                         "expected_checks": 29, "migration_expected_checks": 10,
+                         "socket_directories_retained": True},
+               expected_lengths={"migrations": 10})
         device("dcc-operations", "test_dcc_ops.py",
                output="--out", result="file", count=16)
         device("ufs-register-dma", "test_ufs_sm8250.py",

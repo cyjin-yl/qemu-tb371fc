@@ -50,6 +50,7 @@
 #include "hw/misc/qcom-tcsr-mutex.h"
 #include "hw/misc/qcom-aop-msgram.h"
 #include "hw/misc/qcom-refgen.h"
+#include "hw/misc/qcom-gdsc.h"
 #include "hw/misc/qcom-spmi-pmic-arb.h"
 #include "hw/gpio/qcom-tb371fc-tlmm.h"
 #include "hw/misc/qcom-sm8250-rpmh.h"
@@ -155,6 +156,7 @@ struct TB371FCMachineState {
     Clock *board_xo;
     char *rpmh_profile, *rpmh_cmd_db;
     char *spmi_profile;
+    char *gdsc_profile;
     bool rpmh_boot_configured;
     MemoryRegion qtest_dma_alias;
     bool enable_ufs;
@@ -1009,6 +1011,38 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
                         qdev_get_gpio_in(s->gic, 208));
 }
 
+static void tb371fc_create_gpu_gdsc(TB371FCMachineState *s)
+{
+    DeviceState *cx = qdev_new(TYPE_QCOM_GDSC);
+    DeviceState *gx = qdev_new(TYPE_QCOM_GDSC);
+    bool enabled = strcmp(s->gdsc_profile, "none") != 0;
+    bool reference_on = !strcmp(s->gdsc_profile, "reference-on");
+
+    /*
+     * Keep configuration markers present in every profile, so a migration
+     * cannot silently add or remove the mapped power-control devices.
+     * All addresses below are captured GPU windows, outside the GCC map.
+     */
+    object_property_add_child(OBJECT(s), "gpu-cx-gdsc", OBJECT(cx));
+    object_property_add_child(OBJECT(s), "gpu-gx-gdsc", OBJECT(gx));
+    qdev_prop_set_bit(cx, "enabled-reference", enabled);
+    qdev_prop_set_bit(gx, "enabled-reference", enabled);
+    qdev_prop_set_bit(cx, "reference-on", reference_on);
+    qdev_prop_set_bit(gx, "reference-on", reference_on);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(cx), &error_fatal);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(gx), &error_fatal);
+    if (!enabled) {
+        return;
+    }
+
+    sysbus_mmio_map(SYS_BUS_DEVICE(cx), QCOM_GDSC_CONTROL, 0x03d9106c);
+    sysbus_mmio_map(SYS_BUS_DEVICE(cx), QCOM_GDSC_HW_STATUS, 0x03d91540);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gx), QCOM_GDSC_CONTROL, 0x03d9100c);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gx), QCOM_GDSC_DOMAIN_CONTROL, 0x03d91508);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gx), QCOM_GDSC_SW_RESET, 0x03d91008);
+    /* GPU/GMU consumers and external voters have no invented peer here. */
+}
+
 static void tb371fc_create_pdc(TB371FCMachineState *s)
 {
     static const struct {
@@ -1184,6 +1218,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_mmio_timer(s);
     tb371fc_create_watchdog(s);
     tb371fc_create_boot_resources(s);
+    tb371fc_create_gpu_gdsc(s);
     tb371fc_create_smmus(s);
     if (s->enable_ufs) {
         s->ufs = qdev_new(TYPE_QCOM_SM8250_UFS);
@@ -1342,6 +1377,29 @@ static void tb371fc_set_kernel_load_base(Object *obj, Visitor *v,
 }
 
 
+static char *tb371fc_get_gdsc_profile(Object *obj, Error **errp)
+{
+    return g_strdup(TB371FC_MACHINE(obj)->gdsc_profile);
+}
+
+static void tb371fc_set_gdsc_profile(Object *obj, const char *value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "gdsc-profile is fixed after machine creation");
+        return;
+    }
+    if (strcmp(value, "none") && strcmp(value, "reference-off") &&
+        strcmp(value, "reference-on")) {
+        error_setg(errp, "gdsc-profile must be none, reference-off, or "
+                         "reference-on");
+        return;
+    }
+    g_free(s->gdsc_profile);
+    s->gdsc_profile = g_strdup(value);
+}
+
 static char *tb371fc_get_spmi_profile(Object *obj, Error **errp)
 {
     return g_strdup(TB371FC_MACHINE(obj)->spmi_profile);
@@ -1425,6 +1483,7 @@ static void tb371fc_instance_init(Object *obj)
 
     s->rpmh_profile = g_strdup("off");
     s->spmi_profile = g_strdup("off");
+    s->gdsc_profile = g_strdup("none");
     s->rpmh_boot_configured = true;
     s->counter_exact = true;
     s->gcc_boot_configured = true;
@@ -1438,6 +1497,7 @@ static void tb371fc_instance_finalize(Object *obj)
     g_free(s->rpmh_profile);
     g_free(s->rpmh_cmd_db);
     g_free(s->spmi_profile);
+    g_free(s->gdsc_profile);
 }
 
 static void tb371fc_class_init(ObjectClass *oc, const void *data)
@@ -1459,6 +1519,11 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
     mc->possible_cpu_arch_ids = tb371fc_possible_cpu_arch_ids;
     mc->cpu_index_to_instance_props = tb371fc_cpu_index_to_props;
 
+    object_class_property_add_str(oc, "gdsc-profile",
+        tb371fc_get_gdsc_profile, tb371fc_set_gdsc_profile);
+    object_class_property_set_description(oc, "gdsc-profile",
+        "none (default), reference-off or reference-on GPU CX/GX digital "
+        "power controls; no GPU execution or measured silicon reset state");
     object_class_property_add_str(oc, "spmi-profile",
         tb371fc_get_spmi_profile, tb371fc_set_spmi_profile);
     object_class_property_set_description(oc, "spmi-profile",
