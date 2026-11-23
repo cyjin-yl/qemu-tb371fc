@@ -52,6 +52,7 @@
 #include "hw/misc/qcom-ipcc.h"
 #include "hw/misc/qcom-qsee-irq.h"
 #include "hw/misc/qcom-tcsr-mutex.h"
+#include "hw/misc/qcom-tsens24xx.h"
 #include "hw/misc/qcom-smem-handoff.h"
 #include "hw/misc/qcom-aop-msgram.h"
 #include "hw/misc/qcom-aop-qmp.h"
@@ -1375,6 +1376,37 @@ static void tb371fc_create_mpm2_sleep_counter(TB371FCMachineState *s)
     sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, 0x0c221000);
 }
 
+static void tb371fc_create_tsens(TB371FCMachineState *s)
+{
+    static const struct {
+        hwaddr srot, tm;
+        unsigned upper_lower_spi, critical_spi;
+    } controllers[] = {
+        { 0x0c222000, 0x0c263000, 506, 508 },
+        { 0x0c223000, 0x0c265000, 507, 509 },
+    };
+
+    for (unsigned i = 0; i < ARRAY_SIZE(controllers); i++) {
+        DeviceState *dev = qdev_new(TYPE_QCOM_TSENS24XX);
+        g_autofree char *name = g_strdup_printf("tsens%u", i);
+
+        object_property_add_child(OBJECT(s), name, OBJECT(dev));
+        qdev_prop_set_uint32(dev, "controller-id", i);
+        sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+        /*
+         * Actual DT lists a four-byte SROT resource, but the pinned driver
+         * and observed abort establish a read at +4 after page-rounded
+         * ioremap. Map only that control word; preserve the original DT.
+         */
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, controllers[i].srot + 4);
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 1, controllers[i].tm);
+        sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0,
+            qdev_get_gpio_in(s->gic, controllers[i].upper_lower_spi));
+        sysbus_connect_irq(SYS_BUS_DEVICE(dev), 1,
+            qdev_get_gpio_in(s->gic, controllers[i].critical_spi));
+    }
+}
+
 static void tb371fc_create_mmio_timer(TB371FCMachineState *s)
 {
     DeviceState *dev = qdev_new(TYPE_ARM_ARCH_TIMER_MMIO);
@@ -1478,6 +1510,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_spmi(s);
     tb371fc_create_mmio_timer(s);
     tb371fc_create_mpm2_sleep_counter(s);
+    tb371fc_create_tsens(s);
     tb371fc_create_watchdog(s);
     tb371fc_create_boot_resources(s);
     tb371fc_create_smmus(s);
