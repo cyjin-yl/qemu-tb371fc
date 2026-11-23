@@ -1,5 +1,9 @@
 # QEMU TB371FC
 
+## SCS/NVIC 继续实现：等待本变体的实际验证
+
+本分支新增显式 `local-alias-dtcm32k-scs-reference`，只将已核对的 14 个架构窗口转发给 QEMU 已实例化的 NVIC，并保留其余 PPB 的错误保护。[设计与边界](tb371fc/docs/aop-scs-reference.md)及 18 项新的公开架构检查已加入；原三个配置、11 项 XML 回归和原 14 项入口检查继续保留。源码发布本身不代表这些新增检查已通过。实际 NVIC 状态检查也不证明 AOP 固件完整启动或原生复位等价。
+
 [![AOP synthetic preflight](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/aop-entry-reference.yml/badge.svg?branch=tb371fc-aop-reference-ci-20261123-1148)](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/aop-entry-reference.yml)
 
 ## AOP 独立诊断参考：公开合成检查已通过

@@ -33,6 +33,11 @@ OBJECT_DECLARE_SIMPLE_TYPE(AOPReferenceState, AOP_ENTRY_REFERENCE)
 #define AOP_REF_PPB_BASE 0xe0000000
 #define AOP_REF_PPB_SIZE 0x00100000
 #define AOP_REF_CLOCK_HZ 1000000
+#define AOP_REF_SCS_BASE 0xe000e000
+#define AOP_REF_SCS_PROFILE "local-alias-dtcm32k-scs-reference"
+#define AOP_REF_SCS_READ 1
+#define AOP_REF_SCS_WRITE 2
+#define AOP_REF_SCS_WINDOWS 14
 
 typedef struct AOPReferenceRegion {
     hwaddr base;
@@ -55,6 +60,43 @@ typedef struct AOPReferenceGuard {
     hwaddr base;
 } AOPReferenceGuard;
 
+typedef struct AOPReferenceSCSRegister {
+    const char *name;
+    uint16_t offset;
+    uint16_t size;
+    uint8_t access;
+    bool subword;
+} AOPReferenceSCSRegister;
+
+/*
+ * A deliberately small Cortex-M3 architectural window set. These accesses
+ * are forwarded to QEMU's real NVIC; this table supplies no register values.
+ * IRQ count, priority bits and the clock remain reference assumptions.
+ * Unlisted SCS, SysTick, MPU, debug and other PPB addresses stay guarded.
+ */
+static const AOPReferenceSCSRegister scs_registers[AOP_REF_SCS_WINDOWS] = {
+    { "ictr",  0x004,  4, AOP_REF_SCS_READ, false },
+    { "iser0", 0x100,  4, AOP_REF_SCS_READ | AOP_REF_SCS_WRITE, false },
+    { "icer0", 0x180,  4, AOP_REF_SCS_READ | AOP_REF_SCS_WRITE, false },
+    { "ispr0", 0x200,  4, AOP_REF_SCS_READ | AOP_REF_SCS_WRITE, false },
+    { "icpr0", 0x280,  4, AOP_REF_SCS_READ | AOP_REF_SCS_WRITE, false },
+    { "iabr0", 0x300,  4, AOP_REF_SCS_READ, false },
+    { "ipr",   0x400, 32, AOP_REF_SCS_READ | AOP_REF_SCS_WRITE, true },
+    { "cpuid", 0xd00,  4, AOP_REF_SCS_READ, false },
+    { "icsr",  0xd04,  4, AOP_REF_SCS_READ | AOP_REF_SCS_WRITE, false },
+    { "vtor",  0xd08,  4, AOP_REF_SCS_READ | AOP_REF_SCS_WRITE, false },
+    { "aircr", 0xd0c,  4, AOP_REF_SCS_READ | AOP_REF_SCS_WRITE, false },
+    { "ccr",   0xd14,  4, AOP_REF_SCS_READ | AOP_REF_SCS_WRITE, false },
+    { "shpr",  0xd18, 12, AOP_REF_SCS_READ | AOP_REF_SCS_WRITE, true },
+    { "shcsr", 0xd24,  4, AOP_REF_SCS_READ | AOP_REF_SCS_WRITE, false },
+};
+
+typedef struct AOPReferenceSCSWindow {
+    MemoryRegion mr;
+    AOPReferenceState *machine;
+    const AOPReferenceSCSRegister *reg;
+} AOPReferenceSCSWindow;
+
 struct AOPReferenceState {
     MachineState parent_obj;
     ARMv7MState armv7m;
@@ -65,6 +107,13 @@ struct AOPReferenceState {
     AOPReferenceRegion regions[AOP_REF_REGIONS];
     AOPReferenceGuard unmapped;
     AOPReferenceGuard ppb;
+    AOPReferenceSCSWindow scs_windows[AOP_REF_SCS_WINDOWS];
+    MemoryRegion *nvic_sysregs;
+    uint64_t scs_reads;
+    uint64_t scs_writes;
+    uint64_t scs_failed_reads;
+    uint64_t scs_failed_writes;
+    bool scs_reference;
     uint64_t unsupported_reads;
     uint64_t unsupported_writes;
     uint64_t last_unsupported_address;
@@ -113,6 +162,146 @@ static const MemoryRegionOps aop_ref_guard_ops = {
     },
 };
 
+static bool aop_ref_scs_access_valid(AOPReferenceSCSWindow *window,
+                                     hwaddr addr, unsigned size, bool write)
+{
+    const AOPReferenceSCSRegister *r = window->reg;
+    unsigned access = write ? AOP_REF_SCS_WRITE : AOP_REF_SCS_READ;
+
+    if (!(r->access & access) || !(size == 1 || size == 2 || size == 4) ||
+        addr >= r->size || size > r->size - addr || (addr & (size - 1))) {
+        return false;
+    }
+    return r->subword || size == 4;
+}
+
+static MemTxResult aop_ref_scs_read(void *opaque, hwaddr addr,
+                                  uint64_t *value, unsigned size,
+                                  MemTxAttrs attrs)
+{
+    AOPReferenceSCSWindow *window = opaque;
+    AOPReferenceState *s = window->machine;
+    MemTxResult result;
+
+    if (!aop_ref_scs_access_valid(window, addr, size, false)) {
+        s->scs_failed_reads++;
+        return aop_ref_bad_read(&s->ppb,
+                                AOP_REF_SCS_BASE - AOP_REF_PPB_BASE +
+                                window->reg->offset + addr,
+                                value, size, attrs);
+    }
+    /*
+     * Dispatch directly to the realized NVIC MR, never through the
+     * ARMv7M container/PPB overlay. Preserve the CPU's privilege attrs.
+     */
+    result = memory_region_dispatch_read(s->nvic_sysregs,
+                                         window->reg->offset + addr, value,
+                                         size_memop(size) | MO_LE, attrs);
+    if (result == MEMTX_OK) {
+        s->scs_reads++;
+    } else {
+        s->scs_failed_reads++;
+    }
+    return result;
+}
+
+static MemTxResult aop_ref_scs_write(void *opaque, hwaddr addr,
+                                   uint64_t value, unsigned size,
+                                   MemTxAttrs attrs)
+{
+    AOPReferenceSCSWindow *window = opaque;
+    AOPReferenceState *s = window->machine;
+    MemTxResult result;
+
+    if (!aop_ref_scs_access_valid(window, addr, size, true) ||
+        /*
+         * Cortex-M3 reserves AIRCR[1:0] for Debug use. QEMU logs their
+         * UNPREDICTABLE use but otherwise returns success; do not treat
+         * that as a supported operation in this diagnostic profile.
+         * A wrong VECTKEY is instead ignored by the real NVIC.
+         */
+        (window->reg->offset == 0xd0c && (value >> 16) == 0x5fa &&
+         (value & 3))) {
+        s->scs_failed_writes++;
+        return aop_ref_bad_write(&s->ppb,
+                                 AOP_REF_SCS_BASE - AOP_REF_PPB_BASE +
+                                 window->reg->offset + addr,
+                                 value, size, attrs);
+    }
+    result = memory_region_dispatch_write(s->nvic_sysregs,
+                                          window->reg->offset + addr, value,
+                                          size_memop(size) | MO_LE, attrs);
+    if (result == MEMTX_OK) {
+        s->scs_writes++;
+    } else {
+        s->scs_failed_writes++;
+    }
+    return result;
+}
+
+/* Keep original transaction widths intact so invalid accesses are rejected. */
+static const MemoryRegionOps aop_ref_scs_ops = {
+    .read_with_attrs = aop_ref_scs_read,
+    .write_with_attrs = aop_ref_scs_write,
+    .endianness = DEVICE_LITTLE_ENDIAN,
+    .valid = {
+        .min_access_size = 1,
+        .max_access_size = 8,
+        .unaligned = true,
+    },
+    .impl = {
+        .min_access_size = 1,
+        .max_access_size = 8,
+        .unaligned = true,
+    },
+};
+
+static char *aop_ref_get_scs_windows(Object *obj, Error **errp)
+{
+    AOPReferenceState *s = AOP_ENTRY_REFERENCE(obj);
+    GString *result = g_string_new("[");
+    unsigned i;
+
+    if (s->scs_reference) {
+        for (i = 0; i < AOP_REF_SCS_WINDOWS; i++) {
+            const AOPReferenceSCSRegister *r = &scs_registers[i];
+
+            g_string_append_printf(
+                result,
+                "%s{\"name\":\"%s\",\"base\":%u,\"size\":%u,"
+                "\"read\":%s,\"write\":%s,\"subword\":%s}",
+                i ? "," : "", r->name, AOP_REF_SCS_BASE + r->offset, r->size,
+                (r->access & AOP_REF_SCS_READ) ? "true" : "false",
+                (r->access & AOP_REF_SCS_WRITE) ? "true" : "false",
+                r->subword ? "true" : "false");
+        }
+    }
+    g_string_append_c(result, ']');
+    return g_string_free(result, false);
+}
+
+static char *aop_ref_get_scs_state(Object *obj, Error **errp)
+{
+    AOPReferenceState *s = AOP_ENTRY_REFERENCE(obj);
+
+    if (!s->initialized || !bql_locked() ||
+        !CPU(s->armv7m.cpu)->stopped || runstate_is_running()) {
+        error_setg(errp, "SCS observation requires initialized/stopped CPU/BQL");
+        return NULL;
+    }
+    return g_strdup_printf(
+        "{\"enabled\":%s,\"external_irqs\":%u,\"priority_bits\":%u,"
+        "\"reference_clock_hz\":%u,\"successful_reads\":%" G_GUINT64_FORMAT
+        ",\"successful_writes\":%" G_GUINT64_FORMAT
+        ",\"failed_reads\":%" G_GUINT64_FORMAT
+        ",\"failed_writes\":%" G_GUINT64_FORMAT "}",
+        s->scs_reference ? "true" : "false",
+        s->armv7m.nvic.num_irq - NVIC_INTERNAL_VECTORS,
+        s->armv7m.nvic.num_prio_bits, AOP_REF_CLOCK_HZ,
+        s->scs_reads, s->scs_writes,
+        s->scs_failed_reads, s->scs_failed_writes);
+}
+
 static char *aop_ref_get_profile(Object *obj, Error **errp)
 {
     return g_strdup(AOP_ENTRY_REFERENCE(obj)->profile);
@@ -128,7 +317,8 @@ static void aop_ref_set_profile(Object *obj, const char *value, Error **errp)
     }
     if (strcmp(value, "elf-physical-entry") &&
         strcmp(value, "local-alias-vector") &&
-        strcmp(value, "local-alias-dtcm32k-reference")) {
+        strcmp(value, "local-alias-dtcm32k-reference") &&
+        strcmp(value, AOP_REF_SCS_PROFILE)) {
         error_setg(errp, "Unknown AOP reference profile '%s'", value);
         return;
     }
@@ -255,7 +445,9 @@ static void aop_ref_init(MachineState *machine)
     }
     memcpy(s->regions, captured_regions, sizeof(s->regions));
     s->local_aliases = strcmp(s->profile, "elf-physical-entry") != 0;
-    if (!strcmp(s->profile, "local-alias-dtcm32k-reference")) {
+    s->scs_reference = !strcmp(s->profile, AOP_REF_SCS_PROFILE);
+    if (!strcmp(s->profile, "local-alias-dtcm32k-reference") ||
+        s->scs_reference) {
         s->regions[1].size = 0x8000;
     }
 
@@ -302,6 +494,10 @@ static void aop_ref_init(MachineState *machine)
     armv7m = DEVICE(&s->armv7m);
     qdev_prop_set_string(armv7m, "cpu-type", ARM_CPU_TYPE_NAME("cortex-m3"));
     qdev_prop_set_uint32(armv7m, "num-irq", 32);
+    if (s->scs_reference) {
+        /* Explicit reference configuration, not an observed Kona priority. */
+        qdev_prop_set_uint8(DEVICE(&s->armv7m.nvic), "num-prio-bits", 8);
+    }
     qdev_prop_set_bit(armv7m, "enable-bitband", false);
     /*
      * Avoid an implicit reset read from an unmapped vector address.
@@ -317,8 +513,9 @@ static void aop_ref_init(MachineState *machine)
 
     /*
      * ARMv7M normally implements SCS/SysTick and privileged PPB RAZ/WI.
-     * This diagnostic has no verified AOP PPB model; every such access must
-     * be unsupported, even when an upstream ARMv7M device could answer it.
+     * The original three profiles have no verified AOP PPB model, so their
+     * entire PPB stays unsupported. Only the separate SCS reference profile
+     * adds explicit architectural children inside this guard below.
      */
     s->ppb.machine = s;
     s->ppb.base = AOP_REF_PPB_BASE;
@@ -326,6 +523,29 @@ static void aop_ref_init(MachineState *machine)
                           "aop-ref-unsupported-ppb", AOP_REF_PPB_SIZE);
     memory_region_add_subregion_overlap(&s->armv7m.container, AOP_REF_PPB_BASE,
                                         &s->ppb.mr, INT_MAX);
+
+    if (s->scs_reference) {
+        s->nvic_sysregs = sysbus_mmio_get_region(SYS_BUS_DEVICE(&s->armv7m.nvic),
+                                                 0);
+        for (i = 0; i < AOP_REF_SCS_WINDOWS; i++) {
+            AOPReferenceSCSWindow *window = &s->scs_windows[i];
+            const AOPReferenceSCSRegister *r = &scs_registers[i];
+            g_autofree char *name = g_strdup_printf("aop-ref-scs.%s", r->name);
+
+            window->machine = s;
+            window->reg = r;
+            memory_region_init_io(&window->mr, OBJECT(s), &aop_ref_scs_ops,
+                                  window, name, r->size);
+            /*
+             * Only these exact children override the surrounding guard.
+             * Dispatch targets the distinct original NVIC MR, so this does
+             * not recurse through the guarded ARMv7M address space.
+             */
+            memory_region_add_subregion(&s->ppb.mr,
+                                        AOP_REF_SCS_BASE - AOP_REF_PPB_BASE +
+                                        r->offset, &window->mr);
+        }
+    }
 
     assert(!CPU(s->armv7m.cpu)->ignore_memory_transaction_failures);
     assert(CPU_GET_CLASS(s->armv7m.cpu)->gdb_stop_before_watchpoint);
@@ -361,7 +581,7 @@ static void aop_ref_class_init(ObjectClass *oc, const void *data)
         NULL,
     };
 
-    mc->desc = "Private AOP entry reference (Cortex-M3; no peripheral responses)";
+    mc->desc = "Private AOP entry reference (Cortex-M3; guarded MMIO)";
     mc->init = aop_ref_init;
     mc->default_cpu_type = ARM_CPU_TYPE_NAME("cortex-m3");
     mc->valid_cpu_types = valid_cpus;
@@ -375,6 +595,10 @@ static void aop_ref_class_init(ObjectClass *oc, const void *data)
                                    aop_ref_padding_pristine, NULL);
     object_class_property_add_str(oc, "watchpoint-hits",
                                   aop_ref_get_watchpoint_hits, NULL);
+    object_class_property_add_str(oc, "scs-reference-windows",
+                                  aop_ref_get_scs_windows, NULL);
+    object_class_property_add_str(oc, "scs-reference-state",
+                                  aop_ref_get_scs_state, NULL);
 }
 
 static const TypeInfo aop_ref_info = {
