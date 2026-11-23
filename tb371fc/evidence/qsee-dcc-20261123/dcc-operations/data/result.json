@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "expected_checks": 16,
+  "qemu_sha256": "51fe61d35213a6602a8eaa865faba04bc85f88df341947ca8a2e6300a8ab5be6",
+  "test_sha256": "b2f019564bf0ebba1a4d14d31b751759a02b7f231d6bc91df83e02a6d4d1cc26",
+  "helper_sha256": "6d3dd521c59b8fae80b13f5fb312bac4b83b1952f70f127f6f8a7f355b461708",
+  "checks": [
+    {
+      "name": "write_only_waits_for_deadline",
+      "passed": true
+    },
+    {
+      "name": "write_literal_is_not_an_opcode",
+      "passed": true
+    },
+    {
+      "name": "ordered_writes_and_captures",
+      "passed": true
+    },
+    {
+      "name": "write_offset_and_bus_selector",
+      "passed": true
+    },
+    {
+      "name": "rmw_captures_old_then_new",
+      "passed": true
+    },
+    {
+      "name": "rmw_masks_zero_all_and_outside_value_bits",
+      "passed": true
+    },
+    {
+      "name": "loop_one_and_max_driver_iterations",
+      "passed": true
+    },
+    {
+      "name": "loop_reexecutes_bus_operations",
+      "passed": true
+    },
+    {
+      "name": "sequential_loops_use_their_own_body",
+      "passed": true
+    },
+    {
+      "name": "rmw_inside_loop_uses_each_new_read",
+      "passed": true
+    },
+    {
+      "name": "truncated_payloads_have_no_earlier_effects",
+      "passed": true
+    },
+    {
+      "name": "invalid_loop_targets_and_nesting_are_rejected",
+      "passed": true
+    },
+    {
+      "name": "rmw_requires_exactly_one_adjacent_read",
+      "passed": true
+    },
+    {
+      "name": "expanded_capture_overflow_is_preflighted",
+      "passed": true
+    },
+    {
+      "name": "self_modifying_write_is_not_silently_snapshotted",
+      "passed": true
+    },
+    {
+      "name": "migration_executes_pending_program_once",
+      "passed": true,
+      "source": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 50,
+        "total-time": 72,
+        "ram": {
+          "total": 134246400,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 311405,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 249.66197183098592,
+          "transferred": 2215750,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32771,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 16384,
+          "normal": 4
+        }
+      },
+      "destination": {
+        "status": "completed"
+      },
+      "remaining_ns": 600
+    }
+  ],
+  "passed": true,
+  "scope": "Reference canonical DCC programs; actual memory/IO and migration. No native identity or physical bus timing claim.",
+  "elapsed_seconds": 1.215
+}

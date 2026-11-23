@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0-only
-"""Generate explicit SM8250 GCC descriptors from the pinned upstream driver.
+"""Generate SM8250 GCC descriptors with one audited downstream supplement.
 
 The parser deliberately accepts one audited source revision only. It extracts
 register facts, not arbitrary C. Run in the development container:
   python3 tb371fc/scripts/generate_gcc_sm8250.py /path/to/linux-6.12.114
+
+The fixed Kona supplement restores the documented SYS_NOC_CPUSS halt register
+and parent omitted by upstream's probe-only enable. Its primary source and
+hash are emitted in the manifest; other unknown parents remain unresolved.
 """
 import argparse
 import hashlib
@@ -122,6 +126,27 @@ def main():
             ext += 1
     if ext != 84 or len({d['id'] for d in clocks}) != 198:
         raise ValueError('unexpected external clock or duplicate binding')
+    # Assign the original external slots first: VMState v1 serializes all 84
+    # Clock inputs in this order. Slot 63 and its old QOM name remain present,
+    # but this branch's recovered internal parent determines its actual rate.
+    cpuss = next(d for d in clocks if d['id'] == 143)
+    if (cpuss['name'], cpuss['reg'], cpuss['enable_reg'],
+            cpuss['enable_mask'], cpuss['parent'], cpuss['external']) != (
+            'gcc_sys_noc_cpuss_ahb_clk', 0xffffffff, 0x52000, 1, -4, 63):
+        raise ValueError('unexpected upstream SYS_NOC_CPUSS description')
+    cpuss_parent = next(d for d in clocks if d['id'] == 18)
+    if cpuss_parent['name'] != 'gcc_cpuss_ahb_postdiv_clk_src':
+        raise ValueError('unexpected CPUSS parent binding')
+    cpuss.update(reg=0x48198, parent=18, halt_check='BRANCH_HALT_VOTED')
+    cpuss['source_supplement'] = {
+        'source_url': 'https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/'
+                      '94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/gcc-kona.c',
+        'sha256': 'ed208678508c983d0989f1f135fac898c5a9a91c14af1fa42cd7ea2f24cd14cd',
+        'line': 3265,
+        'fields': ['reg', 'parent', 'halt_check'],
+        'driver_flags': ['CLK_IS_CRITICAL', 'CLK_SET_RATE_PARENT'],
+        'legacy_external_slot': 63,
+    }
     resets = []
     body = required(r'static const struct qcom_reset_map gcc_sm8250_resets\[\] = \{([\s\S]*?)\n\};', source).group(1)
     for name, reg, more in re.findall(r'\[(\w+)\]\s*=\s*\{\s*(0x[0-9a-f]+)([^}]*)\}', body):
@@ -171,12 +196,14 @@ def main():
                     registers=[dict(offset=reg, write_mask=rw, status_mask=ro) for reg, (rw, ro) in sorted(regs.items())])
     (args.output_root / 'tb371fc/docs/gcc-sm8250-registers.json').write_text(json.dumps(manifest, indent=2) + '\n')
     out = ['/* SPDX-License-Identifier: GPL-2.0-only */',
-           '/* Generated register facts from Linux v6.12.114 gcc-sm8250.c.',
+           '/* Generated Linux v6.12.114 GCC facts and a pinned Kona supplement.',
            ' * Source copyright (c) 2020, The Linux Foundation. All rights reserved.',
            ' * Regenerate with tb371fc/scripts/generate_gcc_sm8250.py; see manifest.',
            ' */', 'static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {']
     for d in clocks:
         pm = ', '.join(str(v) for v in d['parent_map'])
+        if 'source_supplement' in d:
+            out.append('    /* Kona line 3265: halt/parent; legacy external slot 63 retained. */')
         out += [f'    /* upstream line {d["line"]} */',
                 f'    [{d["id"]}] = {{ "{d["name"]}", GCC_{d["kind"]},',
                 f'        0x{d["reg"]:x}, 0x{d["enable_reg"]:x}, 0x{d["enable_mask"]:x}, {d["parent"]},',

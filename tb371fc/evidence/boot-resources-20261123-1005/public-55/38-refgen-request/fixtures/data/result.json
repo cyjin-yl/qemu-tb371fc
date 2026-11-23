@@ -1,0 +1,533 @@
+{
+  "schema_version": 1,
+  "suite": "REFGEN software request and validity actual QTest",
+  "expected_checks": 16,
+  "passed": true,
+  "all_passed": true,
+  "success": true,
+  "qemu": "/work/boot-resources-root-1005/qemu-system-aarch64",
+  "qemu_sha256": "2173fa4da68f8f769c53942b056124c5621e4714652c7f572deacc9440ec09cf",
+  "test_sha256": "08754321c8bd6e361ea33f722bd0a4c813419e053618f4d4a48a9dd1bffaa1bf",
+  "machine": "tb371fc,ufs-enabled=off",
+  "qom_path": "/machine/refgen",
+  "output": "/tmp/tbci-xlugwfw8/38/data",
+  "checks": [
+    {
+      "test": "default_state_is_unknown_and_read_is_rejected",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": null,
+        "intercepted_output": "state-known"
+      },
+      "seconds": 0.0507,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/00"
+    },
+    {
+      "test": "explicit_disabled_reference_drives_known_high",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "state-known"
+      },
+      "seconds": 0.0513,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/01"
+    },
+    {
+      "test": "direct_zero_write_establishes_known_disabled_state",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": false,
+        "intercepted_output": "state-known"
+      },
+      "seconds": 0.0448,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/02"
+    },
+    {
+      "test": "direct_one_write_establishes_enabled_request",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": false,
+        "intercepted_output": "software-enable"
+      },
+      "seconds": 0.0459,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/03"
+    },
+    {
+      "test": "downstream_masked_read_modify_write_and_readback",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "software-enable"
+      },
+      "seconds": 0.0518,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/04"
+    },
+    {
+      "test": "unsupported_bits_do_not_partially_modify_valid_state",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "software-enable"
+      },
+      "seconds": 0.0578,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/05"
+    },
+    {
+      "test": "subword_and_unaligned_accesses_do_not_initialize_unknown",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": false,
+        "intercepted_output": "state-known"
+      },
+      "seconds": 0.0697,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/06"
+    },
+    {
+      "test": "reset_without_reference_discards_known_state",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": false,
+        "intercepted_output": "state-known"
+      },
+      "seconds": 0.0563,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/07"
+    },
+    {
+      "test": "reset_with_explicit_reference_restores_disabled_request",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "software-enable"
+      },
+      "seconds": 0.0519,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/08"
+    },
+    {
+      "test": "elapsed_time_does_not_invent_initialization_or_power_good",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": false,
+        "intercepted_output": "state-known"
+      },
+      "seconds": 0.068,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/09"
+    },
+    {
+      "test": "migration_unknown_state_and_validity",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "migration": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 27,
+          "total-time": 38,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 464.92105263157896,
+            "transferred": 2208375,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "before": {
+          "state": "unknown",
+          "known": false,
+          "enabled": false
+        },
+        "qtest_virtual_ns_at_transfer": 1,
+        "restored_reset_reference": false
+      },
+      "seconds": 0.1516,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/10"
+    },
+    {
+      "test": "migration_known_disabled_and_validity",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "migration": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 24,
+          "total-time": 34,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 519.6176470588235,
+            "transferred": 2208375,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "before": {
+          "state": "disabled-request",
+          "known": true,
+          "enabled": false
+        },
+        "qtest_virtual_ns_at_transfer": 1,
+        "restored_reset_reference": false
+      },
+      "seconds": 0.1325,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/11"
+    },
+    {
+      "test": "migration_enabled_request_without_boot_reference",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "migration": {
+          "status": "completed",
+          "setup-time": 1,
+          "downtime": 26,
+          "total-time": 37,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 490.75,
+            "transferred": 2208375,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "before": {
+          "state": "enabled-request",
+          "known": true,
+          "enabled": true
+        },
+        "qtest_virtual_ns_at_transfer": 1,
+        "restored_reset_reference": false
+      },
+      "seconds": 0.1561,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/12"
+    },
+    {
+      "test": "migration_enabled_request_with_boot_reference",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "migration": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 27,
+          "total-time": 38,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 464.92105263157896,
+            "transferred": 2208375,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "before": {
+          "state": "enabled-request",
+          "known": true,
+          "enabled": true
+        },
+        "qtest_virtual_ns_at_transfer": 1,
+        "restored_reset_reference": true
+      },
+      "seconds": 0.1507,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/13"
+    },
+    {
+      "test": "migration_unknown_profile_to_reference_profile_rejected",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_reference": false,
+        "destination_reference": true,
+        "source_transfer": {
+          "status": "failed",
+          "error-desc": "Failed to flush QEMUFile: Unable to write to socket: Broken pipe"
+        },
+        "destination_exit": 1,
+        "rejection_diagnostic": "boot-disabled-reference differs between source and destination",
+        "qtest_virtual_ns_at_transfer": 1
+      },
+      "seconds": 0.1311,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/14"
+    },
+    {
+      "test": "migration_reference_profile_to_unknown_profile_rejected",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_reference": true,
+        "destination_reference": false,
+        "source_transfer": {
+          "status": "failed",
+          "error-desc": "Failed to flush QEMUFile: Unable to write to socket: Broken pipe"
+        },
+        "destination_exit": 1,
+        "rejection_diagnostic": "boot-disabled-reference differs between source and destination",
+        "qtest_virtual_ns_at_transfer": 1
+      },
+      "seconds": 0.1268,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/15"
+    }
+  ],
+  "migrations": [
+    {
+      "test": "migration_unknown_state_and_validity",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "migration": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 27,
+          "total-time": 38,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 464.92105263157896,
+            "transferred": 2208375,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "before": {
+          "state": "unknown",
+          "known": false,
+          "enabled": false
+        },
+        "qtest_virtual_ns_at_transfer": 1,
+        "restored_reset_reference": false
+      },
+      "seconds": 0.1516,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/10"
+    },
+    {
+      "test": "migration_known_disabled_and_validity",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "migration": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 24,
+          "total-time": 34,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 519.6176470588235,
+            "transferred": 2208375,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "before": {
+          "state": "disabled-request",
+          "known": true,
+          "enabled": false
+        },
+        "qtest_virtual_ns_at_transfer": 1,
+        "restored_reset_reference": false
+      },
+      "seconds": 0.1325,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/11"
+    },
+    {
+      "test": "migration_enabled_request_without_boot_reference",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "migration": {
+          "status": "completed",
+          "setup-time": 1,
+          "downtime": 26,
+          "total-time": 37,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 490.75,
+            "transferred": 2208375,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "before": {
+          "state": "enabled-request",
+          "known": true,
+          "enabled": true
+        },
+        "qtest_virtual_ns_at_transfer": 1,
+        "restored_reset_reference": false
+      },
+      "seconds": 0.1561,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/12"
+    },
+    {
+      "test": "migration_enabled_request_with_boot_reference",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "migration": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 27,
+          "total-time": 38,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 464.92105263157896,
+            "transferred": 2208375,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "before": {
+          "state": "enabled-request",
+          "known": true,
+          "enabled": true
+        },
+        "qtest_virtual_ns_at_transfer": 1,
+        "restored_reset_reference": true
+      },
+      "seconds": 0.1507,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/13"
+    },
+    {
+      "test": "migration_unknown_profile_to_reference_profile_rejected",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_reference": false,
+        "destination_reference": true,
+        "source_transfer": {
+          "status": "failed",
+          "error-desc": "Failed to flush QEMUFile: Unable to write to socket: Broken pipe"
+        },
+        "destination_exit": 1,
+        "rejection_diagnostic": "boot-disabled-reference differs between source and destination",
+        "qtest_virtual_ns_at_transfer": 1
+      },
+      "seconds": 0.1311,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/14"
+    },
+    {
+      "test": "migration_reference_profile_to_unknown_profile_rejected",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_reference": true,
+        "destination_reference": false,
+        "source_transfer": {
+          "status": "failed",
+          "error-desc": "Failed to flush QEMUFile: Unable to write to socket: Broken pipe"
+        },
+        "destination_exit": 1,
+        "rejection_diagnostic": "boot-disabled-reference differs between source and destination",
+        "qtest_virtual_ns_at_transfer": 1
+      },
+      "seconds": 0.1268,
+      "directory": "/tmp/tbci-xlugwfw8/38/data/15"
+    }
+  ],
+  "migration_expected_checks": 6,
+  "socket_directories_retained": true,
+  "scope": "Kona CTRL5 bit 0; explicit unknown/default and disabled/reference; component migration with UFS disabled; no analog, voltage, power-good, or whole-board migration claim",
+  "completed_checks": 16,
+  "passed_checks": 16
+}

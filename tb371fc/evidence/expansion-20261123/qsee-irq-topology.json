@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-11-23T09:08:20.745251+00:00",
+  "private_dt_source": "/work/device-assets/live-android-20261123.dtb",
+  "node": "/soc/qcom,qsee_irq",
+  "compatible": "qcom,kona-qsee-irq",
+  "syscon_phandle": 132,
+  "syscon_node": "/soc/syscon@1880000",
+  "physical_base": "0x1880000",
+  "length": "0x10000",
+  "banks": [
+    {
+      "name": "sp_ipc0",
+      "spi": 348,
+      "status_offset": "0x6000",
+      "clear_offset": "0x6008",
+      "mask_offset": "0x601c",
+      "valid_bits": 4
+    },
+    {
+      "name": "sp_ipc1",
+      "spi": 349,
+      "status_offset": "0x8000",
+      "clear_offset": "0x8008",
+      "mask_offset": "0x801c",
+      "valid_bits": 4
+    }
+  ],
+  "fault": {
+    "run": "native-root-0903",
+    "function": "qsee_irq_probe+0x140/0x238",
+    "callee": "regmap_mmio_write32le+0xc",
+    "instruction": "b9000102",
+    "offset": "0x601c",
+    "value": "0xf",
+    "physical_address": "0x188601c",
+    "meaning": "probe masks all four notifications in bank0"
+  },
+  "source_url": "https://github.com/tem423/android_kernel_lenovo_tb371fc/blob/9d8abebf4ac4d45cf4cc11b5b6bc5e4483d10fd1/drivers/soc/qcom/qsee_ipc_irq.c",
+  "source_sha256": "0bc893aba2ec43d2ae6568c37e30ee7fa069148bd046f9a104aa77a38707acbf",
+  "semantics_from_driver": [
+    "mask bit 1 disables notification; clearing mask bit enables it",
+    "status is read then individual enabled pending bits are cleared by writes to clear register",
+    "both sp_ipc0 and sp_ipc1 implement bits0..3",
+    "edge-type arrays in driver software do not establish a hardware edge-config register"
+  ],
+  "proposed_model_choices_not_hardware_samples": [
+    "reset mask=0xf and pending=0 per bank",
+    "masked notification events retain pending state",
+    "GIC level output is pending & ~mask",
+    "GPIO low-to-high is a reference event adapter; not a sampled secure-firmware waveform",
+    "reset preserves external input levels",
+    "clear is write-only; unestablished readback is rejected",
+    "unknown/register/width/reserved-bit accesses are rejected; no TEE/SCM success is fabricated"
+  ],
+  "state": "implementation draft; syntax checks are not runtime proof",
+  "official_source_url": "https://android.googlesource.com/kernel/msm/+/1a4b384857a9b5ec3dceebc060096f7cf88f82ec/drivers/soc/qcom/qsee_ipc_irq.c",
+  "official_source_blob": "0e397261488bf360e4560b84f23894e8b768b541",
+  "source_url_role": "fixed third-party source mirror; not verified exact OEM source",
+  "selected_dt": {
+    "/soc/qcom,qsee_irq": {
+      "compatible": "qcom,kona-qsee-irq",
+      "syscon": "84",
+      "interrupts": "0 15c 4 0 15d 4",
+      "interrupt-names": "sp_ipc0 sp_ipc1",
+      "#interrupt-cells": "3"
+    },
+    "/soc/qcom,qsee_irq_bridge": {
+      "compatible": "qcom,qsee-ipc-irq-bridge"
+    },
+    "/soc/qcom,smem": {
+      "compatible": "qcom,smem",
+      "memory-region": "82",
+      "hwlocks": "83 3"
+    }
+  },
+  "selected_syscon": {
+    "/soc/hwlock": {
+      "compatible": {
+        "base64": "cWNvbSx0Y3NyLW11dGV4AA==",
+        "sha256": "ab6018c187c848422aecbc55a51d710c88999df4c785a3945cdd597197191352",
+        "size": 16,
+        "strings": [
+          "qcom,tcsr-mutex"
+        ]
+      },
+      "phandle": {
+        "base64": "AAAAgw==",
+        "be32": [
+          131
+        ],
+        "sha256": "89aed9b889b07e48b80a60e7dc62ab68bda5428ccaec24f53d3fbdbe627ffe7a",
+        "size": 4
+      }
+    },
+    "/soc/syscon@1880000": {
+      "compatible": {
+        "base64": "c3lzY29uAA==",
+        "sha256": "c23b0b2e2a46f4d60c116ce33985d51c1b4ba87e0a9a5c58ac87a5729d02c081",
+        "size": 7,
+        "strings": [
+          "syscon"
+        ]
+      },
+      "phandle": {
+        "base64": "AAAAhA==",
+        "be32": [
+          132
+        ],
+        "sha256": "3b7b2feddfcccfcd2e7f521fcb297f9da84c56eb78018d49ac4d72d6bb802391",
+        "size": 4
+      },
+      "reg": {
+        "base64": "AYgAAAABAAA=",
+        "be32": [
+          25690112,
+          65536
+        ],
+        "sha256": "6d2f922e40f3f3a5e8fb9b6eec2f5b4893d16a0d1c54f12ee496020655d4a500",
+        "size": 8
+      }
+    }
+  },
+  "model_mmio": [
+    {
+      "index": 0,
+      "base": "0x1886000",
+      "length": "0x20"
+    },
+    {
+      "index": 1,
+      "base": "0x1888000",
+      "length": "0x20"
+    }
+  ]
+}

@@ -24,6 +24,9 @@ def main():
     p.add_argument("--qemu",type=Path,required=True)
     p.add_argument("--machine",default="tb371fc",
                    help="TB371FC machine plus explicit device-profile properties")
+    p.add_argument("--global-property", action="append", default=[],
+                   metavar="DRIVER.PROPERTY=VALUE",
+                   help="Explicit QEMU device property; recorded in the diagnostic")
     p.add_argument("--kernel",type=Path,required=True)
     p.add_argument("--initrd",type=Path,required=True)
     p.add_argument("--dtb",type=Path)
@@ -33,11 +36,16 @@ def main():
     p.add_argument("--trace-code",action="store_true")
     p.add_argument("--legacy-printk-symbols",type=Path,
                    help="Matching Linux 4.x kallsyms; capture stopped guest log privately")
+    p.add_argument("--observe-smem-probe", action="store_true",
+                   help="Read the verified production kernel's published SMEM driver object")
     a=p.parse_args()
     if a.seconds<=0 or a.seconds>120:
         p.error("--seconds must be in (0, 120]")
     if a.machine.split(",", 1)[0] != "tb371fc":
         p.error("--machine must select tb371fc")
+    if a.observe_smem_probe and (not a.legacy_printk_symbols or
+                                 "nokaslr" not in a.append.split()):
+        p.error("--observe-smem-probe requires matching symbols and nokaslr")
     for name in ("qemu", "kernel", "initrd", "dtb", "legacy_printk_symbols"):
         path = getattr(a, name)
         if path is not None and not path.is_file():
@@ -56,7 +64,10 @@ def main():
          (",in_asm" if a.trace_code else ""),"-D",str(out/"qemu.log")]
     if a.dtb:
         cmd+=["-dtb",str(a.dtb.resolve())]
+    for value in a.global_property:
+        cmd += ["-global", value]
     report={"schema_version":1,"scope":"Diagnostic only; no success verdict",
+            "global_properties":a.global_property,
             "command":cmd,"kernel_sha256":sha256(a.kernel),
             "qemu_sha256":sha256(a.qemu),"machine":a.machine,"events":[]}
     if a.dtb:
@@ -142,6 +153,10 @@ def main():
                                 command,a.legacy_printk_symbols,out)
                         except Exception as exc:
                             report["legacy_printk_error"]=str(exc)
+                    if a.observe_smem_probe:
+                        from observe_smem import capture_smem_probe
+                        report["smem_probe"] = capture_smem_probe(
+                            command, a.legacy_printk_symbols, a.kernel)
                     send("quit")
                     break
                 messages=receive(.1)

@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "suite": "SPMI PMIC arbiter v5 reference subset",
+  "qemu_sha256": "05c617462f87d5bacea9b86007ca8e37de5ed9a2644a5e3af5ac0d60485ec55b",
+  "test_sha256": "6086a22039b246ac6850d211e9a8fc4a8144b48d264b19cd14bf33330713c900",
+  "scope": "Explicit reference VERSION/APID map; real byte transactions, strict failures, synthetic peripheral IRQ and actual migration; no native PMIC analog claim",
+  "checks": [
+    {
+      "name": "reference_geometry_and_sparse_table",
+      "passed": true
+    },
+    {
+      "name": "identity_bytes_have_bounded_provenance",
+      "passed": true
+    },
+    {
+      "name": "unknown_identity_is_failure_without_partial_data",
+      "passed": true
+    },
+    {
+      "name": "read_only_identity_write_fails",
+      "passed": true
+    },
+    {
+      "name": "one_to_eight_byte_read_packing",
+      "passed": true
+    },
+    {
+      "name": "writes_change_real_irq_register_state",
+      "passed": true
+    },
+    {
+      "name": "completion_waits_and_uses_command_time_data",
+      "passed": true
+    },
+    {
+      "name": "concurrent_apid_observers_are_independent",
+      "passed": true
+    },
+    {
+      "name": "unsupported_opcodes_do_not_succeed",
+      "passed": true
+    },
+    {
+      "name": "malformed_command_and_page_boundary_fail",
+      "passed": true
+    },
+    {
+      "name": "missing_apids_never_acknowledge",
+      "passed": true
+    },
+    {
+      "name": "ownership_and_observer_ee_are_enforced",
+      "passed": true
+    },
+    {
+      "name": "invalid_write_span_is_atomic",
+      "passed": true
+    },
+    {
+      "name": "command_collision_reports_drop_without_mutation",
+      "passed": true
+    },
+    {
+      "name": "invalid_mmio_widths_and_read_only_registers",
+      "passed": true
+    },
+    {
+      "name": "linux_unmask_discards_disabled_stale_edge",
+      "passed": true
+    },
+    {
+      "name": "linux_edge_acknowledges_both_latches",
+      "passed": true
+    },
+    {
+      "name": "level_interrupt_reasserts_until_source_deasserts",
+      "passed": true
+    },
+    {
+      "name": "falling_and_both_edge_polarities",
+      "passed": true
+    },
+    {
+      "name": "peripheral_and_arbiter_enable_gates",
+      "passed": true
+    },
+    {
+      "name": "irq_bits_and_w1c_are_independent",
+      "passed": true
+    },
+    {
+      "name": "reset_cancels_pending_and_preserves_physical_input",
+      "passed": true
+    },
+    {
+      "name": "synthetic_endpoints_are_opt_in",
+      "passed": true,
+      "synthetic_peripherals_enabled": false
+    },
+    {
+      "name": "execution_environment_one_has_separate_ownership",
+      "passed": true,
+      "execution_environment": 1,
+      "irq_owner_apid": 5
+    },
+    {
+      "name": "migrate_pending_transaction_and_irq",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "pending_data_and_irq_preserved": true,
+      "qtest_virtual_ns_at_transfer": 2400
+    }
+  ],
+  "passed": true,
+  "elapsed_seconds": 1.183
+}

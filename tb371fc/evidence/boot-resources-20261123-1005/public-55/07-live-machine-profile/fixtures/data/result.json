@@ -1,0 +1,1005 @@
+{
+  "checks": [
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": [
+        0,
+        256,
+        512,
+        768,
+        1024,
+        1280,
+        1536,
+        1792
+      ],
+      "name": "dt.cpu_mpidrs",
+      "observed": [
+        0,
+        256,
+        512,
+        768,
+        1024,
+        1280,
+        1536,
+        1792
+      ],
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "name": "qmp.cpu_indexes",
+      "observed": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": [
+        0,
+        256,
+        512,
+        768,
+        1024,
+        1280,
+        1536,
+        1792
+      ],
+      "name": "qmp.cpu_mpidrs",
+      "observed": [
+        0,
+        256,
+        512,
+        768,
+        1024,
+        1280,
+        1536,
+        1792
+      ],
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": [
+        [
+          "psci"
+        ],
+        [
+          "psci"
+        ],
+        [
+          "psci"
+        ],
+        [
+          "psci"
+        ],
+        [
+          "psci"
+        ],
+        [
+          "psci"
+        ],
+        [
+          "psci"
+        ],
+        [
+          "psci"
+        ]
+      ],
+      "name": "dt.cpu_enable_method",
+      "observed": [
+        [
+          "psci"
+        ],
+        [
+          "psci"
+        ],
+        [
+          "psci"
+        ],
+        [
+          "psci"
+        ],
+        [
+          "psci"
+        ],
+        [
+          "psci"
+        ],
+        [
+          "psci"
+        ],
+        [
+          "psci"
+        ]
+      ],
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": "This is an explicit model choice, not a comparison with real CPU identities.",
+      "expected": [
+        "cortex-a55",
+        "cortex-a55",
+        "cortex-a55",
+        "cortex-a55",
+        "cortex-a77",
+        "cortex-a77",
+        "cortex-a77",
+        "cortex-a77"
+      ],
+      "name": "model.declared_cpu_types",
+      "observed": [
+        "cortex-a55",
+        "cortex-a55",
+        "cortex-a55",
+        "cortex-a55",
+        "cortex-a77",
+        "cortex-a77",
+        "cortex-a77",
+        "cortex-a77"
+      ],
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": [
+        [
+          "arm,cortex-a55"
+        ],
+        [
+          "arm,cortex-a55"
+        ],
+        [
+          "arm,cortex-a55"
+        ],
+        [
+          "arm,cortex-a55"
+        ],
+        [
+          "arm,cortex-a77"
+        ],
+        [
+          "arm,cortex-a77"
+        ],
+        [
+          "arm,cortex-a77"
+        ],
+        [
+          "arm,cortex-a77"
+        ]
+      ],
+      "name": "dt.cpu_compatible_matches_qom",
+      "observed": [
+        [
+          "arm,cortex-a55"
+        ],
+        [
+          "arm,cortex-a55"
+        ],
+        [
+          "arm,cortex-a55"
+        ],
+        [
+          "arm,cortex-a55"
+        ],
+        [
+          "arm,cortex-a77"
+        ],
+        [
+          "arm,cortex-a77"
+        ],
+        [
+          "arm,cortex-a77"
+        ],
+        [
+          "arm,cortex-a77"
+        ]
+      ],
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "declared_deviation",
+      "detail": "The small-core A55 model remains a Kryo surrogate. A77 r1p0 MIDR matches the measured big cores; timing and reference cache geometry are not silicon measurements.",
+      "expected": [
+        "0x51df805e",
+        "0x51df805e",
+        "0x51df805e",
+        "0x51df805e",
+        "0x411fd0d0",
+        "0x411fd0d0",
+        "0x411fd0d0",
+        "0x411fd0d0"
+      ],
+      "name": "hardware.cpu_midr",
+      "observed": [
+        "0x412fd050",
+        "0x412fd050",
+        "0x412fd050",
+        "0x412fd050",
+        "0x411fd0d0",
+        "0x411fd0d0",
+        "0x411fd0d0",
+        "0x411fd0d0"
+      ],
+      "passed": false,
+      "required": false
+    },
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": [
+        {
+          "address": 396361728,
+          "size": 65536
+        },
+        {
+          "address": 396754944,
+          "size": 1048576
+        }
+      ],
+      "name": "dt.gic_regions",
+      "observed": [
+        {
+          "address": 396361728,
+          "size": 65536
+        },
+        {
+          "address": 396754944,
+          "size": 1048576
+        }
+      ],
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": 131072,
+      "name": "dt.gic_redistributor_stride",
+      "observed": 131072,
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": 19200000,
+      "name": "dt.timer_frequency",
+      "observed": 19200000,
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": [
+        19200000,
+        19200000,
+        19200000,
+        19200000,
+        19200000,
+        19200000,
+        19200000,
+        19200000
+      ],
+      "name": "qmp.cpu_counter_frequency",
+      "observed": [
+        19200000,
+        19200000,
+        19200000,
+        19200000,
+        19200000,
+        19200000,
+        19200000,
+        19200000
+      ],
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": "GICv3 PPI flags compare trigger bits; the downstream legacy CPU-mask bits are recorded separately.",
+      "expected": [
+        1,
+        13,
+        8,
+        1,
+        14,
+        8,
+        1,
+        11,
+        8,
+        1,
+        12,
+        8
+      ],
+      "name": "dt.timer_ppi_semantics",
+      "observed": [
+        1,
+        13,
+        8,
+        1,
+        14,
+        8,
+        1,
+        11,
+        8,
+        1,
+        12,
+        8
+      ],
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "declared_deviation",
+      "detail": "Downstream GICv2-style CPU mask bits are not copied to the GICv3 generated DT.",
+      "expected": [
+        1,
+        13,
+        65288,
+        1,
+        14,
+        65288,
+        1,
+        11,
+        65288,
+        1,
+        12,
+        65288
+      ],
+      "name": "hardware.timer_raw_interrupt_flags",
+      "observed": [
+        1,
+        13,
+        8,
+        1,
+        14,
+        8,
+        1,
+        11,
+        8,
+        1,
+        12,
+        8
+      ],
+      "passed": false,
+      "required": false
+    },
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": [
+        {
+          "address": 11075584,
+          "size": 16384
+        }
+      ],
+      "name": "dt.console_regions",
+      "observed": [
+        {
+          "address": 11075584,
+          "size": 16384
+        }
+      ],
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": {
+        "flags": 4,
+        "number": 357,
+        "type": 0
+      },
+      "name": "dt.console_interrupt",
+      "observed": {
+        "flags": 4,
+        "number": 357,
+        "type": 0
+      },
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": {
+        "cells": 3,
+        "phandle": 32772
+      },
+      "name": "dt.console_interrupt_parent",
+      "observed": {
+        "cells": 3,
+        "phandle": 32772
+      },
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "declared_deviation",
+      "detail": "The model advertises the upstream Linux GENI debug-UART binding, not the downstream Android compatible string.",
+      "expected": [
+        "qcom,msm-geni-console"
+      ],
+      "name": "hardware.console_driver_binding",
+      "observed": [
+        "qcom,geni-debug-uart"
+      ],
+      "passed": false,
+      "required": false
+    },
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": [
+        "smc"
+      ],
+      "name": "dt.psci_method",
+      "observed": [
+        "smc"
+      ],
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": [
+        "arm,psci-1.0"
+      ],
+      "name": "dt.psci_version_binding",
+      "observed": [
+        "arm,psci-1.0",
+        "arm,psci-0.2",
+        "arm,psci"
+      ],
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": "Subtract explicit no-map reservations before comparison; this does not prove that excluded addresses lack physical RAM.",
+      "expected": [
+        [
+          2147483648,
+          3148873728
+        ],
+        [
+          3221225472,
+          10737418240
+        ]
+      ],
+      "name": "dt.os_visible_memory_banks",
+      "observed": [
+        [
+          2147483648,
+          3148873728
+        ],
+        [
+          3221225472,
+          10737418240
+        ]
+      ],
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": "The captured 69 MiB gap is preserved as an OS-visible exclusion. Backing RAM can still be contiguous.",
+      "expected": [
+        [
+          3148873728,
+          3221225472
+        ]
+      ],
+      "name": "dt.captured_memory_gap",
+      "observed": [
+        {
+          "excluded_from_effective_memory": true,
+          "explicit_no_map": true,
+          "range": [
+            3148873728,
+            3221225472
+          ]
+        }
+      ],
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": false,
+      "name": "qmp.machine_paused",
+      "observed": false,
+      "passed": true,
+      "required": true
+    },
+    {
+      "classification": "matched",
+      "detail": null,
+      "expected": "major/minor/micro reported by running QEMU",
+      "name": "qmp.version_observed",
+      "observed": {
+        "major": 11,
+        "micro": 3,
+        "minor": 1
+      },
+      "passed": true,
+      "required": true
+    }
+  ],
+  "complete_emulation": false,
+  "deviations": [
+    {
+      "classification": "declared_deviation",
+      "detail": "The small-core A55 model remains a Kryo surrogate. A77 r1p0 MIDR matches the measured big cores; timing and reference cache geometry are not silicon measurements.",
+      "expected": [
+        "0x51df805e",
+        "0x51df805e",
+        "0x51df805e",
+        "0x51df805e",
+        "0x411fd0d0",
+        "0x411fd0d0",
+        "0x411fd0d0",
+        "0x411fd0d0"
+      ],
+      "name": "hardware.cpu_midr",
+      "observed": [
+        "0x412fd050",
+        "0x412fd050",
+        "0x412fd050",
+        "0x412fd050",
+        "0x411fd0d0",
+        "0x411fd0d0",
+        "0x411fd0d0",
+        "0x411fd0d0"
+      ],
+      "passed": false,
+      "required": false
+    },
+    {
+      "classification": "declared_deviation",
+      "detail": "Downstream GICv2-style CPU mask bits are not copied to the GICv3 generated DT.",
+      "expected": [
+        1,
+        13,
+        65288,
+        1,
+        14,
+        65288,
+        1,
+        11,
+        65288,
+        1,
+        12,
+        65288
+      ],
+      "name": "hardware.timer_raw_interrupt_flags",
+      "observed": [
+        1,
+        13,
+        8,
+        1,
+        14,
+        8,
+        1,
+        11,
+        8,
+        1,
+        12,
+        8
+      ],
+      "passed": false,
+      "required": false
+    },
+    {
+      "classification": "declared_deviation",
+      "detail": "The model advertises the upstream Linux GENI debug-UART binding, not the downstream Android compatible string.",
+      "expected": [
+        "qcom,msm-geni-console"
+      ],
+      "name": "hardware.console_driver_binding",
+      "observed": [
+        "qcom,geni-debug-uart"
+      ],
+      "passed": false,
+      "required": false
+    }
+  ],
+  "dtb_normalization": {
+    "dtc_stderr": "",
+    "method": "dtc -I dtb -O dtb (without --force)",
+    "reason": "Remove legal FDT_NOP tags unsupported by some fdtget -l versions; no property edits",
+    "source_sha256": "f80a0d89127d23aa1ad5cf36ba12d181ae3d4142f67f7798a0ac4369cc6ca212",
+    "validation_sha256": "6fa3f6306af2aeec75565e93dd0206457ace9855cebecf2ba7bd713a41436cf4"
+  },
+  "gate": "implemented-platform-configuration",
+  "hardware_equivalent": false,
+  "limitations": [
+    "DT/QOM agreement is not peripheral behavioral equivalence or an Android boot result.",
+    "CPU microarchitecture, caches, timing and real CPU identity are not reproduced.",
+    "The PSCI SMC interface is served by QEMU, not captured Qualcomm secure firmware.",
+    "This gate does not test GPU, display, UFS, Wi-Fi, input, charging, suspend or power behavior.",
+    "Only generated DT memory visibility is checked; no claim is made about the physical meaning of Android carveouts."
+  ],
+  "observed": {
+    "dt": {
+      "chosen_stdout_path": [
+        "/soc/geniqup@ac0000/serial@a90000:115200n8"
+      ],
+      "console": {
+        "compatible": [
+          "qcom,geni-debug-uart"
+        ],
+        "interrupt": {
+          "flags": 4,
+          "number": 357,
+          "type": 0
+        },
+        "interrupt_parent": 32772,
+        "node": "/soc/geniqup@ac0000/serial@a90000",
+        "regions": [
+          {
+            "address": 11075584,
+            "size": 16384
+          }
+        ]
+      },
+      "cpus": [
+        {
+          "compatible": [
+            "arm,cortex-a55"
+          ],
+          "enable_method": [
+            "psci"
+          ],
+          "mpidr": 0,
+          "node": "/cpus/cpu@0"
+        },
+        {
+          "compatible": [
+            "arm,cortex-a55"
+          ],
+          "enable_method": [
+            "psci"
+          ],
+          "mpidr": 256,
+          "node": "/cpus/cpu@100"
+        },
+        {
+          "compatible": [
+            "arm,cortex-a55"
+          ],
+          "enable_method": [
+            "psci"
+          ],
+          "mpidr": 512,
+          "node": "/cpus/cpu@200"
+        },
+        {
+          "compatible": [
+            "arm,cortex-a55"
+          ],
+          "enable_method": [
+            "psci"
+          ],
+          "mpidr": 768,
+          "node": "/cpus/cpu@300"
+        },
+        {
+          "compatible": [
+            "arm,cortex-a77"
+          ],
+          "enable_method": [
+            "psci"
+          ],
+          "mpidr": 1024,
+          "node": "/cpus/cpu@400"
+        },
+        {
+          "compatible": [
+            "arm,cortex-a77"
+          ],
+          "enable_method": [
+            "psci"
+          ],
+          "mpidr": 1280,
+          "node": "/cpus/cpu@500"
+        },
+        {
+          "compatible": [
+            "arm,cortex-a77"
+          ],
+          "enable_method": [
+            "psci"
+          ],
+          "mpidr": 1536,
+          "node": "/cpus/cpu@600"
+        },
+        {
+          "compatible": [
+            "arm,cortex-a77"
+          ],
+          "enable_method": [
+            "psci"
+          ],
+          "mpidr": 1792,
+          "node": "/cpus/cpu@700"
+        }
+      ],
+      "gics": [
+        {
+          "interrupt_cells": 3,
+          "node": "/soc/interrupt-controller@17a00000",
+          "phandle": 32772,
+          "redistributor_stride": 131072,
+          "regions": [
+            {
+              "address": 396361728,
+              "size": 65536
+            },
+            {
+              "address": 396754944,
+              "size": 1048576
+            }
+          ]
+        }
+      ],
+      "memory": [
+        {
+          "address": 2147483648,
+          "size": 1001390080
+        },
+        {
+          "address": 3221225472,
+          "size": 7516192768
+        }
+      ],
+      "psci": {
+        "compatible": [
+          "arm,psci-1.0",
+          "arm,psci-0.2",
+          "arm,psci"
+        ],
+        "method": [
+          "smc"
+        ]
+      },
+      "reserved_memory": [
+        {
+          "address": 3148873728,
+          "no_map": true,
+          "node": "/reserved-memory/firmware-hole@bbb00000",
+          "size": 72351744
+        }
+      ],
+      "root_compatible": [
+        "qemu,tb371fc",
+        "lenovo,tb371fc",
+        "qcom,sm8250"
+      ],
+      "timers": [
+        {
+          "clock_frequency_hz": 19200000,
+          "interrupt_cells": [
+            1,
+            13,
+            8,
+            1,
+            14,
+            8,
+            1,
+            11,
+            8,
+            1,
+            12,
+            8
+          ],
+          "node": "/timer"
+        }
+      ],
+      "uarts": [
+        {
+          "compatible": [
+            "qcom,geni-debug-uart"
+          ],
+          "interrupt": {
+            "flags": 4,
+            "number": 357,
+            "type": 0
+          },
+          "interrupt_parent": 32772,
+          "node": "/soc/geniqup@ac0000/serial@a90000",
+          "regions": [
+            {
+              "address": 11075584,
+              "size": 16384
+            }
+          ]
+        }
+      ]
+    },
+    "qmp": {
+      "cpus": [
+        {
+          "cntfrq": 19200000,
+          "cpu-index": 0,
+          "midr": 1093652560,
+          "mp-affinity": 0,
+          "props": {
+            "core-id": 0,
+            "socket-id": 0,
+            "thread-id": 0
+          },
+          "qom-path": "/machine/cpu0",
+          "qom-type": "cortex-a55-arm-cpu",
+          "target": "aarch64",
+          "thread-id": 192374
+        },
+        {
+          "cntfrq": 19200000,
+          "cpu-index": 1,
+          "midr": 1093652560,
+          "mp-affinity": 256,
+          "props": {
+            "core-id": 1,
+            "socket-id": 0,
+            "thread-id": 0
+          },
+          "qom-path": "/machine/cpu1",
+          "qom-type": "cortex-a55-arm-cpu",
+          "target": "aarch64",
+          "thread-id": 192375
+        },
+        {
+          "cntfrq": 19200000,
+          "cpu-index": 2,
+          "midr": 1093652560,
+          "mp-affinity": 512,
+          "props": {
+            "core-id": 2,
+            "socket-id": 0,
+            "thread-id": 0
+          },
+          "qom-path": "/machine/cpu2",
+          "qom-type": "cortex-a55-arm-cpu",
+          "target": "aarch64",
+          "thread-id": 192376
+        },
+        {
+          "cntfrq": 19200000,
+          "cpu-index": 3,
+          "midr": 1093652560,
+          "mp-affinity": 768,
+          "props": {
+            "core-id": 3,
+            "socket-id": 0,
+            "thread-id": 0
+          },
+          "qom-path": "/machine/cpu3",
+          "qom-type": "cortex-a55-arm-cpu",
+          "target": "aarch64",
+          "thread-id": 192377
+        },
+        {
+          "cntfrq": 19200000,
+          "cpu-index": 4,
+          "midr": 1092604112,
+          "mp-affinity": 1024,
+          "props": {
+            "core-id": 4,
+            "socket-id": 0,
+            "thread-id": 0
+          },
+          "qom-path": "/machine/cpu4",
+          "qom-type": "cortex-a77-arm-cpu",
+          "target": "aarch64",
+          "thread-id": 192378
+        },
+        {
+          "cntfrq": 19200000,
+          "cpu-index": 5,
+          "midr": 1092604112,
+          "mp-affinity": 1280,
+          "props": {
+            "core-id": 5,
+            "socket-id": 0,
+            "thread-id": 0
+          },
+          "qom-path": "/machine/cpu5",
+          "qom-type": "cortex-a77-arm-cpu",
+          "target": "aarch64",
+          "thread-id": 192379
+        },
+        {
+          "cntfrq": 19200000,
+          "cpu-index": 6,
+          "midr": 1092604112,
+          "mp-affinity": 1536,
+          "props": {
+            "core-id": 6,
+            "socket-id": 0,
+            "thread-id": 0
+          },
+          "qom-path": "/machine/cpu6",
+          "qom-type": "cortex-a77-arm-cpu",
+          "target": "aarch64",
+          "thread-id": 192380
+        },
+        {
+          "cntfrq": 19200000,
+          "cpu-index": 7,
+          "midr": 1092604112,
+          "mp-affinity": 1792,
+          "props": {
+            "core-id": 7,
+            "socket-id": 0,
+            "thread-id": 0
+          },
+          "qom-path": "/machine/cpu7",
+          "qom-type": "cortex-a77-arm-cpu",
+          "target": "aarch64",
+          "thread-id": 192381
+        }
+      ],
+      "status": {
+        "running": false,
+        "status": "prelaunch"
+      },
+      "version": {
+        "package": "v11.1.3-7-g5f8bca7-dirty",
+        "qemu": {
+          "major": 11,
+          "micro": 3,
+          "minor": 1
+        }
+      }
+    }
+  },
+  "passed": true,
+  "schema_version": 1,
+  "sources": {
+    "capture_sha256": "a5421aa98d39e9a7908a1ee4cb96e761bf9aa616f2fea065ffdd9fc202d57e28",
+    "profile_sha256": "cdb9ddf01c986fa7f005825707da00bb32c61c12f36bf63a104460dd47a01cdc",
+    "qemu": "/work/boot-resources-root-1005/qemu-system-aarch64",
+    "qemu_sha256": "2173fa4da68f8f769c53942b056124c5621e4714652c7f572deacc9440ec09cf",
+    "qmp_dumpdtb_sha256": "f80a0d89127d23aa1ad5cf36ba12d181ae3d4142f67f7798a0ac4369cc6ca212"
+  },
+  "summary": {
+    "required_passed": 20,
+    "required_total": 20
+  },
+  "validated_at_utc": "2026-11-23T10:25:26.624082+00:00"
+}

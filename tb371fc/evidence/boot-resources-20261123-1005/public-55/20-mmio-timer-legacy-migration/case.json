@@ -1,0 +1,36 @@
+{
+  "name": "mmio-timer-legacy-migration",
+  "command": [
+    "/usr/bin/python3",
+    "/work/tb371fc-verified-root-0820/tb371fc/tests/test_mmio_timer_migration.py",
+    "--qemu",
+    "/work/boot-resources-root-1005/qemu-system-aarch64",
+    "--machine",
+    "tb371fc,ufs-enabled=off,counter-exact=off",
+    "--counter-mode",
+    "legacy",
+    "--out",
+    "/tmp/tbci-xlugwfw8/20/data"
+  ],
+  "started_utc": "2026-11-23T10:26:07.918233+00:00",
+  "timeout_seconds": 180,
+  "fixture": "/tmp/tbci-xlugwfw8/20",
+  "environment": {
+    "QTEST_QEMU_BINARY": "/work/boot-resources-root-1005/qemu-system-aarch64",
+    "TMPDIR": "/tmp/tbci-xlugwfw8/20/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "passed": true,
+  "exit_code": 0,
+  "verified": {
+    "verdict_field": "passed",
+    "verdict": true,
+    "check_count": 4
+  },
+  "elapsed_seconds": 0.668,
+  "completed_utc": "2026-11-23T10:26:08.586128+00:00",
+  "log_sha256": {
+    "stdout.log": "c1a9d4fe3d77b02663d48f18af78e7a2371b7903ed603efcdb500aeb39b52152",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "suite": "SM8250 GCC actual process-to-process migration",
+  "qemu": "/work/boot-resources-root-1005/qemu-system-aarch64",
+  "machine": "tb371fc,gcc-boot-configured=off,ufs-enabled=off",
+  "qemu_sha256": "2173fa4da68f8f769c53942b056124c5621e4714652c7f572deacc9440ec09cf",
+  "work_dir": "/tmp/tbci-xlugwfw8/11/data",
+  "checks": [
+    {
+      "check": "active_clock_pending_update_power_and_reset",
+      "status": "pass"
+    },
+    {
+      "check": "actual_qmp_migration_completed",
+      "status": "pass"
+    },
+    {
+      "check": "registers_clock_remote_vote_gpio_and_ram_preserved",
+      "status": "pass"
+    },
+    {
+      "check": "pending_timers_resume_at_test_controlled_deadlines",
+      "status": "pass"
+    },
+    {
+      "check": "destination_clocks_votes_and_reset_continue",
+      "status": "pass"
+    }
+  ],
+  "ram_per_process": "128 MiB",
+  "scope": "Clock register/gate state, software reset/power and controlled virtual-time transitions; no analog, silicon timing, voltage or full-SoC equivalence",
+  "success": true,
+  "migration": {
+    "source": {
+      "status": "completed",
+      "setup-time": 0,
+      "downtime": 26,
+      "total-time": 37,
+      "ram": {
+        "total": 134250496,
+        "postcopy-requests": 0,
+        "dirty-sync-count": 2,
+        "multifd-bytes": 0,
+        "pages-per-second": 0,
+        "downtime-bytes": 307340,
+        "page-size": 4096,
+        "remaining": 0,
+        "postcopy-bytes": 0,
+        "mbps": 478.3718918918919,
+        "transferred": 2212470,
+        "dirty-sync-missed-zero-copy": 0,
+        "precopy-bytes": 0,
+        "duplicate": 32773,
+        "dirty-pages-rate": 0,
+        "normal-bytes": 12288,
+        "normal": 3
+      }
+    },
+    "target": {
+      "status": "completed"
+    }
+  },
+  "qtest_virtual_ns_at_transfer": 6000,
+  "expected_checks": 5
+}

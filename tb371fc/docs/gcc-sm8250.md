@@ -14,7 +14,8 @@ unimplemented hardware appear to work. Enable diagnostics with
 
 ## Evidence and reproducible register descriptions
 
-The principal source is the pinned upstream Linux **6.12.114** driver:
+The principal source is the pinned upstream Linux **6.12.114** driver, with
+one explicitly recorded Kona SYS_NOC_CPUSS supplement described below:
 
 - [gcc-sm8250.c](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/clk/qcom/gcc-sm8250.c?h=v6.12.114)
 - [clock/reset/power binding indices](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/include/dt-bindings/clock/qcom,gcc-sm8250.h?h=v6.12.114)
@@ -46,12 +47,13 @@ code retains its GPL-2.0-or-later license.
 | RCG2 roots | 46 | Parent mux, half-integer divider, M/N/D, shadow/active state, update acknowledgement |
 | Read-only post-dividers | 3 | Divider readback and derived rate; synthetic initial divide-by-one |
 | Declared branch clocks | 139 | Independent vote/enable bits, parent availability, CLK_OFF and HWCG request |
-| Additional probe-enabled gates | 6 | Explicit enable bits used by upstream probe; no invented CBCR status at vote registers |
+| Additional probe-enabled gates | 6 | Upstream enable bits; SYS_NOC_CPUSS also has its documented Kona halt register and parent |
 | Reset outputs | 45 | Active-high GPIOs with upstream reset binding indices |
 | Software GDSCs | 11 | Collapse/on state and power GPIO output with upstream domain indices |
 
-There are **198 described clock outputs**, **84 explicit external parent
-inputs**, and **459 allowed register addresses**. Clock binding slots 189 and
+There are **198 described clock outputs**, **84 retained external parent
+input slots** (83 active and one compatibility input), and **460 allowed
+register addresses**. Clock binding slots 189 and
 195 have no upstream clock description and are not fabricated. Counts describe
 coverage of the driver's register contract, not a percentage of the physical
 SoC that is emulated.
@@ -73,6 +75,110 @@ This community source is not established as the exact source of the tablet's
 running 4.19.157 kernel. In particular it does not provide the same complete
 GPLL4 description as the upstream driver. Agreement of selected offsets is
 useful cross-checking, not proof of downstream register or firmware equivalence.
+
+### Kona SYS_NOC_CPUSS critical branch
+
+The [official OnePlus SM8250 `gcc-kona.c` at fixed commit
+94304e12a3509eac7b3716bf574ce0b1fcaacbae](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/gcc-kona.c)
+has SHA-256
+`ed208678508c983d0989f1f135fac898c5a9a91c14af1fa42cd7ea2f24cd14cd`.
+Its `gcc_sys_noc_cpuss_ahb_clk` declaration, beginning at line 3265, supplies
+the halt register and internal parent omitted by upstream's probe-only enable:
+
+| Clock contract | Value |
+| --- | --- |
+| Stable GCC binding | 143, `gcc_sys_noc_cpuss_ahb_clk` |
+| Halt/status offset | `0x48198`, physical address `0x00148198` |
+| HLOS vote | `0x52000` bit 0 |
+| Halt check | `BRANCH_HALT_VOTED`, `clk_branch2_ops` |
+| Parent | Binding 18, `gcc_cpuss_ahb_postdiv_clk_src` |
+| Parent divider | Read-only field `[3:0]` at `0x48028`, divisor field + 1 |
+| Parent root | Binding 17, `gcc_cpuss_ahb_clk_src`, CMD `0x48010` |
+| Linux clock flags | `CLK_IS_CRITICAL` and `CLK_SET_RATE_PARENT` |
+
+The [same official source's branch implementation](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/clk-branch.c)
+(SHA-256 `375830dc9cd0ecbc12ea018eee1d260d8ba724dc52f1ac8b3589a07bc75d08aa`)
+enables a voted branch by updating its HLOS bit and then polling the distinct
+halt register. `BRANCH_HALT_VOTED` adds a delay on disable because another
+voter may still hold the clock. The critical flag makes Linux request the
+clock during registration; it does not justify forcing QEMU's branch on.
+
+The model derives `CLK_OFF` bit 31 from the actual requested output rate.
+Software or `remote-vote[143]` can request it, and demand propagates through
+divider 18 to RCG 17. A stopped selected PLL leaves it halted. The status
+register has no writable enable bit: the existing CBCR status mask
+`0xf0000000` is read-only, writes of those status bits have no effect, and
+other nonzero bits are rejected. This does not add a NoC state machine.
+
+The [408d82a native diagnostic](../evidence/gdsc-smem-20261123/native-ci-408.json)
+provides the concrete failure that motivated this addition. On the exact
+board executable used by its successful 53-component and four-Linux CI
+invocations, the unmodified production kernel accepted the explicit SMEM
+handoff, then aborted reading physical `0x00148198` through
+`clk_branch2_check_halt` during `gcc_kona_probe`. That binary predates this
+branch/parent implementation.
+
+The implementation tested at 0a617bab passed
+[24 behavior checks](../evidence/gdsc-smem-20261123/gcc-registers-0a617ba.json)
+and [eight checks around one actual process transfer](../evidence/gdsc-smem-20261123/gcc-migration-0a617ba.json).
+The source and destination use the same binary; this is not an eight-transfer
+or old-to-new-version compatibility claim. The [downloaded board executable](../evidence/gdsc-smem-20261123/artifact-0a617ba.json),
+SHA256 `a2e19b188f6253928ad47630896e0967fb99f55abbddaf98212f312e8194ee1b`,
+matches both successful 53-component and four-Linux CI suite reports.
+The [0a617bab native diagnostic](../evidence/gdsc-smem-20261123/native-ci-0a.json)
+subsequently used that exact executable and passed the prior `0x00148198`
+abort. The unmodified production kernel again accepted the SMEM handoff,
+with all 23 state checks passing and no observer writes to guest memory.
+Its next fatal access was an unsupported GCC read at offset `0xf060`,
+physical `0x0010f060`, through `mux_get_parent`, `clk_register`,
+`qcom_cc_really_probe` and `gcc_kona_probe`. The 21.166-second diagnostic
+records ESR `0x96000210` and a kernel panic; support for this next access
+and full native boot remain incomplete. The source-level identification
+and remaining decoding questions are documented below. Earlier 19/5
+receipts retain their original counts, executable hashes and coverage.
+
+A separate [actual Python regeneration](../evidence/gdsc-smem-20261123/gcc-regeneration-0a617ba.json)
+used the fixed Linux 6.12.114 inputs and reproduced both
+`hw/misc/qcom-sm8250-gcc-data.inc` and the JSON register manifest byte for
+byte against 0a617bab. It records generator/source/output hashes and exit 0;
+it is a generation-integrity check, separate from QEMU execution.
+
+Binding 16, `gcc_cpuss_ahb_clk`, already uses the same parent and its separate
+`0x52000` bit 21 / `0x48000` halt status. The two branch votes remain
+independent. Other critical clocks, including `gcc_cpuss_dvm_bus_clk`, still
+retain their previously declared coverage and unknown external-parent
+boundaries; this supplement supplies no guessed fabric source for them.
+
+The generator first allocates the original external-input indices, then
+applies only this audited supplement. Input slot 63 and its QOM Clock name
+`gcc_sys_noc_cpuss_ahb_clk_parent` remain present for the existing VMState v1
+layout, but no longer determine this branch's rate. All other external slots
+keep their indices. The manifest records the primary URL, hash, source line
+and supplemented fields alongside the original upstream description.
+
+### Next observed boundary: USB3 primary PIPE source mux
+
+The same [fixed official Kona driver](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/gcc-kona.c)
+declares `gcc_usb3_prim_phy_pipe_clk_src` at line 1512, with register
+`0xf060`, shift 0 and width 2. Its three named parents are
+`usb3_phy_wrapper_gcc_usb30_pipe_clk`, `core_bi_pll_test_se` and
+`bi_tcxo`. This declaration identifies the observed offset; it does not
+by itself prove the production kernel's parent decoding or a PHY clock rate.
+
+The fixed snapshot's [mux getter and setter](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/clk-regmap-mux.c)
+are asymmetric: the getter passes the selector to `qcom_find_src_index`,
+while the setter writes the selected parent's `.cfg` field. The
+[lookup helper](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/common.c)
+compares that value with `.src`. Production `mux_get_parent`
+disassembly must therefore be checked before choosing an emulated decoding
+contract. The official PHY and test-parent `clk_dummy` declarations use
+`rrate = 1000`; these are dummy placeholders, not measured 1 kHz PHY or
+test-clock outputs.
+
+No source mux model is included in this follow-up. Explicit external-parent
+state, selector semantics, unknown-encoding errors, reset and migration
+behavior remain work for the next implementation. The current unsupported
+read and production panic are retained in the diagnostic evidence.
 
 ## Actual tablet observations and frequency assumptions
 
@@ -150,7 +256,8 @@ request after the HLOS vote is cleared. For branches with HWCG enabled,
 clock binding. The default is no remote vote and no hardware request; absent
 remote processors are not silently treated as permanent voters.
 
-Parent relationships absent from the Linux descriptor are exposed as explicit
+Parent relationships absent from the audited source descriptions are exposed
+as explicit
 `<clock-name>_parent` Clock inputs. This includes fabric and PHY/symbol clocks.
 The model does not guess that all such clocks share one oscillator. A branch
 request with a missing external parent leaves CLK_OFF asserted and outputs
@@ -202,6 +309,13 @@ commit, pending power transition, remote vote, asserted reset and RAM marker
 between two real QEMU processes, then checks continuation. QTest owns each
 process's virtual time, so the migration harness explicitly aligns that test
 clock before transfer; the checked deadlines are not physical timing evidence.
+
+The SYS_NOC_CPUSS correction keeps the existing register array, 200 clock
+slots, 84 external-input slots and VMState v1 field layout. Its newly decoded
+status word stores no writable state. Keeping the wire layout does not prove
+unchanged behavior across QEMU versions: an old stream's branch vote is now
+evaluated using the corrected internal parent. Runtime migration acceptance
+must identify the actual source and destination binaries.
 
 Run the compiled model in the development container:
 

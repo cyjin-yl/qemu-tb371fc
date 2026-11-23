@@ -10,29 +10,151 @@
 **完整 Android 启动和整台平板等价仍是未通过的目标。**
 生产内核加测试 initramfs 的成功不等于原厂 Android 系统启动。小核仍用 A55 代替 Qualcomm Kryo；显示、Adreno 650、触控、无线、音频、摄像头以及完整电源/固件契约仍有大量实现工作。缓存容量、功耗、射频、电气行为和真实芯片时序不由这些功能测试证明。
 
-## 当前统一验收
+## 当前已验收构建：GCC 修复后的 0a617bab
 
-[46 项公共输入验收](tb371fc/evidence/resume-final-20261123/result.json)已在冻结构建 12
-（QEMU SHA256 `178bace28c84bced9471b824d413feb18e76ddb15212ec32412ad7a7ec32a675`）
-**46/46 全部通过**，用时 74.755 秒，运行前后二进制保持一致。
-其中包含 42 个组件/校验 gate 和四个 Linux gate；新加入的 SPMI 25 项、
-IPCC 16 项、PDC 18 项 C QTest 与 10 项迁移、DCC 17 项均在同一执行文件上通过。
-测试使用公开 Linux 输入和合成 fixture，不需要生产 Image、完整原生 DT 或 AOP 镜像。
+提交 [0a617bab](https://github.com/cyjin-yl/qemu-tb371fc/commit/0a617bab7cb2277073aa24092ec9a12b63fceb50) 的 [GitHub Actions 运行 45170677624](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45170677624) 两路任务均为 **Success**。
+原始 [53/53 组件回执](tb371fc/evidence/gdsc-smem-20261123/components-0a617ba.json)与另次 [4/4 无补丁 Linux 回执](tb371fc/evidence/gdsc-smem-20261123/linux-0a617ba.json)分别保留，共 57 个通过的 gate；独立 A77/PCI 任务的实际日志与计数见 [CI 审核记录](tb371fc/evidence/gdsc-smem-20261123/ci-0a617ba.json)。
 
-独立通用构建的最终复验也已通过：[UFS PCI 15/15，全部实际运行](tb371fc/evidence/compat-final-20261123/ufs-pci/result.json)，以及
-[A77 九种配置的 852 项 guest 检查和两项非法配置拒绝](tb371fc/evidence/compat-final-20261123/a77/result.json)。
-它们共用 SHA256 `c06bb42b52bc47839fbe40eb5a247c04d70b64840411af6efff1497d0a1d16c0` 的通用构建，
-与上述 TB371FC 板级构建分别记录；[源码来源核对](tb371fc/evidence/compat-final-20261123/a77/source-provenance.json)绑定最终源码及实际构建输入。
+[下载产物核对](tb371fc/evidence/gdsc-smem-20261123/artifact-0a617ba.json)确认板级 QEMU 为 62,152,896 字节，实际 SHA-256：
+`a2e19b188f6253928ad47630896e0967fb99f55abbddaf98212f312e8194ee1b`。
+该文件与组件、Linux 两份原始报告的可执行文件哈希一致；ZIP 归档摘要另行保存。
 
-同一冻结构建还通过独立的[生产内核八项验收及实际 guest power-off](tb371fc/evidence/production-gdb-frozen12-20261123/result.json)。
-该验收使用生成 DT 和测试 initramfs。完整原生 DT 的[显式 SPMI reference 诊断](tb371fc/evidence/native-dt-spmi-reference-20261123/result.json)
-仍在 `qsee_irq_probe+0x140` 失败；完整原生 DT 和 Android 启动尚未通过。
+| 本轮项目 | 实际结果与范围 |
+| --- | --- |
+| GCC | [24/24 行为检查](tb371fc/evidence/gdsc-smem-20261123/gcc-registers-0a617ba.json)；[8/8 迁移检查](tb371fc/evidence/gdsc-smem-20261123/gcc-migration-0a617ba.json)围绕 **一次**真实 QMP 进程迁移，不是八次迁移或跨版本兼容验收。 |
+| GPU GDSC | [29/29](tb371fc/evidence/gdsc-smem-20261123/gdsc-0a617ba.json)，其中有十个迁移结果：六次成功和四次预期 profile 拒绝。 |
+| 空 SMEM reference | [22/22](tb371fc/evidence/gdsc-smem-20261123/smem-0a617ba.json)，包含两次成功迁移和两次预期 profile 拒绝；这个 QTest gate 不执行 guest CPU。 |
+| A77 / 共享 UFS PCI | [852 项 guest 检查、9 种配置及两项非法配置拒绝；PCI 15/15 无跳过](tb371fc/evidence/gdsc-smem-20261123/ci-0a617ba.json)，使用独立通用构建。 |
 
-此前的[42 项成功回执](tb371fc/evidence/resume-20261123/result.json)和
-[45 项旧二进制失败回执](tb371fc/evidence/public-ci-20261123/attempt-45-old-binary/result.json)
-保留各自的实际结果、输入和二进制哈希。持续结果与限制见
-[持续验证账本](tb371fc/evidence/VALIDATION-continued-20261123.md)；
+本轮 GCC 实现补齐 binding 143 `gcc_sys_noc_cpuss_ahb_clk` 的独立 halt/status，以及 binding 18 `gcc_cpuss_ahb_postdiv_clk_src` 父时钟。
+`CLK_OFF` 来自实际时钟/vote 状态，支持独立 HLOS 和 remote vote，不强制关键时钟运行。
+[真实 Python 再生检查](tb371fc/evidence/gdsc-smem-20261123/gcc-regeneration-0a617ba.json)也确认 C 数据与 JSON manifest 两份输出和受测提交逐字节一致。寄存器与来源见 [GCC 契约](tb371fc/docs/gcc-sm8250.md#kona-sys_noc_cpuss-critical-branch)。
+
+[下载本轮板级 QEMU、公开 Linux 输入与回执](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45170677624/artifacts/14817122316)；
+[下载独立 A77/PCI 产物](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45170677624/artifacts/14817955970)。
+
+同一源码另在 doesvm 完成了独立的[本地 57/57 总验收](tb371fc/evidence/gdsc-smem-20261123/local-final-summary.json)，[原始单次 `--suite all` 回执](tb371fc/evidence/gdsc-smem-20261123/local-all-0a617ba.json)记录 53 组件＋4 Linux、0 失败、0 跳过；本地 QEMU 为 `89fcb435…`，Linux 输入另行编译，此次未重跑 A77/PCI 或原厂 native 诊断。
+
+**同一 `a2e19b18…` CI 二进制已完成原厂完整 DT 的后续诊断，越过此前 `0x00148198` 的 GCC abort。**
+[0a617bab 原厂回执](tb371fc/evidence/gdsc-smem-20261123/native-ci-0a.json)核对相同的未修改生产 Image 与完整 DT 输入，重新观察到 SMEM probe 成功及 **23/23** 状态检查通过；观察器没有写 guest 内存。
+此次 21.166 秒诊断的下一处致命异常仍位于 GCC：`mux_get_parent → clk_register → qcom_cc_really_probe → gcc_kona_probe` 读取物理地址 **`0x0010f060`**（偏移 **`0xf060`**），QEMU 报告 unsupported read，内核产生 `ESR 0x96000210` 并 panic。
+[固定版本官方源码](tb371fc/docs/gcc-sm8250.md#next-observed-boundary-usb3-primary-pipe-source-mux)将该寄存器标为 USB3 primary PIPE source mux `gcc_usb3_prim_phy_pipe_clk_src`。后续仍需核对生产 getter 的实际解码并实现外部父时钟与未知编码行为；源码里的 PHY/test 1 kHz dummy 值不作为实测频率。该 mux 尚未实现，完整原生 DT 到达用户态 PID 1 和 Android 启动仍未通过。
+
+## 先前原厂 SMEM 实测：408d82a 构建
+
+提交 [408d82a](https://github.com/cyjin-yl/qemu-tb371fc/commit/408d82ae4acc0fce05d16d3f17ee3123eda82ab4) 的 [GitHub Actions 运行 45164018326](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45164018326) 两路任务均为 **Success**。
+[公开 CI 回执](tb371fc/evidence/gdsc-smem-20261123/ci-408d82a.json)记录 **53/53 组件/解析 gate 和另次 4/4 无补丁 Linux gate**，合计 57 项；独立通用构建还通过 A77 852 项、两项非法配置拒绝及 PCI UFS 15/15，无跳过。
+53 与 4 是两次 runner 调用，各自保留输入和 verdict；这些结果不改写为一次另行执行的 all-suite。
+
+随后下载并核对该板级 artifact，[原厂诊断回执](tb371fc/evidence/gdsc-smem-20261123/native-ci-408.json)确认其中 QEMU 与上述两份 suite 记录使用相同 SHA-256：
+`0190794d7890fcc34caeff3c7f30d00218a6f0027bddc4500c34f79c45051a93`。
+归档 ZIP 的 SHA 和可执行文件 SHA 分别核对，诊断后二进制保持不变。另一路 doesvm 源码构建的整套本地复验尚无已归档结果；以下原厂测量直接使用已验收的 CI 产物。
+
+**未修改的生产内核使用完整原生 DT 输入，已实际执行 `qcom_smem_probe` 的成功路径，23 项运行状态一致性检查全部通过。**
+观察器核对生产指令中的发布路径，在暂停的 guest 中读到非零 `__smem` 及一致的锁、目录、分区和 header 状态；观察器没有写来宾内存。
+该次显式选择 SMEM empty reference、TCSR unlocked reference、GDSC reference-off、SPMI reference、REFGEN disabled reference 和部分 RPMh 文件输入；运行时仍有明确的 loader 内存修正。
+这项真实驱动观察独立于公开 SMEM gate 的 22 项 QTest fixture，不证明生产来宾完成后续分配操作、原生 SBL 状态或远端固件服务。
+
+此前的 GDSC 访问异常未再出现，日志记录了 CX/GX supply 注册。该次完整启动仍失败：
+`gcc_kona_probe → qcom_cc_really_probe → clk_register → clk_branch2_enable → clk_branch_toggle → clk_branch2_check_halt → regmap_mmio_read32le+0x8`
+在读取物理地址 **`0x00148198`**（GCC 偏移 **`0x48198`**）时触发 synchronous external abort。
+**完整原生 DT 到达用户态 PID 1、Android userspace 和 GPU 执行仍未通过。**
+
+## 新增 GPU GDSC 与 SMEM 参考接口
+
+本轮补充两个需要显式选择的接口，默认配置保持其未知或未初始化状态：
+
+| 接口 | 默认值与显式选项 | 实现范围 |
+| --- | --- | --- |
+| GPU CX/GX GDSC | `gdsc-profile=none`；可选择 `reference-off` 或 `reference-on` | 仅映射捕获到的五个四字节控制/状态窗口，保留软件 collapse、retention/wait、独立硬件请求、外部 vote、clamp/reset 与配置匹配迁移。数字状态不代表 GPU/GMU、GPUCC 时钟、物理供电或 secure firmware 已实现。 |
+| SMEM 交接 | `smem-profile=off`；可选择 `reference-empty`，并必须另加 `-global qcom-tcsr-mutex.boot-unlocked-reference=on` | 通过 loader 向 `0x80900000` 起的 2 MiB 普通 RAM 写入明确合成的空 SMEM v12 格式，由真实来宾代码自行分配和查找；不填造 socinfo、远端身份或固件 IPC 响应。 |
+
+完整映射、复位和迁移契约见 [GPU GDSC](tb371fc/docs/gdsc.md)、[SMEM reference](tb371fc/docs/smem-reference.md)与 [machine.md](tb371fc/docs/machine.md)。
+GDSC 的 `none` 不映射寄存器，仍保留用于迁移配置检查的设备；SMEM 的 `off` 不写交接镜像。
+SMEM reference 在普通 reset 时恢复为空堆，迁移时由普通 RAM 迁移保存分配结果，并拒绝不同 profile 间的迁移。
+这些是直接内核启动使用的显式模型配置，不是 SBL 执行、实机上电状态或完整 Android 启动记录。
+
+组件 gate、同一冻结二进制的集成验收，以及[原厂 SMEM 驱动成功路径观察](tb371fc/docs/smem-driver-observer.md)分别记录；
+下面保留的历史通过回执只证明各自命名的构建和输入。
+
+## 先前 TCSR、AOP 消息内存与 REFGEN 增量验证（2026-11-23）
+
+本轮冻结二进制 SHA-256 为 `2173fa4da68f8f769c53942b056124c5621e4714652c7f572deacc9440ec09cf`。
+[55/55 公共 gate](tb371fc/evidence/boot-resources-20261123-1005/public-55/result.json) 实际通过，包含 51 组组件/解析检查和四次 Linux 启动。
+[50 项专项检查](tb371fc/evidence/boot-resources-20261123-1005/workflow.json) 包括 TCSR 24 项、AOP SRAM 10 项和 REFGEN 16 项；十次迁移尝试包括七次成功传输及三次预期的配置不匹配拒绝。
+
+TCSR 实现 32 个互斥槽的所有者和未知状态；AOP SRAM 实现 4 KiB 存储与真实 RAM 迁移；REFGEN 实现 CTRL5 bit 0 软件请求和状态有效性。
+行为与边界见 [TCSR](tb371fc/docs/tcsr-mutex.md)、[AOP SRAM](tb371fc/docs/aop-msgram.md)、[REFGEN](tb371fc/docs/refgen.md)。
+
+[两次原厂内核与完整 DT 诊断](tb371fc/evidence/boot-resources-20261123-1005/native-progression.json) 均失败：
+默认未知 REFGEN 状态仍在 `refgen_kona_is_enabled` 读取处中止；显式选择尚未实测的 disabled reference 后，推进到 `gdsc_probe -> regmap_mmio_read32le`。
+此前 AOP 64 字节描述符读取异常未在这两次日志中出现，但 AOP 固件、QMP 握手和电源服务尚未验证。
+**完整原生 DT 和 Android 启动仍未通过。** SMEM/SBL 交接、原生 PMIC 映射和未解析 regulator 等依赖继续保留为未完成项。
+
+## 先前 QSEE 与 DCC 增量验证（2026-11-23）
+
+该轮冻结二进制 SHA-256 为 `51fe61d35213a6602a8eaa865faba04bc85f88df341947ca8a2e6300a8ab5be6`。
+[52/52 公共 gate](tb371fc/evidence/qsee-dcc-20261123/public-52/result.json) 实际通过，包含 48 组组件/解析检查和四次 Linux 启动。
+[51 项专项检查](tb371fc/evidence/qsee-dcc-20261123/workflow.json) 包括 QSEE 12 项、真实迁移 6 项、DCC 新操作 16 项和原有 DCC 17 项。
+
+QSEE 实现两组四位通知、mask/W1C、SPI 348/349 和状态迁移；DCC 实现有序单字 WRITE、平坦 LOOP 与单寄存器 RMW，执行真实内存事务。
+[首次迁移脚本失败](tb371fc/evidence/qsee-dcc-20261123/initial-attempt/workflow.json) 与[脚本修正](tb371fc/evidence/qsee-dcc-20261123/harness-fix.json) 均保留；设备 C 代码和冻结二进制未因该修正改变。
+
+未修改的生产内核加完整原生 DT 已越过 QSEE；[本轮实际故障](tb371fc/evidence/qsee-dcc-20261123/native-progression.json)
+为 AOP mailbox 的 64 字节共享内存读取和 `refgen_kona_is_enabled+0x14`。
+**完整原生 DT 和 Android 启动仍未通过。** QSEE 不是 TEE/SCM 执行实现，DCC 仍缺 CRC/ATB/CTI、嵌套循环等模式。
+行为与限制见 [QSEE](tb371fc/docs/qsee-irq.md) 和 [DCC 操作](tb371fc/docs/dcc-operations.md)。
+
+## 先前显示 RSC 增量验证（2026-11-23）
+
+新增显示 RSC 的真实窗口和 SPI 129 接线，与三个 APPS 投票槽共享同一资源服务。
+新二进制 SHA-256 为 `05c617462f87d5bacea9b86007ca8e37de5ed9a2644a5e3af5ac0d60485ec55b`。
+[49/49 公共 gate](tb371fc/evidence/display-rsc-20261123/public-49/result.json) 已通过，包含 45 组组件/解析检查与四次 Linux 启动。
+另有 [53 项 RPMh 专项检查](tb371fc/evidence/display-rsc-20261123/tests-final.json)，覆盖显示 11 项、显示迁移 6 项、APPS 22 项、APPS 迁移 5 项、文件配置 3 项及私有部分数据库的时钟 6 项。
+
+同一原厂内核和完整私有设备树，配显式 SPMI reference 与部分 RPMh 文件配置，
+已越过先前显示 RSC 和 SPMI 控制器访问异常；[该轮下一实际故障](tb371fc/evidence/display-rsc-20261123/native-progression.json) 是 `qsee_irq_probe+0x140`。
+PMIC 路由、RPMh regulator 资源和 SBL/SMEM handoff 仍不完整。**原厂 Android 完整启动仍未通过。**
+详细寄存器、共享投票和迁移边界见 [显示 RSC 文档](tb371fc/docs/rpmh-display-rsc.md)。
+
+## 08:20 基线统一验收
+
+[隔离构建的最终验收](tb371fc/evidence/verified-20261123-0820/final-verification.json)现已完成：
+**47/47 公共 gate、9 种 Cortex-A77 配置合计 852 项 guest 检查及 2 项非法配置拒绝、15/15 PCI UFS 兼容测试全部通过。**
+47 项包含 43 组组件/解析检查和四次完整 Linux 启动，用时 73.261 秒。
+板级 QEMU SHA 为 `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`；
+A77/PCI QEMU SHA 为 `2605ddb7a6c503cff9532bcd1f24a0945b76f5f148149170ee3af7813beeec29`。
+运行时源码与二进制的前后哈希一致，冻结源码快照是 `9a80cddf1bd6ad8ecdbba34fa164acb5524e206b`。
+
+[原顺序任务](tb371fc/evidence/verified-20261123-0820/initial-sequential-verification.json)保留失败状态：
+PCI 首次 discovery 因冻结文件名附加后缀而得到零项测试。
+将内容哈希相同的文件使用 QTest 要求的规范名称后，
+[15 项兼容检查](tb371fc/evidence/verified-20261123-0820/pci-ufs/result.json)在 8.643 秒内通过。
+发布前另有一处 DCC 纯格式修改，其[独立记录](tb371fc/evidence/verified-20261123-0820/dcc-style-only-after-verification.json)
+说明忽略空白后的 token 完全一致；没有把冻结回执的源码哈希改写成后续文件哈希。
+
+先前[42 项成功](tb371fc/evidence/resume-20261123/result.json)及
+[旧二进制上的后续失败](tb371fc/evidence/public-ci-20261123/attempt-45-old-binary/result.json)均按原字节保留。
+
+持续结果与限制见[持续验证账本](tb371fc/evidence/VALIDATION-continued-20261123.md)；
 [原始验证账本](tb371fc/evidence/VALIDATION.md)及其原始哈希保持不变。
+
+## 冻结构建 12 的独立历史验收
+
+默认分支原提交 `5fd52c1` 的 [46/46 公共门禁回执](tb371fc/evidence/resume-final-20261123/result.json)完整保留。
+该次使用板级 QEMU SHA-256 `178bace28c84bced9471b824d413feb18e76ddb15212ec32412ad7a7ec32a675`，
+42 组组件/验证检查和四次 Linux 启动在 74.755 秒内通过；运行前后二进制未改变。
+同一板级二进制的[未修改生产内核复验](tb371fc/evidence/production-gdb-frozen12-20261123/result.json)通过八项用户态检查并由 guest 主动关机。
+
+配套独立通用构建的 [A77 852 项与两项非法配置拒绝](tb371fc/evidence/compat-final-20261123/a77/result.json)
+和 [PCI UFS 15/15 无跳过检查](tb371fc/evidence/compat-final-20261123/ufs-pci/result.json)
+使用另一 QEMU：`c06bb42b52bc47839fbe40eb5a247c04d70b64840411af6efff1497d0a1d16c0`。
+[来源记录](tb371fc/evidence/compat-final-20261123/a77/source-provenance.json)保留 4,444 个树文件、1,088 个实际编译输入和 keymap 对照。
+这些记录与 08:20 基线以及后续 49/52/55 项集成各自独立，不能把不同二进制的回执合成一次验收。
+
+该轮[完整原生 DT 诊断](tb371fc/evidence/native-dt-spmi-reference-20261123/result.json)显式使用 SPMI reference，
+仍在 `qsee_irq_probe+0x140` 对 `0x0188601c` 写入 `0xf` 时失败；后续增量记录了继续推进的故障点。
+SPMI 原有 [25 项参考模型回执及来源](tb371fc/evidence/spmi-reference-20261123/result.json)也按原字节保留。
 
 ## 已执行的验证
 
@@ -41,31 +163,34 @@ IPCC 16 项、PDC 18 项 C QTest 与 10 项迁移、DCC 17 项均在同一执行
 | 验证 | 实际结果与证据 | 主要范围 |
 | --- | --- | --- |
 | 平板与启动布局 | [原始板级配置](tb371fc/evidence/android-board.json)、[扩展设备树/硬件清单](tb371fc/evidence/expansion-20261123/android-device-inventory.json)、[13 项运行时布局检查](tb371fc/evidence/boot-layout-20261123/runtime-layout-frozen4.json) | CPU affinity、内存段、GIC、UART、timer、设备依赖；布局检查保留原先重复 memory 节点失败及修复记录。 |
-| Cortex-A77 | [最终复验：9 配置、852 项 guest 检查及 2 项非法配置拒绝](tb371fc/evidence/compat-final-20261123/a77/result.json) | 架构寄存器、实际指令、特征开关、缓存 ID 描述和 PMU；不等于缓存时序或 DSU 模拟。 |
+| Cortex-A77 | [9 配置、852 项 guest 检查及 2 项非法配置拒绝](tb371fc/evidence/cpu-a77-r1p0/result.json) | 架构寄存器、实际指令、特征开关、缓存 ID 描述和 PMU；不等于缓存时序或 DSU 模拟。 |
 | GENI UART | [14 项寄存器/FIFO/IRQ 检查](tb371fc/evidence/expansion-20261123/revalidation-4/geni-qtest.json)、[6 项真实进程迁移](tb371fc/evidence/expansion-20261123/revalidation-4/geni-migration.json) | 包括修复后空闲 TX watermark 驱动下一次 TTY 发送；Linux 多次串口输出另有实际记录。 |
 | GCC 与串口接线 | [19 项 GCC、5 项 GCC 迁移、6 项 clock/reset、4 项接线迁移](tb371fc/evidence/expansion-20261123/revalidation-4/summary.json) | 状态、父时钟、分频、门控、复位、GDSC 及未完成 TX/RX 恢复。 |
 | CPU/MMIO timer | [精确计数及修前/修后回执](tb371fc/evidence/mmio-timer-live-status-20261123/) | 每虚拟秒准确 19,200,000 tick；独立 icount 参考、10 项 exact/10 项 legacy MMIO、真实 CPU 与 MMIO 迁移、模式不匹配拒绝，以及 16 次 CPU→GIC 线状态检查。 |
 | SMMUv2 | [23/23 C QTest](tb371fc/evidence/smmuv2-20261123/qtest-result.json) | RAM 页表遍历、权限、fault、stream/context bank、ATS、TTBR1、无效模式；保留修前反例。 |
-| UFS 与 DMA | [56 项控制器/PHY/DMA 检查](tb371fc/evidence/resume-final-20261123/result.json)、[19 项 Linux UFS/SMMU 检查](tb371fc/evidence/ufs-bringup-20261123/linux-strict-iommu-19.json) | 真实 SCSI 块 I/O、strict DMA domain、flush/reopen、错误路径、Hibern8，以及宿主独立核对写入的 32 KiB 数据。 |
-| 共享 UFS core / PCI | [最终 15/15，未跳过任何用例](tb371fc/evidence/compat-final-20261123/ufs-pci/result.json) | 独立通用构建、ARM virt/PCI 路径；证明共享代码的兼容性，范围不包含整块 TB371FC。 |
+| UFS 与 DMA | [56 项控制器/PHY/DMA 检查](tb371fc/evidence/resume-20261123/reports/32-ufs-register-dma.json)、[19 项 Linux UFS/SMMU 检查](tb371fc/evidence/ufs-bringup-20261123/linux-strict-iommu-19.json) | 真实 SCSI 块 I/O、strict DMA domain、flush/reopen、错误路径、Hibern8，以及宿主独立核对写入的 32 KiB 数据。 |
+| 共享 UFS core / PCI | [冻结构建 12 配套通用构建 15/15](tb371fc/evidence/compat-final-20261123/ufs-pci/result.json)、[08:20 通用构建 15/15](tb371fc/evidence/verified-20261123-0820/pci-ufs/result.json) | 所有用例实际执行，无跳过；两次通用构建的哈希和失败修正记录分别保留。 |
 | RPMh reference/file | [22 项 reference/文件 ABI 检查、5 项迁移](tb371fc/evidence/expansion-20261123/revalidation-5/rpmh-summary.json) | TCS 执行、ARC/VRM/BCM 请求、IRQ、sleep/wake 输入、取消及非法请求不完成。reference 数据显式为合成数据。 |
 | Watchdog | [16 项数字行为检查](tb371fc/evidence/watchdog-20261123/qtest-16.json)、[真实 pending-bite 迁移](tb371fc/evidence/watchdog-20261123/migration.json) | bark/bite、pet、counter phase、复位动作、IRQ 和错误频率拒绝；频率是软件配置证据。 |
 | TLMM | [25 项 C QTest](tb371fc/evidence/tlmm-20261123/qtest-result.json)、[15 项真实迁移检查](tb371fc/evidence/tlmm-20261123/migration-result.json) | 180 GPIO、边沿/电平 IRQ、输出/使能、专用 UFS reset、显式 boot handoff；四次进程迁移。 |
 | IMEM / PS_HOLD | [7 项检查，含实际迁移](tb371fc/evidence/boot-resources-20261123/qtest-migration-7.json) | 可写 SRAM、guest-owned handoff 字段、reset retention 和数字 PS_HOLD 输出；没有伪造 PMIC 关机策略。 |
 | Linux RPMh provider | [23 项 guest 与 3 项宿主检查](tb371fc/evidence/rpmh-linux-20261123/result.json) | 显式 reference profile；RSC/clk-rpmh 绑定、CCF 19.2 MHz、真实 TCS IRQ、完成的 XO 事务与清除的 pending IRQ、UFS/SMMU 和宿主磁盘核对。 |
-| DCC | [17 项真实捕获/错误/迁移检查](tb371fc/evidence/dcc-20261123/result.json) | 实际 SRAM 与源地址空间事务；reference map2 身份，尚无 CRC、ATB、loop、write/RMW 完整执行。 |
-| PDC | [18 项 C QTest 与 10 项真实迁移检查](tb371fc/evidence/resume-final-20261123/result.json) | 原生四段 pin→SPI 映射、实际 GIC pending、level/edge 转换和迁移不重放边沿；native VERSION 仍未知，17/9 历史回执保留。 |
-| IPCC | [16 项消息/IRQ/迁移检查](tb371fc/evidence/resume-final-20261123/result.json) | APPS self-send、实际 SPI 229/GIC pending、独立 mask/latch、clear-on-read、容量边界及迁移；没有伪造远端固件回复。 |
-| SPMI reference | [25 项控制器/负例/IRQ/迁移检查](tb371fc/evidence/resume-final-20261123/result.json) | 显式 v5 reference APID/owner 表，真实有界字节事务、PDC pin 1 接线；测试 IRQ 外设是显式合成 fixture，未声称完整 PMIC。 |
-| 生产内核无串口验收 | [冻结构建 12 的 8/8 用户态检查与实际 guest power-off](tb371fc/evidence/production-gdb-frozen12-20261123/result.json) | 未修改的 4.19.157 生产 Image、8 GiB、8 CPU、生成 DT、测试 PID 1；GDB 只读普通 guest RAM 结果后恢复执行。 |
+| DCC | [17 项原有检查](tb371fc/evidence/qsee-dcc-20261123/dcc-existing/report.json)及[16 项新增操作检查](tb371fc/evidence/qsee-dcc-20261123/dcc-operations/report.json) | 实际 READ/单字 WRITE/平坦 LOOP/单寄存器 RMW 与 pending 迁移；reference 身份和时序，CRC/ATB/CTI 等仍缺。 |
+| QSEE IRQ | [12 项行为检查](tb371fc/evidence/qsee-dcc-20261123/qsee/report.json)及[6 项真实迁移](tb371fc/evidence/qsee-dcc-20261123/qsee-migration/report.json) | 两组通知锁存、屏蔽、W1C 与真实 SPI 348/349；不执行 secure firmware。 |
+| PDC | [18 项 C QTest](tb371fc/evidence/verified-20261123-0820/public-47/30-pdc-c-qtest/case.json)、[10 项迁移检查](tb371fc/evidence/verified-20261123-0820/public-47/42-pdc-migration/fixtures/data/result.json) | 已在同一隔离构建实际通过；native VERSION 仍未知，旧 17/9 回执保留。 |
+| IPCC | [16 项消息/IRQ/迁移检查](tb371fc/evidence/verified-20261123-0820/public-47/37-ipcc-messages/fixtures/data/result.json) | 实际 GIC SPI 229 传播、mask/clear 和迁移；未连接的远端固件不伪造回复。 |
+| SPMI / PDC / GIC | [SPMI 25 项](tb371fc/evidence/verified-20261123-0820/public-47/39-spmi-pmic-arb/fixtures/data/result.json)、[真实连线与迁移 8 项](tb371fc/evidence/verified-20261123-0820/public-47/40-spmi-pdc-gic-route/fixtures/data/result.json) | 显式 reference 映射和测试端点；事务、剩余 deadline 与 SPI 481 传播已测，原生 PMIC 行为未由此证明。 |
+| 生产内核无串口验收 | [原始 8/8 用户态检查与 guest shutdown](tb371fc/evidence/production-gdb-exact-20261123/result.json)、[冻结构建 12 独立复验](tb371fc/evidence/production-gdb-frozen12-20261123/result.json) | 未修改的 4.19.157 生产 Image、8 GiB、8 CPU、生成 DT、测试 PID 1；GDB 只读普通 guest RAM 结果后恢复执行。 |
+| GPU GDSC / 空 SMEM 组件 | [408d82a 的成功 gate 与严格计数](tb371fc/evidence/gdsc-smem-20261123/ci-408d82a.json)：GDSC 29 项、10 个迁移结果；SMEM 22 项、4 个迁移结果 | 迁移结果包含预期配置拒绝，分别为 GDSC 六次成功＋四次拒绝、SMEM 两次成功＋两次拒绝；SMEM fixture 不执行 guest CPU。 |
+| 原厂 SMEM driver probe | [408d82a](tb371fc/evidence/gdsc-smem-20261123/native-ci-408.json) 与 [0a617bab](tb371fc/evidence/gdsc-smem-20261123/native-ci-0a.json) 两份独立回执各有 23 项一致性检查和成功路径观察 | 各自核对受测 CI 二进制；未修改生产内核、完整原生 DT 输入、显式参考交接，观察器不写 guest 内存。0a 越过先前 `0x00148198`，随后在 `0x0010f060` 发生 GCC external abort；未达到完整原生启动。 |
 
-TLMM、IMEM/PS_HOLD、普通 Linux UFS19 和 reference RPMh 联合 Linux23 已在冻结构建 7（QEMU SHA `f3fa0d2db54d9f59ba9b0ea25239553900b805c3c05e53e0dd8577e94607e41b`）实际通过。新 kernel SHA 为 `c513268fb0727d289fdfc0f02637c53cf5f976cc836ea9c586763f5f584bce40`。这些组件和生成 DT 的成功仍不证明完整原生 DT 或 Android 启动。最新集成重放、实际二进制和各 gate verdict 见[46 项当前回执](tb371fc/evidence/resume-final-20261123/result.json)；分项与后续证据见[持续验证账本](tb371fc/evidence/VALIDATION-continued-20261123.md)。
+TLMM、IMEM/PS_HOLD、普通 Linux UFS19 和 reference RPMh 联合 Linux23 已在冻结构建 7（QEMU SHA `f3fa0d2db54d9f59ba9b0ea25239553900b805c3c05e53e0dd8577e94607e41b`）实际通过。新 kernel SHA 为 `c513268fb0727d289fdfc0f02637c53cf5f976cc836ea9c586763f5f584bce40`。这些组件和生成 DT 的成功仍不证明完整原生 DT 或 Android 启动。08:20 基线集成重放、实际二进制和各 gate verdict 见[该轮回执](tb371fc/evidence/verified-20261123-0820/final-verification.json)；分项与后续证据见[持续验证账本](tb371fc/evidence/VALIDATION-continued-20261123.md)。
 
 ### 三种启动结果的区别
 
 - **公开主线 Linux**：固定版本、无补丁的 upstream 输入，正式 `ttyMSM0` console 接管，用户态检查和 UFS/SMMU I/O 均有实测。UFS 的专用 I/O gate 在检查 guest verdict 和磁盘后由宿主 QMP 结束；它不测试 guest shutdown。
 - **未修改的生产内核 + 测试 initramfs**：已有八项用户态检查和真正的 QMP `guest-shutdown` 事件。生产配置没有串口 console，验收通过只读 GDB checkpoint 取出完成掩码、uname、在线 CPU、计时和原样探针输出，再继续 guest 关机。见 [guest-acceptance.md](tb371fc/docs/guest-acceptance.md)。
-- **生产内核 + 完整原生 DT / Android 系统**：冻结构建 12 在显式 `spmi-profile=reference` 下越过前期 watchdog、IMEM/restart、DCC、IPCC 和 SPMI probe 阻塞，下一记录故障为 `qsee_irq_probe+0x140` 向 `0x0188601c` 写入 `0xf`。见[最新诊断回执](tb371fc/evidence/native-dt-spmi-reference-20261123/result.json)与[较早逐次记录](tb371fc/evidence/native-dt-progression-20261123/progress.json)。SPMI/APID 身份和所有权是明确的参考假设；这没有证明原生 DCC 列表完整执行、完整 DT 到达 PID 1 或 Android userspace 成功。
+- **生产内核 + 完整原生 DT / Android 系统**：实际诊断已越过 watchdog、IMEM/restart 和 DCC probe，并由未改驱动编程 DCC 列表 3/6/7；后续具体故障按冻结构建逐次记录。见[逐次诊断回执](tb371fc/evidence/native-dt-progression-20261123/progress.json)。这没有证明 DCC 完整捕获或完整 DT 到达 PID 1，Android userspace、显示、输入和网络也尚无端到端成功记录。
 
 最早的 [Linux 八项启动记录](tb371fc/evidence/linux-smoke.json)、[GENI 13 项记录](tb371fc/evidence/geni-qtest.json)和 [20 项 profile 对照](tb371fc/evidence/machine-profile-validation.json)保留为历史。它们不描述所有后续设备或当前 CPU 配置。
 早期 research kernel 的页表池失败也保留了[回执](tb371fc/evidence/linux-research-kernel-failure.json)和[日志](tb371fc/evidence/linux-research-kernel-failure.log)；[可选修正建议](tb371fc/patches/linux-6.12-qemu-early-pgtable.patch)仍未应用。
@@ -82,9 +207,9 @@ TLMM、IMEM/PS_HOLD、普通 Linux UFS19 和 reference RPMh 联合 Linux23 已�
 | SMMUv2 | apps/GPU 两个架构窗口，非安全 AArch64 stage-1、4 KiB 页表和真实 DMA 翻译；不冒充已实现 Qualcomm TCU/TBU、stage 2 或全部 QSMMU v500 扩展。GPU SMMU 的存在不等于 GPU 已实现。 |
 | UFS | Sysbus HCI、Qualcomm wrapper、QMP PHY、GCC 依赖、SMMU DMA 与 SCSI 后端。使用显式测试磁盘。ICE、RPMB 认证、完整原生 LU 启动属性、全部错误/复位模式和物理 PHY/闪存时序仍未完成。 |
 | RPMh | `rpmh-profile=off` 为默认值；`reference` 和 `file` 必须显式选择。file 解析外部 cmd-db 并核对内容；未知资源不会自动获得成功 ACK。它不执行 AOP 固件，也不模拟真实 PMIC 电压。 |
-| DCC / PDC / IPCC | 分别实现有界 SRAM read-capture、原生 pin→GIC 中断转换和 APPS 消息 latch。各自的参考身份、仲裁和未覆盖模式见设备文档；不提供未实现的协处理器服务。 |
-| SPMI / PMIC | 默认 `spmi-profile=off`；`reference` 显式映射五个原生窗口。v5/APID/owner 表为参考输入，只返回有来源的身份字节，未知字段失败；合成 SID15 IRQ fixture 与真实 PMIC 分开。 |
-| 迁移 | GENI、GCC、timer、RPMh、watchdog、TLMM、IMEM/PS_HOLD、DCC、PDC、IPCC 和 SPMI reference 有各自的实际迁移回执。**上游 UFS core 当前阻止整板迁移**；组件测试显式使用 `ufs-enabled=off`。SMMUv2 另有 [18 项独立进程迁移／配置拒绝回执](tb371fc/evidence/smmuv2-migration-20261123/publication.json)，使用 VMState v2；旧 v1 stream 明确拒绝。其他未验收状态不能由这些回执推定。 |
+| GPU GDSC | CX/GX 五个独立四字节窗口；`gdsc-profile=none` 默认不映射，`reference-off`/`reference-on` 明示初始数字请求。状态由软件或硬件请求与独立外部 vote 产生，未知位写入失败；GPU/GMU、GPUCC 和真实供电/retention 尚未由此实现。 |
+| SMEM | `smem-profile=off` 默认不初始化；`reference-empty` 加显式 TCSR unlocked-reference 提供普通 RAM 中的空 v12 交接格式。来宾拥有分配器操作，缺失的固件 item 保持缺失；没有 SBL、socinfo、remoteproc 或 IPC 服务替身。 |
+| 迁移 | GENI、GCC、timer、RPMh、watchdog、TLMM、IMEM/PS_HOLD、DCC、PDC、IPCC、SPMI、QSEE、TCSR、AOP SRAM 和 REFGEN 有各自的实际迁移回执。**上游 UFS core 当前阻止整板迁移**；组件测试显式使用 `ufs-enabled=off`。SMMUv2 另有 [18 项独立进程迁移／配置拒绝回执](tb371fc/evidence/smmuv2-migration-20261123/publication.json)，使用 VMState v2；旧 v1 stream 明确拒绝。其他未验收状态不能由这些回执推定。 |
 
 地址、属性、启动接口、生成 DT 与原生 DT 的差异见 [machine.md](tb371fc/docs/machine.md)。独立设备文档和来源索引见 [SOURCES.md](tb371fc/SOURCES.md)。
 
@@ -117,7 +242,7 @@ python3 tb371fc/scripts/ci_device_tests.py \
 # 校验固定官方源码 SHA，独立构建无补丁 Linux
 SMOKE_JOBS=2 bash tb371fc/scripts/build_smoke_kernel.sh /work/clean-linux
 
-# 普通/空 UFS 各八项 + UFS/SMMU 十九项 + RPMh 联合二十三项，均为 8 GiB / 八核
+# 八项用户态 + UFS/SMMU 十九项 + RPMh 联合二十三项，均为 8 GiB / 八核
 python3 tb371fc/scripts/ci_device_tests.py \
   --qemu /work/build/qemu-system-aarch64 --build-dir /work/build \
   --kernel /work/clean-linux/artifacts/Image \

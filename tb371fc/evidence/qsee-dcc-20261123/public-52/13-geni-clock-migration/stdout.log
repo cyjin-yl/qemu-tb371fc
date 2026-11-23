@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "suite": "GCC-wired GENI actual process-to-process migration",
+  "qemu": "/work/qsee-dcc-root-0925/qemu-system-aarch64",
+  "machine": "tb371fc,ufs-enabled=off",
+  "qemu_sha256": "51fe61d35213a6602a8eaa865faba04bc85f88df341947ca8a2e6300a8ab5be6",
+  "work_dir": "/tmp/tbci-keep4aw_/13/data",
+  "ram_per_process": "128 MiB",
+  "scope": "Actual device clock/reset wiring and FIFO continuity; no silicon electrical or baud timing equivalence",
+  "success": true,
+  "checks": [
+    {
+      "check": "source_queued_tx_rx_and_clock_gated_irq",
+      "status": "pass"
+    },
+    {
+      "check": "actual_qmp_migration_completed",
+      "status": "pass"
+    },
+    {
+      "check": "clock_gate_fifo_and_latched_status_preserved",
+      "status": "pass"
+    },
+    {
+      "check": "destination_clock_restore_continues_without_duplicate_bytes",
+      "status": "pass"
+    }
+  ],
+  "migration": {
+    "source": {
+      "status": "completed",
+      "setup-time": 0,
+      "downtime": 31,
+      "total-time": 46,
+      "ram": {
+        "total": 134246400,
+        "postcopy-requests": 0,
+        "dirty-sync-count": 2,
+        "multifd-bytes": 0,
+        "pages-per-second": 0,
+        "downtime-bytes": 303215,
+        "page-size": 4096,
+        "remaining": 0,
+        "postcopy-bytes": 0,
+        "mbps": 383.92347826086956,
+        "transferred": 2207560,
+        "dirty-sync-missed-zero-copy": 0,
+        "precopy-bytes": 0,
+        "duplicate": 32773,
+        "dirty-pages-rate": 0,
+        "normal-bytes": 8192,
+        "normal": 2
+      }
+    },
+    "target": {
+      "status": "completed"
+    }
+  },
+  "expected_checks": 4
+}

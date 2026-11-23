@@ -3,6 +3,8 @@
  * SM8250 global clock controller: software-visible register state and gates.
  * Register evidence: Linux v6.12.114 drivers/clk/qcom/gcc-sm8250.c,
  * clk-alpha-pll.c, clk-rcg2.c, clk-branch.c, gdsc.c, reset.c.
+ * The SYS_NOC_CPUSS halt register and parent also use the pinned official
+ * OnePlus SM8250 gcc-kona.c contract recorded in the generated manifest.
  * See tb371fc/docs/gcc-sm8250.md for evidence, assumptions and limitations.
  * This implements neither analog PLLs nor undocumented Qualcomm firmware.
  */
@@ -217,7 +219,8 @@ static uint64_t gcc_rate(QcomSm8250GccState *s, int id,
         if (!demand[id]) {
             return 0;
         }
-        if (d->external >= 0) {
+        /* Keep legacy Clock input slots without overriding a known parent. */
+        if (d->parent < 0 && d->external >= 0) {
             return clock_get_hz(s->external[d->external]);
         }
         return gcc_rate(s, d->parent, demand, depth + 1);

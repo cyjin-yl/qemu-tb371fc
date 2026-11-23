@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "started_utc": "2026-11-23T08:39:46.620973+00:00",
+  "scope": "Shared UFS core and PCI transport on generic ARM virt; no full TB371FC attestation",
+  "private_inputs_used": false,
+  "qemu_sha256": "2605ddb7a6c503cff9532bcd1f24a0945b76f5f148149170ee3af7813beeec29",
+  "qos_test_sha256": "d99b3f5b9ce88f9a8a8cc1d9984e0255ca0ae3fc2a44470257ea845ec23c4767",
+  "runner_sha256": "abba865462414529e0fe269ec10785461202e0cb3b4644f39622fd8d530c5798",
+  "expected_tests": [
+    "hid",
+    "init",
+    "legacy-read-write",
+    "long-prdt",
+    "mcq-cq-wraparound",
+    "mcq-read-write",
+    "no-prdt",
+    "query-attribute",
+    "query-desciptor",
+    "query-flag",
+    "reg-read",
+    "short-prdt",
+    "sync-cache",
+    "wb-init",
+    "wb-read-write"
+  ],
+  "checks": [],
+  "passed": false,
+  "list_command": [
+    "/work/build-verified-a77-0820/tests/qtest/qos-test",
+    "-l"
+  ],
+  "list_exit_code": 0,
+  "discovered_tests": [],
+  "error": "Traceback (most recent call last):\n  File \"/work/tb371fc-verified-root-0820/tb371fc/scripts/run_ufs_pci_compat.py\", line 75, in main\n    raise RuntimeError(f\"Expected all 15 unique UFS PCI tests; found {names!r}\")\nRuntimeError: Expected all 15 unique UFS PCI tests; found []\n",
+  "elapsed_seconds": 1.182,
+  "completed_utc": "2026-11-23T08:39:47.803307+00:00"
+}

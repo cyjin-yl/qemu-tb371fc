@@ -1,0 +1,644 @@
+{
+  "ancillary_extraction_errors": [
+    {
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/work/tb371fc-verified-root-0820/include/hw/qdev-properties.h'",
+      "path": "include/hw/qdev-properties.h",
+      "stage": "baseline"
+    },
+    {
+      "error": "HTTPError: HTTP Error 404: Not Found",
+      "path": "Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt",
+      "stage": "driver-fetch"
+    },
+    {
+      "error": "HTTPError: HTTP Error 404: Not Found",
+      "path": "Documentation/devicetree/bindings/soc/qcom/qcom,smem.txt",
+      "stage": "driver-fetch"
+    }
+  ],
+  "baseline_correction": {
+    "correction": "Copied actual QEMU include/hw/core/qdev-properties.h; unavailable .txt bindings remain absent and are not needed for runtime geometry.",
+    "created_utc": "2026-11-23T09:29:17.389674+00:00",
+    "original_run_exit_preserved": "2",
+    "sha256": "f3759ad90df782aca827e9b4fbdd35318677ec19711d25424066c84ddff537bd",
+    "source": "/work/tb371fc-verified-root-0820/include/hw/core/qdev-properties.h"
+  },
+  "created_utc": "2026-11-23T09:41:01.027338+00:00",
+  "derivation": "Allowed DT geometry only; original binary assets remain private. No new tablet reads.",
+  "driver": {
+    "provenance": "pinned public kernel mirror, not claimed an official complete vendor release",
+    "registered_lock_slots": 32,
+    "sha256": "19722f9e4e3a8ddeb11500185745e8bf72911be1a3e751f5d62986d9d66e6778",
+    "url": "https://raw.githubusercontent.com/tem423/android_kernel_lenovo_tb371fc/9d8abebf4ac4d45cf4cc11b5b6bc5e4483d10fd1/drivers/hwspinlock/qcom_hwspinlock.c"
+  },
+  "known": {
+    "mutex_base": "0x1f40000",
+    "mutex_window_size": "0x20000",
+    "slot_offset": "0x0",
+    "slot_stride": "0x1000",
+    "smem_base": "0x80900000",
+    "smem_lock_slot": 3,
+    "smem_size": "0x200000"
+  },
+  "native_initial_owner_verified": false,
+  "original_extraction_exit": 2,
+  "records": [
+    {
+      "address_context": [
+        {
+          "path": "/",
+          "properties": {
+            "#address-cells": {
+              "base64": "AAAAAg==",
+              "be32_cells": [
+                2
+              ],
+              "sha256": "433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a",
+              "size_bytes": 4
+            },
+            "#size-cells": {
+              "base64": "AAAAAg==",
+              "be32_cells": [
+                2
+              ],
+              "sha256": "433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a",
+              "size_bytes": 4
+            }
+          }
+        },
+        {
+          "path": "/reserved-memory",
+          "properties": {
+            "#address-cells": {
+              "base64": "AAAAAg==",
+              "be32_cells": [
+                2
+              ],
+              "sha256": "433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a",
+              "size_bytes": 4
+            },
+            "#size-cells": {
+              "base64": "AAAAAg==",
+              "be32_cells": [
+                2
+              ],
+              "sha256": "433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a",
+              "size_bytes": 4
+            },
+            "ranges": {
+              "base64": "",
+              "present_boolean": true,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size_bytes": 0
+            }
+          }
+        },
+        {
+          "path": "/soc",
+          "properties": {
+            "#address-cells": {
+              "base64": "AAAAAQ==",
+              "be32_cells": [
+                1
+              ],
+              "sha256": "b40711a88c7039756fb8a73827eabe2c0fe5a0346ca7e0a104adc0fc764f528d",
+              "size_bytes": 4
+            },
+            "#size-cells": {
+              "base64": "AAAAAQ==",
+              "be32_cells": [
+                1
+              ],
+              "sha256": "b40711a88c7039756fb8a73827eabe2c0fe5a0346ca7e0a104adc0fc764f528d",
+              "size_bytes": 4
+            },
+            "ranges": {
+              "base64": "AAAAAAAAAAAAAAAA/////w==",
+              "be32_cells": [
+                0,
+                0,
+                0,
+                4294967295
+              ],
+              "sha256": "34885ea2ef8490886fae553c8ce7ffb5a27563825e5f6ce02784875d1ace0e47",
+              "size_bytes": 16
+            }
+          }
+        }
+      ],
+      "fdt_offset": 0,
+      "fdt_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+      "links": [
+        {
+          "arguments": [],
+          "from": "/soc/qcom,smem",
+          "phandle": 130,
+          "property": "memory-region",
+          "target": "/reserved-memory/smem_region@80900000"
+        },
+        {
+          "arguments": [
+            3
+          ],
+          "from": "/soc/qcom,smem",
+          "phandle": 131,
+          "property": "hwlocks",
+          "target": "/soc/hwlock"
+        },
+        {
+          "arguments": [
+            0,
+            4096
+          ],
+          "from": "/soc/hwlock",
+          "phandle": 129,
+          "property": "syscon",
+          "target": "/soc/syscon@1f40000"
+        }
+      ],
+      "nodes": [
+        {
+          "path": "/soc/qcom,smem",
+          "properties": {
+            "compatible": {
+              "base64": "cWNvbSxzbWVtAA==",
+              "sha256": "0a83647abfa36d1d03d41b082d3ec1358c618de7f90320a76c1a899424e4bc7e",
+              "size_bytes": 10,
+              "strings": [
+                "qcom,smem"
+              ]
+            },
+            "hwlocks": {
+              "base64": "AAAAgwAAAAM=",
+              "be32_cells": [
+                131,
+                3
+              ],
+              "sha256": "536e99d787de86e96068852214119ffdad20cc9bc0004d87f63c5f91aae7a583",
+              "size_bytes": 8
+            },
+            "memory-region": {
+              "base64": "AAAAgg==",
+              "be32_cells": [
+                130
+              ],
+              "sha256": "ae8ab7ce4b4ecb41298617e6006047c15063456a595bb203be3951b6f8529199",
+              "size_bytes": 4
+            },
+            "phandle": {
+              "base64": "AAADmA==",
+              "be32_cells": [
+                920
+              ],
+              "sha256": "57dcfcb2de7cfd5773df4922b12c26e17ce371f2f943978c21ce22d716726d01",
+              "size_bytes": 4
+            }
+          },
+          "reg_decoded": []
+        },
+        {
+          "path": "/soc/hwlock",
+          "properties": {
+            "#hwlock-cells": {
+              "base64": "AAAAAQ==",
+              "be32_cells": [
+                1
+              ],
+              "sha256": "b40711a88c7039756fb8a73827eabe2c0fe5a0346ca7e0a104adc0fc764f528d",
+              "size_bytes": 4
+            },
+            "compatible": {
+              "base64": "cWNvbSx0Y3NyLW11dGV4AA==",
+              "sha256": "ab6018c187c848422aecbc55a51d710c88999df4c785a3945cdd597197191352",
+              "size_bytes": 16,
+              "strings": [
+                "qcom,tcsr-mutex"
+              ]
+            },
+            "phandle": {
+              "base64": "AAAAgw==",
+              "be32_cells": [
+                131
+              ],
+              "sha256": "89aed9b889b07e48b80a60e7dc62ab68bda5428ccaec24f53d3fbdbe627ffe7a",
+              "size_bytes": 4
+            },
+            "syscon": {
+              "base64": "AAAAgQAAAAAAABAA",
+              "be32_cells": [
+                129,
+                0,
+                4096
+              ],
+              "sha256": "e81f148c72a04cba811605b8ec72e3738a4017a7d607414a03e910d4a92ff7a4",
+              "size_bytes": 12
+            }
+          },
+          "reg_decoded": []
+        },
+        {
+          "path": "/reserved-memory/smem_region@80900000",
+          "properties": {
+            "no-map": {
+              "base64": "",
+              "present_boolean": true,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size_bytes": 0
+            },
+            "phandle": {
+              "base64": "AAAAgg==",
+              "be32_cells": [
+                130
+              ],
+              "sha256": "ae8ab7ce4b4ecb41298617e6006047c15063456a595bb203be3951b6f8529199",
+              "size_bytes": 4
+            },
+            "reg": {
+              "base64": "AAAAAICQAAAAAAAAACAAAA==",
+              "be32_cells": [
+                0,
+                2156920832,
+                0,
+                2097152
+              ],
+              "sha256": "18978715a9f9ec2d87920ca8fd757e7d4e85681a670c097087b6f354258375d3",
+              "size_bytes": 16
+            }
+          },
+          "reg_decoded": [
+            {
+              "address_cells": 2,
+              "address_cells_source": "/reserved-memory/#address-cells",
+              "bus_address": "0x80900000",
+              "physical_address": "0x80900000",
+              "size": "0x200000",
+              "size_cells": 2,
+              "size_cells_source": "/reserved-memory/#size-cells",
+              "translation": [
+                {
+                  "bus": "/reserved-memory",
+                  "translation": "identity"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "path": "/soc/syscon@1f40000",
+          "properties": {
+            "compatible": {
+              "base64": "c3lzY29uAA==",
+              "sha256": "c23b0b2e2a46f4d60c116ce33985d51c1b4ba87e0a9a5c58ac87a5729d02c081",
+              "size_bytes": 7,
+              "strings": [
+                "syscon"
+              ]
+            },
+            "phandle": {
+              "base64": "AAAAgQ==",
+              "be32_cells": [
+                129
+              ],
+              "sha256": "326489dc8abb4eadb67859409d018441c5df1a334713f3a1d24835103aa686c9",
+              "size_bytes": 4
+            },
+            "reg": {
+              "base64": "AfQAAAACAAA=",
+              "be32_cells": [
+                32768000,
+                131072
+              ],
+              "sha256": "fc939f56ebb456a4b8f94ce074ab6b2ef2661e0bb69a125f5b916b0d6f6849e1",
+              "size_bytes": 8
+            }
+          },
+          "reg_decoded": [
+            {
+              "address_cells": 1,
+              "address_cells_source": "/soc/#address-cells",
+              "bus_address": "0x1f40000",
+              "physical_address": "0x1f40000",
+              "size": "0x20000",
+              "size_cells": 1,
+              "size_cells_source": "/soc/#size-cells",
+              "translation": [
+                {
+                  "bus": "/soc",
+                  "child_base": "0x0",
+                  "parent_base": "0x0",
+                  "size": "0xffffffff"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "source": "existing live DT asset",
+      "source_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207"
+    },
+    {
+      "address_context": [
+        {
+          "path": "/",
+          "properties": {
+            "#address-cells": {
+              "base64": "AAAAAg==",
+              "be32_cells": [
+                2
+              ],
+              "sha256": "433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a",
+              "size_bytes": 4
+            },
+            "#size-cells": {
+              "base64": "AAAAAg==",
+              "be32_cells": [
+                2
+              ],
+              "sha256": "433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a",
+              "size_bytes": 4
+            }
+          }
+        },
+        {
+          "path": "/reserved-memory",
+          "properties": {
+            "#address-cells": {
+              "base64": "AAAAAg==",
+              "be32_cells": [
+                2
+              ],
+              "sha256": "433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a",
+              "size_bytes": 4
+            },
+            "#size-cells": {
+              "base64": "AAAAAg==",
+              "be32_cells": [
+                2
+              ],
+              "sha256": "433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a",
+              "size_bytes": 4
+            },
+            "ranges": {
+              "base64": "",
+              "present_boolean": true,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size_bytes": 0
+            }
+          }
+        },
+        {
+          "path": "/soc",
+          "properties": {
+            "#address-cells": {
+              "base64": "AAAAAQ==",
+              "be32_cells": [
+                1
+              ],
+              "sha256": "b40711a88c7039756fb8a73827eabe2c0fe5a0346ca7e0a104adc0fc764f528d",
+              "size_bytes": 4
+            },
+            "#size-cells": {
+              "base64": "AAAAAQ==",
+              "be32_cells": [
+                1
+              ],
+              "sha256": "b40711a88c7039756fb8a73827eabe2c0fe5a0346ca7e0a104adc0fc764f528d",
+              "size_bytes": 4
+            },
+            "ranges": {
+              "base64": "AAAAAAAAAAAAAAAA/////w==",
+              "be32_cells": [
+                0,
+                0,
+                0,
+                4294967295
+              ],
+              "sha256": "34885ea2ef8490886fae553c8ce7ffb5a27563825e5f6ce02784875d1ace0e47",
+              "size_bytes": 16
+            }
+          }
+        }
+      ],
+      "fdt_offset": 0,
+      "fdt_sha256": "9ded79854f0db23503b3592417c1e5cd61d98d84cab8dc5e213d3a9b868c7019",
+      "links": [
+        {
+          "arguments": [],
+          "from": "/soc/qcom,smem",
+          "phandle": 130,
+          "property": "memory-region",
+          "target": "/reserved-memory/smem_region@80900000"
+        },
+        {
+          "arguments": [
+            3
+          ],
+          "from": "/soc/qcom,smem",
+          "phandle": 131,
+          "property": "hwlocks",
+          "target": "/soc/hwlock"
+        },
+        {
+          "arguments": [
+            0,
+            4096
+          ],
+          "from": "/soc/hwlock",
+          "phandle": 129,
+          "property": "syscon",
+          "target": "/soc/syscon@1f40000"
+        }
+      ],
+      "nodes": [
+        {
+          "path": "/soc/qcom,smem",
+          "properties": {
+            "compatible": {
+              "base64": "cWNvbSxzbWVtAA==",
+              "sha256": "0a83647abfa36d1d03d41b082d3ec1358c618de7f90320a76c1a899424e4bc7e",
+              "size_bytes": 10,
+              "strings": [
+                "qcom,smem"
+              ]
+            },
+            "hwlocks": {
+              "base64": "AAAAgwAAAAM=",
+              "be32_cells": [
+                131,
+                3
+              ],
+              "sha256": "536e99d787de86e96068852214119ffdad20cc9bc0004d87f63c5f91aae7a583",
+              "size_bytes": 8
+            },
+            "memory-region": {
+              "base64": "AAAAgg==",
+              "be32_cells": [
+                130
+              ],
+              "sha256": "ae8ab7ce4b4ecb41298617e6006047c15063456a595bb203be3951b6f8529199",
+              "size_bytes": 4
+            },
+            "phandle": {
+              "base64": "AAADmA==",
+              "be32_cells": [
+                920
+              ],
+              "sha256": "57dcfcb2de7cfd5773df4922b12c26e17ce371f2f943978c21ce22d716726d01",
+              "size_bytes": 4
+            }
+          },
+          "reg_decoded": []
+        },
+        {
+          "path": "/soc/hwlock",
+          "properties": {
+            "#hwlock-cells": {
+              "base64": "AAAAAQ==",
+              "be32_cells": [
+                1
+              ],
+              "sha256": "b40711a88c7039756fb8a73827eabe2c0fe5a0346ca7e0a104adc0fc764f528d",
+              "size_bytes": 4
+            },
+            "compatible": {
+              "base64": "cWNvbSx0Y3NyLW11dGV4AA==",
+              "sha256": "ab6018c187c848422aecbc55a51d710c88999df4c785a3945cdd597197191352",
+              "size_bytes": 16,
+              "strings": [
+                "qcom,tcsr-mutex"
+              ]
+            },
+            "phandle": {
+              "base64": "AAAAgw==",
+              "be32_cells": [
+                131
+              ],
+              "sha256": "89aed9b889b07e48b80a60e7dc62ab68bda5428ccaec24f53d3fbdbe627ffe7a",
+              "size_bytes": 4
+            },
+            "syscon": {
+              "base64": "AAAAgQAAAAAAABAA",
+              "be32_cells": [
+                129,
+                0,
+                4096
+              ],
+              "sha256": "e81f148c72a04cba811605b8ec72e3738a4017a7d607414a03e910d4a92ff7a4",
+              "size_bytes": 12
+            }
+          },
+          "reg_decoded": []
+        },
+        {
+          "path": "/reserved-memory/smem_region@80900000",
+          "properties": {
+            "no-map": {
+              "base64": "",
+              "present_boolean": true,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size_bytes": 0
+            },
+            "phandle": {
+              "base64": "AAAAgg==",
+              "be32_cells": [
+                130
+              ],
+              "sha256": "ae8ab7ce4b4ecb41298617e6006047c15063456a595bb203be3951b6f8529199",
+              "size_bytes": 4
+            },
+            "reg": {
+              "base64": "AAAAAICQAAAAAAAAACAAAA==",
+              "be32_cells": [
+                0,
+                2156920832,
+                0,
+                2097152
+              ],
+              "sha256": "18978715a9f9ec2d87920ca8fd757e7d4e85681a670c097087b6f354258375d3",
+              "size_bytes": 16
+            }
+          },
+          "reg_decoded": [
+            {
+              "address_cells": 2,
+              "address_cells_source": "/reserved-memory/#address-cells",
+              "bus_address": "0x80900000",
+              "physical_address": "0x80900000",
+              "size": "0x200000",
+              "size_cells": 2,
+              "size_cells_source": "/reserved-memory/#size-cells",
+              "translation": [
+                {
+                  "bus": "/reserved-memory",
+                  "translation": "identity"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "path": "/soc/syscon@1f40000",
+          "properties": {
+            "compatible": {
+              "base64": "c3lzY29uAA==",
+              "sha256": "c23b0b2e2a46f4d60c116ce33985d51c1b4ba87e0a9a5c58ac87a5729d02c081",
+              "size_bytes": 7,
+              "strings": [
+                "syscon"
+              ]
+            },
+            "phandle": {
+              "base64": "AAAAgQ==",
+              "be32_cells": [
+                129
+              ],
+              "sha256": "326489dc8abb4eadb67859409d018441c5df1a334713f3a1d24835103aa686c9",
+              "size_bytes": 4
+            },
+            "reg": {
+              "base64": "AfQAAAACAAA=",
+              "be32_cells": [
+                32768000,
+                131072
+              ],
+              "sha256": "fc939f56ebb456a4b8f94ce074ab6b2ef2661e0bb69a125f5b916b0d6f6849e1",
+              "size_bytes": 8
+            }
+          },
+          "reg_decoded": [
+            {
+              "address_cells": 1,
+              "address_cells_source": "/soc/#address-cells",
+              "bus_address": "0x1f40000",
+              "physical_address": "0x1f40000",
+              "size": "0x20000",
+              "size_cells": 1,
+              "size_cells_source": "/soc/#size-cells",
+              "translation": [
+                {
+                  "bus": "/soc",
+                  "child_base": "0x0",
+                  "parent_base": "0x0",
+                  "size": "0xffffffff"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "source": "first FDT by file offset, not asserted bootloader index",
+      "source_sha256": "7827766497a13ce96161ab3e38b2db4f7238dba3a056793299e911334a1732a4"
+    }
+  ],
+  "runtime_model_tested": false,
+  "schema": "tb371fc-smem-mutex-geometry-v1",
+  "smem_blob_available": false,
+  "source_extraction_sha256": "542935cce710f1f3251333f4ebb2bfc42218847899259ff1fa43ac0665ae5fd5",
+  "unknown": [
+    "native initial owners",
+    "security/access control by execution environment",
+    "native arbitration latency",
+    "native SMEM header/version/partition directory/items",
+    "pre-kernel SMEM handoff blob"
+  ]
+}

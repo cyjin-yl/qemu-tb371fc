@@ -1,0 +1,21 @@
+{
+  "scope": "Local GDSC and SMEM binary before the later GCC correction",
+  "targeted": {
+    "smem-first": {
+      "success": true,
+      "expected_checks": 22,
+      "qemu_sha256": "618b778e66c91298563d1d5834c3175d6c8f7742165e507bca27f876092dc77c",
+      "result_sha256": "832d894d4d2a3b41a34a47751818bdeb2dfe6b6070d2ded8496901bd888fbfe3"
+    },
+    "gdsc-combined": {
+      "success": true,
+      "expected_checks": 29,
+      "qemu_sha256": "618b778e66c91298563d1d5834c3175d6c8f7742165e507bca27f876092dc77c",
+      "result_sha256": "4a80b18e608a287a696a4b583bda54932ca8556f77e6f28048a976d40bdde22f"
+    }
+  },
+  "gcc_correction_included": false,
+  "combined_orchestrator_exit": 1,
+  "combined_orchestrator_log_sha256": "8d36d8eb67e7f054ddb43b3f805165a0d01942136486973296a4eb3942798abd",
+  "combined_orchestrator_error_tail": "Traceback (most recent call last):\n  File \"/work/continue-gdsc-20261123/validate-combined.py\", line 23, in <module>\n    if time.monotonic()>deadline:raise TimeoutError('combined build/tests did not finish')\n                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTimeoutError: combined build/tests did not finish\n"
+}

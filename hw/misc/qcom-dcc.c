@@ -1,13 +1,13 @@
 /*
  * SPDX-License-Identifier: GPL-2.0-or-later
  *
- * Qualcomm DCC v2 map2, bounded SRAM capture subset.
+ * Qualcomm DCC v2 map2, bounded SRAM program subset.
  *
  * Register and descriptor inputs are derived from the Qualcomm Linux driver;
  * see tb371fc/docs/dcc.md for pinned sources and the explicit reference
  * geometry. This is not a complete debug/trace/CTI or CRC implementation.
  * Unsupported requests stay busy and are diagnosed; they never complete
- * with made-up data. Source MMIO reads go through the actual address space.
+ * with made-up data. Source MMIO operations use the actual address space.
  */
 #include "qemu/osdep.h"
 #include "hw/misc/qcom-dcc.h"
@@ -18,6 +18,7 @@
 #include "qemu/bswap.h"
 #include "qemu/log.h"
 #include "qemu/module.h"
+#include "qemu/rcu.h"
 #include "qemu/timer.h"
 #include "system/memory.h"
 
@@ -126,59 +127,148 @@ static bool dcc_sram_index(uint32_t address, uint32_t *index)
 }
 
 /*
- * Decode and bound the entire read-only list before performing source reads.
- * LINK pairs are 15-bit relative-word-offset/length tuples. A zero-length
- * second pair is the driver's single-pair padding; an all-zero LINK ends
- * the list. Each ADDRESS resets the relative cursor.
+ * Decode the complete program before any bus transaction. Payload words are
+ * never decoded as opcodes. The supported loop form is the driver's flat
+ * finite loop, starting at an ADDRESS descriptor, with 1..255 iterations.
+ * The expanded operation plan has an explicit SRAM-derived upper bound.
  */
-static bool dcc_decode(QcomDccState *s, unsigned list,
-                       uint64_t *addresses, unsigned *count,
-                       uint32_t *destination)
+typedef enum DccOperationKind {
+    DCC_OPERATION_READ,
+    DCC_OPERATION_WRITE,
+    DCC_OPERATION_RMW,
+} DccOperationKind;
+
+typedef struct DccOperation {
+    uint32_t address;
+    uint32_t value;
+    uint32_t mask;
+    DccOperationKind kind;
+} DccOperation;
+
+typedef struct DccProgramMark {
+    unsigned operation;
+    unsigned captures;
+    bool address;
+} DccProgramMark;
+
+#define DCC_DESC_LOOP          0x40000000u
+#define DCC_DESC_RMW           0x80000000u
+#define DCC_MAX_ITERATIONS     255u
+#define DCC_MAX_OPERATIONS     (DCC_RAM_WORDS * DCC_MAX_ITERATIONS)
+
+static bool dcc_append_operation(QcomDccState *s, unsigned list, GArray *ops,
+                                 DccOperation op)
+{
+    if (ops->len == DCC_MAX_OPERATIONS) {
+        dcc_stall(s, list, "expanded operation limit");
+        return false;
+    }
+    g_array_append_val(ops, op);
+    return true;
+}
+
+static bool dcc_write_target_supported(QcomDccState *s, hwaddr address);
+
+static bool dcc_decode(QcomDccState *s, unsigned list, GArray *ops,
+                       unsigned *captures, uint32_t *destination)
 {
     QcomDccList *l = &s->lists[list];
     uint8_t *ram = memory_region_get_ram_ptr(&s->sram);
+    g_autofree DccProgramMark *marks = g_new0(DccProgramMark, DCC_RAM_WORDS);
     uint32_t start, pc, dest, previous = 0;
+    uint32_t last_loop = UINT32_MAX;
     uint64_t base = 0;
     bool have_address = false;
+    bool single_read = false;
 
-    *count = 0;
+    *captures = 0;
     if (!dcc_sram_index(l->base, &start) ||
         !dcc_sram_index(l->data_base, &dest)) {
         dcc_stall(s, list, "SRAM base outside supplied aperture");
         return false;
     }
-    pc = start;
-    for (unsigned descriptors = 0; descriptors < DCC_RAM_WORDS;
-         descriptors++) {
-        uint32_t descriptor;
 
-        if (pc > DCC_RAM_SIZE - 4) {
-            break;
-        }
-        descriptor = ldl_le_p(ram + pc);
+    pc = start;
+    while (pc <= DCC_RAM_SIZE - 4) {
+        uint32_t here = pc;
+        uint32_t descriptor = ldl_le_p(ram + pc);
+
+        marks[pc / 4].operation = ops->len;
+        marks[pc / 4].captures = *captures;
         pc += 4;
+
         if (descriptor == DCC_DESC_LINK) {
-            uint64_t end = (uint64_t)dest + (uint64_t)*count * 4;
+            uint64_t end = (uint64_t)dest + (uint64_t)*captures * 4;
 
             if (end > DCC_RAM_SIZE ||
-                (*count && dest < pc && end > start)) {
+                (*captures && dest < pc && end > start)) {
                 dcc_stall(s, list, "capture overlaps descriptors or SRAM end");
                 return false;
+            }
+            /*
+             * Reject all statically unsupported write targets before any
+             * READ or WRITE. Execution rechecks in case mappings change.
+             */
+            for (unsigned n = 0; n < ops->len; n++) {
+                DccOperation *op = &g_array_index(ops, DccOperation, n);
+
+                if (op->kind != DCC_OPERATION_READ &&
+                    !dcc_write_target_supported(s, op->address)) {
+                    dcc_stall(s, list,
+                              "self-modifying or split WRITE unsupported");
+                    return false;
+                }
             }
             *destination = dest;
             return true;
         }
+
         switch (descriptor & DCC_DESCRIPTOR_TYPE) {
         case DCC_DESC_ADDRESS:
-            if (descriptor & DCC_DESC_WRITE) {
-                dcc_stall(s, list, "write descriptor is unsupported");
-                return false;
-            }
+            marks[here / 4].address = true;
             base = (uint64_t)(descriptor & 0x0fffffff) << 4;
             previous = 0;
-            have_address = true;
+            single_read = false;
+            if (descriptor & DCC_DESC_WRITE) {
+                uint32_t link_word, first, second;
+                uint64_t address;
+                DccOperation op;
+
+                if (pc > DCC_RAM_SIZE - 8) {
+                    dcc_stall(s, list, "truncated WRITE payload");
+                    return false;
+                }
+                link_word = ldl_le_p(ram + pc);
+                first = link_word & 0x7fff;
+                second = (link_word >> 15) & 0x7fff;
+                if ((link_word & DCC_DESCRIPTOR_TYPE) != DCC_DESC_LINK ||
+                    (first >> 8) != 1 || second > 1) {
+                    dcc_stall(s, list, "unsupported multiword WRITE format");
+                    return false;
+                }
+                address = base + (first & 0xff) * 4;
+                if (address > UINT32_MAX - 3) {
+                    dcc_stall(s, list, "WRITE address overflow");
+                    return false;
+                }
+                op = (DccOperation) {
+                    .kind = DCC_OPERATION_WRITE,
+                    .address = address,
+                    .value = ldl_le_p(ram + pc + 4),
+                };
+                if (!dcc_append_operation(s, list, ops, op)) {
+                    return false;
+                }
+                pc += 8;
+                have_address = false;
+            } else {
+                have_address = true;
+            }
             break;
-        case DCC_DESC_LINK:
+
+        case DCC_DESC_LINK: {
+            unsigned read_count = 0;
+
             if (!have_address) {
                 dcc_stall(s, list, "LINK without an ADDRESS");
                 return false;
@@ -199,62 +289,186 @@ static bool dcc_decode(QcomDccState *s, unsigned list,
                 offset = (uint64_t)previous + delta;
                 last = base + (offset + length - 1) * 4;
                 if (last > UINT32_MAX - 3 ||
-                    *count + length > DCC_RAM_WORDS) {
+                    *captures + length > DCC_RAM_WORDS) {
                     dcc_stall(s, list, "capture address/count overflow");
                     return false;
                 }
                 for (unsigned n = 0; n < length; n++) {
-                    addresses[(*count)++] = base + (offset + n) * 4;
+                    DccOperation op = {
+                        .kind = DCC_OPERATION_READ,
+                        .address = base + (offset + n) * 4,
+                    };
+
+                    if (!dcc_append_operation(s, list, ops, op)) {
+                        return false;
+                    }
                 }
+                *captures += length;
+                read_count += length;
                 previous = offset + length - 1;
             }
+            single_read = read_count == 1;
             break;
+        }
+
+        case DCC_DESC_RMW: {
+            DccOperation op;
+
+            if (descriptor != DCC_DESC_RMW ||
+                pc > DCC_RAM_SIZE - 8 || !single_read || !ops->len ||
+                g_array_index(ops, DccOperation,
+                              ops->len - 1).kind != DCC_OPERATION_READ) {
+                dcc_stall(s, list, "RMW requires an adjacent single READ");
+                return false;
+            }
+            op = (DccOperation) {
+                .kind = DCC_OPERATION_RMW,
+                .address = g_array_index(ops, DccOperation,
+                                        ops->len - 1).address,
+                .mask = ldl_le_p(ram + pc),
+                .value = ldl_le_p(ram + pc + 4),
+            };
+            if (!dcc_append_operation(s, list, ops, op)) {
+                return false;
+            }
+            pc += 8;
+            single_read = false;
+            have_address = false;
+            break;
+        }
+
+        case DCC_DESC_LOOP: {
+            unsigned back_words = descriptor & 0xffff;
+            unsigned repeats = (descriptor >> 16) & 0xfff;
+            uint32_t target;
+            unsigned first, length, reads;
+            uint64_t total_operations, total_captures;
+            g_autofree DccOperation *body = NULL;
+
+            if ((descriptor & 0x30000000u) ||
+                !back_words || back_words > (here - start) / 4 ||
+                repeats >= DCC_MAX_ITERATIONS) {
+                dcc_stall(s, list, "unsupported LOOP count or back distance");
+                return false;
+            }
+            target = here - back_words * 4;
+            if (!marks[target / 4].address ||
+                (last_loop != UINT32_MAX && target <= last_loop)) {
+                dcc_stall(s, list, "LOOP target or nesting unsupported");
+                return false;
+            }
+            first = marks[target / 4].operation;
+            length = ops->len - first;
+            reads = *captures - marks[target / 4].captures;
+            total_operations = (uint64_t)ops->len + (uint64_t)length * repeats;
+            total_captures = (uint64_t)*captures + (uint64_t)reads * repeats;
+            if (!length || total_operations > DCC_MAX_OPERATIONS ||
+                total_captures > DCC_RAM_WORDS) {
+                dcc_stall(s, list, "expanded LOOP exceeds operation/SRAM bounds");
+                return false;
+            }
+            if (repeats) {
+                body = g_memdup2(&g_array_index(ops, DccOperation, first),
+                                 length * sizeof(*body));
+                for (unsigned n = 0; n < repeats; n++) {
+                    g_array_append_vals(ops, body, length);
+                }
+            }
+            *captures = total_captures;
+            last_loop = here;
+            single_read = false;
+            have_address = false;
+            break;
+        }
+
         default:
-            dcc_stall(s, list, "loop or read-modify-write descriptor unsupported");
-            return false;
+            g_assert_not_reached();
         }
     }
     dcc_stall(s, list, "unterminated or oversized descriptor list");
     return false;
 }
 
+/*
+ * A write to DCC's own control or SRAM could invalidate the predecoded
+ * program or recursively change ownership. Those self-modifying programs
+ * are outside the bounded reference contract, not silently snapshotted.
+ * Other MMIO writes still use the actual target MemoryRegion transaction.
+ */
+static bool dcc_write_target_supported(QcomDccState *s, hwaddr address)
+{
+    hwaddr translated, length = 4;
+    MemoryRegion *region;
+    RCU_READ_LOCK_GUARD();
+
+    region = address_space_translate(&s->dma_as, address, &translated,
+                                      &length, true, MEMTXATTRS_UNSPECIFIED);
+    return length >= 4 && region != &s->registers && region != &s->sram;
+}
+
 static void dcc_capture(QcomDccState *s, unsigned list)
 {
     QcomDccList *l = &s->lists[list];
-    g_autofree uint64_t *addresses = g_new(uint64_t, DCC_RAM_WORDS);
+    g_autoptr(GArray) ops = g_array_new(false, false, sizeof(DccOperation));
     uint8_t *ram = memory_region_get_ram_ptr(&s->sram);
-    uint32_t destination;
-    unsigned count;
+    uint32_t destination, last_read = 0, last_address = 0;
+    unsigned captures, output = 0;
+    bool have_read = false;
 
-    if (!dcc_decode(s, list, addresses, &count, &destination)) {
+    if (!dcc_decode(s, list, ops, &captures, &destination)) {
         return;
     }
-    for (unsigned n = 0; n < count; n++) {
+    for (unsigned n = 0; n < ops->len; n++) {
+        DccOperation *op = &g_array_index(ops, DccOperation, n);
         uint8_t data[4];
         MemTxResult result;
 
-        result = address_space_read(&s->dma_as, addresses[n],
-                                    MEMTXATTRS_UNSPECIFIED, data, sizeof(data));
+        if (op->kind == DCC_OPERATION_READ) {
+            result = address_space_read(&s->dma_as, op->address,
+                                        MEMTXATTRS_UNSPECIFIED,
+                                        data, sizeof(data));
+            if (result == MEMTX_OK) {
+                last_read = ldl_le_p(data);
+                last_address = op->address;
+                have_read = true;
+                memcpy(ram + destination + output * 4, data, sizeof(data));
+                memory_region_set_dirty(&s->sram, destination + output * 4, 4);
+                output++;
+            }
+        } else {
+            uint32_t value = op->value;
+
+            if (!dcc_write_target_supported(s, op->address)) {
+                dcc_stall(s, list, "self-modifying or split WRITE unsupported");
+                return;
+            }
+            if (op->kind == DCC_OPERATION_RMW) {
+                /*
+                 * Reference execution: consume the adjacent captured READ.
+                 * Do not perform a second side-effecting source MMIO read.
+                 */
+                assert(have_read && last_address == op->address);
+                value = (last_read & ~op->mask) | (op->value & op->mask);
+            }
+            stl_le_p(data, value);
+            result = address_space_write(&s->dma_as, op->address,
+                                         MEMTXATTRS_UNSPECIFIED,
+                                         data, sizeof(data));
+            have_read = false;
+        }
         if (result != MEMTX_OK) {
-            /*
-             * The driver checks any nonzero low-two-bit bus-access status
-             * and clears it with 3. The exact silicon error-bit taxonomy is
-             * not specified by our sources: do not invent it here. The
-             * capture remains busy, with a diagnostic, rather than reporting
-             * successful completion or fabricating zero data.
-             */
+            /* Preserve real earlier effects; do not invent silicon error bits. */
             dcc_stall(s, list, "source transaction failed");
             return;
         }
-        memcpy(ram + destination + n * 4, data, sizeof(data));
-        memory_region_set_dirty(&s->sram, destination + n * 4, 4);
+        if (!l->busy || l->stalled) {
+            return;
+        }
     }
+    assert(output == captures);
     l->busy = false;
     l->deadline = -1;
-    /*
-     * Sources establish polling completion, but not completion-IRQ bit
-     * meanings. Do not invent an interrupt or a CRC result.
-     */
+    /* Completion IRQ, CRC and trace/CTI semantics remain unspecified. */
 }
 
 static void dcc_timer(void *opaque)
@@ -354,7 +568,8 @@ static MemTxResult dcc_read(void *opaque, hwaddr address, uint64_t *data,
             return dcc_read_result(data, l->interrupt_status);
         case DCC_LL_SW_TRIGGER: return dcc_read_result(data, 0);
         case DCC_LL_BUS_STATUS: return dcc_read_result(data, l->bus_status);
-        default: break;
+        default:
+        break;
         }
     }
     qemu_log_mask(LOG_UNIMP, TYPE_QCOM_DCC
@@ -548,7 +763,7 @@ static void dcc_init(Object *obj)
 {
     QcomDccState *s = QCOM_DCC(obj);
 
-    s->geometry = 0x00020800; /* ABI guard: map2, eight reference lists. */
+    s->geometry = 0x00020801; /* ABI guard: map2, eight lists, operation VM. */
     s->timer = timer_new_ns(QEMU_CLOCK_VIRTUAL, dcc_timer, s);
     memory_region_init_io(&s->registers, obj, &dcc_ops, s,
                           TYPE_QCOM_DCC "/registers", DCC_REG_SIZE);

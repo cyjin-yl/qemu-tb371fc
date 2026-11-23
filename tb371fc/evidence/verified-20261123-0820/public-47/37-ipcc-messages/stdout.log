@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "suite": "Qualcomm IPCC APPS message frame",
+  "qemu_sha256": "87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89",
+  "test_sha256": "3cce319a0759c70d7b5cb1dc4604ef899a3bbb54b289cbb77144cebbdf6a91a5",
+  "scope": "Actual message latches/masks; APPS self-loop; real GIC SPI229 pending/deassert; separate wire-level migration; explicit test peer events; no DSP/firmware reply claim",
+  "checks": [
+    {
+      "name": "initial_state_and_client_clear",
+      "passed": true
+    },
+    {
+      "name": "apps_self_send_is_real_receive",
+      "passed": true
+    },
+    {
+      "name": "masked_arrival_remains_pending",
+      "passed": true
+    },
+    {
+      "name": "explicit_peer_receive_uses_sender_id",
+      "passed": true
+    },
+    {
+      "name": "remote_send_never_fabricates_reply",
+      "passed": true
+    },
+    {
+      "name": "masking_and_unmasking_preserve_pending",
+      "passed": true
+    },
+    {
+      "name": "clear_only_selected_pair",
+      "passed": true
+    },
+    {
+      "name": "duplicate_messages_coalesce_as_latches",
+      "passed": true
+    },
+    {
+      "name": "deterministic_reference_arbitration",
+      "passed": true
+    },
+    {
+      "name": "clear_on_read_selects_next_message",
+      "passed": true
+    },
+    {
+      "name": "protocol_clear_resets_masks_pending_and_config",
+      "passed": true
+    },
+    {
+      "name": "full_packed_id_and_zero_id_are_distinct",
+      "passed": true
+    },
+    {
+      "name": "invalid_width_and_configuration_do_not_mutate",
+      "passed": true
+    },
+    {
+      "name": "bounded_sparse_capacity_preserves_live_entries",
+      "passed": true
+    },
+    {
+      "name": "real_gic_spi229_pending_mask_clear_and_deassert",
+      "passed": true,
+      "gic_spi": 229,
+      "architectural_intid": 261,
+      "parent_connection_intercepted": false,
+      "self_send_mask_unmask_and_both_ack_paths_reach_gic": true
+    },
+    {
+      "name": "actual_pending_mask_and_irq_migration",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "pending_masks_summary_irq_and_tx_state_preserved": true,
+      "clear_on_read_configuration_preserved": true
+    }
+  ],
+  "passed": true,
+  "expected_checks": 16,
+  "elapsed_seconds": 0.91
+}

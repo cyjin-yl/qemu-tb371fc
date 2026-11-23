@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
-/* Generated register facts from Linux v6.12.114 gcc-sm8250.c.
+/* Generated Linux v6.12.114 GCC facts and a pinned Kona supplement.
  * Source copyright (c) 2020, The Linux Foundation. All rights reserved.
  * Regenerate with tb371fc/scripts/generate_gcc_sm8250.py; see manifest.
  */
@@ -719,9 +719,10 @@ static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {
         0x1600c, 0x0, 0x0, -4,
         8, 5, 0x0, 0x0,
         { -1, 0, -127, -127, -127, -127, 1, -127 }, -1 },
+    /* Kona line 3265: halt/parent; legacy external slot 63 retained. */
     /* upstream line 3652 */
     [143] = { "gcc_sys_noc_cpuss_ahb_clk", GCC_BRANCH,
-        0xffffffff, 0x52000, 0x1, -4,
+        0x48198, 0x52000, 0x1, 18,
         0, 0, 0x0, 0x0,
         { -127, -127, -127, -127, -127, -127, -127, -127 }, 63 },
     /* upstream line 2651 */
@@ -1358,6 +1359,7 @@ static const GccRegisterDesc gcc_registers[] = {
     { 0x48014, 0x0010371f, 0x00000000 },
     { 0x48028, 0x00000000, 0x0000000f },
     { 0x4818c, 0x00000001, 0x00000000 },
+    { 0x48198, 0x00000000, 0xf0000000 },
     { 0x4d000, 0x00000001, 0x00000000 },
     { 0x4d004, 0x00000003, 0xf0000000 },
     { 0x4d008, 0x00000001, 0xf0000000 },

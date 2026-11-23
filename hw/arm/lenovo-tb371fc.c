@@ -46,6 +46,12 @@
 #include "hw/misc/qcom-pshold.h"
 #include "hw/misc/qcom-dcc.h"
 #include "hw/misc/qcom-ipcc.h"
+#include "hw/misc/qcom-qsee-irq.h"
+#include "hw/misc/qcom-tcsr-mutex.h"
+#include "hw/misc/qcom-smem-handoff.h"
+#include "hw/misc/qcom-aop-msgram.h"
+#include "hw/misc/qcom-refgen.h"
+#include "hw/misc/qcom-gdsc.h"
 #include "hw/misc/qcom-spmi-pmic-arb.h"
 #include "hw/gpio/qcom-tb371fc-tlmm.h"
 #include "hw/misc/qcom-sm8250-rpmh.h"
@@ -151,6 +157,8 @@ struct TB371FCMachineState {
     Clock *board_xo;
     char *rpmh_profile, *rpmh_cmd_db;
     char *spmi_profile;
+    char *smem_profile;
+    char *gdsc_profile;
     bool rpmh_boot_configured;
     MemoryRegion qtest_dma_alias;
     bool enable_ufs;
@@ -267,6 +275,31 @@ static void tb371fc_fixup_memory(const struct arm_boot_info *info, void *fdt)
                                      2, MIN(end, TB371FC_RAM_HOLE_END) -
                                         TB371FC_RAM_HOLE_BASE);
         qemu_fdt_setprop(fdt, hole, "no-map", NULL, 0);
+    }
+
+    if (!strcmp(s->smem_profile, "reference-empty")) {
+        bool reserved = false;
+        int count = fdt_num_mem_rsv(fdt);
+
+        /* Preserve supplied DT content and add only the explicit reservation. */
+        for (int i = 0; i < count; i++) {
+            uint64_t address, size;
+
+            if (!fdt_get_mem_rsv(fdt, i, &address, &size) &&
+                address == QCOM_SMEM_BASE && size == QCOM_SMEM_SIZE) {
+                reserved = true;
+                break;
+            }
+        }
+        if (!reserved) {
+            int ret = fdt_add_mem_rsv(fdt, QCOM_SMEM_BASE, QCOM_SMEM_SIZE);
+
+            if (ret < 0) {
+                error_report("tb371fc: cannot reserve reference SMEM: %s",
+                             fdt_strerror(ret));
+                exit(1);
+            }
+        }
     }
 }
 
@@ -510,6 +543,49 @@ static uint32_t tb371fc_add_tlmm_fdt(void *fdt)
     return phandle;
 }
 
+
+static void tb371fc_add_smem_fdt(TB371FCMachineState *s, void *fdt)
+{
+    const char *region = "/reserved-memory/smem_region@80900000";
+    const char *syscon = "/soc/syscon@1f40000";
+    const char *hwlock = "/soc/hwlock";
+    const char *smem = "/soc/qcom,smem";
+    uint32_t region_phandle, syscon_phandle, lock_phandle;
+
+    if (strcmp(s->smem_profile, "reference-empty")) {
+        return;
+    }
+    region_phandle = qemu_fdt_alloc_phandle(fdt);
+    syscon_phandle = qemu_fdt_alloc_phandle(fdt);
+    lock_phandle = qemu_fdt_alloc_phandle(fdt);
+    qemu_fdt_add_path(fdt, "/reserved-memory");
+    qemu_fdt_setprop_cell(fdt, "/reserved-memory", "#address-cells", 2);
+    qemu_fdt_setprop_cell(fdt, "/reserved-memory", "#size-cells", 2);
+    qemu_fdt_setprop(fdt, "/reserved-memory", "ranges", NULL, 0);
+    qemu_fdt_add_path(fdt, region);
+    qemu_fdt_setprop_sized_cells(fdt, region, "reg",
+                                2, QCOM_SMEM_BASE, 2, QCOM_SMEM_SIZE);
+    qemu_fdt_setprop(fdt, region, "no-map", NULL, 0);
+    qemu_fdt_setprop_cell(fdt, region, "phandle", region_phandle);
+    qemu_fdt_add_path(fdt, syscon);
+    qemu_fdt_setprop_string(fdt, syscon, "compatible", "syscon");
+    qemu_fdt_setprop_sized_cells(fdt, syscon, "reg",
+                                2, 0x01f40000, 2, 0x20000);
+    qemu_fdt_setprop_cell(fdt, syscon, "phandle", syscon_phandle);
+    qemu_fdt_add_path(fdt, hwlock);
+    qemu_fdt_setprop_string(fdt, hwlock, "compatible", "qcom,tcsr-mutex");
+    qemu_fdt_setprop_cell(fdt, hwlock, "#hwlock-cells", 1);
+    qemu_fdt_setprop_cell(fdt, hwlock, "phandle", lock_phandle);
+    qemu_fdt_setprop_cells(fdt, hwlock, "syscon", syscon_phandle, 0, 0x1000);
+    qemu_fdt_add_path(fdt, smem);
+    qemu_fdt_setprop_string(fdt, smem, "compatible", "qcom,smem");
+    qemu_fdt_setprop_cell(fdt, smem, "memory-region", region_phandle);
+    qemu_fdt_setprop_cells(fdt, smem, "hwlocks", lock_phandle, 3);
+    qemu_fdt_setprop_string(fdt, smem, "qemu,model-note",
+                            "Explicit empty SMEM v12 reference handoff; "
+                            "no captured SBL, socinfo or remote services");
+}
+
 static void tb371fc_create_fdt(TB371FCMachineState *s)
 {
     MachineState *ms = MACHINE(s);
@@ -675,6 +751,7 @@ static void tb371fc_create_fdt(TB371FCMachineState *s)
                             rpmh_clock, tlmm);
     }
 
+    tb371fc_add_smem_fdt(s, fdt);
     tb371fc_fixup_memory(&s->bootinfo, fdt);
 }
 
@@ -840,6 +917,9 @@ static void tb371fc_create_rpmh(TB371FCMachineState *s)
     }
     /* A read-only firmware-owned region overlays the reserved physical RAM. */
     sysbus_mmio_map_overlap(SYS_BUS_DEVICE(dev), 3, 0x80860000, 1);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), RPMH_DISPLAY_MMIO, 0x0af20000);
+    sysbus_connect_irq(SYS_BUS_DEVICE(dev), RPMH_DISPLAY_DRV,
+                       qdev_get_gpio_in(s->gic, 129));
     clock_set_source(s->xo, qdev_get_clock_out(dev, "bi_tcxo"));
 }
 
@@ -934,6 +1014,11 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
     DeviceState *pshold = qdev_new(TYPE_QCOM_PSHOLD);
     DeviceState *dcc = qdev_new(TYPE_QCOM_DCC);
     DeviceState *ipcc = qdev_new(TYPE_QCOM_IPCC);
+    DeviceState *qsee = qdev_new(TYPE_QCOM_QSEE_IRQ);
+    DeviceState *mutex = qdev_new(TYPE_QCOM_TCSR_MUTEX);
+    DeviceState *smem = qdev_new(TYPE_QCOM_SMEM_HANDOFF);
+    DeviceState *msgram = qdev_new(TYPE_QCOM_AOP_MSGRAM);
+    DeviceState *refgen = qdev_new(TYPE_QCOM_REFGEN);
 
     /* Captured IMEM SRAM aperture, initially empty without firmware input. */
     /*
@@ -963,6 +1048,49 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
     sysbus_connect_irq(SYS_BUS_DEVICE(ipcc), 0,
                       qdev_get_gpio_in(s->gic, 229));
 
+    object_property_add_child(OBJECT(s), "qsee-irq", OBJECT(qsee));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(qsee), &error_fatal);
+    for (unsigned i = 0; i < QCOM_QSEE_IRQ_BANKS; i++) {
+        sysbus_mmio_map(SYS_BUS_DEVICE(qsee), i, 0x01886000 + i * 0x2000);
+        sysbus_connect_irq(SYS_BUS_DEVICE(qsee), i,
+                           qdev_get_gpio_in(s->gic, 348 + i));
+    }
+
+    /* Captured SMEM hardware-lock geometry; initial owners remain unknown. */
+    object_property_add_child(OBJECT(s), "tcsr-mutex", OBJECT(mutex));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(mutex), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(mutex), 0, 0x01f40000);
+
+    /*
+     * Do not silently change the mutex's unknown handoff. This synthetic SMEM
+     * profile requires the caller to opt in to the separate reference lock.
+     */
+    if (!strcmp(s->smem_profile, "reference-empty") &&
+        !object_property_get_bool(OBJECT(mutex), "boot-unlocked-reference",
+                                  &error_fatal)) {
+        error_report("tb371fc: smem-profile=reference-empty requires "
+                     "-global qcom-tcsr-mutex.boot-unlocked-reference=on");
+        exit(1);
+    }
+    object_property_add_child(OBJECT(s), "smem-handoff", OBJECT(smem));
+    object_property_set_link(OBJECT(smem), "ram", OBJECT(MACHINE(s)->ram),
+                             &error_fatal);
+    qdev_prop_set_bit(smem, "reference-empty",
+                      !strcmp(s->smem_profile, "reference-empty"));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(smem), &error_fatal);
+
+
+    /* Actual shared storage, without an invented AOP descriptor or peer. */
+    object_property_add_child(OBJECT(s), "aop-msgram", OBJECT(msgram));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(msgram), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(msgram), 0, 0x0c300000);
+
+    /* Kona CTRL5 software request; firmware handoff is unknown by default. */
+    object_property_add_child(OBJECT(s), "refgen", OBJECT(refgen));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(refgen), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(refgen), 0,
+                    0x088e7000 + QCOM_REFGEN_CTRL5_OFFSET);
+
     s->tlmm = qdev_new(TYPE_QCOM_TB371FC_TLMM);
     object_property_add_child(OBJECT(s), "tlmm", OBJECT(s->tlmm));
     if (s->enable_ufs) {
@@ -972,6 +1100,38 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
     sysbus_mmio_map(SYS_BUS_DEVICE(s->tlmm), 0, 0x0f000000);
     sysbus_connect_irq(SYS_BUS_DEVICE(s->tlmm), 0,
                         qdev_get_gpio_in(s->gic, 208));
+}
+
+static void tb371fc_create_gpu_gdsc(TB371FCMachineState *s)
+{
+    DeviceState *cx = qdev_new(TYPE_QCOM_GDSC);
+    DeviceState *gx = qdev_new(TYPE_QCOM_GDSC);
+    bool enabled = strcmp(s->gdsc_profile, "none") != 0;
+    bool reference_on = !strcmp(s->gdsc_profile, "reference-on");
+
+    /*
+     * Keep configuration markers present in every profile, so a migration
+     * cannot silently add or remove the mapped power-control devices.
+     * All addresses below are captured GPU windows, outside the GCC map.
+     */
+    object_property_add_child(OBJECT(s), "gpu-cx-gdsc", OBJECT(cx));
+    object_property_add_child(OBJECT(s), "gpu-gx-gdsc", OBJECT(gx));
+    qdev_prop_set_bit(cx, "enabled-reference", enabled);
+    qdev_prop_set_bit(gx, "enabled-reference", enabled);
+    qdev_prop_set_bit(cx, "reference-on", reference_on);
+    qdev_prop_set_bit(gx, "reference-on", reference_on);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(cx), &error_fatal);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(gx), &error_fatal);
+    if (!enabled) {
+        return;
+    }
+
+    sysbus_mmio_map(SYS_BUS_DEVICE(cx), QCOM_GDSC_CONTROL, 0x03d9106c);
+    sysbus_mmio_map(SYS_BUS_DEVICE(cx), QCOM_GDSC_HW_STATUS, 0x03d91540);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gx), QCOM_GDSC_CONTROL, 0x03d9100c);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gx), QCOM_GDSC_DOMAIN_CONTROL, 0x03d91508);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gx), QCOM_GDSC_SW_RESET, 0x03d91008);
+    /* GPU/GMU consumers and external voters have no invented peer here. */
 }
 
 static void tb371fc_create_pdc(TB371FCMachineState *s)
@@ -1149,6 +1309,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_mmio_timer(s);
     tb371fc_create_watchdog(s);
     tb371fc_create_boot_resources(s);
+    tb371fc_create_gpu_gdsc(s);
     tb371fc_create_smmus(s);
     if (s->enable_ufs) {
         s->ufs = qdev_new(TYPE_QCOM_SM8250_UFS);
@@ -1307,6 +1468,51 @@ static void tb371fc_set_kernel_load_base(Object *obj, Visitor *v,
 }
 
 
+static char *tb371fc_get_gdsc_profile(Object *obj, Error **errp)
+{
+    return g_strdup(TB371FC_MACHINE(obj)->gdsc_profile);
+}
+
+static void tb371fc_set_gdsc_profile(Object *obj, const char *value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "gdsc-profile is fixed after machine creation");
+        return;
+    }
+    if (strcmp(value, "none") && strcmp(value, "reference-off") &&
+        strcmp(value, "reference-on")) {
+        error_setg(errp, "gdsc-profile must be none, reference-off, or "
+                         "reference-on");
+        return;
+    }
+    g_free(s->gdsc_profile);
+    s->gdsc_profile = g_strdup(value);
+}
+
+
+static char *tb371fc_get_smem_profile(Object *obj, Error **errp)
+{
+    return g_strdup(TB371FC_MACHINE(obj)->smem_profile);
+}
+
+static void tb371fc_set_smem_profile(Object *obj, const char *value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "smem-profile is fixed after machine creation");
+        return;
+    }
+    if (!value || (strcmp(value, "off") && strcmp(value, "reference-empty"))) {
+        error_setg(errp, "smem-profile must be off or reference-empty");
+        return;
+    }
+    g_free(s->smem_profile);
+    s->smem_profile = g_strdup(value);
+}
+
 static char *tb371fc_get_spmi_profile(Object *obj, Error **errp)
 {
     return g_strdup(TB371FC_MACHINE(obj)->spmi_profile);
@@ -1390,6 +1596,8 @@ static void tb371fc_instance_init(Object *obj)
 
     s->rpmh_profile = g_strdup("off");
     s->spmi_profile = g_strdup("off");
+    s->smem_profile = g_strdup("off");
+    s->gdsc_profile = g_strdup("none");
     s->rpmh_boot_configured = true;
     s->counter_exact = true;
     s->gcc_boot_configured = true;
@@ -1403,6 +1611,8 @@ static void tb371fc_instance_finalize(Object *obj)
     g_free(s->rpmh_profile);
     g_free(s->rpmh_cmd_db);
     g_free(s->spmi_profile);
+    g_free(s->smem_profile);
+    g_free(s->gdsc_profile);
 }
 
 static void tb371fc_class_init(ObjectClass *oc, const void *data)
@@ -1424,6 +1634,16 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
     mc->possible_cpu_arch_ids = tb371fc_possible_cpu_arch_ids;
     mc->cpu_index_to_instance_props = tb371fc_cpu_index_to_props;
 
+    object_class_property_add_str(oc, "gdsc-profile",
+        tb371fc_get_gdsc_profile, tb371fc_set_gdsc_profile);
+    object_class_property_set_description(oc, "gdsc-profile",
+        "none (default), reference-off or reference-on GPU CX/GX digital "
+        "power controls; no GPU execution or measured silicon reset state");
+    object_class_property_add_str(oc, "smem-profile",
+        tb371fc_get_smem_profile, tb371fc_set_smem_profile);
+    object_class_property_set_description(oc, "smem-profile",
+        "off (default) or empty SMEM v12 reference handoff; requires "
+        "explicit unlocked-reference TCSR profile");
     object_class_property_add_str(oc, "spmi-profile",
         tb371fc_get_spmi_profile, tb371fc_set_spmi_profile);
     object_class_property_set_description(oc, "spmi-profile",

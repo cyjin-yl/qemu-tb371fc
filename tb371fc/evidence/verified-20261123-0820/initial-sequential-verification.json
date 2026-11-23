@@ -1,0 +1,86 @@
+{
+  "binary_sha256": {
+    "/work/verified-root-0820/qemu-system-aarch64": "87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89",
+    "/work/verified-root-0820/qemu-system-aarch64-a77-pci": "2605ddb7a6c503cff9532bcd1f24a0945b76f5f148149170ee3af7813beeec29"
+  },
+  "binary_unchanged": true,
+  "completed_utc": "2026-11-23T08:42:44.862546+00:00",
+  "passed": false,
+  "private_inputs_used": false,
+  "source_changes": {},
+  "source_commit": "9a80cddf1bd6ad8ecdbba34fa164acb5524e206b",
+  "source_unchanged": true,
+  "started_utc": "2026-11-23T08:38:06.486295+00:00",
+  "tasks": [
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/work/tb371fc-verified-root-0820/tb371fc/scripts/ci_device_tests.py",
+        "--qemu",
+        "/work/verified-root-0820/qemu-system-aarch64",
+        "--build-dir",
+        "/work/build-verified-root-0820",
+        "--kernel",
+        "/work/linux-rpmh/artifacts/Image",
+        "--suite",
+        "all",
+        "--out",
+        "/work/ci-review/verified-root-0820-47/public-47"
+      ],
+      "completed_utc": "2026-11-23T08:39:43.278434+00:00",
+      "elapsed_seconds": 76.508,
+      "exit_code": 0,
+      "name": "public-47",
+      "passed": true,
+      "result_sha256": "102156cb6df01ca6e6136c457e1dcbf590f6a06a30bea64c2e53504462861580",
+      "started_utc": "2026-11-23T08:38:26.770647+00:00"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/work/tb371fc-verified-root-0820/tb371fc/tests/test_a77_cpu.py",
+        "--qemu",
+        "/work/verified-root-0820/qemu-system-aarch64-a77-pci",
+        "--output",
+        "/work/ci-review/verified-root-0820-47/a77"
+      ],
+      "completed_utc": "2026-11-23T08:39:46.576338+00:00",
+      "elapsed_seconds": 3.297,
+      "exit_code": 0,
+      "name": "a77",
+      "observed_variant_checks": [
+        94,
+        94,
+        94,
+        94,
+        95,
+        95,
+        95,
+        95,
+        96
+      ],
+      "passed": true,
+      "result_sha256": "1054e272ae3f7e58997fc25fb1fe17a6fa1352c2a9f4d91c6c3486a9a555ab3b",
+      "started_utc": "2026-11-23T08:39:43.278873+00:00"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/work/tb371fc-verified-root-0820/tb371fc/scripts/run_ufs_pci_compat.py",
+        "--qemu",
+        "/work/verified-root-0820/qemu-system-aarch64-a77-pci",
+        "--qos-test",
+        "/work/build-verified-a77-0820/tests/qtest/qos-test",
+        "--out",
+        "/work/ci-review/verified-root-0820-47/pci-ufs"
+      ],
+      "completed_utc": "2026-11-23T08:39:47.844773+00:00",
+      "elapsed_seconds": 1.268,
+      "exit_code": 1,
+      "name": "pci-ufs",
+      "passed": false,
+      "result_sha256": "9bdacc8b52d72c076204585a4103f5fdea3d4b68798ae62ad65335c330547053",
+      "started_utc": "2026-11-23T08:39:46.576625+00:00"
+    }
+  ]
+}

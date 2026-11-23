@@ -10,6 +10,7 @@
 OBJECT_DECLARE_SIMPLE_TYPE(QcomSm8250GccState, QCOM_SM8250_GCC)
 
 #define GCC_CLOCKS 200
+/* Slot 63 remains for v1 migration; SYS_NOC_CPUSS now has a known parent. */
 #define GCC_EXTERNAL_PARENTS 84
 #define GCC_RESETS 45
 #define GCC_POWER_DOMAINS 11

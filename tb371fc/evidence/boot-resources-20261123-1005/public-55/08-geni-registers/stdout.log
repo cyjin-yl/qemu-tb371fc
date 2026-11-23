@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "suite": "GENI actual QTest/chardev",
+  "success": true,
+  "qemu": "/work/boot-resources-root-1005/qemu-system-aarch64",
+  "machine": "tb371fc,ufs-enabled=off",
+  "checks": [
+    {
+      "test": "idle_watermark_restarts_tty_transfers",
+      "status": "pass",
+      "seconds": 0.0111
+    },
+    {
+      "test": "identity",
+      "status": "pass",
+      "seconds": 0.0031
+    },
+    {
+      "test": "exact_tx_and_padding",
+      "status": "pass",
+      "seconds": 0.0223
+    },
+    {
+      "test": "latched_masked_w1c_irq",
+      "status": "pass",
+      "seconds": 0.0048
+    },
+    {
+      "test": "global_gate",
+      "status": "pass",
+      "seconds": 0.0042
+    },
+    {
+      "test": "watermark_reassertion",
+      "status": "pass",
+      "seconds": 0.0039
+    },
+    {
+      "test": "enable_aliases",
+      "status": "pass",
+      "seconds": 0.0034
+    },
+    {
+      "test": "cancel_abort_overrun",
+      "status": "pass",
+      "seconds": 0.004
+    },
+    {
+      "test": "rx_partial_word_irq",
+      "status": "pass",
+      "seconds": 0.004
+    },
+    {
+      "test": "rx_underflow",
+      "status": "pass",
+      "seconds": 0.0031
+    },
+    {
+      "test": "rx_backpressure",
+      "status": "pass",
+      "seconds": 0.0085
+    },
+    {
+      "test": "rx_abort",
+      "status": "pass",
+      "seconds": 0.0038
+    },
+    {
+      "test": "unsupported_commands",
+      "status": "pass",
+      "seconds": 0.0244
+    },
+    {
+      "test": "reset_clears_state",
+      "status": "pass",
+      "seconds": 0.0079
+    }
+  ],
+  "expected_checks": 14,
+  "test_ram": "128 MiB",
+  "scope": "FIFO behavioral model; no silicon timing or DMA validation"
+}
