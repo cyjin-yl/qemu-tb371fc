@@ -1100,8 +1100,10 @@ def three_physical_banks_have_only_26_sparse_windows_and_leave_gdsc_unmapped(arg
                                  r"size ([0-9]+), region '([^']+)', reason: ([^\n]+)", new_log)
             actual = [(kind, int(addr, 16), int(size), region, reason)
                       for kind, addr, size, region, reason in matches]
-            assert actual == [("write", address, 4, "unassigned", "rejected"),
-                              ("read", address, 4, "unassigned", "rejected")], (address, actual, new_log)
+            # io_mem_init gives the unassigned region a NULL name and no
+            # owner; the Linux CI host renders that diagnostic as '(null)'.
+            assert actual == [("write", address, 4, "(null)", "rejected"),
+                              ("read", address, 4, "(null)", "rejected")], (address, actual, new_log)
     finally:
         rig.close()
 
