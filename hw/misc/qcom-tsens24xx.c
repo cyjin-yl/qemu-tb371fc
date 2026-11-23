@@ -471,7 +471,10 @@ static bool global_state_valid(const QcomTsens24xxState *s)
     if (s->sample_pending) {
         if (!active || s->deadline_exhausted || s->sample_deadline_ns <= 0 ||
             s->captured_enable_mask != active ||
-            (s->captured_valid_mask & ~active)) {
+            (s->captured_valid_mask & ~active) ||
+            (s->sample_rounds &&
+             s->sample_deadline_ns - s->last_sample_ns <
+             s->sampling_period_ns)) {
             return false;
         }
     } else if (s->sample_deadline_ns || s->captured_enable_mask ||
