@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "reduced-ci-topology-summary",
+  "full_allowlisted_capture_included": false,
+  "provenance_note": "Retained and checked geometry/source metadata only. The complete allowlisted capture payload was not retained in the authoring session and is omitted, not reconstructed.",
+  "original_full_topology": {
+    "saved_path": "/work/gdsc-next-draft-20261123/patch/tb371fc/evidence/expansion-20261123/gpu-cx-gdsc-topology.json",
+    "bytes": 51611,
+    "sha256": "b307c39863d0c8eb3b6c09e422c8229cebd435edff9436490212de67853e2ba1",
+    "included_in_ci_checkpoint": false,
+    "archival_status": "saved on doesvm; later archival pending device connection recovery"
+  },
+  "original_allowlisted_capture": {
+    "saved_path": "/work/gdsc-next-draft-20261123/dt-selected.json",
+    "sha256": "ba145ab155d846bff87d0d4d6590dc8c7d20c0ac3ceb3de12339e26ca77777c0",
+    "included": false
+  },
+  "ci_scope": {
+    "development_origin": "C/header/test/doc were authored in the CT102 qemu-tb371fc-dev draft; code compiled and first targeted attempt executed there before the connection outage.",
+    "corrected_test_sha256": "f56b85ff6557c3d4c3fcd6a4fda93fb181a4f20a16c122c7b47fa35907da8d11",
+    "model_c_sha256": "eace625a3613c884aca9d7f9c3a25cd0bc6ece1fefb516f420bd60c831ad4d05",
+    "runtime_receipt": false,
+    "complete_native_boot_claim": false,
+    "fully_passing_test_run_claim": false,
+    "test_correction": "Known input level changes no longer inject an unknown-validity pulse; explicit None still clears validity. Test assertions and planned counts are unchanged."
+  },
+  "geometry_metadata": {
+    "schema_version": 1,
+    "type": "qcom-gpu-cx-gdsc",
+    "qom_path": "/machine/gpu-cx-gdsc",
+    "captured": {
+      "node": "/soc/qcom,gdsc@3d9106c",
+      "compatible": "qcom,gdsc",
+      "regulator_name": "gpu_cx_gdsc",
+      "phandle": 379,
+      "control": {
+        "address": 64557164,
+        "size": 4
+      },
+      "status": {
+        "node": "/soc/syscon@3d91540",
+        "address": 64558400,
+        "size": 4,
+        "phandle": 113
+      },
+      "parent": {
+        "phandle": 102,
+        "path": "/soc/rsc@18200000/rpmh-regulator-cxlvl/regulator-pm8150-s3-level",
+        "references": [
+          "parent-supply",
+          "vdd_parent-supply"
+        ]
+      },
+      "driver_clk_dis_wait": 8,
+      "driver_gds_timeout_us": 500,
+      "original_capture_receipt_sha256": "ba145ab155d846bff87d0d4d6590dc8c7d20c0ac3ceb3de12339e26ca77777c0"
+    },
+    "register_contract": {
+      "control_mask": 63489,
+      "power_read_only_mask": 2147483648,
+      "hw_trigger_and_sw_override_supported": false,
+      "status_window_write_supported": false,
+      "mmio_parent_gate": false,
+      "cross_region_atomicity_claimed": false
+    },
+    "model_contract": {
+      "default_control_known": false,
+      "reference_property": "boot-collapsed-reference",
+      "default_reference_property": false,
+      "transition_ns_reference": 1000,
+      "parent_inputs": [
+        "parent-known",
+        "parent-on"
+      ],
+      "external_inputs": [
+        "external-known",
+        "external-vote"
+      ],
+      "outputs": [
+        "state-known",
+        "power-on"
+      ],
+      "logic": "three-valued parent AND (HLOS OR aggregate external)",
+      "analog_voltage_or_power_good": false
+    },
+    "rpmh_binding_review": {
+      "repository": "https://github.com/cyjin-yl/qemu-tb371fc",
+      "commit": "5f8bca77a89e025161f332667dabd6d3cfa0485a",
+      "header": "include/hw/misc/qcom-sm8250-rpmh.h",
+      "resource": "cx.lvl",
+      "power_gpio_index": 1,
+      "presence_property": "res.cx.lvl.present",
+      "enabled_property": "res.cx.lvl.enabled",
+      "layer": "modeled typed resource after command application",
+      "existing_power_output_consumers_in_reviewed_board": 0
+    },
+    "sources": [
+      {
+        "kind": "official Android driver",
+        "url": "https://android.googlesource.com/kernel/msm/+/b6410c3f75259c0ca2df45a01838d2e46272723e/drivers/clk/qcom/gdsc-regulator.c",
+        "git_blob": "e16a9e5baad6abe1228fdbf4d7c454b64acffa60",
+        "sha256": "1018185ce92e333ac7b94d1058f5411a73635a4270446ba6a38dea2524e6696b"
+      },
+      {
+        "kind": "fixed third-party mirror, not verified exact OEM source",
+        "url": "https://github.com/tem423/android_kernel_lenovo_tb371fc/blob/9d8abebf4ac4d45cf4cc11b5b6bc5e4483d10fd1/drivers/clk/qcom/gdsc-regulator.c",
+        "sha256": "e2f0e4269e1a81b2680deb15cc2c3b11ed55611831640b0432d3772293d777e7"
+      },
+      {
+        "kind": "official Android Kona DT",
+        "url": "https://android.googlesource.com/kernel/msm-extra/devicetree/+/refs/heads/android-msm-bramble-4.19-android11-qpr1/qcom/kona.dtsi",
+        "git_blob": "632f7ae931e3cd75c472295e08a5a2fa7e8b5cdf"
+      },
+      {
+        "kind": "upstream SM8250 GPUCC driver",
+        "url": "https://linux.googlesource.com/linux/kernel/git/torvalds/linux/+/aaed66fadba2d2de8fe0daa0aa3eac827d2076b9/drivers/clk/qcom/gpucc-sm8250.c"
+      }
+    ],
+    "test_plan": {
+      "expected_checks": 26,
+      "migration_expected_checks": 8,
+      "expected_migration_attempts": 9,
+      "expected_completed_attempts": 6,
+      "expected_rejected_attempts": 3,
+      "unperformed_plan_is_not_receipt": true
+    }
+  }
+}

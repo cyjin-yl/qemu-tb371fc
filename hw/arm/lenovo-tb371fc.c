@@ -50,6 +50,7 @@
 #include "hw/misc/qcom-tcsr-mutex.h"
 #include "hw/misc/qcom-aop-msgram.h"
 #include "hw/misc/qcom-refgen.h"
+#include "hw/misc/qcom-gpu-cx-gdsc.h"
 #include "hw/misc/qcom-spmi-pmic-arb.h"
 #include "hw/gpio/qcom-tb371fc-tlmm.h"
 #include "hw/misc/qcom-sm8250-rpmh.h"
@@ -850,6 +851,27 @@ static void tb371fc_create_rpmh(TB371FCMachineState *s)
     clock_set_source(s->xo, qdev_get_clock_out(dev, "bi_tcxo"));
 }
 
+static void tb371fc_create_gpu_cx_gdsc(TB371FCMachineState *s)
+{
+    DeviceState *gdsc = qdev_new(TYPE_QCOM_GPU_CX_GDSC);
+
+    object_property_add_child(OBJECT(s), "gpu-cx-gdsc", OBJECT(gdsc));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(gdsc), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gdsc), 0, 0x03d9106c);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gdsc), 1, 0x03d91540);
+    if (s->rpmh) {
+        /* Resource power[1] is cx.lvl; this is digital ARC availability. */
+        qdev_connect_gpio_out_named(s->rpmh, "power", 1,
+            qdev_get_gpio_in_named(gdsc, "parent-on", 0));
+        qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-on", 0),
+            object_property_get_bool(OBJECT(s->rpmh), "res.cx.lvl.enabled",
+                                     &error_fatal));
+        qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-known", 0),
+            object_property_get_bool(OBJECT(s->rpmh), "res.cx.lvl.present",
+                                     &error_fatal));
+    }
+}
+
 static void tb371fc_create_gcc(TB371FCMachineState *s)
 {
     DeviceState *gcc;
@@ -1191,6 +1213,7 @@ static void tb371fc_init(MachineState *ms)
         s->ufs->id = g_strdup("ufs0");
     }
     tb371fc_create_gcc(s);
+    tb371fc_create_gpu_cx_gdsc(s);
     if (s->ufs) {
         tb371fc_realize_ufs(s);
         /* Native pinctrl states: output-low asserts the dedicated pad. */

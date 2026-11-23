@@ -1,6 +1,6 @@
 # QEMU TB371FC
 
-[![TB371FC public functional gates](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml/badge.svg?branch=tb371fc-verified-20261123-0820)](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml)
+[![TB371FC public functional gates](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml/badge.svg?branch=tb371fc-verified-gpu-cx-ci-20261123-1138)](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml)
 
 面向 **Lenovo TB371FC / SM8250（Kona）** 的整机模拟开发分支，基于 QEMU **11.1.3**，提供独立的 `-M tb371fc`。目标是实现真实来宾驱动可使用的软件可见硬件接口，并用平板的只读证据和实际运行的测试逐项核对。
 
@@ -9,6 +9,20 @@
 
 **完整 Android 启动和整台平板等价仍是未通过的目标。**
 生产内核加测试 initramfs 的成功不等于原厂 Android 系统启动。小核仍用 A55 代替 Qualcomm Kryo；显示、Adreno 650、触控、无线、音频、摄像头以及完整电源/固件契约仍有大量实现工作。缓存容量、功耗、射频、电气行为和真实芯片时序不由这些功能测试证明。
+
+## GPU CX 独立 CI 检查点（2026-11-23，结果待验证）
+
+本分支新增 [GPU CX GDSC 数字控制器](tb371fc/docs/gpu-cx-gdsc.md)，连接已有 RPMh `cx.lvl` 资源，并增加严格的公开测试入口。
+**这是待验证的检查点；本段不宣称新增模型的全套测试已通过。**
+
+模型已在 doesvm 的 CT102 开发容器内编译。首轮专项测试执行了 7 项检查：6 项通过，第 7 项失败后停止，未执行迁移。
+审查确认测试 helper 在已知输入切换时插入了非预期的 unknown 脉冲；本分支只修正两个 helper 的输入波形，C 模型及原断言保持不变。
+公开 CI 将执行 56 个 gate，其中 GPU CX 要求 26 项检查、8 个迁移场景、9 次实际迁移尝试（6 次成功、3 次预期拒绝）；以实际运行回执为准。
+[检查点记录](tb371fc/evidence/gpu-cx-ci-20261123/checkpoint.json) 保存源码哈希、已观察到的失败和未执行的验证项。
+
+doesvm 执行/写入通道暂时排队超时，原始失败目录及完整拓扑提取保留在那里。当前分支提供的是明确标记的拓扑摘要。
+**新增 GPU CX 模型尚未完成完整原生 DT 复测；原厂 Android 启动与整机等价仍未通过。**
+以下 55/55 等历史成功记录对应各自注明的先前提交，不能充当本次 GPU CX 新增部分的通过回执。
 
 ## TCSR、AOP 消息内存与 REFGEN 增量验证（2026-11-23）
 
