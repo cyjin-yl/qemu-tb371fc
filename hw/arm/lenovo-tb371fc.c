@@ -934,12 +934,13 @@ static void tb371fc_create_gpu_cx_gdsc(TB371FCMachineState *s)
         /* Resource power[1] is cx.lvl; this is digital ARC availability. */
         qdev_connect_gpio_out_named(s->rpmh, "power", 1,
             qdev_get_gpio_in_named(gdsc, "parent-on", 0));
+        /* RPMh res.* QOM properties are uint64, including 0/1 states. */
         qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-on", 0),
-            object_property_get_bool(OBJECT(s->rpmh), "res.cx.lvl.enabled",
-                                     &error_fatal));
+            object_property_get_uint(OBJECT(s->rpmh), "res.cx.lvl.enabled",
+                                     &error_fatal) != 0);
         qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-known", 0),
-            object_property_get_bool(OBJECT(s->rpmh), "res.cx.lvl.present",
-                                     &error_fatal));
+            object_property_get_uint(OBJECT(s->rpmh), "res.cx.lvl.present",
+                                     &error_fatal) != 0);
     }
 }
 

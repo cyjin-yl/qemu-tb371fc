@@ -21,13 +21,12 @@ import subprocess
 import time
 
 from boot_smoke import cpio_entry, sha256
+from boot_qmp import QMP, connect, has_guest_shutdown
+from boot_verdict import CHECKS, validate_counter_probe
 
 MAGIC = 0x3153455243464254
 RECORD_SIZE = 3120
 PROBE_CAPACITY = 2048
-CHECKS = ("procfs", "sysfs", "aarch64", "eight_online_cpus_psci",
-          "timer_and_scheduler_progress", "fork_and_wait", "board_model",
-          "arch_counter_probe")
 FIELDS = ("magic", "version", "structure_size", "completed",
           "checks_completed", "pass_mask", "fail_mask", "failures",
           "elapsed_ns", "counter_probe_bytes", "counter_probe_wait_status",
@@ -84,92 +83,10 @@ def validate_record(record, native):
     try:
         # Exactly one complete JSON document; extra non-whitespace is rejected.
         probe = json.loads(record.get("probe_stdout", ""))
-        expected_frequency = native["probe_result"]["counter_frequency_hz"]
-        if not isinstance(probe, dict):
-            raise ValueError("probe JSON is not an object")
-        if probe.get("schema_version") != 1:
-            raise ValueError("wrong probe schema")
-        if probe.get("kind") != "tb371fc-el0-counter-probe":
-            raise ValueError("wrong probe kind")
-        if probe.get("counter_frequency_hz") != expected_frequency:
-            raise ValueError("counter frequency differs from native evidence")
-        if (probe.get("increased") is not True or
-                type(probe.get("counter_delta")) is not int or
-                probe["counter_delta"] <= 0):
-            raise ValueError("counter did not increase")
-        if probe.get("counter_end", 0) - probe.get("counter_start", 0) != \
-                probe["counter_delta"]:
-            raise ValueError("counter delta inconsistent with endpoints")
-        if probe.get("loop_iterations") != 65536:
-            raise ValueError("wrong native-probe loop count")
+        validate_counter_probe(probe, native)
     except (ValueError, TypeError, KeyError) as error:
         errors.append(f"probe JSON: {error}")
     return errors, probe
-
-
-def has_guest_shutdown(messages):
-    return any(item.get("event") == "SHUTDOWN" and
-               item.get("data", {}).get("guest") is True and
-               item.get("data", {}).get("reason") == "guest-shutdown"
-               for item in messages)
-
-
-def connect(path, process, deadline):
-    sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    while True:
-        try:
-            sock.connect(str(path))
-            return sock
-        except (FileNotFoundError, ConnectionRefusedError):
-            if process.poll() is not None or time.monotonic() >= deadline:
-                sock.close()
-                raise RuntimeError(f"QEMU socket unavailable: {path}")
-            time.sleep(.01)
-
-
-class QMP:
-    def __init__(self, sock):
-        self.sock, self.buffer, self.messages = sock, b"", []
-        self.identifier = 0
-
-    def receive(self, timeout):
-        if not select.select([self.sock], [], [], timeout)[0]:
-            return []
-        data = self.sock.recv(65536)
-        if not data:
-            return None
-        self.buffer += data
-        messages = []
-        while b"\n" in self.buffer:
-            line, self.buffer = self.buffer.split(b"\n", 1)
-            if line.strip():
-                messages.append(json.loads(line))
-        self.messages.extend(messages)
-        return messages
-
-    def command(self, name, arguments=None):
-        self.identifier += 1
-        request = {"execute": name, "id": self.identifier}
-        if arguments is not None:
-            request["arguments"] = arguments
-        self.sock.sendall(json.dumps(request).encode() + b"\n")
-        deadline = time.monotonic() + 5
-        while time.monotonic() < deadline:
-            messages = self.receive(.1)
-            if messages is None:
-                raise RuntimeError("QMP connection closed")
-            for message in messages:
-                if message.get("id") == self.identifier:
-                    if "error" in message:
-                        raise RuntimeError(f"QMP error: {message}")
-                    return message.get("return")
-        raise TimeoutError(f"QMP {name} response timed out")
-
-    def drain(self):
-        while True:
-            messages = self.receive(0)
-            if not messages:
-                break
 
 
 class GDB:

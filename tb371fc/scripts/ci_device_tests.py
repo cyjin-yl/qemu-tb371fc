@@ -87,6 +87,7 @@ def plan(args, runtime):
             ("dt-inventory-unit", scripts / "test_inventory_dtb.py"),
             ("hardware-sysfs-unit", scripts / "test_collect_hardware_sysfs.py"),
             ("guest-result-unit", tests / "test_guest_result.py"),
+            ("console-boot-verdict-unit", tests / "test_boot_verdict.py"),
             ("tlmm-map-unit", tests / "test_tlmm_map.py"),
         ):
             add(name, script, result="exit")
@@ -228,13 +229,15 @@ def plan(args, runtime):
             ("--qemu", qemu, "--kernel", kernel, "--timeout", "120"),
             output="--out", result="file", count=8,
             count_field="guest_checks",
-            expected={"arch_counter_matches_native_frequency_and_progress": True})
+            expected={"arch_counter_matches_native_frequency_and_progress": True,
+                      "guest_shutdown_observed": True, "validation_errors": []})
         add("linux-console-empty-ufs", scripts / "boot_smoke.py",
             ("--qemu", qemu, "--kernel", kernel, "--timeout", "120",
              "--without-ufs-lu", "--debug-mmio"),
             output="--out", result="file", count=8,
             count_field="guest_checks",
             expected={"arch_counter_matches_native_frequency_and_progress": True,
+                      "guest_shutdown_observed": True, "validation_errors": [],
                       "ufs_fixture": {"populated": False, "kind": "none", "bytes": 0}})
         add("linux-ufs-smmu", scripts / "boot_ufs.py",
             ("--qemu", qemu, "--kernel", kernel, "--timeout", "120"),
@@ -282,6 +285,49 @@ def expected_json_value(actual, expected):
     return actual == expected
 
 
+def checked_verdict_fields(record, location):
+    """A true aggregate cannot conceal a contradictory local verdict."""
+    present = False
+    for field in ("passed", "success", "all_passed"):
+        if field in record:
+            present = True
+            if record[field] is not True:
+                raise ValueError(f"Contradictory {location}.{field}")
+    return present
+
+
+def check_identity(check, location, guest=False):
+    """Validate the three receipt formats produced by component/guest tests."""
+    if guest and isinstance(check, str):
+        match = re.fullmatch(r"TB371FC_CHECK PASS ([A-Za-z0-9_]+)", check)
+        if match:
+            return match[1]
+        raise ValueError(f"Unsuccessful or malformed {location}")
+    if guest and isinstance(check, list):
+        if (len(check) == 2 and check[0] == "PASS" and
+                isinstance(check[1], str) and
+                re.fullmatch(r"[A-Za-z0-9_]+", check[1])):
+            return check[1]
+        raise ValueError(f"Unsuccessful or malformed {location}")
+    if not isinstance(check, dict):
+        raise ValueError(f"{location} is not an attested check object")
+    verdict = checked_verdict_fields(check, location)
+    if "status" in check:
+        if (not isinstance(check["status"], str) or
+                check["status"].lower() not in ("pass", "passed", "ok")):
+            raise ValueError(f"Unsuccessful {location}.status")
+        verdict = True
+    if not verdict:
+        raise ValueError(f"{location} has no positive check verdict")
+    names = [check[field] for field in ("name", "test", "check") if field in check]
+    if not names or any(not isinstance(name, str) or not name.strip()
+                        for name in names):
+        raise ValueError(f"{location} has no valid check identity")
+    if len(set(names)) != 1:
+        raise ValueError(f"{location} has conflicting check identities")
+    return names[0]
+
+
 def judge(case, stdout):
     if case.result == "exit":
         return {"verdict": "successful test process"}
@@ -306,24 +352,18 @@ def judge(case, stdout):
     data = json.loads(path.read_text())
     if not isinstance(data, dict) or data.get(case.verdict) is not True:
         raise ValueError(f"Missing true JSON verdict {case.verdict!r}: {path}")
+    checked_verdict_fields(data, "summary")
     details = {"verdict_field": case.verdict, "verdict": True}
     if case.expected_count is not None:
         checks = data.get(case.count_field)
         if not isinstance(checks, list) or len(checks) != case.expected_count:
             raise ValueError(
                 f"{case.count_field} must contain {case.expected_count} entries")
-        for index, check in enumerate(checks):
-            if not isinstance(check, dict):
-                continue
-            for field in ("passed", "success", "all_passed"):
-                if field in check and check[field] is not True:
-                    raise ValueError(
-                        f"Contradictory {case.count_field}[{index}].{field}")
-            if "status" in check and (
-                    not isinstance(check["status"], str) or
-                    check["status"].lower() not in ("pass", "passed", "ok")):
-                raise ValueError(
-                    f"Unsuccessful {case.count_field}[{index}].status")
+        identities = [check_identity(check, f"{case.count_field}[{index}]",
+                                     guest=case.count_field == "guest_checks")
+                      for index, check in enumerate(checks)]
+        if len(set(identities)) != len(identities):
+            raise ValueError(f"Duplicate check identities in {case.count_field}")
         details["check_count"] = len(checks)
     for key, count in case.expected_lengths.items():
         value = data.get(key)
