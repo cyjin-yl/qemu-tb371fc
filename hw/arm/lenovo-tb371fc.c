@@ -43,6 +43,7 @@
 #include "hw/intc/arm_gicv3_common.h"
 #include "hw/intc/qcom-pdc.h"
 #include "hw/misc/qcom-sm8250-gcc.h"
+#include "hw/misc/qcom-sm8250-gpucc.h"
 #include "hw/misc/qcom-pshold.h"
 #include "hw/misc/qcom-dcc.h"
 #include "hw/misc/qcom-ipcc.h"
@@ -970,6 +971,30 @@ static void tb371fc_create_gpu_gx_gdsc(TB371FCMachineState *s)
     }
 }
 
+
+static void tb371fc_create_gpucc(TB371FCMachineState *s)
+{
+    DeviceState *gpucc = qdev_new(TYPE_QCOM_SM8250_GPUCC);
+    unsigned i;
+
+    object_property_add_child(OBJECT(s), "gpucc", OBJECT(gpucc));
+    qdev_connect_clock_in(gpucc, "xo", s->xo);
+    qdev_connect_clock_in(gpucc, "gcc_gpu_gpll0_clk_src",
+        qdev_get_clock_out(DEVICE(&s->gcc), "gcc_gpu_gpll0_clk_src"));
+    qdev_connect_clock_in(gpucc, "gcc_gpu_gpll0_div_clk_src",
+        qdev_get_clock_out(DEVICE(&s->gcc), "gcc_gpu_gpll0_div_clk_src"));
+    /*
+     * PLL0, QDSS and branch parents not specified by the source remain
+     * unwired. An AOP QDSS vote is not a clock frequency. The opt-in
+     * enabled-reference property does not seed any PLL or clock vote.
+     */
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(gpucc), &error_fatal);
+    for (i = 0; i < GPUCC_WINDOWS; i++) {
+        sysbus_mmio_map(SYS_BUS_DEVICE(gpucc), i,
+                        0x03d90000 + qcom_sm8250_gpucc_window_offsets[i]);
+    }
+}
+
 static void tb371fc_create_gcc(TB371FCMachineState *s)
 {
     DeviceState *gcc;
@@ -1344,6 +1369,7 @@ static void tb371fc_init(MachineState *ms)
         s->ufs->id = g_strdup("ufs0");
     }
     tb371fc_create_gcc(s);
+    tb371fc_create_gpucc(s);
     tb371fc_create_gpu_cx_gdsc(s);
     tb371fc_create_gpu_gx_gdsc(s);
     if (s->ufs) {

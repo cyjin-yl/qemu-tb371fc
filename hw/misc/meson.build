@@ -170,6 +170,7 @@ system_ss.add(when: 'CONFIG_SBSA_REF', if_true: files('sbsa_ec.c'))
 system_ss.add(when: 'CONFIG_LASI', if_true: files('lasi.c'))
 
 system_ss.add(when: 'CONFIG_QCOM_SM8250_GCC', if_true: files('qcom-sm8250-gcc.c'))
+system_ss.add(when: 'CONFIG_QCOM_SM8250_GPUCC', if_true: files('qcom-sm8250-gpucc.c'))
 system_ss.add(when: 'CONFIG_QCOM_SM8250_RPMH', if_true: files('qcom-sm8250-rpmh.c'))
 system_ss.add(when: 'CONFIG_QCOM_PSHOLD', if_true: files('qcom-pshold.c'))
 system_ss.add(when: 'CONFIG_QCOM_DCC', if_true: files('qcom-dcc.c'))
