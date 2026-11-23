@@ -133,3 +133,22 @@ already-hashed ramdisk slice, without opening any referenced partition or
 key path. The separate [boot metadata receipt](evidence/wholeboard-20261123-a47/boot-ramdisk-inputs-b95f97.json)
 records the full existing boot-file hash and raw init ELF metadata. Neither
 collector executes init, authenticates AVB or proves complete Android inputs.
+
+## Actual RPMh WAIT and complete-DT model evidence
+
+The [3b31e8 native observations](evidence/wholeboard-20261123-a47/native-observations-3b31e8.json)
+record the exact rejected DRV2 write, CPU7 PID1 abort and full printk context.
+The [bounded Image disassembly](evidence/wholeboard-20261123-a47/rpmh-production-disassembly-3b31e8.json)
+hashes the unchanged production Image and kallsyms, captures five named
+functions (4584 bytes) and matches the fault instruction plus four preceding
+instructions against the native Code dump. The Image offset mapping is
+therefore checked independently of a guessed symbol address. These are
+software execution facts; no hardware reserved-bit behavior was measured.
+
+The [direct actual-DT root-model read](evidence/wholeboard-20261123-a47/actual-dt-model-3b31e8.json)
+binds the full 5114262a DTB to the exact 37-byte property including its NUL:
+`Qualcomm Technologies, Inc. kona QRD`. The [legacy fixture review](evidence/wholeboard-20261123-a47/legacy-userspace-board-model-review.json)
+preserves its incompatible TB371FC-name predicate. Staging those old inputs
+was not a guest execution or an eight-check pass.
+
+The [independent source/production review](evidence/wholeboard-20261123-a47/rpmh-source-production-review-3b31e8.json) confirms the exact producer stack slot, 12-byte command copy and unnormalized WAIT accumulation in the unchanged production machine code. It distinguishes this local path equivalence from whole-kernel source provenance and from unmeasured silicon behavior.

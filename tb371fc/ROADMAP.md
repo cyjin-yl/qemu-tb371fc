@@ -23,8 +23,10 @@
 - [x] TSENS 有限数字参考：两控制器/32 通道的 [34 项检查、2 次完成迁移、2 次 profile 拒绝及 2 次损坏流拒绝](evidence/wholeboard-20261123-a47/tsens24xx-52492a.json)实际通过；[72 项统一 CI](evidence/wholeboard-20261123-a47/public-ci-52492a.json)与[同二进制完整原生 DT 运行](evidence/wholeboard-20261123-a47/native-52492a.json)已确认各 16670 轮参考采样并越过旧 TSENS fatal。温度/使能/1 ms 为显式假设，两个虚拟温度区 EINVAL、校准和物理热行为仍未通过。
 - [x] CPUFreq EPSS：[三域参考模型](docs/cpufreq-hw-reference.md)实际通过 30 项、2/2/2 迁移及拒绝检查；`1fe4e1` 的[74 项统一 CI](evidence/wholeboard-20261123-a47/public-ci-1fe4e1.json)与同二进制原厂复测已完成，printk 明确注册成功。合成表不声称原厂频率或电压。
 - [x] L3 devfreq：[请求参考模型](docs/devfreq-qcom-fw-reference.md)已在 `b95f97` 实际通过 20 项及 2/2/2 迁移和拒绝检查，全部 75 项统一验收与[同二进制完整 DT 诊断](evidence/wholeboard-20261123-a47/native-b95f97.json)完成；内核明确注册四个 voter 并初始化父设备。只证明数字请求接口，不代表物理缓存频率或固件执行。
-- [ ] 配置 NoC SBM：最新已验收边界仍为 b95f97 延迟 probe 工作线程在 `msm_bus_noc_sbm_config+0x84` 向 `0x01506080` 写入时外部异常。独立八端口参考模型及 28/2/2/2 检查已加入 76 项候选计划，待正式 CI 和同二进制原厂复测；现有 47 端口 QoS 不变，真实端点流量排空仍未实现。
-- [ ] 原厂完整 DT 用户态及 Android 启动；不能将 75 项公共成功、控制器注册或 NoC 配置匹配当作整板可用。
+- [x] 配置 NoC SBM 组件：`3b31e8` 的 76 项正式 CI 已通过，八端口参考的 28/2/2/2 检查和五个实际迁移流已核验；47 端口 QoS 不变。
+- [ ] 配置 NoC SBM 原厂路径：本次在更早的 RPMh WAIT 写发生 PID1 panic，SBM SET/CLR 仍均为零，未证明越过 b95f97 的旧工作线程异常；真实端点流量排空未实现。
+- [ ] RPMh WAIT：生产机器码已保存，现有模型拒绝 `0x778bd800`；需来源明确的边界处理和专项回归，不能将保留位的严格模型策略等同真实硅片行为。
+- [ ] 原厂完整 DT 用户态及 Android 启动；不能将 76 项公共成功、控制器注册或 NoC 配置匹配当作整板可用。
 
 本轮精确构建与原厂证据见 [README](../README.md) 和
 [原厂对照](evidence/wholeboard-20261123-a47/native-progression.json)。

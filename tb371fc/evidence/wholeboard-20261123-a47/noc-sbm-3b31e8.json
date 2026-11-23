@@ -1,0 +1,780 @@
+{
+  "schema": "tb371fc-noc-sbm-v1",
+  "gate": "noc-sbm-reference",
+  "qemu": "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+  "machine": "tb371fc,gcc-boot-configured=off,ufs-enabled=off,rpmh-profile=off,rpmh-boot-configured=off",
+  "qemu_sha256_before": "e0e1a669fefee1b20e8421dc6943faabee7fccb91c35f72ae2cd2f45513d23f2",
+  "test_sha256": "ebba6a0a4cc2139bb6657636f6160975f3bd070034d769c66e25c4ed5ba6563f",
+  "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+  "source_sha256": "9e408e18745857c575be792a92cb3eb7bcab1fb51b181cc389fd2b81213560a6",
+  "source_path": "drivers/soc/qcom/msm_bus/msm_bus_noc_rpmh.c",
+  "actual_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "actual_dt_layout_blob": "614c1a2225a701be9fbce9f6a893db4080614882",
+  "source_contract_blob": "6346b2fab8d6ec380eaaab42ef9a21c5e27b5be5",
+  "old_qos_test_sha256": "b2d3ff9127b4a7967e8fe89a4fce9cbeee4ceb5d4e0d655eea042c24407ead00",
+  "expected_checks": 28,
+  "expected_completed_migrations": 2,
+  "expected_rejected_migrations": 2,
+  "expected_corrupted_stream_rejections": 2,
+  "vmstate_version": 1,
+  "vmstate_payload_bytes_per_device": 152,
+  "device_count": 1,
+  "port_count": 8,
+  "register_count": 3,
+  "sparse_window_count": 3,
+  "mapped_bytes": 12,
+  "reference_latency_ns": 1000,
+  "supported_port_mask": 255,
+  "reference_boot_disconnected_mask": 0,
+  "reference_profile_is_default": false,
+  "default_profile_leaves_mmio_unmapped": true,
+  "independent_logical_port_deadlines": 8,
+  "qemu_timer_object_count": 1,
+  "diagnostic_counters_are_hardware": false,
+  "hardware_latency_measured": false,
+  "traffic_blocking_implemented": false,
+  "traffic_drain_observed": false,
+  "clock_control_implemented": false,
+  "irq_implemented": false,
+  "guest_cpu_executed": false,
+  "native_kernel_probe_observed": false,
+  "android_boot_passed": false,
+  "checks": [
+    {
+      "name": "explicit_reference_cold_state_has_only_connected_ports_and_zero_diagnostics",
+      "passed": true
+    },
+    {
+      "name": "literal_driver_disconnect_and_reconnect_polls_observe_completed_transitions",
+      "passed": true
+    },
+    {
+      "name": "all_eight_ports_have_independent_exact_deadlines",
+      "passed": true
+    },
+    {
+      "name": "word_commands_preserve_unselected_bits_and_count_accepted_zero_masks",
+      "passed": true
+    },
+    {
+      "name": "duplicate_requests_do_not_rearm_pending_or_completed_ports",
+      "passed": true
+    },
+    {
+      "name": "reversing_to_current_sense_cancels_without_a_late_response",
+      "passed": true
+    },
+    {
+      "name": "stalled_before_request_keeps_the_full_phase_until_host_release",
+      "passed": true
+    },
+    {
+      "name": "midflight_stall_preserves_remaining_phase_in_both_directions",
+      "passed": true
+    },
+    {
+      "name": "reversal_while_stalled_discards_the_saved_request_phase",
+      "passed": true
+    },
+    {
+      "name": "unrelated_callbacks_never_finish_a_stalled_zero_remaining_port",
+      "passed": true
+    },
+    {
+      "name": "reserved_port_bits_fail_whole_commands_and_host_input_atomically",
+      "passed": true
+    },
+    {
+      "name": "register_permissions_and_readonly_qom_cannot_forge_handshake_state",
+      "passed": true
+    },
+    {
+      "name": "invalid_widths_and_unaligned_requests_do_not_undo_valid_wide_word_transactions",
+      "passed": true
+    },
+    {
+      "name": "paused_virtual_time_and_reads_do_not_acknowledge_due_requests",
+      "passed": true
+    },
+    {
+      "name": "system_reset_cancels_requests_and_counters_but_preserves_the_host_stall_input",
+      "passed": true
+    },
+    {
+      "name": "deadline_overflow_rejects_multibit_commands_and_unstall_without_partial_changes",
+      "passed": true
+    },
+    {
+      "name": "default_unknown_is_instantiated_but_keeps_all_sbm_words_unmapped",
+      "passed": true
+    },
+    {
+      "name": "enabled_profile_maps_only_three_low_words_and_keeps_status_and_high_banks_holes",
+      "passed": true
+    },
+    {
+      "name": "paused_normal_tcg_exposes_the_host_peer_input_without_running_a_guest",
+      "passed": true
+    },
+    {
+      "name": "sbm_requests_are_isolated_from_all_forty_seven_existing_qos_devices",
+      "passed": true
+    },
+    {
+      "name": "v1_relative_deadlines_and_zero_remainder_restore_before_first_sbm_mmio",
+      "passed": true,
+      "source_virtual_ns": 1000,
+      "destination_virtual_ns": 987654321
+    },
+    {
+      "name": "restored_eight_deadlines_dispatch_independently_and_accept_new_commands",
+      "passed": true
+    },
+    {
+      "name": "v1_stalled_and_active_reconnects_restore_before_first_sbm_mmio",
+      "passed": true,
+      "source_virtual_ns": 1500,
+      "destination_virtual_ns": 73
+    },
+    {
+      "name": "restored_stall_phase_resumes_exactly_and_system_reset_cancels_the_next_request",
+      "passed": true
+    },
+    {
+      "name": "real_migration_rejects_reference_to_unknown_profile",
+      "passed": true
+    },
+    {
+      "name": "real_migration_rejects_unknown_to_reference_profile",
+      "passed": true
+    },
+    {
+      "name": "real_migration_rejects_single_field_corruption_reference_identity",
+      "passed": true
+    },
+    {
+      "name": "real_migration_rejects_single_field_corruption_port1_remaining",
+      "passed": true
+    }
+  ],
+  "migrations": [
+    {
+      "name": "v1_eight_independent_relative_deadlines_and_ram",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 2,
+        "downtime": 21,
+        "total-time": 29,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 667.5374814814814,
+          "transferred": 2252939,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "destination": {
+        "status": "completed"
+      },
+      "source_directory": "migration-deadlines-source",
+      "target_directory": "migration-deadlines-target",
+      "destination_virtual_ns": 987654321,
+      "different_virtual_origins": true,
+      "snapshot_file": "noc-sbm-v1-eight-relative-deadlines.migration",
+      "snapshot_sha256": "ef5a383d404e124a155ae68b8a70f873bf15a77b4263007c542d4005b8b6334a",
+      "snapshot_bytes": 2252939,
+      "stream_modified": false,
+      "device_sections_verified": 1,
+      "payload_bytes_per_device": 152,
+      "sections": [
+        {
+          "instance_id": 0,
+          "section_version": 1,
+          "section_name": "qcom-noc-sbm",
+          "section_header_offset": 2120489,
+          "section_id": 43,
+          "payload_offset": 2120515,
+          "payload_bytes": 152,
+          "payload_hex": "0000000100000000000000000150608000000000015060880000000001506100000000ff000003e853424d310000000000000000000000ff00000000000000ff0000000000000000000000000000006400000000000000c8000000000000012c000000000000019000000000000001f4000000000000025800000000000002bc000000000000000800000000000000000000008000000000",
+          "payload_file": "noc-sbm-v1-eight-relative-deadlines.migration.instance0.payload.bin",
+          "decoded_fields": {
+            "profile": 1,
+            "instance_id": 0,
+            "clear_address": 22044800,
+            "set_address": 22044808,
+            "sense_address": 22044928,
+            "supported_port_mask": 255,
+            "reference_latency_ns": 1000,
+            "reference_identity": 1396854065,
+            "boot_disconnected_mask": 0,
+            "peer_stall_mask": 0,
+            "requested_mask": 255,
+            "sense_mask": 0,
+            "pending_mask": 255,
+            "port0_remaining_ns": 0,
+            "port1_remaining_ns": 100,
+            "port2_remaining_ns": 200,
+            "port3_remaining_ns": 300,
+            "port4_remaining_ns": 400,
+            "port5_remaining_ns": 500,
+            "port6_remaining_ns": 600,
+            "port7_remaining_ns": 700,
+            "accepted_set_writes": 8,
+            "accepted_clear_writes": 0,
+            "last_set_mask": 128,
+            "last_clear_mask": 0
+          },
+          "all_serialized_fields_verified": true,
+          "runtime_matches_actual_source_qom": true,
+          "unknown_runtime_zero_invariant_verified": false
+        }
+      ],
+      "target_sbm_mmio_before_first_observation": false,
+      "target_qmp_cont_before_first_observation": false,
+      "destination_state_was_different_before_load": true,
+      "target_qom_before_first_mmio_file": "migration-deadlines-target/destination-before-first-sbm-mmio.json",
+      "target_query_migrate_file": "migration-deadlines-target/destination-query-migrate.json",
+      "continued_after_restore": true,
+      "source_virtual_ns": 1000,
+      "source_qom_and_pre_save_did_not_acknowledge_requests": true,
+      "source_qom_before_file": "migration-deadlines-source/source-qom-before-save.json",
+      "source_qom_after_file": "migration-deadlines-source/source-qom-after-save.json",
+      "source_query_migrate_file": "migration-deadlines-source/source-query-migrate.json",
+      "source_had_pending_zero_remaining_port": true,
+      "restored_timer_observations_file": "migration-deadlines-target/destination-restored-timers-before-first-sbm-mmio.json",
+      "restored_deadlines_verified_before_any_sbm_mmio": true
+    },
+    {
+      "name": "v1_stalled_reconnect_and_environment_input",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 21,
+        "total-time": 30,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 621.5004137931035,
+          "transferred": 2252939,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "destination": {
+        "status": "completed"
+      },
+      "source_directory": "migration-stalled-source",
+      "target_directory": "migration-stalled-target",
+      "destination_virtual_ns": 73,
+      "different_virtual_origins": true,
+      "snapshot_file": "noc-sbm-v1-stalled-reconnect.migration",
+      "snapshot_sha256": "78decb607dfb08ccf23d99c8dce3dbc3d396a43da35f9ada679837edf4211388",
+      "snapshot_bytes": 2252939,
+      "stream_modified": false,
+      "device_sections_verified": 1,
+      "payload_bytes_per_device": 152,
+      "sections": [
+        {
+          "instance_id": 0,
+          "section_version": 1,
+          "section_name": "qcom-noc-sbm",
+          "section_header_offset": 2120489,
+          "section_id": 43,
+          "payload_offset": 2120515,
+          "payload_bytes": 152,
+          "payload_hex": "0000000100000000000000000150608000000000015060880000000001506100000000ff000003e853424d310000000000000005000000ae000000ff00000051000000000000025800000000000000000000000000000000000000000000000000000000000001f4000000000000000000000000000001f40000000000000000000000000000000200000000000000010000000400000055",
+          "payload_file": "noc-sbm-v1-stalled-reconnect.migration.instance0.payload.bin",
+          "decoded_fields": {
+            "profile": 1,
+            "instance_id": 0,
+            "clear_address": 22044800,
+            "set_address": 22044808,
+            "sense_address": 22044928,
+            "supported_port_mask": 255,
+            "reference_latency_ns": 1000,
+            "reference_identity": 1396854065,
+            "boot_disconnected_mask": 0,
+            "peer_stall_mask": 5,
+            "requested_mask": 174,
+            "sense_mask": 255,
+            "pending_mask": 81,
+            "port0_remaining_ns": 600,
+            "port1_remaining_ns": 0,
+            "port2_remaining_ns": 0,
+            "port3_remaining_ns": 0,
+            "port4_remaining_ns": 500,
+            "port5_remaining_ns": 0,
+            "port6_remaining_ns": 500,
+            "port7_remaining_ns": 0,
+            "accepted_set_writes": 2,
+            "accepted_clear_writes": 1,
+            "last_set_mask": 4,
+            "last_clear_mask": 85
+          },
+          "all_serialized_fields_verified": true,
+          "runtime_matches_actual_source_qom": true,
+          "unknown_runtime_zero_invariant_verified": false
+        }
+      ],
+      "target_sbm_mmio_before_first_observation": false,
+      "target_qmp_cont_before_first_observation": false,
+      "destination_state_was_different_before_load": true,
+      "target_qom_before_first_mmio_file": "migration-stalled-target/destination-before-first-sbm-mmio.json",
+      "target_query_migrate_file": "migration-stalled-target/destination-query-migrate.json",
+      "continued_after_restore": true,
+      "source_virtual_ns": 1500,
+      "source_qom_and_pre_save_did_not_acknowledge_requests": true,
+      "source_qom_before_file": "migration-stalled-source/source-qom-before-save.json",
+      "source_qom_after_file": "migration-stalled-source/source-qom-after-save.json",
+      "source_query_migrate_file": "migration-stalled-source/source-query-migrate.json",
+      "restored_timer_observations_file": "migration-stalled-target/destination-restored-timers-before-first-sbm-mmio.json",
+      "restored_deadlines_verified_before_any_sbm_mmio": true,
+      "system_reset_preserved_environment_input": true
+    }
+  ],
+  "rejected_migrations": [
+    {
+      "name": "reference-to-unknown",
+      "passed": true,
+      "profile_mismatch": true,
+      "source_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 2,
+        "downtime": 21,
+        "total-time": 29,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 667.5374814814814,
+          "transferred": 2252939,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "snapshot_file": "noc-sbm-v1-eight-relative-deadlines.migration",
+      "snapshot_sha256": "ef5a383d404e124a155ae68b8a70f873bf15a77b4263007c542d4005b8b6334a",
+      "snapshot_bytes": 2252939,
+      "stream_modified": false,
+      "sections": [
+        {
+          "instance_id": 0,
+          "section_version": 1,
+          "section_name": "qcom-noc-sbm",
+          "section_header_offset": 2120489,
+          "section_id": 43,
+          "payload_offset": 2120515,
+          "payload_bytes": 152,
+          "payload_hex": "0000000100000000000000000150608000000000015060880000000001506100000000ff000003e853424d310000000000000000000000ff00000000000000ff0000000000000000000000000000006400000000000000c8000000000000012c000000000000019000000000000001f4000000000000025800000000000002bc000000000000000800000000000000000000008000000000",
+          "payload_file": "noc-sbm-v1-eight-relative-deadlines.migration.instance0.payload.bin",
+          "decoded_fields": {
+            "profile": 1,
+            "instance_id": 0,
+            "clear_address": 22044800,
+            "set_address": 22044808,
+            "sense_address": 22044928,
+            "supported_port_mask": 255,
+            "reference_latency_ns": 1000,
+            "reference_identity": 1396854065,
+            "boot_disconnected_mask": 0,
+            "peer_stall_mask": 0,
+            "requested_mask": 255,
+            "sense_mask": 0,
+            "pending_mask": 255,
+            "port0_remaining_ns": 0,
+            "port1_remaining_ns": 100,
+            "port2_remaining_ns": 200,
+            "port3_remaining_ns": 300,
+            "port4_remaining_ns": 400,
+            "port5_remaining_ns": 500,
+            "port6_remaining_ns": 600,
+            "port7_remaining_ns": 700,
+            "accepted_set_writes": 8,
+            "accepted_clear_writes": 0,
+            "last_set_mask": 128,
+            "last_clear_mask": 0
+          },
+          "all_serialized_fields_verified": true,
+          "runtime_matches_actual_source_qom": true,
+          "unknown_runtime_zero_invariant_verified": false
+        }
+      ],
+      "target_reference": false,
+      "target_directory": "rejected-reference-to-unknown",
+      "original_stream_hash_unchanged": true,
+      "source_virtual_ns": 1000,
+      "source_qom_and_pre_save_did_not_acknowledge_requests": true,
+      "source_qom_before_file": "migration-deadlines-source/source-qom-before-save.json",
+      "source_qom_after_file": "migration-deadlines-source/source-qom-after-save.json",
+      "source_query_migrate_file": "migration-deadlines-source/source-query-migrate.json",
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-noc-sbm",
+      "expected_diagnostic": "0 != 1",
+      "specific_load_failure_observed": true
+    },
+    {
+      "name": "unknown-to-reference",
+      "passed": true,
+      "profile_mismatch": true,
+      "source_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 2,
+        "downtime": 21,
+        "total-time": 29,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 667.5374814814814,
+          "transferred": 2252939,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "snapshot_file": "noc-sbm-v1-unknown-profile.migration",
+      "snapshot_sha256": "d5b85bccacbd0048ce89b32e13be9f2e41faf70023bb8319411da971fc43c775",
+      "snapshot_bytes": 2252939,
+      "stream_modified": false,
+      "sections": [
+        {
+          "instance_id": 0,
+          "section_version": 1,
+          "section_name": "qcom-noc-sbm",
+          "section_header_offset": 2120489,
+          "section_id": 43,
+          "payload_offset": 2120515,
+          "payload_bytes": 152,
+          "payload_hex": "0000000000000000000000000150608000000000015060880000000001506100000000ff000003e853424d31000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "payload_file": "noc-sbm-v1-unknown-profile.migration.instance0.payload.bin",
+          "decoded_fields": {
+            "profile": 0,
+            "instance_id": 0,
+            "clear_address": 22044800,
+            "set_address": 22044808,
+            "sense_address": 22044928,
+            "supported_port_mask": 255,
+            "reference_latency_ns": 1000,
+            "reference_identity": 1396854065,
+            "boot_disconnected_mask": 0,
+            "peer_stall_mask": 0,
+            "requested_mask": 0,
+            "sense_mask": 0,
+            "pending_mask": 0,
+            "port0_remaining_ns": 0,
+            "port1_remaining_ns": 0,
+            "port2_remaining_ns": 0,
+            "port3_remaining_ns": 0,
+            "port4_remaining_ns": 0,
+            "port5_remaining_ns": 0,
+            "port6_remaining_ns": 0,
+            "port7_remaining_ns": 0,
+            "accepted_set_writes": 0,
+            "accepted_clear_writes": 0,
+            "last_set_mask": 0,
+            "last_clear_mask": 0
+          },
+          "all_serialized_fields_verified": true,
+          "runtime_matches_actual_source_qom": false,
+          "unknown_runtime_zero_invariant_verified": true
+        }
+      ],
+      "target_reference": true,
+      "target_directory": "rejected-unknown-to-reference",
+      "original_stream_hash_unchanged": true,
+      "source_virtual_ns": 4567,
+      "source_qom_and_pre_save_did_not_acknowledge_requests": true,
+      "source_qom_before_file": "migration-unknown-source/source-qom-before-save.json",
+      "source_qom_after_file": "migration-unknown-source/source-qom-after-save.json",
+      "source_query_migrate_file": "migration-unknown-source/source-query-migrate.json",
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-noc-sbm",
+      "expected_diagnostic": "1 != 0",
+      "specific_load_failure_observed": true
+    }
+  ],
+  "corrupted_stream_rejections": [
+    {
+      "name": "reference-identity",
+      "passed": true,
+      "stream_modified": true,
+      "source_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 2,
+        "downtime": 21,
+        "total-time": 29,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 667.5374814814814,
+          "transferred": 2252939,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "original_stream_file": "noc-sbm-v1-eight-relative-deadlines.migration",
+      "original_stream_sha256": "ef5a383d404e124a155ae68b8a70f873bf15a77b4263007c542d4005b8b6334a",
+      "original_stream_bytes": 2252939,
+      "corrupted_stream_file": "noc-sbm-v1-corrupted-reference-identity.migration",
+      "corrupted_stream_sha256": "407fa93e6f3bd62cafcd61250bb611c6c80dd6826cef2dea1115160c0a7053f7",
+      "corrupted_stream_bytes": 2252939,
+      "original_stream_hash_unchanged": true,
+      "target_directory": "corrupted-reference-identity",
+      "original_sections": [
+        {
+          "instance_id": 0,
+          "section_version": 1,
+          "section_name": "qcom-noc-sbm",
+          "section_header_offset": 2120489,
+          "section_id": 43,
+          "payload_offset": 2120515,
+          "payload_bytes": 152,
+          "payload_hex": "0000000100000000000000000150608000000000015060880000000001506100000000ff000003e853424d310000000000000000000000ff00000000000000ff0000000000000000000000000000006400000000000000c8000000000000012c000000000000019000000000000001f4000000000000025800000000000002bc000000000000000800000000000000000000008000000000",
+          "payload_file": "noc-sbm-v1-eight-relative-deadlines.migration.instance0.payload.bin",
+          "decoded_fields": {
+            "profile": 1,
+            "instance_id": 0,
+            "clear_address": 22044800,
+            "set_address": 22044808,
+            "sense_address": 22044928,
+            "supported_port_mask": 255,
+            "reference_latency_ns": 1000,
+            "reference_identity": 1396854065,
+            "boot_disconnected_mask": 0,
+            "peer_stall_mask": 0,
+            "requested_mask": 255,
+            "sense_mask": 0,
+            "pending_mask": 255,
+            "port0_remaining_ns": 0,
+            "port1_remaining_ns": 100,
+            "port2_remaining_ns": 200,
+            "port3_remaining_ns": 300,
+            "port4_remaining_ns": 400,
+            "port5_remaining_ns": 500,
+            "port6_remaining_ns": 600,
+            "port7_remaining_ns": 700,
+            "accepted_set_writes": 8,
+            "accepted_clear_writes": 0,
+            "last_set_mask": 128,
+            "last_clear_mask": 0
+          },
+          "all_serialized_fields_verified": true,
+          "runtime_matches_actual_source_qom": true,
+          "unknown_runtime_zero_invariant_verified": false
+        }
+      ],
+      "mutation": {
+        "instance_id": 0,
+        "field": "reference-identity",
+        "section_header_offset": 2120489,
+        "payload_offset": 2120515,
+        "field_relative_offset": 40,
+        "field_offset": 2120555,
+        "modified_field_bytes": 4,
+        "old_value": 1396854065,
+        "new_value": 1396854064,
+        "old_field_hex": "53424d31",
+        "new_field_hex": "53424d30",
+        "original_payload_hex": "0000000100000000000000000150608000000000015060880000000001506100000000ff000003e853424d310000000000000000000000ff00000000000000ff0000000000000000000000000000006400000000000000c8000000000000012c000000000000019000000000000001f4000000000000025800000000000002bc000000000000000800000000000000000000008000000000",
+        "modified_payload_hex": "0000000100000000000000000150608000000000015060880000000001506100000000ff000003e853424d300000000000000000000000ff00000000000000ff0000000000000000000000000000006400000000000000c8000000000000012c000000000000019000000000000001f4000000000000025800000000000002bc000000000000000800000000000000000000008000000000",
+        "complete_file_byte_differences": [
+          {
+            "offset": 2120558,
+            "old_byte": 49,
+            "new_byte": 48
+          }
+        ],
+        "only_one_field_modified": true,
+        "only_one_bit_modified": true
+      },
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-noc-sbm",
+      "expected_diagnostic": "53424d31 != 53424d30",
+      "specific_load_failure_observed": true
+    },
+    {
+      "name": "port1-remaining",
+      "passed": true,
+      "stream_modified": true,
+      "source_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 2,
+        "downtime": 21,
+        "total-time": 29,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 667.5374814814814,
+          "transferred": 2252939,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "original_stream_file": "noc-sbm-v1-eight-relative-deadlines.migration",
+      "original_stream_sha256": "ef5a383d404e124a155ae68b8a70f873bf15a77b4263007c542d4005b8b6334a",
+      "original_stream_bytes": 2252939,
+      "corrupted_stream_file": "noc-sbm-v1-corrupted-port1-remaining.migration",
+      "corrupted_stream_sha256": "2ed6ad8f2fb7a757cd51141efe295cdb4a6cb922aa7ce5c19dbc4d9eceeffaa0",
+      "corrupted_stream_bytes": 2252939,
+      "original_stream_hash_unchanged": true,
+      "target_directory": "corrupted-port1-remaining",
+      "original_sections": [
+        {
+          "instance_id": 0,
+          "section_version": 1,
+          "section_name": "qcom-noc-sbm",
+          "section_header_offset": 2120489,
+          "section_id": 43,
+          "payload_offset": 2120515,
+          "payload_bytes": 152,
+          "payload_hex": "0000000100000000000000000150608000000000015060880000000001506100000000ff000003e853424d310000000000000000000000ff00000000000000ff0000000000000000000000000000006400000000000000c8000000000000012c000000000000019000000000000001f4000000000000025800000000000002bc000000000000000800000000000000000000008000000000",
+          "payload_file": "noc-sbm-v1-eight-relative-deadlines.migration.instance0.payload.bin",
+          "decoded_fields": {
+            "profile": 1,
+            "instance_id": 0,
+            "clear_address": 22044800,
+            "set_address": 22044808,
+            "sense_address": 22044928,
+            "supported_port_mask": 255,
+            "reference_latency_ns": 1000,
+            "reference_identity": 1396854065,
+            "boot_disconnected_mask": 0,
+            "peer_stall_mask": 0,
+            "requested_mask": 255,
+            "sense_mask": 0,
+            "pending_mask": 255,
+            "port0_remaining_ns": 0,
+            "port1_remaining_ns": 100,
+            "port2_remaining_ns": 200,
+            "port3_remaining_ns": 300,
+            "port4_remaining_ns": 400,
+            "port5_remaining_ns": 500,
+            "port6_remaining_ns": 600,
+            "port7_remaining_ns": 700,
+            "accepted_set_writes": 8,
+            "accepted_clear_writes": 0,
+            "last_set_mask": 128,
+            "last_clear_mask": 0
+          },
+          "all_serialized_fields_verified": true,
+          "runtime_matches_actual_source_qom": true,
+          "unknown_runtime_zero_invariant_verified": false
+        }
+      ],
+      "mutation": {
+        "instance_id": 0,
+        "field": "port1-remaining",
+        "section_header_offset": 2120489,
+        "payload_offset": 2120515,
+        "field_relative_offset": 72,
+        "field_offset": 2120587,
+        "modified_field_bytes": 8,
+        "old_value": 100,
+        "new_value": 1124,
+        "old_field_hex": "0000000000000064",
+        "new_field_hex": "0000000000000464",
+        "original_payload_hex": "0000000100000000000000000150608000000000015060880000000001506100000000ff000003e853424d310000000000000000000000ff00000000000000ff0000000000000000000000000000006400000000000000c8000000000000012c000000000000019000000000000001f4000000000000025800000000000002bc000000000000000800000000000000000000008000000000",
+        "modified_payload_hex": "0000000100000000000000000150608000000000015060880000000001506100000000ff000003e853424d310000000000000000000000ff00000000000000ff0000000000000000000000000000046400000000000000c8000000000000012c000000000000019000000000000001f4000000000000025800000000000002bc000000000000000800000000000000000000008000000000",
+        "complete_file_byte_differences": [
+          {
+            "offset": 2120593,
+            "old_byte": 0,
+            "new_byte": 4
+          }
+        ],
+        "only_one_field_modified": true,
+        "only_one_bit_modified": true
+      },
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-noc-sbm",
+      "expected_diagnostic": "qcom-noc-sbm: invalid migrated reference state",
+      "specific_load_failure_observed": true
+    }
+  ],
+  "passed": true,
+  "duration_seconds": 10.483784784000022,
+  "qemu_sha256_after": "e0e1a669fefee1b20e8421dc6943faabee7fccb91c35f72ae2cd2f45513d23f2",
+  "binary_unchanged": true
+}

@@ -65,7 +65,7 @@ the component verdict. This combined 70+4 plan actually passed on source
 records all 74 gates and the exact artifact. The older 52492a 68+4 pass remains
 separate.
 
-## Config NoC SBM candidate
+## Config NoC SBM accepted component checkpoint
 
 The `noc-sbm-reference` gate is inserted immediately after `noc-qos` without
 changing any prior gate contract or relative order. It requires 28 unique
@@ -80,14 +80,23 @@ requests, stalls including zero remaining time, pure reads, reset cancellation,
 strict access rejection and migration rebasing onto a different virtual epoch.
 First restored observations must precede device MMIO. An unknown-profile source
 is saved for reverse rejection, not counted as a third completed roundtrip.
-The exact-artifact native guard will inspect fifteen component reports and
-thirty-two actual migration files, including five SBM files.
+The exact-artifact guard actually inspected fifteen component reports and
+thirty-two migration files, including five SBM files, before native execution.
 
-This is a 72+4 candidate plan, not a new passed CI result. The previous
-[b95f97 71+4 pass](../evidence/wholeboard-20261123-a47/public-ci-b95f97.json)
-and its native worker abort remain the latest accepted execution evidence
-until this exact source's formal run is recorded. Neither a reference response
-nor a component pass establishes actual endpoint traffic or Android boot.
+The exact [3b31e8 run](../evidence/wholeboard-20261123-a47/public-ci-3b31e8.json)
+passed 72/72 components in 324.502 seconds and 4/4 Linux gates in 7.934 seconds.
+Both source-clean aggregates bind the same unchanged binary. The independent
+CPU job passed 852 guest checks, two configuration rejections and fifteen PCI
+UFS cases. The [raw SBM report](../evidence/wholeboard-20261123-a47/noc-sbm-3b31e8.json)
+passed all 28/2/2/2 cases in 10.484 seconds; the actual independent ZIP verifier
+checked all five 152-byte sections, QMP/QTest observations and rejection logs.
+
+The [same-binary native run](../evidence/wholeboard-20261123-a47/native-3b31e8.json)
+encountered an earlier DRV2 TCS0 WAIT write rejection and PID1 panic. Both SBM
+accepted-write counters were zero, so its cold coherent observer is not native
+driver coverage. The previous b95f97 L3 registration and later SBM worker
+exception remain separate evidence. Full original-DT userspace and Android
+are unpassed; no repeated native run was used to select a more favorable trace.
 
 ## Gates
 

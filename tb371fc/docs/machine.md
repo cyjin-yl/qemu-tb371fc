@@ -456,7 +456,7 @@ The board creates `/machine/cpufreq0..2` at `0x18591000`, `0x18592000` and `0x18
 
 The board creates `/machine/devfreq-l3` with only `0x18590000/4`, `0x18590100/160` and `0x18590320/4`. Four actual-DT child voters are guest software consumers of the one parent request register. The [contract](devfreq-qcom-fw-reference.md) defines the enabled handoff, synthetic LUT, exact access boundaries, reset policy, pure read-only QOM observations and 72-byte VMState v1. The [b95f97 75-gate run](../evidence/wholeboard-20261123-a47/public-ci-b95f97.json) actually passes its twenty checks, two completed migrations, two profile mismatches and two single-field corruptions. The [same accepted binary](../evidence/wholeboard-20261123-a47/native-b95f97.json) registers all four voter children and initializes the parent with the unchanged production Image and complete live DT. Its stopped PERF is 3 and all forty synthetic rows match. The next actual boundary is a deferred-probe worker's external abort writing 0x01506080 in msm_bus_noc_sbm_config; that b95f97 binary has no SBM registers. Full-DT userspace, native DMA, Android and physical cache behavior are not established.
 
-## Config NoC SBM handshake reference candidate
+## Config NoC SBM handshake reference
 
 The board always creates `/machine/noc-sbm-config`; its explicit profile is
 disabled by default. The three four-byte regions remain absent from FlatView
@@ -474,7 +474,12 @@ observer](../evidence/wholeboard-20261123-a47/native-noc-sbm-observer.py) reads
 QOM state and guest run status only for this device, without MMIO, writes or
 time advancement. Its in-memory checks are observer checks, not a native run.
 
-This implementation awaits its exact 76-gate formal CI and same-binary native
-result. Full-DT userspace, native DMA, endpoint rendering and Android remain
-separate unaccepted milestones. The preserved b95f97 worker exception above
-motivated this increment; it did not establish PID1 failure.
+This implementation actually passed the [76-gate formal run](../evidence/wholeboard-20261123-a47/public-ci-3b31e8.json),
+including 28 SBM checks, two completed transfers and four real rejection cases.
+The same binary's [native run](../evidence/wholeboard-20261123-a47/native-3b31e8.json)
+reached an earlier RPMh WAIT rejection: DRV2 TCS0 offset 0xd10 received 0x778bd800
+and PID1 panicked in __tcs_buffer_write+0x220. The complete stopped SBM observer
+matched geometry and identity but had zero SET/CLR counts and entirely cold
+request/sense state. This does not prove the former SBM abort was crossed.
+The prior b95f97 L3 registration and worker exception remain separate results.
+Full-DT userspace, native DMA, endpoint rendering and Android remain unaccepted.

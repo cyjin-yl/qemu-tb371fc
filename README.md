@@ -11,15 +11,19 @@
 生产内核加测试 initramfs 的成功不等于原厂 Android 系统启动。小核仍用 A55 代替 Qualcomm Kryo；显示、Adreno 650、触控、无线、音频、摄像头以及完整电源/固件契约仍有大量实现工作。缓存容量、功耗、射频、电气行为和真实芯片时序不由这些功能测试证明。
 
 
-## 正在验收：配置 NoC SBM 与 76 项计划
+## 最新验收：76 项通过，原厂暴露 RPMh WAIT 异常（2026-11-23）
 
 新增独立的 [NoC SBM 参考握手模型](tb371fc/docs/noc-sbm-reference.md)，按[固定驱动源码和完整实机 DT](tb371fc/evidence/wholeboard-20261123-a47/noc-sbm-source-contract.json)仅映射三个 32 位 word、八个端口。默认保持三个地址未映射；显式启用后区分请求、反馈和挂起状态，支持独立期限、外部参考阻塞、复位和 152 B 的 VMState v1。1000 ns 延迟与冷态连接均为明示参考策略；没有实现摄像头、显示或 Venus 的实际流量排空。
 
-统一执行计划现为 **76 个 gate：72 个组件/解析检查 + 4 次 Linux 启动**。新 gate 要求 28 项检查、2 次完成迁移、2 次 profile 拒绝和 2 次损坏流拒绝。旧 75 项的要求与相对顺序不变。[计划检查](tb371fc/evidence/wholeboard-20261123-a47/development-validation-sbm76.json)只运行了 AST/独立计划构造；本提交仍待正式 CI 和同二进制原厂复测，不能把 76 项计划写成已通过。最近已验收的运行仍是下面的 b95f97。
+统一源码 `3b31e83dc412962826ada872e361a1d32ea4e463` 已实际通过 **76 个 gate：72/72 组件 + 4/4 Linux，以及独立 A77 852+2、PCI UFS 15 项**。见[正式 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45255339714)和[精确产物回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-3b31e8.json)。板级 QEMU SHA-256 为 `e0e1a669fefee1b20e8421dc6943faabee7fccb91c35f72ae2cd2f45513d23f2`；实际 ZIP 中 15 份组件报告、32 个迁移文件已直接核验。SBM 的[原始报告](tb371fc/evidence/wholeboard-20261123-a47/noc-sbm-3b31e8.json)通过 28 项、2 次完成迁移、2 次 profile 拒绝和 2 次损坏流拒绝，五个实际 152 B payload 与真实日志均已检查。
+
+同一二进制的[未修改原厂 Image／完整 DT 诊断](tb371fc/evidence/wholeboard-20261123-a47/native-3b31e8.json)这次在更早处终止：DRV2 TCS0 `WAIT_FOR_CMPL`（偏移 `0xd10`）写入 `0x778bd800` 被现有模型拒绝，`__tcs_buffer_write+0x220` 触发 PID1 panic。SBM 只读观察虽完整匹配参考几何和冷态，SET/CLR 计数均为零，**未证明原厂越过先前 SBM 异常**。本次未到达 CPUFreq/L3 注册；下面 b95f97 的较远进展仍独立保留。SMEM 23/23、GCC/GPUCC/NPUCC 和 MPM 32768 Hz 是本次实际观察。
+
+[固定原厂机器码取证](tb371fc/evidence/wholeboard-20261123-a47/rpmh-production-disassembly-3b31e8.json)保留五个函数的 4584 B 代码、反汇编及故障指令匹配。[源码与机器码复核](tb371fc/evidence/wholeboard-20261123-a47/rpmh-source-production-review-3b31e8.json)确认生产驱动确实留下未初始化的命令 wait 字段，并把整个 u32 合入 WAIT。保留高位的处理仍需明确模型合同；没有修改原厂 Image，也没有认定真实硅片会产生同样总线错误。[完整 DT 根 model](tb371fc/evidence/wholeboard-20261123-a47/actual-dt-model-3b31e8.json)实际是 `Qualcomm Technologies, Inc. kona QRD`，因此旧用户态夹具的 `TB371FC` 名称判定不能复用为完整 DT 验收。本次没有执行该旧夹具。
 
 [既有启动镜像核验](tb371fc/evidence/wholeboard-20261123-a47/boot-ramdisk-inputs-b95f97.json)确认固定 ramdisk 中存在 AArch64 `init` ELF；[实际挂载配置与生产符号核验](tb371fc/evidence/wholeboard-20261123-a47/boot-fstab-and-sbm-symbols-b95f97.json)确认五个首阶段逻辑分区 `system/system_ext/product/vendor/odm` 及 metadata/data 配置。它们只说明输入内容和配置要求，未执行 init、认证 AVB、读取配置指向的分区或确认完整 Android 镜像已齐。
 
-## 最新整板推进：75 项通过与原厂 L3 注册（2026-11-23）
+## 保留的 75 项通过与原厂 L3 注册（2026-11-23）
 
 统一源码 `b95f973f9b20d53e3a0b8843c919156e3acb58d9` 已实际通过 **75 个 gate：71/71 组件 + 4/4 Linux，以及独立 A77/UFS job**。见[正式 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45247295321)和[源码／产物绑定回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-b95f97.json)。板级 QEMU SHA-256 为 `0f6ebed05f414484f1ef04196457c314bbd635245683c547c40d0a601065c88e`；已直接核验下载的 ZIP、两份 clean-source 汇总、14 份组件报告和 **27 个实际迁移文件**。
 
