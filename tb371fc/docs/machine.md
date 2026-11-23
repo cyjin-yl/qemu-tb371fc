@@ -20,7 +20,30 @@ retains the initial noncanonical-filename discovery failure and the later
 byte-identical canonical-name success. The
 [original ledger](../evidence/VALIDATION.md) remains an immutable historical record.
 [The source index](../SOURCES.md) links each device's precise register contract,
-primary references, assumptions and executed receipts.
+primary references, assumptions and executed receipts. The
+[default-branch history index](../evidence/DEFAULT-HISTORY-5fd52c1.md) also retains
+frozen12 and generic-build receipts published in `5fd52c1`; these remain
+measurements of their original binaries, not results for a later commit.
+
+## Explicit boot-resource profiles
+
+The current development branch adds the following opt-in properties. They
+describe reference contracts, not captured SBL state or AOP firmware execution.
+
+| Option | Contract |
+| --- | --- |
+| `smem-profile=off|reference-empty` | Default off; the reference initializes the documented empty SMEM v12 handoff. |
+| `aop-profile=none|reference-qdss-vote` | Default none retains raw SRAM. The reference adds real IPCC link/channel processing and only QDSS/QDSS_AO off/dynamic votes. |
+| `qcom-gpu-cx-gdsc.boot-collapsed-reference=on` | Explicit collapsed CX handoff; connected RPMh `cx.lvl` remains its parent input. |
+| `qcom-gdsc.enabled-reference=on` | Explicit GX digital reference state; `gfx.lvl` is its distinct parent. |
+| `qcom-refgen.boot-disabled-reference=on` | Explicit REFGEN disabled handoff. |
+| `qcom-tcsr-mutex.boot-unlocked-reference=on` | Explicit unlocked mutex handoff. |
+
+The latter four are device `-global` properties. See [SMEM](smem-reference.md),
+[AOP reference peer](aop-reference-peer.md), [CX](gpu-cx-gdsc.md) and
+[GX](gpu-gx-gdsc.md) for exact state, unsupported inputs and migration scope.
+GCC v3 deliberately rejects older GCC migration streams; UFS still prevents
+a full-board migration claim.
 
 ## Current executed scope
 
@@ -98,7 +121,25 @@ configuration, not all register contents or hardware behavior.
 | TLMM | `0x0f000000/0x01000000`, SPI 208; 180 ordinary digital GPIOs plus a separate UFS reset output |
 | IMEM / PS_HOLD | `0x146bf000/0x1000` writable SRAM and `0x0c264000/4` digital hold output; no initialized OEM firmware state |
 | DCC register / SRAM | `0x01023000/0x1000` and `0x0103a000/0x6000`; internal word-address offset `0x1a000`; reference map2 identity with bounded READ, single-word WRITE, flat LOOP and single-register RMW |
+| PDC | `0x0b220000/0x30000`, SPI-type bitmap `0x17c000f0/0x60`; 138 DT-mapped pins, including pin 1 → SPI 481 |
+| IPCC APPS | `0x00408000/0x1000`, SPI 229; local client ID 8 from the captured APPS self-ping node |
+| SPMI arbiter | Five native windows below, mapped only with `spmi-profile=reference`; IRQ output through PDC input 1 |
 | PSCI | SMC |
+
+The explicit SPMI reference profile maps these captured CPU physical ranges:
+
+| SPMI region | Base | Size |
+| --- | --- | --- |
+| core | `0x0c440000` | `0x1100` |
+| chnls | `0x0c600000` | `0x02000000` |
+| obsrvr | `0x0e600000` | `0x00100000` |
+| intr | `0x0e700000` | `0x000a0000` |
+| cnfg | `0x0c40a000` | `0x00026000` |
+
+The window addresses are DT observations; arbiter v5 identity, APID numbering
+and ownership are explicit reference inputs. They are not measured reset values.
+The [SPMI contract](spmi-pmic-arb.md) distinguishes the native-address controller
+from its reference identities and optional synthetic peripheral fixture.
 
 PPI and SPI numbers are DT interrupt-specifier numbers. Architectural INTIDs
 are PPI + 16 or SPI + 32; for example the console uses INTID 389.
@@ -177,6 +218,7 @@ and the retained live-ISTATUS regression.
 | `ufs-enabled` | `on`; use `off` for independent component migration tests |
 | `gcc-boot-configured` | `on`; explicit GPLL0/UART firmware handoff state, not cold silicon reset |
 | `bootstrap-fabric-hz` | `100000000`; explicit reference for presently unmodeled fabric parents, not a measured rate |
+| `spmi-profile` | `off`; `reference` explicitly enables the bounded v5 arbiter/identity model; it does not enable a complete PMIC or fabricate generated-DT PMIC children |
 | `rpmh-profile` | `off`; `reference` or `file` must be requested explicitly |
 | `rpmh-cmd-db` | External file path for `rpmh-profile=file` |
 | `rpmh-boot-configured` | `on` seeds the explicit DRV2 XO handoff vote when RPMh is enabled |
@@ -186,6 +228,32 @@ is checked, only catalogued typed resources are bound, and an unknown
 request remains uncompleted. The reference database's addresses and some
 auxiliary values are synthetic. A privately derived AOP partial table is
 not a complete live cmd-db. See [rpmh-sm8250.md](rpmh-sm8250.md).
+
+### DCC, PDC, IPCC and SPMI boundaries
+
+[DCC](dcc.md) implements reference-map2 SRAM capture and propagates source
+transaction failures. Its [operation extension](dcc-operations.md) also performs
+bounded single-word WRITE, flat finite LOOP and single-register RMW operations
+through the actual address space. CRC/ATB/CTI, nested loops, broader write/RMW
+formats and complete execution of the native three-list workload remain
+unsupported or unverified.
+
+[PDC](pdc.md) converts the five legacy level/edge modes into the captured GIC
+routes. Its default VERSION read fails because native identity is unmeasured;
+mainline experiments can explicitly select
+`-global qcom-pdc.reference-version=0x20000`. The parent GIC owns pending/EOI.
+
+[IPCC](ipcc.md) implements pending latches, masks, clear-on-read and APPS self
+routing. An absent remote endpoint produces no invented incoming message.
+Its priority ordering and sparse capacity are explicit model choices.
+
+The [SPMI reference model](spmi-pmic-arb.md) performs bounded 1–8-byte
+transactions with status/error and ownership checks. Known or source-derived
+primary PMIC identity bytes are separate from unknown revision fields, which
+fail. Native APID/ownership and raw chip versions remain unmeasured. The
+optional SID15 IRQ peripheral is an explicit synthetic controller fixture;
+its tests prove the SPMI→PDC→GIC route, not real regulator, ADC, charger or PON
+behavior. No power-domain wake or secure-firmware completion is implied.
 
 ## Boot and diagnostic interfaces
 
@@ -227,7 +295,7 @@ attached explicitly for storage I/O. The public
 attaches LU0 to `ufs0`. No native tablet partition is required.
 
 Whole-board migration with UFS is currently blocked by the upstream core.
-GENI/GCC/timer/RPMh/watchdog/TLMM/boot-resource migration receipts use
+GENI/GCC/timer/RPMh/watchdog/TLMM/boot-resource/DCC/PDC/IPCC/SPMI migration receipts use
 `-M tb371fc,ufs-enabled=off` and establish only their declared component
 continuity. SMMU state fields alone do not establish a passed SMMU migration.
 See [ufs-sm8250.md](ufs-sm8250.md) for the remaining ICE/RPMB/LU/PHY limits.
@@ -247,6 +315,7 @@ See [ufs-sm8250.md](ufs-sm8250.md) for the remaining ICE/RPMB/LU/PHY limits.
 | RPMh resources | Nodes and command-db appear only with an explicit profile; reference addresses/aux data remain synthetic |
 | TLMM and device reset | Upstream west/south/north pinctrl ranges, 180 ordinary GPIOs plus UFS_RESET group 180; active-low UFS reset is connected separately from GCC controller reset |
 | IMEM / PS_HOLD | Native physical mappings exist, but the generated DT does not advertise an incomplete PMIC poweroff path; lifecycle gates use PSCI |
+| DCC / PDC / IPCC / SPMI | Native-address component models and explicit test profiles do not advertise nonexistent PMIC children or remote firmware services; reference SPMI is off by default |
 | Optional services | No implicit all-success SCM, regulator, interconnect, firmware or absent-peripheral service |
 
 Instantiating the GPU SMMU does not create Adreno or display engines.

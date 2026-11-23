@@ -3,7 +3,7 @@
 """Exercise the real CPUSS branch, parent clocks and migration version gate.
 
 No guest CPU or production kernel executes in this component gate. The v1
-negative case relabels only the GCC section header of an actual v2 snapshot;
+negative case relabels only the GCC section header of an actual v3 snapshot;
 it proves rejection before fields are decoded, not a run of an old binary.
 """
 import argparse
@@ -28,6 +28,7 @@ PARENT = "gcc_cpuss_ahb_postdiv_clk_src"
 RCG = "gcc_cpuss_ahb_clk_src"
 OTHER_VOTE = 1 << 21
 EXPECTED_CHECKS = 11
+VMSTATE_VERSION = 3
 
 
 def digest(path):
@@ -162,7 +163,7 @@ def file_channels(path):
                                    "filename": str(path), "offset": 0}}]}
 
 
-def relabel_gcc_version(snapshot, output):
+def relabel_gcc_version(snapshot, output, advertised_version=1):
     """Find exactly one full device header using QEMU's savevm framing."""
     raw = bytearray(snapshot.read_bytes())
     assert raw[:8] == b"QEVM" + struct.pack(">I", 3), raw[:8]
@@ -182,18 +183,18 @@ def relabel_gcc_version(snapshot, output):
             if (raw[start - 1] == length and raw[start - 6] in (1, 4) and
                     (full_name == name or full_name.endswith(b"/" + name)) and
                     all(32 <= value < 127 for value in full_name) and
-                    struct.unpack_from(">II", raw, end) == (0, 2)):
+                    struct.unpack_from(">II", raw, end) == (0, VMSTATE_VERSION)):
                 matches.append((end + 4, full_name.decode()))
         position = end
     assert len(matches) == 1, matches
     offset, section = matches[0]
     before = bytes(raw)
-    struct.pack_into(">I", raw, offset, 1)
+    struct.pack_into(">I", raw, offset, advertised_version)
     assert raw[:offset] == before[:offset]
     assert raw[offset + 4:] == before[offset + 4:]
     output.write_bytes(raw)
     return {"section": section, "version_offset": offset,
-            "source_version": 2, "advertised_version": 1,
+            "source_version": VMSTATE_VERSION, "advertised_version": advertised_version,
             "original_sha256": hashlib.sha256(before).hexdigest(),
             "relabeled_sha256": hashlib.sha256(raw).hexdigest()}
 
@@ -220,14 +221,14 @@ def migration_checks(args, out, report):
         regs = (CBCR, VOTE, CMD, CFG, DIV, 0, 4, 0x40, 0x52018)
         before = {hex(reg): source.read(reg) for reg in regs}
         now = source.last_clock
-        snapshot = out / "gcc-v2.migration"
+        snapshot = out / "gcc-v3.migration"
         source.monitor("migrate", file_channels(snapshot))
         source_state = wait_migration(source)
         assert source.monitor("query-status")["status"] == "postmigrate"
         legacy = out / "gcc-advertised-v1.migration"
         version_change = relabel_gcc_version(snapshot, legacy)
         report["legacy_version_fixture"] = version_change
-        check("actual_v2_stream_contains_the_new_gcc_version")
+        check("actual_v3_stream_contains_the_new_gcc_version")
 
         target = rig("migration-target", incoming=True)
         target.command(f"clock_set {now}")
@@ -239,9 +240,9 @@ def migration_checks(args, out, report):
         target.expect_hz(CLOCK, 100_000_000)
         assert target.read(VOTE) == OTHER_VOTE  # remote vote preserved
         report["migrations"].append({
-            "name": "v2_file_roundtrip", "passed": True,
+            "name": "v3_file_roundtrip", "passed": True,
             "source": source_state, "destination": target_state})
-        check("v2_restore_preserves_parent_shadow_remote_vote_and_ram")
+        check("v3_restore_preserves_parent_shadow_remote_vote_and_ram")
 
         target.monitor("cont")
         target.step(999)
@@ -254,7 +255,7 @@ def migration_checks(args, out, report):
         target.expect_hz(CLOCK, 0)
         assert target.read(CBCR) & OFF
         target.expect_hz("gcc_cpuss_ahb_clk", 300_000_000)
-        check("v2_destination_resumes_updates_and_independent_votes")
+        check("v3_destination_resumes_updates_and_independent_votes")
 
         rejected = rig("migration-v1-rejected", incoming=True)
         rejected.command(f"clock_set {now}")
@@ -266,7 +267,7 @@ def migration_checks(args, out, report):
         returncode = rejected.process.wait(timeout=20)
         stderr = rejected.log_path.read_text(errors="replace")
         needle = ("qcom-sm8250-gcc: incoming version_id 1 is too old "
-                  "for local minimum version_id 2")
+                  f"for local minimum version_id {VMSTATE_VERSION}")
         assert returncode != 0 and needle in stderr, (returncode, stderr)
         report["migrations"].append({
             "name": "advertised_v1_rejected_before_field_decode",
@@ -295,7 +296,7 @@ def main():
         "schema": "tb371fc-gcc-cpuss-v1", "passed": False,
         "expected_checks": EXPECTED_CHECKS, "checks": [], "migrations": [],
         "qemu_sha256": initial_hash, "script_sha256": digest(__file__),
-        "vmstate_version": 2, "external_parent_inputs": 83,
+        "vmstate_version": VMSTATE_VERSION, "external_parent_inputs": 83,
         "guest_cpu_executed": False, "native_kernel_probe_observed": False,
         "scope": "Actual QTest register/clock transactions and migration; "
                  "native GCC probe and full-board boot require separate runs"}

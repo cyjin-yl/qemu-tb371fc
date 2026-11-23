@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0-only
-"""Generate SM8250 GCC descriptors with one pinned Kona branch supplement.
+"""Generate SM8250 GCC descriptors with pinned Kona branch/mux supplements.
 
 The parser deliberately accepts one audited source revision only. It extracts
 register facts, not arbitrary C. Run in the development container:
@@ -161,6 +161,74 @@ def main():
             ext += 1
     if ext != 83 or len({d['id'] for d in clocks}) != 198:
         raise ValueError('unexpected external clock or duplicate binding')
+    # Upstream leaves binding slots 189/195 empty and directly exposes the
+    # two PHY pipe inputs. Retain those input slots/names, but route each
+    # branch through its officially described Kona selector.
+    muxes = {name: (body, line)
+             for name, body, line in definitions(vendor_source, 'clk_regmap_mux')}
+    vendor_maps = {name: body
+                   for name, body, _ in definitions(vendor_source, 'parent_map')}
+    for suffix, selector_reg, map_name, input_symbol, input_name in [
+            ('prim', 0xf060, 'gcc_parent_map_6',
+             'P_USB3_PHY_WRAPPER_GCC_USB30_PIPE_CLK',
+             'usb3_phy_wrapper_gcc_usb30_pipe_clk'),
+            ('sec', 0x10060, 'gcc_parent_map_7',
+             'P_USB3_UNI_PHY_SEC_GCC_USB30_PIPE_CLK',
+             'usb3_uni_phy_sec_gcc_usb30_pipe_clk')]:
+        branch_name = 'gcc_usb3_' + suffix + '_phy_pipe_clk'
+        mux_name = branch_name + '_src'
+        mux_body, mux_line = muxes[mux_name]
+        names_name = 'gcc_parent_names_' + ('6' if suffix == 'prim' else '7')
+        mux_facts = (number(mux_body, 'reg'), number(mux_body, 'shift'),
+                     number(mux_body, 'width'),
+                     required(r'\.parent_map\s*=\s*(\w+)', mux_body).group(1),
+                     required(r'\.parent_names\s*=\s*(\w+)', mux_body).group(1),
+                     number(mux_body, 'num_parents'),
+                     required(r'\.ops\s*=\s*&(\w+)', mux_body).group(1))
+        if mux_facts != (selector_reg, 0, 2, map_name, names_name, 3,
+                         'clk_regmap_mux_closest_ops'):
+            raise ValueError('unexpected Kona USB pipe mux description')
+        source_map = re.findall(r'\{\s*(P_\w+),\s*(\d+)\s*\}',
+                                vendor_maps[map_name])
+        if source_map != [(input_symbol, '0'), ('P_CORE_BI_PLL_TEST_SE', '1'),
+                          ('P_BI_TCXO', '2')]:
+            raise ValueError('unexpected Kona USB pipe selector map')
+        names_body = required(
+            r'static const char \* const ' + names_name +
+            r'\[\] = \{([\s\S]*?)\n\};', vendor_source).group(1)
+        parent_names = re.findall(r'"([^"]+)"', names_body)
+        if parent_names != [input_name, 'core_bi_pll_test_se', 'bi_tcxo']:
+            raise ValueError('unexpected Kona USB pipe parent names')
+        branch = next(d for d in clocks if d['name'] == branch_name)
+        branch_body, branch_line = vendor[branch_name]
+        vendor_parent = required(
+            r'\.parent_names\s*=\s*\(const char \*\[\]\)\{\s*"(\w+)"\s*,?\s*\}',
+            branch_body).group(1)
+        if (number(branch_body, 'halt_reg'), number(branch_body, 'enable_reg'),
+                bit(branch_body, 'enable_mask'), vendor_parent,
+                required(r'\.halt_check\s*=\s*(\w+)', branch_body).group(1)) != (
+                    branch['reg'], branch['enable_reg'], branch['enable_mask'],
+                    mux_name, 'BRANCH_HALT_DELAY'):
+            raise ValueError('mainline and Kona USB pipe branch disagree')
+        if branch['external'] < 0 or branch['parent'] != -4:
+            raise ValueError('USB pipe external input layout changed')
+        mux_id = ids[mux_name.upper()]
+        upstream_line = branch['line']
+        branch.update(parent=mux_id, line=branch_line, source='oneplus-kona',
+                      upstream_line=upstream_line,
+                      external_parent_role='USB PHY input feeding the mux',
+                      external_parent_name=input_name)
+        clocks.append(dict(
+            id=mux_id, name=mux_name, kind='MUX', line=mux_line,
+            reg=selector_reg, enable_reg=0, enable_mask=0, parent=-4,
+            mnd_width=0, hid_width=2, hwcg_reg=0, hwcg_mask=0,
+            parent_map=[-4, -5, -1, -127, -127, -127, -127, -127],
+            external=branch['external'], source='oneplus-kona',
+            parent_names=parent_names,
+            external_input_clock=branch_name + '_parent'))
+    clocks.sort(key=lambda d: d['id'])
+    if len(clocks) != 200 or len({d['id'] for d in clocks}) != 200:
+        raise ValueError('expected all 200 clocks after Kona mux supplement')
     resets = []
     body = required(r'static const struct qcom_reset_map gcc_sm8250_resets\[\] = \{([\s\S]*?)\n\};', source).group(1)
     for name, reg, more in re.findall(r'\[(\w+)\]\s*=\s*\{\s*(0x[0-9a-f]+)([^}]*)\}', body):
@@ -196,6 +264,8 @@ def main():
         elif kind == 'DIV':
             # Linux declares these read-only. POR is a model default divide1.
             add(r, ro=((1 << d['hid_width']) - 1) << d['mnd_width'])
+        elif kind == 'MUX':
+            add(r, ((1 << d['hid_width']) - 1) << d['mnd_width'])
         elif kind == 'BRANCH':
             if r != 0xffffffff: add(r, ro=0xf0000000)
             add(d['enable_reg'], d['enable_mask'])
@@ -210,21 +280,31 @@ def main():
                     source_supplements=[dict(name='oneplus-kona', revision=VENDOR_REVISION,
                                              path=VENDOR_PATH, url=VENDOR_URL,
                                              sha256=VENDOR_SHA256,
-                                             clock_ids=[clock_ids['gcc_sys_noc_cpuss_ahb_clk']])],
+                                             clock_ids=[ids[symbol] for symbol in (
+                                                 'GCC_SYS_NOC_CPUSS_AHB_CLK',
+                                                 'GCC_USB3_PRIM_PHY_PIPE_CLK',
+                                                 'GCC_USB3_PRIM_PHY_PIPE_CLK_SRC',
+                                                 'GCC_USB3_SEC_PHY_PIPE_CLK',
+                                                 'GCC_USB3_SEC_PHY_PIPE_CLK_SRC')])],
                     clocks=clocks, resets=resets, power_domains=gdscs,
                     registers=[dict(offset=reg, write_mask=rw, status_mask=ro) for reg, (rw, ro) in sorted(regs.items())])
     (args.output_root / 'tb371fc/docs/gcc-sm8250-registers.json').write_text(json.dumps(manifest, indent=2) + '\n')
     out = ['/* SPDX-License-Identifier: GPL-2.0-only */',
            '/* Generated register facts from Linux v6.12.114 gcc-sm8250.c.',
            ' * Source copyright (c) 2018-2020, The Linux Foundation. All rights reserved.',
-           ' * SYS_NOC/CPUSS branch supplemented from pinned official Kona source.',
+           ' * CPUSS branch and USB pipe muxes use pinned official Kona facts.',
            ' * Regenerate with tb371fc/scripts/generate_gcc_sm8250.py; see manifest.',
            ' */', 'static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {']
     for d in clocks:
         pm = ', '.join(str(v) for v in d['parent_map'])
-        origin = (f'oneplus-kona line {d["line"]}; upstream probe line '
-                  f'{d["upstream_probe_line"]}' if d.get('source') == 'oneplus-kona'
-                  else f'upstream line {d["line"]}')
+        if d.get('source') == 'oneplus-kona':
+            origin = f'oneplus-kona line {d["line"]}'
+            if 'upstream_probe_line' in d:
+                origin += f'; upstream probe line {d["upstream_probe_line"]}'
+            elif 'upstream_line' in d:
+                origin += f'; upstream line {d["upstream_line"]}'
+        else:
+            origin = f'upstream line {d["line"]}'
         out += [f'    /* {origin} */',
                 f'    [{d["id"]}] = {{ "{d["name"]}", GCC_{d["kind"]},',
                 f'        0x{d["reg"]:x}, 0x{d["enable_reg"]:x}, 0x{d["enable_mask"]:x}, {d["parent"]},',

@@ -49,13 +49,15 @@ code retains its GPL-2.0-or-later license.
 | Declared branch clocks | 139 | Independent vote/enable bits, parent availability, CLK_OFF and HWCG request |
 | Additional mainline probe-enabled gates | 5 | Explicit enable bits used by upstream probe; no invented CBCR status at vote registers |
 | Official Kona CPUSS branch supplement | 1 | Separate CBCR, HLOS/remote votes and the existing CPUSS post-divider/RCG parent chain |
+| Official Kona USB PHY pipe muxes | 2 | Independent two-bit selectors, real PHY/test/XO input clocks and downstream branch gating |
 | Reset outputs | 45 | Active-high GPIOs with upstream reset binding indices |
 | Software GDSCs | 11 | Collapse/on state and power GPIO output with upstream domain indices |
 
-There are **198 described clock outputs**, **83 explicit external parent
-inputs**, and **460 allowed register addresses**. Clock binding slots 189 and
-195 have no upstream clock description and are not fabricated. Counts describe
-coverage of the driver's register contract, not a percentage of the physical
+There are **200 described clock outputs**, **83 retained branch-parent input
+slots**, a separate shared test-clock input, and **462 allowed register
+addresses**. Binding slots 189 and 195 are described by the pinned official
+Kona mux declarations absent from the mainline driver. Counts describe
+coverage of these drivers' register contracts, not a percentage of the physical
 SoC that is emulated.
 
 The Lenovo community 4.19 candidate source at commit
@@ -133,6 +135,68 @@ that actual snapshot and requires an explicit incoming-version-1 rejection.
 This verifies rejection before field decoding; it does not claim execution
 of an old QEMU binary. Neither gate executes the production kernel or attests
 that its full GCC probe or the entire board now boots.
+
+## Official Kona USB PHY pipe muxes
+
+The same pinned [Kona GCC source](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/gcc-kona.c)
+declares `gcc_usb3_prim_phy_pipe_clk_src` at line 1512 and its secondary
+counterpart at line 1544. The
+[matching mux driver](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/clk-regmap-mux.c)
+reads and updates the declared selector field. That behavior reference has
+SHA-256 `eb5b41803e1dbd375dfef371e0a0ed3273f05a927b570c7c3ea616f3aca06f24`;
+the generator continues to parse the three pinned register/binding inputs.
+
+| Contract | Primary | Secondary |
+| --- | --- | --- |
+| Mux binding / branch binding | 189 / 188 | 195 / 194 |
+| Selector register, shift / width | `0xf060`, 0 / 2 | `0x10060`, 0 / 2 |
+| Board physical selector | `0x0010f060` | `0x00110060` |
+| Downstream branch CBCR / enable | `0xf05c` bit 0 | `0x1005c` bit 0 |
+| Selector 0 | `usb3_phy_wrapper_gcc_usb30_pipe_clk` | `usb3_uni_phy_sec_gcc_usb30_pipe_clk` |
+| Selector 1 | Shared `core_bi_pll_test_se` | Shared `core_bi_pll_test_se` |
+| Selector 2 | `bi_tcxo`, supplied through GCC `xo` | `bi_tcxo`, supplied through GCC `xo` |
+| Selector 3 | Undefined parent; stored readback, zero output | Undefined parent; stored readback, zero output |
+
+The mux output follows the currently selected input without an invented
+update timer or an independent enable bit. The branch consumes that mux
+output only when its local or remote vote requests it. A running mux alone
+does not enable its branch, and an enabled branch cannot manufacture a
+missing parent clock.
+
+The primary and secondary physical inputs keep their existing QOM names,
+`gcc_usb3_prim_phy_pipe_clk_parent` and
+`gcc_usb3_sec_phy_pipe_clk_parent`, at external array slots 76 and 78.
+All 83 pre-existing slots retain their numbers and names. The branch
+descriptors retain those input allocations but their explicit mux parent
+takes precedence when computing output. The shared test input has QOM name
+`core_bi_pll_test_se`.
+
+Unconnected PHY and test inputs default to zero; the board does not provide
+USB PHY or test-generator models. The vendor source's `clk_dummy` objects
+use a nominal `rrate = 1000` for software bookkeeping. That is not a measured
+physical frequency and is not copied into the emulator. Cold/reset selector
+zero is an explicit model default, not a captured native firmware handoff.
+
+For compiled tests only, QTest exposes
+`qtest-usb3-primary-phy-hz`, `qtest-usb3-secondary-phy-hz` and
+`qtest-core-bi-pll-test-hz` on the GCC object. These are explicit synthetic
+input providers: they change real Clock inputs and run ordinary mux/branch
+rate propagation, never assign an output directly, and reject overriding a
+connected clock source. Normal TCG has none of these fixture properties.
+
+```sh
+python3 tb371fc/tests/test_gcc_usb_mux.py \
+  --qemu /work/build/qemu-system-aarch64 --out /work/new-gcc-usb-mux
+```
+
+The mux gate requires 15 groups covering independent nonzero PHY inputs, the shared test input,
+XO and undefined selection, loss/change of a selected source, local/remote
+branch votes, reserved-bit rejection, reset, and the absence of test controls
+in a paused TCG process. It transfers real v3 state between processes and
+checks input/selector/vote restoration and subsequent clock changes. A
+separate snapshot with only its GCC header advertised as version 2 must be
+rejected before fields are decoded. It does not execute an older QEMU binary
+or prove native USB functionality.
 
 ## Actual tablet observations and frequency assumptions
 
@@ -254,13 +318,15 @@ individually.
 
 ## Migration and verification
 
-**The GCC stream now requires VMState version 2. Version 1 is rejected.**
-The CPUSS supplement removes one synthetic external input, changing the
-serialized external-clock array from 84 entries to 83 and correcting its
-parent semantics. Accepting an old stream would risk both array misalignment
-and silently applying the old clock interpretation. The new minimum version
-is checked before decoding any GCC fields. Historical v1 receipts below
-remain historical evidence; they do not establish v1-to-v2 compatibility.
+**The GCC stream now requires VMState version 3. Versions 1 and 2 are rejected.**
+The earlier CPUSS supplement changed the serialized external-clock array
+from 84 entries to 83 and required v2. The USB mux supplement preserves all
+83 slots and names, but adds a separately serialized shared test Clock input,
+so it requires v3/min3. The minimum version is checked before decoding any
+GCC fields. The CPUSS and mux gates respectively test explicit v1 and v2
+header rejection against actual v3 snapshots. Historical v1/v2 receipts
+remain evidence for their original binaries; they do not establish
+cross-version compatibility.
 
 VMState retains programming, active divider/PLL state, votes, power state and
 pending transition deadlines. Incoming state is validated and output clocks and

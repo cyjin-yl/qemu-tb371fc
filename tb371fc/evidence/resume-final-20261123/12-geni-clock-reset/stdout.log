@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "suite": "GCC-wired GENI actual QTest",
+  "qemu": "/work/resume-20261123/frozen12/qemu-system-aarch64",
+  "machine": "tb371fc,ufs-enabled=off",
+  "qemu_sha256": "178bace28c84bced9471b824d413feb18e76ddb15212ec32412ad7a7ec32a675",
+  "work_dir": "/tmp/tbci-3rse88bm/12/data",
+  "ram_per_process": "128 MiB",
+  "scope": "Actual device clock/reset wiring and FIFO continuity; no silicon electrical or baud timing equivalence",
+  "checks": [
+    {
+      "test": "handoff_clocks_deliver_console",
+      "status": "pass"
+    },
+    {
+      "test": "serial_engine_pause_preserves_fifo_and_pending_irq",
+      "status": "pass"
+    },
+    {
+      "test": "rx_backpressure_while_clock_stopped",
+      "status": "pass"
+    },
+    {
+      "test": "ahb_gates_reject_mmio_without_mutation",
+      "status": "pass"
+    },
+    {
+      "test": "wrapper_bcr_flushes_fifo_and_holds_reset",
+      "status": "pass"
+    },
+    {
+      "test": "zero_length_completion_waits_for_engine_clock",
+      "status": "pass"
+    }
+  ],
+  "expected_checks": 6,
+  "success": true
+}

@@ -1,6 +1,6 @@
 # QEMU TB371FC
 
-[![TB371FC public functional gates](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml/badge.svg?branch=tb371fc-verified-gpu-cx-ci-20261123-1138)](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml)
+[![TB371FC public functional gates](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml/badge.svg?branch=tb371fc-verified-wholeboard-20261123-a47)](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml)
 
 面向 **Lenovo TB371FC / SM8250（Kona）** 的整机模拟开发分支，基于 QEMU **11.1.3**，提供独立的 `-M tb371fc`。目标是实现真实来宾驱动可使用的软件可见硬件接口，并用平板的只读证据和实际运行的测试逐项核对。
 
@@ -10,19 +10,28 @@
 **完整 Android 启动和整台平板等价仍是未通过的目标。**
 生产内核加测试 initramfs 的成功不等于原厂 Android 系统启动。小核仍用 A55 代替 Qualcomm Kryo；显示、Adreno 650、触控、无线、音频、摄像头以及完整电源/固件契约仍有大量实现工作。缓存容量、功耗、射频、电气行为和真实芯片时序不由这些功能测试证明。
 
-## GPU CX 独立 CI 检查点（2026-11-23，结果待验证）
+## 本次整板推进与统一验收（2026-11-23）
 
-本分支新增 [GPU CX GDSC 数字控制器](tb371fc/docs/gpu-cx-gdsc.md)，连接已有 RPMh `cx.lvl` 资源，并增加严格的公开测试入口。
-**这是待验证的检查点；本段不宣称新增模型的全套测试已通过。**
+当前统一分支为 `tb371fc-verified-wholeboard-20261123-a47`。整合后的公开计划是 **65 个 gate：61 个组件/解析检查和 4 次 Linux 启动**，另有独立 A77 / 共享 UFS PCI job。新增内容包括 GPU CX/GX、SMEM 交接及生产驱动观察器、AOP 参考对端、Kona CPUSS 分支和两个 USB PIPE 时钟 mux。计划注册不代表当前提交已经通过；实际结果以该提交的 [CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml) 和冻结回执为准。
 
-模型已在 doesvm 的 CT102 开发容器内编译。首轮专项测试执行了 7 项检查：6 项通过，第 7 项失败后停止，未执行迁移。
-审查确认测试 helper 在已知输入切换时插入了非预期的 unknown 脉冲；本分支只修正两个 helper 的输入波形，C 模型及原断言保持不变。
-公开 CI 将执行 56 个 gate，其中 GPU CX 要求 26 项检查、8 个迁移场景、9 次实际迁移尝试（6 次成功、3 次预期拒绝）；以实际运行回执为准。
-[检查点记录](tb371fc/evidence/gpu-cx-ci-20261123/checkpoint.json) 保存源码哈希、已观察到的失败和未执行的验证项。
+本次整合前已经实际完成的验证分别属于以下版本：
 
-doesvm 执行/写入通道暂时排队超时，原始失败目录及完整拓扑提取保留在那里。当前分支提供的是明确标记的拓扑摘要。
-**新增 GPU CX 模型尚未完成完整原生 DT 复测；原厂 Android 启动与整机等价仍未通过。**
-以下 55/55 等历史成功记录对应各自注明的先前提交，不能充当本次 GPU CX 新增部分的通过回执。
+| 冻结版本 | 实际结果 |
+| --- | --- |
+| `79d7e978` | 同一板级二进制 56/56 组件 + 4/4 Linux；原厂完整 DT 下 SMEM 生产驱动成功路径 23/23，仍在 GCC `0x148198` external abort。该 run 的 A77 job 后来因新提交取消，不能称整个 run 全绿。 |
+| `27171d77` | GCC CPUSS 来源再生成、真实父时钟/投票、迁移版本拒绝，以及 56/56 组件 + 4/4 Linux和独立 A77/UFS job 全部通过。 |
+| `90c71325` | 原厂完整 DT 已越过 `0x148198`，下一实际异常为 USB PIPE mux `0x10f060`；这一版本的公共组件为 57/58，唯一失败是后来修正的生成器字典键，Linux 未执行，未改写为全绿。 |
+| `e8122489` | AOP 严格 30 组、6 次成功迁移和 2 次配置拒绝；57/57 组件 + 4/4 Linux及 A77/UFS job 全绿。原厂驱动实际建立通道并消费 1 个 QDSS 请求，SMEM 仍为 23/23。 |
+
+[原厂两次 GCC 对照](tb371fc/evidence/wholeboard-20261123-a47/native-progression.json)、
+[原厂 AOP 只读观察](tb371fc/evidence/wholeboard-20261123-a47/native-aop-e812.json)
+记录各自源码、二进制、输入和日志哈希。AOP 还记录了一个被拒绝的未实现命令；其 payload 未由该观察器采集。观察器退出 0 不代表来宾启动成功。
+
+**完整原生 DT 到达用户态、原厂 Android 和整板可用仍未通过。**
+USB mux 新实现及整合后的完整回归需要本分支自己的实际回执。SMEM、AOP、SPMI 与电源交接的 reference 配置必须显式选择，不是原厂固件捕获或真实 PMIC/时钟频率测量。AOP 不执行固件，GX/CX 不执行 Adreno/GMU 命令。
+
+[历史默认分支索引](tb371fc/evidence/DEFAULT-HISTORY-5fd52c1.md)保留原默认分支的五组冻结结果及原字节账本；没有用新源码覆盖旧回执。
+此前 [GPU CX 检查点](tb371fc/evidence/gpu-cx-ci-20261123/checkpoint.json) 的未完成状态和初次失败也继续保留，不能代替上述后续实际验证。
 
 ## TCSR、AOP 消息内存与 REFGEN 增量验证（2026-11-23）
 
@@ -143,7 +152,7 @@ TLMM、IMEM/PS_HOLD、普通 Linux UFS19 和 reference RPMh 联合 Linux23 已�
 [Containerfile](tb371fc/Containerfile) 提供开发环境。示例不访问真实平板或已有磁盘：
 
 ```sh
-git clone --branch tb371fc-verified-20261123-0820 https://github.com/cyjin-yl/qemu-tb371fc.git
+git clone --branch tb371fc-verified-wholeboard-20261123-a47 https://github.com/cyjin-yl/qemu-tb371fc.git
 cd qemu-tb371fc
 docker build -f tb371fc/Containerfile -t qemu-tb371fc-dev .
 docker volume create qemu-tb371fc-work

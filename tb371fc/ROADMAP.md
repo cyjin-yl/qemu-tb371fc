@@ -5,6 +5,20 @@
 
 以下状态按已归档回执填写。最早的 Linux 八项/GENI 十三项结果保留为历史；当前组件验收索引见 [README](../README.md)，公共 CI 计划见 [ci.md](docs/ci.md)，新隔离构建已通过的 47 项、A77 852 + 2 项和 PCI UFS 15 项见[最终回执](evidence/verified-20261123-0820/final-verification.json)，后续计划与失败记录见[持续验证账本](evidence/VALIDATION-continued-20261123.md)。CI 中已注册的门槛仍须在对应提交实际执行成功。
 
+## 2026-11-23 本次推进
+
+- [x] GPU CX 的 RPMh QOM 类型修复，CX/GX 独立电源域状态、正确父资源接线及实际迁移验收。
+- [x] 显式 SMEM 空 v12 reference 交接，以及未改生产内核发布驱动对象的只读观察；本轮完整 DT 诊断中 23/23 字段检查成功。
+- [x] AOP reference QMP link/channel 握手、受支持的 QDSS 投票、真实 IPCC/GIC 通知、复位和同版迁移拒绝；独立版本 30 组及 6 成功/2 拒绝迁移已通过。
+- [x] 原厂驱动实际建立 AOP reference 通道并消费一个受支持的 QDSS 请求；仍有一个未实现请求被明确拒绝，不等于 AOP firmware 或全部服务实现。
+- [x] GCC CPUSS 官方来源补充及严格再生成；原厂完整 DT 异常已从 `0x148198` 推进到 USB PIPE mux `0x10f060`。
+- [ ] 两个 USB PIPE mux 新实现的实际统一回归，以及修复后的原厂完整 DT 再次推进。
+- [ ] 整合后的 65 gate、独立 A77/UFS job、原厂完整 DT 用户态和 Android 启动各自达到验收；不合并不同二进制的通过记录。
+
+本轮精确构建与原厂证据见 [README](../README.md) 和
+[原厂对照](evidence/wholeboard-20261123-a47/native-progression.json)。
+原默认分支历史按原字节保留在[独立索引](evidence/DEFAULT-HISTORY-5fd52c1.md)。
+
 ## 1. CPU、内存、中断与启动基础
 
 - [x] 独立 `-M tb371fc`，固定 QEMU 11.1.3 上游基线和独立构建环境。

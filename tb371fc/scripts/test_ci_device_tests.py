@@ -172,7 +172,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 62)
+        self.assertEqual(len(cases), 65)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]
@@ -183,6 +183,21 @@ class PlanTests(unittest.TestCase):
                           "output_interception_installed": False})
         self.assertIn(str(ci.ROOT / "tb371fc/tests/test_spmi_pdc_route.py"),
                       case.command)
+
+    def test_aop_reference_gate_requires_actual_migration_outcomes(self):
+        args = SimpleNamespace(suite="components", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        matches = [case for case in ci.plan(args, Path("/test/runtime"))
+                   if case.name == "aop-reference-peer"]
+        self.assertEqual(len(matches), 1)
+        case = matches[0]
+        self.assertEqual(case.expected_count, 30)
+        self.assertEqual(case.expected_lengths,
+                         {"migrations": 6, "rejected_migrations": 2})
+        self.assertEqual(case.expected_values["completed_migrations"], 6)
+        self.assertEqual(case.expected_values["rejected_migration_attempts"], 2)
+        self.assertIs(case.expected_values["ipcc_output_intercepted"], False)
+        self.assertIs(case.expected_values["guest_cpu_executed"], False)
 
     def test_ipcc_gate_requires_sixteen_real_checks(self):
         args = SimpleNamespace(suite="components", qemu=Path("/test/qemu"),

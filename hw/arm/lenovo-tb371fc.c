@@ -50,6 +50,7 @@
 #include "hw/misc/qcom-tcsr-mutex.h"
 #include "hw/misc/qcom-smem-handoff.h"
 #include "hw/misc/qcom-aop-msgram.h"
+#include "hw/misc/qcom-aop-qmp.h"
 #include "hw/misc/qcom-refgen.h"
 #include "hw/misc/qcom-gpu-cx-gdsc.h"
 #include "hw/misc/qcom-gdsc.h"
@@ -159,6 +160,7 @@ struct TB371FCMachineState {
     char *rpmh_profile, *rpmh_cmd_db;
     char *spmi_profile;
     char *smem_profile;
+    char *aop_profile;
     bool rpmh_boot_configured;
     MemoryRegion qtest_dma_alias;
     bool enable_ufs;
@@ -1126,9 +1128,22 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
 
 
     /* Actual shared storage, without an invented AOP descriptor or peer. */
+    QCOM_AOP_MSGRAM(msgram)->reference_peer =
+        !strcmp(s->aop_profile, "reference-qdss-vote");
     object_property_add_child(OBJECT(s), "aop-msgram", OBJECT(msgram));
     sysbus_realize_and_unref(SYS_BUS_DEVICE(msgram), &error_fatal);
     sysbus_mmio_map(SYS_BUS_DEVICE(msgram), 0, 0x0c300000);
+
+    if (!strcmp(s->aop_profile, "reference-qdss-vote")) {
+        DeviceState *peer = qdev_new(TYPE_QCOM_AOP_QMP);
+
+        object_property_add_child(OBJECT(s), "aop-peer", OBJECT(peer));
+        object_property_set_link(OBJECT(peer), "msgram", OBJECT(msgram),
+                                 &error_fatal);
+        object_property_set_link(OBJECT(peer), "ipcc", OBJECT(ipcc),
+                                 &error_fatal);
+        sysbus_realize_and_unref(SYS_BUS_DEVICE(peer), &error_fatal);
+    }
 
     /* Kona CTRL5 software request; firmware handoff is unknown by default. */
     object_property_add_child(OBJECT(s), "refgen", OBJECT(refgen));
@@ -1483,6 +1498,28 @@ static void tb371fc_set_kernel_load_base(Object *obj, Visitor *v,
 
 
 
+static char *tb371fc_get_aop_profile(Object *obj, Error **errp)
+{
+    return g_strdup(TB371FC_MACHINE(obj)->aop_profile);
+}
+
+static void tb371fc_set_aop_profile(Object *obj, const char *value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "aop-profile is fixed after machine creation");
+        return;
+    }
+    if (!value || (strcmp(value, "none") &&
+                   strcmp(value, "reference-qdss-vote"))) {
+        error_setg(errp, "aop-profile must be none or reference-qdss-vote");
+        return;
+    }
+    g_free(s->aop_profile);
+    s->aop_profile = g_strdup(value);
+}
+
 static char *tb371fc_get_smem_profile(Object *obj, Error **errp)
 {
     return g_strdup(TB371FC_MACHINE(obj)->smem_profile);
@@ -1588,6 +1625,7 @@ static void tb371fc_instance_init(Object *obj)
     s->rpmh_profile = g_strdup("off");
     s->spmi_profile = g_strdup("off");
     s->smem_profile = g_strdup("off");
+    s->aop_profile = g_strdup("none");
     s->rpmh_boot_configured = true;
     s->counter_exact = true;
     s->gcc_boot_configured = true;
@@ -1602,6 +1640,7 @@ static void tb371fc_instance_finalize(Object *obj)
     g_free(s->rpmh_cmd_db);
     g_free(s->spmi_profile);
     g_free(s->smem_profile);
+    g_free(s->aop_profile);
 }
 
 static void tb371fc_class_init(ObjectClass *oc, const void *data)
@@ -1623,6 +1662,11 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
     mc->possible_cpu_arch_ids = tb371fc_possible_cpu_arch_ids;
     mc->cpu_index_to_instance_props = tb371fc_cpu_index_to_props;
 
+    object_class_property_add_str(oc, "aop-profile",
+        tb371fc_get_aop_profile, tb371fc_set_aop_profile);
+    object_class_property_set_description(oc, "aop-profile",
+        "none (default) or explicit reference QMP peer for QDSS off/dynamic "
+        "votes; no AOP firmware or physical clock-frequency model");
     object_class_property_add_str(oc, "smem-profile",
         tb371fc_get_smem_profile, tb371fc_set_smem_profile);
     object_class_property_set_description(oc, "smem-profile",

@@ -17,6 +17,8 @@ struct QcomAopMsgramState {
     SysBusDevice parent_obj;
 
     MemoryRegion sram;
+    /* Fixed by the board before realization; not a writable QOM property. */
+    uint32_t reference_peer;
 };
 
 #endif /* HW_MISC_QCOM_AOP_MSGRAM_H */

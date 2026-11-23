@@ -1,0 +1,360 @@
+{
+  "schema_version": 1,
+  "scope": "Two bounded full-DT production-kernel diagnostic runs; neither is a boot success.",
+  "date": "2026-11-23",
+  "input_identity_verified": true,
+  "observer_guest_memory_written": false,
+  "conclusion": {
+    "cpuss_cbcr_external_abort_removed": true,
+    "previous_offset": "0x48198",
+    "next_offset": "0xf060",
+    "next_function": "mux_get_parent",
+    "full_native_dt_boot_passed": false,
+    "android_boot_passed": false,
+    "aop_timeout_still_present_in_both": true,
+    "unresolved_npu_cfg_parent_warning_still_present": true
+  },
+  "builds": [
+    {
+      "source": "79d7e9785be46fa7e58fd35eccd9a042aca3eb54",
+      "workflow_run": 45172378437,
+      "artifact_id": 14817358083,
+      "artifact_sha256": "6e76c81f1aaf02d217c4464387da65bde4f2192eb71fc12bec383b7c76dac412",
+      "qemu_sha256": "9403a30b80beba37505f71f272b6ad2dfed4ad7d949dca574dffeb8411ddc5be",
+      "suites": [
+        {
+          "suite": "components",
+          "passed": true,
+          "passed_gates": 56,
+          "expected_gates": 56,
+          "qemu_sha256": "9403a30b80beba37505f71f272b6ad2dfed4ad7d949dca574dffeb8411ddc5be",
+          "qemu_unchanged": true
+        },
+        {
+          "suite": "linux",
+          "passed": true,
+          "passed_gates": 4,
+          "expected_gates": 4,
+          "qemu_sha256": "9403a30b80beba37505f71f272b6ad2dfed4ad7d949dca574dffeb8411ddc5be",
+          "qemu_unchanged": true
+        }
+      ]
+    },
+    {
+      "source": "90c71325a7187bc24c747c4b220909d8ea2bf8c0",
+      "workflow_run": 45174673547,
+      "artifact_id": 14819770214,
+      "artifact_sha256": "7d5bcaca0f29400c0314b0fa3c10f3a221e2d18c085bf863959e9fc787a28bf4",
+      "qemu_sha256": "83df425cf391bdbceba821280d3f02aef32f86a184ecfd547edd7c6cfce88a51",
+      "component_passed": 57,
+      "component_expected": 58,
+      "failed_gates": [
+        "gcc-source-generation"
+      ],
+      "linux_not_run": true,
+      "all_public_gates_passed": false,
+      "scope": "Diagnostic binary; source-regeneration helper failed while hardware gates passed"
+    }
+  ],
+  "runs": [
+    {
+      "schema_version": 1,
+      "source_commit": "79d7e9785be46fa7e58fd35eccd9a042aca3eb54",
+      "scope": "Unmodified production kernel and full supplied DT, reference handoffs, validation initramfs; diagnostic failure, not Android boot",
+      "qemu_sha256": "9403a30b80beba37505f71f272b6ad2dfed4ad7d949dca574dffeb8411ddc5be",
+      "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+      "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+      "initramfs_sha256": "8c2f582b72f19ba6043af7e85f91a3936c3c8fcb3c2a306ae4f76efe6d72ae7e",
+      "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+      "diagnostic_sha256": "6e826c75a191dc69655926778a19a907cfc1d1fd8ab7673795f81615ccff996c",
+      "printk_sha256": "77e6aa832803c0b0ba4a78a88c44d1e3fb7f0aa91a0fff9e7112a74c60f72d98",
+      "observer_source_sha256": "3c5d0dad523ba2d2725e5bf9764e459536f5b9670118eee40a9fde3fd209dc57",
+      "smem_observer_sha256": "6d0c11ccd866c965e05bf2f0dbf9dd6af38f515c1acde54f139d3d22c885e4b3",
+      "reference_profiles": {
+        "rpmh": "file:partial-aop-derived-command-db",
+        "spmi": "reference",
+        "smem": "reference-empty",
+        "aop": "none"
+      },
+      "global_properties": [
+        "qcom-refgen.boot-disabled-reference=on",
+        "qcom-tcsr-mutex.boot-unlocked-reference=on",
+        "qcom-gpu-cx-gdsc.boot-collapsed-reference=on",
+        "qcom-gdsc.enabled-reference=on"
+      ],
+      "cmd_db_sha256": "a971809c06fa1a3ff44c9d28463bc6ff53203d9375ffd0f76dc73d4c8a3ea6f9",
+      "stopped_by_timeout": true,
+      "diagnostic_exit_code": 0,
+      "elapsed_seconds": 30.853,
+      "full_native_dt_boot_passed": false,
+      "android_boot_passed": false,
+      "smem_probe": {
+        "success_path_observed": true,
+        "publication_instructions_verified": true,
+        "guest_memory_written": false,
+        "native_sbl_captured": false,
+        "android_boot_passed": false,
+        "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+        "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+        "verdict": "production-driver-success-path-observed",
+        "checks": [
+          {
+            "name": "published_driver_pointer",
+            "passed": true
+          },
+          {
+            "name": "dev_kernel_pointer",
+            "passed": true
+          },
+          {
+            "name": "hwlock_kernel_pointer",
+            "passed": true
+          },
+          {
+            "name": "item_count",
+            "passed": true
+          },
+          {
+            "name": "ptable_base_kernel_pointer",
+            "passed": true
+          },
+          {
+            "name": "global_virtual_base_kernel_pointer",
+            "passed": true
+          },
+          {
+            "name": "global_physical_base",
+            "passed": true
+          },
+          {
+            "name": "global_cacheline",
+            "passed": true
+          },
+          {
+            "name": "global_size",
+            "passed": true
+          },
+          {
+            "name": "region_count",
+            "passed": true
+          },
+          {
+            "name": "region_physical_base",
+            "passed": true
+          },
+          {
+            "name": "region_virtual_base_kernel_pointer",
+            "passed": true
+          },
+          {
+            "name": "region_size",
+            "passed": true
+          },
+          {
+            "name": "ptable_magic",
+            "passed": true
+          },
+          {
+            "name": "ptable_version",
+            "passed": true
+          },
+          {
+            "name": "ptable_entries",
+            "passed": true
+          },
+          {
+            "name": "partition_magic",
+            "passed": true
+          },
+          {
+            "name": "partition_hosts",
+            "passed": true
+          },
+          {
+            "name": "partition_size",
+            "passed": true
+          },
+          {
+            "name": "allocation_frontiers",
+            "passed": true
+          },
+          {
+            "name": "header_version",
+            "passed": true
+          },
+          {
+            "name": "header_initialized",
+            "passed": true
+          },
+          {
+            "name": "header_reserved",
+            "passed": true
+          }
+        ]
+      },
+      "failure": {
+        "kind": "synchronous-external-abort",
+        "process": "kernel init PID1",
+        "controller": "GCC",
+        "controller_base": "0x00100000",
+        "register_offset": "0x48198",
+        "physical_address": "0x148198",
+        "pc": "regmap_mmio_read32le+0x8/0x20",
+        "caller": "clk_branch2_check_halt+0x38/0x90",
+        "probe": "gcc_kona_probe+0x1a4/0x1d8"
+      },
+      "aop_clock_channel_timeout_observed": true,
+      "npu_cfg_ahb_unavailable_warning_observed": true
+    },
+    {
+      "schema_version": 1,
+      "source_commit": "90c71325a7187bc24c747c4b220909d8ea2bf8c0",
+      "scope": "Unmodified production kernel and full supplied DT, reference handoffs, validation initramfs; diagnostic failure, not Android boot",
+      "qemu_sha256": "83df425cf391bdbceba821280d3f02aef32f86a184ecfd547edd7c6cfce88a51",
+      "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+      "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+      "initramfs_sha256": "8c2f582b72f19ba6043af7e85f91a3936c3c8fcb3c2a306ae4f76efe6d72ae7e",
+      "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+      "diagnostic_sha256": "6011207101f71b242334edefc4e1fa75d7618b769730261b860e8f06fdd6568a",
+      "printk_sha256": "385fa0be692418c8780014d98a24e8c3f2bdeab2feff277a1f55a87087d3d86f",
+      "observer_source_sha256": "3c5d0dad523ba2d2725e5bf9764e459536f5b9670118eee40a9fde3fd209dc57",
+      "smem_observer_sha256": "6d0c11ccd866c965e05bf2f0dbf9dd6af38f515c1acde54f139d3d22c885e4b3",
+      "reference_profiles": {
+        "rpmh": "file:partial-aop-derived-command-db",
+        "spmi": "reference",
+        "smem": "reference-empty",
+        "aop": "none"
+      },
+      "global_properties": [
+        "qcom-refgen.boot-disabled-reference=on",
+        "qcom-tcsr-mutex.boot-unlocked-reference=on",
+        "qcom-gpu-cx-gdsc.boot-collapsed-reference=on",
+        "qcom-gdsc.enabled-reference=on"
+      ],
+      "cmd_db_sha256": "a971809c06fa1a3ff44c9d28463bc6ff53203d9375ffd0f76dc73d4c8a3ea6f9",
+      "stopped_by_timeout": true,
+      "diagnostic_exit_code": 0,
+      "elapsed_seconds": 30.882,
+      "full_native_dt_boot_passed": false,
+      "android_boot_passed": false,
+      "smem_probe": {
+        "success_path_observed": true,
+        "publication_instructions_verified": true,
+        "guest_memory_written": false,
+        "native_sbl_captured": false,
+        "android_boot_passed": false,
+        "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+        "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+        "verdict": "production-driver-success-path-observed",
+        "checks": [
+          {
+            "name": "published_driver_pointer",
+            "passed": true
+          },
+          {
+            "name": "dev_kernel_pointer",
+            "passed": true
+          },
+          {
+            "name": "hwlock_kernel_pointer",
+            "passed": true
+          },
+          {
+            "name": "item_count",
+            "passed": true
+          },
+          {
+            "name": "ptable_base_kernel_pointer",
+            "passed": true
+          },
+          {
+            "name": "global_virtual_base_kernel_pointer",
+            "passed": true
+          },
+          {
+            "name": "global_physical_base",
+            "passed": true
+          },
+          {
+            "name": "global_cacheline",
+            "passed": true
+          },
+          {
+            "name": "global_size",
+            "passed": true
+          },
+          {
+            "name": "region_count",
+            "passed": true
+          },
+          {
+            "name": "region_physical_base",
+            "passed": true
+          },
+          {
+            "name": "region_virtual_base_kernel_pointer",
+            "passed": true
+          },
+          {
+            "name": "region_size",
+            "passed": true
+          },
+          {
+            "name": "ptable_magic",
+            "passed": true
+          },
+          {
+            "name": "ptable_version",
+            "passed": true
+          },
+          {
+            "name": "ptable_entries",
+            "passed": true
+          },
+          {
+            "name": "partition_magic",
+            "passed": true
+          },
+          {
+            "name": "partition_hosts",
+            "passed": true
+          },
+          {
+            "name": "partition_size",
+            "passed": true
+          },
+          {
+            "name": "allocation_frontiers",
+            "passed": true
+          },
+          {
+            "name": "header_version",
+            "passed": true
+          },
+          {
+            "name": "header_initialized",
+            "passed": true
+          },
+          {
+            "name": "header_reserved",
+            "passed": true
+          }
+        ]
+      },
+      "failure": {
+        "kind": "synchronous-external-abort",
+        "process": "kernel init PID1",
+        "controller": "GCC",
+        "controller_base": "0x00100000",
+        "register_offset": "0xf060",
+        "physical_address": "0x10f060",
+        "pc": "regmap_mmio_read32le+0x8/0x20",
+        "caller": "mux_get_parent+0x40/0x98",
+        "probe": "gcc_kona_probe+0x1a4/0x1d8"
+      },
+      "aop_clock_channel_timeout_observed": true,
+      "npu_cfg_ahb_unavailable_warning_observed": true
+    }
+  ],
+  "provenance_note": "Hashes identify the retained private logs and inputs. Only the selected non-personal diagnostics are published; no kernel, DTB, command-db payload or RAM dump is included. Exit code zero belongs to the diagnostic process and does not imply guest boot success."
+}

@@ -11,6 +11,7 @@ import socket
 import subprocess
 import time
 from legacy_printk import capture_kernel_log
+from observe_aop import capture_aop_peer, initial_observation, reference_profile_selected
 
 def sha256(path):
     h=hashlib.sha256()
@@ -38,11 +39,16 @@ def main():
                    help="Matching Linux 4.x kallsyms; capture stopped guest log privately")
     p.add_argument("--observe-smem-probe", action="store_true",
                    help="Read the verified production kernel's published SMEM driver object")
+    p.add_argument("--observe-aop-peer", action="store_true",
+                   help="Read stopped reference AOP transport and clock-vote state")
     a=p.parse_args()
     if a.seconds<=0 or a.seconds>120:
         p.error("--seconds must be in (0, 120]")
     if a.machine.split(",", 1)[0] != "tb371fc":
         p.error("--machine must select tb371fc")
+    if a.observe_aop_peer and not reference_profile_selected(a.machine):
+        p.error("--observe-aop-peer requires exactly one explicit "
+                "aop-profile=reference-qdss-vote machine option")
     if a.observe_smem_probe and (not a.legacy_printk_symbols or
                                  "nokaslr" not in a.append.split()):
         p.error("--observe-smem-probe requires matching symbols and nokaslr")
@@ -70,6 +76,9 @@ def main():
             "global_properties":a.global_property,
             "command":cmd,"kernel_sha256":sha256(a.kernel),
             "qemu_sha256":sha256(a.qemu),"machine":a.machine,"events":[]}
+    report["aop_peer_requested"] = a.observe_aop_peer
+    if a.observe_aop_peer:
+        report["aop_peer"] = initial_observation(a.machine)
     report["smem_probe_requested"] = a.observe_smem_probe
     if a.observe_smem_probe:
         report["smem_probe"] = {
@@ -164,6 +173,8 @@ def main():
                         from observe_smem import capture_smem_probe
                         report["smem_probe"] = capture_smem_probe(
                             command, a.legacy_printk_symbols, a.kernel)
+                    if a.observe_aop_peer:
+                        report["aop_peer"] = capture_aop_peer(command, a.machine)
                     send("quit")
                     break
                 messages=receive(.1)

@@ -15,7 +15,7 @@ after an earlier component failure so their independent results remain visible.
 
 ## Gates
 
-The current public plan has **55 gates: 51 component/parser gates and four
+The current public plan has **65 gates: 61 component/parser gates and four
 Linux boots**, plus the separate A77 and PCI UFS compatibility job. The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
@@ -30,10 +30,15 @@ pass does not attest newly added devices.
 
 | Area | Required checks |
 | --- | --- |
-| Capture and result parsers | Board profile, machine validator, DT inventory, sysfs collector, guest-result ABI and TLMM map unit tests |
+| Capture and result parsers | Strict CI verdict/plan checks, SMEM observer, AOP observer, board profile, machine validator, DT inventory, sysfs collector, guest-result ABI and TLMM map unit tests |
 | Live board configuration | QMP CPU information and generated DT compared with the public tablet capture |
 | GENI UART | 14 register/FIFO/IRQ/reset groups and 6 actual migration checks |
 | GCC and GENI wiring | 19 GCC groups, 5 GCC migration checks, 6 clock/reset groups and 4 wired migration checks |
+| Pinned Kona GCC supplements | Exact three-source regeneration of both generated files; CPUSS 11 checks and USB PIPE mux 15 checks, including real v3 transfers and explicit old-version rejection; no USB PHY execution claim |
+| GPU CX and GX power domains | CX 26 checks with 9 migration attempts (6 completed, 3 rejected); GX 37 checks with 12 attempts (8 completed, 4 rejected); explicit digital reference states only |
+| SMEM reference handoff | 22 checks and 4 real migration cases; the separate stopped-production-kernel observer never substitutes for a native run |
+| AOP SRAM and reference peer | Raw SRAM 10 checks retained; explicit reference peer 30 groups, 6 completed migrations and 2 same-binary profile rejections; actual IPCC/GIC routing, supported vote state and no fabricated unknown-service ACK |
+| TCSR and REFGEN | TCSR 24 checks and REFGEN 16 checks, including actual state transfer and rejected reference mismatches |
 | Counter arithmetic | 1,848 independent arbitrary-precision floor/ceiling/overflow reference cases |
 | MMIO Generic Timer | 10 exact and 10 legacy groups; exact and legacy four-check migrations; both incompatible-mode rejection directions |
 | CPU counters and timers | Independent icount rate measurement in both modes; physical/virtual CVAL, signed TVAL, mask and wrap behavior |
@@ -106,8 +111,7 @@ covers the retained files. No private device asset is uploaded by this plan.
 The verdict reader requires a true boolean aggregate, the exact check count,
 no contradictory individual verdict, and strictly typed required metadata.
 C TAP output must contain exactly one matching plan and unique consecutive
-test numbers; SKIP and TODO do not satisfy a gate. Twenty-two local unit tests
-cover these rejection paths and the registered plan contracts.
+test numbers; SKIP and TODO do not satisfy a gate. The verdict and plan unit suite covers these rejection paths and the registered plan contracts.
 
 ## What a pass means
 
@@ -124,15 +128,14 @@ analog PMIC behavior, firmware equivalence or every peripheral mode.
 The clean kernel boots with the machine-generated device tree and an
 instrumented test initramfs. The UFS I/O gates finish with host QMP quit after
 checking its guest verdict and disk contents; it does not claim a guest
-shutdown. The independent console/user-space and production GDB receipts have
-their own termination contracts.
+shutdown. The two console/user-space gates require a real QMP SHUTDOWN event with guest=true and reason=guest-shutdown, in addition to exact guest checks and exit zero. Production GDB validation has its own stopped-checkpoint and guest-shutdown contract.
 
 A passing public job does not establish stock Android boot, complete native
 device-tree boot, Adreno graphics, modem, camera, audio, sensors, or full-tablet
 equivalence. Those claims require their own implemented devices and actual
 end-to-end evidence.
 
-The route receipt must contain literal true aggregate verdicts, eight checks, an explicit false output-interception flag, and exactly one migration record. Missing or incorrectly typed secondary evidence lists are rejected. The 22 local verdict and plan tests include these failure cases.
+The route receipt must contain literal true aggregate verdicts, eight checks, an explicit false output-interception flag, and exactly one migration record. Missing or incorrectly typed secondary evidence lists are rejected. The verdict and plan tests include these failure cases.
 
 ## Display RSC integration
 

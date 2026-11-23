@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /* Generated register facts from Linux v6.12.114 gcc-sm8250.c.
  * Source copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
- * SYS_NOC/CPUSS branch supplemented from pinned official Kona source.
+ * CPUSS branch and USB pipe muxes use pinned official Kona facts.
  * Regenerate with tb371fc/scripts/generate_gcc_sm8250.py; see manifest.
  */
 static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {
@@ -945,11 +945,16 @@ static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {
         0xf058, 0xf058, 0x1, 186,
         0, 0, 0x0, 0x0,
         { -1, -127, -127, -127, -127, -127, -127, -127 }, -1 },
-    /* upstream line 3110 */
+    /* oneplus-kona line 3902; upstream line 3110 */
     [188] = { "gcc_usb3_prim_phy_pipe_clk", GCC_BRANCH,
-        0xf05c, 0xf05c, 0x1, -4,
+        0xf05c, 0xf05c, 0x1, 189,
         0, 0, 0x0, 0x0,
         { -1, -127, -127, -127, -127, -127, -127, -127 }, 76 },
+    /* oneplus-kona line 1512 */
+    [189] = { "gcc_usb3_prim_phy_pipe_clk_src", GCC_MUX,
+        0xf060, 0x0, 0x0, -4,
+        0, 2, 0x0, 0x0,
+        { -4, -5, -1, -127, -127, -127, -127, -127 }, 76 },
     /* upstream line 3123 */
     [190] = { "gcc_usb3_sec_clkref_en", GCC_BRANCH,
         0x8c010, 0x8c010, 0x1, -4,
@@ -970,11 +975,16 @@ static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {
         0x10058, 0x10058, 0x1, 192,
         0, 0, 0x0, 0x0,
         { -1, -127, -127, -127, -127, -127, -127, -127 }, -1 },
-    /* upstream line 3172 */
+    /* oneplus-kona line 3969; upstream line 3172 */
     [194] = { "gcc_usb3_sec_phy_pipe_clk", GCC_BRANCH,
-        0x1005c, 0x1005c, 0x1, -4,
+        0x1005c, 0x1005c, 0x1, 195,
         0, 0, 0x0, 0x0,
         { -1, -127, -127, -127, -127, -127, -127, -127 }, 78 },
+    /* oneplus-kona line 1544 */
+    [195] = { "gcc_usb3_sec_phy_pipe_clk_src", GCC_MUX,
+        0x10060, 0x0, 0x0, -4,
+        0, 2, 0x0, 0x0,
+        { -4, -5, -1, -127, -127, -127, -127, -127 }, 78 },
     /* upstream line 3647 */
     [196] = { "gcc_video_ahb_clk", GCC_BRANCH,
         0xffffffff, 0xb004, 0x1, -4,
@@ -1119,6 +1129,7 @@ static const GccRegisterDesc gcc_registers[] = {
     { 0x0f054, 0x00000001, 0xf0000000 },
     { 0x0f058, 0x00000001, 0xf0000000 },
     { 0x0f05c, 0x00000001, 0xf0000000 },
+    { 0x0f060, 0x00000003, 0x00000000 },
     { 0x0f064, 0x00000003, 0x800000f0 },
     { 0x0f068, 0x0010371f, 0x00000000 },
     { 0x0f07c, 0x00000001, 0xf0000000 },
@@ -1139,6 +1150,7 @@ static const GccRegisterDesc gcc_registers[] = {
     { 0x10054, 0x00000001, 0xf0000000 },
     { 0x10058, 0x00000001, 0xf0000000 },
     { 0x1005c, 0x00000001, 0xf0000000 },
+    { 0x10060, 0x00000003, 0x00000000 },
     { 0x10064, 0x00000003, 0x800000f0 },
     { 0x10068, 0x0010371f, 0x00000000 },
     { 0x1007c, 0x00000001, 0xf0000000 },

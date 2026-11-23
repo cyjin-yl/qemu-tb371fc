@@ -14,7 +14,11 @@
       "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/gcc-kona.c",
       "sha256": "ed208678508c983d0989f1f135fac898c5a9a91c14af1fa42cd7ea2f24cd14cd",
       "clock_ids": [
-        143
+        143,
+        188,
+        189,
+        194,
+        195
       ]
     }
   ],
@@ -4906,11 +4910,11 @@
       "id": 188,
       "name": "gcc_usb3_prim_phy_pipe_clk",
       "kind": "BRANCH",
-      "line": 3110,
+      "line": 3902,
       "reg": 61532,
       "enable_reg": 61532,
       "enable_mask": 1,
-      "parent": -4,
+      "parent": 189,
       "mnd_width": 0,
       "hid_width": 0,
       "hwcg_reg": 0,
@@ -4926,7 +4930,43 @@
         -127
       ],
       "external": 76,
-      "halt_check": "BRANCH_HALT_DELAY"
+      "halt_check": "BRANCH_HALT_DELAY",
+      "source": "oneplus-kona",
+      "upstream_line": 3110,
+      "external_parent_role": "USB PHY input feeding the mux",
+      "external_parent_name": "usb3_phy_wrapper_gcc_usb30_pipe_clk"
+    },
+    {
+      "id": 189,
+      "name": "gcc_usb3_prim_phy_pipe_clk_src",
+      "kind": "MUX",
+      "line": 1512,
+      "reg": 61536,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 2,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -4,
+        -5,
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 76,
+      "source": "oneplus-kona",
+      "parent_names": [
+        "usb3_phy_wrapper_gcc_usb30_pipe_clk",
+        "core_bi_pll_test_se",
+        "bi_tcxo"
+      ],
+      "external_input_clock": "gcc_usb3_prim_phy_pipe_clk_parent"
     },
     {
       "id": 190,
@@ -5036,11 +5076,11 @@
       "id": 194,
       "name": "gcc_usb3_sec_phy_pipe_clk",
       "kind": "BRANCH",
-      "line": 3172,
+      "line": 3969,
       "reg": 65628,
       "enable_reg": 65628,
       "enable_mask": 1,
-      "parent": -4,
+      "parent": 195,
       "mnd_width": 0,
       "hid_width": 0,
       "hwcg_reg": 0,
@@ -5056,7 +5096,43 @@
         -127
       ],
       "external": 78,
-      "halt_check": "BRANCH_HALT_DELAY"
+      "halt_check": "BRANCH_HALT_DELAY",
+      "source": "oneplus-kona",
+      "upstream_line": 3172,
+      "external_parent_role": "USB PHY input feeding the mux",
+      "external_parent_name": "usb3_uni_phy_sec_gcc_usb30_pipe_clk"
+    },
+    {
+      "id": 195,
+      "name": "gcc_usb3_sec_phy_pipe_clk_src",
+      "kind": "MUX",
+      "line": 1544,
+      "reg": 65632,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 2,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -4,
+        -5,
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 78,
+      "source": "oneplus-kona",
+      "parent_names": [
+        "usb3_uni_phy_sec_gcc_usb30_pipe_clk",
+        "core_bi_pll_test_se",
+        "bi_tcxo"
+      ],
+      "external_input_clock": "gcc_usb3_sec_phy_pipe_clk_parent"
     },
     {
       "id": 196,
@@ -5837,6 +5913,11 @@
       "status_mask": 4026531840
     },
     {
+      "offset": 61536,
+      "write_mask": 3,
+      "status_mask": 0
+    },
+    {
       "offset": 61540,
       "write_mask": 3,
       "status_mask": 2147483888
@@ -5935,6 +6016,11 @@
       "offset": 65628,
       "write_mask": 1,
       "status_mask": 4026531840
+    },
+    {
+      "offset": 65632,
+      "write_mask": 3,
+      "status_mask": 0
     },
     {
       "offset": 65636,

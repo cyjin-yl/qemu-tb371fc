@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "started_utc": "2026-11-23T08:27:10.623457+00:00",
+  "scope": "Real Linux qcom UFS/QMP/GCC I/O on a synthetic empty disk; host QMP ends the run after guest verdict",
+  "guest_shutdown_tested": false,
+  "require_rpmh": true,
+  "expected_guest_checks": 23,
+  "qemu_sha256": "178bace28c84bced9471b824d413feb18e76ddb15212ec32412ad7a7ec32a675",
+  "kernel_sha256": "c513268fb0727d289fdfc0f02637c53cf5f976cc836ea9c586763f5f584bce40",
+  "guest_source_sha256": "cd1e7798723f4e5d897719733bee8df9d9156d152f90b112130d8cf711b9f87a",
+  "init_sha256": "29728d17543389630972ce32aa47bbe2ecd6e6c0c61e54d31b789cc1fb5a9814",
+  "initramfs_sha256": "0c8fb9fc1825fc86ca628c4152fd2dcf1168b16a873cc53dd1a61c4c1b58b01d",
+  "command": [
+    "/work/resume-20261123/frozen12/qemu-system-aarch64",
+    "-M",
+    "tb371fc,rpmh-profile=reference",
+    "-accel",
+    "tcg,thread=multi",
+    "-m",
+    "8G",
+    "-smp",
+    "8",
+    "-display",
+    "none",
+    "-monitor",
+    "none",
+    "-serial",
+    "stdio",
+    "-no-reboot",
+    "-qmp",
+    "unix:/tmp/tbci-3rse88bm/45/data/monitor.sock,server=on,wait=off",
+    "-kernel",
+    "/work/linux-rpmh/artifacts/Image",
+    "-initrd",
+    "/tmp/tbci-3rse88bm/45/data/initramfs.cpio.gz",
+    "-append",
+    "earlycon=qcom_geni,0xa90000 console=ttyMSM0,115200n8 rdinit=/init loglevel=7 panic=-1 nokaslr",
+    "-blockdev",
+    "{\"driver\": \"file\", \"node-name\": \"f0\", \"filename\": \"/tmp/tbci-3rse88bm/45/data/disk.raw\"}",
+    "-blockdev",
+    "driver=raw,node-name=d0,file=f0",
+    "-device",
+    "ufs-lu,bus=ufs0,drive=d0,lun=0",
+    "-d",
+    "unimp,guest_errors",
+    "-D",
+    "/tmp/tbci-3rse88bm/45/data/qemu-debug.log"
+  ],
+  "compile_command": [
+    "aarch64-linux-gnu-gcc",
+    "-DTB371FC_REQUIRE_RPMH",
+    "-static",
+    "-Os",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "/work/resume-20261123/source-final/tb371fc/tests/ufs-guest.c",
+    "-o",
+    "/tmp/tbci-3rse88bm/45/data/init"
+  ],
+  "passed": true,
+  "timed_out": false,
+  "rpmh_host_observation": {
+    "observation": "Stopped guest; QOM and physical-memory reads only",
+    "command_db_sha256": "416efcf69817cc7b0465a33724bace31e576040b3ec775e0a184a2d051f8c6f8",
+    "reference_profile": true,
+    "xo": {
+      "present": 1,
+      "address": 253952,
+      "value": 3,
+      "enabled": 1
+    },
+    "irq": {
+      "address": 404884736,
+      "values": [
+        3,
+        0
+      ],
+      "raw": "18220d00: 0x00000003 0x00000000\r\n"
+    },
+    "active_commands": [
+      {
+        "address": 404884784,
+        "values": [
+          65800,
+          253952,
+          3,
+          65792
+        ],
+        "raw": "18220d30: 0x00010108 0x0003e000 0x00000003 0x00010100\r\n"
+      },
+      {
+        "address": 404885456,
+        "values": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "raw": "18220fd0: 0x00000000 0x00000000 0x00000000 0x00000000\r\n"
+      }
+    ],
+    "checks": {
+      "rpmh_xo_request_applied": true,
+      "rpmh_active_irq_enabled_and_acknowledged": true,
+      "rpmh_completed_xo_command": true
+    },
+    "passed": true
+  },
+  "exit_code": 0,
+  "elapsed_seconds": 2.969,
+  "guest_checks": [
+    [
+      "PASS",
+      "procfs"
+    ],
+    [
+      "PASS",
+      "sysfs"
+    ],
+    [
+      "PASS",
+      "devtmpfs"
+    ],
+    [
+      "PASS",
+      "qcom_host_driver"
+    ],
+    [
+      "PASS",
+      "qmp_phy_driver"
+    ],
+    [
+      "PASS",
+      "gcc_driver"
+    ],
+    [
+      "PASS",
+      "apps_smmu_driver"
+    ],
+    [
+      "PASS",
+      "kgsl_smmu_driver"
+    ],
+    [
+      "PASS",
+      "ufs_translated_dma_domain"
+    ],
+    [
+      "PASS",
+      "rpmh_rsc_driver"
+    ],
+    [
+      "PASS",
+      "rpmh_clock_driver"
+    ],
+    [
+      "PASS",
+      "rpmh_xo_rate_19200000"
+    ],
+    [
+      "PASS",
+      "rpmh_completion_interrupt"
+    ],
+    [
+      "PASS",
+      "ufs_block_discovered"
+    ],
+    [
+      "PASS",
+      "logical_sector_4096"
+    ],
+    [
+      "PASS",
+      "capacity_64_mib"
+    ],
+    [
+      "PASS",
+      "direct_multiblock_write"
+    ],
+    [
+      "PASS",
+      "cache_flush"
+    ],
+    [
+      "PASS",
+      "direct_multiblock_read"
+    ],
+    [
+      "PASS",
+      "close_reopen_persistence"
+    ],
+    [
+      "PASS",
+      "scsi_read_capacity"
+    ],
+    [
+      "PASS",
+      "unsupported_scsi_rejected"
+    ],
+    [
+      "PASS",
+      "read_beyond_disk_is_eof"
+    ]
+  ],
+  "guest_verdicts": [
+    [
+      "PASS",
+      "23",
+      "0"
+    ]
+  ],
+  "host_verified_disk_payload": true,
+  "disk_payload_sha256": "faf3511fec2180665df534811d7ed01fdf14127f1d0596c46b34fb9ba6ee466e",
+  "serial.log_sha256": "53452025c5dda66149e36d3b42268d708c701507594394effb2d369ebf160229",
+  "qemu-debug.log_sha256": "1068099ff15a38dd0e0e83f3f1c5e18c33b9d4c2d052243767db3a2a14e3ae90"
+}
