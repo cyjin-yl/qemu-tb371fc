@@ -53,6 +53,7 @@
 #include "hw/misc/qcom-qsee-irq.h"
 #include "hw/misc/qcom-tcsr-mutex.h"
 #include "hw/misc/qcom-tsens24xx.h"
+#include "hw/misc/qcom-cpufreq-hw.h"
 #include "hw/misc/qcom-smem-handoff.h"
 #include "hw/misc/qcom-aop-msgram.h"
 #include "hw/misc/qcom-aop-qmp.h"
@@ -977,6 +978,30 @@ static void tb371fc_create_gpu_gx_gdsc(TB371FCMachineState *s)
 }
 
 
+static void tb371fc_create_cpufreq(TB371FCMachineState *s)
+{
+    for (unsigned i = 0; i < QCOM_CPUFREQ_HW_DOMAINS; i++) {
+        const QcomCpufreqHwDomain *d = &qcom_cpufreq_hw_domains[i];
+        DeviceState *dev = qdev_new(TYPE_QCOM_CPUFREQ_HW_EPSS);
+        g_autofree char *name = g_strdup_printf("cpufreq%u", i);
+
+        object_property_add_child(OBJECT(s), name, OBJECT(dev));
+        qdev_prop_set_uint32(dev, "domain-id", i);
+        /*
+         * Actual DT: RPMh CXO and GCC GPLL0 (vendor binding ID 209).
+         * The explicit XO01 reference LUT uses only XO; alternate remains
+         * a real connected input, not a fabricated fixed 600 MHz value.
+         */
+        qdev_connect_clock_in(dev, "xo", s->xo);
+        qdev_connect_clock_in(dev, "alternate",
+                              qdev_get_clock_out(DEVICE(&s->gcc), "gpll0"));
+        sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, d->base);
+        sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0,
+                           qdev_get_gpio_in(s->gic, d->spi));
+    }
+}
+
 static void tb371fc_create_gpucc(TB371FCMachineState *s)
 {
     DeviceState *gpucc = qdev_new(TYPE_QCOM_SM8250_GPUCC);
@@ -1520,6 +1545,7 @@ static void tb371fc_init(MachineState *ms)
         s->ufs->id = g_strdup("ufs0");
     }
     tb371fc_create_gcc(s);
+    tb371fc_create_cpufreq(s);
     tb371fc_create_gpucc(s);
     tb371fc_create_npucc(s);
     tb371fc_create_noc_qos(s);
