@@ -44,6 +44,7 @@
 #include "hw/intc/qcom-pdc.h"
 #include "hw/misc/qcom-sm8250-gcc.h"
 #include "hw/misc/qcom-sm8250-gpucc.h"
+#include "hw/misc/qcom-sm8250-npucc.h"
 #include "hw/misc/qcom-pshold.h"
 #include "hw/misc/qcom-dcc.h"
 #include "hw/misc/qcom-ipcc.h"
@@ -995,6 +996,36 @@ static void tb371fc_create_gpucc(TB371FCMachineState *s)
     }
 }
 
+static void tb371fc_create_npucc(TB371FCMachineState *s)
+{
+    static const hwaddr bases[] = { 0x09980000, 0x09800000, 0x09810000 };
+    DeviceState *npucc = qdev_new(TYPE_QCOM_SM8250_NPUCC);
+    unsigned i;
+
+    object_property_add_child(OBJECT(s), "npucc", OBJECT(npucc));
+    /*
+     * Both RPMh XO names use the same physical active carrier in the
+     * vendor driver. Separate logical SLEEP votes are not modeled here.
+     */
+    qdev_connect_clock_in(npucc, "bi_tcxo", s->xo);
+    qdev_connect_clock_in(npucc, "bi_tcxo_ao", s->xo);
+    qdev_connect_clock_in(npucc, "gcc_npu_gpll0_clk_src",
+        qdev_get_clock_out(DEVICE(&s->gcc), "gcc_npu_gpll0_clk_src"));
+    qdev_connect_clock_in(npucc, "gcc_npu_gpll0_div_clk_src",
+        qdev_get_clock_out(DEVICE(&s->gcc), "gcc_npu_gpll0_div_clk_src"));
+    /*
+     * Test, QDSS, NOC, S2P and LLM parents remain unknown until a real
+     * provider is connected. No boot rates or remote votes are seeded.
+     */
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(npucc), &error_fatal);
+    for (i = 0; i < NPUCC_WINDOWS; i++) {
+        const QcomNpuccWindowDef *w = &qcom_sm8250_npucc_windows[i];
+
+        sysbus_mmio_map(SYS_BUS_DEVICE(npucc), i, bases[w->bank] + w->offset);
+    }
+    /* cc + 0x1004 (the separate NPU GDSC) is intentionally not mapped. */
+}
+
 static void tb371fc_create_gcc(TB371FCMachineState *s)
 {
     DeviceState *gcc;
@@ -1370,6 +1401,7 @@ static void tb371fc_init(MachineState *ms)
     }
     tb371fc_create_gcc(s);
     tb371fc_create_gpucc(s);
+    tb371fc_create_npucc(s);
     tb371fc_create_gpu_cx_gdsc(s);
     tb371fc_create_gpu_gx_gdsc(s);
     if (s->ufs) {
