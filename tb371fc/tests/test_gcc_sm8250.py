@@ -463,6 +463,10 @@ def sys_noc_cpuss_reset(r):
     r.gpio('remote-vote', 143, True)
     r.write(SHARED_VOTE, SYS_NOC_CPUSS_VOTE)
     r.reset()
+    # PLL markers were already zero before this reset, so wait for the
+    # previously asserted branch vote to clear before observing reset state.
+    r.wait_for(lambda: r.read(SHARED_VOTE) == 0,
+               'SYS_NOC_CPUSS software vote cleared by reset')
     assert r.read(SHARED_VOTE) == 0
     assert r.read(SYS_NOC_CPUSS_CBCR) == 0
     assert r.read(CPUSS_CBCR) == OFF
