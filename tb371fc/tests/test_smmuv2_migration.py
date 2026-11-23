@@ -350,8 +350,12 @@ def main():
                 assert target.process.poll() is not None, "Destination did not reject incompatible SMR capacity"
                 assert target.process.returncode != 0
                 error = target.log_path.read_text(errors="replace")
-                assert "num_smrs" in error and "Failed to load" in error, error
                 attempt["destination_error"] = error
+                # QEMU's uint32_equal loader reports values in hexadecimal;
+                # it names the device but does not include the field name.
+                expected = f"{target_count:x} != {source_count:x}"
+                assert "error while loading state" in error and "'arm-smmuv2'" in error, error
+                assert expected in error, (expected, error)
                 passed(directory.name)
             finally:
                 if source:
