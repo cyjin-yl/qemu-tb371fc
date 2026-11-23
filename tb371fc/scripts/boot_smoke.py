@@ -14,7 +14,11 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+import tempfile
 import time
+
+from boot_qmp import QMP, connect, has_guest_shutdown
+from boot_verdict import validate_console
 
 
 def sha256(path: Path) -> str:
@@ -37,6 +41,50 @@ def cpio_entry(name: str, data: bytes, mode: int, inode: int,
     return part + b"\0" * (-len(data) % 4)
 
 
+def observe_boot(command, log, qmp_path, timeout):
+    """Observe QEMU until exit and preserve the reason for guest shutdown."""
+    report = {"timed_out": False, "guest_shutdown_observed": False,
+              "qmp_messages": [], "exit_code": None}
+    process = qmp = None
+    deadline = time.monotonic() + timeout
+    with log.open("wb") as serial:
+        try:
+            process = subprocess.Popen(command, stdout=serial, stderr=subprocess.STDOUT)
+            qmp = QMP(connect(qmp_path, process, min(deadline, time.monotonic() + 5)))
+            qmp.command("qmp_capabilities")
+            qmp.command("cont")
+            while process.poll() is None:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise subprocess.TimeoutExpired(command, timeout)
+                if qmp.receive(min(.1, remaining)) is None:
+                    process.wait(timeout=min(3, remaining))
+            qmp.drain()
+        except subprocess.TimeoutExpired:
+            report["timed_out"] = True
+        except Exception as exc:
+            report["observer_error"] = str(exc)
+        finally:
+            if process is not None:
+                if process.poll() is None:
+                    process.terminate()
+                    try:
+                        process.wait(timeout=3)
+                    except subprocess.TimeoutExpired:
+                        process.kill()
+                        process.wait(timeout=3)
+                report["exit_code"] = process.returncode
+            if qmp is not None:
+                try:
+                    qmp.drain()
+                except Exception as exc:
+                    report.setdefault("observer_error", str(exc))
+                report["qmp_messages"] = qmp.messages
+                report["guest_shutdown_observed"] = has_guest_shutdown(qmp.messages)
+                qmp.sock.close()
+    return report
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--qemu", required=True, type=Path)
@@ -53,8 +101,10 @@ def main() -> int:
     parser.add_argument("--debug-mmio", action="store_true",
                         help="Record QEMU unimplemented/guest-error diagnostics")
     args = parser.parse_args()
+    if args.timeout <= 0:
+        parser.error("--timeout must be positive")
     qemu, kernel, out = args.qemu.resolve(), args.kernel.resolve(), args.out.resolve()
-    out.mkdir(parents=True, exist_ok=True)
+    out.mkdir(parents=True, exist_ok=False)
     source = Path(__file__).resolve().parents[1] / "tests" / "guest-init.c"
     init = out / "init"
     compile_command = [args.cc, "-static", "-Os", "-Wall", "-Wextra", "-Werror",
@@ -123,46 +173,22 @@ def main() -> int:
                              "bytes": disk.stat().st_size if disk else 0}
     if args.dtb:
         result["dtb_sha256"] = sha256(args.dtb.resolve())
-    timed_out = False
     log = out / "serial.log"
-    with log.open("wb") as serial_output:
-        try:
-            proc = subprocess.run(command, stdout=serial_output, stderr=subprocess.STDOUT,
-                                  timeout=args.timeout, check=False)
-            result["exit_code"] = proc.returncode
-        except subprocess.TimeoutExpired:
-            timed_out = True
-            result["exit_code"] = None
+    # Start paused so even a fast guest cannot shut down before QMP subscribes.
+    # A short socket directory also works in deeply nested CI checkouts.
+    with tempfile.TemporaryDirectory(prefix="tbboot-", dir="/tmp") as runtime:
+        qmp_path = Path(runtime) / "qmp.sock"
+        command.extend(["-S", "-qmp", f"unix:{qmp_path},server=on,wait=off"])
+        result.update(observe_boot(command, log, qmp_path, args.timeout))
     output = log.read_bytes()
     if debug_log.exists():
         result["qemu_debug_sha256"] = sha256(debug_log)
     text = output.decode("utf-8", errors="replace")
-    probe_records = []
-    for line in text.splitlines():
-        try:
-            record = json.loads(line)
-        except (json.JSONDecodeError, ValueError):
-            continue
-        if isinstance(record, dict) and record.get("kind") == "tb371fc-el0-counter-probe":
-            probe_records.append(record)
-    probe_ok = (len(probe_records) == 1 and
-                probe_records[0].get("counter_frequency_hz") ==
-                native["probe_result"]["counter_frequency_hz"] and
-                probe_records[0].get("counter_delta", 0) > 0 and
-                probe_records[0].get("increased") is True)
-    checks = [line.strip() for line in text.splitlines() if line.startswith("TB371FC_CHECK ")]
-    expected = {"procfs", "sysfs", "aarch64", "eight_online_cpus_psci",
-                "timer_and_scheduler_progress", "fork_and_wait", "board_model",
-                "arch_counter_probe"}
-    passed = {line.removeprefix("TB371FC_CHECK PASS ") for line in checks
-              if line.startswith("TB371FC_CHECK PASS ")}
-    verdict = (not timed_out and result["exit_code"] == 0 and passed == expected and probe_ok and
-               "TB371FC_GUEST_RESULT PASS failures=0" in text and
-               "TB371FC_CHECK FAIL" not in text and "Kernel panic" not in text)
+    result.update(validate_console(text, native))
+    verdict = (not result["timed_out"] and result["exit_code"] == 0 and
+               "observer_error" not in result and result["guest_shutdown_observed"] and
+               not result["validation_errors"])
     result.update(elapsed_seconds=round(time.monotonic() - start, 3),
-                  timed_out=timed_out, guest_checks=checks,
-                  arch_counter_probe=probe_records,
-                  arch_counter_matches_native_frequency_and_progress=probe_ok,
                   serial_sha256=sha256(log), passed=verdict)
     (out / "result.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2))

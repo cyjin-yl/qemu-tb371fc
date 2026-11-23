@@ -87,6 +87,7 @@ def plan(args, runtime):
             ("dt-inventory-unit", scripts / "test_inventory_dtb.py"),
             ("hardware-sysfs-unit", scripts / "test_collect_hardware_sysfs.py"),
             ("guest-result-unit", tests / "test_guest_result.py"),
+            ("console-boot-verdict-unit", tests / "test_boot_verdict.py"),
             ("tlmm-map-unit", tests / "test_tlmm_map.py"),
         ):
             add(name, script, result="exit")
@@ -221,13 +222,15 @@ def plan(args, runtime):
             ("--qemu", qemu, "--kernel", kernel, "--timeout", "120"),
             output="--out", result="file", count=8,
             count_field="guest_checks",
-            expected={"arch_counter_matches_native_frequency_and_progress": True})
+            expected={"arch_counter_matches_native_frequency_and_progress": True,
+                      "guest_shutdown_observed": True, "validation_errors": []})
         add("linux-console-empty-ufs", scripts / "boot_smoke.py",
             ("--qemu", qemu, "--kernel", kernel, "--timeout", "120",
              "--without-ufs-lu", "--debug-mmio"),
             output="--out", result="file", count=8,
             count_field="guest_checks",
             expected={"arch_counter_matches_native_frequency_and_progress": True,
+                      "guest_shutdown_observed": True, "validation_errors": [],
                       "ufs_fixture": {"populated": False, "kind": "none", "bytes": 0}})
         add("linux-ufs-smmu", scripts / "boot_ufs.py",
             ("--qemu", qemu, "--kernel", kernel, "--timeout", "120"),

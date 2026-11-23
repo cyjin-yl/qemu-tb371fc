@@ -172,7 +172,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 56)
+        self.assertEqual(len(cases), 57)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]
@@ -225,6 +225,15 @@ class PlanTests(unittest.TestCase):
         self.assertEqual(case.expected_count, 8)
         self.assertEqual(case.expected_values["ufs_fixture"],
                          {"populated": False, "kind": "none", "bytes": 0})
+
+    def test_console_gates_require_guest_initiated_shutdown(self):
+        args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        cases = {case.name: case for case in ci.plan(args, Path("/test/runtime"))}
+        self.assertIn("console-boot-verdict-unit", cases)
+        for name in ("linux-console-userspace", "linux-console-empty-ufs"):
+            self.assertIs(cases[name].expected_values["guest_shutdown_observed"], True)
+            self.assertEqual(cases[name].expected_values["validation_errors"], [])
 
     def test_linux_plans_require_rpmh_driver_and_host_evidence(self):
         for suite in ("linux", "all"):
