@@ -114,8 +114,11 @@ and Linux manifest entries, A77 payload/log hashes and PCI manifest entries were
 checked against their original receipts. Process stderr and PCI/A77 logs are
 retained beside the reports.
 
-The six invalid incoming streams/configurations exited with status 1, before
-resume and without changing their media. The incoming SCSI-queue case emitted
+The six invalid incoming streams/configurations exited with status 1 without
+changing their media. The original fixture inspected QMP events read while
+awaiting the command response; it did not drain the exited receiver's QMP stream
+to EOF. This receipt therefore does not establish a complete no-RESUME event
+audit. The incoming SCSI-queue case emitted
 the UFS-specific rejection hook diagnostic. The seventh rejection came from an
 actual unfinished UTRD DMA request on the source; its migration failed with the
 quiescent-queue diagnostic while the request remained visible. HCE reset and
