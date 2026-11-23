@@ -60,8 +60,10 @@ Source snapshots prove that pure QOM projection does not settle stored counter
 anchors; `pre_save` must perform that settlement. Targets use different virtual
 origins, then continue for one nanosecond before device MMIO. Physical LUTs,
 analog voltage, TCG speed, native policy registration and Android are outside
-the component verdict. This new combined 70+4 plan still requires actual CI;
-the older 52492a 68+4 pass remains a separate frozen result.
+the component verdict. This combined 70+4 plan actually passed on source
+`1fe4e1a8d3e4d1f1d64e800aa10bd355a007eac5`; [the source-bound receipt](../evidence/wholeboard-20261123-a47/public-ci-1fe4e1.json)
+records all 74 gates and the exact artifact. The older 52492a 68+4 pass remains
+separate.
 
 ## Gates
 
@@ -254,10 +256,16 @@ The [byte-preserved SMMUv500 report](../evidence/wholeboard-20261123-a47/smmuv50
 
 ## Concurrent default-branch granule integration
 
-The merged `smmuv2-granules` gate retains the original 26-check invocation and three migration attempts. Its report must explicitly state `legacy_v2_transfer_tested=false`; the public gate does not fetch a historical binary. Default-branch b5f4415 and 69ca28 records are preserved byte for byte, including the failed missing-library attempt and later actual v2-to-v3 extended run. Their successes apply to their own source/binaries. This branch's default 4 KiB SMMUv500 companion gate keeps 36 checks and now verifies the actual core v3 headers/profile in its source streams, while companion VMState remains v1. A fresh unified run is required after CPUFreq and these changes are combined.
+The merged `smmuv2-granules` gate retains the original 26-check invocation and three migration attempts. Its report must explicitly state `legacy_v2_transfer_tested=false`; the public gate does not fetch a historical binary. Default-branch b5f4415 and 69ca28 records are preserved byte for byte, including the failed missing-library attempt and later actual v2-to-v3 extended run. Their successes apply to their own source/binaries. This branch's default 4 KiB SMMUv500 companion gate keeps 36 checks and now verifies the actual core v3 headers/profile in its source streams, while companion VMState remains v1. The fresh unified 1fe4e1 run passed all 70 component and four Linux gates, including the 26-check granule gate and unchanged 36-check companion contract; the actual companion streams contain core v3 headers.
 
 ## First integrated EPSS build failure
 
 Run [45237654368](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45237654368), source `530909a61f59ac6bf4a644ac0d13f4d1fc9c95ea`, failed while compiling the board translation unit: the new descriptor member `first_cpu` expanded the existing CPU-list macro from `hw/core/cpu.h`. No component or Linux gate ran. The failed board artifact contains only `qemu-build.log`; the exact-artifact guard stopped before installation or native execution. The separate CPU job actually passed 852 guest checks, two rejected configurations and 15 UFS regressions. [The failure receipt and full official board log](../evidence/wholeboard-20261123-a47/public-ci-530909-build-failure.json) are retained.
 
-The reviewed fix `4dbcb3e07a3c844e75043c4589a63125906174ae` changes only that member's name to `first_cpu_index`. Its type and position, all model C, VMState, acceptance scripts and the 70 + 4 plan are unchanged. Static review is not a replacement for the next formal CI run.
+The reviewed fix `4dbcb3e07a3c844e75043c4589a63125906174ae` changes only that member's name to `first_cpu_index`. Its type and position, all model C, VMState, acceptance scripts and the 70 + 4 plan are unchanged. The subsequent source `1fe4e1a8d3e4d1f1d64e800aa10bd355a007eac5` actually passed formal run 45240510512. The original failure remains preserved and was never used for native execution.
+
+## Actual 74-gate checkpoint
+
+The [1fe4e1 receipt](../evidence/wholeboard-20261123-a47/public-ci-1fe4e1.json) binds source `1fe4e1a8d3e4d1f1d64e800aa10bd355a007eac5` to board binary `4edcf24e59963b2e33942c042cdd04f8a96c2d6faf6891dfd372b8eb219f5b95`: 70/70 components in 164.14 seconds and 4/4 Linux gates in 5.609 seconds. Both aggregates report clean source and unchanged QEMU. The raw ZIP, binary, thirteen selected reports and twenty-two migration files were directly read. The separate CPU job passed 852 guest checks, two invalid configurations and fifteen UFS regressions with its own binary.
+
+CPUFreq actually passed 30 checks and 2/2/2 completed/profile/corrupt cases. Its independent verifier decoded all fifteen 84-byte domain sections across five files, checked actual QMP state and unchanged source anchors, and verified restored state before first target MMIO. The unknown source is not a third roundtrip. The [same-binary native run](../evidence/wholeboard-20261123-a47/native-1fe4e1.json) reports CPUFreq registered, then aborts in L3 devfreq at 0x18590000; this is not native userspace or Android success.

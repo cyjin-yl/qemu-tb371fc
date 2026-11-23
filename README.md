@@ -12,9 +12,13 @@
 
 ## 本次整板推进与统一验收（2026-11-23）
 
-当前新组合加入[三域 CPUFreq EPSS 数字参考模型](tb371fc/docs/cpufreq-hw-reference.md)，并合入默认分支的 SMMUv2 大页能力；统一计划为 **74 个 gate：70 个组件检查 + 4 次 Linux 启动**。CPUFreq 的 30 项检查覆盖真实档位选择、时钟输出、分数计数、三路中断和迁移；新的完整组合尚待正式 CI 与同二进制原厂复测。下文已通过的 72 项回执仍绑定 `52492a`。
+统一提交 `1fe4e1a8d3e4d1f1d64e800aa10bd355a007eac5` 已实际通过 **74 个 gate：70/70 组件检查 + 4/4 Linux 启动，以及独立 A77/UFS job**。见[正式 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45240510512)和[冻结回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-1fe4e1.json)。板级 QEMU SHA-256 为 `4edcf24e59963b2e33942c042cdd04f8a96c2d6faf6891dfd372b8eb219f5b95`；已直接读取 ZIP、包内二进制、两份 clean-source 汇总、13 份组件报告及 **22 个实际迁移文件**。三组 CI unit 实际为 29、17、14 项。
 
-首次 74 项组合 `530909a` 的[正式构建失败](tb371fc/evidence/wholeboard-20261123-a47/public-ci-530909-build-failure.json)已保留：新增 header 的 `first_cpu` 成员与 QEMU 已有宏冲突，板级编译失败，70 项组件和 4 项 Linux 均未执行。失败 ZIP 仅有构建日志，安装保护在缺少二进制时退出，没有启动原厂复测。独立 CPU job 的 852 项来宾检查、2 项配置拒绝和 15 项 UFS 回归通过。最小修复 `4dbcb3e` 仅将该成员改名为 `first_cpu_index`，保持类型、布局、模型行为和全部门槛不变；修复后的完整组合待正式重跑。
+[CPUFreq EPSS 的原始回执](tb371fc/evidence/wholeboard-20261123-a47/cpufreq-hw-1fe4e1.json)通过 **30 项检查、2 次完成迁移、2 次 profile 拒绝和 2 次损坏流拒绝**。独立核验实际五个迁移文件的十五个域 payload、保存前后的真实 QMP、目标不同时间起点与首个纳秒续进。合入的 SMMUv2 granule 门禁[实际通过 26 项](tb371fc/evidence/wholeboard-20261123-a47/smmuv2-granules-1fe4e1.json)，默认 companion 的 36 项和 core v3 实际流检查同时通过。
+
+同一个已验收二进制的[生产 Image／完整实机 DT 运行](tb371fc/evidence/wholeboard-20261123-a47/native-1fe4e1.json)已越过旧 `0x18591100` 异常，内核明确报告 **`cpufreq: driver qcom-cpufreq-hw up and running`**。停止状态下三域均与显式参考表一致；SMEM 23/23、NoC 46/46 非延迟配置、两组 TSENS 采样和 SMMUv500 资源状态保留。新的实际 fatal 是 **`devfreq_qcom_fw_driver_probe+0x94` 读取 `0x18590000`**，对应[实际 DT 的 L3 devfreq en-base](tb371fc/evidence/wholeboard-20261123-a47/devfreq-dt-symbols-1fe4e1.json)。完整实机 DT 用户态、原厂 Android、GPU/NPU 执行和整板等价仍未通过。
+
+首次 74 项组合 `530909a` 的[正式构建失败](tb371fc/evidence/wholeboard-20261123-a47/public-ci-530909-build-failure.json)已保留：新增 header 的 `first_cpu` 成员与 QEMU 已有宏冲突，板级编译失败，70 项组件和 4 项 Linux 均未执行。失败 ZIP 仅有构建日志，安装保护在缺少二进制时退出，没有启动原厂复测。独立 CPU job 的 852 项来宾检查、2 项配置拒绝和 15 项 UFS 回归通过。最小修复 `4dbcb3e` 仅将该成员改名为 `first_cpu_index`，保持类型、布局、模型行为和全部门槛不变；修复后的 `1fe4e1` 组合已完成上述正式重跑。
 
 统一提交 `52492a797d2acd9c918a8639564e8ff3e7beab3f` 已实际通过 **72 个 gate：68/68 组件检查 + 4/4 Linux 启动，以及独立 A77/UFS job**。见[实际 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45226846782)和[冻结回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-52492a.json)。板级 QEMU SHA-256 为 `debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3`；已直接读取 ZIP、包内二进制、两份 clean-source 汇总、11 份组件报告及 **17 个 MPM/NoC/SMMUv500/TSENS 迁移文件**。
 

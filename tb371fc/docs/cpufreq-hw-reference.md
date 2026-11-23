@@ -337,3 +337,9 @@ A stopped pure-QOM snapshot is an observation of these declared digital
 states. It cannot establish firmware equivalence, successful native
 CPUFreq registration, physical CPU voltage, actual CPU performance,
 userspace boot or Android.
+
+## Observed acceptance on 1fe4e1
+
+[Formal CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45240510512) for source `1fe4e1a8d3e4d1f1d64e800aa10bd355a007eac5` passed all 70 component and four Linux gates. The [raw component receipt](../evidence/wholeboard-20261123-a47/cpufreq-hw-1fe4e1.json) passes 30 checks, two completed transfers, two profile mismatches and two corrupted-state rejections. Its binary is `4edcf24e59963b2e33942c042cdd04f8a96c2d6faf6891dfd372b8eb219f5b95`. The independent ZIP verifier actually checked five migration files and fifteen complete domain payloads, actual source/target QMP state, different virtual origins, first-nanosecond continuation and exact receiver diagnostics. The failed 530909 board build and one-member macro fix remain recorded separately.
+
+With the same binary, [full captured DT and unchanged production Image](../evidence/wholeboard-20261123-a47/native-1fe4e1.json), printk at 1.944063 reports `cpufreq: driver qcom-cpufreq-hw up and running`. The stopped observer records three coherent reference domains, each at requested index 3 and nominal/reference output 1843200000 Hz; the explicit boot index was 0. The snapshot alone does not identify the writer or measure physical CPU speed/voltage, counter progress or IRQ delivery. The positive driver-registration claim comes separately from printk. Native execution then aborts at the L3 devfreq enable word `0x18590000`; full-DT userspace and Android remain unpassed.

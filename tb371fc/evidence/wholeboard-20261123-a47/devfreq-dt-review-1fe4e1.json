@@ -1,0 +1,215 @@
+{
+  "schema": "tb371fc-devfreq-l3-source-dt-review-v1",
+  "scope": "Independent read-only review of bounded original DT/kallsyms capture and pinned public driver; no MMIO model, tests, QEMU run or tablet capture performed here.",
+  "capture": {
+    "git_blob": "777468d5612057ebd2394bd80b021d79762e9365",
+    "bytes": 6381,
+    "sha256": "3b4d663de9e5ea33f5a86fc7d9f49f26223a6217657594423691d59f0ded124b",
+    "host_path": "/tank/shared/projects/tb371fc-wholeboard-a47/devfreq-dt-symbols-1fe4e1.json",
+    "input_dtb": {
+      "bytes": 973052,
+      "path": "/work/device-assets/live-android-20261123.dtb",
+      "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207"
+    },
+    "symbols": {
+      "path": "/work/kernel-symbols/production-4.19.157.kallsyms",
+      "bytes": 5226424,
+      "sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0"
+    },
+    "capture_script": {
+      "bytes": 2850,
+      "sha256": "8e9ee3aaae0ce5f0f706d75c8dfe03efeea7c1773382803ace347f016a189fcf",
+      "path": "/run/tb371fc-devfreq-source-a47/capture_dt_symbols.py"
+    },
+    "execution_note": "Root ran one serialized capture after relay queue/rate-limit failures; reviewer subsequently read the saved Git blob and independently checked raw bytes and geometry."
+  },
+  "native_boundary": {
+    "provenance": "Actual native-1fe4e1 kernel/QEMU observations supplied by root; this review independently checked the fixed DT and symbol identity, not re-executed the guest.",
+    "cpufreq_registration_guest_seconds": 1.944063,
+    "cpufreq_registration_message": "cpufreq: driver qcom-cpufreq-hw up and running",
+    "first_new_fatal_guest_seconds": 2.280807,
+    "physical_address": "0x18590000",
+    "read_bytes": 4,
+    "qemu_log_line": 10771,
+    "cpu": 4,
+    "esr": "0x96000010",
+    "far": "0xffffff800ae4d000",
+    "elr": "0xffffff8008cffee4",
+    "instruction": "0xb9400008: ldr w8, [x0]",
+    "symbol": "devfreq_qcom_fw_driver_probe",
+    "symbol_base": "0xffffff8008cffe50",
+    "symbol_offset": "0x94",
+    "symbol_extent_from_next_function": "0x4e8",
+    "source_correlation": "The named en-base resource starts exactly at the rejected PA, and the pinned driver's init path first reads its bit0. The public OnePlus source is a correlated reference, not a claim that the private Image was built from that exact tree."
+  },
+  "sources": [
+    {
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "path": "drivers/devfreq/devfreq_qcom_fw.c",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/devfreq/devfreq_qcom_fw.c",
+      "git_blob": "87e58971df652c021e11c2b54ef2da5a70204df7",
+      "bytes": 7517,
+      "sha256": "745457c2a20c90521772ef29c5f572570f481541d01ef427707d3da35bc5eb16",
+      "line_ranges": {
+        "frequency_constants_and_masks": [
+          21,
+          28
+        ],
+        "target_and_get_cur_freq": [
+          41,
+          100
+        ],
+        "populate_opp": [
+          102,
+          146
+        ],
+        "hardware_init": [
+          148,
+          207
+        ],
+        "software_voter_and_probe": [
+          209,
+          304
+        ],
+        "compatible_and_init": [
+          306,
+          333
+        ]
+      }
+    },
+    {
+      "commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "path": "drivers/devfreq/Kconfig",
+      "git_blob": "bc43003484b40186361c1be0bd6fe64429a6c682",
+      "bytes": 9405,
+      "sha256": "815e9652b53ac18ff1a4ae877bf1c2412cba6d12f7382da8ca4fce40c3330843",
+      "config": "ARM_QCOM_DEVFREQ_FW",
+      "purpose": "Firmware-offloaded device frequency selection, with L3 given as an example; selects performance/powersave/userspace governors."
+    },
+    {
+      "commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "path": "drivers/devfreq/Makefile",
+      "git_blob": "c511cf0397ab091cc9b8d3e62baabae17df3fbb4",
+      "bytes": 1507,
+      "sha256": "62464aa3dba2293bd226a62494a587fbb8a11a21d63abdc7716e8bfea5ff3b3d",
+      "line": 23,
+      "object": "obj-$(CONFIG_ARM_QCOM_DEVFREQ_FW) += devfreq_qcom_fw.o"
+    }
+  ],
+  "actual_dt": {
+    "path": "/soc/qcom,devfreq-l3",
+    "compatible": "qcom,devfreq-fw",
+    "soc_address_cells": 1,
+    "soc_size_cells": 1,
+    "resources": [
+      {
+        "name": "en-base",
+        "base": "0x18590000",
+        "bytes": 4
+      },
+      {
+        "name": "ftbl-base",
+        "base": "0x18590100",
+        "bytes": 160
+      },
+      {
+        "name": "perf-base",
+        "base": "0x18590320",
+        "bytes": 4
+      }
+    ],
+    "total_described_bytes": 168,
+    "total_32bit_words": 42,
+    "ftbl_last_word": "0x1859019c",
+    "row_size_override_present": false,
+    "clock_properties_present": false,
+    "interrupt_properties_present": false,
+    "power_properties_present": false,
+    "parent_properties_exact": [
+      "compatible",
+      "reg",
+      "reg-names"
+    ],
+    "software_voters": [
+      {
+        "path": "/soc/qcom,devfreq-l3/qcom,cpu0-cpu-l3-lat",
+        "compatible": "qcom,devfreq-fw-voter",
+        "phandle": 86,
+        "reg_present": false
+      },
+      {
+        "path": "/soc/qcom,devfreq-l3/qcom,cpu4-cpu-l3-lat",
+        "compatible": "qcom,devfreq-fw-voter",
+        "phandle": 89,
+        "reg_present": false
+      },
+      {
+        "path": "/soc/qcom,devfreq-l3/qcom,cpu7-cpu-l3-lat",
+        "compatible": "qcom,devfreq-fw-voter",
+        "phandle": 90,
+        "reg_present": false
+      },
+      {
+        "path": "/soc/qcom,devfreq-l3/qcom,cdsp-cdsp-l3-lat",
+        "compatible": "qcom,devfreq-fw-voter",
+        "phandle": 142,
+        "reg_present": false
+      }
+    ],
+    "geometry_boundary": "Three sparse resources end at 0x18590324; do not map the intervening holes or extend into CPUFreq domain0 at0x18591000. Child names identify software clients, not four independent hardware register banks."
+  },
+  "source_contract": {
+    "enable": "Read32 en-base bit0 must already be set by firmware or a declared reference handoff. Linux does not write this register to enable it. Returning zero causes -ENODEV; default unknown must not silently become successful firmware state.",
+    "ftbl": "Read32 at ftbl-base+i*stride, i<40. Static file-level stride defaults4; this DT node supplies no override and160B fits40x4. No physical LUT words were measured. Other instances' effect on the shared static stride was not established by this single-node capture.",
+    "decode": "SRC=(word>>30)&3; MULT=word&255; SRC!=0 decodes19200000*MULT Hz, SRC==0 decodes300000000 Hz regardless of MULT. These are driver constants, not measured oscillator/GCC-parent routing.",
+    "terminal": "Stop at the second adjacent row with equal decoded frequency. The comment mentions core counts, but the executable condition checks only prev_freq==freq. Raw-word equality and CPU-count fields are not the condition.",
+    "opp": "Each accepted frequency is added with voltage0. There is no sourced voltage table or voltage register in this interface.",
+    "perf": "Target resolves the OPP into the software frequency-table index, then writes that u32 index to the one parent perf-base. A hardware-instance current-frequency read reads PERF and clamps it in guest software to max_state-1. A child current-frequency read returns its own software vote index without an MMIO read.",
+    "voters": "Each child copies parent OPPs and keeps an index in kernel RAM. Target under voter_lock selects the maximum index across the software list and writes the same single parent PERF word. No hardware voter registers are evidenced.",
+    "registration": "A parent with available children populates those children and does not register itself directly with devfreq. Each leaf registers the performance governor; polling_ms50 is Linux framework policy, not a modeled hardware sample period.",
+    "no_source_for": [
+      "IRQ/status/W1C registers",
+      "cycle counters",
+      "voltage registers",
+      "firmware execution or shared-memory command processing",
+      "physical clock parent routing",
+      "reset value or reset retention",
+      "DVFS completion delay/analog voltage behavior"
+    ]
+  },
+  "minimum_reference_boundary": {
+    "scope": "If implemented next, expose only the three sourced resources; make ready handoff and every synthetic table entry explicit opt-in reference data.",
+    "functional_requirement": "Model supported PERF selection as real retained request state. Expose the frequency decoded from the selected reference row explicitly as a requested rate, not a measured/applied L3 clock or completed firmware DVFS transaction. Returning EN=1 alone or accepting arbitrary indices is insufficient.",
+    "reference_policy_needed": [
+      "synthetic ascending unique frequencies and adjacent duplicate sentinel",
+      "cold PERF index and enabled handoff",
+      "read-only EN/FTBL access policy and unsupported PERF-index policy",
+      "reset behavior",
+      "same-profile migration identity plus retained PERF and correctly re-derived requested frequency"
+    ],
+    "not_claimed": [
+      "native LUT or voltages",
+      "native firmware ran",
+      "L3 cache timing/performance",
+      "silicon parent clocks or actual DVFS latency",
+      "Android or full-board userspace acceptance"
+    ],
+    "current_authorized_scope_note": "Root selected one parent, three windows and requested-only state; no Clock output, timer or IRQ is claimed or required by this source/DT contract."
+  },
+  "independent_checks": {
+    "dt_and_symbols_have_fixed_expected_identities": true,
+    "one_matching_resource": true,
+    "match_is_enable_word": true,
+    "exact_named_geometry": true,
+    "symbol_pc_offset_and_extent": true,
+    "software_voters_only": true,
+    "no_added_clk_irq_handoff_evidence": true
+  },
+  "outcome": {
+    "source_and_dt_contract_consistent": true,
+    "blocking_source_ambiguity_for_this_three_window_reference_scope": false,
+    "no_new_model_or_test_authored": true,
+    "no_runtime_validation_claimed": true
+  }
+}
