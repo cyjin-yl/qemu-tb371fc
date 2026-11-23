@@ -12,11 +12,17 @@
 
 ## 本次整板推进与统一验收（2026-11-23）
 
-GPUCC 后续增量已加入源码：显式启用的 PLL1、GMU root、15 路 branch、5 路 reset 和真实 GCC Clock 接线；[契约与边界](tb371fc/docs/gpucc-sm8250.md)。当前计划相应扩展为 **66 个 gate：62 个组件/解析检查和 4 次 Linux 启动**。新增 GPUCC 门禁要求 30 项检查、2 次完成迁移和 2 次配置拒绝。首次 `db3ac11` 的组件结果为 61/62；唯一失败是测试遗漏 `invalid_mem` 日志类别，Linux 未运行。修正测试后，原样 CI 二进制已实际完成 **30/30、2 次完成迁移和 2 次配置拒绝**，见[失败与同二进制修正对照](tb371fc/evidence/wholeboard-20261123-a47/gpucc-fixture-fix.json)。完整 66 项回归仍需新提交自己的结果，下面的 `a813` 冻结回执只证明该旧提交。
+后续 NPUCC 增量已加入三个物理窗口对应的数字模型：3 组 PLL、6 个 RCG、33 路 branch、7 路 reset，以及真实 XO/GCC Clock 接线；[契约与边界](tb371fc/docs/npucc-sm8250.md)。当前验收计划扩展为 **67 项（63 项组件 + 4 次 Linux 启动）**，新增门槛要求 37 项检查、2 次完成迁移和 2 次配置拒绝。该增量的实际构建、测试和原厂运行仍须单独验收；下面的 `df667` 结果只证明它自己的 66 项源码。
 
-当前统一分支为 `tb371fc-verified-wholeboard-20261123-a47`。`a813` 冻结检查点的公开计划是 **65 个 gate：61 个组件/解析检查和 4 次 Linux 启动**，另有独立 A77 / 共享 UFS PCI job。新增内容包括 GPU CX/GX、SMEM 交接及生产驱动观察器、AOP 参考对端、Kona CPUSS 分支和两个 USB PIPE 时钟 mux。统一提交 `a8136d1b1871d5a90aced67cc269dfb312be5c65` 已实际通过 **61/61 组件 + 4/4 Linux，以及独立 A77/UFS job**；见[本次 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45179839601)及[按源码和二进制冻结的回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-a813.json)。
+统一提交 `df667a3e8dbb31368ebbd6af1a7569a2b4c785d0` 已实际通过 **66 个 gate：62/62 组件检查 + 4/4 Linux 启动，以及独立 A77/UFS job**。见[本次 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45188581468)及[冻结回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-df667.json)。本次板级二进制 SHA-256 为 `654d2eed0cd057028b68f1dba87e4bde49d6e60431538ed991f624de9dba08a0`；已下载 ZIP、直接核对包内文件，并验证两套测试的源码干净状态和前后哈希一致。
 
-统一二进制 SHA-256 为 `fc6c7cba342297fd86b4fdd9800f8e6a944e435a244f26091ef7e6c632ce03a9`，已下载 CI artifact 并直接计算包内文件哈希。两个观察器单元测试分别实际运行 17 和 14 项；它们使用模拟 monitor，同一次原厂运行的只读观察证据另见下文。
+新增 GPUCC 实现显式启用的 PLL1、GMU root、15 路 branch、5 路 reset 和真实 GCC Clock 接线；[契约与边界](tb371fc/docs/gpucc-sm8250.md)。其 **30 项检查、2 次完成迁移和 2 次配置拒绝**已在上述统一构建通过。首次 `db3ac11` 的组件结果为 61/62，唯一失败是测试遗漏 `invalid_mem` 日志类别，Linux 未运行；[原失败及同二进制修正对照](tb371fc/evidence/wholeboard-20261123-a47/gpucc-fixture-fix.json)保留原始结论。
+
+同一个通过公开 CI 的二进制运行未修改的生产内核和完整原生 DT，实际输出 **Registered GCC clocks** 和 **Registered GPU CC clocks**；SMEM 为 **23/23**，AOP reference 通道已消费 QDSS 请求。[原厂运行回执](tb371fc/evidence/wholeboard-20261123-a47/native-df667.json)的下一实际 fatal 是 **NPUCC `0x09980000` 的 PLL0 MODE 读取**，尚未达到完整原生 DT 用户态或 Android。
+
+统一开发分支为 `tb371fc-verified-wholeboard-20261123-a47`。前一 `a813` 冻结检查点的公开计划是 **65 个 gate：61 个组件/解析检查和 4 次 Linux 启动**，另有独立 A77 / 共享 UFS PCI job。新增内容包括 GPU CX/GX、SMEM 交接及生产驱动观察器、AOP 参考对端、Kona CPUSS 分支和两个 USB PIPE 时钟 mux。统一提交 `a8136d1b1871d5a90aced67cc269dfb312be5c65` 已实际通过 **61/61 组件 + 4/4 Linux，以及独立 A77/UFS job**；见[本次 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45179839601)及[按源码和二进制冻结的回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-a813.json)。
+
+该 `a813` 检查点的二进制 SHA-256 为 `fc6c7cba342297fd86b4fdd9800f8e6a944e435a244f26091ef7e6c632ce03a9`，已下载 CI artifact 并直接计算包内文件哈希。两个观察器单元测试分别实际运行 17 和 14 项；它们使用模拟 monitor，同一次原厂运行的只读观察证据另见下文。
 
 本次整合前已经实际完成的验证分别属于以下版本：
 
@@ -32,9 +38,9 @@ GPUCC 后续增量已加入源码：显式启用的 PLL1、GMU root、15 路 bra
 记录各自源码、二进制、输入和日志哈希。早期 AOP 观察器没有采集被拒绝请求的 payload；`a813` 的追加只读邮箱诊断已识别为 DDR 日志停止请求，详见[统一版本原厂运行](tb371fc/evidence/wholeboard-20261123-a47/native-a813.json)。观察器退出 0 不代表来宾启动成功。
 
 **完整原生 DT 到达用户态、原厂 Android 和整板可用仍未通过。**
-`a813` 使用同一个 CI 二进制运行未修改的生产内核和完整原生 DT，实际越过 `0x10f060`，内核输出 **Registered GCC clocks**；SMEM 仍为 **23/23**，AOP 通道 connected 并消费一个 QDSS 请求。下一处致命异常是 GPUCC `0x03d90100` 的 `clk_lucid_pll_configure` 读取，尚未到达 PID 1 用户态。DDR 日志请求与公开驱动的 panic notifier、实测 DT 属性相符；这是源码关联推断，没有将它列为启动前置依赖。
+前一 `a813` 冻结版本止于 GPUCC `0x03d90100`，后续 `df667` 已越过这一位置并完成 GPUCC 注册，随后在 NPUCC `0x09980000` 中止。两个版本自己的原始回执均保留。DDR 日志请求与公开驱动的 panic notifier、实测 DT 属性相符；这是源码关联推断，没有将它列为启动前置依赖。
 
-SMEM、AOP、SPMI 与电源交接的 reference 配置必须显式选择，不是原厂固件捕获或真实 PMIC/时钟频率测量。AOP 不执行固件，GX/CX 不执行 Adreno/GMU 命令。后续 GPUCC 改动必须获得自己的构建、组件和原厂运行回执，不能借用 `a813` 的成功。
+SMEM、AOP、SPMI 与电源交接的 reference 配置必须显式选择，不是原厂固件捕获或真实 PMIC/时钟频率测量。AOP 不执行固件，GX/CX 不执行 Adreno/GMU 命令。后续 NPUCC 等改动必须获得自己的构建、组件和原厂运行回执，不能借用这些冻结版本的成功。
 
 [历史默认分支索引](tb371fc/evidence/DEFAULT-HISTORY-5fd52c1.md)保留原默认分支的五组冻结结果及原字节账本；没有用新源码覆盖旧回执。
 此前 [GPU CX 检查点](tb371fc/evidence/gpu-cx-ci-20261123/checkpoint.json) 的未完成状态和初次失败也继续保留，不能代替上述后续实际验证。

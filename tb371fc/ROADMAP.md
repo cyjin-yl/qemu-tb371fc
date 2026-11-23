@@ -14,8 +14,9 @@
 - [x] GCC CPUSS 官方来源补充及严格再生成；原厂完整 DT 异常已从 `0x148198` 推进到 USB PIPE mux `0x10f060`。
 - [x] 两个 USB PIPE mux 的 15 项检查、v3 迁移及版本拒绝；统一 `a813` 原厂完整 DT 已越过 mux 读取并输出 Registered GCC clocks。
 - [x] 整合后的 `a813` 65 gate 和独立 A77/UFS job；已解包核对精确二进制，并在同一板级二进制上获得 SMEM 23/23 和 AOP reference 交换证据。
-- [ ] GPUCC 新增数字 PLL/GMU/branch/reset 模型的 30 项、2 完成/2 拒绝迁移，以及统一 66 gate 和原厂驱动复测。
-- [ ] 原厂完整 DT 用户态及 Android 启动；`a813` 下一实际 fatal 为 GPUCC `0x03d90100`，不能将 65 项公共成功当作整板可用。
+- [x] GPUCC 数字 PLL/GMU/branch/reset 模型的 30 项、2 完成/2 拒绝迁移；统一 `df667` 的 62/62 组件 + 4/4 Linux 和独立 A77/UFS 全部通过，同一二进制原厂完整 DT 已完成 GPUCC 注册。
+- [ ] NPUCC 三窗口数字 PLL/RCG/branch/reset 实现及 37 项组件/2 完成/2 拒绝迁移、统一 67 gate 和原厂驱动验收；源码和计划已加入，待实际运行。`df667` 当前 fatal 为 `0x09980000` PLL0 MODE 读取。
+- [ ] 原厂完整 DT 用户态及 Android 启动；不能将 66 项公共成功或 GPUCC 注册当作整板可用。
 
 本轮精确构建与原厂证据见 [README](../README.md) 和
 [原厂对照](evidence/wholeboard-20261123-a47/native-progression.json)。
