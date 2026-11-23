@@ -45,6 +45,7 @@
 #include "hw/misc/qcom-sm8250-gcc.h"
 #include "hw/misc/qcom-sm8250-gpucc.h"
 #include "hw/misc/qcom-sm8250-npucc.h"
+#include "hw/misc/qcom-noc-qos.h"
 #include "hw/misc/qcom-pshold.h"
 #include "hw/misc/qcom-dcc.h"
 #include "hw/misc/qcom-ipcc.h"
@@ -1027,6 +1028,58 @@ static void tb371fc_create_npucc(TB371FCMachineState *s)
     /* cc + 0x1004 (the separate NPU GDSC) is intentionally not mapped. */
 }
 
+static void tb371fc_create_noc_qos(TB371FCMachineState *s)
+{
+    /*
+     * Original DT SHA256 5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207.
+     * Physical AP-owned QoS ports only: display aliases name existing ports.
+     * base + base-offset + port * qos-off is the vendor callback's geometry.
+     */
+    static const struct {
+        const char *name;
+        hwaddr base;
+        uint32_t offset, stride, count;
+        uint32_t ports[13];
+    } fabrics[] = {
+        { "aggre1", 0x016e0000, 0x2000, 0x1000, 9,
+          { 0, 1, 2, 3, 4, 5, 6, 7, 8 } },
+        { "aggre2", 0x01700000, 0x3000, 0x1000, 10,
+          { 0, 1, 2, 3, 4, 7, 8, 9, 11, 12 } },
+        { "compute", 0x01700000, 0x33000, 0x800, 2,
+          { 6, 7 } },
+        { "gem", 0x09100000, 0x21000, 0x1000, 13,
+          { 0, 1, 2, 3, 64, 65, 66, 67, 127, 128, 129, 130, 131 } },
+        { "mmss", 0x01740000, 0xa000, 0x800, 11,
+          { 0, 1, 2, 4, 5, 6, 8, 10, 12, 13, 14 } },
+        { "system", 0x01620000, 0x12000, 0x1000, 2,
+          { 0, 1 } },
+    };
+    unsigned f, p, r;
+
+    for (f = 0; f < ARRAY_SIZE(fabrics); f++) {
+        for (p = 0; p < fabrics[f].count; p++) {
+            uint32_t port = fabrics[f].ports[p];
+            hwaddr address = fabrics[f].base + fabrics[f].offset +
+                             port * fabrics[f].stride;
+            DeviceState *dev = qdev_new(TYPE_QCOM_NOC_QOS);
+            g_autofree char *name = g_strdup_printf("noc-qos-%s-%u",
+                                                     fabrics[f].name, port);
+
+            QCOM_NOC_QOS(dev)->port_address = address;
+            object_property_add_child(OBJECT(s), name, OBJECT(dev));
+            sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+            for (r = 0; r < QCOM_NOC_QOS_REGISTERS; r++) {
+                sysbus_mmio_map(SYS_BUS_DEVICE(dev), r,
+                                address + qcom_noc_qos_offsets[r]);
+            }
+        }
+    }
+    /*
+     * No fabric container, legacy QoS or SBM windows are mapped. The
+     * reference profile neither seeds DT policy nor supplies traffic/ACKs.
+     */
+}
+
 static void tb371fc_create_gcc(TB371FCMachineState *s)
 {
     DeviceState *gcc;
@@ -1418,6 +1471,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_gcc(s);
     tb371fc_create_gpucc(s);
     tb371fc_create_npucc(s);
+    tb371fc_create_noc_qos(s);
     tb371fc_create_gpu_cx_gdsc(s);
     tb371fc_create_gpu_gx_gdsc(s);
     if (s->ufs) {

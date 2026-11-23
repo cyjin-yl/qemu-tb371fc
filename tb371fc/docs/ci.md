@@ -27,9 +27,13 @@ The `mpm2-sleep-counter` gate requires 17 actual compiled-device checks, two com
 
 The `smmuv2-migration` gate preserves the default branch's 18-check test and version-2 geometry contract. It requires four recorded attempts: two successful transfers and two incompatible SMR-capacity rejections. The default branch and its original evidence remain intact; this combined source must pass its own 65 + 4 plan; previous successes do not attest the new combination. See [SMMUv2 migration](smmuv2-migration.md).
 
+## NoC QoS increment
+
+The `noc-qos` gate exercises the [four-word configuration contract](noc-qos-reference.md) on 47 actual-DT physical ports. The plan requires 20 successful checks, two completed same-profile transfers, two explicit profile mismatch rejections and two deliberately modified-stream rejections. The latter are corruption tests, not alternate supported board geometries. The gate checks 188 sparse four-byte windows, literal vendor RMW behavior, nonzero complete-word patterns, forbidden accesses, reset and raw destination observations before device MMIO. It does not establish NoC arbitration, bandwidth enforcement, SBM completion or native-driver progress. The extended 70-gate plan is pending its own executed receipts.
+
 ## Gates
 
-The current public plan has **69 gates: 65 component/parser gates and four
+The current public plan has **70 gates: 66 component/parser gates and four
 Linux boots**, plus the separate A77 and PCI UFS compatibility job. The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
@@ -51,6 +55,7 @@ pass does not attest newly added devices.
 | Pinned Kona GCC supplements | Exact three-source regeneration of both generated files; CPUSS 11 checks and USB PIPE mux 15 checks, including real v3 transfers and explicit old-version rejection; no USB PHY execution claim |
 | MPM sleep counter | 17 checks; exact 32768 Hz, one read-only word, reset continuity, two actual migrations and one deliberately modified-stream rejection |
 | SMMUv2 migration | 18 checks; geometry-bound VMState 2, two completed process migrations and two incompatible SMR capacity rejections |
+| NoC QoS | 20 checks; 47 independent ports / 188 words, two completed transfers, two profile mismatches and two deliberately corrupted-stream rejections; no traffic or SBM synthesis |
 | NPUCC | 37 checks across three physical banks, actual Clock outputs, source-bound CRC/dividers, two completed migrations and two profile rejections; full NPU/DSP execution remains outside scope |
 | GPUCC | 30 actual digital PLL/RCG/branch/reset checks, two completed migrations and two profile rejections; actual Clock providers and sparse ownership boundaries |
 | GPU CX and GX power domains | CX 26 checks with 9 migration attempts (6 completed, 3 rejected); GX 37 checks with 12 attempts (8 completed, 4 rejected); explicit digital reference states only |
@@ -188,3 +193,9 @@ Commit `a8136d1b1871d5a90aced67cc269dfb312be5c65` actually passed 61 component/p
 ## Frozen NPUCC-inclusive d790 result
 
 [The 67-gate receipt](../evidence/wholeboard-20261123-a47/public-ci-d790.json) records 63/63 component gates, 4/4 Linux boots and independent A77/UFS success. Actual board ZIP member SHA256 is `5e508e06b6ed66b264c1559a3e29a7ea9e9d6574950db5a81e5cf022252b29ba`. Both aggregate source-clean receipts and six selected component receipts were read from that ZIP. [The matching production-Image/full-DT run](../evidence/wholeboard-20261123-a47/native-d790.json) registers GCC, GPUCC and NPUCC, retains SMEM 23/23 and the AOP reference exchange, then faults in `boot_stats_init+0x14c`. Pinned public source and the actual DT identify the MPM counter candidate at `0x0c221000`, 32768 Hz; the recorded fault VA was not independently translated. VIDEOCC was deferred for an unavailable bandwidth-voting bus driver. Full native-DT userspace, Android and GPU/NPU command execution remain unpassed.
+
+## Frozen MPM/SMMU-inclusive 0508 result
+
+[The 69-gate receipt](../evidence/wholeboard-20261123-a47/public-ci-0508.json) records 65/65 component gates, 4/4 Linux boots and independent A77/UFS success for `0508fe9d5382b3e94ee0664012ff1e6f0457e5b7`. The actual board ZIP binary hashes to `f3582740b3ccbe3689181f796412d8d28cdfc92ad0ea48e639334dd464c6548b`. Both clean-source aggregate receipts, eight selected component receipts and all three MPM migration files were read from the downloaded artifact. The MPM [original JSON](../evidence/wholeboard-20261123-a47/mpm2-0508.json) records 17/17 checks, two completed transfers and one deliberately corrupted-frequency rejection. SMMUv2 records 18/18 checks, two completed transfers and two incompatible-SMR-capacity rejections; rejection senders report failed, not completed. The actual CI unit suites passed 29, 17 and 14 tests. The earlier [local preflight](../evidence/wholeboard-20261123-a47/development-validation-0508.json) preserves its one environment-denied AF_UNIX test; it is not substituted for formal CI.
+
+[The matching production-Image/full-DT run](../evidence/wholeboard-20261123-a47/native-0508.json) retained GCC/GPUCC/NPUCC registration, SMEM 23/23 and the supported AOP reference exchange, then actually printed the MPM timestamp and 32768-Hz frequency. Its next fatal is `msm_bus_noc_qos_init+0x48`; logging directly identifies the rejected physical read at `0x016e9008`. The exact Image's embedded configuration and [actual DT layout](../evidence/wholeboard-20261123-a47/noc-layout-0508.json) select RPMh NoC QoS Aggre1 port 7. Full native-DT userspace and Android still did not pass. The diagnostic's exit zero is observer completion, not a successful guest boot.

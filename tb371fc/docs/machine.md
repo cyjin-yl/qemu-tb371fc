@@ -32,6 +32,7 @@ describe reference contracts, not captured SBL state or AOP firmware execution.
 
 | Option | Contract |
 | --- | --- |
+| `qcom-noc-qos.enabled-reference=on` | Explicit four-word configuration reference at 47 actual-DT ports; default off rejects reads and writes. No traffic, power or SBM acknowledgement is synthesized. |
 | `smem-profile=off` or `smem-profile=reference-empty` | Default off; the reference initializes the documented empty SMEM v12 handoff. |
 | `aop-profile=none` or `aop-profile=reference-qdss-vote` | Default none retains raw SRAM. The reference adds real IPCC link/channel processing and only QDSS/QDSS_AO off/dynamic votes. |
 | `qcom-sm8250-npucc.enabled-reference=on` | Explicit three-bank digital PLL/RCG/branch/reset profile; [contract](npucc-sm8250.md). Default MMIO errors, unknown parents remain stopped; no NPU/DSP/GDSC execution claim. |
@@ -47,13 +48,21 @@ The `qcom-...` entries are device `-global` properties. See [SMEM](smem-referenc
 GCC v3 deliberately rejects older GCC migration streams; UFS still prevents
 a full-board migration claim.
 
+## NoC QoS configuration increment
+
+The [NoC QoS reference](noc-qos-reference.md) adds one SysBus device per physical QoS port: 47 instances and 188 individual four-byte windows. Only the actual-DT ports and four source-defined offsets are mapped. Display aliases share the same physical state; the deferred IPA port is available but not preprogrammed. Legal writes replace complete words, including the pinned vendor driver's destructive RMW effects; unsupported bits reject atomically. Reset-to-zero is an explicit reference policy. VMState 1 binds the selected profile and immutable physical identity, and checks the restored masks. Raw QOM register observations are read-only. Component and native evidence for this added model remain pending; the following 0508 receipts still measure the binary before this increment.
+
 ## New MPM counter and SMMUv2 integration
 
 The board now creates an independent [MPM2 sleep counter](mpm2-sleep-counter.md) at `0x0c221000..0x0c221003`. It uses the actual DT's fixed 32768-Hz declaration, with overflow-safe virtual-time arithmetic and preserved fractional phase in VMState 1. Cold zero and continuity across software reset are explicit reference policies. The remaining DT window is unmapped, and the 32000-Hz GCC sleep input is independent.
 
-The integrated [SMMUv2 migration contract](smmuv2-migration.md) from default commit `339b9cd277aeae84fba52b60ae34ede90b7ff101` requires version 2 and matching MMIO aperture, context-bank count and SMR capacity. Earlier unguarded version-1 streams are rejected. This is component migration with UFS disabled, not a claim that the complete running board migrates. The new MPM/SMMU combination is pending its own public and native execution receipts.
+The integrated [SMMUv2 migration contract](smmuv2-migration.md) from default commit `339b9cd277aeae84fba52b60ae34ede90b7ff101` requires version 2 and matching MMIO aperture, context-bank count and SMR capacity. Earlier unguarded version-1 streams are rejected. This is component migration with UFS disabled, not a claim that the complete running board migrates. The combined source actually passed [65 component gates and four Linux boots](../evidence/wholeboard-20261123-a47/public-ci-0508.json), plus the independent A77/UFS job. MPM passed 17 checks, two completed transfers and one deliberate stream-corruption rejection; SMMUv2 passed 18 checks, two completed transfers and two real capacity-mismatch rejections.
 
-## Latest unified NPUCC checkpoint
+## Latest unified 0508 native checkpoint
+
+The exact `0508fe9d5382b3e94ee0664012ff1e6f0457e5b7` CI artifact's [production Image/full-DT run](../evidence/wholeboard-20261123-a47/native-0508.json) registered GCC, GPUCC and NPUCC, observed SMEM success (23/23) and the supported AOP reference exchange, then completed the boot-stat counter read: timestamp 112563 and frequency 32768 Hz. No bootloader values were fabricated; the four existing IMEM KPI values remained zero. The next fatal is a 32-bit read in `msm_bus_noc_qos_init+0x48`. QEMU `invalid_mem` directly records physical address `0x016e9008`, followed by the CPU5 DataAbort with matching FAR and ELR. The [bounded original-DT evidence](../evidence/wholeboard-20261123-a47/noc-dt-evidence-0508.json) and embedded `CONFIG_QCOM_BUS_CONFIG_RPMH=y` identify Aggre1 port 7 QoS MAINCTL. NoC is not implemented in this binary; its [47-port layout](../evidence/wholeboard-20261123-a47/noc-layout-0508.json) is the next bounded contract. VIDEOCC remains deferred for the unavailable bus driver. Full native-DT userspace and Android remain unpassed.
+
+## Earlier unified NPUCC checkpoint
 
 Commit `d79052f306ec37a797d05c9e4b2f8f7ea69c0675` passed [63 component gates and four Linux boots](../evidence/wholeboard-20261123-a47/public-ci-d790.json), plus the separate A77/UFS job. The exact artifact binary's [production Image and full native-DT run](../evidence/wholeboard-20261123-a47/native-d790.json) registered GCC, GPUCC and NPUCC, observed SMEM success (23/23) and a supported AOP reference exchange, then faulted on a 32-bit read in `boot_stats_init+0x14c`. Pinned source and the actual DT correlate that read with the MPM sleep-counter resource at `0x0c221000`, declared 32768 Hz. The fault log contains a virtual address; no separate VA-to-PA translation was captured. This frequency is distinct from the 32000-Hz `chip_sleep_clk`. VIDEOCC was deferred because its bandwidth-voting bus driver was not ready.
 
