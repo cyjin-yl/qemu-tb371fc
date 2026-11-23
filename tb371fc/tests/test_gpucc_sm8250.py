@@ -794,15 +794,25 @@ def take_snapshot(source, path, witness):
     return before, state
 
 
-def restore_snapshot(target, path, clock, before, witness):
+def restore_snapshot(target, path, clock, before, witness, expected_irq=None):
     target.command(f"clock_set {clock}")
     target.last_clock = clock
     target.monitor("migrate-incoming", file_channels(path))
     state = wait_migration(target)
     assert state["status"] == "completed"
     assert target.monitor("query-status")["running"] is False
-    assert target.snapshot() == before
+    # Device MMIO reads can call its update/publish function. Check pure QOM
+    # state and actual Clock outputs first, so a later read cannot conceal a
+    # missing post_load publication. RAM drains IRQ messages without touching
+    # GPUCC or running its virtual timer.
+    assert {name: target.get(name) for name in STATE_PROPERTIES} == before["state"]
+    for name, period in before["outputs"].items():
+        assert target.period(name) == period, (name, target.period(name), period)
     assert target.raw_read(0x80010000) == witness
+    if expected_irq is not None:
+        index, level = expected_irq
+        assert target.irq.get(index, False) is level, (expected_irq, target.irq)
+    assert target.snapshot() == before
     return state
 
 
@@ -865,7 +875,8 @@ def migration_checks(args, out, report):
 
         target = new("migration-lock-target", incoming=True)
         target.expect_hz("gpu_cc_ahb_clk_parent", 0)
-        got = restore_snapshot(target, lock_path, source.last_clock, before, 0x47505531)
+        got = restore_snapshot(target, lock_path, source.last_clock, before, 0x47505531,
+                               expected_irq=(0, True))
         target.expect_hz("gpu_cc_ahb_clk_parent", 80_000_000)
         target.expect_hz("core_bi_pll_test_se", 50_000_000)
         target.expect_hz("gpu_cc_ahb_clk", 80_000_000)
