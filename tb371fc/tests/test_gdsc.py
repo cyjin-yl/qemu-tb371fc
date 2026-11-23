@@ -678,7 +678,7 @@ def default_none_profile_has_no_mapping_or_invented_power(args, directory):
             check(rig.monitor('qom-get', dict(path=path,
                        property='power-on')) is False, ('none power output', path))
         flatview = rig.monitor('human-monitor-command',
-                               dict(command_line='info mtree -f'))
+                               {'command-line': 'info mtree -f'})
         (directory / 'flatview.txt').write_text(flatview)
         check('qcom-gdsc.' not in flatview,
               'default none unexpectedly maps a GDSC register window')
