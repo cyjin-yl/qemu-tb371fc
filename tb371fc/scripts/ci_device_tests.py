@@ -131,6 +131,20 @@ def plan(args, runtime):
                output="--work-dir", verdict="success", count=6)
         device("geni-clock-migration", "test_geni_clock_reset.py",
                "--migration-only", output="--work-dir", verdict="success", count=4)
+        device("mpm2-sleep-counter", "test_mpm2_sleep_counter.py",
+               output="--out", result="file", count=17,
+               expected={"expected_checks": 17,
+                         "expected_completed_migrations": 2,
+                         "expected_corrupted_stream_rejections": 1,
+                         "vmstate_version": 1,
+                         "clock_frequency_hz": 32768,
+                         "mmio_register_count": 1, "mmio_window_bytes": 4,
+                         "guest_cpu_executed": False,
+                         "native_kernel_probe_observed": False,
+                         "android_boot_passed": False,
+                         "binary_unchanged": True},
+               expected_lengths={"migrations": 2,
+                                 "corrupted_stream_rejections": 1})
         add("counter-arithmetic", tests / "test_counter_conversion.py",
             ("--build-config", str(build)), output="--out", result="file",
             expected={"cases": 1848, "errors": []})
@@ -296,6 +310,12 @@ def plan(args, runtime):
                output="--out", result="file", verdict="all_passed", count=15)
         device("pdc-migration", "test_pdc_migration.py",
                output="--out", result="file", verdict="all_passed", count=10)
+        device("smmuv2-migration", "test_smmuv2_migration.py",
+               output="--out", result="file", verdict="all_passed", count=18,
+               expected={"schema_version": 1,
+                         "kind": "tb371fc-smmuv2-process-migration",
+                         "geometry_only": False},
+               expected_lengths={"migrations": 4})
 
     if args.suite in ("all", "linux"):
         kernel = str(args.kernel.resolve()) if args.kernel else "@KERNEL@"

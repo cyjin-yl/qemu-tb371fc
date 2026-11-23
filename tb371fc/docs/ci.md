@@ -19,11 +19,17 @@ The `gpucc-sm8250` gate runs `test_gpucc_sm8250.py` against the compiled binary.
 
 ## NPUCC increment
 
-The `npucc-sm8250` gate adds 37 unique checks against the compiled three-bank digital reference model, with two completed migrations and two profile rejections. It requires VMState 1, 95 registers in 26 sparse windows, three PLLs, six RCGs, 33 branches, seven resets, 12 input Clocks and 45 output Clocks. Shared ARES/CBCR words, the exact Q16 upper endpoint, unknown inputs and restored pending deadlines are included. [The contract](npucc-sm8250.md) does not claim NPU/DSP command execution or an implemented NPU GDSC. Registration of this gate is a plan; the frozen df667 result below applies to the preceding 66-gate source.
+The `npucc-sm8250` gate adds 37 unique checks against the compiled three-bank digital reference model, with two completed migrations and two profile rejections. It requires VMState 1, 95 registers in 26 sparse windows, three PLLs, six RCGs, 33 branches, seven resets, 12 input Clocks and 45 output Clocks. Shared ARES/CBCR words, the exact Q16 upper endpoint, unknown inputs and restored pending deadlines are included. [The contract](npucc-sm8250.md) does not claim NPU/DSP command execution or an implemented NPU GDSC. Commit `d79052f306ec37a797d05c9e4b2f8f7ea69c0675` actually passed this gate (37/37, two completed transfers, two real profile rejections), all 63 component gates, four Linux boots and the independent A77/UFS job. [The receipt](../evidence/wholeboard-20261123-a47/public-ci-d790.json) binds the inspected artifact and exact source; the older df667 receipt remains a separate 66-gate result.
+
+## MPM counter and concurrent SMMUv2 increments
+
+The `mpm2-sleep-counter` gate requires 17 actual compiled-device checks, two completed process migrations and one explicitly modified-stream rejection. It verifies a single four-byte read-only register at 32768 Hz, exact fractional boundaries, wrap, different destination time origins, reset continuity and paused host-time behavior. Its modified-frequency stream is a corruption test, not a migration between two supported configurations. [The contract](mpm2-sleep-counter.md) distinguishes cold/reset reference policies from measured hardware.
+
+The `smmuv2-migration` gate preserves the default branch's 18-check test and version-2 geometry contract. It requires four recorded attempts: two successful transfers and two incompatible SMR-capacity rejections. The default branch and its original evidence remain intact; this combined source must pass its own 65 + 4 plan; previous successes do not attest the new combination. See [SMMUv2 migration](smmuv2-migration.md).
 
 ## Gates
 
-The current public plan has **67 gates: 63 component/parser gates and four
+The current public plan has **69 gates: 65 component/parser gates and four
 Linux boots**, plus the separate A77 and PCI UFS compatibility job. The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
@@ -43,6 +49,8 @@ pass does not attest newly added devices.
 | GENI UART | 14 register/FIFO/IRQ/reset groups and 6 actual migration checks |
 | GCC and GENI wiring | 19 GCC groups, 5 GCC migration checks, 6 clock/reset groups and 4 wired migration checks |
 | Pinned Kona GCC supplements | Exact three-source regeneration of both generated files; CPUSS 11 checks and USB PIPE mux 15 checks, including real v3 transfers and explicit old-version rejection; no USB PHY execution claim |
+| MPM sleep counter | 17 checks; exact 32768 Hz, one read-only word, reset continuity, two actual migrations and one deliberately modified-stream rejection |
+| SMMUv2 migration | 18 checks; geometry-bound VMState 2, two completed process migrations and two incompatible SMR capacity rejections |
 | NPUCC | 37 checks across three physical banks, actual Clock outputs, source-bound CRC/dividers, two completed migrations and two profile rejections; full NPU/DSP execution remains outside scope |
 | GPUCC | 30 actual digital PLL/RCG/branch/reset checks, two completed migrations and two profile rejections; actual Clock providers and sparse ownership boundaries |
 | GPU CX and GX power domains | CX 26 checks with 9 migration attempts (6 completed, 3 rejected); GX 37 checks with 12 attempts (8 completed, 4 rejected); explicit digital reference states only |
@@ -176,3 +184,7 @@ Commit `a8136d1b1871d5a90aced67cc269dfb312be5c65` actually passed 61 component/p
 ## Frozen GPUCC-inclusive df667 result
 
 [The 66-gate receipt](../evidence/wholeboard-20261123-a47/public-ci-df667.json) records 62/62 component gates, 4/4 Linux boots and the separate A77/UFS success. Actual ZIP member SHA256 is `654d2eed0cd057028b68f1dba87e4bde49d6e60431538ed991f624de9dba08a0`. The first db3 GPUCC test failed because core invalid-access diagnostics were not enabled; [that failure and the unchanged-binary corrected test](../evidence/wholeboard-20261123-a47/gpucc-fixture-fix.json) remain distinct from this later complete run. [The matching production-kernel/full-DT run](../evidence/wholeboard-20261123-a47/native-df667.json) registers GCC and GPUCC, keeps SMEM 23/23 and the AOP reference exchange, then panics at NPUCC `0x09980000`. GPU command execution, full native-DT userspace and Android remain unpassed.
+
+## Frozen NPUCC-inclusive d790 result
+
+[The 67-gate receipt](../evidence/wholeboard-20261123-a47/public-ci-d790.json) records 63/63 component gates, 4/4 Linux boots and independent A77/UFS success. Actual board ZIP member SHA256 is `5e508e06b6ed66b264c1559a3e29a7ea9e9d6574950db5a81e5cf022252b29ba`. Both aggregate source-clean receipts and six selected component receipts were read from that ZIP. [The matching production-Image/full-DT run](../evidence/wholeboard-20261123-a47/native-d790.json) registers GCC, GPUCC and NPUCC, retains SMEM 23/23 and the AOP reference exchange, then faults in `boot_stats_init+0x14c`. Pinned public source and the actual DT identify the MPM counter candidate at `0x0c221000`, 32768 Hz; the recorded fault VA was not independently translated. VIDEOCC was deferred for an unavailable bandwidth-voting bus driver. Full native-DT userspace, Android and GPU/NPU command execution remain unpassed.

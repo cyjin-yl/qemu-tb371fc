@@ -1,0 +1,313 @@
+{
+  "schema": "tb371fc-github-ci-log-review-v1",
+  "kind": "authored-sanitized-ci-summary",
+  "reviewed_commit": "408d82ae4acc0fce05d16d3f17ee3123eda82ab4",
+  "reviewed_source_tree": "ab84f1ad2ad1f576331b7ee5dfb3f3dc6af8fea3",
+  "evidence_basis": {
+    "remote_source": "GitHub Actions job logs and workflow/job/artifact REST metadata",
+    "artifact_zip_downloaded": false,
+    "artifact_member_files_read": false,
+    "local_worktree_or_remote_device_consulted": false,
+    "scope": "Only allowlisted job conclusions, gate output, checked source requirements, public Linux metadata, archive identities and source links are retained.",
+    "count_method": "53 component/validation gates plus four Linux gates are separate successful runner invocations; 57 is their sum, not a separate all-suite execution.",
+    "nested_gate_count_method": "GDSC and SMEM counts are enforced by the checked-in runner and a successful gate log line; their individual artifact JSON files were not read during this review."
+  },
+  "run": {
+    "id": 45164018326,
+    "attempt": 1,
+    "event": "push",
+    "branch": "tb371fc-verified-gdsc-20261123",
+    "url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45164018326",
+    "status": "completed",
+    "conclusion": "success",
+    "created_utc": "2026-11-23T11:18:36Z",
+    "updated_utc": "2026-11-23T11:26:27Z"
+  },
+  "board": {
+    "job_id": 137656400698,
+    "job_url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45164018326/job/137656400698",
+    "conclusion": "success",
+    "components": {
+      "passed": true,
+      "passed_gates": 53,
+      "expected_gates": 53,
+      "elapsed_seconds": 54.967,
+      "qemu_unchanged": true,
+      "passed_gate_names": [
+        "ci-verdict-unit",
+        "board-profile-unit",
+        "machine-validator-unit",
+        "dt-inventory-unit",
+        "hardware-sysfs-unit",
+        "guest-result-unit",
+        "tlmm-map-unit",
+        "live-machine-profile",
+        "geni-registers",
+        "geni-migration",
+        "gcc-registers",
+        "gcc-migration",
+        "geni-clock-reset",
+        "geni-clock-migration",
+        "counter-arithmetic",
+        "mmio-timer-exact",
+        "mmio-timer-legacy",
+        "cpu-counter-exact",
+        "cpu-counter-legacy",
+        "mmio-timer-migration",
+        "mmio-timer-legacy-migration",
+        "reject-exact-to-legacy",
+        "reject-legacy-to-exact",
+        "cpu-timer-migration",
+        "cpu-timer-control",
+        "cpu-irq-realtime",
+        "cpu-irq-exact-icount",
+        "cpu-irq-legacy-icount",
+        "smmuv2-c-qtest",
+        "tlmm-c-qtest",
+        "pdc-c-qtest",
+        "rpmh-reference",
+        "rpmh-reference-migration",
+        "rpmh-display",
+        "rpmh-display-migration",
+        "qsee-notification",
+        "qsee-notification-migration",
+        "tcsr-mutex",
+        "refgen-request",
+        "aop-msgram",
+        "gpu-gdsc",
+        "smem-reference-handoff",
+        "dcc-operations",
+        "ufs-register-dma",
+        "watchdog-registers",
+        "watchdog-migration",
+        "boot-resources",
+        "ipcc-messages",
+        "dcc-capture",
+        "spmi-pmic-arb",
+        "spmi-pdc-gic-route",
+        "tlmm-migration",
+        "pdc-migration"
+      ]
+    },
+    "linux": {
+      "passed": true,
+      "passed_gates": 4,
+      "expected_gates": 4,
+      "elapsed_seconds": 5.156,
+      "qemu_unchanged": true,
+      "passed_gate_names": [
+        "linux-console-userspace",
+        "linux-console-empty-ufs",
+        "linux-ufs-smmu",
+        "linux-ufs-rpmh"
+      ],
+      "input": {
+        "version": "6.12.114",
+        "source_url": "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.114.tar.xz",
+        "source_tar_sha256": "7a8589912bd7a8adb07fed074283652cf482a35facef8954554654f0154b4af3",
+        "image_sha256": "bc46a7b6e7887aa4ad8a59ca34a4b1141903412e2bd94ce3536fe59eb36e32d7",
+        "image_bytes": 4450312,
+        "patches_applied_by_script": []
+      },
+      "scope": "Public unpatched upstream Linux, generated DT and synthetic validation inputs. No production kernel, complete native DT or Android userspace acceptance is established."
+    },
+    "total_public_gate_invocations_passed": 57,
+    "successful_gates_with_source_enforced_counts": [
+      {
+        "name": "gpu-gdsc",
+        "checks": 29,
+        "migration_outcomes": 10,
+        "all_passed": true,
+        "source": "https://github.com/cyjin-yl/qemu-tb371fc/blob/408d82ae4acc0fce05d16d3f17ee3123eda82ab4/tb371fc/scripts/ci_device_tests.py",
+        "log_verdict": "PASS gpu-gdsc",
+        "count_provenance": "Successful gate plus runner validation of checks and migrations lengths; no artifact result JSON downloaded."
+      },
+      {
+        "name": "smem-reference-handoff",
+        "checks": 22,
+        "migration_outcomes": 4,
+        "all_passed": true,
+        "guest_cpu_executed": false,
+        "native_sbl_captured": false,
+        "remote_firmware_emulated": false,
+        "source": "https://github.com/cyjin-yl/qemu-tb371fc/blob/408d82ae4acc0fce05d16d3f17ee3123eda82ab4/tb371fc/scripts/ci_device_tests.py",
+        "log_verdict": "PASS smem-reference-handoff",
+        "migration_scope": "Two successful same-profile transfers and two expected profile-mismatch rejections, as enforced by the tested script; not four successful migrations.",
+        "count_provenance": "Successful gate plus runner validation of checks, migrations and declared scope; no artifact result JSON downloaded."
+      }
+    ],
+    "qemu_binary_sha256": null,
+    "qemu_binary_sha256_status": "Not printed in the retrieved job log. The job redirects sha256sum output to tb371fc-results/qemu.sha256; that artifact member was not downloaded or read.",
+    "qemu_unchanged_scope": "Each separate component and Linux runner summary reports qemu_unchanged=true. No unprinted binary digest is inferred."
+  },
+  "generic_a77_and_pci": {
+    "job_id": 137656401343,
+    "job_url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45164018326/job/137656401343",
+    "conclusion": "success",
+    "a77": {
+      "passed_guest_checks": 852,
+      "configurations": 9,
+      "variants": [
+        {
+          "name": "default",
+          "passed_checks": 94
+        },
+        {
+          "name": "observed-revidr",
+          "passed_checks": 94
+        },
+        {
+          "name": "l2-128k",
+          "passed_checks": 94
+        },
+        {
+          "name": "l2-256k",
+          "passed_checks": 94
+        },
+        {
+          "name": "l3-512k",
+          "passed_checks": 95
+        },
+        {
+          "name": "l3-1m",
+          "passed_checks": 95
+        },
+        {
+          "name": "l3-2m",
+          "passed_checks": 95
+        },
+        {
+          "name": "l3-4m",
+          "passed_checks": 95
+        },
+        {
+          "name": "crypto-off",
+          "passed_checks": 96
+        }
+      ],
+      "invalid_configurations_rejected": 2,
+      "invalid_configurations": [
+        ",l2-cache-size=1M",
+        ",l3-cache-size=128K"
+      ],
+      "terminal_log_verdict": "Verified 852 real guest checks and 2 rejected CPU configurations",
+      "scope": "Architectural instruction/ID/PMU and reference cache-description probes, not native cache-size/timing/DSU/performance measurements."
+    },
+    "ufs_pci": {
+      "passed": true,
+      "executed_cases": 15,
+      "expected_cases": 15,
+      "passed_cases": [
+        "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/reg-read",
+        "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/init",
+        "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-read-write",
+        "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-read-write",
+        "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/no-prdt",
+        "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/sync-cache",
+        "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/long-prdt",
+        "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/short-prdt",
+        "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-cq-wraparound",
+        "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-flag",
+        "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-attribute",
+        "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-desciptor",
+        "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-init",
+        "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-read-write",
+        "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/hid"
+      ],
+      "elapsed_seconds": 7.313,
+      "skips_observed_in_case_output": 0,
+      "runner_source": "https://github.com/cyjin-yl/qemu-tb371fc/blob/408d82ae4acc0fce05d16d3f17ee3123eda82ab4/tb371fc/scripts/run_ufs_pci_compat.py",
+      "scope": "Shared UFS core and PCI transport regression using generic virt/PCI, separate from the TB371FC board."
+    },
+    "qemu_binary_sha256": null,
+    "qos_test_binary_sha256": null,
+    "binary_hash_status": "Neither executable SHA256 appears in the retrieved job log. The archive ZIP SHA256 below must not be used as either executable's SHA256."
+  },
+  "artifacts": [
+    {
+      "id": 14813532760,
+      "name": "tb371fc-public-gates-408d82ae4acc0fce05d16d3f17ee3123eda82ab4",
+      "bytes": 32981491,
+      "zip_sha256": "7c7812bf16b93e92b04574c1b0900d14e771ff96702fec590ff9be0c05e8c2de",
+      "digest_scope": "GitHub artifact ZIP archive, not an individual binary or member file",
+      "download_url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45164018326/artifacts/14813532760",
+      "created_utc": "2026-11-23T11:26:21Z",
+      "expires_utc": "2026-12-07T11:26:16Z",
+      "expired_at_review": false,
+      "downloaded_in_this_review": false
+    },
+    {
+      "id": 14812918252,
+      "name": "tb371fc-a77-gates-408d82ae4acc0fce05d16d3f17ee3123eda82ab4",
+      "bytes": 28318405,
+      "zip_sha256": "697a7a2039fe4923c64b6d752efb2f308942a38a78be1ed21120461341086dbf",
+      "digest_scope": "GitHub artifact ZIP archive, not an individual binary or member file",
+      "download_url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45164018326/artifacts/14812918252",
+      "created_utc": "2026-11-23T11:23:33Z",
+      "expires_utc": "2026-12-07T11:23:30Z",
+      "expired_at_review": false,
+      "downloaded_in_this_review": false
+    }
+  ],
+  "initial_ci_failure_preserved": {
+    "head_sha": "28194623740c1e50fa100bdf7101c586b0cd0fd7",
+    "run_id": 45162621780,
+    "run_url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45162621780",
+    "overall_run_conclusion": "cancelled",
+    "board_job_id": 137651571776,
+    "board_job_conclusion": "failure",
+    "components": {
+      "passed": false,
+      "passed_gates": 52,
+      "expected_gates": 53,
+      "elapsed_seconds": 105.388,
+      "qemu_unchanged": true
+    },
+    "failed_gate_names": [
+      "gpu-gdsc"
+    ],
+    "smem_gate_log_verdict": "PASS smem-reference-handoff",
+    "linux_kernel_build_and_linux_gate_steps": "skipped",
+    "cpu_job_id": 137651572269,
+    "cpu_job_conclusion": "cancelled",
+    "cpu_and_pci_gate_steps": "skipped",
+    "correction": {
+      "commit": "408d82ae4acc0fce05d16d3f17ee3123eda82ab4",
+      "commit_url": "https://github.com/cyjin-yl/qemu-tb371fc/commit/408d82ae4acc0fce05d16d3f17ee3123eda82ab4",
+      "changed_file": "tb371fc/tests/test_gdsc.py",
+      "operation": "Use the required QMP human-monitor-command argument name command-line instead of Python identifier command_line.",
+      "source_diff_only_change": "dict(command_line='info mtree -f') -> {'command-line': 'info mtree -f'}",
+      "attribution_scope": "The first job log exposes the failing gpu-gdsc gate and aggregate 52/53 result, not its hidden per-case traceback. The correcting commit's sole file diff identifies the harness parameter correction; no raw artifact failure traceback was downloaded."
+    },
+    "board_failure_artifact": {
+      "id": 14812911817,
+      "name": "tb371fc-public-gates-28194623740c1e50fa100bdf7101c586b0cd0fd7",
+      "bytes": 28804353,
+      "zip_sha256": "523046894ee50c626db383eb10ef50db4153d0d5e8b99fb3d05191201f6a7592",
+      "download_url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45162621780/artifacts/14812911817",
+      "downloaded_in_this_review": false
+    },
+    "interpretation": "Retained failure: 52/53 is not a passing component run. Overall cancellation and skipped later jobs do not turn it into a pass; SMEM's explicit PASS remains an independently observed gate result."
+  },
+  "remaining_acceptance_boundaries": [
+    "No original production kernel with the full native DT was run by this public CI workflow.",
+    "No original Android userspace boot, native SBL/SMEM capture or remote firmware service is validated by this receipt.",
+    "GPU GDSC request/status behavior is not Adreno execution, display output or complete power-management equivalence.",
+    "SMEM reference tests use QTest RAM/MMIO allocation fixtures; guest_cpu_executed is false.",
+    "Archive identities and successful upload metadata do not substitute for reading and hashing individual artifact binaries."
+  ],
+  "sources": {
+    "successful_run_api": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/runs/45164018326",
+    "successful_jobs_api": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/runs/45164018326/jobs",
+    "board_job_log_api": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/jobs/137656400698/logs",
+    "cpu_job_log_api": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/jobs/137656401343/logs",
+    "successful_artifacts_api": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/runs/45164018326/artifacts",
+    "initial_board_job_log_api": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/jobs/137651571776/logs",
+    "initial_jobs_api": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/runs/45162621780/jobs",
+    "initial_artifacts_api": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/runs/45162621780/artifacts",
+    "runner": "https://github.com/cyjin-yl/qemu-tb371fc/blob/408d82ae4acc0fce05d16d3f17ee3123eda82ab4/tb371fc/scripts/ci_device_tests.py",
+    "smem_gate": "https://github.com/cyjin-yl/qemu-tb371fc/blob/408d82ae4acc0fce05d16d3f17ee3123eda82ab4/tb371fc/tests/test_smem_reference.py",
+    "gdsc_gate": "https://github.com/cyjin-yl/qemu-tb371fc/blob/408d82ae4acc0fce05d16d3f17ee3123eda82ab4/tb371fc/tests/test_gdsc.py"
+  },
+  "reviewed_utc": "2026-11-23T11:38:22Z"
+}

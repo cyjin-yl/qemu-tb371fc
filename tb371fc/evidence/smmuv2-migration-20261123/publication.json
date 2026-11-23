@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "kind": "tb371fc-smmuv2-migration-publication",
+  "date": "2026-11-23",
+  "public_base_commit": "5fd52c120058fb2addedfa74fe5c855b138b590f",
+  "test_commit": "f61166b693162edb369222a9652344e49e883dfd",
+  "before": {
+    "report": "before.json",
+    "binary_sha256": "178bace28c84bced9471b824d413feb18e76ddb15212ec32412ad7a7ec32a675",
+    "passed_positive_checks": 16,
+    "incompatible_receiver_rejected": false,
+    "source_and_destination_status": "completed"
+  },
+  "initial_ci": {
+    "run_id": 45178176417,
+    "url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45178176417",
+    "branch_head": "523d86936e63822c3adb14846821d03420042847",
+    "tested_merge_commit": "de57584b87623beae8082e654b9f032bcfa549c4",
+    "board_job_id": 137704919900,
+    "cpu_job_id": 137704919518,
+    "board_job_conclusion": "failure",
+    "cpu_job_conclusion": "success",
+    "existing_component_gates_passed": 42,
+    "new_component_gate_passed": false,
+    "failure_report": "first-ci-diagnostic-failure.json",
+    "failure_reason": "Receiver correctly rejected incompatible geometry, but the test expected a diagnostic field name not emitted by QEMU's uint32_equal loader.",
+    "artifact_id": 14818938411,
+    "artifact_sha256": "b9c54599003a2e81159a5ec1890ee79699d5a4e09d5b46e622c2db026a0915a2"
+  },
+  "after": {
+    "report": "after.json",
+    "execution_environment": "doesvm CT102 / qemu-tb371fc-dev",
+    "binary_origin": "Unchanged binary from the initial CI artifact; model code unchanged by the diagnostic-only test correction.",
+    "binary_sha256": "252c72ecb08b56ebb51c214d4695e9632f0a397dbc209ddfbbd5e40b1122c642",
+    "test_sha256": "3b11bab007060d80dfc24ac577d02d51b8320fac7e4e151a707c21bea245721c",
+    "passed_checks": 18,
+    "all_passed": true,
+    "actual_transfers": 2,
+    "incompatible_receivers_rejected": 2
+  },
+  "contract": {
+    "vmstate_version": 2,
+    "minimum_vmstate_version": 2,
+    "geometry_equal_fields": [
+      "mmio_size",
+      "num_context_banks",
+      "num_smrs"
+    ],
+    "negative_geometry_pairs_tested": [
+      {
+        "field": "num_smrs",
+        "source": 128,
+        "destination": 64
+      },
+      {
+        "field": "num_smrs",
+        "source": 64,
+        "destination": 128
+      }
+    ],
+    "other_geometry_fields_negative_runtime_tested": false,
+    "legacy_stream_negative_runtime_tested": false
+  },
+  "limits": {
+    "ufs_enabled": false,
+    "whole_board_migration_verified": false,
+    "in_flight_storage_migration_verified": false,
+    "external_iotlb_notifier_verified": false,
+    "gpu_rendering_verified": false,
+    "native_dt_boot_verified": false,
+    "android_boot_verified": false,
+    "native_hardware_equivalence_verified": false
+  },
+  "preservation": "The before, first-CI failure and after reports retain their actual verdicts. The fixed binary and test script have different source revisions, explicitly identified above. This publication does not convert the failed first CI run into a success."
+}

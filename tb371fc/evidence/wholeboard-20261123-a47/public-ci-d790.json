@@ -1,0 +1,1667 @@
+{
+  "schema_version": 1,
+  "source_commit": "d79052f306ec37a797d05c9e4b2f8f7ea69c0675",
+  "source_tree": "88c5017e0b94d684b6cadec2f2258969cf0cb561",
+  "scope": "Public component/receipt tests and four clean Linux boots; separate A77/shared-UFS job. This is not a full native-DT or Android boot receipt.",
+  "workflow": {
+    "id": 45193131352,
+    "url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45193131352",
+    "board_job": {
+      "id": 137756638025,
+      "conclusion": "success"
+    },
+    "cpu_job": {
+      "id": 137756637522,
+      "conclusion": "success"
+    }
+  },
+  "board_artifact": {
+    "source": "d79052f306ec37a797d05c9e4b2f8f7ea69c0675",
+    "workflow_run": 45193131352,
+    "artifact_id": 14828265176,
+    "artifact_sha256": "d84f083a79f1a7f0230bd94ff790429107d0c3dd77aad9cfcc94c468cc2de7dd",
+    "qemu_sha256": "5e508e06b6ed66b264c1559a3e29a7ea9e9d6574950db5a81e5cf022252b29ba",
+    "suites": [
+      {
+        "suite": "components",
+        "passed": true,
+        "passed_gates": 63,
+        "expected_gates": 63,
+        "qemu_sha256": "5e508e06b6ed66b264c1559a3e29a7ea9e9d6574950db5a81e5cf022252b29ba",
+        "qemu_unchanged": true
+      },
+      {
+        "suite": "linux",
+        "passed": true,
+        "passed_gates": 4,
+        "expected_gates": 4,
+        "qemu_sha256": "5e508e06b6ed66b264c1559a3e29a7ea9e9d6574950db5a81e5cf022252b29ba",
+        "qemu_unchanged": true
+      }
+    ]
+  },
+  "source_clean_verified_from_both_suite_receipts": true,
+  "board_binary_hash_verified_by_reading_zip_member": true,
+  "total_board_gates": 67,
+  "plan_order": [
+    {
+      "index": 1,
+      "total": 63,
+      "name": "ci-verdict-unit"
+    },
+    {
+      "index": 2,
+      "total": 63,
+      "name": "smem-observer-unit"
+    },
+    {
+      "index": 3,
+      "total": 63,
+      "name": "aop-observer-unit"
+    },
+    {
+      "index": 4,
+      "total": 63,
+      "name": "board-profile-unit"
+    },
+    {
+      "index": 5,
+      "total": 63,
+      "name": "machine-validator-unit"
+    },
+    {
+      "index": 6,
+      "total": 63,
+      "name": "dt-inventory-unit"
+    },
+    {
+      "index": 7,
+      "total": 63,
+      "name": "hardware-sysfs-unit"
+    },
+    {
+      "index": 8,
+      "total": 63,
+      "name": "guest-result-unit"
+    },
+    {
+      "index": 9,
+      "total": 63,
+      "name": "console-boot-verdict-unit"
+    },
+    {
+      "index": 10,
+      "total": 63,
+      "name": "tlmm-map-unit"
+    },
+    {
+      "index": 11,
+      "total": 63,
+      "name": "gcc-source-generation"
+    },
+    {
+      "index": 12,
+      "total": 63,
+      "name": "live-machine-profile"
+    },
+    {
+      "index": 13,
+      "total": 63,
+      "name": "geni-registers"
+    },
+    {
+      "index": 14,
+      "total": 63,
+      "name": "geni-migration"
+    },
+    {
+      "index": 15,
+      "total": 63,
+      "name": "gcc-registers"
+    },
+    {
+      "index": 16,
+      "total": 63,
+      "name": "gcc-migration"
+    },
+    {
+      "index": 17,
+      "total": 63,
+      "name": "gcc-cpuss-branch"
+    },
+    {
+      "index": 18,
+      "total": 63,
+      "name": "gcc-usb-pipe-mux"
+    },
+    {
+      "index": 19,
+      "total": 63,
+      "name": "geni-clock-reset"
+    },
+    {
+      "index": 20,
+      "total": 63,
+      "name": "geni-clock-migration"
+    },
+    {
+      "index": 21,
+      "total": 63,
+      "name": "counter-arithmetic"
+    },
+    {
+      "index": 22,
+      "total": 63,
+      "name": "mmio-timer-exact"
+    },
+    {
+      "index": 23,
+      "total": 63,
+      "name": "mmio-timer-legacy"
+    },
+    {
+      "index": 24,
+      "total": 63,
+      "name": "cpu-counter-exact"
+    },
+    {
+      "index": 25,
+      "total": 63,
+      "name": "cpu-counter-legacy"
+    },
+    {
+      "index": 26,
+      "total": 63,
+      "name": "mmio-timer-migration"
+    },
+    {
+      "index": 27,
+      "total": 63,
+      "name": "mmio-timer-legacy-migration"
+    },
+    {
+      "index": 28,
+      "total": 63,
+      "name": "reject-exact-to-legacy"
+    },
+    {
+      "index": 29,
+      "total": 63,
+      "name": "reject-legacy-to-exact"
+    },
+    {
+      "index": 30,
+      "total": 63,
+      "name": "cpu-timer-migration"
+    },
+    {
+      "index": 31,
+      "total": 63,
+      "name": "cpu-timer-control"
+    },
+    {
+      "index": 32,
+      "total": 63,
+      "name": "cpu-irq-realtime"
+    },
+    {
+      "index": 33,
+      "total": 63,
+      "name": "cpu-irq-exact-icount"
+    },
+    {
+      "index": 34,
+      "total": 63,
+      "name": "cpu-irq-legacy-icount"
+    },
+    {
+      "index": 35,
+      "total": 63,
+      "name": "smmuv2-c-qtest"
+    },
+    {
+      "index": 36,
+      "total": 63,
+      "name": "tlmm-c-qtest"
+    },
+    {
+      "index": 37,
+      "total": 63,
+      "name": "pdc-c-qtest"
+    },
+    {
+      "index": 38,
+      "total": 63,
+      "name": "rpmh-reference"
+    },
+    {
+      "index": 39,
+      "total": 63,
+      "name": "rpmh-reference-migration"
+    },
+    {
+      "index": 40,
+      "total": 63,
+      "name": "rpmh-display"
+    },
+    {
+      "index": 41,
+      "total": 63,
+      "name": "rpmh-display-migration"
+    },
+    {
+      "index": 42,
+      "total": 63,
+      "name": "qsee-notification"
+    },
+    {
+      "index": 43,
+      "total": 63,
+      "name": "qsee-notification-migration"
+    },
+    {
+      "index": 44,
+      "total": 63,
+      "name": "tcsr-mutex"
+    },
+    {
+      "index": 45,
+      "total": 63,
+      "name": "refgen-request"
+    },
+    {
+      "index": 46,
+      "total": 63,
+      "name": "gpucc-sm8250"
+    },
+    {
+      "index": 47,
+      "total": 63,
+      "name": "npucc-sm8250"
+    },
+    {
+      "index": 48,
+      "total": 63,
+      "name": "gpu-gx-gdsc"
+    },
+    {
+      "index": 49,
+      "total": 63,
+      "name": "gpu-cx-gdsc"
+    },
+    {
+      "index": 50,
+      "total": 63,
+      "name": "aop-reference-peer"
+    },
+    {
+      "index": 51,
+      "total": 63,
+      "name": "aop-msgram"
+    },
+    {
+      "index": 52,
+      "total": 63,
+      "name": "smem-reference-handoff"
+    },
+    {
+      "index": 53,
+      "total": 63,
+      "name": "dcc-operations"
+    },
+    {
+      "index": 54,
+      "total": 63,
+      "name": "ufs-register-dma"
+    },
+    {
+      "index": 55,
+      "total": 63,
+      "name": "watchdog-registers"
+    },
+    {
+      "index": 56,
+      "total": 63,
+      "name": "watchdog-migration"
+    },
+    {
+      "index": 57,
+      "total": 63,
+      "name": "boot-resources"
+    },
+    {
+      "index": 58,
+      "total": 63,
+      "name": "ipcc-messages"
+    },
+    {
+      "index": 59,
+      "total": 63,
+      "name": "dcc-capture"
+    },
+    {
+      "index": 60,
+      "total": 63,
+      "name": "spmi-pmic-arb"
+    },
+    {
+      "index": 61,
+      "total": 63,
+      "name": "spmi-pdc-gic-route"
+    },
+    {
+      "index": 62,
+      "total": 63,
+      "name": "tlmm-migration"
+    },
+    {
+      "index": 63,
+      "total": 63,
+      "name": "pdc-migration"
+    },
+    {
+      "index": 1,
+      "total": 4,
+      "name": "linux-console-userspace"
+    },
+    {
+      "index": 2,
+      "total": 4,
+      "name": "linux-console-empty-ufs"
+    },
+    {
+      "index": 3,
+      "total": 4,
+      "name": "linux-ufs-smmu"
+    },
+    {
+      "index": 4,
+      "total": 4,
+      "name": "linux-ufs-rpmh"
+    }
+  ],
+  "selected_component_receipts": {
+    "tb371fc-results/components/17-gcc-usb-pipe-mux/fixtures/data/result.json": {
+      "schema": "tb371fc-gcc-usb-mux-v1",
+      "passed": true,
+      "expected_checks": 15,
+      "qemu_sha256": "5e508e06b6ed66b264c1559a3e29a7ea9e9d6574950db5a81e5cf022252b29ba",
+      "script_sha256": "3101bbb9eae93606d1eaf50a09c01a82c7fe005450c24ed6ca60454b4809af10",
+      "vmstate_version": 3,
+      "external_parent_inputs": 83,
+      "expected_completed_migrations": 1,
+      "expected_rejected_migrations": 1,
+      "guest_cpu_executed": false,
+      "usb_phy_emulated": false,
+      "native_kernel_probe_observed": false,
+      "scope": "Actual mux/Clock/gate transactions and migration; fixture Hz are explicit QTest inputs, not physical measurements",
+      "binary_unchanged": true,
+      "completed_migrations": 1,
+      "rejected_migration_attempts": 1,
+      "elapsed_seconds": 0.6154523650000101,
+      "list_details": {
+        "checks": {
+          "length": 15,
+          "entries": [
+            {
+              "name": "cold_unknown_inputs_are_stopped",
+              "passed": true
+            },
+            {
+              "name": "independent_phy_sources_feed_their_muxes",
+              "passed": true
+            },
+            {
+              "name": "shared_test_source_fans_out",
+              "passed": true
+            },
+            {
+              "name": "xo_selection_uses_the_board_clock",
+              "passed": true
+            },
+            {
+              "name": "undefined_selector_has_no_parent",
+              "passed": true
+            },
+            {
+              "name": "live_phy_source_changes_propagate",
+              "passed": true
+            },
+            {
+              "name": "live_test_source_changes_follow_selection",
+              "passed": true
+            },
+            {
+              "name": "local_and_remote_requests_are_independent",
+              "passed": true
+            },
+            {
+              "name": "invalid_masks_preserve_selectors_and_rates",
+              "passed": true
+            },
+            {
+              "name": "reset_preserves_external_inputs_and_remote_request",
+              "passed": true
+            },
+            {
+              "name": "fixture_hz_types_reject_invalid_values",
+              "passed": true
+            },
+            {
+              "name": "normal_tcg_exposes_no_fixture_inputs",
+              "passed": true
+            },
+            {
+              "name": "v3_restore_preserves_muxes_inputs_remote_vote_and_ram",
+              "passed": true
+            },
+            {
+              "name": "v3_destination_propagates_new_sources_and_independent_requests",
+              "passed": true
+            },
+            {
+              "name": "v2_header_is_rejected_before_new_clock_state_is_decoded",
+              "passed": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 1,
+          "entries": [
+            {
+              "name": "v3_mux_input_and_vote_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed"
+            }
+          ]
+        },
+        "rejected_migrations": {
+          "length": 1,
+          "entries": [
+            {
+              "name": "advertised_v2_rejected_before_field_decode",
+              "passed": true,
+              "destination_exit": 1
+            }
+          ]
+        }
+      }
+    },
+    "tb371fc-results/components/45-gpucc-sm8250/fixtures/data/result.json": {
+      "schema": "tb371fc-gpucc-sm8250-v1",
+      "passed": true,
+      "expected_checks": 30,
+      "expected_completed_migrations": 2,
+      "expected_rejected_migrations": 2,
+      "vmstate_version": 1,
+      "qemu_sha256": "5e508e06b6ed66b264c1559a3e29a7ea9e9d6574950db5a81e5cf022252b29ba",
+      "script_sha256": "3fde64d74406729714b4d5c86d21f745a918baf12475858217971c6bcce23967",
+      "register_count": 36,
+      "sparse_window_count": 7,
+      "branch_count": 15,
+      "reset_count": 5,
+      "input_clock_count": 15,
+      "guest_cpu_executed": false,
+      "native_kernel_probe_observed": false,
+      "gpu_execution_observed": false,
+      "android_boot_passed": false,
+      "scope": "Actual compiled-device QTest/QMP transactions, Clock providers, and migration of explicit digital reference state",
+      "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "binary_unchanged": true,
+      "duration_seconds": 1.362,
+      "list_details": {
+        "checks": {
+          "length": 30,
+          "entries": [
+            {
+              "name": "cold_reference_has_no_running_or_invented_clock",
+              "passed": true
+            },
+            {
+              "name": "actual_vendor_configure_vector_remains_in_standby",
+              "passed": true
+            },
+            {
+              "name": "lucid_lock_is_delayed_and_outputs_have_two_gates",
+              "passed": true
+            },
+            {
+              "name": "invalid_l_and_unqualified_analog_programming_cannot_lock",
+              "passed": true
+            },
+            {
+              "name": "calibration_survives_standby_and_real_reset_clears_it",
+              "passed": true
+            },
+            {
+              "name": "pll_latch_captures_shadow_and_requires_software_ack_clear",
+              "passed": true
+            },
+            {
+              "name": "rcg_shadow_is_atomic_and_commits_at_the_reference_deadline",
+              "passed": true
+            },
+            {
+              "name": "rcg_hid_zero_one_and_fractional_divisor_follow_the_driver",
+              "passed": true
+            },
+            {
+              "name": "legal_unknown_rcg_source_latches_without_inventing_a_clock",
+              "passed": true
+            },
+            {
+              "name": "undefined_source_and_mnd_mode_do_not_commit",
+              "passed": true
+            },
+            {
+              "name": "live_pll_feeds_both_gmu_branches",
+              "passed": true
+            },
+            {
+              "name": "actual_gcc_provider_changes_propagate_through_board_clock_links",
+              "passed": true
+            },
+            {
+              "name": "every_branch_has_independent_local_and_remote_requests",
+              "passed": true
+            },
+            {
+              "name": "unknown_branch_parent_stays_stopped_and_live_qdss_input_fans_out",
+              "passed": true
+            },
+            {
+              "name": "reset_registers_drive_five_distinct_gpio_outputs",
+              "passed": true
+            },
+            {
+              "name": "reserved_status_and_invalid_accesses_are_atomic",
+              "passed": true
+            },
+            {
+              "name": "read_only_feedback_cannot_be_forged_by_guest_writes",
+              "passed": true
+            },
+            {
+              "name": "reset_cancels_pending_work_but_preserves_external_inputs_and_votes",
+              "passed": true
+            },
+            {
+              "name": "qtest_fixture_types_and_connected_providers_are_protected",
+              "passed": true
+            },
+            {
+              "name": "late_timer_dispatch_preserves_the_original_latch_and_relock_deadlines",
+              "passed": true
+            },
+            {
+              "name": "clearing_update_cancels_captured_pll_and_rcg_requests",
+              "passed": true
+            },
+            {
+              "name": "default_profile_rejects_all_defined_mmio_and_stays_uninitialized",
+              "passed": true
+            },
+            {
+              "name": "normal_tcg_exposes_no_fixture_setters",
+              "passed": true
+            },
+            {
+              "name": "sparse_gpucc_windows_preserve_existing_cx_and_gx_owners",
+              "passed": true
+            },
+            {
+              "name": "v1_lock_pending_state_inputs_gpio_and_ram_restore",
+              "passed": true
+            },
+            {
+              "name": "v1_lock_remaining_3000ns_and_destination_requests_resume",
+              "passed": true
+            },
+            {
+              "name": "v1_independent_captured_requests_survive_migration",
+              "passed": true
+            },
+            {
+              "name": "v1_latch_rcg_deadlines_and_new_clock_values_resume_after_restore",
+              "passed": true
+            },
+            {
+              "name": "reference_to_default_profile_is_rejected",
+              "passed": true
+            },
+            {
+              "name": "default_to_reference_profile_is_rejected",
+              "passed": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "v1_lock_pending_clock_input_vote_gpio_and_ram_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "0eafa8f4149d054dd54aad788252b2ca9c0473e4cda6f51caaef1a2c9023fe1c",
+              "snapshot_bytes": 2221946
+            },
+            {
+              "name": "v1_captured_pll_latch_and_rcg_shadow_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "9538f6fd5ab3de46848115add2ccbf360b550a342c7fe7bfe1a5d3e4a71cf36b",
+              "snapshot_bytes": 2221946
+            }
+          ]
+        },
+        "rejected_migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "reference_to_default_profile_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed"
+            },
+            {
+              "name": "default_to_reference_profile_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed"
+            }
+          ]
+        }
+      }
+    },
+    "tb371fc-results/components/46-npucc-sm8250/fixtures/data/result.json": {
+      "schema": "tb371fc-npucc-sm8250-v1",
+      "passed": true,
+      "expected_checks": 37,
+      "expected_completed_migrations": 2,
+      "expected_rejected_migrations": 2,
+      "vmstate_version": 1,
+      "qemu_sha256": "5e508e06b6ed66b264c1559a3e29a7ea9e9d6574950db5a81e5cf022252b29ba",
+      "script_sha256": "6e13fbe27f1b90e8a0c8936aa9c96a64797f485dc9c6e1489147eb8cd8cdb843",
+      "register_count": 95,
+      "sparse_window_count": 26,
+      "branch_count": 33,
+      "reset_count": 7,
+      "input_clock_count": 12,
+      "pll_count": 3,
+      "rcg_count": 6,
+      "output_clock_count": 45,
+      "guest_cpu_executed": false,
+      "native_kernel_probe_observed": false,
+      "npu_execution_observed": false,
+      "android_boot_passed": false,
+      "scope": "Actual compiled-device QTest/QMP transactions, real Clock periods, and migration of an explicit digital reference profile",
+      "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "binary_unchanged": true,
+      "duration_seconds": 5.099,
+      "list_details": {
+        "checks": {
+          "length": 37,
+          "entries": [
+            {
+              "name": "cold_reference_has_no_running_or_invented_clock",
+              "passed": true
+            },
+            {
+              "name": "actual_vendor_three_bank_configure_vector_remains_in_standby",
+              "passed": true
+            },
+            {
+              "name": "physically_separate_pll_banks_do_not_alias",
+              "passed": true
+            },
+            {
+              "name": "three_staggered_pll_lock_deadlines_are_independent",
+              "passed": true
+            },
+            {
+              "name": "every_pll_requires_both_output_gates_and_rejects_unknown_selection",
+              "passed": true
+            },
+            {
+              "name": "pll0_lock_and_even_output_do_not_depend_on_crc_programming",
+              "passed": true
+            },
+            {
+              "name": "crc_reference_vector_controls_only_the_divide_two_path",
+              "passed": true
+            },
+            {
+              "name": "postdivider_zero_means_divide_one_and_unknown_encodings_are_atomic",
+              "passed": true
+            },
+            {
+              "name": "v2_nominal_two_ghz_accepts_only_the_ceil_q16_endpoint",
+              "passed": true
+            },
+            {
+              "name": "unsupported_analog_recipe_stops_only_the_affected_pll",
+              "passed": true
+            },
+            {
+              "name": "three_captured_pll_latches_keep_old_outputs_until_ack_and_relock",
+              "passed": true
+            },
+            {
+              "name": "standby_reset_and_cancel_are_local_to_each_pll",
+              "passed": true
+            },
+            {
+              "name": "late_dispatch_uses_original_latch_deadlines_for_all_three_plls",
+              "passed": true
+            },
+            {
+              "name": "six_independent_rcgs_capture_shadow_and_latch_at_one_microsecond",
+              "passed": true
+            },
+            {
+              "name": "source_maps_route_pll_postdivider_crc_and_dsp_outputs",
+              "passed": true
+            },
+            {
+              "name": "hm_rcgs_are_separate_and_hm1_branches_follow_the_pinned_hm0_parent",
+              "passed": true
+            },
+            {
+              "name": "six_hid_fields_cover_bypass_integer_and_fractional_division",
+              "passed": true
+            },
+            {
+              "name": "undefined_source_codes_and_nonzero_mnd_modes_do_not_commit",
+              "passed": true
+            },
+            {
+              "name": "legal_unknown_input_can_latch_without_creating_a_frequency",
+              "passed": true
+            },
+            {
+              "name": "real_gcc_parent_clocks_propagate_through_board_links",
+              "passed": true
+            },
+            {
+              "name": "all_33_branches_have_independent_local_and_remote_requests",
+              "passed": true
+            },
+            {
+              "name": "unknown_external_branch_parents_remain_zero_and_shared_inputs_fan_out",
+              "passed": true
+            },
+            {
+              "name": "shared_ares_and_cbcr_bits_preserve_each_other_without_invented_gating",
+              "passed": true
+            },
+            {
+              "name": "seven_reset_outputs_follow_binding_order_and_shared_word_masks",
+              "passed": true
+            },
+            {
+              "name": "reserved_registers_masks_and_narrow_accesses_are_atomic",
+              "passed": true
+            },
+            {
+              "name": "read_only_feedback_cannot_be_forged_or_erased",
+              "passed": true
+            },
+            {
+              "name": "system_reset_cancels_all_pending_work_and_retains_external_requests",
+              "passed": true
+            },
+            {
+              "name": "qtest_fixture_types_and_connected_sources_are_protected",
+              "passed": true
+            },
+            {
+              "name": "default_profile_rejects_all_defined_mmio_and_stays_uninitialized",
+              "passed": true
+            },
+            {
+              "name": "normal_tcg_exposes_no_fixture_setters",
+              "passed": true
+            },
+            {
+              "name": "three_physical_banks_have_only_26_sparse_windows_and_leave_gdsc_unmapped",
+              "passed": true
+            },
+            {
+              "name": "v1_three_pending_plls_inputs_clock_gpio_and_ram_restore_before_mmio",
+              "passed": true
+            },
+            {
+              "name": "v1_three_distinct_lock_deadlines_fire_without_mmio_repair",
+              "passed": true
+            },
+            {
+              "name": "v1_nine_independent_captured_requests_restore_before_mmio",
+              "passed": true
+            },
+            {
+              "name": "v1_nine_captured_deadlines_and_new_input_changes_resume_without_mmio_repair",
+              "passed": true
+            },
+            {
+              "name": "reference_to_default_profile_is_rejected",
+              "passed": true
+            },
+            {
+              "name": "default_to_reference_profile_is_rejected",
+              "passed": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "v1_three_lock_deadlines_inputs_vote_gpio_and_ram_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "2a90e5255dc19f765ce2e1a7c2fdcd3112f89de3d652fff2233e58dc21267b9a",
+              "snapshot_bytes": 2221946
+            },
+            {
+              "name": "v1_three_pll_latches_six_rcg_requests_and_shadows_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "75ce225b73b7d57368fbc9ae1bb98568283c5fb386c4be40f47ecc0e2a94bf26",
+              "snapshot_bytes": 2221946
+            }
+          ]
+        },
+        "rejected_migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "reference_to_default_profile_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed"
+            },
+            {
+              "name": "default_to_reference_profile_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed"
+            }
+          ]
+        }
+      }
+    },
+    "tb371fc-results/components/47-gpu-gx-gdsc/fixtures/data/result.json": {
+      "schema_version": 1,
+      "suite": "GPU GX digital requests, isolation, reset and migration",
+      "expected_checks": 37,
+      "passed": true,
+      "all_passed": true,
+      "success": true,
+      "qemu_sha256": "5e508e06b6ed66b264c1559a3e29a7ea9e9d6574950db5a81e5cf022252b29ba",
+      "test_sha256": "7a127367a2eeddf67aff63e110e5d4aeb5acd432fa0253e00109a2707f1fdbc4",
+      "machine": "tb371fc,ufs-enabled=off,rpmh-profile=off",
+      "qom_path": "/machine/gpu-gx-gdsc",
+      "migration_expected_checks": 12,
+      "expected_migration_attempts": 12,
+      "socket_directories_retained": true,
+      "scope": "GPU GX GDSCR/clamp/reset software contract with explicit reference reset and injected hardware/external votes; no analog, GPU, TrustZone execution, or whole-board migration claim",
+      "completed_checks": 37,
+      "passed_checks": 37,
+      "completed_migration_attempts": 8,
+      "rejected_migration_attempts": 4,
+      "list_details": {
+        "checks": {
+          "length": 37,
+          "entries": [
+            {
+              "test": "default_reference_starts_collapsed",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "explicit_on_reference_starts_powered",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "downstream_software_enable_disable_read_modify_write",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "read_only_power_bit_cannot_override_votes",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "retain_ff_and_clock_wait_survive_power_changes",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "hardware_control_follows_external_input",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "hardware_input_is_ignored_in_software_mode",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "independent_vote_can_keep_software_collapsed_domain_powered",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "independent_vote_and_hardware_vote_release_independently",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "unknown_and_override_bits_are_rejected_without_partial_updates",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "subword_accesses_are_rejected_without_changing_registers",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "reset_restores_off_reference_but_preserves_external_inputs",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "reset_restores_on_reference_and_clears_retention_fields",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "elapsed_time_does_not_invent_a_hardware_vote",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "gx_does_not_replace_or_mutate_cx_controller",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "gx_clamp_and_two_reset_sources_have_digital_readback",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "gx_reserved_writes_are_atomic_and_reset_restores_reference",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "unknown_parent_does_not_become_power_good",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "known_off_parent_blocks_every_request_source",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "parent_changes_preserve_requests_and_isolation",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "default_unknown_rejects_all_three_windows",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "observed_clamp-io",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "observed_reset-asserted",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "observed_state-known",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "actual_rpmh_gfx_parent_is_independent_of_cx",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_software_on_with_retention_and_wait",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_hardware_mode_and_active_hardware_vote",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_independent_vote_while_hardware_vote_is_low",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_hidden_hardware_input_in_collapsed_software_mode",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_on_reference_preserves_later_reset_policy",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_unknown_parent_keeps_feedback_unknown",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_off_parent_keeps_live_request_off",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_none_to_reference_off_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_reference_off_to_none_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_gx_isolation_reset_and_control",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_off_reference_to_on_reference_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_on_reference_to_off_reference_rejected",
+              "status": "pass",
+              "passed": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 12,
+          "entries": [
+            {
+              "test": "migration_software_on_with_retention_and_wait",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_hardware_mode_and_active_hardware_vote",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_independent_vote_while_hardware_vote_is_low",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_hidden_hardware_input_in_collapsed_software_mode",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_on_reference_preserves_later_reset_policy",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_unknown_parent_keeps_feedback_unknown",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_off_parent_keeps_live_request_off",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_none_to_reference_off_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_reference_off_to_none_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_gx_isolation_reset_and_control",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_off_reference_to_on_reference_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_on_reference_to_off_reference_rejected",
+              "status": "pass",
+              "passed": true
+            }
+          ]
+        },
+        "migration_attempts": {
+          "length": 12,
+          "entries": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              "destination_exit": 1
+            },
+            {
+              "destination_exit": 1
+            },
+            {},
+            {
+              "destination_exit": 1
+            },
+            {
+              "destination_exit": 1
+            }
+          ]
+        }
+      }
+    },
+    "tb371fc-results/components/48-gpu-cx-gdsc/fixtures/data/result.json": {
+      "schema_version": 1,
+      "suite": "GPU CX GDSC normal/votable actual QTest",
+      "expected_checks": 26,
+      "migration_expected_checks": 8,
+      "expected_migration_attempts": 9,
+      "passed": true,
+      "all_passed": true,
+      "success": true,
+      "qemu_sha256": "5e508e06b6ed66b264c1559a3e29a7ea9e9d6574950db5a81e5cf022252b29ba",
+      "test_sha256": "f56b85ff6557c3d4c3fcd6a4fda93fb181a4f20a16c122c7b47fa35907da8d11",
+      "transport_sha256": "08754321c8bd6e361ea33f722bd0a4c813419e053618f4d4a48a9dd1bffaa1bf",
+      "machine": "tb371fc,ufs-enabled=off",
+      "qom_path": "/machine/gpu-cx-gdsc",
+      "socket_directories_retained": true,
+      "scope": "Two four-byte register windows; digital reference feedback; three-valued parent/votes; UFS disabled for component migration; no analogue/GPU/full-board claim",
+      "completed_migration_attempts": 6,
+      "rejected_migration_attempts": 3,
+      "completed_checks": 26,
+      "passed_checks": 26,
+      "list_details": {
+        "migration_attempts": {
+          "length": 9,
+          "entries": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              "destination_exit": 1
+            },
+            {
+              "destination_exit": 1
+            },
+            {
+              "destination_exit": 1
+            }
+          ]
+        },
+        "checks": {
+          "length": 26,
+          "entries": [
+            {
+              "test": "default_unknown_is_not_initialized_by_time",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "explicit_reference_does_not_assume_parent_on",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "all_three_valued_and_or_combinations",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "two_windows_change_only_at_feedback_deadline",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "parent_off_preserves_request_and_mmio_access",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "unknown_parent_cancels_pending_on_without_late_success",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "known_parent_off_cancels_pending_enable",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "repeated_votes_and_config_do_not_postpone_deadline",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "reverse_and_reenable_cancel_old_transition",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "external_vote_keeps_power_without_hlos_vote",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "validity_tracks_unknown_votes_with_hlos_dominance",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "retain_and_clock_wait_config_are_latched_without_new_power_vote",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "status_window_is_read_only_and_power_bit_cannot_be_forged",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "unsupported_modes_and_bits_preserve_request_timer_and_feedback",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "invalid_subword_accesses_do_not_initialize_or_mutate",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "reset_cancels_old_timer_and_preserves_held_external_input",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "default_reset_restores_unknown_control_without_erasing_inputs",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "actual_shared_rpmh_cx_votes_drive_parent_and_feedback",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_unknown",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_pending_on",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_pending_off",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_external",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_actual_rpmh_and_gdsc_pending_in_two_stages",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_unknown_to_reference_profile_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_reference_to_unknown_profile_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_transition_delay_mismatch_rejected",
+              "status": "pass",
+              "passed": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 8,
+          "entries": [
+            {
+              "test": "migration_unknown",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_pending_on",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_pending_off",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_external",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_actual_rpmh_and_gdsc_pending_in_two_stages",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_unknown_to_reference_profile_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_reference_to_unknown_profile_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_transition_delay_mismatch_rejected",
+              "status": "pass",
+              "passed": true
+            }
+          ]
+        }
+      }
+    },
+    "tb371fc-results/components/49-aop-reference-peer/fixtures/data/result.json": {
+      "schema_version": 1,
+      "suite": "AOP reference QDSS vote peer",
+      "machine": "tb371fc,ufs-enabled=off,aop-profile=reference-qdss-vote",
+      "expected_checks": 30,
+      "qemu_sha256": "5e508e06b6ed66b264c1559a3e29a7ea9e9d6574950db5a81e5cf022252b29ba",
+      "test_sha256": "447cc07b5ae45d5b1e669757961d60a7f01928c48c8ad9a6bd60916030ecbc1d",
+      "expected_completed_migrations": 6,
+      "expected_rejected_migrations": 2,
+      "scope": "Real QTest/IPCC/GIC, logical GPIO votes and process migration; no physical frequency or AOP firmware claim",
+      "guest_cpu_executed": false,
+      "ipcc_output_intercepted": false,
+      "passed": true,
+      "all_passed": true,
+      "elapsed_seconds": 1.54,
+      "completed_migrations": 6,
+      "rejected_migration_attempts": 2,
+      "list_details": {
+        "checks": {
+          "length": 30,
+          "entries": [
+            {
+              "name": "initialized_reference_descriptor",
+              "passed": true
+            },
+            {
+              "name": "link_requires_actual_ack_and_doorbell",
+              "passed": true
+            },
+            {
+              "name": "channel_requires_both_sides_ack",
+              "passed": true
+            },
+            {
+              "name": "premature_packet_is_not_handshake_completion",
+              "passed": true
+            },
+            {
+              "name": "wrong_ipcc_route_cannot_activate_peer",
+              "passed": true
+            },
+            {
+              "name": "payload_and_length_require_a_new_doorbell",
+              "passed": true
+            },
+            {
+              "name": "vendor_96_byte_qdss_vote_drives_output",
+              "passed": true
+            },
+            {
+              "name": "sixty_four_byte_frames_keep_votes_independent",
+              "passed": true
+            },
+            {
+              "name": "duplicate_doorbells_do_not_replay",
+              "passed": true
+            },
+            {
+              "name": "unsupported_services_are_not_consumed",
+              "passed": true
+            },
+            {
+              "name": "unsupported_levels_are_not_consumed",
+              "passed": true
+            },
+            {
+              "name": "malformed_and_extra_commands_are_not_consumed",
+              "passed": true
+            },
+            {
+              "name": "invalid_length_and_missing_nul_are_not_consumed",
+              "passed": true
+            },
+            {
+              "name": "modified_descriptor_and_bounds_are_not_trusted",
+              "passed": true
+            },
+            {
+              "name": "fabricated_ack_bytes_cannot_create_connected_phase",
+              "passed": true
+            },
+            {
+              "name": "close_preserves_votes_and_refuses_staged_message",
+              "passed": true
+            },
+            {
+              "name": "masked_completion_uses_real_ipcc_and_gic",
+              "passed": true
+            },
+            {
+              "name": "stale_irq_cannot_ack_an_unknown_packet",
+              "passed": true
+            },
+            {
+              "name": "reset_cancels_work_and_reinitializes_only_reference_ranges",
+              "passed": true
+            },
+            {
+              "name": "ipcc_full_retry_never_replays_service",
+              "passed": true
+            },
+            {
+              "name": "migrate_idle_votes_and_outputs",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_pending_message_exactly_once",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_pending_link_handshake",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_unknown_packet_remains_unconsumed",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_masked_reply_preserves_real_ipcc_pending",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_pending_full_ipcc_notification",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "reject_none_to_reference_migration",
+              "passed": true,
+              "destination_exit": 1
+            },
+            {
+              "name": "reject_reference_to_none_migration",
+              "passed": true,
+              "destination_exit": 1
+            },
+            {
+              "name": "default_and_explicit_none_keep_raw_sram",
+              "passed": true
+            },
+            {
+              "name": "invalid_profile_is_rejected",
+              "passed": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 6,
+          "entries": [
+            {
+              "name": "migrate_idle_votes_and_outputs",
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_pending_message_exactly_once",
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_pending_link_handshake",
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_unknown_packet_remains_unconsumed",
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_masked_reply_preserves_real_ipcc_pending",
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_pending_full_ipcc_notification",
+              "source_status": "completed",
+              "target_status": "completed"
+            }
+          ]
+        },
+        "rejected_migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "reject_none_to_reference_migration",
+              "destination_exit": 1
+            },
+            {
+              "name": "reject_reference_to_none_migration",
+              "destination_exit": 1
+            }
+          ]
+        }
+      }
+    }
+  },
+  "unit_stderr": {
+    "tb371fc-results/components/01-smem-observer-unit/stderr.log": ".................\n----------------------------------------------------------------------\nRan 17 tests in 0.368s\n\nOK\n",
+    "tb371fc-results/components/02-aop-observer-unit/stderr.log": "..............\n----------------------------------------------------------------------\nRan 14 tests in 0.036s\n\nOK\n"
+  },
+  "cpu_and_shared_ufs": {
+    "separate_binary": true,
+    "variant_count": 9,
+    "guest_checks": 852,
+    "rejected_configurations": 2,
+    "ufs_pci_checks": 15,
+    "source": "Actual completed job log; board binary is not substituted for this separate A77 build.",
+    "artifact_id": 14826588430,
+    "artifact_digest_reported_by_github": "810fcdf1a942827f89865877fb7472b3f3ab2f7833b2c1781b2bac415cc520ee"
+  },
+  "pre_run_fixture_correction": {
+    "commit": "9507999c1e0e6dd258bd1992423b0f9730f23b31",
+    "reason": "Core unassigned memory region has a NULL name; exact Linux diagnostic spelling corrected before any NPU test execution failure was observed.",
+    "model_changed": false,
+    "superseded_run": 45192984817,
+    "superseded_source": "7a5a5d4de5a73d65432ebee901aa5347a5cb6b92",
+    "superseded_run_conclusion": "cancelled",
+    "superseded_run_verified": {
+      "id": 45192984817,
+      "head_sha": "7a5a5d4de5a73d65432ebee901aa5347a5cb6b92",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "updated_at": "2026-11-23T14:20:43Z"
+    }
+  },
+  "limitations": {
+    "full_native_dt_boot_passed": false,
+    "android_boot_passed": false,
+    "physical_timing_measured": false,
+    "adreno_rendering_passed": false,
+    "npu_dsp_execution_passed": false
+  }
+}

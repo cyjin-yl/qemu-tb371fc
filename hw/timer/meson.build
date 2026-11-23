@@ -35,3 +35,4 @@ system_ss.add(when: 'CONFIG_SIFIVE_PWM', if_true: files('sifive_pwm.c'))
 
 system_ss.add(when: 'CONFIG_AVR_TIMER16', if_true: files('avr_timer16.c'))
 system_ss.add(when: 'CONFIG_ARM_ARCH_TIMER_MMIO', if_true: files('arm-arch-timer-mmio.c'))
+system_ss.add(when: 'CONFIG_QCOM_MPM2_SLEEP_COUNTER', if_true: files('qcom-mpm2-sleep-counter.c'))

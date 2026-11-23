@@ -188,8 +188,11 @@ GFRE/CFRE-masked upstream RAZ/WI responses are not modeled as a separate bus
 sink: failed DMA receives IOMMU_NONE. Cacheability/shareability metadata in PAR
 is represented, but data-cache behavior is not simulated.
 
-Migration fields and reset/post-load IRQ restoration are implemented; SMMU
-migration has not yet been separately validated. The QTests establish selected
+Migration format version 2 binds the aperture, context-bank count and SMR
+capacity before restoring register arrays; unqualified version 1 streams are
+rejected. The separate [process migration gate](smmuv2-migration.md) exercises
+translation, RAM page tables, fault IRQs and reset continuation, and requires
+incompatible geometry to fail. The QTests establish selected
 architectural behavior against the implementation, not native SMMU silicon
 equivalence. A Linux driver binding to the generated DT and translated UFS I/O
 are additional integration gates. Neither gate establishes that the production

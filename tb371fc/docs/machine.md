@@ -47,9 +47,17 @@ The `qcom-...` entries are device `-global` properties. See [SMEM](smem-referenc
 GCC v3 deliberately rejects older GCC migration streams; UFS still prevents
 a full-board migration claim.
 
-## Latest unified GPUCC checkpoint
+## New MPM counter and SMMUv2 integration
 
-Commit `df667a3e8dbb31368ebbd6af1a7569a2b4c785d0` passed [62 component gates and four Linux boots](../evidence/wholeboard-20261123-a47/public-ci-df667.json), plus the separate A77/UFS job. The same binary's [production Image and full native-DT run](../evidence/wholeboard-20261123-a47/native-df667.json) registered GCC and GPUCC, observed SMEM success (23/23) and a supported AOP reference exchange, then panicked on NPUCC PLL0 MODE at `0x09980000`. This is a completed GPUCC probe, not a full native boot or GPU/NPU command execution. GCC's NPU configuration-AHB parent remains unproven; its warning is retained.
+The board now creates an independent [MPM2 sleep counter](mpm2-sleep-counter.md) at `0x0c221000..0x0c221003`. It uses the actual DT's fixed 32768-Hz declaration, with overflow-safe virtual-time arithmetic and preserved fractional phase in VMState 1. Cold zero and continuity across software reset are explicit reference policies. The remaining DT window is unmapped, and the 32000-Hz GCC sleep input is independent.
+
+The integrated [SMMUv2 migration contract](smmuv2-migration.md) from default commit `339b9cd277aeae84fba52b60ae34ede90b7ff101` requires version 2 and matching MMIO aperture, context-bank count and SMR capacity. Earlier unguarded version-1 streams are rejected. This is component migration with UFS disabled, not a claim that the complete running board migrates. The new MPM/SMMU combination is pending its own public and native execution receipts.
+
+## Latest unified NPUCC checkpoint
+
+Commit `d79052f306ec37a797d05c9e4b2f8f7ea69c0675` passed [63 component gates and four Linux boots](../evidence/wholeboard-20261123-a47/public-ci-d790.json), plus the separate A77/UFS job. The exact artifact binary's [production Image and full native-DT run](../evidence/wholeboard-20261123-a47/native-d790.json) registered GCC, GPUCC and NPUCC, observed SMEM success (23/23) and a supported AOP reference exchange, then faulted on a 32-bit read in `boot_stats_init+0x14c`. Pinned source and the actual DT correlate that read with the MPM sleep-counter resource at `0x0c221000`, declared 32768 Hz. The fault log contains a virtual address; no separate VA-to-PA translation was captured. This frequency is distinct from the 32000-Hz `chip_sleep_clk`. VIDEOCC was deferred because its bandwidth-voting bus driver was not ready.
+
+The later minidump/PIL warnings match item 602 exceeding the reference SIII item count of 512. Socinfo item 137 is in range but absent in the empty global partition, producing a separate dummy-data fallback. The pinned sources and exact model contract are linked in the native receipt; the production Image's exact public source tree is unproven. No records were invented to suppress these messages. These successful controller probes do not establish full native-DT userspace or GPU/NPU execution. GCC's NPU configuration-AHB parent remains unproven and its warning is retained. The preceding [df667 receipt](../evidence/wholeboard-20261123-a47/native-df667.json) preserves its own NPUCC MMIO failure.
 
 ## Current executed scope
 

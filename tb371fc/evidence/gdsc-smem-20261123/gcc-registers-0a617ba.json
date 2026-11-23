@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "suite": "SM8250 GCC actual QTest",
+  "qemu": "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+  "machine": "tb371fc,gcc-boot-configured=off,ufs-enabled=off",
+  "qemu_sha256": "a2e19b188f6253928ad47630896e0967fb99f55abbddaf98212f312e8194ee1b",
+  "work_dir": "/tmp/tbci-6_zs9n9i/10/data",
+  "checks": [
+    {
+      "test": "cold_defaults",
+      "status": "pass",
+      "seconds": 0.0217
+    },
+    {
+      "test": "invalid_pll_does_not_lock",
+      "status": "pass",
+      "seconds": 0.0204
+    },
+    {
+      "test": "pll_vote_lock_and_stop",
+      "status": "pass",
+      "seconds": 0.0215
+    },
+    {
+      "test": "pll_manual_output_gate",
+      "status": "pass",
+      "seconds": 0.0211
+    },
+    {
+      "test": "pll_shadow_and_latch",
+      "status": "pass",
+      "seconds": 0.022
+    },
+    {
+      "test": "pll_disabled_latch",
+      "status": "pass",
+      "seconds": 0.0192
+    },
+    {
+      "test": "independent_pll_vote_bits",
+      "status": "pass",
+      "seconds": 0.0225
+    },
+    {
+      "test": "rcg_exact_fraction_and_shadow",
+      "status": "pass",
+      "seconds": 0.0225
+    },
+    {
+      "test": "invalid_rcg_keeps_previous_active_config",
+      "status": "pass",
+      "seconds": 0.0201
+    },
+    {
+      "test": "invalid_fraction_does_not_ack",
+      "status": "pass",
+      "seconds": 0.0208
+    },
+    {
+      "test": "stopped_parent_keeps_requested_branch_off",
+      "status": "pass",
+      "seconds": 0.0203
+    },
+    {
+      "test": "shared_votes_and_remote_voter",
+      "status": "pass",
+      "seconds": 0.0224
+    },
+    {
+      "test": "sys_noc_cpuss_status_contract",
+      "status": "pass",
+      "seconds": 0.0227
+    },
+    {
+      "test": "sys_noc_cpuss_shared_votes",
+      "status": "pass",
+      "seconds": 0.0255
+    },
+    {
+      "test": "sys_noc_cpuss_parent_demand",
+      "status": "pass",
+      "seconds": 0.0282
+    },
+    {
+      "test": "sys_noc_cpuss_remote_vote",
+      "status": "pass",
+      "seconds": 0.0229
+    },
+    {
+      "test": "sys_noc_cpuss_reset",
+      "status": "pass",
+      "seconds": 0.0256
+    },
+    {
+      "test": "hwcg_consumer_request",
+      "status": "pass",
+      "seconds": 0.02
+    },
+    {
+      "test": "absent_external_parent_is_not_success",
+      "status": "pass",
+      "seconds": 0.0194
+    },
+    {
+      "test": "sleep_parent_and_integer_divider",
+      "status": "pass",
+      "seconds": 0.0199
+    },
+    {
+      "test": "reset_lines_and_shared_cbcr_bits",
+      "status": "pass",
+      "seconds": 0.0213
+    },
+    {
+      "test": "software_power_transition",
+      "status": "pass",
+      "seconds": 0.0199
+    },
+    {
+      "test": "reset_cancels_pending_transitions",
+      "status": "pass",
+      "seconds": 0.0224
+    },
+    {
+      "test": "unsupported_registers_are_diagnosed",
+      "status": "pass",
+      "seconds": 0.0184
+    }
+  ],
+  "ram_per_process": "128 MiB",
+  "scope": "Clock register/gate state, software reset/power and controlled virtual-time transitions; no analog, silicon timing, voltage or full-SoC equivalence",
+  "expected_checks": 24,
+  "success": true
+}

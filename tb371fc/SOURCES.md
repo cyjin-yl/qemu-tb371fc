@@ -50,10 +50,13 @@ Use their per-run hashes rather than treating a source table as execution proof.
 | --- | --- |
 | Board and loader | [machine.md](docs/machine.md), [runtime layout evidence](evidence/boot-layout-20261123/runtime-layout-frozen4.json) |
 | A77 CPU and PMU | [cpu.md](docs/cpu.md), Arm Cortex-A77 TRM references and native MIDR/REVIDR observations |
+| MPM sleep counter | [mpm2-sleep-counter.md](docs/mpm2-sleep-counter.md), pinned boot_stats read32 contract and actual TB371FC DT 32768-Hz declaration; explicit virtual-time, cold-epoch/reset and migration policies |
 | Generic Timer | [mmio-timer.md](docs/mmio-timer.md), Arm ARM external-register contract, exact-count arithmetic and retained regression controls |
 | GENI | [geni-uart.md](docs/geni-uart.md), Linux FIFO/IRQ contract and actual clock/reset integration |
 | GCC | [gcc-sm8250.md](docs/gcc-sm8250.md), pinned Linux-derived register manifest and clock-parent assumptions |
-| SMMUv2 | [smmuv2.md](docs/smmuv2.md), architectural stage-1 model and explicit Qualcomm-extension limits |
+| GPUCC | [gpucc-sm8250.md](docs/gpucc-sm8250.md), pinned Kona Lucid PLL1, GMU, branch/reset contracts, actual Clock outputs and explicit analog/rendering limits |
+| NPUCC | [npucc-sm8250.md](docs/npucc-sm8250.md), pinned Kona v2 three-bank PLL/RCG/branch/reset contracts, bounded CRC divider and unresolved-parent limits |
+| SMMUv2 | [smmuv2.md](docs/smmuv2.md), architectural stage-1 model and explicit Qualcomm-extension limits; [version-2 geometry-bound migration](docs/smmuv2-migration.md) and actual retained counterexample/transfer receipts |
 | UFS | [ufs-sm8250.md](docs/ufs-sm8250.md), [clock diagnosis](docs/ufs-clock-diagnosis.md), [pinned upstream backports](docs/ufs-upstream-backports.json) |
 | RPMh | [rpmh-sm8250.md](docs/rpmh-sm8250.md), synthetic reference database versus optional external-file and AOP-derived partial metadata |
 | TLMM | [tlmm.md](docs/tlmm.md), native enclosing aperture and pinned Linux per-pin layout |
