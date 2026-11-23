@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "suite": "QSEE digital notification actual QTest",
+  "qemu": "/work/qsee-dcc-root-0925/qemu-system-aarch64",
+  "qemu_sha256": "51fe61d35213a6602a8eaa865faba04bc85f88df341947ca8a2e6300a8ab5be6",
+  "machine": "tb371fc,ufs-enabled=off",
+  "test_sha256": "c14f77b32de60ac43a3490e733719ae7a8c154c40330a274902f936bb8694993",
+  "work_dir": "/work/qsee-dcc-root-0925/qsee-migration/data",
+  "scope": "Two four-bit notification banks; reference GPIO event adapter; no TEE/SCM or full-board migration",
+  "success": false,
+  "expected_checks": 6,
+  "checks": [],
+  "error": "Traceback (most recent call last):\n  File \"/work/tb371fc-verified-root-0820/tb371fc/tests/test_qsee_irq.py\", line 283, in migrate\n    target.step(now)\n    ~~~~~~~~~~~^^^^^\n  File \"/work/tb371fc-verified-root-0820/tb371fc/tests/test_gcc_sm8250.py\", line 74, in step\n    self.last_clock = int(self.command(f'clock_step {ns}')[0], 0)\n                          ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\n  File \"/work/tb371fc-verified-root-0820/tb371fc/tests/test_qsee_irq.py\", line 41, in command\n    return super().command(line)\n           ~~~~~~~~~~~~~~~^^^^^^\n  File \"/work/tb371fc-verified-root-0820/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: clock_step 0: FAIL could not advance time\n"
+}

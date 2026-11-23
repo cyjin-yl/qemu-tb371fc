@@ -44,7 +44,8 @@
 - [x] **IMEM 映射消除冻结构建 5 的原生 `msm_restart_probe+0xec` external abort；冻结构建 7 推进到 `dcc_probe+0x114`。**
 - [ ] IMEM/PS_HOLD 与 PMIC/PON 的完整 reset/poweroff 联合验收；越过 restart probe 不证明整个关机链。
 - [x] DCC map2 read-capture 子集、17 项实际事务/负向/迁移检查；原生驱动已完成列表 3/6/7 编程。
-- [ ] DCC loop、write/RMW、CRC/ATB/CTI 和原生三列表完整执行；探测成功与 SRAM read 子集不替代这些模式。
+- [x] DCC 单字 WRITE、平坦 LOOP、单寄存器 RMW：16 项新增操作与迁移检查，原有 17 项保持通过。
+- [ ] DCC CRC/ATB/CTI、嵌套循环、多字 RMW 及原生三列表完整执行。
 - [x] IPCC 16 项、SPMI reference 25 项，以及真实 SPMI → PDC → GIC 连线/迁移 8 项通过；PDC 18/10 在同一冻结构建通过。
 - [ ] 原生 PMIC、远端固件服务及其余完整 DT 依赖与完整引导验收。
 - [x] **IMEM/PS_HOLD 七项 gate 纳入公开 CI，并以计划回归验证 components/all 均强制执行。**
@@ -116,4 +117,10 @@ clean kernel 成功不验证该 patch，也不解决真实平板的原始 handof
 
 - [x] 捕获拓扑对应的显示 RSC、四 voter 共享服务、真实 SPI 129 路径与组件迁移：11 + 6 项通过。
 - [x] 新二进制公共 49/49 gate 和 RPMh 专项 53 项通过；见 [新增回执](evidence/display-rsc-20261123/publication.json)。
-- [ ] 完整原生 DT 启动：当前失败于 qsee_irq_probe；SPMI 原生映射、未解析 regulator 与 SMEM/SBL handoff 仍缺。
+- [ ] 完整原生 DT 启动：该轮失败于 qsee_irq_probe；最新 QSEE/DCC 增量已越过此处，仍未通过完整启动。
+
+### QSEE 与 DCC 后续增量
+
+- [x] QSEE 两组通知锁存和真实 SPI 348/349：12 项行为、6 项真实迁移。
+- [x] 同一冻结二进制公共 52/52 gate、专项 51 项通过；[初次失败与修正均保留](evidence/qsee-dcc-20261123/publication.json)。
+- [ ] 原厂完整 DT 仍失败：AOP mailbox 共享内存读与 REFGEN 控制位读；SMEM/SBL、原生 PMIC 和未解析 regulator 等依赖仍缺。

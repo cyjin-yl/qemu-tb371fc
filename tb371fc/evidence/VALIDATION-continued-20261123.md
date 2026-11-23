@@ -190,3 +190,7 @@ log, its scope and source hashes must say so explicitly.
 ## 2026-11-23 display RSC integration
 
 Frozen binary 05c617462f87d5bacea9b86007ca8e37de5ed9a2644a5e3af5ac0d60485ec55b passes 49/49 public gates and 53 targeted RPMh checks. Source hashes remain unchanged across the public run. Evidence: [display-rsc-20261123](display-rsc-20261123/publication.json). Untouched production kernel/full private DT still fails at qsee_irq_probe+0x140 under explicit reference SPMI and partial RPMh file profiles; no stock Android success is claimed.
+
+## 2026-11-23 QSEE and DCC integration
+
+Frozen binary 51fe61d35213a6602a8eaa865faba04bc85f88df341947ca8a2e6300a8ab5be6 passes 52/52 public gates in 128.434 seconds and 51 targeted checks (QSEE 12 + migration 6, DCC operations 16 + original 17). Source and binary hashes were unchanged across the successful run. The initial QSEE migration harness failed before transfer on clock_step 0; the preserved correction advances the source by one virtual nanosecond, without changing the device C or binary. See [publication record](qsee-dcc-20261123/publication.json). The original kernel/full DT still fails at AOP mailbox memcpy and refgen_kona_is_enabled; stock Android and full native-DT boot remain unpassed. The preceding display commit dc11891 has two successful GitHub Actions jobs, recorded separately and not attributed to this newer commit.

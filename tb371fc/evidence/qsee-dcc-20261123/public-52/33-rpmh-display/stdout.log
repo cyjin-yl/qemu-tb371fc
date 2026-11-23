@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "suite": "SM8250 shared APPS/display RSC actual QTest",
+  "qemu": "/work/qsee-dcc-root-0925/qemu-system-aarch64",
+  "qemu_sha256": "51fe61d35213a6602a8eaa865faba04bc85f88df341947ca8a2e6300a8ab5be6",
+  "machine": "tb371fc,rpmh-profile=reference,rpmh-boot-configured=off,ufs-enabled=off",
+  "test_sha256": "eedc4d025763a91e89e0f4fea038054aa16763c4ceb8d303037d3e4d636b5557",
+  "work_dir": "/tmp/tbci-keep4aw_/33/data",
+  "native_command_db": false,
+  "scope": "Two controller geometries, four voters and one digital service; synthetic command-db; no whole-board migration, AOP firmware or SDE sequencer equivalence",
+  "checks": [
+    {
+      "test": "frame_geometry_matches_independent_dt_layout",
+      "status": "pass",
+      "seconds": 0.0356
+    },
+    {
+      "test": "active_request_borrows_display_wake_tcs",
+      "status": "pass",
+      "seconds": 0.0505
+    },
+    {
+      "test": "four_voter_aggregation_and_independent_release",
+      "status": "pass",
+      "seconds": 0.0446
+    },
+    {
+      "test": "frame_irq_masks_pending_and_w1c_are_independent",
+      "status": "pass",
+      "seconds": 0.0674
+    },
+    {
+      "test": "bcm_commits_are_per_voter_with_shared_aggregation",
+      "status": "pass",
+      "seconds": 0.0639
+    },
+    {
+      "test": "explicit_display_sleep_wake_uses_only_two_banks",
+      "status": "pass",
+      "seconds": 0.0509
+    },
+    {
+      "test": "highest_command_and_invalid_frame_boundaries",
+      "status": "pass",
+      "seconds": 0.0595
+    },
+    {
+      "test": "cancel_preserves_completed_command_but_not_unfinished_one",
+      "status": "pass",
+      "seconds": 0.041
+    },
+    {
+      "test": "unsupported_display_request_stalls_without_false_ack",
+      "status": "pass",
+      "seconds": 0.042
+    },
+    {
+      "test": "guest_reset_clears_both_frames_and_all_votes",
+      "status": "pass",
+      "seconds": 0.0547
+    },
+    {
+      "test": "real_gic_spi129_mask_pending_clear_and_deassert",
+      "status": "pass",
+      "seconds": 0.0448
+    }
+  ],
+  "expected_checks": 11,
+  "success": true
+}

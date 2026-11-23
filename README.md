@@ -10,7 +10,21 @@
 **完整 Android 启动和整台平板等价仍是未通过的目标。**
 生产内核加测试 initramfs 的成功不等于原厂 Android 系统启动。小核仍用 A55 代替 Qualcomm Kryo；显示、Adreno 650、触控、无线、音频、摄像头以及完整电源/固件契约仍有大量实现工作。缓存容量、功耗、射频、电气行为和真实芯片时序不由这些功能测试证明。
 
-## 显示 RSC 增量验证（2026-11-23）
+## QSEE 与 DCC 增量验证（2026-11-23）
+
+最新冻结二进制 SHA-256 为 `51fe61d35213a6602a8eaa865faba04bc85f88df341947ca8a2e6300a8ab5be6`。
+[52/52 公共 gate](tb371fc/evidence/qsee-dcc-20261123/public-52/result.json) 实际通过，包含 48 组组件/解析检查和四次 Linux 启动。
+[51 项专项检查](tb371fc/evidence/qsee-dcc-20261123/workflow.json) 包括 QSEE 12 项、真实迁移 6 项、DCC 新操作 16 项和原有 DCC 17 项。
+
+QSEE 实现两组四位通知、mask/W1C、SPI 348/349 和状态迁移；DCC 实现有序单字 WRITE、平坦 LOOP 与单寄存器 RMW，执行真实内存事务。
+[首次迁移脚本失败](tb371fc/evidence/qsee-dcc-20261123/initial-attempt/workflow.json) 与[脚本修正](tb371fc/evidence/qsee-dcc-20261123/harness-fix.json) 均保留；设备 C 代码和冻结二进制未因该修正改变。
+
+未修改的生产内核加完整原生 DT 已越过 QSEE；[本轮实际故障](tb371fc/evidence/qsee-dcc-20261123/native-progression.json)
+为 AOP mailbox 的 64 字节共享内存读取和 `refgen_kona_is_enabled+0x14`。
+**完整原生 DT 和 Android 启动仍未通过。** QSEE 不是 TEE/SCM 执行实现，DCC 仍缺 CRC/ATB/CTI、嵌套循环等模式。
+行为与限制见 [QSEE](tb371fc/docs/qsee-irq.md) 和 [DCC 操作](tb371fc/docs/dcc-operations.md)。
+
+## 先前显示 RSC 增量验证（2026-11-23）
 
 新增显示 RSC 的真实窗口和 SPI 129 接线，与三个 APPS 投票槽共享同一资源服务。
 新二进制 SHA-256 为 `05c617462f87d5bacea9b86007ca8e37de5ed9a2644a5e3af5ac0d60485ec55b`。
@@ -18,11 +32,11 @@
 另有 [53 项 RPMh 专项检查](tb371fc/evidence/display-rsc-20261123/tests-final.json)，覆盖显示 11 项、显示迁移 6 项、APPS 22 项、APPS 迁移 5 项、文件配置 3 项及私有部分数据库的时钟 6 项。
 
 同一原厂内核和完整私有设备树，配显式 SPMI reference 与部分 RPMh 文件配置，
-已越过先前显示 RSC 和 SPMI 控制器访问异常；[下一实际故障](tb371fc/evidence/display-rsc-20261123/native-progression.json) 是 `qsee_irq_probe+0x140`。
+已越过先前显示 RSC 和 SPMI 控制器访问异常；[该轮下一实际故障](tb371fc/evidence/display-rsc-20261123/native-progression.json) 是 `qsee_irq_probe+0x140`。
 PMIC 路由、RPMh regulator 资源和 SBL/SMEM handoff 仍不完整。**原厂 Android 完整启动仍未通过。**
 详细寄存器、共享投票和迁移边界见 [显示 RSC 文档](tb371fc/docs/rpmh-display-rsc.md)。
 
-## 当前统一验收
+## 08:20 基线统一验收
 
 [隔离构建的最终验收](tb371fc/evidence/verified-20261123-0820/final-verification.json)现已完成：
 **47/47 公共 gate、9 种 Cortex-A77 配置合计 852 项 guest 检查及 2 项非法配置拒绝、15/15 PCI UFS 兼容测试全部通过。**
@@ -62,7 +76,8 @@ PCI 首次 discovery 因冻结文件名附加后缀而得到零项测试。
 | TLMM | [25 项 C QTest](tb371fc/evidence/tlmm-20261123/qtest-result.json)、[15 项真实迁移检查](tb371fc/evidence/tlmm-20261123/migration-result.json) | 180 GPIO、边沿/电平 IRQ、输出/使能、专用 UFS reset、显式 boot handoff；四次进程迁移。 |
 | IMEM / PS_HOLD | [7 项检查，含实际迁移](tb371fc/evidence/boot-resources-20261123/qtest-migration-7.json) | 可写 SRAM、guest-owned handoff 字段、reset retention 和数字 PS_HOLD 输出；没有伪造 PMIC 关机策略。 |
 | Linux RPMh provider | [23 项 guest 与 3 项宿主检查](tb371fc/evidence/rpmh-linux-20261123/result.json) | 显式 reference profile；RSC/clk-rpmh 绑定、CCF 19.2 MHz、真实 TCS IRQ、完成的 XO 事务与清除的 pending IRQ、UFS/SMMU 和宿主磁盘核对。 |
-| DCC | [17 项真实捕获/错误/迁移检查](tb371fc/evidence/dcc-20261123/result.json) | 实际 SRAM 与源地址空间事务；reference map2 身份，尚无 CRC、ATB、loop、write/RMW 完整执行。 |
+| DCC | [17 项原有检查](tb371fc/evidence/qsee-dcc-20261123/dcc-existing/report.json)及[16 项新增操作检查](tb371fc/evidence/qsee-dcc-20261123/dcc-operations/report.json) | 实际 READ/单字 WRITE/平坦 LOOP/单寄存器 RMW 与 pending 迁移；reference 身份和时序，CRC/ATB/CTI 等仍缺。 |
+| QSEE IRQ | [12 项行为检查](tb371fc/evidence/qsee-dcc-20261123/qsee/report.json)及[6 项真实迁移](tb371fc/evidence/qsee-dcc-20261123/qsee-migration/report.json) | 两组通知锁存、屏蔽、W1C 与真实 SPI 348/349；不执行 secure firmware。 |
 | PDC | [18 项 C QTest](tb371fc/evidence/verified-20261123-0820/public-47/30-pdc-c-qtest/case.json)、[10 项迁移检查](tb371fc/evidence/verified-20261123-0820/public-47/42-pdc-migration/fixtures/data/result.json) | 已在同一隔离构建实际通过；native VERSION 仍未知，旧 17/9 回执保留。 |
 | IPCC | [16 项消息/IRQ/迁移检查](tb371fc/evidence/verified-20261123-0820/public-47/37-ipcc-messages/fixtures/data/result.json) | 实际 GIC SPI 229 传播、mask/clear 和迁移；未连接的远端固件不伪造回复。 |
 | SPMI / PDC / GIC | [SPMI 25 项](tb371fc/evidence/verified-20261123-0820/public-47/39-spmi-pmic-arb/fixtures/data/result.json)、[真实连线与迁移 8 项](tb371fc/evidence/verified-20261123-0820/public-47/40-spmi-pdc-gic-route/fixtures/data/result.json) | 显式 reference 映射和测试端点；事务、剩余 deadline 与 SPI 481 传播已测，原生 PMIC 行为未由此证明。 |

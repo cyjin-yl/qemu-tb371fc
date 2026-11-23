@@ -46,6 +46,7 @@
 #include "hw/misc/qcom-pshold.h"
 #include "hw/misc/qcom-dcc.h"
 #include "hw/misc/qcom-ipcc.h"
+#include "hw/misc/qcom-qsee-irq.h"
 #include "hw/misc/qcom-spmi-pmic-arb.h"
 #include "hw/gpio/qcom-tb371fc-tlmm.h"
 #include "hw/misc/qcom-sm8250-rpmh.h"
@@ -937,6 +938,7 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
     DeviceState *pshold = qdev_new(TYPE_QCOM_PSHOLD);
     DeviceState *dcc = qdev_new(TYPE_QCOM_DCC);
     DeviceState *ipcc = qdev_new(TYPE_QCOM_IPCC);
+    DeviceState *qsee = qdev_new(TYPE_QCOM_QSEE_IRQ);
 
     /* Captured IMEM SRAM aperture, initially empty without firmware input. */
     /*
@@ -965,6 +967,14 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
     sysbus_mmio_map(SYS_BUS_DEVICE(ipcc), 0, 0x00408000);
     sysbus_connect_irq(SYS_BUS_DEVICE(ipcc), 0,
                       qdev_get_gpio_in(s->gic, 229));
+
+    object_property_add_child(OBJECT(s), "qsee-irq", OBJECT(qsee));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(qsee), &error_fatal);
+    for (unsigned i = 0; i < QCOM_QSEE_IRQ_BANKS; i++) {
+        sysbus_mmio_map(SYS_BUS_DEVICE(qsee), i, 0x01886000 + i * 0x2000);
+        sysbus_connect_irq(SYS_BUS_DEVICE(qsee), i,
+                           qdev_get_gpio_in(s->gic, 348 + i));
+    }
 
     s->tlmm = qdev_new(TYPE_QCOM_TB371FC_TLMM);
     object_property_add_child(OBJECT(s), "tlmm", OBJECT(s->tlmm));

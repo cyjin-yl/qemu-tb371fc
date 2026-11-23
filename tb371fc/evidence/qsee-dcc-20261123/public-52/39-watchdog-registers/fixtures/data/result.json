@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "suite": "KPSS watchdog QTest",
+  "qemu_sha256": "51fe61d35213a6602a8eaa865faba04bc85f88df341947ca8a2e6300a8ab5be6",
+  "test_sha256": "88086af9825fdc184d8ba98f054b90f029c3d30dc995c7bb01710ce092f10dd7",
+  "frequency_hz": 32765,
+  "frequency_provenance": "explicit reference profile; not measured hardware",
+  "scope": "Digital MMIO counter, IRQ and QEMU watchdog action; no secure firmware",
+  "checks": [
+    {
+      "name": "reset_fields_and_stopped_counter",
+      "passed": true
+    },
+    {
+      "name": "register_masks_and_invalid_access",
+      "passed": true
+    },
+    {
+      "name": "exact_reference_frequency",
+      "passed": true
+    },
+    {
+      "name": "first_nanosecond_bark_boundary",
+      "passed": true
+    },
+    {
+      "name": "pet_clears_and_rearms",
+      "passed": true
+    },
+    {
+      "name": "disable_preserves_subtick_phase",
+      "passed": true
+    },
+    {
+      "name": "disable_gates_asserted_irq",
+      "passed": true
+    },
+    {
+      "name": "bite_event_once_per_pet",
+      "passed": true
+    },
+    {
+      "name": "bite_before_bark",
+      "passed": true
+    },
+    {
+      "name": "rewrite_elapsed_compare",
+      "passed": true
+    },
+    {
+      "name": "counter_field_wrap",
+      "passed": true
+    },
+    {
+      "name": "machine_reset_cancels_deadline",
+      "passed": true
+    },
+    {
+      "name": "wakeup_output_reference_profile",
+      "passed": true
+    },
+    {
+      "name": "bite_requests_real_machine_reset",
+      "passed": true
+    },
+    {
+      "name": "invalid_frequency_0_rejected",
+      "passed": true,
+      "stderr": "qemu-system-aarch64: qcom-kpss-watchdog: frequency must be 1..1000000000\n"
+    },
+    {
+      "name": "invalid_frequency_1000000001_rejected",
+      "passed": true,
+      "stderr": "qemu-system-aarch64: qcom-kpss-watchdog: frequency must be 1..1000000000\n"
+    }
+  ],
+  "passed": true,
+  "passed_count": 16,
+  "elapsed_seconds": 0.829
+}

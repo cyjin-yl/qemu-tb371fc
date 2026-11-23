@@ -159,6 +159,12 @@ def plan(args, runtime):
                output="--work-dir", verdict="success", count=11)
         device("rpmh-display-migration", "test_rpmh_display.py",
                "--migration-only", output="--work-dir", verdict="success", count=6)
+        device("qsee-notification", "test_qsee_irq.py",
+               output="--work-dir", verdict="success", count=12)
+        device("qsee-notification-migration", "test_qsee_irq.py",
+               "--migration-only", output="--work-dir", verdict="success", count=6)
+        device("dcc-operations", "test_dcc_ops.py",
+               output="--out", result="file", count=16)
         device("ufs-register-dma", "test_ufs_sm8250.py",
                output="--out", result="file", count=56)
         device("watchdog-registers", "test_watchdog_kpss.py",

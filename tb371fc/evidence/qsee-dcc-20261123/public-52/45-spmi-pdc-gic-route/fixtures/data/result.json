@@ -1,0 +1,148 @@
+{
+  "all_passed": true,
+  "checks": [
+    {
+      "name": "unintercepted-spmi-event-reaches-native-gic-spi-481",
+      "observed": {
+        "adjacent_spis_pending": false,
+        "gic_pending": true
+      },
+      "passed": true
+    },
+    {
+      "name": "pdc-mask-and-unmask-preserve-spmi-latch",
+      "observed": {
+        "controller_latch_retained": true,
+        "mask_and_unmask_observed": true
+      },
+      "passed": true
+    },
+    {
+      "name": "linux-ack-clears-route-without-new-edge",
+      "observed": {
+        "irq_cleared": true,
+        "unchanged_input_did_not_replay": true
+      },
+      "passed": true
+    },
+    {
+      "name": "new-edge-reaches-only-the-captured-parent-spi",
+      "observed": {
+        "gic_intid": 513,
+        "gic_spi": 481
+      },
+      "passed": true
+    },
+    {
+      "name": "actual-qmp-transfer-completed",
+      "observed": {
+        "destination_status": "completed",
+        "source_status": "completed"
+      },
+      "passed": true
+    },
+    {
+      "name": "destination-restores-irq-registers-and-ram",
+      "observed": {
+        "pdc_configuration_preserved": true,
+        "pending_irq": true,
+        "pending_transaction": true,
+        "ram_marker_preserved": true
+      },
+      "passed": true
+    },
+    {
+      "name": "pending-write-completes-at-remaining-virtual-deadline",
+      "observed": {
+        "output_deasserted_by_real_write": true,
+        "remaining_nanoseconds": 600,
+        "source_input_still_asserted": true
+      },
+      "passed": true
+    },
+    {
+      "name": "destination-continues-with-new-events-and-acknowledgement",
+      "observed": {
+        "acknowledgement_cleared_real_gic": true,
+        "new_irq_delivered": true
+      },
+      "passed": true
+    }
+  ],
+  "completed_utc": "2026-11-23T09:41:11.457302+00:00",
+  "elapsed_seconds": 0.152835,
+  "expected_checks": 8,
+  "extra_qemu_args": [
+    "-global",
+    "qcom-spmi-pmic-arb.test-peripheral=on",
+    "-d",
+    "unimp,guest_errors"
+  ],
+  "helper_sha256": {
+    "test_geni_migration.py": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8",
+    "test_geni_uart.py": "4ab5857e40f3d320656677812abb86d2683c310764d35baa7a32b4aa53572fbd",
+    "test_spmi_pmic_arb.py": "6086a22039b246ac6850d211e9a8fc4a8144b48d264b19cd14bf33330713c900"
+  },
+  "kind": "tb371fc-spmi-pdc-real-gic-route",
+  "limits": [
+    "Explicit reference VERSION/APID/ownership and opt-in synthetic PMIC IRQ endpoint.",
+    "No native PMIC identity, physical timing, analog behavior, TrustZone or power-state wake equivalence.",
+    "No guest CPU interrupt handler is executed; this verifies the hardware-model route through the GIC distributor.",
+    "PDC VERSION is neither read nor replaced with a reference value in this test."
+  ],
+  "machine": "tb371fc,ufs-enabled=off,spmi-profile=reference",
+  "migrations": [
+    {
+      "destination": {
+        "status": "completed"
+      },
+      "source": {
+        "downtime": 33,
+        "ram": {
+          "dirty-pages-rate": 0,
+          "dirty-sync-count": 2,
+          "dirty-sync-missed-zero-copy": 0,
+          "downtime-bytes": 303215,
+          "duplicate": 32773,
+          "mbps": 417.31182608695656,
+          "multifd-bytes": 0,
+          "normal": 2,
+          "normal-bytes": 8192,
+          "page-size": 4096,
+          "pages-per-second": 0,
+          "postcopy-bytes": 0,
+          "postcopy-requests": 0,
+          "precopy-bytes": 0,
+          "remaining": 0,
+          "total": 134246400,
+          "transferred": 2399543
+        },
+        "setup-time": 0,
+        "status": "completed",
+        "total-time": 46
+      },
+      "source_qtest_virtual_ns": 4400
+    }
+  ],
+  "output_interception_installed": false,
+  "passed": true,
+  "qemu_sha256": "51fe61d35213a6602a8eaa865faba04bc85f88df341947ca8a2e6300a8ab5be6",
+  "qemu_version": {
+    "package": "v11.1.3-6-gdc11891-dirty",
+    "qemu": {
+      "major": 11,
+      "micro": 3,
+      "minor": 1
+    }
+  },
+  "route": {
+    "gic_intid": 513,
+    "gic_spi": 481,
+    "pdc_input": 1,
+    "spmi_test_apid": 4
+  },
+  "schema_version": 1,
+  "scope": "Actual byte transactions, un-intercepted board IRQ wiring, real GIC pending registers and one QMP process migration.",
+  "started_utc": "2026-11-23T09:41:10.619461+00:00",
+  "test_sha256": "0bc08bfb012290f92f28afd4e62aee5985695f9a16c5d9990fa7bf09f08663b4"
+}

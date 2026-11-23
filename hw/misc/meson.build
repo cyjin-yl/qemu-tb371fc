@@ -174,4 +174,5 @@ system_ss.add(when: 'CONFIG_QCOM_SM8250_RPMH', if_true: files('qcom-sm8250-rpmh.
 system_ss.add(when: 'CONFIG_QCOM_PSHOLD', if_true: files('qcom-pshold.c'))
 system_ss.add(when: 'CONFIG_QCOM_DCC', if_true: files('qcom-dcc.c'))
 system_ss.add(when: 'CONFIG_QCOM_IPCC', if_true: files('qcom-ipcc.c'))
+system_ss.add(when: 'CONFIG_QCOM_QSEE_IRQ', if_true: files('qcom-qsee-irq.c'))
 system_ss.add(when: 'CONFIG_QCOM_SPMI_PMIC_ARB', if_true: files('qcom-spmi-pmic-arb.c'))

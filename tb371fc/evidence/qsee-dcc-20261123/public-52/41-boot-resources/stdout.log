@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "suite": "IMEM SRAM and PS_HOLD output",
+  "qemu_sha256": "51fe61d35213a6602a8eaa865faba04bc85f88df341947ca8a2e6300a8ab5be6",
+  "test_sha256": "baa0a5adbd14728e40c735be0be679ec6b4e16c75bee7f1ac9f6b7ea1bb2a349",
+  "scope": "Captured aperture and digital pin; no initialized firmware data or PMIC power policy",
+  "checks": [
+    {
+      "name": "imem_initial_and_boundaries",
+      "passed": true
+    },
+    {
+      "name": "imem_subword_little_endian",
+      "passed": true
+    },
+    {
+      "name": "imem_guest_owned_handoff_fields",
+      "passed": true
+    },
+    {
+      "name": "imem_retained_on_machine_reset",
+      "passed": true
+    },
+    {
+      "name": "pshold_digital_output_and_reserved_bits",
+      "passed": true
+    },
+    {
+      "name": "pshold_invalid_width_does_not_mutate",
+      "passed": true
+    },
+    {
+      "name": "actual_migration",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "ram_and_low_pin_preserved": true,
+      "post_migration_reset_retains_imem": true
+    }
+  ],
+  "passed": true,
+  "elapsed_seconds": 0.538
+}

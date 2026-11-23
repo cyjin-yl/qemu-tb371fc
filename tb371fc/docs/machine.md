@@ -97,7 +97,7 @@ configuration, not all register contents or hardware behavior.
 | KPSS watchdog | `0x17c10000`; bark/bite SPIs 0 and 1 |
 | TLMM | `0x0f000000/0x01000000`, SPI 208; 180 ordinary digital GPIOs plus a separate UFS reset output |
 | IMEM / PS_HOLD | `0x146bf000/0x1000` writable SRAM and `0x0c264000/4` digital hold output; no initialized OEM firmware state |
-| DCC register / SRAM | `0x01023000/0x1000` and `0x0103a000/0x6000`; internal word-address offset `0x1a000`; reference map2 identity and bounded read capture |
+| DCC register / SRAM | `0x01023000/0x1000` and `0x0103a000/0x6000`; internal word-address offset `0x1a000`; reference map2 identity with bounded READ, single-word WRITE, flat LOOP and single-register RMW |
 | PSCI | SMC |
 
 PPI and SPI numbers are DT interrupt-specifier numbers. Architectural INTIDs
@@ -315,4 +315,8 @@ in [ROADMAP.md](../ROADMAP.md).
 
 ## Display RSC follow-up
 
-The four-voter APPS/display model passes [49 public gates](../evidence/display-rsc-20261123/public-49/result.json) and [53 targeted checks](../evidence/display-rsc-20261123/tests-final.json). Version 2 RPMh migration is required; legacy three-voter streams are rejected. See [display RSC behavior and reference assumptions](rpmh-display-rsc.md). Full native-DT Android boot remains unverified and currently fails later in qsee_irq_probe.
+The four-voter APPS/display model passes [49 public gates](../evidence/display-rsc-20261123/public-49/result.json) and [53 targeted checks](../evidence/display-rsc-20261123/tests-final.json). Version 2 RPMh migration is required; legacy three-voter streams are rejected. See [display RSC behavior and reference assumptions](rpmh-display-rsc.md). That native run failed later in qsee_irq_probe; the subsequent run below records the next faults.
+
+## QSEE notification and DCC operation follow-up
+
+The [52-gate frozen result](../evidence/qsee-dcc-20261123/public-52/result.json) and [51 targeted checks](../evidence/qsee-dcc-20261123/workflow.json) pass. QSEE maps only 0x20-byte banks at 0x01886000 and 0x01888000, with real GIC SPI348/349 outputs; the rest of that syscon is not a success stub. DCC executes the documented bounded operation subset as actual bus transactions. See [QSEE](qsee-irq.md) and [DCC operations](dcc-operations.md). The production kernel and full DT progress past QSEE but fail at AOP shared-memory and REFGEN reads; TEE/SCM, native firmware handoff and Android userspace remain unimplemented or unverified.

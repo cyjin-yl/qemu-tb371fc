@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "suite": "QSEE digital notification actual QTest",
+  "qemu": "/work/qsee-dcc-root-0925/qemu-system-aarch64",
+  "qemu_sha256": "51fe61d35213a6602a8eaa865faba04bc85f88df341947ca8a2e6300a8ab5be6",
+  "machine": "tb371fc,ufs-enabled=off",
+  "test_sha256": "45383c7c19b1a1131593663504e7e7ae45f38783cc6864443a23700b3e14d4f3",
+  "work_dir": "/work/qsee-dcc-recheck-0936/qsee-migration/data",
+  "scope": "Two four-bit notification banks; reference GPIO event adapter; no TEE/SCM or full-board migration",
+  "success": true,
+  "expected_checks": 6,
+  "checks": [
+    {
+      "check": "actual_process_to_process_transfer",
+      "status": "pass"
+    },
+    {
+      "check": "active_and_masked_pending_state_preserved",
+      "status": "pass"
+    },
+    {
+      "check": "held_input_levels_preserved_without_phantom_edges",
+      "status": "pass"
+    },
+    {
+      "check": "masked_event_unmasks_and_w1c_deasserts_after_load",
+      "status": "pass"
+    },
+    {
+      "check": "independent_new_edges_work_after_load",
+      "status": "pass"
+    },
+    {
+      "check": "reset_keeps_external_levels_after_migration",
+      "status": "pass"
+    }
+  ],
+  "migration": {
+    "status": "completed",
+    "setup-time": 6,
+    "downtime": 35,
+    "total-time": 59,
+    "ram": {
+      "total": 134246400,
+      "postcopy-requests": 0,
+      "dirty-sync-count": 2,
+      "multifd-bytes": 0,
+      "pages-per-second": 0,
+      "downtime-bytes": 303215,
+      "page-size": 4096,
+      "remaining": 0,
+      "postcopy-bytes": 0,
+      "mbps": 333.2166037735849,
+      "transferred": 2207560,
+      "dirty-sync-missed-zero-copy": 0,
+      "precopy-bytes": 0,
+      "duplicate": 32773,
+      "dirty-pages-rate": 0,
+      "normal-bytes": 8192,
+      "normal": 2
+    }
+  },
+  "qtest_virtual_ns_at_transfer": 1
+}

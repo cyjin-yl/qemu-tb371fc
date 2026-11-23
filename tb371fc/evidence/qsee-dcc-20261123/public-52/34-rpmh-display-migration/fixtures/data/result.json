@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "suite": "SM8250 shared APPS/display RSC actual QTest",
+  "qemu": "/work/qsee-dcc-root-0925/qemu-system-aarch64",
+  "qemu_sha256": "51fe61d35213a6602a8eaa865faba04bc85f88df341947ca8a2e6300a8ab5be6",
+  "machine": "tb371fc,rpmh-profile=reference,rpmh-boot-configured=off,ufs-enabled=off",
+  "test_sha256": "eedc4d025763a91e89e0f4fea038054aa16763c4ceb8d303037d3e4d636b5557",
+  "work_dir": "/tmp/tbci-keep4aw_/34/data",
+  "native_command_db": false,
+  "scope": "Two controller geometries, four voters and one digital service; synthetic command-db; no whole-board migration, AOP firmware or SDE sequencer equivalence",
+  "success": true,
+  "expected_checks": 6,
+  "checks": [
+    {
+      "check": "actual_process_transfer_v2",
+      "status": "pass"
+    },
+    {
+      "check": "both_frames_pending_masks_and_votes_preserved",
+      "status": "pass"
+    },
+    {
+      "check": "deadline_and_shared_vote_release_after_load",
+      "status": "pass"
+    },
+    {
+      "check": "independent_staged_bcm_votes_survive_and_commit",
+      "status": "pass"
+    },
+    {
+      "check": "stalled_request_is_not_acknowledged_and_recovers",
+      "status": "pass"
+    },
+    {
+      "check": "display_sleep_wake_remains_operational_after_load",
+      "status": "pass"
+    }
+  ],
+  "migration": {
+    "status": "completed",
+    "setup-time": 1,
+    "downtime": 22,
+    "total-time": 36,
+    "ram": {
+      "total": 134246400,
+      "postcopy-requests": 0,
+      "dirty-sync-count": 2,
+      "multifd-bytes": 0,
+      "pages-per-second": 0,
+      "downtime-bytes": 303215,
+      "page-size": 4096,
+      "remaining": 0,
+      "postcopy-bytes": 0,
+      "mbps": 509.4873142857143,
+      "transferred": 2229007,
+      "dirty-sync-missed-zero-copy": 0,
+      "precopy-bytes": 0,
+      "duplicate": 32773,
+      "dirty-pages-rate": 0,
+      "normal-bytes": 8192,
+      "normal": 2
+    }
+  },
+  "qtest_virtual_ns_at_transfer": 5000
+}

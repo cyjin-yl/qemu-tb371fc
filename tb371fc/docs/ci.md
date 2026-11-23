@@ -15,7 +15,7 @@ after an earlier component failure so their independent results remain visible.
 
 ## Gates
 
-The current public plan has **49 gates: 45 component/parser gates and four
+The current public plan has **52 gates: 48 component/parser gates and four
 Linux boots**, plus the separate A77 and PCI UFS compatibility job. The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
@@ -48,7 +48,8 @@ pass does not attest newly added devices.
 | TLMM | 25 C QTests, including the explicit UFS reset boot handoff, and 15 checks across four actual migrations |
 | PDC | 18 C QTests and 10 migration checks in the expanded plan; earlier 17/9 results retain their original scope |
 | IPCC | 16 message, real GIC SPI229, mask, clear, negative and migration checks; no fabricated remote firmware reply |
-| DCC | 17 read-capture, bounds, unsupported-mode, source-transaction and pending-capture migration checks |
+| DCC | 17 original checks plus 16 ordered WRITE/LOOP/RMW, bounds, side-effect and pending-operation migration checks |
+| QSEE notification | 12 state/real SPI348/349/invalid-access checks and 6 actual migration checks; no secure-service replies |
 | SPMI arbiter | 25 checks against explicit reference fixtures; missing physical PMIC behavior is not inferred from a passing arbiter test |
 | SPMI → PDC → GIC | 8 checks with the real parent IRQ wiring preserved and exactly one actual migration, including the remaining transaction deadline |
 | Clean Linux user space | 8 PID 1 checks with 8 CPUs, 8 GiB RAM, normal GENI console handoff and a native AArch64 counter probe; a newly created synthetic UFS disk is attached |
@@ -105,7 +106,7 @@ covers the retained files. No private device asset is uploaded by this plan.
 The verdict reader requires a true boolean aggregate, the exact check count,
 no contradictory individual verdict, and strictly typed required metadata.
 C TAP output must contain exactly one matching plan and unique consecutive
-test numbers; SKIP and TODO do not satisfy a gate. Twenty local unit tests
+test numbers; SKIP and TODO do not satisfy a gate. Twenty-two local unit tests
 cover these rejection paths and the registered plan contracts.
 
 ## What a pass means
@@ -135,4 +136,8 @@ The route receipt must contain literal true aggregate verdicts, eight checks, an
 
 ## Display RSC integration
 
-The expanded [49-gate run](../evidence/display-rsc-20261123/public-49/result.json) passed all gates on the matching frozen binary. The preceding 47-gate receipt remains an immutable baseline. [53 additional RPMh checks](../evidence/display-rsc-20261123/tests-final.json) include the private partial-file clock suite; those six checks are not public CI inputs. The native full-DT run remains a failure at qsee_irq_probe.
+The expanded [49-gate run](../evidence/display-rsc-20261123/public-49/result.json) passed all gates on the matching frozen binary. The preceding 47-gate receipt remains an immutable baseline. [53 additional RPMh checks](../evidence/display-rsc-20261123/tests-final.json) include the private partial-file clock suite; those six checks are not public CI inputs. That full-DT run failed at qsee_irq_probe; the subsequent QSEE/DCC run below advances past that write and remains a failed native boot.
+
+## QSEE and DCC integration
+
+The [52-gate run](../evidence/qsee-dcc-20261123/public-52/result.json) passed on binary SHA256 51fe61d35213a6602a8eaa865faba04bc85f88df341947ca8a2e6300a8ab5be6. Its [51 targeted checks](../evidence/qsee-dcc-20261123/workflow.json) also passed. The initial QSEE migration harness attempted a non-increasing QTest clock before transfer; that failed receipt and the one-nanosecond harness correction remain archived. Device C and the binary were unchanged. The native diagnostic still fails in AOP mailbox and REFGEN accesses; observer exit 0 is not a guest boot verdict.
