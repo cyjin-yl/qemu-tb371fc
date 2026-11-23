@@ -15,7 +15,7 @@ after an earlier component failure so their independent results remain visible.
 
 ## GPUCC increment
 
-The `gpucc-sm8250` gate runs `test_gpucc_sm8250.py` against the compiled binary. It requires 30 unique successful checks, two completed process migrations, two explicit profile rejections, VMState 1, 36 registers, seven sparse windows, 15 branches, five reset outputs and 15 input Clocks. The binary must remain unchanged. Its paused TCG check verifies that QTest fixture setters are absent; its original-kernel/GPU-execution/Android claims remain false. [The model contract](gpucc-sm8250.md) distinguishes the explicit reference profile from tablet handoff and analog timing. The earlier a813 result below is frozen separately; plan registration is not a passing run.
+The `gpucc-sm8250` gate runs `test_gpucc_sm8250.py` against the compiled binary. It requires 30 unique successful checks, two completed process migrations, two explicit profile rejections, VMState 1, 36 registers, seven sparse windows, 15 branches, five reset outputs and 15 input Clocks. The binary must remain unchanged. Its paused TCG check verifies that QTest fixture setters are absent; its original-kernel/GPU-execution/Android claims remain false. [The model contract](gpucc-sm8250.md) distinguishes the explicit reference profile from tablet handoff and analog timing. Commit `df667a3e8dbb31368ebbd6af1a7569a2b4c785d0` has now actually passed the complete 62 + 4 plan and the independent A77/UFS job; [its receipt](../evidence/wholeboard-20261123-a47/public-ci-df667.json) records its own source and binary. The earlier a813 result below remains frozen separately.
 
 ## Gates
 
@@ -39,6 +39,7 @@ pass does not attest newly added devices.
 | GENI UART | 14 register/FIFO/IRQ/reset groups and 6 actual migration checks |
 | GCC and GENI wiring | 19 GCC groups, 5 GCC migration checks, 6 clock/reset groups and 4 wired migration checks |
 | Pinned Kona GCC supplements | Exact three-source regeneration of both generated files; CPUSS 11 checks and USB PIPE mux 15 checks, including real v3 transfers and explicit old-version rejection; no USB PHY execution claim |
+| GPUCC | 30 actual digital PLL/RCG/branch/reset checks, two completed migrations and two profile rejections; actual Clock providers and sparse ownership boundaries |
 | GPU CX and GX power domains | CX 26 checks with 9 migration attempts (6 completed, 3 rejected); GX 37 checks with 12 attempts (8 completed, 4 rejected); explicit digital reference states only |
 | SMEM reference handoff | 22 checks and 4 real migration cases; the separate stopped-production-kernel observer never substitutes for a native run |
 | AOP SRAM and reference peer | Raw SRAM 10 checks retained; explicit reference peer 30 groups, 6 completed migrations and 2 same-binary profile rejections; actual IPCC/GIC routing, supported vote state and no fabricated unknown-service ACK |
@@ -166,3 +167,7 @@ The production kernel/full DT panics in both unknown and explicit-reference REFG
 ## Frozen unified a813 result
 
 Commit `a8136d1b1871d5a90aced67cc269dfb312be5c65` actually passed 61 component/parser gates and 4 clean-Linux boots, plus the independent A77/shared-UFS job. [The receipt](../evidence/wholeboard-20261123-a47/public-ci-a813.json) binds the actual ZIP member SHA256, both clean-source aggregate receipts, exact gate order and selected component details. The two observer unit suites ran 17 and 14 mock-monitor tests; [the separate production-kernel run](../evidence/wholeboard-20261123-a47/native-a813.json) records their real stopped-QEMU observation. That native run registered GCC clocks and then panicked at GPUCC `0x03d90100`; full native-DT userspace and Android remain unpassed.
+
+## Frozen GPUCC-inclusive df667 result
+
+[The 66-gate receipt](../evidence/wholeboard-20261123-a47/public-ci-df667.json) records 62/62 component gates, 4/4 Linux boots and the separate A77/UFS success. Actual ZIP member SHA256 is `654d2eed0cd057028b68f1dba87e4bde49d6e60431538ed991f624de9dba08a0`. The first db3 GPUCC test failed because core invalid-access diagnostics were not enabled; [that failure and the unchanged-binary corrected test](../evidence/wholeboard-20261123-a47/gpucc-fixture-fix.json) remain distinct from this later complete run. [The matching production-kernel/full-DT run](../evidence/wholeboard-20261123-a47/native-df667.json) registers GCC and GPUCC, keeps SMEM 23/23 and the AOP reference exchange, then panics at NPUCC `0x09980000`. GPU command execution, full native-DT userspace and Android remain unpassed.

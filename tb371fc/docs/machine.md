@@ -40,11 +40,15 @@ describe reference contracts, not captured SBL state or AOP firmware execution.
 | `qcom-refgen.boot-disabled-reference=on` | Explicit REFGEN disabled handoff. |
 | `qcom-tcsr-mutex.boot-unlocked-reference=on` | Explicit unlocked mutex handoff. |
 
-The latter four are device `-global` properties. See [SMEM](smem-reference.md),
+The `qcom-...` entries are device `-global` properties. See [SMEM](smem-reference.md),
 [AOP reference peer](aop-reference-peer.md), [CX](gpu-cx-gdsc.md) and
 [GX](gpu-gx-gdsc.md) for exact state, unsupported inputs and migration scope.
 GCC v3 deliberately rejects older GCC migration streams; UFS still prevents
 a full-board migration claim.
+
+## Latest unified GPUCC checkpoint
+
+Commit `df667a3e8dbb31368ebbd6af1a7569a2b4c785d0` passed [62 component gates and four Linux boots](../evidence/wholeboard-20261123-a47/public-ci-df667.json), plus the separate A77/UFS job. The same binary's [production Image and full native-DT run](../evidence/wholeboard-20261123-a47/native-df667.json) registered GCC and GPUCC, observed SMEM success (23/23) and a supported AOP reference exchange, then panicked on NPUCC PLL0 MODE at `0x09980000`. This is a completed GPUCC probe, not a full native boot or GPU/NPU command execution. GCC's NPU configuration-AHB parent remains unproven; its warning is retained.
 
 ## Current executed scope
 
