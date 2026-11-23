@@ -270,7 +270,8 @@ def main():
                 passed("highest-apps-bank-retains-independent-fault-and-stream-syndrome")
                 assert target.ats(GPU, 7, IOVA) & 0x0000fffffffff001 == PA2
                 assert target.ats(GPU, 7, IOVA, write=True) & 9 == 9
-                assert target.get(cb(GPU, 7) + 0x58) == 8
+                # FSR.FORMAT (bit 10) describes AArch64; it is not a fault.
+                assert target.get(cb(GPU, 7) + 0x58) & FSR_MASK == 8
                 assert not target.pending(GIC_IDS[3])
                 target.put(cb(GPU, 7), SCTRL)
                 assert target.pending(GIC_IDS[3])
@@ -280,7 +281,7 @@ def main():
                 passed("gpu-ats-permissions-and-masked-fault-continue-after-load")
                 target.put(GPU_TABLE + 0x2008, 0, "q")
                 assert target.ats(GPU, 7, IOVA) & 3 == 3
-                assert target.get(cb(GPU, 7) + 0x58) == 0
+                assert target.get(cb(GPU, 7) + 0x58) & FSR_MASK == 0
                 assert not target.pending(GIC_IDS[3])
                 passed("destination-gpu-ats-failure-does-not-create-client-irq")
                 target.put(TABLE + 0x2008, PA2 | PTE_RW, "q")
