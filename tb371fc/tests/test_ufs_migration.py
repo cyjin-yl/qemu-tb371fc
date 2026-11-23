@@ -353,12 +353,15 @@ def main():
         close()
 
         for prop, value in (("hw-version", "0x30000000"), ("nutrs", "16")):
-            rejected("reject-" + prop, original, "qcom-sm8250-ufs",
+            diagnostic = ("qcom-sm8250-ufs" if prop == "hw-version" else
+                          "SM8250 UFS migration: configuration mismatch")
+            rejected("reject-" + prop, original, diagnostic,
                      extra_args=("-global", f"qcom-sm8250-ufs.{prop}={value}"))
         small = args.out / "different-capacity.raw"
         with small.open("xb") as stream:
             stream.truncate(32 * 1024 * 1024)
-        rejected("reject-lun-capacity", original, "migration_config", image=small)
+        rejected("reject-lun-capacity", original,
+                 "SM8250 UFS migration: configuration mismatch", image=small)
 
         raw = original.read_bytes()
         body = section_body(raw, "qcom-sm8250-ufs")

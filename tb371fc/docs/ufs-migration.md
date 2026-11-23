@@ -2,12 +2,24 @@
 
 This change replaces the QCOM wrapper's unconditional migration blocker with
 a bounded, versioned checkpoint format. **Runtime migration validation is
-still incomplete.** The first executed gate passed its source DMA/I/O group
-but failed before sending a migration command, because QTest rejects
+still incomplete.** The second executed gate completed all three source and
+receiver migrations and passed 15 groups, including resumed DMA/I/O, pending
+UIC/PHY deadlines, SCSI sense and the Hibern8 background timer. The LUN-capacity
+mismatch was correctly rejected, but its generic byte-equality diagnostic did
+not contain the field name required by the fixture. The remaining rejection
+cases did not run. Its unmodified [partial report](../evidence/ufs-migration-20261123/second-attempt-b2a9131/result.json)
+and [source/artifact binding](../evidence/ufs-migration-20261123/second-attempt-b2a9131/source-binding.json)
+are retained. The configuration comparison now reports an explicit
+`SM8250 UFS migration: configuration mismatch` without changing the 32 wire
+bytes or accepting a mismatched configuration.
+
+The first executed gate passed its source DMA/I/O group but failed before
+sending a migration command, because QTest rejects
 `clock_step 0`. Its unmodified [failure report](../evidence/ufs-migration-20261123/first-attempt-c0ebdb7/result.json)
 and [source/artifact binding](../evidence/ufs-migration-20261123/first-attempt-c0ebdb7/source-binding.json)
 are retained. The fixture now caches the actual timestamp returned by each
 successful nonzero step and uses that value to align the receiver.
+
 The generic `ufs` PCI and `ufs-sysbus` devices remain unmigratable. Enabling this
 format does not establish a whole-board boot or migration claim.
 
