@@ -14,6 +14,8 @@
 
 当前新组合加入[三域 CPUFreq EPSS 数字参考模型](tb371fc/docs/cpufreq-hw-reference.md)，并合入默认分支的 SMMUv2 大页能力；统一计划为 **74 个 gate：70 个组件检查 + 4 次 Linux 启动**。CPUFreq 的 30 项检查覆盖真实档位选择、时钟输出、分数计数、三路中断和迁移；新的完整组合尚待正式 CI 与同二进制原厂复测。下文已通过的 72 项回执仍绑定 `52492a`。
 
+首次 74 项组合 `530909a` 的[正式构建失败](tb371fc/evidence/wholeboard-20261123-a47/public-ci-530909-build-failure.json)已保留：新增 header 的 `first_cpu` 成员与 QEMU 已有宏冲突，板级编译失败，70 项组件和 4 项 Linux 均未执行。失败 ZIP 仅有构建日志，安装保护在缺少二进制时退出，没有启动原厂复测。独立 CPU job 的 852 项来宾检查、2 项配置拒绝和 15 项 UFS 回归通过。最小修复 `4dbcb3e` 仅将该成员改名为 `first_cpu_index`，保持类型、布局、模型行为和全部门槛不变；修复后的完整组合待正式重跑。
+
 统一提交 `52492a797d2acd9c918a8639564e8ff3e7beab3f` 已实际通过 **72 个 gate：68/68 组件检查 + 4/4 Linux 启动，以及独立 A77/UFS job**。见[实际 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45226846782)和[冻结回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-52492a.json)。板级 QEMU SHA-256 为 `debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3`；已直接读取 ZIP、包内二进制、两份 clean-source 汇总、11 份组件报告及 **17 个 MPM/NoC/SMMUv500/TSENS 迁移文件**。
 
 新增[两组 TSENS24xx 数字参考模型](tb371fc/docs/tsens24xx-reference.md)的[原始回执](tb371fc/evidence/wholeboard-20261123-a47/tsens24xx-52492a.json)实际通过 **34 项检查、2 次完成迁移、2 次 profile 拒绝和 2 次损坏流拒绝**。独立解码器检查五个真实迁移文件及六个完整控制器 payload，并将可变字段与停止状态下的真实 QOM 观测比对。默认仍为未知；`0xffff` 初始使能、25°C 输入与 1 ms 采样均是显式参考假设。

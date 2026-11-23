@@ -1,0 +1,41 @@
+{
+  "schema": "tb371fc-cpufreq-artifact-verifier-independent-static-review-v1",
+  "reviewed_at_utc": "2026-11-23 18:24:34 UTC",
+  "verifier": {
+    "git_blob": "20ac24956caedd81ab2efbeebe23dcfc348ed46f",
+    "bytes": 51698,
+    "sha256": "135b69fb0f615b8112f5ac0ab343fb2d604a9a845cbf5bf30eef6c8f928d9612",
+    "entry_point": "verify_cpufreq_streams(z, info, data)"
+  },
+  "test": {
+    "commit": "239a6eec51c09e27b40b57d7d6ef7f0b3157635c",
+    "git_blob": "105767c824bbc3101ec6386d5b6e1fe756ee7eeb",
+    "bytes": 76093,
+    "sha256": "0a11d0f3c8f70c09716083830b8f672a2c62b82d3ff42589373b480b3998dd03"
+  },
+  "model_commit": "e133c1c85b53ca5d3afe81bda2c1767d9e0d39d8",
+  "scope": "Independent full source review for mismatches between this verifier and the exact acceptance fixture. The verifier function, acceptance script and QEMU were not executed.",
+  "findings": [
+    "QMP parsing matches CpuFreqRig's paired request and unwrapped response framing. ERROR lines are retained as strings; source and destination completed statuses come from actual query-migrate responses after the corresponding file-channel request.",
+    "The file transport parameter structure matches file_channels and the exact migration basenames emitted by the fixture. Artifact members are scoped to the component result directory and missing/duplicate members are rejected.",
+    "The independent >IIQ13I2Q decoder is 84 bytes and follows all 18 model fields in order: 48-byte immutable identity, 20-byte runtime and two 8-byte Clock periods.",
+    "Each actual source section is matched by FULL/START header, instance/domain identity, version and immutable geometry. Both positive streams are compared with independently specified source times, rates, caps, IRQ latches, counter values and fractional phases.",
+    "The pre-save QOM window is delimited by the last successful stop and migrate. The fixture reads each anchor exactly three times: before the full snapshot, in that snapshot, and after it. The verifier's repetition and nonmutation requirements match those actual calls.",
+    "The post-save source window also includes later repeated projected counter checks. Those reads occur while the source is postmigrate and produce the same values, so the equality checks do not reject the legitimate continuation fixture.",
+    "The target pre-load window starts after the final external-limit qom-set, followed by its complete snapshot. The restored window ends before the first cont, and the first post-cont counter/phase/epoch getters match the fixture's explicit 1 ns continuation at the different target origin.",
+    "The unknown-profile source is independently reconstructed with zero inaccessible runtime fields, known input Clock periods and actual QOM errors. It is correctly excluded from completed-roundtrip counts.",
+    "Both corrupt copies change one specified field bit in the original source stream. The verifier compares unchanged prefix/suffix bytes and all three decoded domains, and requires specific device load diagnostics rather than generic process failure alone.",
+    "Reported GPIO interception assertions are explicitly distinguished from what raw QMP proves: loaded IRQ latch/getter consistency. The verifier does not fabricate raw GPIO event logs that the fixture did not record.",
+    "The final expected inventory is five migration files and fifteen decoded domain payloads, including six sections from the two corrupt copies. Two completed migrations, two profile rejections and two corrupt-stream rejections remain separate.",
+    "The bytes-mismatch helper reports lengths and SHA-256 rather than rendering full migration RAM. This changes diagnostic volume without weakening equality."
+  ],
+  "static_blockers": [],
+  "changes_requested": [],
+  "verifier_function_invoked": false,
+  "acceptance_script_executed": false,
+  "qemu_executed": false,
+  "artifact_zip_downloaded_or_opened": false,
+  "new_cases_requested": 0,
+  "verdict": "no-static-fixture-or-oracle-blocker; first execution against the formal CI ZIP remains pending",
+  "historical_review_note": "Keep the earlier review blob 5dfc8790c770cffb2c1c8f5bc2fd44404dc067f4 unchanged: it accurately records that this independent review was pending at its publication time. This later review can accompany the actual CI evidence freeze."
+}

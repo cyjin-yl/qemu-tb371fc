@@ -1,0 +1,176 @@
+{
+  "schema": "tb371fc-public-ci-build-failure-v1",
+  "source_commit": "530909a61f59ac6bf4a644ac0d13f4d1fc9c95ea",
+  "run_id": 45237654368,
+  "board_job_id": 137913555207,
+  "board_conclusion": "failure",
+  "board_completed_at": "2026-11-23T18:33:14Z",
+  "failed_steps": [
+    {
+      "name": "Build the dedicated machine and C QTests",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 4,
+      "started_at": "2026-11-23T18:31:16Z",
+      "completed_at": "2026-11-23T18:33:11Z"
+    }
+  ],
+  "skipped_steps": [
+    "Run every public component gate sequentially",
+    "Build the pinned unpatched Linux input",
+    "Run eight-CPU user-space and UFS, SMMU and RPMh driver gates"
+  ],
+  "actual_component_and_linux_gate_start_lines": [],
+  "components_executed": false,
+  "linux_gates_executed": false,
+  "native_executed": false,
+  "compiler_failure": {
+    "translation_unit": "hw/arm/lenovo-tb371fc.c",
+    "header": "include/hw/misc/qcom-cpufreq-hw.h",
+    "header_line": 15,
+    "declaration": "uint32_t first_cpu;",
+    "macro_source": "include/hw/core/cpu.h:622",
+    "macro": "#define first_cpu QTAILQ_FIRST_RCU(&cpus_queue)",
+    "diagnostic": "include/qemu/atomic.h:112:6: error: expected identifier or ‘(’ before ‘{’ token",
+    "cause": "Descriptor member token is expanded by an existing CPU-list macro in the board translation unit",
+    "suggested_fix": "Rename the descriptor member without changing its type, position, migration layout or the global CPU macro"
+  },
+  "compiled_cpufreq_c_line": "2026-11-23T18:32:45.2682936Z [1276/1412] Compiling C object libsystem.a.p/hw_misc_qcom-cpufreq-hw.c.o",
+  "board_log_characters": 239366,
+  "board_log_sha256": "d757a8dfeae4d78db049e7bbc145189caf65a229f78716bc09be18d57e710d1f",
+  "artifact_log_metadata": {
+    "id": 14850811505,
+    "bytes": 19813,
+    "zip_sha256": "a622a8b5e7803ee61fc8964c2637a21397ead219b48eae2f539a532f7c035fdf"
+  },
+  "separate_cpu_job_review": {
+    "job_id": 137913555557,
+    "run_id": 45237654368,
+    "source_commit": "530909a61f59ac6bf4a644ac0d13f4d1fc9c95ea",
+    "status": "success",
+    "completed_at": "2026-11-23T18:26:51Z",
+    "actual_a77_confirmation": [
+      "2026-11-23T18:26:44.2357238Z Verified 852 real guest checks and 2 rejected CPU configurations"
+    ],
+    "actual_ufs_confirmation": [
+      "2026-11-23T18:26:42.9387779Z {\"passed\": true, \"checks\": 15, \"elapsed_seconds\": 7.44}"
+    ],
+    "log_characters": 250923,
+    "log_sha256": "22f0594489f84540f5a68a5a897ae2a679f255654d8deb7a715c8526a1000675",
+    "artifact_downloaded": false,
+    "variants": [
+      {
+        "name": "default",
+        "checks": 94
+      },
+      {
+        "name": "observed-revidr",
+        "checks": 94
+      },
+      {
+        "name": "l2-128k",
+        "checks": 94
+      },
+      {
+        "name": "l2-256k",
+        "checks": 94
+      },
+      {
+        "name": "l3-512k",
+        "checks": 95
+      },
+      {
+        "name": "l3-1m",
+        "checks": 95
+      },
+      {
+        "name": "l3-2m",
+        "checks": 95
+      },
+      {
+        "name": "l3-4m",
+        "checks": 95
+      },
+      {
+        "name": "crypto-off",
+        "checks": 96
+      }
+    ],
+    "rejected_cpu_configurations": [
+      ",l2-cache-size=1M",
+      ",l3-cache-size=128K"
+    ],
+    "ufs_tests": [
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/reg-read",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/init",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-read-write",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-read-write",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/no-prdt",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/sync-cache",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/long-prdt",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/short-prdt",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-cq-wraparound",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-flag",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-attribute",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-desciptor",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-init",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-read-write",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/hid"
+    ],
+    "actual_ufs_count": 15,
+    "actual_guest_check_total": 852,
+    "actual_invalid_cpu_count": 2,
+    "artifact_id": 14850303640,
+    "artifact_bytes": 28319250,
+    "artifact_zip_sha256": "f4831ae098fff86244b26b8f724bad51924d98bb492f8fbad567eb72ad7381d9"
+  },
+  "artifact_downloaded": true,
+  "new_build_started": false,
+  "reviewed_minimal_fix": {
+    "commit": "4dbcb3e07a3c844e75043c4589a63125906174ae",
+    "parent": "530909a61f59ac6bf4a644ac0d13f4d1fc9c95ea",
+    "changed_files": [
+      "include/hw/misc/qcom-cpufreq-hw.h"
+    ],
+    "change": "uint32_t first_cpu -> uint32_t first_cpu_index",
+    "header_blob": "4ec4ef470a210319358b49ee91106d6ae587abe1",
+    "header_sha256": "3674357fc61ca735ba1b3c02283591cd95328e0f9fa67ed21daa16d040afd95d",
+    "header_bytes": 619,
+    "local_build_performed": false,
+    "rerun_pass_observed": false
+  },
+  "workflow_url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45237654368",
+  "board_log_bytes": 239392,
+  "board_log_file": "public-ci-530909-board.log",
+  "independent_reviewer_artifact_downloaded": false,
+  "actual_failed_zip": {
+    "artifact_id": 14850811505,
+    "bytes": 19813,
+    "sha256": "a622a8b5e7803ee61fc8964c2637a21397ead219b48eae2f539a532f7c035fdf",
+    "members": [
+      "tb371fc-results/qemu-build.log"
+    ],
+    "contains_board_binary": false,
+    "contains_component_or_linux_receipts": false
+  },
+  "native_install_guard": {
+    "watcher_pid": 2488850,
+    "actual_log_terminal_line": "WATCH_WORKER_EXIT 1",
+    "failure": "Expected exactly one board qemu-system-aarch64 in the official artifact; observed none",
+    "guard_before_install": true,
+    "binary_install_reached": false,
+    "native_launch_reached": false
+  },
+  "root_review": {
+    "official_completed_job_logs_read": true,
+    "jobs_api_read": true,
+    "board_log_hash_independently_recomputed": true,
+    "cpu_actual_pass_lines_independently_parsed": true,
+    "cpu_actual_guest_checks": 852,
+    "cpu_actual_variants": 9,
+    "cpu_actual_rejected_configurations": 2,
+    "cpu_actual_ufs_tests": 15,
+    "static_fix_commit_read": true,
+    "fix_only_changes_one_member_identifier": true
+  }
+}

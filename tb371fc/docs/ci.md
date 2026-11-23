@@ -255,3 +255,9 @@ The [byte-preserved SMMUv500 report](../evidence/wholeboard-20261123-a47/smmuv50
 ## Concurrent default-branch granule integration
 
 The merged `smmuv2-granules` gate retains the original 26-check invocation and three migration attempts. Its report must explicitly state `legacy_v2_transfer_tested=false`; the public gate does not fetch a historical binary. Default-branch b5f4415 and 69ca28 records are preserved byte for byte, including the failed missing-library attempt and later actual v2-to-v3 extended run. Their successes apply to their own source/binaries. This branch's default 4 KiB SMMUv500 companion gate keeps 36 checks and now verifies the actual core v3 headers/profile in its source streams, while companion VMState remains v1. A fresh unified run is required after CPUFreq and these changes are combined.
+
+## First integrated EPSS build failure
+
+Run [45237654368](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45237654368), source `530909a61f59ac6bf4a644ac0d13f4d1fc9c95ea`, failed while compiling the board translation unit: the new descriptor member `first_cpu` expanded the existing CPU-list macro from `hw/core/cpu.h`. No component or Linux gate ran. The failed board artifact contains only `qemu-build.log`; the exact-artifact guard stopped before installation or native execution. The separate CPU job actually passed 852 guest checks, two rejected configurations and 15 UFS regressions. [The failure receipt and full official board log](../evidence/wholeboard-20261123-a47/public-ci-530909-build-failure.json) are retained.
+
+The reviewed fix `4dbcb3e07a3c844e75043c4589a63125906174ae` changes only that member's name to `first_cpu_index`. Its type and position, all model C, VMState, acceptance scripts and the 70 + 4 plan are unchanged. Static review is not a replacement for the next formal CI run.
