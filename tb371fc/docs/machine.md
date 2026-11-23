@@ -32,8 +32,9 @@ describe reference contracts, not captured SBL state or AOP firmware execution.
 
 | Option | Contract |
 | --- | --- |
-| `smem-profile=off|reference-empty` | Default off; the reference initializes the documented empty SMEM v12 handoff. |
-| `aop-profile=none|reference-qdss-vote` | Default none retains raw SRAM. The reference adds real IPCC link/channel processing and only QDSS/QDSS_AO off/dynamic votes. |
+| `smem-profile=off` or `smem-profile=reference-empty` | Default off; the reference initializes the documented empty SMEM v12 handoff. |
+| `aop-profile=none` or `aop-profile=reference-qdss-vote` | Default none retains raw SRAM. The reference adds real IPCC link/channel processing and only QDSS/QDSS_AO off/dynamic votes. |
+| `qcom-sm8250-gpucc.enabled-reference=on` | Explicit source-bounded digital PLL1/GMU/branch/reset model; [contract](gpucc-sm8250.md). Default MMIO errors, no seeded GPU frequency or GPU execution. |
 | `qcom-gpu-cx-gdsc.boot-collapsed-reference=on` | Explicit collapsed CX handoff; connected RPMh `cx.lvl` remains its parent input. |
 | `qcom-gdsc.enabled-reference=on` | Explicit GX digital reference state; `gfx.lvl` is its distinct parent. |
 | `qcom-refgen.boot-disabled-reference=on` | Explicit REFGEN disabled handoff. |
@@ -386,18 +387,18 @@ in [ROADMAP.md](../ROADMAP.md).
 
 The four-voter APPS/display model passes [49 public gates](../evidence/display-rsc-20261123/public-49/result.json) and [53 targeted checks](../evidence/display-rsc-20261123/tests-final.json). Version 2 RPMh migration is required; legacy three-voter streams are rejected. See [display RSC behavior and reference assumptions](rpmh-display-rsc.md). That native run failed later in qsee_irq_probe; the subsequent run below records the next faults.
 
-## QSEE notification and DCC operation follow-up
+## Historical QSEE notification and DCC operation follow-up
 
-The [52-gate frozen result](../evidence/qsee-dcc-20261123/public-52/result.json) and [51 targeted checks](../evidence/qsee-dcc-20261123/workflow.json) pass. QSEE maps only 0x20-byte banks at 0x01886000 and 0x01888000, with real GIC SPI348/349 outputs; the rest of that syscon is not a success stub. DCC executes the documented bounded operation subset as actual bus transactions. See [QSEE](qsee-irq.md) and [DCC operations](dcc-operations.md). The production kernel and full DT progress past QSEE but fail at AOP shared-memory and REFGEN reads; TEE/SCM, native firmware handoff and Android userspace remain unimplemented or unverified.
+The [52-gate frozen result](../evidence/qsee-dcc-20261123/public-52/result.json) and [51 targeted checks](../evidence/qsee-dcc-20261123/workflow.json) pass. QSEE maps only 0x20-byte banks at 0x01886000 and 0x01888000, with real GIC SPI348/349 outputs; the rest of that syscon is not a success stub. DCC executes the documented bounded operation subset as actual bus transactions. See [QSEE](qsee-irq.md) and [DCC operations](dcc-operations.md). That frozen binary's production-kernel/full-DT run progressed past QSEE but failed at AOP shared-memory and REFGEN reads. The later explicit AOP reference peer has its own separately scoped validation; TEE/SCM, native firmware handoff and Android userspace remain unimplemented or unverified.
 
-## Additional boot resources
+## Default boot-resource contracts and earlier validation
 
 | QOM device | Mapped resource | Contract |
 | --- | --- | --- |
 | /machine/tcsr-mutex | 0x01f40000 / 0x20000 | 32 owner words, 0x1000 stride; initial owners unknown unless explicit unlocked reference |
-| /machine/aop-msgram | 0x0c300000 / 0x1000 | Migrating RAM; reference cold zero and reset retention; no AOP peer |
+| /machine/aop-msgram | 0x0c300000 / 0x1000 | Migrating RAM; reference cold zero and reset retention under default `aop-profile=none`; no peer in that profile |
 | /machine/refgen | 0x088e7080 / 4 | CTRL5 bit 0 software request with validity; initial request unknown unless explicit disabled reference |
 
 The [50 targeted checks and 55 public gates](../evidence/boot-resources-20261123-1005/publication.json) passed on one frozen binary.
 [Native observations](../evidence/boot-resources-20261123-1005/native-progression.json) separate the default REFGEN read abort from the later GDSC abort under explicit reference state.
-No SMEM initialization, secure firmware, QMP remote service, analog reference voltage, or native reset value is claimed by these models.
+The three raw/default resource models above do not claim SMEM initialization, secure firmware, QMP remote service, analog reference voltage, or native reset values. The explicitly enabled [SMEM handoff](smem-reference.md) and [AOP reference peer](aop-reference-peer.md) are separate models with the bounded contracts described above.

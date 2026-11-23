@@ -12,8 +12,10 @@
 - [x] AOP reference QMP link/channel 握手、受支持的 QDSS 投票、真实 IPCC/GIC 通知、复位和同版迁移拒绝；独立版本 30 组及 6 成功/2 拒绝迁移已通过。
 - [x] 原厂驱动实际建立 AOP reference 通道并消费一个受支持的 QDSS 请求；仍有一个未实现请求被明确拒绝，不等于 AOP firmware 或全部服务实现。
 - [x] GCC CPUSS 官方来源补充及严格再生成；原厂完整 DT 异常已从 `0x148198` 推进到 USB PIPE mux `0x10f060`。
-- [ ] 两个 USB PIPE mux 新实现的实际统一回归，以及修复后的原厂完整 DT 再次推进。
-- [ ] 整合后的 65 gate、独立 A77/UFS job、原厂完整 DT 用户态和 Android 启动各自达到验收；不合并不同二进制的通过记录。
+- [x] 两个 USB PIPE mux 的 15 项检查、v3 迁移及版本拒绝；统一 `a813` 原厂完整 DT 已越过 mux 读取并输出 Registered GCC clocks。
+- [x] 整合后的 `a813` 65 gate 和独立 A77/UFS job；已解包核对精确二进制，并在同一板级二进制上获得 SMEM 23/23 和 AOP reference 交换证据。
+- [ ] GPUCC 新增数字 PLL/GMU/branch/reset 模型的 30 项、2 完成/2 拒绝迁移，以及统一 66 gate 和原厂驱动复测。
+- [ ] 原厂完整 DT 用户态及 Android 启动；`a813` 下一实际 fatal 为 GPUCC `0x03d90100`，不能将 65 项公共成功当作整板可用。
 
 本轮精确构建与原厂证据见 [README](../README.md) 和
 [原厂对照](evidence/wholeboard-20261123-a47/native-progression.json)。
@@ -146,5 +148,5 @@ clean kernel 成功不验证该 patch，也不解决真实平板的原始 handof
 - [x] REFGEN CTRL5 software request, explicit state validity, GPIO transitions and migration: 16 checks.
 - [x] Same frozen binary: 55/55 public gates, 50 targeted checks.
 - [ ] Native full DT: default REFGEN handoff remains unknown; explicit disabled reference advances to GDSC probe and still panics.
-- [ ] Evidence-backed SBL/SMEM initialization and remote-processor services; AOP firmware execution and QMP handshake.
+- [ ] Native SBL/SMEM handoff and AOP firmware execution. Later explicit SMEM reference and AOP reference QMP handshake are separately validated above; they do not complete this native-firmware milestone.
 - [ ] Original PMIC routing/identity and unresolved RPMh regulator resources; display/GPU and remaining platform power domains.
