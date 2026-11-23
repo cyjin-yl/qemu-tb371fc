@@ -24,13 +24,17 @@
 - [x] CPUFreq EPSS：[三域参考模型](docs/cpufreq-hw-reference.md)实际通过 30 项、2/2/2 迁移及拒绝检查；`1fe4e1` 的[74 项统一 CI](evidence/wholeboard-20261123-a47/public-ci-1fe4e1.json)与同二进制原厂复测已完成，printk 明确注册成功。合成表不声称原厂频率或电压。
 - [x] L3 devfreq：[请求参考模型](docs/devfreq-qcom-fw-reference.md)已在 `b95f97` 实际通过 20 项及 2/2/2 迁移和拒绝检查，全部 75 项统一验收与[同二进制完整 DT 诊断](evidence/wholeboard-20261123-a47/native-b95f97.json)完成；内核明确注册四个 voter 并初始化父设备。只证明数字请求接口，不代表物理缓存频率或固件执行。
 - [x] 配置 NoC SBM 组件：`3b31e8` 的 76 项正式 CI 已通过，八端口参考的 28/2/2/2 检查和五个实际迁移流已核验；47 端口 QoS 不变。
-- [ ] 配置 NoC SBM 原厂路径：本次在更早的 RPMh WAIT 写发生 PID1 panic，SBM SET/CLR 仍均为零，未证明越过 b95f97 的旧工作线程异常；真实端点流量排空未实现。
-- [ ] RPMh WAIT：生产机器码确认未初始化字段；默认关闭的参考兼容模型、24 B 可选迁移子节和 17/1/2/2 专项检查已实现，加入 77 项候选计划，待正式 CI 与原厂复测。忙碌和其他命令约束保持严格，未宣称真实硅片保留位语义。
-- [ ] 完整 DT 用户态夹具：正式 CI 构建独立 exact-model 变体，后续同源码 ELF/initrd 验收、EL0 记录和真实关机仍须实际执行；旧八项夹具与四项 Linux gate 不改。
-- [ ] 原厂完整 DT 用户态及 Android 启动；不能将 76 项公共成功、控制器注册或 NoC 配置匹配当作整板可用。
+- [x] 配置 NoC SBM 原厂 MMIO 使用：`09c638` 接收 3 次 CLR、最后 mask=4、SET=0；三状态掩码均为零，已越过旧 SBM 写异常。
+- [ ] 配置 NoC SBM 真实流量：幂等 CLR 和静止参考状态不证明实际摄像头／显示／Venus 流量排空或电源耦合。
+- [x] RPMh WAIT 参考兼容组件：`09c638` 的 77 项正式 CI 已通过，专项 17/1/2/2、五流和不变主 v2 通过独立 ZIP 核验；真实硅片保留位语义仍未知。
+- [ ] RPMh WAIT 原厂高位使用证据：本次显式开启，但掩码计数／日志均为零，不能将启动推进归因于兼容开关。
+- [x] 完整 DT 用户态夹具构建／暂存：`09c638` 正式 CI 构建 exact-model 变体；同一 ZIP 的八个成员、ELF/CPIO/3120 B ABI 已实际校验。
+- [ ] 完整 DT 夹具执行：primary 在 BPS GDSC `0x0ad07004` 出现工作线程 Oops，尚未运行后续 EL0／八项记录／独立 guest shutdown 验收；旧夹具和四个 Linux gate 不改。
+- [ ] BPS GDSC 原厂路径：CPU7 PID60 的 `gdsc_probe+0x770` 读异常已有直接 PA 与完整日志证据；需先固定实际 DT／驱动契约，不用常数成功状态代替实现。
+- [ ] 原厂完整 DT 用户态及 Android 启动；不能将 77 项公共成功、控制器注册或 NoC 配置匹配当作整板可用。
 
 本轮精确构建与原厂证据见 [README](../README.md) 和
-[原厂对照](evidence/wholeboard-20261123-a47/native-progression.json)。
+[本次原厂对照](evidence/wholeboard-20261123-a47/native-09c638.json)；[早期对照](evidence/wholeboard-20261123-a47/native-progression.json)保留原始范围。
 原默认分支历史按原字节保留在[独立索引](evidence/DEFAULT-HISTORY-5fd52c1.md)。
 
 ## 1. CPU、内存、中断与启动基础

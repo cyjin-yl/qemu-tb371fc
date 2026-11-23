@@ -1,0 +1,35 @@
+{
+  "schema": "tb371fc-rpmh-wait-artifact-verifier-root-static-review-v1",
+  "verifier": {
+    "bytes": 61601,
+    "sha256": "55b13a822e50d2862a4295e321fa05c1762612a8d455e832a5191365077f624c",
+    "function": "verify_rpmh_wait_streams",
+    "imports": [
+      "hashlib",
+      "json",
+      "re",
+      "struct"
+    ]
+  },
+  "test_commit": "4fb1a83a52d89d50066703c2e57b7aaa7d519c67",
+  "test_sha256": "b72b503c8c968310ea435dc058c6db1a072cad2a20281761696e2ffb3bd16032",
+  "reviewed": [
+    "All three original and two corrupted complete streams, section identity/framing/footer and five complete 19420-byte main decodes",
+    "All four 24-byte subsection payloads, actual source QOM and strict/cold main byte identity",
+    "Raw QMP greeting/request IDs/replies/events and exact command-policy configuration",
+    "Raw QTest time replies and IRQ events, source fixed programming and target prewarm",
+    "First restored pure QOM before cont/device MMIO, original aligned absolute deadline 999 then 1000 ns and continued new command",
+    "Opposite-policy and two deliberate one-bit failures, specific actual stderr; exit remains the reported process exit, without reexecution",
+    "Whole-stream prefix/suffix comparison, unchanged original ZIP bytes, and normal paused TCG readonly access",
+    "Pinned RpmhRig clear order and WaitRig teardown do not introduce unexpected QMP quit or device accesses"
+  ],
+  "cross_channel_order_limit_explicit": true,
+  "scope": "Static source and recorded-log contract review only. Actual ZIP verification and native execution are still pending.",
+  "static_blocker_found": false,
+  "ast_and_compile_object_only": true,
+  "verifier_invoked": false,
+  "public_tests_executed": false,
+  "qemu_executed": false,
+  "supersedes_reviewed_verifier_sha256": "b92a3ac09afd28b03f9ab8de310b789d465b9b9d3619327b3f54de7b17bfcf7e",
+  "last_reviewed_delta": "Simplified source stderr guard to reject any source RPMh unsupported write/no completion line; same vectors, payload decoder and target proof."
+}

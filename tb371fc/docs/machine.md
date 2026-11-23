@@ -502,10 +502,31 @@ double-reads the eight properties with stopped-status checks and does no MMIO,
 write, virtual-time advance or implicit acknowledgement. Original observer
 functions remain byte-identical outside the new call and definition.
 
-The proposed next original-DT diagnostic appends this explicitly reviewed
-eighteenth global after the existing seventeen. An eventual eight-check
-userspace fixture must use the exact same ordered globals, actual accepted
-ELF/initrd, unmodified Image and complete DT. Its model predicate is exactly
-`Qualcomm Technologies, Inc. kona QRD`, proved by the direct fixed-DTB read.
-The ELF supplies its own result address; no old fixture address is reused.
-These source changes still await formal CI and runtime evidence.
+The [09c638 exact-binary diagnostic](../evidence/wholeboard-20261123-a47/native-09c638.json)
+actually used this eighteenth global after the existing seventeen. The stopped
+observer found it enabled but recorded zero accepted masked writes, consistent
+with zero corresponding log messages. This run does not establish native use
+of the high-bit compatibility policy or attribute later progress to it.
+
+The same run recorded three accepted SBM CLR writes, last mask 4, and zero
+SET writes. Requested, SENSE and pending masks were all zero. This is native
+MMIO coverage of the reference command interface; an idempotent CLR can leave
+the connected cold state unchanged and is not proof of delayed drain, actual
+traffic or successful endpoint power control. CPUFreq and all four L3 voter
+registrations plus parent initialization are separately present in printk.
+
+The next direct invalid access is a four-byte read at 0x0ad07004, in the BPS
+GDSC probe context. The kernel records regmap_mmio_read32le+0x8 with
+gdsc_probe+0x770 below it, CPU7/PID60 kworker/7:1, and a synchronous external
+abort at 4.106479 seconds. The complete log contains this worker Oops and
+later thermal messages, not a PID1 panic. The 32.12-second diagnostic timeout
+and collector exit zero do not establish a successful boot.
+
+The full-DT eight-check fixture was built and its actual ELF/initrd were
+[validated and staged](../evidence/wholeboard-20261123-a47/full-dtb-fixture-stage-audit-09c638.json),
+but it was not executed because the primary kernel log contains a fatal.
+Any later consumer must use the exact ordered globals, accepted ELF/initrd,
+unmodified Image and complete DT. The exact model predicate remains
+`Qualcomm Technologies, Inc. kona QRD`; the new ELF supplies its result
+address rather than reusing the old fixture address. Full-DT EL0 acceptance,
+the eight results, guest shutdown and Android remain separate unpassed goals.

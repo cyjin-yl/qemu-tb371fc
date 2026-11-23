@@ -51,7 +51,7 @@ Use their per-run hashes rather than treating a source table as execution proof.
 | Board and loader | [machine.md](docs/machine.md), [runtime layout evidence](evidence/boot-layout-20261123/runtime-layout-frozen4.json) |
 | A77 CPU and PMU | [cpu.md](docs/cpu.md), Arm Cortex-A77 TRM references and native MIDR/REVIDR observations |
 | NoC QoS | [noc-qos-reference.md](docs/noc-qos-reference.md), pinned RPMh programming sequence and bounded DT; [actual 20-check receipt](evidence/wholeboard-20261123-a47/noc-qos-99ef.json) and [47-port native snapshot](evidence/wholeboard-20261123-a47/native-99ef.json); no traffic or SBM claim |
-| Config NoC SBM | [noc-sbm-reference.md](docs/noc-sbm-reference.md), [fixed vendor source/actual-DT contract](evidence/wholeboard-20261123-a47/noc-sbm-source-contract.json), [independent DT geometry](evidence/wholeboard-20261123-a47/noc-sbm-independent-dt-layout.json); `3b31e8` component CI and all five streams verified; native SET/CLR remain zero because the earlier RPMh WAIT panic prevented exercising this path |
+| Config NoC SBM | [noc-sbm-reference.md](docs/noc-sbm-reference.md), [fixed vendor source/actual-DT contract](evidence/wholeboard-20261123-a47/noc-sbm-source-contract.json), [independent DT geometry](evidence/wholeboard-20261123-a47/noc-sbm-independent-dt-layout.json); component CI and all five streams verified. [09c638 native](evidence/wholeboard-20261123-a47/native-09c638.json) recorded three CLR writes and zero SET writes; settled cold bits prove neither traffic drain nor consumer power success. The earlier 3b31e8 unused cold state remains separate |
 | QSMMUv500 reference | [source contract](docs/smmuv500-source-contract.md) and [14-node actual DT slice](evidence/wholeboard-20261123-a47/smmuv500-dt-evidence-99ef.json); directly observed TCU VERSION fault, source-defined HALT/ECATS, [apps-only companion](docs/smmuv500-reference.md), and [exact Image IKCONFIG](evidence/wholeboard-20261123-a47/smmuv500-kernel-config.json); version, timing and firmware handoff remain unmeasured. Absent in 99ef; [3ef98 passed 36 checks and real migrations](evidence/wholeboard-20261123-a47/smmuv500-3ef98.json), with [separate native TBU resource progress](evidence/wholeboard-20261123-a47/native-3ef98.json) |
 | TBU power ownership | [Four complete GDSC DT nodes](evidence/wholeboard-20261123-a47/smmuv500-tbu-gdsc-dt.json) and [current GCC ownership/source review](evidence/wholeboard-20261123-a47/smmuv500-tbu-gdsc-review.json); existing GCC domains 7–10 own the words, while traffic/power coupling is not added by the companion |
 | TSENS24xx digital reference | [Two actual controllers and direct thermal references](evidence/wholeboard-20261123-a47/tsens-dt-evidence-3ef98.json), [pinned vendor/upstream source review](evidence/wholeboard-20261123-a47/tsens-dt-review-3ef98.json) and [model contract](docs/tsens24xx-reference.md); actual PA `0x0c222004` abort in [3ef98 native run](evidence/wholeboard-20261123-a47/native-3ef98.json). SROT DT size 4 remains distinct from sourced +4 access. Explicit temperature, boot mask, 1-ms timing, reset defaults and held-clear policy are reference assumptions. [52492a CI](evidence/wholeboard-20261123-a47/public-ci-52492a.json) and its [original TSENS 34/2/2/2 receipt](evidence/wholeboard-20261123-a47/tsens24xx-52492a.json) passed; the [same-binary full-DT run](evidence/wholeboard-20261123-a47/native-52492a.json) completed reference sampling on both controllers and next aborted in CPUFreq at `0x18591100` |
@@ -169,3 +169,25 @@ means guest execution. The source-pinned consumer and pure ZIP-stage helper
 check the actual ELF/RET/CPIO relationships and bind any later execution to
 the same source, binary, original Image and complete DT. Original Android
 images and hardware endpoint behavior remain separate missing acceptance.
+
+## Actual 77-gate checkpoint and unexecuted full-DT fixture
+
+The [09c638 public receipt](evidence/wholeboard-20261123-a47/public-ci-09c638.json)
+binds 73 component passes, four Linux passes and the exact board executable to
+the [complete job-log audit](evidence/wholeboard-20261123-a47/official-ci-log-audit-09c638.json).
+The [raw WAIT result](evidence/wholeboard-20261123-a47/rpmh-wait-09c638.json)
+has 17 checks, one completed transfer and four rejection cases. The executed
+artifact guard read sixteen original reports and thirty-seven actual stream
+files. Its full raw JSON is preserved in gzip; the [index](evidence/wholeboard-20261123-a47/ci-artifact-audit-index-09c638.json)
+is a derived navigation record with both compressed and original hashes.
+
+The [original fixture manifest](evidence/wholeboard-20261123-a47/actual-dt-fixture-manifest-09c638.json)
+and [executed stage audit](evidence/wholeboard-20261123-a47/full-dtb-fixture-stage-audit-09c638.json)
+bind the new ELF, fixed native-tested arch probe and initrd to that same source
+and ZIP. They prove build and content validation, not guest execution. The
+subsequent [native diagnostic](evidence/wholeboard-20261123-a47/native-09c638.json)
+has a direct read fault at BPS GDSC 0x0ad07004 in a deferred-probe worker.
+The complete kernel log contains an Oops but no PID1 panic; the full-DT
+eight-check consumer was not run. WAIT masking was enabled with zero usage,
+so this trace does not establish it caused the later progress. No Android,
+physical reserved-bit behavior or endpoint traffic success is inferred.

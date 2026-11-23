@@ -11,15 +11,19 @@
 生产内核加测试 initramfs 的成功不等于原厂 Android 系统启动。小核仍用 A55 代替 Qualcomm Kryo；显示、Adreno 650、触控、无线、音频、摄像头以及完整电源/固件契约仍有大量实现工作。缓存容量、功耗、射频、电气行为和真实芯片时序不由这些功能测试证明。
 
 
-## 正在验收：显式 RPMh WAIT 兼容与完整 DT 用户态夹具
+## 最新验收：77 项通过，原厂推进到 BPS GDSC（2026-11-23）
 
-新增[默认关闭的 WAIT 保留位参考兼容选项](tb371fc/docs/rpmh-wait-reserved-reference.md)，对应下方已经由生产机器码确认的未初始化 `tcs_cmd.wait` 路径。显式开启 `qcom-sm8250-rpmh.reference-wait-mask-reserved=on` 后，只对空闲 WAIT 的高 16 位进行忽略处理，保留低 16 位并记录原值、voter、TCS 和使用次数。忙碌写入、CMD_ENABLE、资源校验、实际命令定时与 IRQ 规则保持严格。该策略不是实测硅片行为，没有修改原厂 Image。
+统一源码 `09c638d6a6d4fa4a4e4e332a7b39aa7bf7f5418e` 已实际通过 **77 个 gate：73/73 组件 + 4/4 Linux，以及独立 A77 852+2、PCI UFS 15 项**。见[正式 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45264653096)、[精确产物回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-09c638.json)和[完整日志独审](tb371fc/evidence/wholeboard-20261123-a47/official-ci-log-audit-09c638.json)。板级 QEMU SHA-256 为 `7211873740226d0509e354cfbf1c23bb4eb0459b6eca470187ea3dfd3a2e04ca`；产物保护实际核验 16 份组件报告和 **37 个迁移文件**。完整审计按原字节压缩保留，[可读索引](tb371fc/evidence/wholeboard-20261123-a47/ci-artifact-audit-index-09c638.json)明确标为派生摘要；37 个文件包含负例和损坏副本，不是 37 次成功迁移。
 
-公共计划扩展到 **77 项：73 项组件检查 + 4 项既有 Linux 启动**。新增 WAIT gate 要求 **17 项、1 次完成迁移、2 次策略不匹配拒绝和 2 次单 bit 损坏流拒绝**；主 VMState v2 保持原字段，24 B 的可选 v1 子节绑定兼容策略和诊断历史。旧 76 项合同及相对顺序保持不变。代码、独立审查和[计划预检](tb371fc/evidence/wholeboard-20261123-a47/development-validation-rpmh77.json)不是正式执行成功；本组合仍待它自己的 CI 和精确二进制原厂复测。
+[默认关闭的 WAIT 参考兼容](tb371fc/docs/rpmh-wait-reserved-reference.md)及其[原始报告](tb371fc/evidence/wholeboard-20261123-a47/rpmh-wait-09c638.json)实际通过 **17 项、1 次完成迁移、2 次策略不匹配拒绝和 2 次单 bit 损坏流拒绝**。主 VMState v2 和四项旧 RPMh gate 保留；五个实际流及完整 19420 B 主段／24 B 可选子节已直接核验。兼容只作用于空闲 WAIT 高 16 位，忙碌和其他命令仍严格；这不证明实测硅片的保留位行为。
 
-正式 CI 另增加完整 DT 用户态夹具的**构建步骤**，使用实际 `Qualcomm Technologies, Inc. kona QRD` 名称，保留原八项检查和 3120 B 结果 ABI。它不增加第五次 Linux 启动，也不构成原厂用户态通过。后续[取证适配器](tb371fc/evidence/wholeboard-20261123-a47/native-userspace8-actual-dt-draft.py)只消费同源码已验收 ZIP 中的 ELF/initrd，按实际 ELF 符号定位结果；要求同二进制 primary 完整日志无 fatal，再以 EL0 PC/PSTATE、原始内存记录和独立 guest shutdown 取证。当前没有执行该夹具，完整 DT 用户态与 Android 仍未通过。
+同一二进制的[未修改生产 Image／完整 DT 诊断](tb371fc/evidence/wholeboard-20261123-a47/native-09c638.json)运行 32.12 秒后按界限停止，SMEM 23/23、AOP reference、CPUFreq 及四个 L3 voter／父设备注册均有实际证据。WAIT 策略虽开启，但掩码计数和对应日志均为 **0**，不能把推进归因于该开关。SBM 实际接收 **3 次 CLR、0 次 SET，最后 CLR mask=4**，停机请求、SENSE、pending 均为零；证明接口被使用，不证明真实流量排空或非平凡延时握手。
 
-## 最新验收：76 项通过，原厂暴露 RPMh WAIT 异常（2026-11-23）
+新的唯一无效访问是 **读取 BPS GDSC `0x0ad07004` 的 4 B**，在 4.106479 秒触发 CPU7、PID60 `kworker/7:1` 的同步外部异常；调用链包含 `gdsc_probe+0x770`。这是延迟 probe 工作线程 Oops，完整日志没有 PID1 panic，随后 10/20 秒仍有内核日志。诊断程序退出 0 仅表示取证完成。**完整原厂 DT 下的用户态及 guest shutdown 验收、原厂 Android 和整板可用仍未通过。**
+
+完整 DT 专用八项夹具已在本次 CI **实际构建并从同一 ZIP 校验、暂存**：[原始构建清单](tb371fc/evidence/wholeboard-20261123-a47/actual-dt-fixture-manifest-09c638.json)、[暂存审计](tb371fc/evidence/wholeboard-20261123-a47/full-dtb-fixture-stage-audit-09c638.json)。其 ELF/3120 B 结果 ABI、精确 `Qualcomm Technologies, Inc. kona QRD` 名称和 CPIO 已检查，但**没有运行该夹具**；primary 日志中的异常阻止后续 EL0／八项结果／独立关机验收。构建步骤不增加第五个 Linux gate，也不改旧八项夹具。
+
+## 保留的 76 项通过与 RPMh WAIT 异常（2026-11-23）
 
 新增独立的 [NoC SBM 参考握手模型](tb371fc/docs/noc-sbm-reference.md)，按[固定驱动源码和完整实机 DT](tb371fc/evidence/wholeboard-20261123-a47/noc-sbm-source-contract.json)仅映射三个 32 位 word、八个端口。默认保持三个地址未映射；显式启用后区分请求、反馈和挂起状态，支持独立期限、外部参考阻塞、复位和 152 B 的 VMState v1。1000 ns 延迟与冷态连接均为明示参考策略；没有实现摄像头、显示或 Venus 的实际流量排空。
 

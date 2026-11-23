@@ -1,0 +1,135 @@
+{
+  "schema": "tb371fc-rpmh-wait-zip-verifier-static-review-v1",
+  "verifier": {
+    "path": "/run/tb371fc-root77-a47/rpmh-wait-artifact-verifier.py",
+    "git_blob": "33b514ae0ad17d074f70b3cfa6a33d5c759031aa",
+    "bytes": 61601,
+    "sha256": "55b13a822e50d2862a4295e321fa05c1762612a8d455e832a5191365077f624c",
+    "entrypoint": "verify_rpmh_wait_streams(z, info, data)",
+    "return_keys": [
+      "rpmh_wait_streams_from_zip",
+      "rpmh_wait_decoded_sections",
+      "rpmh_wait_log_evidence"
+    ],
+    "local_bytes_match_saved_git_blob": true
+  },
+  "pinned_test": {
+    "commit": "4fb1a83a52d89d50066703c2e57b7aaa7d519c67",
+    "git_blob": "4118a15144a7690a159f934da9094746fc2c417c",
+    "path": "tb371fc/tests/test_rpmh_wait_mask.py",
+    "bytes": 44703,
+    "sha256": "b72b503c8c968310ea435dc058c6db1a072cad2a20281761696e2ffb3bd16032"
+  },
+  "model": {
+    "commit": "dbf0e411e3fedad43e9bdbe44e7e969ca2fc89b1",
+    "base": "3b31e83dc412962826ada872e361a1d32ea4e463",
+    "main_vmstate_version": 2,
+    "main_payload_bytes": 19420,
+    "optional_subsection": "qcom-sm8250-rpmh/wait-reserved-reference",
+    "subsection_version": 1,
+    "subsection_payload_bytes": 24
+  },
+  "frozen_expectations": {
+    "checks": 17,
+    "completed_roundtrips": 1,
+    "profile_rejections": 2,
+    "single_bit_corruption_rejections": 2,
+    "unmodified_source_files": 3,
+    "actual_files": 5,
+    "positive_source_virtual_ns": 400,
+    "target_virtual_ns_before_incoming": 400,
+    "absolute_deadline_ns": 1000,
+    "source_masked_writes": [
+      [
+        0,
+        7,
+        65537
+      ],
+      [
+        2,
+        0,
+        2147516416
+      ],
+      [
+        3,
+        1,
+        131074
+      ]
+    ],
+    "source_last": [
+      3,
+      3,
+      1,
+      131074
+    ],
+    "strict_cold_virtual_ns": 23,
+    "masked_cold_virtual_ns": 37,
+    "corruptions": [
+      {
+        "field": "policy",
+        "relative_offset": 0,
+        "old": 1,
+        "new": 0
+      },
+      {
+        "field": "last_voter",
+        "relative_offset": 12,
+        "old": 3,
+        "new": 7
+      }
+    ]
+  },
+  "verification_contract": [
+    "Reads exact ZIP members with duplicate-name and indexed-size checks; compares the supplied report with the actual member.",
+    "Pins test/report and unchanged old RPMh helper identities. The outer worker separately binds the formal source and QEMU binary; the function does not pretend to rerun the process.",
+    "Parses raw QMP JSONL greeting, monotonically matched request IDs, real responses/errors, and asynchronous events. A rejected incoming may end with the recorded send and EOF, but requires its specific device-load stderr.",
+    "Parses raw QTest JSONL requests, actual clock replies, IRQ events and recorded pre-request virtual time. Full source and target operation sequences exclude extra memory repair or time advancement.",
+    "Independently decodes every main payload field: digest, latency, four DRV headers, all 32 TCS states and 512 command slots, all 98 per-voter resource vote/staging/dirty states, and XO Clock period.",
+    "Checks the actual FULL/START section, adjacent optional v1 subsection and default 0x7e footer with the same section ID. The subsection's five fields match stopped-source QOM; hidden main resource votes are validated against the literal source programming scenario rather than claimed QOM observability.",
+    "Requires strict cold source omission and masked cold source inclusion despite zero use, and byte-identical 19,420-byte main payloads.",
+    "Binds completed source/destination query-migrate replies, prewarmed target, doubled thirteen-getter snapshots, first restored observations before cont, and actual Clock/IRQ/command completion at 999 then 1000 ns.",
+    "Requires entire-file unchanged prefixes/suffixes, one changed byte/bit in the designated four-byte field, exact old/new values, and specific destination rejection for both corrupted copies.",
+    "Checks the existing paused-TCG case's fifteen getters, stopped statuses, lack of cont, and empty QTest log without starting another case."
+  ],
+  "reviews": {
+    "author_static": "No blocker found after complete source/fixture review; the function was not invoked.",
+    "root_static": "Root reported no concrete false rejection or false pass in the full candidate and independently rechecked clear() ordering and the TCG getter count. The final change only tightened the source stderr filter.",
+    "independent_test_author_static": "SMEM independently read the final 61,601-byte / 55b13a... version against fixed test 4fb1a83a, including all source/target QMP and QTest sequences and the EOF path; reported no static interface or log-order blocker."
+  },
+  "primary_wire_sources": {
+    "ref": "3b31e83dc412962826ada872e361a1d32ea4e463",
+    "paths": [
+      "migration/savevm.h",
+      "migration/savevm.c",
+      "migration/options.c"
+    ],
+    "facts": [
+      "QEMU_VM_SUBSECTION is 0x05",
+      "QEMU_VM_SECTION_FOOTER is 0x7e",
+      "send-section-footer defaults true"
+    ]
+  },
+  "validation": {
+    "ast_parse": true,
+    "compile_to_code_object_without_execution": true,
+    "top_level_functions": 1,
+    "imports": [
+      "hashlib",
+      "json",
+      "re",
+      "struct"
+    ],
+    "verifier_function_called": false,
+    "test_module_imported": false,
+    "test_executed": false,
+    "qemu_executed": false,
+    "remote_command_executed": false,
+    "refs_updated": false
+  },
+  "scope_limits": [
+    "This receipt records static review only. Successful execution against the actual formal CI ZIP remains pending.",
+    "Cross-channel QMP/QTest ordering is supported by the pinned harness and retained receipts; the channels do not share an invented timestamp.",
+    "The original command deadline is absolute and both QTest clocks are aligned to 400 ns. The compatibility option does not add or rebase a timer.",
+    "No hardware WI/RAZ semantics, native driver progress, EL0 execution, firmware execution or Android boot is established by this component verifier."
+  ]
+}

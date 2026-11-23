@@ -98,7 +98,7 @@ driver coverage. The previous b95f97 L3 registration and later SBM worker
 exception remain separate evidence. Full original-DT userspace and Android
 are unpassed; no repeated native run was used to select a more favorable trace.
 
-## Explicit RPMh WAIT policy candidate
+## Explicit RPMh WAIT policy accepted component checkpoint
 
 The new `rpmh-wait-mask-reference` gate follows the four unchanged RPMh gates.
 It requires 17 unique checks, one completed transfer, two opposite-policy
@@ -111,12 +111,29 @@ deadlines, IRQ independence, reset and normal paused TCG observation are part
 of this gate. A completed transfer is counted once, although both restoration
 and continued timing produce checks.
 
-The exact artifact guard requires sixteen selected component reports and
-thirty-seven actual migration files, including the five new WAIT files.
-Its new independent decoder must check the complete 19420-byte main payload,
-the optional 24-byte subsection, actual QMP/QTest logs and destination errors.
-The two strict/cold-masked main payloads must be byte-identical. This remains
-an unexecuted 73+4 plan until the exact source's formal run is recorded.
+The [09c638 formal result](../evidence/wholeboard-20261123-a47/public-ci-09c638.json)
+actually passed 73/73 components in 176.172 seconds and 4/4 Linux gates in
+5.499 seconds, with clean source and the same unchanged board binary. The
+independent CPU job passed 852 guest checks, two rejected configurations and
+15 PCI UFS cases. Complete job logs and the ordered 77-gate audit are retained.
+
+The exact artifact guard actually inspected sixteen component reports and
+thirty-seven migration files, including the five WAIT files. The [original
+WAIT report](../evidence/wholeboard-20261123-a47/rpmh-wait-09c638.json) passed
+17 checks, one completed transfer, two policy rejections and two single-bit
+corruption rejections. The decoder checked every 19420-byte main field,
+the optional 24-byte subsection, raw QMP/QTest transcripts and destination
+errors, including the aligned target clock and original deadline continuation.
+The strict and cold-masked main payloads were byte-identical. Five files
+include three unmodified sources and two corrupted copies; they are not five
+completed roundtrips.
+
+The complete 1,353,997-byte guard audit is retained as a deterministic gzip
+with mtime zero. Its [compact index](../evidence/wholeboard-20261123-a47/ci-artifact-audit-index-09c638.json)
+is explicitly derived, links compressed and original SHA256 identities and
+lists all sixteen report hashes and thirty-seven stream identities. It is
+not substituted for an original component result.json or the complete audit.
+The old four RPMh gates and all prior relative gate ordering remain verified.
 
 ## Complete original-DT userspace fixture build
 
@@ -134,8 +151,17 @@ The separate [native consumer](../evidence/wholeboard-20261123-a47/native-usersp
 requires that same accepted binary and a same-source primary diagnostic with
 a complete fatal-free kernel log. Its exact original Image, complete DT, 8 GiB,
 eight CPUs and ordered reference options remain bound to the primary command.
-EL0/result and actual shutdown have separate receipts. Current preparation
-and successful fixture compilation, by themselves, are not userspace success.
+EL0/result and actual shutdown have separate receipts. In the exact 09c638
+run the fixture build completed, and the [actual stage audit](../evidence/wholeboard-20261123-a47/full-dtb-fixture-stage-audit-09c638.json)
+validated eight ZIP members, ELF symbols/PT_LOAD mapping and the CPIO. The
+[original build manifest](../evidence/wholeboard-20261123-a47/actual-dt-fixture-manifest-09c638.json)
+is preserved byte-for-byte. No guest was executed by building or staging it.
+
+The subsequent primary diagnostic contained a BPS GDSC worker Oops, so the
+full-DT eight-check consumer was not run. Its EL0, results and shutdown remain
+unaccepted. A zero collector exit, timeout or fixture build is not substituted
+for userspace success. The eighteen reference globals and same-binary binding
+still apply to any future authorized consumer execution.
 
 ## Gates
 
