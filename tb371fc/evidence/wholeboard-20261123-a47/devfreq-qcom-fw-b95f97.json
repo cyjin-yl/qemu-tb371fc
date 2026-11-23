@@ -1,0 +1,684 @@
+{
+  "schema": "tb371fc-devfreq-qcom-fw-v1",
+  "qemu": "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+  "machine": "tb371fc,gcc-boot-configured=off,ufs-enabled=off,rpmh-profile=off,rpmh-boot-configured=off",
+  "qemu_sha256_before": "0f6ebed05f414484f1ef04196457c314bbd635245683c547c40d0a601065c88e",
+  "test_sha256": "8c4e49817f58cb2dca002d446486e75fee45c65ee2142963ed9112fbe24669cf",
+  "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+  "source_sha256": "745457c2a20c90521772ef29c5f572570f481541d01ef427707d3da35bc5eb16",
+  "source_path": "drivers/devfreq/devfreq_qcom_fw.c",
+  "actual_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "actual_dt_capture_sha256": "3b4d663de9e5ea33f5a86fc7d9f49f26223a6217657594423691d59f0ded124b",
+  "expected_checks": 20,
+  "expected_completed_migrations": 2,
+  "expected_rejected_migrations": 2,
+  "expected_corrupted_stream_rejections": 2,
+  "vmstate_version": 1,
+  "vmstate_payload_bytes_per_device": 72,
+  "device_count": 1,
+  "register_count": 42,
+  "sparse_window_count": 3,
+  "mapped_bytes": 168,
+  "lut_rows": 40,
+  "lut_row_bytes": 4,
+  "valid_perf_states": 4,
+  "software_voter_count": 4,
+  "reference_nominal_xo_hz": 19200000,
+  "reference_profile_is_default": false,
+  "reference_lut_is_synthetic": true,
+  "factory_lut_observed": false,
+  "hardware_voter_slots_implemented": false,
+  "clock_control_implemented": false,
+  "actual_cache_frequency_measured": false,
+  "irq_implemented": false,
+  "timer_implemented": false,
+  "counter_implemented": false,
+  "voltage_control_implemented": false,
+  "firmware_execution_observed": false,
+  "guest_cpu_executed": false,
+  "native_kernel_probe_observed": false,
+  "android_boot_passed": false,
+  "checks": [
+    {
+      "name": "explicit_reference_exposes_all_forty_rows_and_three_actual_dt_resources",
+      "passed": true
+    },
+    {
+      "name": "literal_production_parser_uses_frequency_only_and_stops_at_the_duplicate",
+      "passed": true
+    },
+    {
+      "name": "every_legal_index_changes_requested_feedback_with_little_endian_words",
+      "passed": true
+    },
+    {
+      "name": "four_software_voters_write_the_literal_maximum_without_hidden_hardware_votes",
+      "passed": true
+    },
+    {
+      "name": "requested_state_does_not_invent_autonomous_clock_or_time_feedback",
+      "passed": true
+    },
+    {
+      "name": "system_reset_restores_boot_request_with_an_independent_gcc_witness",
+      "passed": true
+    },
+    {
+      "name": "invalid_indices_fail_atomically_instead_of_selecting_terminator_rows",
+      "passed": true
+    },
+    {
+      "name": "read_only_handoff_and_table_and_qom_properties_cannot_forge_runtime",
+      "passed": true
+    },
+    {
+      "name": "strict_access_widths_and_sparse_holes_preserve_real_word_transactions",
+      "passed": true
+    },
+    {
+      "name": "default_unknown_profile_rejects_all_forty_two_words_and_runtime_getters",
+      "passed": true
+    },
+    {
+      "name": "explicit_boot_request_and_realization_constraints_are_observable",
+      "passed": true
+    },
+    {
+      "name": "paused_tcg_uses_the_same_request_registers_without_guest_cpu_execution",
+      "passed": true
+    },
+    {
+      "name": "v1_request_state_restores_before_first_devfreq_mmio",
+      "passed": true,
+      "source_virtual_ns": 137,
+      "destination_virtual_ns": 987654321
+    },
+    {
+      "name": "restored_request_accepts_independent_new_indices_without_persisting_old_votes",
+      "passed": true
+    },
+    {
+      "name": "v1_nonzero_boot_policy_and_distinct_live_request_restore_before_mmio",
+      "passed": true,
+      "source_virtual_ns": 12345,
+      "destination_virtual_ns": 73
+    },
+    {
+      "name": "restored_live_request_changes_and_system_reset_reapplies_explicit_boot_policy",
+      "passed": true
+    },
+    {
+      "name": "real_migration_rejects_reference_to_unknown_profile",
+      "passed": true
+    },
+    {
+      "name": "real_migration_rejects_unknown_to_reference_profile",
+      "passed": true
+    },
+    {
+      "name": "real_migration_rejects_single_field_corruption_performance_index",
+      "passed": true
+    },
+    {
+      "name": "real_migration_rejects_single_field_corruption_lut_identity",
+      "passed": true
+    }
+  ],
+  "migrations": [
+    {
+      "name": "v1_requested_index_and_ram_roundtrip_before_first_mmio",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 18,
+        "total-time": 26,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 720.4940799999999,
+          "transferred": 2251544,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "destination": {
+        "status": "completed"
+      },
+      "source_directory": "migration-request-source",
+      "target_directory": "migration-request-target",
+      "destination_virtual_ns": 987654321,
+      "different_virtual_origins": true,
+      "snapshot_file": "devfreq-fw-v1-request-index.migration",
+      "snapshot_sha256": "76d78f53ff17a2cfde87beffe278abf35b763b4f27f3123a97399f1124f9c10a",
+      "snapshot_bytes": 2251544,
+      "stream_modified": false,
+      "device_sections_verified": 1,
+      "payload_bytes_per_device": 72,
+      "sections": [
+        {
+          "instance_id": 0,
+          "section_version": 1,
+          "section_name": "qcom-devfreq-fw",
+          "section_header_offset": 2120383,
+          "section_id": 42,
+          "payload_offset": 2120412,
+          "payload_bytes": 72,
+          "payload_hex": "000000010000000000000000185900000000000018590100000000001859032000000004000000a00000000400000004000000004446303100000028000000040124f80000000001",
+          "payload_file": "devfreq-fw-v1-request-index.migration.instance0.payload.bin",
+          "decoded_fields": {
+            "profile": 1,
+            "instance_id": 0,
+            "enable_address": 408485888,
+            "frequency_table_address": 408486144,
+            "performance_address": 408486688,
+            "enable_resource_size": 4,
+            "frequency_table_resource_size": 160,
+            "performance_resource_size": 4,
+            "lut_row_size": 4,
+            "boot_perf_index": 0,
+            "lut_identity": 1145450545,
+            "lut_entries": 40,
+            "valid_perf_count": 4,
+            "nominal_xo_hz": 19200000,
+            "performance_index": 1
+          },
+          "all_serialized_fields_verified": true,
+          "runtime_matches_actual_source_qom": true,
+          "unknown_runtime_zero_invariant_verified": false
+        }
+      ],
+      "source_boot_perf_index": 0,
+      "target_devfreq_mmio_before_first_observation": false,
+      "target_qmp_cont_before_first_observation": false,
+      "destination_state_was_different_before_load": true,
+      "target_qom_before_first_mmio_file": "migration-request-target/destination-before-first-devfreq-mmio.json",
+      "target_query_migrate_file": "migration-request-target/destination-query-migrate.json",
+      "continued_after_restore": true,
+      "source_virtual_ns": 137,
+      "source_qom_observation_did_not_change_request": true,
+      "source_qom_before_file": "migration-request-source/source-qom-before-save.json",
+      "source_qom_after_file": "migration-request-source/source-qom-after-save.json",
+      "source_query_migrate_file": "migration-request-source/source-query-migrate.json"
+    },
+    {
+      "name": "v1_nonzero_boot_policy_and_live_request_roundtrip",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 18,
+        "total-time": 26,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 720.4940799999999,
+          "transferred": 2251544,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "destination": {
+        "status": "completed"
+      },
+      "source_directory": "migration-boot-policy-source",
+      "target_directory": "migration-boot-policy-target",
+      "destination_virtual_ns": 73,
+      "different_virtual_origins": true,
+      "snapshot_file": "devfreq-fw-v1-explicit-boot-policy.migration",
+      "snapshot_sha256": "df15281dc32d9407624a9d45a34b119fe8c7ca65d3fca8677fcc9dada61fd739",
+      "snapshot_bytes": 2251544,
+      "stream_modified": false,
+      "device_sections_verified": 1,
+      "payload_bytes_per_device": 72,
+      "sections": [
+        {
+          "instance_id": 0,
+          "section_version": 1,
+          "section_name": "qcom-devfreq-fw",
+          "section_header_offset": 2120383,
+          "section_id": 42,
+          "payload_offset": 2120412,
+          "payload_bytes": 72,
+          "payload_hex": "000000010000000000000000185900000000000018590100000000001859032000000004000000a00000000400000004000000024446303100000028000000040124f80000000003",
+          "payload_file": "devfreq-fw-v1-explicit-boot-policy.migration.instance0.payload.bin",
+          "decoded_fields": {
+            "profile": 1,
+            "instance_id": 0,
+            "enable_address": 408485888,
+            "frequency_table_address": 408486144,
+            "performance_address": 408486688,
+            "enable_resource_size": 4,
+            "frequency_table_resource_size": 160,
+            "performance_resource_size": 4,
+            "lut_row_size": 4,
+            "boot_perf_index": 2,
+            "lut_identity": 1145450545,
+            "lut_entries": 40,
+            "valid_perf_count": 4,
+            "nominal_xo_hz": 19200000,
+            "performance_index": 3
+          },
+          "all_serialized_fields_verified": true,
+          "runtime_matches_actual_source_qom": true,
+          "unknown_runtime_zero_invariant_verified": false
+        }
+      ],
+      "source_boot_perf_index": 2,
+      "target_devfreq_mmio_before_first_observation": false,
+      "target_qmp_cont_before_first_observation": false,
+      "destination_state_was_different_before_load": true,
+      "target_qom_before_first_mmio_file": "migration-boot-policy-target/destination-before-first-devfreq-mmio.json",
+      "target_query_migrate_file": "migration-boot-policy-target/destination-query-migrate.json",
+      "continued_after_restore": true,
+      "source_virtual_ns": 12345,
+      "source_qom_observation_did_not_change_request": true,
+      "source_qom_before_file": "migration-boot-policy-source/source-qom-before-save.json",
+      "source_qom_after_file": "migration-boot-policy-source/source-qom-after-save.json",
+      "source_query_migrate_file": "migration-boot-policy-source/source-query-migrate.json",
+      "restored_explicit_boot_policy_verified_by_actual_system_reset": true
+    }
+  ],
+  "rejected_migrations": [
+    {
+      "name": "reference-to-unknown",
+      "passed": true,
+      "profile_mismatch": true,
+      "source_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 18,
+        "total-time": 26,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 720.4940799999999,
+          "transferred": 2251544,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "snapshot_file": "devfreq-fw-v1-request-index.migration",
+      "snapshot_sha256": "76d78f53ff17a2cfde87beffe278abf35b763b4f27f3123a97399f1124f9c10a",
+      "snapshot_bytes": 2251544,
+      "stream_modified": false,
+      "sections": [
+        {
+          "instance_id": 0,
+          "section_version": 1,
+          "section_name": "qcom-devfreq-fw",
+          "section_header_offset": 2120383,
+          "section_id": 42,
+          "payload_offset": 2120412,
+          "payload_bytes": 72,
+          "payload_hex": "000000010000000000000000185900000000000018590100000000001859032000000004000000a00000000400000004000000004446303100000028000000040124f80000000001",
+          "payload_file": "devfreq-fw-v1-request-index.migration.instance0.payload.bin",
+          "decoded_fields": {
+            "profile": 1,
+            "instance_id": 0,
+            "enable_address": 408485888,
+            "frequency_table_address": 408486144,
+            "performance_address": 408486688,
+            "enable_resource_size": 4,
+            "frequency_table_resource_size": 160,
+            "performance_resource_size": 4,
+            "lut_row_size": 4,
+            "boot_perf_index": 0,
+            "lut_identity": 1145450545,
+            "lut_entries": 40,
+            "valid_perf_count": 4,
+            "nominal_xo_hz": 19200000,
+            "performance_index": 1
+          },
+          "all_serialized_fields_verified": true,
+          "runtime_matches_actual_source_qom": true,
+          "unknown_runtime_zero_invariant_verified": false
+        }
+      ],
+      "target_reference": false,
+      "target_directory": "rejected-reference-to-unknown",
+      "original_stream_hash_unchanged": true,
+      "source_virtual_ns": 137,
+      "source_qom_observation_did_not_change_request": true,
+      "source_qom_before_file": "migration-request-source/source-qom-before-save.json",
+      "source_qom_after_file": "migration-request-source/source-qom-after-save.json",
+      "source_query_migrate_file": "migration-request-source/source-query-migrate.json",
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-devfreq-fw",
+      "expected_diagnostic": "0 != 1",
+      "specific_load_failure_observed": true
+    },
+    {
+      "name": "unknown-to-reference",
+      "passed": true,
+      "profile_mismatch": true,
+      "source_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 18,
+        "total-time": 26,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 720.4940799999999,
+          "transferred": 2251544,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "snapshot_file": "devfreq-fw-v1-unknown-profile.migration",
+      "snapshot_sha256": "dc6a429348cafd3465d0bf929e674346c29e3e975b973023bd4c6b9b2502ddc6",
+      "snapshot_bytes": 2251544,
+      "stream_modified": false,
+      "sections": [
+        {
+          "instance_id": 0,
+          "section_version": 1,
+          "section_name": "qcom-devfreq-fw",
+          "section_header_offset": 2120383,
+          "section_id": 42,
+          "payload_offset": 2120412,
+          "payload_bytes": 72,
+          "payload_hex": "000000000000000000000000185900000000000018590100000000001859032000000004000000a00000000400000004000000004446303100000028000000040124f80000000000",
+          "payload_file": "devfreq-fw-v1-unknown-profile.migration.instance0.payload.bin",
+          "decoded_fields": {
+            "profile": 0,
+            "instance_id": 0,
+            "enable_address": 408485888,
+            "frequency_table_address": 408486144,
+            "performance_address": 408486688,
+            "enable_resource_size": 4,
+            "frequency_table_resource_size": 160,
+            "performance_resource_size": 4,
+            "lut_row_size": 4,
+            "boot_perf_index": 0,
+            "lut_identity": 1145450545,
+            "lut_entries": 40,
+            "valid_perf_count": 4,
+            "nominal_xo_hz": 19200000,
+            "performance_index": 0
+          },
+          "all_serialized_fields_verified": true,
+          "runtime_matches_actual_source_qom": false,
+          "unknown_runtime_zero_invariant_verified": true
+        }
+      ],
+      "target_reference": true,
+      "target_directory": "rejected-unknown-to-reference",
+      "original_stream_hash_unchanged": true,
+      "source_virtual_ns": 4567,
+      "source_qom_observation_did_not_change_request": true,
+      "source_qom_before_file": "migration-unknown-source/source-qom-before-save.json",
+      "source_qom_after_file": "migration-unknown-source/source-qom-after-save.json",
+      "source_query_migrate_file": "migration-unknown-source/source-query-migrate.json",
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-devfreq-fw",
+      "expected_diagnostic": "1 != 0",
+      "specific_load_failure_observed": true
+    }
+  ],
+  "corrupted_stream_rejections": [
+    {
+      "name": "performance-index",
+      "passed": true,
+      "stream_modified": true,
+      "source_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 18,
+        "total-time": 26,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 720.4940799999999,
+          "transferred": 2251544,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "original_stream_file": "devfreq-fw-v1-request-index.migration",
+      "original_stream_sha256": "76d78f53ff17a2cfde87beffe278abf35b763b4f27f3123a97399f1124f9c10a",
+      "original_stream_bytes": 2251544,
+      "corrupted_stream_file": "devfreq-fw-v1-corrupted-performance-index.migration",
+      "corrupted_stream_sha256": "4f40f61c470f303a6aa27968cf3f233747d5855500283605ab9bc26b17fd5bda",
+      "corrupted_stream_bytes": 2251544,
+      "original_stream_hash_unchanged": true,
+      "target_directory": "corrupted-performance-index",
+      "original_sections": [
+        {
+          "instance_id": 0,
+          "section_version": 1,
+          "section_name": "qcom-devfreq-fw",
+          "section_header_offset": 2120383,
+          "section_id": 42,
+          "payload_offset": 2120412,
+          "payload_bytes": 72,
+          "payload_hex": "000000010000000000000000185900000000000018590100000000001859032000000004000000a00000000400000004000000004446303100000028000000040124f80000000001",
+          "payload_file": "devfreq-fw-v1-request-index.migration.instance0.payload.bin",
+          "decoded_fields": {
+            "profile": 1,
+            "instance_id": 0,
+            "enable_address": 408485888,
+            "frequency_table_address": 408486144,
+            "performance_address": 408486688,
+            "enable_resource_size": 4,
+            "frequency_table_resource_size": 160,
+            "performance_resource_size": 4,
+            "lut_row_size": 4,
+            "boot_perf_index": 0,
+            "lut_identity": 1145450545,
+            "lut_entries": 40,
+            "valid_perf_count": 4,
+            "nominal_xo_hz": 19200000,
+            "performance_index": 1
+          },
+          "all_serialized_fields_verified": true,
+          "runtime_matches_actual_source_qom": true,
+          "unknown_runtime_zero_invariant_verified": false
+        }
+      ],
+      "mutation": {
+        "instance_id": 0,
+        "field": "performance-index",
+        "section_header_offset": 2120383,
+        "payload_offset": 2120412,
+        "field_relative_offset": 68,
+        "field_offset": 2120480,
+        "modified_field_bytes": 4,
+        "old_value": 1,
+        "new_value": 5,
+        "old_field_hex": "00000001",
+        "new_field_hex": "00000005",
+        "original_payload_hex": "000000010000000000000000185900000000000018590100000000001859032000000004000000a00000000400000004000000004446303100000028000000040124f80000000001",
+        "modified_payload_hex": "000000010000000000000000185900000000000018590100000000001859032000000004000000a00000000400000004000000004446303100000028000000040124f80000000005",
+        "complete_file_byte_differences": [
+          {
+            "offset": 2120483,
+            "old_byte": 1,
+            "new_byte": 5
+          }
+        ],
+        "only_one_field_modified": true,
+        "only_one_bit_modified": true
+      },
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-devfreq-fw",
+      "expected_diagnostic": "qcom-devfreq-fw: invalid migrated performance index",
+      "specific_load_failure_observed": true
+    },
+    {
+      "name": "lut-identity",
+      "passed": true,
+      "stream_modified": true,
+      "source_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 18,
+        "total-time": 26,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 720.4940799999999,
+          "transferred": 2251544,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "original_stream_file": "devfreq-fw-v1-request-index.migration",
+      "original_stream_sha256": "76d78f53ff17a2cfde87beffe278abf35b763b4f27f3123a97399f1124f9c10a",
+      "original_stream_bytes": 2251544,
+      "corrupted_stream_file": "devfreq-fw-v1-corrupted-lut-identity.migration",
+      "corrupted_stream_sha256": "f4ff2d778219a729b6d1a88e29f59a0b7f4a2ea4421f3a0749ab6b85d0b65215",
+      "corrupted_stream_bytes": 2251544,
+      "original_stream_hash_unchanged": true,
+      "target_directory": "corrupted-lut-identity",
+      "original_sections": [
+        {
+          "instance_id": 0,
+          "section_version": 1,
+          "section_name": "qcom-devfreq-fw",
+          "section_header_offset": 2120383,
+          "section_id": 42,
+          "payload_offset": 2120412,
+          "payload_bytes": 72,
+          "payload_hex": "000000010000000000000000185900000000000018590100000000001859032000000004000000a00000000400000004000000004446303100000028000000040124f80000000001",
+          "payload_file": "devfreq-fw-v1-request-index.migration.instance0.payload.bin",
+          "decoded_fields": {
+            "profile": 1,
+            "instance_id": 0,
+            "enable_address": 408485888,
+            "frequency_table_address": 408486144,
+            "performance_address": 408486688,
+            "enable_resource_size": 4,
+            "frequency_table_resource_size": 160,
+            "performance_resource_size": 4,
+            "lut_row_size": 4,
+            "boot_perf_index": 0,
+            "lut_identity": 1145450545,
+            "lut_entries": 40,
+            "valid_perf_count": 4,
+            "nominal_xo_hz": 19200000,
+            "performance_index": 1
+          },
+          "all_serialized_fields_verified": true,
+          "runtime_matches_actual_source_qom": true,
+          "unknown_runtime_zero_invariant_verified": false
+        }
+      ],
+      "mutation": {
+        "instance_id": 0,
+        "field": "lut-identity",
+        "section_header_offset": 2120383,
+        "payload_offset": 2120412,
+        "field_relative_offset": 52,
+        "field_offset": 2120464,
+        "modified_field_bytes": 4,
+        "old_value": 1145450545,
+        "new_value": 1145450544,
+        "old_field_hex": "44463031",
+        "new_field_hex": "44463030",
+        "original_payload_hex": "000000010000000000000000185900000000000018590100000000001859032000000004000000a00000000400000004000000004446303100000028000000040124f80000000001",
+        "modified_payload_hex": "000000010000000000000000185900000000000018590100000000001859032000000004000000a00000000400000004000000004446303000000028000000040124f80000000001",
+        "complete_file_byte_differences": [
+          {
+            "offset": 2120467,
+            "old_byte": 49,
+            "new_byte": 48
+          }
+        ],
+        "only_one_field_modified": true,
+        "only_one_bit_modified": true
+      },
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-devfreq-fw",
+      "expected_diagnostic": "44463031 != 44463030",
+      "specific_load_failure_observed": true
+    }
+  ],
+  "passed": true,
+  "duration_seconds": 7.456253896000021,
+  "qemu_sha256_after": "0f6ebed05f414484f1ef04196457c314bbd635245683c547c40d0a601065c88e",
+  "binary_unchanged": true
+}

@@ -211,3 +211,9 @@ ledger separately binds actual binary hashes, unchanged production Image/DT,
 source-clean receipts, migration bytes and subsequent native outcomes.
 Successful request register traffic alone does not establish firmware,
 cache operation, native userspace, Android or whole-tablet equivalence.
+
+## Actual b95f97 validation
+
+Source `b95f973f9b20d53e3a0b8843c919156e3acb58d9` actually passed [formal run 45247295321](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45247295321): 71 component gates and four Linux gates, plus the independent A77/UFS job. Its [raw Devfreq result](../evidence/wholeboard-20261123-a47/devfreq-qcom-fw-b95f97.json) passes twenty checks, two completed roundtrips, two profile rejections and two single-bit corruptions. All five actual 72-byte sections and raw QMP/QTest/stderr evidence were read by the [independent verifier](../evidence/wholeboard-20261123-a47/devfreq-artifact-verifier.py) from the exact downloaded artifact. The extra unknown-profile source is not a third completed roundtrip.
+
+The board binary SHA256 is `0f6ebed05f414484f1ef04196457c314bbd635245683c547c40d0a601065c88e`. Its [unchanged production-Image/full-live-DT diagnostic](../evidence/wholeboard-20261123-a47/native-b95f97.json) explicitly registers all four voter children and initializes their parent. The stopped model contains PERF 3 and the declared nominal table; the read-only observer does not itself assert driver success. The next external abort is in a deferred-probe worker writing configuration-NoC SBM address 0x01506080. Full-DT userspace, native DMA and Android remain unaccepted, and no physical cache Clock or firmware execution is inferred.

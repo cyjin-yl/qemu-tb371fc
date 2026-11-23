@@ -1,0 +1,117 @@
+{
+  "schema": "tb371fc-devfreq-artifact-verifier-author-review-v1",
+  "status": "static_review_complete_function_not_invoked",
+  "verifier": {
+    "file": "devfreq-artifact-verifier.py",
+    "function": "verify_devfreq_streams(z, info, data)",
+    "git_blob": "c9fa1fda89c12bc28a7838493251c9e40c603737",
+    "bytes": 51364,
+    "sha256": "93d69c10415baea768c746fbcf8576a71c631c1bcb2cef79d3c7eb8465d386db",
+    "local_path": "/run/tb371fc-root75-a47/devfreq-artifact-verifier.py"
+  },
+  "pins": {
+    "model_commit": "cfda4e5c9e17ca540425b809ab21dbb983d26eda",
+    "test_commit": "c1bd8c03a625115f037d09518d0ccaca48167e1c",
+    "test_blob": "6e6d2911a61f331d391347831c0677b387d89bb5",
+    "test_bytes": 50325,
+    "test_sha256": "8c4e49817f58cb2dca002d446486e75fee45c65ee2142963ed9112fbe24669cf",
+    "vendor_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+    "vendor_path": "drivers/devfreq/devfreq_qcom_fw.c",
+    "vendor_sha256": "745457c2a20c90521772ef29c5f572570f481541d01ef427707d3da35bc5eb16",
+    "bounded_dt_capture_blob": "777468d5612057ebd2394bd80b021d79762e9365",
+    "bounded_dt_capture_sha256": "3b4d663de9e5ea33f5a86fc7d9f49f26223a6217657594423691d59f0ded124b",
+    "source_dt_independent_review_blob": "0e12d22da7a6eb3afc4876f5d450c47f95a690eb"
+  },
+  "interface": {
+    "inputs": [
+      "open_zipfile",
+      "component_result_zipinfo",
+      "already_parsed_component_result"
+    ],
+    "returns": [
+      "devfreq_fw_streams_from_zip",
+      "devfreq_fw_decoded_sections",
+      "devfreq_fw_log_evidence"
+    ],
+    "stdlib_imports": [
+      "hashlib",
+      "json",
+      "re",
+      "struct"
+    ],
+    "external_test_import": false,
+    "top_level_statements": 1
+  },
+  "static_checks": {
+    "ast_parse": true,
+    "compile_only": true,
+    "single_function_module": true,
+    "only_hashlib_json_re_struct_imported": true,
+    "no_exec_eval_dynamic_import_or_open": true,
+    "all_runtime_file_reads_from_supplied_zip": true,
+    "test_order_and_report_schema_pinned": true,
+    "before_after_binary_hash_equal_and_binary_unchanged_required": true
+  },
+  "planned_actual_zip_verification": {
+    "migration_files": 5,
+    "complete_sections_decoded": 5,
+    "payload_bytes_per_section": 72,
+    "immutable_bytes_per_section": 68,
+    "mutable_bytes_per_section": 4,
+    "completed_roundtrips": 2,
+    "profile_rejections": 2,
+    "single_field_corruption_rejections": 2,
+    "source_full_qom_snapshots_before_save": 2,
+    "source_full_qom_snapshots_after_save": 1,
+    "qom_requests_per_complete_snapshot": 101,
+    "unknown_runtime_errors_per_complete_snapshot": 84,
+    "unique_full_or_start_section_required_without_filtering_on_expected_payload": true,
+    "immutable_prefix_compared_to_fixed_board_boot_rom_contract": true,
+    "mutable_perf_compared_to_actual_stopped_source_qom": true,
+    "source_and_destination_query_migrate_completed_correlated_to_raw_qmp": true,
+    "target_stopped_with_different_request_before_load": true,
+    "first_restored_complete_qom_before_cont_in_qmp_log": true,
+    "actual_ram_witness_and_perf_readbacks_checked": true,
+    "second_roundtrip_system_reset_reapplies_explicit_boot_policy": true,
+    "unknown_stream_is_reverse_rejection_source_only": true,
+    "corrupt_perf_field": {
+      "offset": 68,
+      "bytes": 4,
+      "before": 1,
+      "after": 5
+    },
+    "corrupt_lut_identity": {
+      "offset": 52,
+      "bytes": 4,
+      "before": 1145450545,
+      "after": 1145450544
+    },
+    "corrupt_whole_file_differences_exactly_one_bit_in_one_byte": true,
+    "original_bytes_reread_from_zip_and_unchanged": true,
+    "specific_actual_device_load_stderr_and_incoming_request_required": true
+  },
+  "evidence_limits": {
+    "qmp_and_qtest_have_no_shared_timestamps": true,
+    "first_mmio_cross_channel_order_bound_to_pinned_harness_and_receipt": true,
+    "operating_system_exit_one_is_reported_not_reexecuted": true,
+    "immutable_fields_not_claimed_as_mutable_qom_state": true,
+    "virtual_time_values_are_fixture_witnesses_only": true,
+    "device_has_no_clock_timer_counter_epoch_irq_voltage_model": true,
+    "nominal_request_rate_not_actual_cache_frequency": true,
+    "outer_worker_must_bind_binary_source_clean_ci_receipt": true
+  },
+  "execution": {
+    "verifier_called": false,
+    "qemu_executed": false,
+    "build_started": false,
+    "acceptance_test_process_executed": false,
+    "network_from_verifier": false,
+    "actual_ci_zip_verified": false,
+    "actual_result": "pending_parent_formal_zip_execution"
+  },
+  "independent_verifier_review": "requested_from_board_gaps_pending",
+  "repository_mutation": {
+    "reference_updated": false,
+    "unreferenced_blob_only": true
+  }
+}

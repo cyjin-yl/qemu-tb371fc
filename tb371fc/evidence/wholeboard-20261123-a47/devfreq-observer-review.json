@@ -1,0 +1,385 @@
+{
+  "schema_version": 1,
+  "purpose": "Independent review and bounded validation of the Devfreq stopped-state observer extension for the next production-Image/full-DT diagnostic",
+  "scope": "The newly added capture_devfreq_fw function and its single wrapper call; no new QEMU/device/native execution",
+  "conclusion": "no_static_blocker",
+  "artifacts": {
+    "observer": {
+      "path": "/run/tb371fc-devfreq-observer-a47/native-devfreq-observer.py",
+      "git_blob": "1820a3c15215b1182c697da838466389b636781c",
+      "bytes": 46491,
+      "sha256": "df8e9b2a2330b283c432f2908fd096c6e8dd1555ac293b0d9cc4df4e338f27bb",
+      "github_blob_readback_byte_equal": true
+    },
+    "base_observer": {
+      "path": "/run/tb371fc-cpufreq-observer-a47/native-cpufreq-observer.py",
+      "git_blob": "546b7a3bc83957e6cd11e863c9e220a7da01d0be",
+      "bytes": 37328,
+      "sha256": "56fad0f32aec8d344782f62c0e731b68424f62571ed900d01e26f8d1125fe0c5"
+    },
+    "model": {
+      "commit": "cfda4e5c9e17ca540425b809ab21dbb983d26eda",
+      "path": "hw/misc/qcom-devfreq-fw.c",
+      "bytes": 14889,
+      "sha256": "ce529e9ce637958039c7072512628b1ccd757a5b7aaf80ac59a04edb398d21fe",
+      "fixed_commit_primary_source_read": true
+    },
+    "isolated_validation_source": {
+      "path": "/run/tb371fc-devfreq-observer-a47/check_observer_locally.py",
+      "git_blob": "70dc4d5e633632d7a76ec3a33883320601930121",
+      "bytes": 9957,
+      "sha256": "afdee9ee7fa976af40f50064e4ecafa4ca4dcc9b33cf76e59daaf9ca553e657d"
+    },
+    "raw_dt_capture": {
+      "git_blob": "777468d5612057ebd2394bd80b021d79762e9365",
+      "bytes": 6381,
+      "sha256": "3b4d663de9e5ea33f5a86fc7d9f49f26223a6217657594423691d59f0ded124b"
+    },
+    "source_dt_review": {
+      "git_blob": "0e12d22da7a6eb3afc4876f5d450c47f95a690eb",
+      "sha256": "969c71e806815a6b7313b1276cb4e0443a120151af42fe82822aafd8981bb5b5"
+    }
+  },
+  "insertion_contract": {
+    "function": "capture_devfreq_fw",
+    "before_base_line": 328,
+    "before_base_text": "def capture_with_mailbox(command,machine):",
+    "function_bytes": 8966,
+    "function_sha256": "59c354f62735f2373ee51c3818fcdc8a49446ffc2416b708eb80ccb1fc660d9d",
+    "call_before_base_line": 354,
+    "call_before_base_text": "    return report\\ndiagnose_kernel.capture_aop_peer=capture_with_mailbox",
+    "call_lines": 4,
+    "call_bytes": 197,
+    "call_sha256": "cbdf7188dd613bd7f2c93c7699c0f953d2fae4907abf2d02e670a4f24e2cc846",
+    "old_wrapper_exact_after_removing_two_insertions": true,
+    "existing_inner74_embedded_wrapper_matches_base": true,
+    "old_AOP_NoC_SMMUv500_TSENS_CPUFreq_logic_unchanged": true,
+    "existing_private_AOP_SRAM_human_monitor_read_preserved": true,
+    "no_new_MMIO_or_human_monitor_command": true
+  },
+  "runtime_observation_contract": {
+    "qom_path": "/machine/devfreq-l3",
+    "new_report_key": "aop_peer.devfreq_fw_observer",
+    "new_error_key": "aop_peer.devfreq_fw_observer_error",
+    "allowed_added_commands": [
+      "query-status",
+      "qom-get"
+    ],
+    "query_status_guards": "running is False before and after; nonempty string status must match; a running/changed guest causes an error instead of a positive observation",
+    "unique_qom_properties": 101,
+    "configuration_fields": 17,
+    "runtime_fields": 4,
+    "lut_rows": 40,
+    "properties_per_lut_row": 2,
+    "reference_qom_get_calls": 102,
+    "reference_query_status_calls": 2,
+    "extra_qom_get": "Repeat performance-index after all LUT reads; require equality with the first PERF value",
+    "unknown_profile_qom_get_calls": 17,
+    "unknown_profile_behavior": "Preserve identity/configuration; skip unavailable runtime/table properties; observation_status remains inconclusive",
+    "type_checks": "Exact bool type and exact nonnegative Python int within uint32/uint64 bounds; bool-as-int is rejected",
+    "geometry": {
+      "enable_address": "0x18590000",
+      "enable_size": 4,
+      "frequency_table_address": "0x18590100",
+      "frequency_table_size": 160,
+      "performance_address": "0x18590320",
+      "performance_size": 4,
+      "instance": 0,
+      "registers": 42,
+      "windows": 3,
+      "bytes": 168,
+      "lut_entries": 40,
+      "valid_perf_states": 4,
+      "row_stride": 4
+    },
+    "reference": {
+      "enabled_reference": true,
+      "boot_perf_index": 0,
+      "lut_identity": "0x44463031",
+      "nominal_xo_hz": 19200000,
+      "valid_lvals": [
+        16,
+        32,
+        64,
+        96
+      ],
+      "nominal_rates_hz": [
+        307200000,
+        614400000,
+        1228800000,
+        1843200000
+      ],
+      "first_adjacent_duplicate_row": 4,
+      "trailing_rows": "4..39 repeat valid row3"
+    },
+    "complete_means": "Stopped raw reference snapshot is type-correct and matches fixed DT geometry, declared model identity/boot0, all 40 nominal table rows and a stable internally consistent PERF selection.",
+    "not_claimed": [
+      "firmware execution",
+      "factory hardware LUT values",
+      "applied cache frequency",
+      "Clock/IRQ/epoch/counter behavior",
+      "identity of the request writer",
+      "native Linux driver probe success",
+      "userspace execution",
+      "Android boot"
+    ],
+    "native_cross_evidence_required": "Root must assess printk and explicit userspace evidence separately; neither PERF==boot nor PERF!=boot establishes probe success."
+  },
+  "launch_inputs": {
+    "additional_qemu_arguments": [
+      "-global",
+      "qcom-devfreq-fw.enabled-reference=on",
+      "-global",
+      "qcom-devfreq-fw.reference-boot-perf-index=0"
+    ],
+    "diagnose_cli_arguments": [
+      "--global-property",
+      "qcom-devfreq-fw.enabled-reference=on",
+      "--global-property",
+      "qcom-devfreq-fw.reference-boot-perf-index=0"
+    ],
+    "replace_embedded_wrapper_sha256_from": "56fad0f32aec8d344782f62c0e731b68424f62571ed900d01e26f8d1125fe0c5",
+    "replace_embedded_wrapper_sha256_to": "df8e9b2a2330b283c432f2908fd096c6e8dd1555ac293b0d9cc4df4e338f27bb",
+    "unchanged_older_globals_and_native_inputs": "Retain the root-controlled diagnostic's current inherited machine/options/input identities; only root schedules the next run after formal CI."
+  },
+  "validation": {
+    "base_wrapper_sha256": "56fad0f32aec8d344782f62c0e731b68424f62571ed900d01e26f8d1125fe0c5",
+    "wrapper_bytes": 46491,
+    "wrapper_sha256": "df8e9b2a2330b283c432f2908fd096c6e8dd1555ac293b0d9cc4df4e338f27bb",
+    "model_c_sha256": "ce529e9ce637958039c7072512628b1ccd757a5b7aaf80ac59a04edb398d21fe",
+    "old_wrapper_exact_after_removing_two_insertions": true,
+    "full_script_ast_and_compile_only_passed": true,
+    "model_getter_names_and_types_match": true,
+    "unique_property_count": 101,
+    "allowed_added_command_names": [
+      "qom-get",
+      "query-status"
+    ],
+    "mock_scope": "Only extracted capture_devfreq_fw executed against in-memory dictionaries; no wrapper imports/main, subprocess, QEMU, sockets or public test scripts.",
+    "isolated_mock_cases_passed": 34,
+    "cases": [
+      {
+        "case": "reference_boot_request",
+        "observed": "complete",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "nonzero_request_does_not_claim_driver_success",
+        "observed": "complete",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "unknown_profile_without_runtime_reads",
+        "observed": "inconclusive",
+        "qom_get_calls": 17,
+        "query_status_calls": 2
+      },
+      {
+        "case": "type_or_range_reject_enabled-reference_int_1",
+        "observed": "error",
+        "qom_get_calls": 1,
+        "query_status_calls": 2
+      },
+      {
+        "case": "type_or_range_reject_reference-boot-perf-index_bool_True",
+        "observed": "error",
+        "qom_get_calls": 2,
+        "query_status_calls": 2
+      },
+      {
+        "case": "type_or_range_reject_enable-address_float_408485888.0",
+        "observed": "error",
+        "qom_get_calls": 4,
+        "query_status_calls": 2
+      },
+      {
+        "case": "type_or_range_reject_performance-index_bool_True",
+        "observed": "error",
+        "qom_get_calls": 19,
+        "query_status_calls": 2
+      },
+      {
+        "case": "type_or_range_reject_requested-frequency-hz_float_307200000.0",
+        "observed": "error",
+        "qom_get_calls": 21,
+        "query_status_calls": 2
+      },
+      {
+        "case": "type_or_range_reject_lut0-frequency-word_bool_True",
+        "observed": "error",
+        "qom_get_calls": 22,
+        "query_status_calls": 2
+      },
+      {
+        "case": "type_or_range_reject_lut0-nominal-frequency-hz_int_-1",
+        "observed": "error",
+        "qom_get_calls": 23,
+        "query_status_calls": 2
+      },
+      {
+        "case": "type_or_range_reject_performance-index_int_4",
+        "observed": "error",
+        "qom_get_calls": 21,
+        "query_status_calls": 2
+      },
+      {
+        "case": "inconsistent_value_enable-address",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "inconsistent_value_reference-boot-perf-index",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "inconsistent_value_reference-lut-identity",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "inconsistent_value_reference-nominal-xo-hz",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "inconsistent_value_mapped-register-count",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "inconsistent_value_mapped-window-count",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "inconsistent_value_mapped-bytes",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "inconsistent_value_lut-max-entries",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "inconsistent_value_valid-perf-count",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "inconsistent_value_lut-row-size",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "inconsistent_value_firmware-enabled",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "inconsistent_value_requested-lval",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "inconsistent_value_requested-frequency-hz",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "inconsistent_value_lut39-frequency-word",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "inconsistent_value_lut39-nominal-frequency-hz",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "wrong_terminal_duplicate",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "perf_changed_during_capture",
+        "observed": "inconclusive",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "running_before",
+        "observed": "error",
+        "qom_get_calls": 0,
+        "query_status_calls": 1
+      },
+      {
+        "case": "nonboolean_running_before",
+        "observed": "error",
+        "qom_get_calls": 0,
+        "query_status_calls": 1
+      },
+      {
+        "case": "empty_status_before",
+        "observed": "error",
+        "qom_get_calls": 0,
+        "query_status_calls": 1
+      },
+      {
+        "case": "running_after",
+        "observed": "error",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "changed_stopped_status",
+        "observed": "error",
+        "qom_get_calls": 102,
+        "query_status_calls": 2
+      },
+      {
+        "case": "missing_device_or_property",
+        "observed": "error",
+        "qom_get_calls": 1,
+        "query_status_calls": 2
+      }
+    ],
+    "qemu_executed": false,
+    "public_test_scripts_executed": false,
+    "remote_calls_made": false,
+    "native_validation_performed": false
+  },
+  "independent_review": {
+    "agent": "/root/gpu_gx_integration",
+    "method": "Full static read of the 153-line insertion against the C getter names and widths",
+    "conclusion": "no_static_blocker",
+    "function_executed_by_reviewer": false
+  },
+  "execution_limits": {
+    "public_tests_run": false,
+    "qemu_run": false,
+    "native_run": false,
+    "remote_device_calls": false,
+    "branch_ref_changed": false
+  },
+  "minor_validation_harness_correction": "The first isolated harness run reached its final check but rejected duplicate human-readable case labels for two PERF negative values; labels were made unique and the complete 34-case harness rerun succeeded. Production observer bytes were unchanged."
+}

@@ -11,13 +11,15 @@
 生产内核加测试 initramfs 的成功不等于原厂 Android 系统启动。小核仍用 A55 代替 Qualcomm Kryo；显示、Adreno 650、触控、无线、音频、摄像头以及完整电源/固件契约仍有大量实现工作。缓存容量、功耗、射频、电气行为和真实芯片时序不由这些功能测试证明。
 
 
-## L3 Devfreq：已接入，等待新的正式验收
+## 最新整板推进：75 项通过与原厂 L3 注册（2026-11-23）
 
-当前源码新增 [L3 Devfreq 请求参考模型](tb371fc/docs/devfreq-qcom-fw-reference.md)及 20 项检查，将统一计划扩至 **75 项：71 组件 + 4 Linux**。它只覆盖实际 DT 的三个稀疏窗口、42 个寄存器和四档合成请求表，不实现物理缓存时钟、IRQ 或固件执行。两次完成迁移、两次 profile 拒绝、两次单字段损坏拒绝均须实际运行通过。
+统一源码 `b95f973f9b20d53e3a0b8843c919156e3acb58d9` 已实际通过 **75 个 gate：71/71 组件 + 4/4 Linux，以及独立 A77/UFS job**。见[正式 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45247295321)和[源码／产物绑定回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-b95f97.json)。板级 QEMU SHA-256 为 `0f6ebed05f414484f1ef04196457c314bbd635245683c547c40d0a601065c88e`；已直接核验下载的 ZIP、两份 clean-source 汇总、14 份组件报告和 **27 个实际迁移文件**。
 
-模型和最终测试的[独立静审](tb371fc/evidence/wholeboard-20261123-a47/devfreq-model-test-review.json)已完成，测试隔离配置在执行前修正。**下方 74 项通过仅属于 `1fe4e1`；新增 75 项及同二进制完整 DT 复测尚未执行通过。**
+[L3 Devfreq 原始报告](tb371fc/evidence/wholeboard-20261123-a47/devfreq-qcom-fw-b95f97.json)实际通过 **20 项检查、2 次完成迁移、2 次 profile 拒绝和 2 次单 bit 损坏流拒绝**。独立核验器读取五个完整 72 B payload、实际 QMP/QTest 和接收端错误日志；第三个 unknown 源文件只用于反向拒绝，不作为第三次成功往返。模型只提供三个 DT 窗口内的 168 B 接口和合成名义请求表，不把这些值当作物理缓存频率。
 
-## 本次整板推进与统一验收（2026-11-23）
+同一个二进制的[未修改生产 Image／完整实机 DT 运行](tb371fc/evidence/wholeboard-20261123-a47/native-b95f97.json)已越过原 `0x18590000` 异常：内核明确注册四个 Devfreq voter 并完成父设备初始化；CPUFreq、SMEM 23/23、AOP QDSS 和此前控制器进展保留。新的唯一无效访问是 **`msm_bus_noc_sbm_config+0x84` 向 `0x01506080` 写入 4 B**。该异常发生在 PID58 的延迟 probe 工作线程，后续内核日志仍继续；不能写成 PID1 panic。完整原厂 DT 用户态、原厂 Android、原厂 DMA、GPU/NPU 执行与整板迁移仍未通过。
+
+## 上一轮 CPUFreq 与 74 项统一验收（2026-11-23）
 
 统一提交 `1fe4e1a8d3e4d1f1d64e800aa10bd355a007eac5` 已实际通过 **74 个 gate：70/70 组件检查 + 4/4 Linux 启动，以及独立 A77/UFS job**。见[正式 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45240510512)和[冻结回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-1fe4e1.json)。板级 QEMU SHA-256 为 `4edcf24e59963b2e33942c042cdd04f8a96c2d6faf6891dfd372b8eb219f5b95`；已直接读取 ZIP、包内二进制、两份 clean-source 汇总、13 份组件报告及 **22 个实际迁移文件**。三组 CI unit 实际为 29、17、14 项。
 

@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "kind": "independent-static-devfreq-artifact-verifier-review",
+  "conclusion": "no_static_blocker",
+  "reviewer": "/root/board_gaps",
+  "artifact": {
+    "git_blob": "c9fa1fda89c12bc28a7838493251c9e40c603737",
+    "path": "/run/tb371fc-root75-a47/devfreq-artifact-verifier.py",
+    "bytes": 51364,
+    "sha256": "93d69c10415baea768c746fbcf8576a71c631c1bcb2cef79d3c7eb8465d386db",
+    "function": "verify_devfreq_streams"
+  },
+  "fixed_inputs": {
+    "test": {
+      "commit": "c1bd8c03a625115f037d09518d0ccaca48167e1c",
+      "path": "tb371fc/tests/test_devfreq_qcom_fw.py",
+      "bytes": 50325,
+      "sha256": "8c4e49817f58cb2dca002d446486e75fee45c65ee2142963ed9112fbe24669cf"
+    },
+    "model": {
+      "commit": "cfda4e5c9e17ca540425b809ab21dbb983d26eda",
+      "path": "hw/misc/qcom-devfreq-fw.c",
+      "bytes": 14889,
+      "sha256": "ce529e9ce637958039c7072512628b1ccd757a5b7aaf80ac59a04edb398d21fe"
+    },
+    "file_channels": {
+      "commit": "cfda4e5c9e17ca540425b809ab21dbb983d26eda",
+      "path": "tb371fc/tests/test_gpucc_sm8250.py",
+      "function_line": 77,
+      "actual_return_contract": "channels[0].channel-type=main; addr.transport=file; addr.filename=str(path); addr.offset=0",
+      "primary_fixed_source_read": true
+    }
+  },
+  "checked": [
+    "Exact c1bd machine isolation and test SHA, source/DT identities, 20 check names/order, two completed roundtrips, two profile and two corrupted-stream rejections match the fixed harness.",
+    "The QMP parser matches DevfreqRig.monitor: > JSON [command, arguments], < JSON response or < ERROR string. Getter failures remain failures, including all 84 unknown-profile runtime/table getters.",
+    "The QTest parser matches DevfreqRig.command's framed commands/replies. Only fixed clock_set/clock_step fixture values are checked; no device clock, timer, epoch or counter is inferred.",
+    "file_channels accepts the actual fixed helper's main/file/filename/offset dictionary. Command argv comparison matches qtest, 128M, -S, sparse reference globals and deferred incoming targets.",
+    "Source evidence windows contain exactly 202 getters after stop and before migrate, and 101 getters after actual completed query-migrate; their saved JSON and repeated state match raw responses.",
+    "Target pre-load starts at the one instance-id snapshot after its four preliminary runtime getters; the first post-load window contains exactly 101 getters before cont. Different pre-load requests and RAM witnesses are checked.",
+    "After cont, expected PERF writes/readbacks match both literal harness paths: boot0 writes3,2,0 and reads3,1,2,0; boot2 writes0,0 and reads0,0,2, with a successful reset and independent GCC witness.",
+    "Each actual FULL/START section is uniquely located by device name and checked for instance0/version1. All 72 bytes are independently decoded: 68 immutable identity bytes and the four-byte PERF request.",
+    "The unknown-profile save is a third actual source save used for reverse-profile rejection, not a third completed roundtrip. Its 84 failed getters are checked, and zero PERF is labeled a serialization invariant.",
+    "Both corrupted streams retain the complete original prefix/suffix and differ at exactly one byte and one bit: PERF offset68 changes1 to5; identity offset52 changes44463031 to44463030. Other fields, headers and payload identities are checked.",
+    "Failure records require a real migrate-incoming request and the specific actual device-load stderr, with the expected profile/identity/performance diagnostic and reported exit1. A generic process failure cannot satisfy the record.",
+    "QMP and QTest do not share timestamps. The verifier explicitly limits cross-channel before-first-MMIO chronology to the pinned harness/receipt, while independently checking each channel's values and order."
+  ],
+  "static_validation": {
+    "identities": [
+      {
+        "path": "/run/tb371fc-root75-a47/devfreq-artifact-verifier.py",
+        "bytes": 51364,
+        "sha256": "93d69c10415baea768c746fbcf8576a71c631c1bcb2cef79d3c7eb8465d386db"
+      },
+      {
+        "path": "/run/tb371fc-devfreq-tests-a47/tb371fc/tests/test_devfreq_qcom_fw.py",
+        "bytes": 50325,
+        "sha256": "8c4e49817f58cb2dca002d446486e75fee45c65ee2142963ed9112fbe24669cf"
+      }
+    ],
+    "top_level_only_function_definition": true,
+    "imports": [
+      "hashlib",
+      "json",
+      "re",
+      "struct"
+    ],
+    "function_called": false
+  },
+  "execution_scope": {
+    "verifier_function_called": false,
+    "zip_downloaded_or_opened_by_this_review": false,
+    "qemu_or_guest_executed": false,
+    "public_test_scripts_executed": false,
+    "native_or_build_started": false,
+    "remote_device_called": false,
+    "branch_ref_changed": false,
+    "actual_ci_zip_verification": "Pending root's single exact-artifact verification at review time; this review is not an execution receipt.",
+    "outer_worker_binding": "The root worker separately binds the actual CI source, shared QEMU binary hash and clean receipt."
+  },
+  "author_review_preserved": {
+    "git_blob": "bb220614ce897e50d4cdeaf0eab9903c1b0c9ae0",
+    "note": "Its earlier independent-review-pending status remains an accurate historical snapshot; this separate review closes that pending static check."
+  }
+}
