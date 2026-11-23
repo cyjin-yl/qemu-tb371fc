@@ -73,5 +73,7 @@ class QMP:
         raise TimeoutError(f"QMP {name} response timed out")
 
     def drain(self):
-        while self.receive(0):
-            pass
+        # An empty message list can mean a partial JSON frame, not an empty
+        # socket. Keep consuming readable bytes until EOF or no data is ready.
+        while not self.closed and select.select([self.sock], [], [], 0)[0]:
+            self.receive(0)
