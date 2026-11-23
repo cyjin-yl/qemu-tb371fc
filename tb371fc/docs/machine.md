@@ -36,6 +36,7 @@ describe reference contracts, not captured SBL state or AOP firmware execution.
 | `qcom-devfreq-fw.enabled-reference=on` | Explicit L3 firmware-handoff reference with four synthetic nominal request indices; 42 words in three actual DT windows. `reference-boot-perf-index=0` selects reset request zero. Default unknown rejects MMIO; no physical cache Clock, IRQ, timer, counter or firmware execution is modeled. [Contract](devfreq-qcom-fw-reference.md). |
 | `qcom-noc-qos.enabled-reference=on` | Explicit four-word configuration reference at 47 actual-DT ports; default off rejects reads and writes. No traffic, power or SBM acknowledgement is synthesized. |
 | `qcom-noc-sbm.enabled-reference=on` | Separate config-NoC reference at CLR 0x01506080, SET 0x01506088 and SENSE 0x01506100; default off disables all three regions. Eight independent logical deadlines use a declared 1000-ns virtual delay; no endpoint traffic is drained. |
+| `qcom-sm8250-rpmh.reference-wait-mask-reserved=on` | Default-off reference compatibility for idle WAIT high16 only; keeps low16, records raw diagnostic history and preserves busy/other-register rejection. Silicon reserved-bit behavior is unmeasured. |
 | `smem-profile=off` or `smem-profile=reference-empty` | Default off; the reference initializes the documented empty SMEM v12 handoff. |
 | `aop-profile=none` or `aop-profile=reference-qdss-vote` | Default none retains raw SRAM. The reference adds real IPCC link/channel processing and only QDSS/QDSS_AO off/dynamic votes. |
 | `qcom-sm8250-npucc.enabled-reference=on` | Explicit three-bank digital PLL/RCG/branch/reset profile; [contract](npucc-sm8250.md). Default MMIO errors, unknown parents remain stopped; no NPU/DSP/GDSC execution claim. |
@@ -483,3 +484,28 @@ matched geometry and identity but had zero SET/CLR counts and entirely cold
 request/sense state. This does not prove the former SBM abort was crossed.
 The prior b95f97 L3 registration and worker exception remain separate results.
 Full-DT userspace, native DMA, endpoint rendering and Android remain unaccepted.
+
+## Explicit RPMh WAIT compatibility and actual-DT userspace preparation
+
+The [bounded compatibility contract](rpmh-wait-reserved-reference.md) is motivated
+by the exact producer/copy/consumer path confirmed in the unchanged production
+Image. The boolean is fixed at realize time. It neither instantiates RPMh nor
+selects a command database. Normal command scheduling, valid typed resources
+and IRQ completion remain required; masking the WAIT word itself performs
+none of them. The original strict behavior is the default.
+
+Pure QOM observations expose the implemented mask, saturating accepted-write
+count and last raw/voter/TCS, with derived effective/ignored words. These are
+model diagnostics since reset, not hardware registers or command completions.
+The [new stopped observer](../evidence/wholeboard-20261123-a47/native-rpmh-wait-observer.py)
+double-reads the eight properties with stopped-status checks and does no MMIO,
+write, virtual-time advance or implicit acknowledgement. Original observer
+functions remain byte-identical outside the new call and definition.
+
+The proposed next original-DT diagnostic appends this explicitly reviewed
+eighteenth global after the existing seventeen. An eventual eight-check
+userspace fixture must use the exact same ordered globals, actual accepted
+ELF/initrd, unmodified Image and complete DT. Its model predicate is exactly
+`Qualcomm Technologies, Inc. kona QRD`, proved by the direct fixed-DTB read.
+The ELF supplies its own result address; no old fixture address is reused.
+These source changes still await formal CI and runtime evidence.

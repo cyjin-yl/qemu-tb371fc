@@ -98,9 +98,48 @@ driver coverage. The previous b95f97 L3 registration and later SBM worker
 exception remain separate evidence. Full original-DT userspace and Android
 are unpassed; no repeated native run was used to select a more favorable trace.
 
+## Explicit RPMh WAIT policy candidate
+
+The new `rpmh-wait-mask-reference` gate follows the four unchanged RPMh gates.
+It requires 17 unique checks, one completed transfer, two opposite-policy
+rejections and two deliberate single-bit corrupted-subsection rejections.
+The main v2 wire fields are unchanged; enabled profiles additionally carry
+the 24-byte v1 policy/diagnostic subsection, including a cold zero-count source.
+The new test verifies the original two RPMh test blobs remain byte-identical.
+Non-response commands, bit0/bit15 waits, busy and stalled rejection, original
+deadlines, IRQ independence, reset and normal paused TCG observation are part
+of this gate. A completed transfer is counted once, although both restoration
+and continued timing produce checks.
+
+The exact artifact guard requires sixteen selected component reports and
+thirty-seven actual migration files, including the five new WAIT files.
+Its new independent decoder must check the complete 19420-byte main payload,
+the optional 24-byte subsection, actual QMP/QTest logs and destination errors.
+The two strict/cold-masked main payloads must be byte-identical. This remains
+an unexecuted 73+4 plan until the exact source's formal run is recorded.
+
+## Complete original-DT userspace fixture build
+
+After the four existing Linux gates, CI builds a separate validation PID1
+using `build_actual_dt_fixture.py`. Its only guest/validator semantic change
+is the exact root-model predicate established by the hash-bound complete DT.
+The build records actual ELF symbols/sections, toolchain commands and hashes,
+the fixed native-tested arch probe, exact initrd entries and source identity.
+It does not execute that ELF and is not a fifth Linux gate.
+
+The [ZIP-stage helper](../evidence/wholeboard-20261123-a47/stage-actual-dt-fixture.py)
+validates the actual eight fixed members, manifest, raw ELF-to-PT_LOAD mapping
+and CPIO bytes before creating a fresh stage. It runs no toolchain or guest.
+The separate [native consumer](../evidence/wholeboard-20261123-a47/native-userspace8-actual-dt-draft.py)
+requires that same accepted binary and a same-source primary diagnostic with
+a complete fatal-free kernel log. Its exact original Image, complete DT, 8 GiB,
+eight CPUs and ordered reference options remain bound to the primary command.
+EL0/result and actual shutdown have separate receipts. Current preparation
+and successful fixture compilation, by themselves, are not userspace success.
+
 ## Gates
 
-The current public plan has **76 gates: 72 component/parser gates and four
+The current public plan has **77 gates: 73 component/parser gates and four
 Linux boots**, plus the separate A77 and PCI UFS compatibility job. The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.

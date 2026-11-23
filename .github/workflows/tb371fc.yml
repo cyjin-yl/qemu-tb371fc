@@ -70,6 +70,16 @@ jobs:
             --kernel "$RUNNER_TEMP/clean-linux/artifacts/Image" \
             --out "$RUNNER_TEMP/tb371fc-results/linux" \
             2>&1 | tee "$RUNNER_TEMP/tb371fc-results/linux.log"
+      - name: Build the full-DTB user-space fixture without executing a guest
+        run: |
+          set -euo pipefail
+          python3 tb371fc/scripts/build_actual_dt_fixture.py \
+            --out "$RUNNER_TEMP/tb371fc-results/full-dtb-user-fixture" \
+            --dt-identity-receipt tb371fc/evidence/wholeboard-20261123-a47/actual-dt-model-3b31e8.json \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/full-dtb-user-fixture-build.log"
+          printf '%s\n' \
+            'The full-DTB eight-check initramfs was built and its ELF/ABI inspected; no production kernel, guest user-space or shutdown was executed by this build-only step.' \
+            >> "$GITHUB_STEP_SUMMARY"
       - name: Upload receipts, logs and public runnable inputs
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

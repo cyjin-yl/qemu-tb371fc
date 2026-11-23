@@ -1,0 +1,52 @@
+{
+  "schema": "tb371fc-rpmh-wait-static-review-v1",
+  "source_commit": "4fb1a83a52d89d50066703c2e57b7aaa7d519c67",
+  "parent_commit": "dbf0e411e3fedad43e9bdbe44e7e969ca2fc89b1",
+  "test_blob": "4118a15144a7690a159f934da9094746fc2c417c",
+  "test_bytes": 44703,
+  "test_sha256": "b72b503c8c968310ea435dc058c6db1a072cad2a20281761696e2ffb3bd16032",
+  "ast_parse": true,
+  "compile_object_only": true,
+  "test_executed": false,
+  "qemu_executed": false,
+  "build_executed": false,
+  "ref_moved": false,
+  "ordinary_count": 10,
+  "ordinary_names": [
+    "default_strict_geometry_and_readonly_diagnostics",
+    "strict_reserved_wait_writes_are_atomic",
+    "reference_masks_only_high_bits_and_audits_each_write",
+    "reference_isolated_across_all_voters_and_boundary_tcs",
+    "low_wait_bits_control_completion_without_response",
+    "masked_high_bits_do_not_request_low_slot_completion",
+    "busy_wait_rejection_does_not_restart_original_deadline",
+    "pending_irq_is_independent_of_idle_wait_programming",
+    "cmd_enable_and_invalid_resource_validation_remain_strict",
+    "system_reset_clears_wait_diagnostics_and_pending_command"
+  ],
+  "expected_checks": 17,
+  "expected_completed_migrations": 1,
+  "expected_rejected_migrations": 2,
+  "expected_corrupted_stream_rejections": 2,
+  "main_vmstate_version": 2,
+  "main_payload_bytes_with_default_clock": 19420,
+  "optional_subsection_version": 1,
+  "optional_subsection_payload_bytes": 24,
+  "modified_existing_test_files": [],
+  "socket_harness_correction": "Short tempfile Unix sockets preserve evidence directories; found statically, not an executed failure",
+  "observer_review": {
+    "file": "/run/tb371fc-root77-a47/capture_rpmh_wait.py",
+    "bytes": 4920,
+    "sha256": "f537d1a978e1829e9d140d0d7533f1c5f83b72137526a266ed810bbb68487f90",
+    "review_scope": "New RPMh WAIT function and wrapper call only; existing AOP HMP capture remains separate",
+    "embedded_function_matches": true,
+    "pure_qom_get_and_query_status_only": true,
+    "readonly_properties": 8,
+    "repeated_stopped_snapshot": true
+  },
+  "independent_static_review_agents": [
+    "/root/board_gaps",
+    "/root/gpu_gx_integration"
+  ],
+  "review_scope_addendum": "Both reviewers read the final 44,703-byte script. GPU review independently checked inherited helpers, main 19,420-byte wire arithmetic, optional 24-byte subsection and default SysBus section identity; no code was executed."
+}

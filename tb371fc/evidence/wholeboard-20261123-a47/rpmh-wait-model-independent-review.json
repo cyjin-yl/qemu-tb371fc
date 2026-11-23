@@ -1,0 +1,51 @@
+{
+  "schema": "tb371fc-rpmh-wait-independent-runtime-static-review-v1",
+  "source_base": "3b31e83dc412962826ada872e361a1d32ea4e463",
+  "reviewed_files": [
+    {
+      "path": "hw/misc/qcom-sm8250-rpmh.c",
+      "bytes": 48803,
+      "sha256": "5786aba96b932a615db0be716bbae3aa61612089191978cbc7940385be13e290"
+    },
+    {
+      "path": "include/hw/misc/qcom-sm8250-rpmh.h",
+      "bytes": 2810,
+      "sha256": "6317eb842512a60ee74704a5181ecd7b8707c027a6dae93940a9264c7e7acddd"
+    }
+  ],
+  "original_runtime": {
+    "bytes": 41448,
+    "sha256": "124c46eecea991a747a9fee69667ac62f0bb86d6b3e99764a1b8a6a703e6e1ff"
+  },
+  "vmstate_core": {
+    "path": "migration/vmstate.c",
+    "git_blob": "9f49abda245eaf9053d7c1241f4a36e943cd54db",
+    "ref": "3b31e83dc412962826ada872e361a1d32ea4e463",
+    "read_from_pinned_repository": true
+  },
+  "findings": [
+    "The existing running-TCS rejection precedes the optional reserved-bit masking; ENABLE and other registers retain their rejection paths.",
+    "Only idle WAIT high bits use the explicit default-false reference policy. The low implemented sixteen bits are preserved and no command is triggered by this write.",
+    "The saturated diagnostic count retains its maximum and still records the latest voter/TCS/raw word. Later ordinary WAIT writes need not equal that historical last raw word.",
+    "Parent pre_load stops its timer, disables the input callback publish path through ready, and clears incoming subsection presence/policy and diagnostics.",
+    "The pinned VMState loader processes subsections before parent post_load. Profile presence/policy and diagnostic validity are checked before original output/timer restoration.",
+    "The optional subsection is present for every enabled profile including a cold zero-count instance. Missing/present mismatches reject both configuration directions.",
+    "Duplicate subsection and invalid subsection policy have explicit rejection paths. Diagnostics reject impossible zero-count last fields, unknown voter/TCS, and nonzero histories without ignored bits.",
+    "The main VMState v2 serialized fields and order remain unchanged. The new subsection serializes exactly 24 bytes excluding its subsection framing.",
+    "Reset clears diagnostics without modifying the immutable opt-in property. Existing resource validation and scheduling behavior remain in place."
+  ],
+  "conclusion": "No static blocker found in this bounded C/header change.",
+  "scope_limits": [
+    "No claim of silicon RAZ/WI behavior; the accepted masking is an explicit reference compatibility policy.",
+    "No compilation, QEMU, QTest, migration execution or public test was performed.",
+    "This review does not establish production guest progress or validate a future CI artifact."
+  ],
+  "actions": {
+    "source_reads": true,
+    "static_diff_review": true,
+    "model_modified": false,
+    "build_executed": false,
+    "qemu_executed": false,
+    "refs_updated": false
+  }
+}

@@ -1,0 +1,683 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Full production-DT userspace fixture build manifest",
+  "description": "Build-only artifact contract. This schema is not a build or guest-execution receipt.",
+  "type": "object",
+  "required": [
+    "schema",
+    "build_completed",
+    "scope",
+    "started_utc",
+    "finished_utc",
+    "target_dt",
+    "execution",
+    "commands",
+    "inputs",
+    "toolchain"
+  ],
+  "properties": {
+    "schema": {
+      "const": "tb371fc-full-dtb-user-fixture-v1"
+    },
+    "build_completed": {
+      "type": "boolean"
+    },
+    "source_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "scope": {
+      "type": "string"
+    },
+    "started_utc": {
+      "type": "string"
+    },
+    "finished_utc": {
+      "type": "string"
+    },
+    "target_dt": {
+      "type": "object",
+      "required": [
+        "sha256",
+        "exact_model",
+        "dtb_read_by_builder",
+        "model_measured_by_builder"
+      ],
+      "properties": {
+        "sha256": {
+          "const": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207"
+        },
+        "exact_model": {
+          "const": "Qualcomm Technologies, Inc. kona QRD"
+        },
+        "dtb_read_by_builder": {
+          "const": false
+        },
+        "model_measured_by_builder": {
+          "const": false
+        },
+        "identity_receipt": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "bytes": {
+                  "const": 3064
+                },
+                "sha256": {
+                  "const": "d7c70cfcdc7ac0d19df25feb22c3431d047129a85d03b4f306e97f5bd1f08e28"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "performed",
+        "userspace_passed",
+        "guest_shutdown_observed",
+        "android_boot_passed"
+      ],
+      "properties": {
+        "performed": {
+          "const": false
+        },
+        "userspace_passed": {
+          "const": null
+        },
+        "guest_shutdown_observed": {
+          "const": null
+        },
+        "android_boot_passed": {
+          "const": null
+        }
+      }
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "argv",
+          "log"
+        ],
+        "properties": {
+          "argv": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "log": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/identity"
+      }
+    },
+    "toolchain": {
+      "type": "object",
+      "additionalProperties": {
+        "allOf": [
+          {
+            "$ref": "#/$defs/identity"
+          },
+          {
+            "required": [
+              "requested",
+              "version_text"
+            ],
+            "properties": {
+              "requested": {
+                "type": "string"
+              },
+              "version_text": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "init": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/identity"
+        },
+        {
+          "type": "object",
+          "required": [
+            "class",
+            "endianness",
+            "elf_type",
+            "e_machine",
+            "interpreter_present",
+            "program_headers",
+            "sections",
+            "symbols",
+            "checkpoint_instruction_bytes",
+            "result_address_from_this_build",
+            "result_address_reused_from_old_fixture",
+            "nm_log",
+            "readelf_log",
+            "objdump_log"
+          ],
+          "properties": {
+            "class": {
+              "const": "ELF64"
+            },
+            "endianness": {
+              "const": "little"
+            },
+            "elf_type": {
+              "const": "ET_EXEC"
+            },
+            "e_machine": {
+              "const": 183
+            },
+            "interpreter_present": {
+              "const": false
+            },
+            "program_headers": {
+              "type": "array",
+              "minItems": 1
+            },
+            "sections": {
+              "type": "array",
+              "minItems": 1
+            },
+            "checkpoint_instruction_bytes": {
+              "const": "c0035fd6"
+            },
+            "result_address_from_this_build": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "result_address_reused_from_old_fixture": {
+              "const": false
+            },
+            "symbols": {
+              "type": "object",
+              "required": [
+                "tb371fc_guest_result",
+                "tb371fc_guest_checkpoint"
+              ],
+              "properties": {
+                "tb371fc_guest_result": {
+                  "type": "object",
+                  "required": [
+                    "address",
+                    "size",
+                    "type"
+                  ],
+                  "properties": {
+                    "address": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "size": {
+                      "const": 3120
+                    },
+                    "type": {
+                      "enum": [
+                        "D",
+                        "B"
+                      ]
+                    }
+                  }
+                },
+                "tb371fc_guest_checkpoint": {
+                  "const": {
+                    "address": 134217728,
+                    "size": 4,
+                    "type": "T"
+                  }
+                }
+              }
+            },
+            "nm_log": {
+              "$ref": "#/$defs/identity"
+            },
+            "readelf_log": {
+              "$ref": "#/$defs/identity"
+            },
+            "objdump_log": {
+              "$ref": "#/$defs/identity"
+            }
+          }
+        }
+      ]
+    },
+    "arch_probe": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/identity"
+        },
+        {
+          "required": [
+            "identical_to_native_tested_elf",
+            "elf_type",
+            "e_machine",
+            "interpreter_present"
+          ],
+          "properties": {
+            "bytes": {
+              "const": 2264
+            },
+            "sha256": {
+              "const": "0ed51cb6c6dd24685beb3f77056d17d47c5c2f697df96d87eef4a678d4c5cb1b"
+            },
+            "identical_to_native_tested_elf": {
+              "const": true
+            },
+            "elf_type": {
+              "const": "ET_EXEC"
+            },
+            "e_machine": {
+              "const": 183
+            },
+            "interpreter_present": {
+              "const": false
+            }
+          }
+        }
+      ]
+    },
+    "initramfs": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/identity"
+        },
+        {
+          "required": [
+            "gzip_mtime",
+            "uncompressed_bytes",
+            "uncompressed_sha256",
+            "entries_including_trailer",
+            "entries"
+          ],
+          "properties": {
+            "gzip_mtime": {
+              "const": 0
+            },
+            "uncompressed_bytes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "uncompressed_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "entries_including_trailer": {
+              "const": 7
+            },
+            "entries": {
+              "type": "array",
+              "minItems": 7,
+              "maxItems": 7,
+              "prefixItems": [
+                {
+                  "type": "object",
+                  "required": [
+                    "path",
+                    "bytes",
+                    "mode",
+                    "inode",
+                    "rdev_major",
+                    "rdev_minor",
+                    "payload_sha256"
+                  ],
+                  "properties": {
+                    "path": {
+                      "const": "init"
+                    },
+                    "bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "payload_sha256": {
+                      "$ref": "#/$defs/sha256"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "path",
+                    "bytes",
+                    "mode",
+                    "inode",
+                    "rdev_major",
+                    "rdev_minor",
+                    "payload_sha256"
+                  ],
+                  "properties": {
+                    "path": {
+                      "const": "dev"
+                    },
+                    "bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "payload_sha256": {
+                      "$ref": "#/$defs/sha256"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "path",
+                    "bytes",
+                    "mode",
+                    "inode",
+                    "rdev_major",
+                    "rdev_minor",
+                    "payload_sha256"
+                  ],
+                  "properties": {
+                    "path": {
+                      "const": "dev/console"
+                    },
+                    "bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "payload_sha256": {
+                      "$ref": "#/$defs/sha256"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "path",
+                    "bytes",
+                    "mode",
+                    "inode",
+                    "rdev_major",
+                    "rdev_minor",
+                    "payload_sha256"
+                  ],
+                  "properties": {
+                    "path": {
+                      "const": "proc"
+                    },
+                    "bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "payload_sha256": {
+                      "$ref": "#/$defs/sha256"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "path",
+                    "bytes",
+                    "mode",
+                    "inode",
+                    "rdev_major",
+                    "rdev_minor",
+                    "payload_sha256"
+                  ],
+                  "properties": {
+                    "path": {
+                      "const": "sys"
+                    },
+                    "bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "payload_sha256": {
+                      "$ref": "#/$defs/sha256"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "path",
+                    "bytes",
+                    "mode",
+                    "inode",
+                    "rdev_major",
+                    "rdev_minor",
+                    "payload_sha256"
+                  ],
+                  "properties": {
+                    "path": {
+                      "const": "arch-probe"
+                    },
+                    "bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "payload_sha256": {
+                      "$ref": "#/$defs/sha256"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "path",
+                    "bytes",
+                    "mode",
+                    "inode",
+                    "rdev_major",
+                    "rdev_minor",
+                    "payload_sha256"
+                  ],
+                  "properties": {
+                    "path": {
+                      "const": "TRAILER!!!"
+                    },
+                    "bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "payload_sha256": {
+                      "$ref": "#/$defs/sha256"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "guest_contract": {
+      "type": "object",
+      "required": [
+        "check_count",
+        "check_names",
+        "model_check_bit",
+        "exact_model",
+        "result_bytes",
+        "magic",
+        "version",
+        "header_bytes",
+        "probe_stdout_offset",
+        "expected_pass_mask",
+        "expected_fail_mask",
+        "minimum_elapsed_ns",
+        "guest_only_difference_is_exact_model_predicate",
+        "validator_only_difference_is_exact_model_predicate",
+        "guest_shutdown_requires_separate_actual_qmp_evidence",
+        "old_four_linux_gates_modified"
+      ],
+      "properties": {
+        "check_count": {
+          "const": 8
+        },
+        "check_names": {
+          "const": [
+            "procfs",
+            "sysfs",
+            "aarch64",
+            "eight_online_cpus_psci",
+            "timer_and_scheduler_progress",
+            "fork_and_wait",
+            "board_model",
+            "arch_counter_probe"
+          ]
+        },
+        "model_check_bit": {
+          "const": 6
+        },
+        "exact_model": {
+          "const": "Qualcomm Technologies, Inc. kona QRD"
+        },
+        "result_bytes": {
+          "const": 3120
+        },
+        "version": {
+          "const": 1
+        },
+        "header_bytes": {
+          "const": 112
+        },
+        "probe_stdout_offset": {
+          "const": 1072
+        },
+        "expected_pass_mask": {
+          "const": 255
+        },
+        "expected_fail_mask": {
+          "const": 0
+        },
+        "minimum_elapsed_ns": {
+          "const": 20000000
+        },
+        "guest_only_difference_is_exact_model_predicate": {
+          "const": true
+        },
+        "validator_only_difference_is_exact_model_predicate": {
+          "const": true
+        },
+        "guest_shutdown_requires_separate_actual_qmp_evidence": {
+          "const": true
+        },
+        "old_four_linux_gates_modified": {
+          "const": false
+        },
+        "magic": {
+          "const": 3554260750543766100
+        }
+      }
+    },
+    "build_error": {
+      "type": "object",
+      "required": [
+        "type",
+        "message"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "build_completed": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "source_commit",
+          "init",
+          "arch_probe",
+          "initramfs",
+          "guest_contract"
+        ],
+        "not": {
+          "required": [
+            "build_error"
+          ]
+        },
+        "properties": {
+          "target_dt": {
+            "required": [
+              "identity_receipt"
+            ]
+          },
+          "toolchain": {
+            "required": [
+              "cc",
+              "nm",
+              "readelf",
+              "objdump",
+              "probe-as",
+              "probe-ld",
+              "cc-linker"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "build_completed": {
+            "const": false
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "build_error"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "identity": {
+      "type": "object",
+      "required": [
+        "path",
+        "bytes",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    }
+  }
+}

@@ -51,7 +51,7 @@ Use their per-run hashes rather than treating a source table as execution proof.
 | Board and loader | [machine.md](docs/machine.md), [runtime layout evidence](evidence/boot-layout-20261123/runtime-layout-frozen4.json) |
 | A77 CPU and PMU | [cpu.md](docs/cpu.md), Arm Cortex-A77 TRM references and native MIDR/REVIDR observations |
 | NoC QoS | [noc-qos-reference.md](docs/noc-qos-reference.md), pinned RPMh programming sequence and bounded DT; [actual 20-check receipt](evidence/wholeboard-20261123-a47/noc-qos-99ef.json) and [47-port native snapshot](evidence/wholeboard-20261123-a47/native-99ef.json); no traffic or SBM claim |
-| Config NoC SBM | [noc-sbm-reference.md](docs/noc-sbm-reference.md), [fixed vendor source/actual-DT contract](evidence/wholeboard-20261123-a47/noc-sbm-source-contract.json), [independent DT geometry](evidence/wholeboard-20261123-a47/noc-sbm-independent-dt-layout.json); candidate reference, formal CI/native still pending |
+| Config NoC SBM | [noc-sbm-reference.md](docs/noc-sbm-reference.md), [fixed vendor source/actual-DT contract](evidence/wholeboard-20261123-a47/noc-sbm-source-contract.json), [independent DT geometry](evidence/wholeboard-20261123-a47/noc-sbm-independent-dt-layout.json); `3b31e8` component CI and all five streams verified; native SET/CLR remain zero because the earlier RPMh WAIT panic prevented exercising this path |
 | QSMMUv500 reference | [source contract](docs/smmuv500-source-contract.md) and [14-node actual DT slice](evidence/wholeboard-20261123-a47/smmuv500-dt-evidence-99ef.json); directly observed TCU VERSION fault, source-defined HALT/ECATS, [apps-only companion](docs/smmuv500-reference.md), and [exact Image IKCONFIG](evidence/wholeboard-20261123-a47/smmuv500-kernel-config.json); version, timing and firmware handoff remain unmeasured. Absent in 99ef; [3ef98 passed 36 checks and real migrations](evidence/wholeboard-20261123-a47/smmuv500-3ef98.json), with [separate native TBU resource progress](evidence/wholeboard-20261123-a47/native-3ef98.json) |
 | TBU power ownership | [Four complete GDSC DT nodes](evidence/wholeboard-20261123-a47/smmuv500-tbu-gdsc-dt.json) and [current GCC ownership/source review](evidence/wholeboard-20261123-a47/smmuv500-tbu-gdsc-review.json); existing GCC domains 7–10 own the words, while traffic/power coupling is not added by the companion |
 | TSENS24xx digital reference | [Two actual controllers and direct thermal references](evidence/wholeboard-20261123-a47/tsens-dt-evidence-3ef98.json), [pinned vendor/upstream source review](evidence/wholeboard-20261123-a47/tsens-dt-review-3ef98.json) and [model contract](docs/tsens24xx-reference.md); actual PA `0x0c222004` abort in [3ef98 native run](evidence/wholeboard-20261123-a47/native-3ef98.json). SROT DT size 4 remains distinct from sourced +4 access. Explicit temperature, boot mask, 1-ms timing, reset defaults and held-clear policy are reference assumptions. [52492a CI](evidence/wholeboard-20261123-a47/public-ci-52492a.json) and its [original TSENS 34/2/2/2 receipt](evidence/wholeboard-20261123-a47/tsens24xx-52492a.json) passed; the [same-binary full-DT run](evidence/wholeboard-20261123-a47/native-52492a.json) completed reference sampling on both controllers and next aborted in CPUFreq at `0x18591100` |
@@ -152,3 +152,20 @@ preserves its incompatible TB371FC-name predicate. Staging those old inputs
 was not a guest execution or an eight-check pass.
 
 The [independent source/production review](evidence/wholeboard-20261123-a47/rpmh-source-production-review-3b31e8.json) confirms the exact producer stack slot, 12-byte command copy and unnormalized WAIT accumulation in the unchanged production machine code. It distinguishes this local path equivalence from whole-kernel source provenance and from unmeasured silicon behavior.
+
+## WAIT compatibility policy and fixture provenance
+
+The [WAIT reference contract](docs/rpmh-wait-reserved-reference.md) separates
+the confirmed production uninitialized-command path from unknown silicon
+reserved-bit behavior. Only the explicit nondefault model policy permits
+high-bit masking; its original low16 command semantics and busy rejection
+remain required. The optional migration identity prevents importing a
+different policy as if it were the same machine configuration.
+
+The new `guest-init-actual-dt.c` and `boot_verdict_actual_dt.py` preserve every
+non-model check of the existing eight-check ABI. The separate CI builder
+records actual output hashes and symbols; its successful-build flag never
+means guest execution. The source-pinned consumer and pure ZIP-stage helper
+check the actual ELF/RET/CPIO relationships and bind any later execution to
+the same source, binary, original Image and complete DT. Original Android
+images and hardware endpoint behavior remain separate missing acceptance.
