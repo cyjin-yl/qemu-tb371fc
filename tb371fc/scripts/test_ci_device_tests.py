@@ -21,7 +21,9 @@ class VerdictTests(unittest.TestCase):
         return ci.Case("fixture", [], self.root / "runtime", **kwargs)
 
     def test_true_json_and_expected_count(self):
-        self.log.write_text(json.dumps({"passed": True, "checks": [1, 2]}))
+        self.log.write_text(json.dumps({"passed": True, "checks": [
+            {"name": "one", "passed": True},
+            {"test": "two", "status": "pass"}]}))
         result = ci.judge(self.case(expected_count=2), self.log)
         self.assertEqual(result["check_count"], 2)
 
@@ -86,6 +88,44 @@ class VerdictTests(unittest.TestCase):
             self.log.write_text(json.dumps({"passed": True, "checks": [check]}))
             with self.subTest(check=check), self.assertRaises(ValueError):
                 ci.judge(self.case(expected_count=1), self.log)
+
+    def test_contradictory_summary_verdicts_rejected(self):
+        for field in ("success", "all_passed"):
+            for value in (False, 1, "true"):
+                self.log.write_text(json.dumps({"passed": True, field: value}))
+                with self.subTest(field=field, value=value), self.assertRaises(ValueError):
+                    ci.judge(self.case(), self.log)
+
+    def test_placeholder_and_unattested_checks_rejected(self):
+        for value in (None, True, 1, [], {}, {"name": "one"},
+                      {"passed": True}, "PASS", "TB371FC_CHECK FAIL one"):
+            self.log.write_text(json.dumps({"passed": True, "checks": [value]}))
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                ci.judge(self.case(expected_count=1), self.log)
+
+    def test_duplicate_check_names_rejected(self):
+        self.log.write_text(json.dumps({"passed": True, "checks": [
+            {"name": "same", "passed": True},
+            {"test": "same", "status": "pass"}]}))
+        with self.assertRaises(ValueError):
+            ci.judge(self.case(expected_count=2), self.log)
+
+    def test_guest_check_receipt_formats(self):
+        for checks in (["TB371FC_CHECK PASS one", "TB371FC_CHECK PASS two"],
+                       [["PASS", "one"], ["PASS", "two"]]):
+            self.log.write_text(json.dumps({"passed": True, "guest_checks": checks}))
+            result = ci.judge(self.case(expected_count=2, count_field="guest_checks"),
+                              self.log)
+            self.assertEqual(result["check_count"], 2)
+
+    def test_failed_or_malformed_guest_checks_rejected(self):
+        for check in (["FAIL", "one"], ["PASS"], ["PASS", "one", "extra"],
+                      ["PASS", ""], "TB371FC_CHECK FAIL one",
+                      "TB371FC_CHECK PASS one trailing", "arbitrary text"):
+            self.log.write_text(json.dumps({"passed": True, "guest_checks": [check]}))
+            with self.subTest(check=check), self.assertRaises(ValueError):
+                ci.judge(self.case(expected_count=1, count_field="guest_checks"),
+                         self.log)
 
     def run_process(self, code, timeout=5):
         case = ci.Case("subprocess", [sys.executable, "-c", code],
