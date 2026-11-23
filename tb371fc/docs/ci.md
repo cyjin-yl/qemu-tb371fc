@@ -41,7 +41,7 @@ The `tsens24xx-reference` gate runs `test_tsens24xx.py` and requires 34 unique s
 
 The gate distinguishes live host temperature inputs from the captured in-flight round, checks VALID bit 21 and vendor TRDY bit 3 at actual timer boundaries, exercises signed thresholds, held-clear behavior, reset cancellation and late-callback policy, and checks all four actual GIC routes without output interception. Normal TCG retains the intended host environment input properties; they are not QTest-only fixtures. Migration verdicts require unmodified real source streams and raw restored state before TSENS MMIO. The default profile remains unknown. Temperature, boot sensor mask and timing are explicit reference choices; native probe progress, analog calibration, firmware equivalence and Android are not implied.
 
-This 72-gate combination has not yet completed its own formal CI or matching native run. The frozen 71-gate result below remains tied to `3ef98`.
+The first `298f21c` run [failed one of 68 component gates](../evidence/wholeboard-20261123-a47/public-ci-298f21-failure.json), after TSENS passed 17 checks. The narrow-access test expected the accepts-callback diagnostic `rejected`, but MemoryRegion correctly emitted `invalid size (min:4 max:4)`. The exact width diagnostic is now required without changing device code, the 34-check count or any migration requirements. The four Linux gates were skipped, and native execution was blocked by the failed aggregate receipt. The fixed combination still needs its own complete formal run. The frozen 71-gate result below remains tied to `3ef98`.
 
 ## Gates
 

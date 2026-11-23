@@ -1,0 +1,26 @@
+> irq_intercept_out /machine/tsens1 sysbus-irq
+< OK 
+> writel 0xc265004 0x7
+< OK 
+> writel 0xc265010 0xffffffff
+< OK 
+> writel 0xc26501c 0xc000ffff
+< OK 
+> writel 0xc26500c 0xffffffff
+< OK 
+> writel 0xc26500c 0x0
+< OK 
+> writel 0xc265018 0xc000ffff
+< OK 
+> writel 0xc265018 0x0
+< OK 
+> writel 0xc265020 0x3e8e70
+< OK 
+> writel 0xc265060 0x4b0
+< OK 
+> writel 0xc223004 0x9
+< OK 
+> clock_step 1000000
+< OK 1000000
+> readb 0xc223004
+< OK 0x0000000000000000

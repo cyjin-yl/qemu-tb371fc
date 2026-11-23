@@ -1,0 +1,232 @@
+{
+  "schema": "tb371fc-tsens24xx-native-observer-independent-review-v1",
+  "scope": "Static review plus isolated AST callback verification of the new TSENS capture function; not a native execution or compiled-device result",
+  "observer": {
+    "path": "native-tsens24xx-observer.py",
+    "bytes": 26958,
+    "sha256": "71dd4ed62aa620f2c2766edcc504a5c353c747fade7081669c9159ed1ef3e64d"
+  },
+  "model": {
+    "commit": "6f2a0c793652067798581a07a516f6f148b82fed",
+    "path": "hw/misc/qcom-tsens24xx.c",
+    "bytes": 31065,
+    "sha256": "9c92f7e38cc581db677ce68707a1065f8a7cb9549a48030e5d27fd247b5ee10c"
+  },
+  "legacy_wrapper": {
+    "bytes": 20364,
+    "sha256": "b9788c1141c20fc84d78843dd37a699c9f886ee2282191c1b8c09d1e17e79850",
+    "exact_bytes_preserved_after_removing_only_tsens_constant_function_and_try_call": true,
+    "legacy_aop_noc_smmuv500_code_changed": false
+  },
+  "dt": {
+    "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "bounded_capture_blob": "b6110a64c701db6727f35234cbbb27f932c6f098",
+    "capture_bytes": 27153,
+    "capture_sha256": "bc480840a9c84d6725c4ead4f07edcb4021a03720df9279a1c3ad59cf9325259",
+    "controllers": [
+      {
+        "path": "/machine/tsens0",
+        "controller_id": 0,
+        "dt_path": "/soc/tsens@c222000",
+        "srot_base": 203563008,
+        "tm_base": 203829248,
+        "dt_srot_size": 4,
+        "dt_tm_size": 511,
+        "upper_lower_spi": 506,
+        "critical_spi": 508,
+        "thermal_reference_sensor_ids": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "compared_to_original_capture_be32": true,
+        "geometry_matches": true
+      },
+      {
+        "path": "/machine/tsens1",
+        "controller_id": 1,
+        "dt_path": "/soc/tsens@c223000",
+        "srot_base": 203567104,
+        "tm_base": 203837440,
+        "dt_srot_size": 4,
+        "dt_tm_size": 511,
+        "upper_lower_spi": 507,
+        "critical_spi": 509,
+        "thermal_reference_sensor_ids": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "compared_to_original_capture_be32": true,
+        "geometry_matches": true
+      }
+    ],
+    "thermal_references_are_measured_enable_masks": false
+  },
+  "qom_contract": {
+    "configuration_fields_per_controller": 8,
+    "state_fields_per_controller": 20,
+    "sensor_fields_per_sensor": 9,
+    "sensors_per_controller": 16,
+    "qom_get_calls_successful_two_controller_capture": 344,
+    "query_status_calls_successful_capture": 2,
+    "properties_match_final_model": true,
+    "allowed_new_function_commands": [
+      "query-status",
+      "qom-get"
+    ],
+    "strict_qom_types": {
+      "configuration": true,
+      "controller_state": true,
+      "sensor_state": true,
+      "booleans_not_accepted_as_integers": true
+    },
+    "sample_code_range": "0..4095; signed12 decoding to millicelsius",
+    "counter_order": "0 <= complete-rounds <= sample-rounds",
+    "stopped_before_and_after_guard": "running must be exactly False; an exception prevents the new observer report from being returned",
+    "positive_label_requires": [
+      "enabled-reference is exactly True",
+      "controller ID and SROT/TM geometry match actual DT",
+      "sensor-count == 16",
+      "sampling-period-ns == 1000000",
+      "sample-rounds > 0 and complete-rounds > 0",
+      "last-sample-ns >= 0 and vendor TRDY == 8",
+      "at least one currently valid sample",
+      "per-sensor VALID agrees across QOM mask and status; code agrees with status and signed millicelsius"
+    ],
+    "positive_label_scope": "Historical completed digital reference sampling with some currently valid sample; not a claim that all future samples or physical channels are valid"
+  },
+  "isolated_ast_verification": {
+    "observer_bytes": 26958,
+    "observer_sha256": "71dd4ed62aa620f2c2766edcc504a5c353c747fade7081669c9159ed1ef3e64d",
+    "scope": "Isolated AST execution of new TSENS capture function with deterministic fake QMP responses only",
+    "real_qemu_connected": false,
+    "native_kernel_executed": false,
+    "compiled_model_executed": false,
+    "cases": [
+      {
+        "name": "valid_two_controller_reference",
+        "passed": true,
+        "positive_controllers": 2,
+        "query_status_calls": 2,
+        "qom_get_calls": 344
+      },
+      {
+        "name": "bool_counter_rejected",
+        "passed": true,
+        "rejected": "TSENS state has unexpected QOM types",
+        "query_status_calls": 1,
+        "qom_get_calls": 28
+      },
+      {
+        "name": "bool_configuration_integer_rejected",
+        "passed": true,
+        "rejected": "TSENS configuration has unexpected QOM types",
+        "query_status_calls": 1,
+        "qom_get_calls": 8
+      },
+      {
+        "name": "bool_sample_code_rejected",
+        "passed": true,
+        "rejected": "TSENS sensor has unexpected QOM types",
+        "query_status_calls": 1,
+        "qom_get_calls": 37
+      },
+      {
+        "name": "integer_input_valid_rejected",
+        "passed": true,
+        "rejected": "TSENS sensor has unexpected QOM types",
+        "query_status_calls": 1,
+        "qom_get_calls": 37
+      },
+      {
+        "name": "counter_order_rejected",
+        "passed": true,
+        "rejected": "TSENS sample counters are inconsistent",
+        "query_status_calls": 1,
+        "qom_get_calls": 28
+      },
+      {
+        "name": "negative_counter_rejected",
+        "passed": true,
+        "rejected": "TSENS sample counters are inconsistent",
+        "query_status_calls": 1,
+        "qom_get_calls": 28
+      },
+      {
+        "name": "wide_sample_code_rejected",
+        "passed": true,
+        "rejected": "TSENS sample code is outside its 12-bit field",
+        "query_status_calls": 1,
+        "qom_get_calls": 37
+      },
+      {
+        "name": "profile_off_cannot_label_controller_positive",
+        "passed": true,
+        "positive_controllers": 1,
+        "query_status_calls": 2,
+        "qom_get_calls": 344
+      },
+      {
+        "name": "wrong_geometry_cannot_label_controller_positive",
+        "passed": true,
+        "positive_controllers": 1,
+        "query_status_calls": 2,
+        "qom_get_calls": 344
+      },
+      {
+        "name": "wrong_sensor_count_cannot_label_controller_positive",
+        "passed": true,
+        "positive_controllers": 1,
+        "query_status_calls": 2,
+        "qom_get_calls": 344
+      },
+      {
+        "name": "wrong_period_cannot_label_controller_positive",
+        "passed": true,
+        "positive_controllers": 1,
+        "query_status_calls": 2,
+        "qom_get_calls": 344
+      }
+    ],
+    "passed": true
+  },
+  "interpretation": {
+    "reference_boot_mask_measured": false,
+    "reference_25000_millicelsius_measured": false,
+    "reference_one_ms_period_measured": false,
+    "analog_calibration_observed": false,
+    "irq_metadata_is_native_delivery_proof": false,
+    "thermal_consumer_reference_is_firmware_enable_mask": false,
+    "native_probe_requires_independent_kernel_log": true
+  },
+  "actions": {
+    "guest_memory_written": false,
+    "device_mmio_read": false,
+    "host_environment_modified": false,
+    "real_qemu_connected": false,
+    "native_kernel_executed": false,
+    "hardware_mmio_accessed": false,
+    "build_or_ci_started": false
+  },
+  "verdict": "No blocking issue in the reviewed new observer function; unified compiled-device CI and subsequent native capture remain separate evidence."
+}

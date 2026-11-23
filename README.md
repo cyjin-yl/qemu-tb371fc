@@ -14,6 +14,8 @@
 
 本轮新增[两组 TSENS24xx 数字参考模型](tb371fc/docs/tsens24xx-reference.md)，公开验收计划扩展为 **72 个 gate：68 个组件检查 + 4 次 Linux 启动**。新增 34 项检查覆盖真实采样轮次、VALID/TRDY、阈值/四路 IRQ、复位及进程间迁移；**该新组合尚待实际 CI 与同二进制原厂验证**。下方已通过的 71 项只对应 `3ef98`，不替代新增组合的结果。
 
+首次 TSENS 组合 `298f21c` 的[实际失败回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-298f21-failure.json)为 **67/68 组件通过，Linux 四项未执行**，独立 A77/UFS 成功。TSENS 前 17 项通过，第 18 项把合法的非法宽度诊断 `invalid size (min:4 max:4)` 误期望为 `rejected`；[原始报告](tb371fc/evidence/wholeboard-20261123-a47/tsens24xx-298f21-failed.json)和真实 QTest/错误日志均保留。当前只修正这一严格测试判断，设备 C、34 项门槛和迁移契约不变，仍须完整重跑。失败产物未用于原厂启动。
+
 统一提交 `3ef98a8afb49a873d677288693d6491c50fd75e1` 已实际通过 **71 个 gate：67/67 组件检查 + 4/4 Linux 启动，以及独立 A77/UFS job**。见[实际 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45216035665)和[冻结回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-3ef98.json)。板级 QEMU SHA-256 为 `703af9a899455c1c32636a9e3535294031c93cd9624fdc193177c61cb8ff7600`；已实际读取 ZIP、包内二进制、两份 clean-source 汇总、十份组件报告及 12 个 MPM/NoC/SMMUv500 迁移文件。
 
 [apps SMMUv500 companion](tb371fc/docs/smmuv500-reference.md)的 [36 项实际检查](tb371fc/evidence/wholeboard-20261123-a47/smmuv500-3ef98.json)、2 次完成迁移、2 次 profile 拒绝和 2 次损坏流拒绝全部通过。它实现 TCU 与 10 个 TBU 的有限 reference 协议，包含有状态 HALT/ECATS、共享 SMMUv2 页表与故障路径、真实 DMA 缓存失效和迁移；`0x02000000` 身份及 1 µs 延时均是明示参考假设。

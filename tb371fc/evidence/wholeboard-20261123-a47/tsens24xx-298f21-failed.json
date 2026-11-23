@@ -1,0 +1,144 @@
+{
+  "schema": "tb371fc-tsens24xx-v1",
+  "passed": false,
+  "expected_checks": 34,
+  "checks": [
+    {
+      "name": "cold_reference_has_no_fabricated_temperature_or_firmware_enable",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "first_sample_and_validity_follow_the_exact_virtual_deadline",
+      "passed": true,
+      "irq_controller": 1
+    },
+    {
+      "name": "a_partial_round_cannot_claim_all_enabled_inputs_were_sampled",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "all_thirty_two_channels_preserve_signed_codes_and_controller_isolation",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "changes_to_environment_inputs_do_not_rewrite_the_inflight_sample",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "withdrawn_sources_lose_validity_without_becoming_an_invented_zero",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "controllers_keep_independent_sampling_phases_and_enable_masks",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "literal_driver_threshold_rmw_preserves_the_other_field_and_c_signed_division",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "signed_upper_and_lower_comparators_include_equality_on_real_irq",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "critical_comparator_and_second_irq_are_independent_of_upper_lower",
+      "passed": true,
+      "irq_controller": 1
+    },
+    {
+      "name": "global_enables_filter_real_latched_irqs_without_erasing_status",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "channel_masks_isolate_events_and_rearming_does_not_require_a_fake_sample",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "clear_pulses_clear_latches_and_held_clear_suppresses_only_the_selected_event",
+      "passed": true,
+      "irq_controller": 1
+    },
+    {
+      "name": "control_changes_cancel_pending_samples_but_preserve_programmed_thresholds",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "software_reset_is_a_real_held_reset_and_preserves_external_environment",
+      "passed": true,
+      "irq_controller": 1
+    },
+    {
+      "name": "system_reset_cancels_timers_and_irqs_and_retains_only_external_inputs",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "read_only_feedback_and_reserved_bits_cannot_forge_a_sample_or_irq",
+      "passed": true,
+      "irq_controller": 0
+    }
+  ],
+  "expected_completed_migrations": 2,
+  "migrations": [],
+  "expected_rejected_migrations": 2,
+  "rejected_migrations": [],
+  "expected_corrupted_stream_rejections": 2,
+  "corrupted_stream_rejections": [],
+  "controller_count": 2,
+  "sensor_count": 32,
+  "sensors_per_controller": 16,
+  "register_count": 114,
+  "sparse_window_count": 6,
+  "mapped_bytes": 456,
+  "registers_per_controller": 57,
+  "mapped_bytes_per_controller": 228,
+  "irq_count": 4,
+  "sampling_period_ns": 1000000,
+  "vmstate_version": 1,
+  "vmstate_payload_bytes_per_controller": 375,
+  "reference_profile_is_default": false,
+  "reference_boot_state_is_measured": false,
+  "environment_input_is_host_controlled": true,
+  "analogue_calibration_implemented": false,
+  "watchdog_producer_implemented": false,
+  "cycle_monitor_producer_implemented": false,
+  "original_dt_srot_declared_bytes_per_controller": 4,
+  "source_observed_control_offset_beyond_declared_srot_size": 4,
+  "original_dt_tm_declared_bytes_per_controller": 511,
+  "unique_dt_referenced_sensor_counts": [
+    16,
+    9
+  ],
+  "dt_references_are_measured_firmware_enable_masks": false,
+  "qemu_sha256": "df70be3a44a91f993d07b26796e93347da215216f9384db42872e05710435916",
+  "script_sha256": "7b53e378fdfc66d57cf7efb409ff6121a22c5a418e138228de87c1cc498fc63c",
+  "guest_cpu_executed": false,
+  "native_kernel_probe_observed": false,
+  "android_boot_passed": false,
+  "scope": "Actual compiled two-controller TSENS transactions, captured external reference inputs, virtual sample deadlines, signed thresholds, real IRQ outputs/GIC routes and state/RAM migration",
+  "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+  "source_url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/thermal/tsens2xxx.c",
+  "source_sha256": {
+    "tsens2xxx.c": "8e3bcb1179ecbb482cb2e7a32ad0daff28caace4ee2582b9521e016fb5ce1283",
+    "tsens.h": "dc878c52e6d0cd41b102759018c15b7982004957562ade83db3cd3fa5db0970e",
+    "msm-tsens.c": "07de996bd2b5e4f4bcf06508535a75f70fa59b9b174f9dad397284753658e282"
+  },
+  "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "dt_evidence_blob": "b6110a64c701db6727f35234cbbb27f932c6f098",
+  "failing_stage": "narrow_and_unaligned_accesses_fail_while_wide_bus_accesses_split_into_words",
+  "error": "([('read', 0, 1, 'qcom-tsens24xx-srot-control', 'invalid size (min:4 max:4)')], [('read', 0, 1, 'qcom-tsens24xx-srot-control', 'rejected')])",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_tsens24xx.py\", line 1516, in main\n    test(rig)\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_tsens24xx.py\", line 732, in narrow_and_unaligned_accesses_fail_while_wide_bus_accesses_split_into_words\n    assert observed == expected, (observed, expected)\n           ^^^^^^^^^^^^^^^^^^^^\nAssertionError: ([('read', 0, 1, 'qcom-tsens24xx-srot-control', 'invalid size (min:4 max:4)')], [('read', 0, 1, 'qcom-tsens24xx-srot-control', 'rejected')])\n",
+  "binary_unchanged": true,
+  "duration_seconds": 7.421
+}
