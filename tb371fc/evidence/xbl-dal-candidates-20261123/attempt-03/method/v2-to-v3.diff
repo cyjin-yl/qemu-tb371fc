@@ -1,0 +1,314 @@
+--- v2/dal_smem_candidates.py
++++ v3/dal_smem_candidates.py
+@@ -36,6 +36,8 @@
+ MAX_REPORTED_CANDIDATES = 4
+ MAX_FAILURE_DETAILS = 4
+ MAX_OUTPUT = 12288
++FORMAT_LEGACY = "legacy"
++FORMAT_COMPACT = "compact-memory-optimised-candidate"
+ FORMAT_SOURCES = {
+     "commit": "20bb8ae36c93fc16bbadda0e0a83f930c0c8a271",
+     "repository": "Rivko/android-firmware-qti-sdm670",
+@@ -47,6 +49,29 @@
+     "DALPropDef.h": "8dc126161edde1add133a9e5cb20a4de3c9a2420e81df48be908213d0f5d41d2",
+ }
+ 
++COMPACT_FORMAT_SOURCES = {
++    "reader": {
++        "path": "adsp_proc/core/kernel/devcfg/service/src/DALProps.c",
++        "sha256": "a0619ff07b088833e66479bb3c1957ef06210526e71c8b389204c1ac429025cc",
++    },
++    "generator": {
++        "path": "adsp_proc/core/kernel/devcfg/scripts/propgen.py",
++        "sha256": "cf96e18be30d2ea75e29b7b530e28d152121f89e809749ef2dbf861c1b7442ac",
++    },
++    "types": {
++        "path": "adsp_proc/core/api/kernel/devcfg/devcfgTypes.h",
++        "sha256": "fe29d28a882159ab31aeaafd79762ab9b993183586729529fae493e16d3495c5",
++    },
++    "property_definitions": {
++        "path": "adsp_proc/core/api/dal/DALPropDef.h",
++        "sha256": "88a2b8dc2fe8d1b82c00b00ab9e6d6fc507da7e50fa98c9595239429e99aa622",
++    },
++    "commit": "20bb8ae36c93fc16bbadda0e0a83f930c0c8a271",
++    "independent_source_contract_blob": "bdf2e2f5a1225d845beb4085084b8431648845f1",
++    "independent_source_contract_sha256": "d76f11e2cf627706afd5599d3fbd3c82cde0b983cfc1710d2e3ed7c9fc5c46d0",
++    "qualification": "Cross-platform format evidence; not proof of native XBL build flags or dispatch.",
++}
++
+ class Reject(Exception):
+     """A fixed reason code, never private bytes or arbitrary exception text."""
+     def __init__(self, code, context=None):
+@@ -153,7 +178,11 @@
+             "collision_ptr": collision_ptr}
+ 
+ class PropBin:
+-    def __init__(self, view, va):
++    def __init__(self, view, va, property_format=FORMAT_LEGACY):
++        need(property_format in (FORMAT_LEGACY, FORMAT_COMPACT),
++             "unsupported_property_format")
++        self.property_format = property_format
++        self.compact = property_format == FORMAT_COMPACT
+         self.view, self.va = view, va
+         vals = struct.unpack("<6I", view.read(va, 24))
+         self.length, self.name_off, self.string_off, self.byte_off, self.u32_off, numeric = vals
+@@ -183,7 +212,8 @@
+              "property_list_start_invalid")
+ 
+     def prop_name(self, word, list_context=None):
+-        rel = self.name_off + (word & 0x7fffffff)
++        name_mask = 0x007fffff if self.compact else 0x7fffffff
++        rel = self.name_off + (word & name_mask)
+         try:
+             extent(rel, 1, self.length, "property_name_offset")
+         except Reject as exc:
+@@ -191,6 +221,7 @@
+             # string or payload bytes from the rejected record.
+             exc.context = {
+                 "propbin_va": self.va, "propbin_length": self.length,
++                "property_format": self.property_format,
+                 "name_section_offset": self.name_off,
+                 "name_or_id_word": word,
+                 "calculated_name_relative_offset": rel,
+@@ -205,6 +236,8 @@
+         need(value and all(0 < b < 128 for b in value), "property_name_unresolved")
+         # Names other than this allowlist are not retained or emitted.
+         text = value.decode("ascii")
++        if self.compact and text == "DevCfgVersionInfo":
++            return text  # Control marker only; never emitted as an extra setting.
+         return text if text in NAMES else None
+ 
+     def parse_list(self, start, all_starts, list_kind="unspecified"):
+@@ -222,14 +255,22 @@
+                         "start": start, "end_marker": pos}
+             entries += 1
+             need(entries <= MAX_PROPERTIES, "property_count_limit")
+-            extent(pos, 8, end, "property_prefix_extent")
+-            word = self.u32(pos + 4)
++            if self.compact and pos == start and typ == 0x14:
++                # The public generators have an inconsistent version prologue.
++                # Do not "repair" its width or infer a hardware-version branch.
++                raise Reject("unresolved_devcfg_version_prologue")
++            prefix_size = 4 if self.compact else 8
++            extent(pos, prefix_size, end, "property_prefix_extent")
++            word = typ if self.compact else self.u32(pos + 4)
+             name = self.prop_name(word, {
+                 "list_start_offset": start, "list_start_va": self.va + start,
+                 "list_kind": list_kind, "entry_va": self.va + pos,
+                 "type_word": typ,
+             })
+-            base_type, payload = typ & 0x7fffffff, pos + 8
++            if self.compact and name == "DevCfgVersionInfo":
++                raise Reject("unresolved_devcfg_version_selection")
++            base_type = (typ >> 24) if self.compact else (typ & 0x7fffffff)
++            payload = pos + prefix_size
+             if base_type in FIXED_TYPES:
+                 payload_size = 4
+             elif base_type == 0x8:
+@@ -245,12 +286,56 @@
+             if name is not None:
+                 need(name not in selected, "duplicate_allowlisted_property")
+                 selected[name] = {
+-                    "type": base_type, "visibility_denied": bool(typ & 0x80000000),
+-                    "name_highbit": bool(word & 0x80000000),
++                    "type": base_type,
++                    "visibility_denied": False if self.compact else bool(typ & 0x80000000),
++                    "name_highbit": bool(word & (0x00800000 if self.compact else 0x80000000)),
++                    "property_header_format": self.property_format,
+                     "entry_va": self.va + pos, "payload_rel": payload,
+                     "payload_size": payload_size}
+             pos = payload + payload_size
+ 
++    def structure_layout_candidates(self, index, struct_base):
++        """Read only each candidate slot, never the pointed-to structure."""
++        rows = []
++        for label, stride, pointer_offset in (
++            ("plain-pointer-aapcs64", 8, 0),
++            ("size-plus-pointer-aapcs64", 16, 8),
++        ):
++            record_va = struct_base + index * stride
++            row = {
++                "layout": label, "entry_stride": stride,
++                "record_va": record_va, "pointer_offset": pointer_offset,
++                "layout_selected": False, "native_build_flag_proven": False,
++                "target_contents_decoded": False, "array_total_length_known": False,
++            }
++            try:
++                row["record_mapping"] = self.view.describe(
++                    record_va, stride, scoped=True, file_backed=True)
++                raw = self.view.read(record_va, stride)
++                if pointer_offset:
++                    row["declared_size"] = struct.unpack_from("<I", raw, 0)[0]
++                    row["declared_size_is_array_total_length"] = False
++                    row["declared_size_note"] = (
++                        "The source generator can emit sizeof(void*); this is not a table count.")
++                target = struct.unpack_from("<Q", raw, pointer_offset)[0]
++                need(target != 0, "null_structure_target")
++                # An unmapped value from the alternate layout is not exported.
++                row["target"] = self.view.describe(target)
++                row["pointer_slot"] = self.view.describe(
++                    record_va + pointer_offset, 8, scoped=True, file_backed=True)
++                row["status"] = "slot_and_target_mapping_observed"
++                if pointer_offset and row["declared_size"]:
++                    try:
++                        row["declared_extent_mapping"] = self.view.describe(
++                            target, row["declared_size"])
++                    except Reject as exc:
++                        row["declared_extent_error"] = exc.code
++            except Reject as exc:
++                row["status"] = "layout_mapping_not_validated"
++                row["error_code"] = exc.code
++            rows.append(row)
++        return rows
++
+     def resolve(self, name, record, struct_base):
+         public = {k: v for k, v in record.items()
+                   if k not in ("payload_rel", "payload_size")}
+@@ -266,15 +351,27 @@
+             index = self.u32(rel)
+             need(index <= MAX_STRUCT_INDEX, "structure_index_limit")
+             need(struct_base != 0, "null_structure_pointer_array")
+-            slot_va = struct_base + index * 8
+-            slot = self.view.describe(slot_va, 8, scoped=True, file_backed=True)
+-            target = struct.unpack("<Q", self.view.read(slot_va, 8))[0]
+-            need(target != 0, "null_structure_target")
+-            public.update(status="static_structure_pointer_candidate",
+-                          index=index, pointer_slot=slot,
+-                          target=self.view.describe(target),
+-                          array_total_length_known=False,
+-                          target_contents_read=False)
++            if self.compact:
++                layouts = self.structure_layout_candidates(index, struct_base)
++                public.update(
++                    status="static_structure_index_with_unselected_layouts",
++                    index=index, struct_pointer_array_va=struct_base,
++                    layout_candidates=layouts,
++                    mapped_layout_count=sum(
++                        row["status"] == "slot_and_target_mapping_observed"
++                        for row in layouts),
++                    struct_layout_selected=False, array_total_length_known=False,
++                    target_contents_read=False)
++            else:
++                slot_va = struct_base + index * 8
++                slot = self.view.describe(slot_va, 8, scoped=True, file_backed=True)
++                target = struct.unpack("<Q", self.view.read(slot_va, 8))[0]
++                need(target != 0, "null_structure_target")
++                public.update(status="static_structure_pointer_candidate",
++                              index=index, pointer_slot=slot,
++                              target=self.view.describe(target),
++                              array_total_length_known=False,
++                              target_contents_read=False)
+         elif typ in (0x11, 0x14, 0x18, 0x8):
+             # Do not reinterpret unexpected types as scalar SMEM settings.
+             public["status"] = "unexpected_type_for_requested_smem_setting"
+@@ -286,7 +383,8 @@
+             typ == (0x12 if name == "smem_partitions" else 0x2))
+         return public
+ 
+-def validate_candidate(view, head_va, descriptor_va, device_name):
++def validate_candidate(view, head_va, descriptor_va, device_name,
++                       property_format=FORMAT_LEGACY):
+     prop_va, structs, count, devices = struct.unpack("<QQI4xQ", view.read(head_va, 32))
+     need(0 < count <= MAX_DEVICES, "string_device_limit")
+     need(devices <= descriptor_va and (descriptor_va - devices) % 40 == 0,
+@@ -294,7 +392,7 @@
+     target_index = (descriptor_va - devices) // 40
+     need(target_index < count, "descriptor_outside_array")
+     array = view.read(devices, count * 40)
+-    prop = PropBin(view, prop_va)
++    prop = PropBin(view, prop_va, property_format)
+     rows, names = [], []
+     starts = {off for _id, off in prop.numeric}
+     for i in range(count):
+@@ -361,6 +459,10 @@
+     if target["driver_info"]:
+         driver_info_mapping = view.describe(target["driver_info"])
+     return {
++        "property_format": property_format,
++        "native_hw_version_used": False,
++        "version_control_policy": "reject unresolved DevCfgVersionInfo and inconsistent prologues"
++                                  if prop.compact else "legacy behavior preserved",
+         "dalprops": view.describe(head_va, 32, scoped=True, file_backed=True),
+         "device_array": {"base": devices, "count": count, "stride": 40,
+                          "byte_extent": count * 40, "sha256": digest(array),
+@@ -388,7 +490,9 @@
+         "smem_initialized_proven": False, "firmware_executed": False,
+     }
+ 
+-def scan_image(view, descriptor_va, expected_file_offset, device_name_va, device_name):
++def scan_image(view, descriptor_va, expected_file_offset, device_name_va, device_name,
++               property_format=FORMAT_LEGACY):
++    need(property_format in (FORMAT_LEGACY, FORMAT_COMPACT), "unsupported_property_format")
+     p, off = view.mapping(descriptor_va, 40)
+     need(off == expected_file_offset, "known_descriptor_file_mapping_mismatch")
+     known = unpack_descriptor(view, descriptor_va)
+@@ -426,7 +530,8 @@
+             continue
+         processed += 1
+         try:
+-            accepted.append(validate_candidate(view, va, descriptor_va, device_name))
++            accepted.append(validate_candidate(view, va, descriptor_va, device_name,
++                                               property_format))
+         except Reject as exc:
+             rejected[exc.code] += 1
+             if exc.code == "property_name_offset" and exc.context is not None:
+@@ -435,7 +540,7 @@
+                     failure_details.append({**exc.context, "head_va": va,
+                                             "reason": exc.code})
+     return {
+-        "schema": "tb371fc-xbl-dal-static-candidates-v2",
++        "schema": "tb371fc-xbl-dal-static-candidates-v3",
+         "analysis_completed": True,
+         "scope": {"load_indices": list(view.scope), "alignment": 8,
+                   "known_descriptor_va": descriptor_va,
+@@ -445,7 +550,9 @@
+                   "excluded": ["RX scan", "firmware-volume parsing", "disassembly",
+                                "firmware execution", "partition-table contents",
+                                "certificates", "identity or user data"]},
++        "property_format": property_format,
+         "format_sources": FORMAT_SOURCES,
++        "compact_format_sources": COMPACT_FORMAT_SOURCES if property_format == FORMAT_COMPACT else None,
+         "limits": {"max_devices": MAX_DEVICES, "max_numeric_devices": MAX_NUMERIC,
+                    "max_propbin_bytes": MAX_PROP_BIN,
+                    "max_property_list_bytes": MAX_LIST_BYTES,
+@@ -463,6 +570,8 @@
+         "failure_details_omitted": failure_detail_count - len(failure_details),
+         "failure_details": failure_details,
+         "accepted_candidate_count": len(accepted),
++        "accepted_candidate_semantics": (
++            "Bounded DAL format candidate only; unresolved structure layouts remain unresolved."),
+         "candidate_details_omitted": max(0, len(accepted) - MAX_REPORTED_CANDIDATES),
+         "candidates": accepted[:MAX_REPORTED_CANDIDATES],
+         "platform_selected": False, "reachable_from_entry_proven": False,
+@@ -512,11 +621,12 @@
+         os.close(fd)
+ 
+ def main():
+-    need(len(sys.argv) == 1, "no_arguments_supported")
++    need(sys.argv[1:] in ([], ["--compact-property-candidate"]), "unsupported_arguments")
++    property_format = FORMAT_COMPACT if sys.argv[1:] else FORMAT_LEGACY
+     data = read_pinned_input()
+     view = ELFView(data, SCOPE_PHS)
+     report = scan_image(view, DESCRIPTOR_VA, DESCRIPTOR_FILE_OFFSET,
+-                        DEVICE_NAME_VA, DEVICE_NAME)
++                        DEVICE_NAME_VA, DEVICE_NAME, property_format)
+     report["input"] = {"basename": "xbl_a.bin", "size": INPUT_SIZE,
+                        "sha256": INPUT_SHA256}
+     report["input_scope"] = "existing validated private backup; no block-device read"
+@@ -527,14 +637,14 @@
+     try:
+         status = main()
+     except Reject as exc:
+-        sys.stdout.write(json.dumps({"schema": "tb371fc-xbl-dal-static-candidates-v2",
++        sys.stdout.write(json.dumps({"schema": "tb371fc-xbl-dal-static-candidates-v3",
+                                     "analysis_completed": False, "error": exc.code,
+                                     "firmware_executed": False},
+                                    sort_keys=True, separators=(",", ":")) + "\n")
+         status = 2
+     except Exception as exc:
+         # Avoid echoing arbitrary file contents or environment paths.
+-        sys.stdout.write(json.dumps({"schema": "tb371fc-xbl-dal-static-candidates-v2",
++        sys.stdout.write(json.dumps({"schema": "tb371fc-xbl-dal-static-candidates-v3",
+                                     "analysis_completed": False,
+                                     "error": "unexpected_" + type(exc).__name__,
+                                     "firmware_executed": False},
