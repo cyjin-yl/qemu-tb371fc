@@ -17,6 +17,7 @@
 #include "hw/core/qdev-clock.h"
 #include "hw/core/qdev-properties.h"
 #include "hw/ufs/qcom-sm8250-ufs.h"
+#include "migration/qemu-file.h"
 #include "migration/vmstate.h"
 #include "system/address-spaces.h"
 #include "system/block-backend.h"

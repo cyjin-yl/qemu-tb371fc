@@ -7,6 +7,38 @@
  * See tb371fc/docs/ufs-migration.md for the shared-storage contract.
  */
 
+static bool qcom_ufs_load_config(QEMUFile *f, void *pv, size_t size,
+                                 const VMStateField *field, Error **errp)
+{
+    uint8_t incoming[32];
+
+    assert(size == sizeof(incoming));
+    if (qemu_get_buffer(f, incoming, size) != size) {
+        error_setg(errp, "SM8250 UFS migration: truncated configuration");
+        return false;
+    }
+    if (memcmp(pv, incoming, size)) {
+        error_setg(errp, "SM8250 UFS migration: configuration mismatch");
+        return false;
+    }
+    return true;
+}
+
+static bool qcom_ufs_save_config(QEMUFile *f, void *pv, size_t size,
+                                 const VMStateField *field, JSONWriter *vmdesc,
+                                 Error **errp)
+{
+    qemu_put_buffer(f, pv, size);
+    return true;
+}
+
+/* Same 32 wire bytes as the original v1 uint8 equality array. */
+static const VMStateInfo vmstate_qcom_ufs_config = {
+    .name = "sm8250-ufs-config",
+    .load = qcom_ufs_load_config,
+    .save = qcom_ufs_save_config,
+};
+
 static void qcom_ufs_hash_u64(GChecksum *sum, uint64_t value)
 {
     uint64_t be = cpu_to_be64(value);
@@ -440,8 +472,8 @@ static const VMStateDescription vmstate_qcom_ufs = {
         VMSTATE_UINT32_EQUAL(hw_version, QcomSm8250UfsState),
         VMSTATE_UINT32_EQUAL(hci_version, QcomSm8250UfsState),
         VMSTATE_UINT32_EQUAL(symbol_hz, QcomSm8250UfsState),
-        VMSTATE_ARRAY(migration_config, QcomSm8250UfsState, 32, 0,
-                      vmstate_info_uint8_equal, uint8_t),
+        VMSTATE_BUFFER_UNSAFE_INFO_TEST(migration_config, QcomSm8250UfsState,
+                                       NULL, 0, vmstate_qcom_ufs_config, 32),
         VMSTATE_STRUCT(ufs, QcomSm8250UfsState, 0, vmstate_qcom_ufs_core,
                        UfsHc),
         VMSTATE_UINT32_ARRAY(vendor, QcomSm8250UfsState,

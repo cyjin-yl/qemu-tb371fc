@@ -2,22 +2,23 @@
 
 This change replaces the QCOM wrapper's unconditional migration blocker with
 a bounded, versioned checkpoint format. **Runtime migration validation is
-still incomplete.** The first executed gate passed its source DMA/I/O group
-but failed before sending a migration command, because QTest rejects
+still incomplete.** The second executed gate completed all three source and
+receiver migrations and passed 15 groups, including resumed DMA/I/O, pending
+UIC/PHY deadlines, SCSI sense and the Hibern8 background timer. The LUN-capacity
+mismatch was correctly rejected, but its generic byte-equality diagnostic did
+not contain the field name required by the fixture. The remaining rejection
+cases did not run. Its unmodified [partial report](../evidence/ufs-migration-20261123/second-attempt-b2a9131/result.json)
+and [source/artifact binding](../evidence/ufs-migration-20261123/second-attempt-b2a9131/source-binding.json)
+are retained. The configuration comparison now reports an explicit
+`SM8250 UFS migration: configuration mismatch` without changing the 32 wire
+bytes or accepting a mismatched configuration.
+
+The first executed gate passed its source DMA/I/O group but failed before
+sending a migration command, because QTest rejects
 `clock_step 0`. Its unmodified [failure report](../evidence/ufs-migration-20261123/first-attempt-c0ebdb7/result.json)
 and [source/artifact binding](../evidence/ufs-migration-20261123/first-attempt-c0ebdb7/source-binding.json)
 are retained. The fixture now caches the actual timestamp returned by each
 successful nonzero step and uses that value to align the receiver.
-The [second executed gate](../evidence/ufs-migration-20261123/second-attempt-b2a9131/result.json)
-completed all three process checkpoints and fifteen groups, then failed its
-LUN-capacity rejection assertion. The receiver correctly exited with status 1;
-the fixture incorrectly expected the internal field name `migration_config`
-in a VMState equality diagnostic that reports only the first unequal values
-(`79 != c2`). The original report, diagnostic and
-[artifact binding](../evidence/ufs-migration-20261123/second-attempt-b2a9131/source-binding.json)
-remain unchanged. The corrected fixture captures actual receiver profile
-streams and requires the exact first unequal field/value diagnostic. Full
-execution of this corrected fixture is still pending.
 
 The generic `ufs` PCI and `ufs-sysbus` devices remain unmigratable. Enabling this
 format does not establish a whole-board boot or migration claim.
@@ -91,9 +92,11 @@ rejection scenarios, with at most one 128 MiB QEMU process at a time:
 - Controller version profile, transfer-slot count and LUN capacity mismatches reject
   the receiver. Three additional quiescent source captures provide each proposed
   receiver's actual immutable prefix; they are not counted as successful
-  transfers. The gate identifies the first unequal field and requires its exact
-  VMState diagnostic, receiver exit 1, no RESUME event and unchanged medium.
-  Corrupt doorbell, WB bound and SCSI queue streams also reject.
+  transfers. The gate identifies the differing field from these real streams
+  and requires its exact VMState diagnostic. Corrupt doorbell, WB bound and
+  SCSI queue streams also reject. Every rejected receiver must exit 1 without
+  changing its medium; QMP is drained to EOF after exit before checking for
+  any RESUME event, including one queued after the command response.
 - A real unmapped UTRD produces an unfinished source DMA request and a failed
   checkpoint. The test then clears its SMMU fault, resets HCE and continues
   actual I/O on that same source.

@@ -153,9 +153,10 @@ def section_body(data, suffix):
 
 
 def profile_mismatch(source, target):
-    """Bind an equality rejection to the actual first unequal wire field.
+    """Bind a configuration rejection to actual unequal wire state.
 
-    VMState uint32/uint8 equality loaders report values, not field names.
+    VMState uint32 equality loaders report values, not field names; the UFS
+    configuration loader reports an explicit configuration mismatch.
     The v1 prefix is three big-endian uint32 values followed by a 32-byte
     immutable configuration digest. Read both real streams so an unrelated
     load failure cannot satisfy a profile-mismatch test.
@@ -179,10 +180,12 @@ def profile_mismatch(source, target):
                        if original[n] != receiver[n]), None)
         assert offset is not None, "profile fixtures must differ"
         a, b = original[offset], receiver[offset]
+    diagnostic = ("SM8250 UFS migration: configuration mismatch" if
+                  field == "migration_config" else f"{b:x} != {a:x}")
     return {
         "field": field, "wire_offset": offset,
         "source_prefix": original.hex(), "receiver_prefix": receiver.hex(),
-        "diagnostic": f"of device 'qcom-sm8250-ufs': {b:x} != {a:x}\n",
+        "diagnostic": f"of device 'qcom-sm8250-ufs': {diagnostic}\n",
     }
 
 
@@ -276,12 +279,25 @@ def main():
         text = (r.d / "qemu.stderr").read_text(errors="replace")
         assert code == 1, (name, code, text)
         assert expected in text, (name, expected, text)
+        # A RESUME can arrive after the migrate-incoming command's reply.
+        # The process has exited, so drain its finite QMP stream to EOF before
+        # asserting that it never resumed. Socket timeout/invalid JSON fail.
+        for _ in range(1024):
+            line = r.m.readline(1024 * 1024)
+            if not line:
+                break
+            message = json.loads(line)
+            if "event" in message:
+                r.events.append(message)
+        else:
+            raise AssertionError((name, "QMP stream did not reach EOF"))
         assert not any(e.get("event") == "RESUME" for e in r.events), r.events
         assert sha(image) == before
         rejections.append({"name": name, "exit_code": code,
                            "expected_diagnostic": expected, "qmp_error": error,
                            "stream_sha256": sha(path), "media_sha256": before,
-                           "profile_mismatch": profile})
+                           "profile_mismatch": profile,
+                           "qmp_drained_to_eof": True, "qmp_events": r.events})
         passed(name + "-rejected-without-resume-or-media-change")
         close()
 
