@@ -15,10 +15,13 @@ after an earlier component failure so their independent results remain visible.
 
 ## Gates
 
-The current public plan has **45 gates: 41 component/parser gates and four
-Linux boots**, plus the separate A77 job. The archived
-[42-gate integrated run](../evidence/resume-20261123/result.json) actually
-passed on its named frozen binary. A subsequent
+The current public plan has **47 gates: 43 component/parser gates and four
+Linux boots**, plus the separate A77 and PCI UFS compatibility job. The archived
+[47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
+actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
+The [same-boundary A77 and PCI results](../evidence/verified-20261123-0820/final-verification.json)
+also passed 852 + 2 and 15 checks respectively. The older
+[42-gate integrated run](../evidence/resume-20261123/result.json) retains its own frozen-binary scope. A subsequent
 [45-gate run using that older binary](../evidence/public-ci-20261123/attempt-45-old-binary/result.json)
 failed and is retained: shared plan and PDC/IPCC inputs changed before launch.
 New entries require matching builds and an actual complete run; an earlier
@@ -43,8 +46,10 @@ pass does not attest newly added devices.
 | IMEM and PS_HOLD | 7 groups covering SRAM boundaries, byte order, guest-owned handoff fields, reset retention, digital output, invalid widths and an actual two-process migration |
 | TLMM | 25 C QTests, including the explicit UFS reset boot handoff, and 15 checks across four actual migrations |
 | PDC | 18 C QTests and 10 migration checks in the expanded plan; earlier 17/9 results retain their original scope |
-| IPCC | 15 message, mask, clear, negative and migration checks; no fabricated remote firmware reply |
+| IPCC | 16 message, real GIC SPI229, mask, clear, negative and migration checks; no fabricated remote firmware reply |
 | DCC | 17 read-capture, bounds, unsupported-mode, source-transaction and pending-capture migration checks |
+| SPMI arbiter | 25 checks against explicit reference fixtures; missing physical PMIC behavior is not inferred from a passing arbiter test |
+| SPMI → PDC → GIC | 8 checks with the real parent IRQ wiring preserved and exactly one actual migration, including the remaining transaction deadline |
 | Clean Linux user space | 8 PID 1 checks with 8 CPUs, 8 GiB RAM, normal GENI console handoff and a native AArch64 counter probe; a newly created synthetic UFS disk is attached |
 | Clean Linux empty UFS bus | The same 8 PID 1 checks and shutdown with UFS enabled and no logical unit attached; missing-LUN recovery is an independent required gate |
 | Clean Linux UFS and SMMU | 19 guest checks plus a host check of the bytes written to the synthetic disk |
@@ -124,3 +129,5 @@ A passing public job does not establish stock Android boot, complete native
 device-tree boot, Adreno graphics, modem, camera, audio, sensors, or full-tablet
 equivalence. Those claims require their own implemented devices and actual
 end-to-end evidence.
+
+The route receipt must contain literal true aggregate verdicts, eight checks, an explicit false output-interception flag, and exactly one migration record. Missing or incorrectly typed secondary evidence lists are rejected. The 22 local verdict and plan tests include these failure cases.

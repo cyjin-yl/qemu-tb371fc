@@ -10,9 +10,14 @@ Implementation lives in [lenovo-tb371fc.c](../../hw/arm/lenovo-tb371fc.c).
 
 The [continued validation ledger](../evidence/VALIDATION-continued-20261123.md)
 separates frozen-binary measurements from later source changes. The
-[42-gate integrated result](../evidence/resume-20261123/result.json) passed
-on SHA256 `5a5c76062c5345d2be5960932a3a7ccefc73c6523e1531ea1b65088f5cdad555`;
-new PDC/IPCC plan entries do not inherit that pass. The
+[47-gate isolated result](../evidence/verified-20261123-0820/public-47/result.json)
+passed on SHA256 `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
+It includes PDC 18/10, IPCC 16, SPMI 25 and the additional eight-check
+SPMI/PDC/GIC route with one actual migration. Separate tests passed
+852 A77 guest checks, two invalid configurations and all 15 PCI UFS cases;
+the [combined receipt](../evidence/verified-20261123-0820/final-verification.json)
+retains the initial noncanonical-filename discovery failure and the later
+byte-identical canonical-name success. The
 [original ledger](../evidence/VALIDATION.md) remains an immutable historical record.
 [The source index](../SOURCES.md) links each device's precise register contract,
 primary references, assumptions and executed receipts.

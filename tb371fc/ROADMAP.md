@@ -3,7 +3,7 @@
 目标是让原生来宾驱动面对一致的软件可见硬件接口，并最终运行完整 Android 的显示、输入、存储、连接和设备生命周期。
 每个完成项需要来源、实现、实际运行回执及明确的实机对照范围。功能测试、驱动 probe 和真实芯片等价是不同门槛；TCG 执行速度不代表 Snapdragon 性能。
 
-以下状态按已归档回执填写。最早的 Linux 八项/GENI 十三项结果保留为历史；当前组件验收索引见 [README](../README.md)，公共 CI 计划见 [ci.md](docs/ci.md)，最新已通过的 42 项集成重放见[回执](evidence/resume-20261123/result.json)，后续计划与失败记录见[持续验证账本](evidence/VALIDATION-continued-20261123.md)。CI 中已注册的门槛仍须在对应提交实际执行成功。
+以下状态按已归档回执填写。最早的 Linux 八项/GENI 十三项结果保留为历史；当前组件验收索引见 [README](../README.md)，公共 CI 计划见 [ci.md](docs/ci.md)，新隔离构建已通过的 47 项、A77 852 + 2 项和 PCI UFS 15 项见[最终回执](evidence/verified-20261123-0820/final-verification.json)，后续计划与失败记录见[持续验证账本](evidence/VALIDATION-continued-20261123.md)。CI 中已注册的门槛仍须在对应提交实际执行成功。
 
 ## 1. CPU、内存、中断与启动基础
 
@@ -45,7 +45,8 @@
 - [ ] IMEM/PS_HOLD 与 PMIC/PON 的完整 reset/poweroff 联合验收；越过 restart probe 不证明整个关机链。
 - [x] DCC map2 read-capture 子集、17 项实际事务/负向/迁移检查；原生驱动已完成列表 3/6/7 编程。
 - [ ] DCC loop、write/RMW、CRC/ATB/CTI 和原生三列表完整执行；探测成功与 SRAM read 子集不替代这些模式。
-- [ ] IPCC/SPMI 及其余原生 DT 依赖的独立实现与完整引导验收。
+- [x] IPCC 16 项、SPMI reference 25 项，以及真实 SPMI → PDC → GIC 连线/迁移 8 项通过；PDC 18/10 在同一冻结构建通过。
+- [ ] 原生 PMIC、远端固件服务及其余完整 DT 依赖与完整引导验收。
 - [x] **IMEM/PS_HOLD 七项 gate 纳入公开 CI，并以计划回归验证 components/all 均强制执行。**
 
 RPMh 默认 `off`，`reference` / `file` 必须显式选择。
@@ -91,7 +92,7 @@ GCC bootstrap 状态、部分 fabric 输入、QUP version 和设备排序延时�
 - [x] 在本地授权范围读取并识别活动槽 boot/kernel/DT/AOP 资产；原始镜像不发布。
 - [x] 未修改的生产 Linux 4.19.157 Image，在生成 DT 和测试 initramfs 下完成八项 PID 1 检查及实际 guest shutdown。
 - [x] 无串口生产配置采用只读 GDB 完成记录，核对掩码、uname、online、计时和原样 native probe 输出后恢复执行；不是仅凭 exit 0。
-- [ ] 生产内核使用完整原生 DT 达到 PID 1。冻结构建 7 越过 watchdog/restart，后续冻结构建 10 越过 DCC probe 并编程列表 3/6/7；接下来是 IPCC/SPMI fault，仍未通过完整启动。
+- [ ] 生产内核使用完整原生 DT 达到 PID 1。冻结构建 7 越过 watchdog/restart，后续冻结构建 10 越过 DCC probe 并编程列表 3/6/7；后续故障逐次记录于原生 DT 诊断回执，仍未通过完整启动。
 - [ ] 完整 Android userspace、原生存储布局、显示、输入和网络端到端任务。
 - [ ] reset、snapshot/migration、错误注入和多次启动的一致性。
 - [ ] 完整逐设备覆盖清单、合成服务表、实机差分及未覆盖行为。

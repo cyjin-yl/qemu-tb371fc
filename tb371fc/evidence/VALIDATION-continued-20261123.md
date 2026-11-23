@@ -15,7 +15,25 @@ the same QEMU build. Test counts are not a hardware-completion percentage.
 
 ## Integrated public-input run
 
-The [42-gate result](resume-20261123/result.json) passed all gates in
+The [isolated final verification](verified-20261123-0820/final-verification.json)
+now records **47/47 public gates, 852 A77 guest checks across nine variants
+plus two invalid-configuration rejections, and 15/15 PCI UFS tests**.
+The board suite took 73.261 seconds on SHA256
+`87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`;
+A77/PCI used `2605ddb7a6c503cff9532bcd1f24a0945b76f5f148149170ee3af7813beeec29`.
+Source and binary hashes were unchanged during verification.
+The frozen source snapshot is `9a80cddf1bd6ad8ecdbba34fa164acb5524e206b`.
+
+The [original sequential aggregate](verified-20261123-0820/initial-sequential-verification.json)
+remains false because its first PCI discovery used a noncanonical executable
+basename and yielded zero tests. The exact same binary bytes under the
+canonical basename passed all 15 tests in 8.643 seconds. The separate final
+receipt cites both attempts; no historical verdict was overwritten.
+A [post-verification DCC formatting record](verified-20261123-0820/dcc-style-only-after-verification.json)
+records the one whitespace-only source cleanup without relabelling the
+frozen-run hashes.
+
+The earlier [42-gate result](resume-20261123/result.json) passed all gates in
 41.861 seconds with exit zero, four real Linux boots and an unchanged QEMU
 SHA256 `5a5c76062c5345d2be5960932a3a7ccefc73c6523e1531ea1b65088f5cdad555`.
 The clean Linux Image was
@@ -39,8 +57,8 @@ failed before any of its 15 cases ran: the runner did not accept the TAP
 comment prefix on listed test paths. It is retained as a harness failure,
 not a passing storage result.
 
-The current CI plan registers 45 gates: 41 component/parser gates and four
-Linux boots, with PDC 18/10 and IPCC 15. The earlier independently measured
+The current CI plan registers 47 gates: 43 component/parser gates and four
+Linux boots, with PDC 18/10, IPCC 16, reference SPMI 25 and the real SPMI/PDC/GIC route 8. All were exercised in the isolated run. The earlier independently measured
 PDC 17/9 receipt remains accurate for its original test and executable hashes.
 
 ## Recorded component and guest results
@@ -58,7 +76,9 @@ PDC 17/9 receipt remains accurate for its original test and executable hashes.
 | Watchdog | [16 behavior groups plus pending-bite migration](watchdog-20261123/) | Digital elapsed count, bark/bite ordering, configured QEMU action and continuation after migration. |
 | IMEM/PS_HOLD | [7 checks on frozen build7](boot-resources-20261123/qtest-migration-7.json) | SRAM bounds/subwords/guest-owned fields, reset retention, digital output, invalid-width behavior and real migration; no PMIC power policy. |
 | DCC | [17/17 read-capture and migration checks](dcc-20261123/result.json) | Real source transactions and SRAM output; reference map2 identity, no native full-list/CRC/ATB/loop/write/RMW claim. |
-| PDC | [17 C tests and 9 migration checks](pdc-20261123/) | Exact historical scope. Expanded 18/10 source is separately gated against its corresponding build. |
+| PDC | [18 C tests and 10 migration checks in the isolated run](verified-20261123-0820/public-47/result.json) | The earlier [17/9 receipt](pdc-20261123/) retains its historical scope. Native VERSION remains unobserved. |
+| IPCC | [16 message/IRQ/negative/migration checks](verified-20261123-0820/public-47/37-ipcc-messages/fixtures/data/result.json) | Includes real GIC SPI 229; no fabricated remote firmware reply. |
+| SPMI / PDC / GIC | [SPMI 25](verified-20261123-0820/public-47/39-spmi-pmic-arb/fixtures/data/result.json) and [real route/migration 8](verified-20261123-0820/public-47/40-spmi-pdc-gic-route/fixtures/data/result.json) | Explicit reference and synthetic endpoint. One actual process transfer retains IRQ and the remaining transaction deadline; not native PMIC or low-power equivalence. |
 | Boot layout | [13/13 paused checks](boot-layout-20261123/runtime-layout-frozen4.json) | Actual ROM/DTB intervals and static reservation checks. CPUs remained paused; this is not a boot verdict. |
 | Production kernel with generated DT | [8/8 PID1 checks and guest shutdown](production-gdb-exact-20261123/result.json) | Unmodified 4.19.157-perf+ Image, eight CPUs, exact-counter machine and a validation initramfs. Not original Android userspace or full native DT. |
 

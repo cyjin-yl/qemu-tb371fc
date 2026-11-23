@@ -354,7 +354,8 @@ static MemTxResult dcc_read(void *opaque, hwaddr address, uint64_t *data,
             return dcc_read_result(data, l->interrupt_status);
         case DCC_LL_SW_TRIGGER: return dcc_read_result(data, 0);
         case DCC_LL_BUS_STATUS: return dcc_read_result(data, l->bus_status);
-        default: break;
+        default:
+        break;
         }
     }
     qemu_log_mask(LOG_UNIMP, TYPE_QCOM_DCC

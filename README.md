@@ -1,6 +1,6 @@
 # QEMU TB371FC
 
-[![TB371FC public functional gates](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml/badge.svg?branch=tb371fc)](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml)
+[![TB371FC public functional gates](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml/badge.svg?branch=tb371fc-verified-20261123-0820)](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml)
 
 面向 **Lenovo TB371FC / SM8250（Kona）** 的整机模拟开发分支，基于 QEMU **11.1.3**，提供独立的 `-M tb371fc`。目标是实现真实来宾驱动可使用的软件可见硬件接口，并用平板的只读证据和实际运行的测试逐项核对。
 
@@ -12,13 +12,22 @@
 
 ## 当前统一验收
 
-[42 项公共输入验收](tb371fc/evidence/resume-20261123/result.json)已在冻结二进制
-`5a5c76062c5345d2be5960932a3a7ccefc73c6523e1531ea1b65088f5cdad555`
-实际全部通过，退出码为 0，用时 41.861 秒。范围包括 UFS 56 项、DCC 17 项，
-以及普通 console、空 UFS、UFS/SMMU、reference RPMh 四次完整 Linux 检查。
-69 个既有测试源在这次运行前后保持一致。其后加入的 PDC 扩展、IPCC 和 CI
-计划变化需要对应新构建重新验收；[旧二进制上的后续失败](tb371fc/evidence/public-ci-20261123/attempt-45-old-binary/result.json)
-保留为失败记录。当前源码与这个已测二进制不能自动视为同一状态。
+[隔离构建的最终验收](tb371fc/evidence/verified-20261123-0820/final-verification.json)现已完成：
+**47/47 公共 gate、9 种 Cortex-A77 配置合计 852 项 guest 检查及 2 项非法配置拒绝、15/15 PCI UFS 兼容测试全部通过。**
+47 项包含 43 组组件/解析检查和四次完整 Linux 启动，用时 73.261 秒。
+板级 QEMU SHA 为 `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`；
+A77/PCI QEMU SHA 为 `2605ddb7a6c503cff9532bcd1f24a0945b76f5f148149170ee3af7813beeec29`。
+运行时源码与二进制的前后哈希一致，冻结源码快照是 `9a80cddf1bd6ad8ecdbba34fa164acb5524e206b`。
+
+[原顺序任务](tb371fc/evidence/verified-20261123-0820/initial-sequential-verification.json)保留失败状态：
+PCI 首次 discovery 因冻结文件名附加后缀而得到零项测试。
+将内容哈希相同的文件使用 QTest 要求的规范名称后，
+[15 项兼容检查](tb371fc/evidence/verified-20261123-0820/pci-ufs/result.json)在 8.643 秒内通过。
+发布前另有一处 DCC 纯格式修改，其[独立记录](tb371fc/evidence/verified-20261123-0820/dcc-style-only-after-verification.json)
+说明忽略空白后的 token 完全一致；没有把冻结回执的源码哈希改写成后续文件哈希。
+
+先前[42 项成功](tb371fc/evidence/resume-20261123/result.json)及
+[旧二进制上的后续失败](tb371fc/evidence/public-ci-20261123/attempt-45-old-binary/result.json)均按原字节保留。
 
 持续结果与限制见[持续验证账本](tb371fc/evidence/VALIDATION-continued-20261123.md)；
 [原始验证账本](tb371fc/evidence/VALIDATION.md)及其原始哈希保持不变。
@@ -42,16 +51,18 @@
 | IMEM / PS_HOLD | [7 项检查，含实际迁移](tb371fc/evidence/boot-resources-20261123/qtest-migration-7.json) | 可写 SRAM、guest-owned handoff 字段、reset retention 和数字 PS_HOLD 输出；没有伪造 PMIC 关机策略。 |
 | Linux RPMh provider | [23 项 guest 与 3 项宿主检查](tb371fc/evidence/rpmh-linux-20261123/result.json) | 显式 reference profile；RSC/clk-rpmh 绑定、CCF 19.2 MHz、真实 TCS IRQ、完成的 XO 事务与清除的 pending IRQ、UFS/SMMU 和宿主磁盘核对。 |
 | DCC | [17 项真实捕获/错误/迁移检查](tb371fc/evidence/dcc-20261123/result.json) | 实际 SRAM 与源地址空间事务；reference map2 身份，尚无 CRC、ATB、loop、write/RMW 完整执行。 |
-| PDC | [17 项 C QTest 与 9 项迁移的历史回执](tb371fc/evidence/pdc-20261123/) | 当前测试已扩展为 18/10，须与对应新构建重新验收；native VERSION 仍未知。 |
+| PDC | [18 项 C QTest](tb371fc/evidence/verified-20261123-0820/public-47/30-pdc-c-qtest/case.json)、[10 项迁移检查](tb371fc/evidence/verified-20261123-0820/public-47/42-pdc-migration/fixtures/data/result.json) | 已在同一隔离构建实际通过；native VERSION 仍未知，旧 17/9 回执保留。 |
+| IPCC | [16 项消息/IRQ/迁移检查](tb371fc/evidence/verified-20261123-0820/public-47/37-ipcc-messages/fixtures/data/result.json) | 实际 GIC SPI 229 传播、mask/clear 和迁移；未连接的远端固件不伪造回复。 |
+| SPMI / PDC / GIC | [SPMI 25 项](tb371fc/evidence/verified-20261123-0820/public-47/39-spmi-pmic-arb/fixtures/data/result.json)、[真实连线与迁移 8 项](tb371fc/evidence/verified-20261123-0820/public-47/40-spmi-pdc-gic-route/fixtures/data/result.json) | 显式 reference 映射和测试端点；事务、剩余 deadline 与 SPI 481 传播已测，原生 PMIC 行为未由此证明。 |
 | 生产内核无串口验收 | [8/8 用户态检查与真实 guest shutdown](tb371fc/evidence/production-gdb-exact-20261123/result.json) | 未修改的 4.19.157 生产 Image、8 GiB、8 CPU、生成 DT、测试 PID 1；GDB 只读普通 guest RAM 结果后恢复执行。 |
 
-TLMM、IMEM/PS_HOLD、普通 Linux UFS19 和 reference RPMh 联合 Linux23 已在冻结构建 7（QEMU SHA `f3fa0d2db54d9f59ba9b0ea25239553900b805c3c05e53e0dd8577e94607e41b`）实际通过。新 kernel SHA 为 `c513268fb0727d289fdfc0f02637c53cf5f976cc836ea9c586763f5f584bce40`。这些组件和生成 DT 的成功仍不证明完整原生 DT 或 Android 启动。最新集成重放、实际二进制和各 gate verdict 见[当前回执](tb371fc/evidence/resume-20261123/result.json)；分项与后续证据见[持续验证账本](tb371fc/evidence/VALIDATION-continued-20261123.md)。
+TLMM、IMEM/PS_HOLD、普通 Linux UFS19 和 reference RPMh 联合 Linux23 已在冻结构建 7（QEMU SHA `f3fa0d2db54d9f59ba9b0ea25239553900b805c3c05e53e0dd8577e94607e41b`）实际通过。新 kernel SHA 为 `c513268fb0727d289fdfc0f02637c53cf5f976cc836ea9c586763f5f584bce40`。这些组件和生成 DT 的成功仍不证明完整原生 DT 或 Android 启动。最新集成重放、实际二进制和各 gate verdict 见[当前回执](tb371fc/evidence/verified-20261123-0820/final-verification.json)；分项与后续证据见[持续验证账本](tb371fc/evidence/VALIDATION-continued-20261123.md)。
 
 ### 三种启动结果的区别
 
 - **公开主线 Linux**：固定版本、无补丁的 upstream 输入，正式 `ttyMSM0` console 接管，用户态检查和 UFS/SMMU I/O 均有实测。UFS 的专用 I/O gate 在检查 guest verdict 和磁盘后由宿主 QMP 结束；它不测试 guest shutdown。
 - **未修改的生产内核 + 测试 initramfs**：已有八项用户态检查和真正的 QMP `guest-shutdown` 事件。生产配置没有串口 console，验收通过只读 GDB checkpoint 取出完成掩码、uname、在线 CPU、计时和原样探针输出，再继续 guest 关机。见 [guest-acceptance.md](tb371fc/docs/guest-acceptance.md)。
-- **生产内核 + 完整原生 DT / Android 系统**：实际诊断已越过 watchdog、IMEM/restart 和 DCC probe，并由未改驱动编程 DCC 列表 3/6/7；下一故障是 IPCC 与并行 SPMI probe。见[逐次诊断回执](tb371fc/evidence/native-dt-progression-20261123/progress.json)。这没有证明 DCC 完整捕获或完整 DT 到达 PID 1，Android userspace、显示、输入和网络也尚无端到端成功记录。
+- **生产内核 + 完整原生 DT / Android 系统**：实际诊断已越过 watchdog、IMEM/restart 和 DCC probe，并由未改驱动编程 DCC 列表 3/6/7；后续具体故障按冻结构建逐次记录。见[逐次诊断回执](tb371fc/evidence/native-dt-progression-20261123/progress.json)。这没有证明 DCC 完整捕获或完整 DT 到达 PID 1，Android userspace、显示、输入和网络也尚无端到端成功记录。
 
 最早的 [Linux 八项启动记录](tb371fc/evidence/linux-smoke.json)、[GENI 13 项记录](tb371fc/evidence/geni-qtest.json)和 [20 项 profile 对照](tb371fc/evidence/machine-profile-validation.json)保留为历史。它们不描述所有后续设备或当前 CPU 配置。
 早期 research kernel 的页表池失败也保留了[回执](tb371fc/evidence/linux-research-kernel-failure.json)和[日志](tb371fc/evidence/linux-research-kernel-failure.log)；[可选修正建议](tb371fc/patches/linux-6.12-qemu-early-pgtable.patch)仍未应用。
@@ -77,7 +88,7 @@ TLMM、IMEM/PS_HOLD、普通 Linux UFS19 和 reference RPMh 联合 Linux23 已�
 [Containerfile](tb371fc/Containerfile) 提供开发环境。示例不访问真实平板或已有磁盘：
 
 ```sh
-git clone --branch tb371fc https://github.com/cyjin-yl/qemu-tb371fc.git
+git clone --branch tb371fc-verified-20261123-0820 https://github.com/cyjin-yl/qemu-tb371fc.git
 cd qemu-tb371fc
 docker build -f tb371fc/Containerfile -t qemu-tb371fc-dev .
 docker volume create qemu-tb371fc-work

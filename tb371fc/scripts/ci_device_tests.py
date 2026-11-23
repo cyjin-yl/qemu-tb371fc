@@ -37,6 +37,7 @@ class Case:
     expected_values: dict = field(default_factory=dict)
     tap_count: int | None = None
     timeout: int = 180
+    expected_lengths: dict = field(default_factory=dict)
 
 
 def sha(path):
@@ -60,7 +61,8 @@ def plan(args, runtime):
     exact = "tb371fc,ufs-enabled=off"
 
     def add(name, script, flags=(), output=None, verdict="passed", count=None,
-            result="stdout", expected=None, count_field="checks", timeout=180):
+            result="stdout", expected=None, count_field="checks", timeout=180,
+            expected_lengths=None):
         fixture = runtime / f"{len(cases):02d}"
         data = fixture / "data"
         argv = [sys.executable, str(script)]
@@ -70,7 +72,8 @@ def plan(args, runtime):
         if result == "file":
             result = str(data / "result.json")
         cases.append(Case(name, argv, fixture, result, verdict, count,
-                          count_field, expected or {}, timeout=timeout))
+                          count_field, expected or {}, timeout=timeout,
+                          expected_lengths=expected_lengths or {}))
         return data
 
     def device(name, script, *flags, **kwargs):
@@ -166,6 +169,11 @@ def plan(args, runtime):
                output="--out", result="file", count=17)
         device("spmi-pmic-arb", "test_spmi_pmic_arb.py",
                output="--out", result="file", count=25)
+        device("spmi-pdc-gic-route", "test_spmi_pdc_route.py",
+               output="--out", result="file", count=8,
+               expected={"all_passed": True, "expected_checks": 8,
+                         "output_interception_installed": False},
+               expected_lengths={"migrations": 1})
         device("tlmm-migration", "test_tlmm_migration.py",
                output="--out", result="file", verdict="all_passed", count=15)
         device("pdc-migration", "test_pdc_migration.py",
@@ -274,6 +282,11 @@ def judge(case, stdout):
                 raise ValueError(
                     f"Unsuccessful {case.count_field}[{index}].status")
         details["check_count"] = len(checks)
+    for key, count in case.expected_lengths.items():
+        value = data.get(key)
+        if not isinstance(value, list) or len(value) != count:
+            raise ValueError(f"{key} must contain {count} entries")
+        details.setdefault("verified_lengths", {})[key] = len(value)
     for key, value in case.expected_values.items():
         if not expected_json_value(data.get(key), value):
             raise ValueError(f"Expected {key}={value!r}; got {data.get(key)!r}")
@@ -406,7 +419,10 @@ def main():
     }
     (out / "plan.json").write_text(json.dumps([
         {"name": c.name, "command": c.command, "result": c.result,
-         "expected_count": c.expected_count, "tap_count": c.tap_count}
+         "expected_count": c.expected_count, "tap_count": c.tap_count,
+         "verdict": c.verdict, "count_field": c.count_field,
+         "expected_values": c.expected_values,
+         "expected_lengths": c.expected_lengths}
         for c in cases], indent=2) + "\n")
     started = time.monotonic()
     for index, case in enumerate(cases):

@@ -1,6 +1,6 @@
 # SPMI PMIC arbiter v5 reference subset
 
-This model implements a bounded SPMI transaction engine and a test-only
+This model implements a bounded SPMI transaction engine and an explicitly enabled reference
 peripheral interrupt path. Its version, APID numbering and ownership table
 are an **explicit reference configuration**. The native TB371FC arbiter
 VERSION and APID/ownership registers have not been captured. Selecting this
@@ -22,10 +22,11 @@ The register protocol comes from these primary driver sources:
   [drivers/spmi/spmi-pmic-arb.c](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/spmi/spmi-pmic-arb.c?h=v6.12.114),
   particularly the v5 APID map, offset, command formatting, ownership,
   completion polling and QPNP interrupt operations.
-- The pinned Qualcomm vendor driver at
-  `/work/power-reference/vendor/drivers__spmi__spmi-pmic-arb.c`. Its v5
-  geometry agrees with the upstream driver and scans the entire native
-  512-entry core mapping aperture.
+- The [pinned public vendor source mirror](https://github.com/tem423/android_kernel_lenovo_tb371fc/blob/9d8abebf4ac4d45cf4cc11b5b6bc5e4483d10fd1/drivers/spmi/spmi-pmic-arb.c),
+  SHA-256 `bedee16415c7290c2c07414623edc8af16b185f475e3512bb963e7c67076754c`.
+  Its v5 geometry agrees with the upstream driver and scans the entire
+  native 512-entry core mapping aperture. This mirror is not asserted to
+  be an official OEM release or the exact source of the running kernel.
 - Linux 6.12.114
   [drivers/mfd/qcom-spmi-pmic.c](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/mfd/qcom-spmi-pmic.c?h=v6.12.114)
   and
@@ -72,7 +73,9 @@ map entries are zero, so both upstream and vendor drivers skip them.
 
 APIDs 4 and 5 exist only with
 `-global qcom-spmi-pmic-arb.test-peripheral=on`. They are not present in
-the native or generated DT. APID numbering and write/IRQ owners in this table
+the native or generated DT. The property is an explicit opt-in and is not
+restricted by qtest_enabled(); it can also be selected deliberately in TCG.
+APID numbering and write/IRQ owners in this table
 are model assumptions, not measured silicon data.
 
 All four primary identity endpoints expose PMIC_TYPE at address 0x104 as
@@ -198,9 +201,13 @@ The script currently defines 25 checks covering geometry/identity provenance,
 byte packing, data snapshots, ownership, strict errors, atomic failure,
 malformed MMIO, IRQ configuration/ACK/masking/polarity/level handling,
 reset, the opt-in boundary, EE1 isolation and in-flight migration.
-These are planned acceptance groups until a built binary has run them;
-measured results and binary/source hashes belong in the accompanying
-sanitized evidence receipt.
+The [actual 25/25 receipt](../evidence/verified-20261123-0820/public-47/39-spmi-pmic-arb/fixtures/data/result.json)
+records successful execution against frozen QEMU SHA-256
+`87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
+The [unified acceptance record](../evidence/verified-20261123-0820/final-verification.json)
+also records the complete 47-gate run. These results cover the explicit
+reference configuration described above; they do not establish a native
+VERSION, APID table or complete PMIC implementation.
 
 Run inside the development container, against a frozen binary:
 
@@ -215,3 +222,35 @@ failures without converting them into success. Public receipts may include
 these synthetic QTest JSON/stderr files and source hashes. Private firmware,
 production DTBs, kernel images and native serial logs must not be copied into
 this evidence directory.
+
+## Whole interrupt-route verification
+
+The separate [SPMI/PDC/GIC runner](../tests/test_spmi_pdc_route.py) defines
+eight checks and one actual QMP process migration. It suppresses the shared
+test harness's output-interception request, preserving the board's real
+SPMI -> PDC input 1 -> GIC SPI 481 connection. It configures the synthetic
+peripheral using actual byte transactions, observes GIC pending bits, checks
+PDC masking and Linux acknowledgement order, and transfers an active IRQ
+with an incomplete enable-clear transaction to another QEMU process.
+
+The [actual route receipt](../evidence/verified-20261123-0820/public-47/40-spmi-pdc-gic-route/fixtures/data/result.json)
+passed **8/8 checks and one real process-to-process migration** on the same
+frozen binary at 2026-11-23 08:39:11 UTC. Its output interception flag is
+false: the board connection remains intact. The test restores an active IRQ,
+RAM and PDC configuration, completes the pending SPMI write after its remaining
+600 virtual nanoseconds, and checks new events and acknowledgement afterward.
+
+The test does not read or assign a PDC VERSION and does not execute a guest
+CPU interrupt handler. This establishes the modeled distributor connection;
+it does not establish native PMIC electrical timing or power-state wake.
+
+~~~sh
+python3 tb371fc/tests/test_spmi_pdc_route.py \
+  --qemu /path/to/frozen/qemu-system-aarch64 --out /new/result/directory
+~~~
+
+The current device accepts only the explicit built-in reference table. It
+does not yet load a captured native APID/ownership profile or expose a
+general external PMIC peripheral-bus API. Those capabilities require future
+implementation and separate evidence; no reference table is silently
+substituted for an absent native capture.

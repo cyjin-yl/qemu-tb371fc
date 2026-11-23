@@ -42,6 +42,16 @@ class VerdictTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             ci.judge(self.case(expected_values={"disk": True}), self.log)
 
+    def test_secondary_list_evidence_rejects_missing_wrong_type_and_count(self):
+        case = self.case(expected_lengths={"migrations": 1})
+        for invalid in (None, 1, "completed", {}, [], [{}, {}]):
+            self.log.write_text(json.dumps({"passed": True, "migrations": invalid}))
+            with self.subTest(value=invalid), self.assertRaises(ValueError):
+                ci.judge(case, self.log)
+        self.log.write_text(json.dumps({"passed": True, "migrations": [{}]}))
+        self.assertEqual(ci.judge(case, self.log)["verified_lengths"],
+                         {"migrations": 1})
+
     def test_tap_passes(self):
         self.log.write_text("TAP version 13\n1..2\nok 1 /one\nok 2 /two\n")
         result = ci.judge(self.case(result="tap", tap_count=2), self.log)
@@ -118,6 +128,22 @@ class VerdictTests(unittest.TestCase):
 
 
 class PlanTests(unittest.TestCase):
+    def test_spmi_route_requires_real_unintercepted_transfer(self):
+        args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        cases = ci.plan(args, Path("/test/runtime"))
+        self.assertEqual(len(cases), 47)
+        matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
+        self.assertEqual(len(matches), 1)
+        case = matches[0]
+        self.assertEqual(case.expected_count, 8)
+        self.assertEqual(case.expected_lengths, {"migrations": 1})
+        self.assertEqual(case.expected_values,
+                         {"all_passed": True, "expected_checks": 8,
+                          "output_interception_installed": False})
+        self.assertIn(str(ci.ROOT / "tb371fc/tests/test_spmi_pdc_route.py"),
+                      case.command)
+
     def test_ipcc_gate_requires_sixteen_real_checks(self):
         args = SimpleNamespace(suite="components", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
