@@ -1,0 +1,62 @@
+{
+  "schema": "tb371fc-gcc-generator-verification-v1",
+  "commit": "0a617bab7cb2277073aa24092ec9a12b63fceb50",
+  "python_version": "3.12.14",
+  "verified_utc": "2026-11-23T12:21:52.919713+00:00",
+  "source_revision": "linux-6.12.114",
+  "source_files": [
+    {
+      "path": "drivers/clk/qcom/gcc-sm8250.c",
+      "bytes": 96749,
+      "sha256": "b3b3865de3a297f906d5562a720d8d304538cef3c8d3703dee026cfd6dba06c8",
+      "matches_manifest": true
+    },
+    {
+      "path": "include/dt-bindings/clock/qcom,gcc-sm8250.h",
+      "bytes": 10041,
+      "sha256": "34682c01e5b21bb13db125afa3504c73606c294c23cfb3a96f6ea52cdffd2ff7",
+      "matches_manifest": true
+    }
+  ],
+  "generator_sha256": "b3c30ef6c6d85dae47c284b4c307400d9f75859e37ccbea3844b2056b7f01c6b",
+  "syntax_check": {
+    "method": "py_compile.compile(doraise=True)",
+    "passed": true
+  },
+  "outputs": [
+    {
+      "path": "hw/misc/qcom-sm8250-gcc-data.inc",
+      "bytes": 62552,
+      "sha256": "6b1b7820eb04f4f900aa48965fced8dbe7cb5b147f00aabc7ef98fbc4cac6ebe",
+      "byte_identical_to_commit": true
+    },
+    {
+      "path": "tb371fc/docs/gcc-sm8250-registers.json",
+      "bytes": 146010,
+      "sha256": "1f621b7b7e545a38dca1315afe823a4c0b7db568628707c6748cf0614b200862",
+      "byte_identical_to_commit": true
+    }
+  ],
+  "qemu_executed": false,
+  "github_ref_modified": false,
+  "all_passed": true,
+  "execution": {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "/tmp/tb371fc-gcc-regeneration-0a617bab/final/tb371fc/scripts/generate_gcc_sm8250.py",
+      "/tmp/tb371fc-gcc-regeneration-0a617bab/source",
+      "--output-root",
+      "/tmp/tb371fc-gcc-regeneration-0a617bab/regenerated"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"clock_descriptors\": 198, \"external_parents\": 84, \"registers\": 460, \"resets\": 45, \"power_domains\": 11}\n",
+    "stderr": ""
+  },
+  "generated_counts": {
+    "clock_descriptors": 198,
+    "external_parents": 84,
+    "registers": 460,
+    "resets": 45,
+    "power_domains": 11
+  }
+}

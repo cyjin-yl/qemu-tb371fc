@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "suite": "linux",
+  "started_utc": "2026-11-23T12:14:14.013200+00:00",
+  "scope": "Public digital component and clean-Linux gates; no stock Android attestation",
+  "private_inputs_used": false,
+  "source_commit": "0a617bab7cb2277073aa24092ec9a12b63fceb50",
+  "source_dirty": false,
+  "runner_sha256": "fc49d6d3d5300364dfd4d6496fc9b47669152b6e93da41a8857b28c12af8a61b",
+  "qemu_sha256": "a2e19b188f6253928ad47630896e0967fb99f55abbddaf98212f312e8194ee1b",
+  "qemu_version": "QEMU emulator version 11.1.3\nCopyright (c) 2003-2026 Fabrice Bellard and the QEMU Project developers",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+  "runtime_fixtures_retained": "/tmp/tbci-eqaqt70t",
+  "expected_gates": 4,
+  "gates": [
+    {
+      "name": "linux-console-userspace",
+      "command": [
+        "/usr/bin/python3",
+        "/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/scripts/boot_smoke.py",
+        "--qemu",
+        "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "--kernel",
+        "/home/runner/work/_temp/clean-linux/artifacts/Image",
+        "--timeout",
+        "120",
+        "--out",
+        "/tmp/tbci-eqaqt70t/00/data"
+      ],
+      "started_utc": "2026-11-23T12:14:14.096247+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-eqaqt70t/00",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-eqaqt70t/00/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 8
+      },
+      "elapsed_seconds": 1.438,
+      "completed_utc": "2026-11-23T12:14:15.534323+00:00",
+      "log_sha256": {
+        "stdout.log": "614ec369dfea620f8f730fa5c7e2ba2b7f00a9186c29c3abb6520b33ab700d94",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "linux-console-empty-ufs",
+      "command": [
+        "/usr/bin/python3",
+        "/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/scripts/boot_smoke.py",
+        "--qemu",
+        "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "--kernel",
+        "/home/runner/work/_temp/clean-linux/artifacts/Image",
+        "--timeout",
+        "120",
+        "--without-ufs-lu",
+        "--debug-mmio",
+        "--out",
+        "/tmp/tbci-eqaqt70t/01/data"
+      ],
+      "started_utc": "2026-11-23T12:14:15.535168+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-eqaqt70t/01",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-eqaqt70t/01/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 8
+      },
+      "elapsed_seconds": 1.376,
+      "completed_utc": "2026-11-23T12:14:16.910874+00:00",
+      "log_sha256": {
+        "stdout.log": "95753be063a895262136a0926e30399387a168abf2104c1f2fc3d0b14ec2ca18",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "linux-ufs-smmu",
+      "command": [
+        "/usr/bin/python3",
+        "/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/scripts/boot_ufs.py",
+        "--qemu",
+        "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "--kernel",
+        "/home/runner/work/_temp/clean-linux/artifacts/Image",
+        "--timeout",
+        "120",
+        "--out",
+        "/tmp/tbci-eqaqt70t/02/data"
+      ],
+      "started_utc": "2026-11-23T12:14:16.911580+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-eqaqt70t/02",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-eqaqt70t/02/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 19
+      },
+      "elapsed_seconds": 1.34,
+      "completed_utc": "2026-11-23T12:14:18.251851+00:00",
+      "log_sha256": {
+        "stdout.log": "d5c7e278c200a6af48917890bcb1572d2345662a63c67e27f14b18856dab2bcd",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "linux-ufs-rpmh",
+      "command": [
+        "/usr/bin/python3",
+        "/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/scripts/boot_ufs.py",
+        "--qemu",
+        "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "--kernel",
+        "/home/runner/work/_temp/clean-linux/artifacts/Image",
+        "--timeout",
+        "120",
+        "--machine",
+        "tb371fc,rpmh-profile=reference",
+        "--require-rpmh",
+        "--out",
+        "/tmp/tbci-eqaqt70t/03/data"
+      ],
+      "started_utc": "2026-11-23T12:14:18.252764+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-eqaqt70t/03",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-eqaqt70t/03/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 23
+      },
+      "elapsed_seconds": 1.397,
+      "completed_utc": "2026-11-23T12:14:19.650062+00:00",
+      "log_sha256": {
+        "stdout.log": "e779c0185b2020f6943df801c9e763c7fd27412c36b76e918b31ddc3eb033b81",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "passed": true,
+  "kernel_sha256": "bc46a7b6e7887aa4ad8a59ca34a4b1141903412e2bd94ce3536fe59eb36e32d7",
+  "kernel_build_receipt": {
+    "schema_version": 1,
+    "completed_utc": "2026-11-23T12:14:13.835045+00:00",
+    "scope": "Independent upstream Linux input for QEMU tb371fc smoke; no tablet flash or boot",
+    "source_version": "6.12.114",
+    "source_url": "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.114.tar.xz",
+    "source_tar_sha256": "7a8589912bd7a8adb07fed074283652cf482a35facef8954554654f0154b4af3",
+    "patches_applied_by_script": [],
+    "config_fragment_path": "/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/configs/linux-smoke.config",
+    "config_fragment_sha256": "9b4809aa256b425a7aac94bb4f1f2e98a9db3ac1db28080523a9f21774ff987b",
+    "effective_config_sha256": "7dad581dcc70b0aa01d1542ee204f6ad5fb3ed3068d68f1d187211113bc49482",
+    "image_path": "/home/runner/work/_temp/clean-linux/artifacts/Image",
+    "image_bytes": 4450312,
+    "image_sha256": "bc46a7b6e7887aa4ad8a59ca34a4b1141903412e2bd94ce3536fe59eb36e32d7",
+    "cross_compiler": {
+      "command": "aarch64-linux-gnu-gcc",
+      "path": "/usr/bin/aarch64-linux-gnu-gcc-13",
+      "sha256": "cd90adc7801f4595267f61a5d25bd3a0c6beb2f9f1f107ab919a97a12972dc9a",
+      "version": "aarch64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+    },
+    "cross_linker": {
+      "command": "aarch64-linux-gnu-ld",
+      "path": "/usr/bin/aarch64-linux-gnu-ld.bfd",
+      "sha256": "7c903ac277dd1f5c4397277db865f12d8239fe45782f71afbeb3d42180a4b1ae",
+      "version": "GNU ld (GNU Binutils for Ubuntu) 2.42"
+    },
+    "host_compiler": {
+      "command": "gcc",
+      "path": "/usr/bin/x86_64-linux-gnu-gcc-13",
+      "sha256": "1b99826121ae6682a634e5efe09bd3e3df58ce58e0b28f849114ab5b89139c26",
+      "version": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+    },
+    "config_command": [
+      "make",
+      "-C",
+      "/home/runner/work/_temp/clean-linux/source/linux-6.12.114",
+      "O=/home/runner/work/_temp/clean-linux/build",
+      "ARCH=arm64",
+      "CROSS_COMPILE=aarch64-linux-gnu-",
+      "allnoconfig"
+    ],
+    "config_environment": {
+      "KCONFIG_ALLCONFIG": "/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/configs/linux-smoke.config"
+    },
+    "build_command": [
+      "make",
+      "-C",
+      "/home/runner/work/_temp/clean-linux/source/linux-6.12.114",
+      "O=/home/runner/work/_temp/clean-linux/build",
+      "ARCH=arm64",
+      "CROSS_COMPILE=aarch64-linux-gnu-",
+      "-j2",
+      "Image"
+    ],
+    "build_environment": {
+      "KBUILD_BUILD_TIMESTAMP": "2026-11-22 00:00:00 +0000",
+      "KBUILD_BUILD_USER": "tb371fc-qemu",
+      "KBUILD_BUILD_HOST": "isolated-builder",
+      "KBUILD_BUILD_VERSION": "1",
+      "SOURCE_DATE_EPOCH": "1795305600"
+    },
+    "build_completed": true,
+    "guest_boot_tested_by_this_script": false
+  },
+  "c_test_binary_sha256": {},
+  "passed_gates": 4,
+  "completed_utc": "2026-11-23T12:14:19.650761+00:00",
+  "elapsed_seconds": 5.555,
+  "qemu_unchanged": true
+}

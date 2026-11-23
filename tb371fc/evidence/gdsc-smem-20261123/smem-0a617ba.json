@@ -1,0 +1,205 @@
+{
+  "all_passed": true,
+  "binary_unchanged": true,
+  "checks": [
+    {
+      "name": "always_present_marker_defaults_off",
+      "passed": true
+    },
+    {
+      "name": "default_ram_has_no_initialized_smem",
+      "passed": true
+    },
+    {
+      "name": "off_reset_does_not_invent_a_handoff",
+      "passed": true
+    },
+    {
+      "name": "invalid_profile_rejected",
+      "passed": true
+    },
+    {
+      "name": "reference_requires_explicit_unlocked_mutex",
+      "passed": true
+    },
+    {
+      "name": "reference_and_mutex_profiles_are_explicit",
+      "passed": true
+    },
+    {
+      "name": "v12_header_directory_and_partition_are_valid",
+      "passed": true
+    },
+    {
+      "name": "global_partition_is_bounded_and_disjoint",
+      "passed": true
+    },
+    {
+      "name": "global_and_legacy_items_are_empty",
+      "passed": true
+    },
+    {
+      "name": "no_fabricated_payload_in_allocator",
+      "passed": true
+    },
+    {
+      "name": "handoff_is_writable_ordinary_ram",
+      "passed": true
+    },
+    {
+      "name": "locked_allocation_fixture_has_valid_bytes",
+      "passed": true
+    },
+    {
+      "name": "second_fixture_preserves_prior_allocation",
+      "passed": true
+    },
+    {
+      "name": "same_profile_migration_completed",
+      "passed": true
+    },
+    {
+      "name": "all_ram_and_lock_state_survive_migration",
+      "passed": true
+    },
+    {
+      "name": "allocator_frontier_continues_after_migration",
+      "passed": true
+    },
+    {
+      "name": "normal_reset_recreates_exact_empty_image",
+      "passed": true
+    },
+    {
+      "name": "reset_does_not_touch_neighbor_ram",
+      "passed": true
+    },
+    {
+      "name": "profile_is_immutable_after_creation",
+      "passed": true
+    },
+    {
+      "name": "off_to_off_migrates_existing_ram",
+      "passed": true
+    },
+    {
+      "name": "reference_to_off_migration_rejected_by_handoff_marker",
+      "passed": true
+    },
+    {
+      "name": "off_to_reference_migration_rejected_by_handoff_marker",
+      "passed": true
+    }
+  ],
+  "elapsed_seconds": 77.31739218200005,
+  "expected_checks": 22,
+  "guest_cpu_executed": false,
+  "migrations": [
+    {
+      "destination": {
+        "status": "completed"
+      },
+      "expected_rejection": false,
+      "source": {
+        "downtime": 17,
+        "ram": {
+          "dirty-pages-rate": 0,
+          "dirty-sync-count": 2,
+          "dirty-sync-missed-zero-copy": 0,
+          "downtime-bytes": 323720,
+          "duplicate": 32769,
+          "mbps": 743.369,
+          "multifd-bytes": 0,
+          "normal": 7,
+          "normal-bytes": 28672,
+          "page-size": 4096,
+          "pages-per-second": 0,
+          "postcopy-bytes": 0,
+          "postcopy-requests": 0,
+          "precopy-bytes": 0,
+          "remaining": 0,
+          "total": 134250496,
+          "transferred": 2230107
+        },
+        "setup-time": 0,
+        "status": "completed",
+        "total-time": 24
+      }
+    },
+    {
+      "destination": {
+        "status": "completed"
+      },
+      "expected_rejection": false,
+      "source": {
+        "downtime": 14,
+        "ram": {
+          "dirty-pages-rate": 0,
+          "dirty-sync-count": 2,
+          "dirty-sync-missed-zero-copy": 0,
+          "downtime-bytes": 307340,
+          "duplicate": 32773,
+          "mbps": 885.4908,
+          "multifd-bytes": 0,
+          "normal": 3,
+          "normal-bytes": 12288,
+          "page-size": 4096,
+          "pages-per-second": 0,
+          "postcopy-bytes": 0,
+          "postcopy-requests": 0,
+          "precopy-bytes": 0,
+          "remaining": 0,
+          "total": 134250496,
+          "transferred": 2213727
+        },
+        "setup-time": 0,
+        "status": "completed",
+        "total-time": 20
+      }
+    },
+    {
+      "destination": {
+        "socket-address": [
+          {
+            "path": "/tmp/tbci-6_zs9n9i/41/tmp/smem-fckyqc01/migration",
+            "type": "unix"
+          }
+        ],
+        "status": "active"
+      },
+      "destination_exit": 1,
+      "destination_stderr": "qemu-system-aarch64: qcom-smem-handoff: reference-empty differs between source and destination\nqemu-system-aarch64: load of migration failed: Invalid argument: error while loading state for instance 0x0 of device 'qcom-smem-handoff': post load hook failed for: qcom-smem-handoff, version_id: 1, minimum_version: 1, ret: -22\n",
+      "expected_rejection": true,
+      "source": {
+        "error-desc": "Failed to flush QEMUFile: Unable to write to socket: Broken pipe",
+        "status": "failed"
+      }
+    },
+    {
+      "destination": {
+        "socket-address": [
+          {
+            "path": "/tmp/tbci-6_zs9n9i/41/tmp/smem-zen8nrio/migration",
+            "type": "unix"
+          }
+        ],
+        "status": "active"
+      },
+      "destination_exit": 1,
+      "destination_stderr": "qemu-system-aarch64: qcom-smem-handoff: reference-empty differs between source and destination\nqemu-system-aarch64: load of migration failed: Invalid argument: error while loading state for instance 0x0 of device 'qcom-smem-handoff': post load hook failed for: qcom-smem-handoff, version_id: 1, minimum_version: 1, ret: -22\n",
+      "expected_rejection": true,
+      "source": {
+        "error-desc": "Failed to flush QEMUFile: Unable to write to socket: Broken pipe",
+        "status": "failed"
+      }
+    }
+  ],
+  "native_sbl_captured": false,
+  "passed": true,
+  "qemu_sha256": "a2e19b188f6253928ad47630896e0967fb99f55abbddaf98212f312e8194ee1b",
+  "remote_firmware_emulated": false,
+  "schema": "tb371fc-smem-reference-v1",
+  "scope": "Actual QTest RAM/MMIO and process migration; allocation fixtures are synthetic, not a guest driver verdict",
+  "script_sha256": "9f3bd287d9764537a9fd484b2e371586e0ba1f5518c11190958cff05aeb47ec2",
+  "started_utc": "2026-11-23T12:10:28.447283+00:00"
+}

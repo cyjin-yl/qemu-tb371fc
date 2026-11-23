@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "scope": "Verified GDSC and SMEM reference models, a critical GCC branch correction, and bounded native-kernel evidence",
+  "functional_source_commit": "0a617bab7cb2277073aa24092ec9a12b63fceb50",
+  "preceding_public_source_commit": "408d82ae4acc0fce05d16d3f17ee3123eda82ab4",
+  "public_ci": {
+    "run_id": 45170677624,
+    "conclusion": "success",
+    "components": {
+      "passed": 53,
+      "expected": 53
+    },
+    "linux": {
+      "passed": 4,
+      "expected": 4
+    },
+    "total_gate_invocations": 57,
+    "runner_invocations": 2,
+    "board_binary_sha256": "a2e19b188f6253928ad47630896e0967fb99f55abbddaf98212f312e8194ee1b",
+    "board_artifact_id": 14817122316,
+    "gcc_register_groups": 24,
+    "gcc_migration_checks": 8,
+    "gcc_migration_transfers": 1,
+    "gdsc_checks": 29,
+    "gdsc_migration_outcomes": 10,
+    "smem_checks": 22,
+    "smem_migration_successes": 2,
+    "smem_profile_mismatch_rejections": 2,
+    "a77_guest_checks": 852,
+    "a77_configurations": 9,
+    "a77_invalid_configuration_rejections": 2,
+    "ufs_pci_checks": 15,
+    "ufs_pci_skipped": 0,
+    "raw_component_and_linux_reports_retained": true,
+    "executable_digest_computed_from_verified_archive": true
+  },
+  "native_kernel_observation": {
+    "source_commit": "0a617bab7cb2277073aa24092ec9a12b63fceb50",
+    "board_binary_sha256": "a2e19b188f6253928ad47630896e0967fb99f55abbddaf98212f312e8194ee1b",
+    "production_image_unmodified": true,
+    "complete_device_tree_input": true,
+    "runtime_loader_device_tree_fixups": true,
+    "explicit_reference_profiles": true,
+    "smem_driver_success_path_observed": true,
+    "driver_object_consistency_checks": 23,
+    "observer_guest_memory_writes": false,
+    "gdsc_original_abort_absent": true,
+    "prior_gcc_48198_abort_absent": true,
+    "latest_confirmed_fatal": "GCC USB3 primary PHY PIPE source mux read32 at physical 0x0010f060 via mux_get_parent and gcc_kona_probe",
+    "native_dt_boot_passed": false,
+    "android_boot_passed": false
+  },
+  "native_recheck_after_gcc_correction": {
+    "observed": true,
+    "source_commit": "0a617bab7cb2277073aa24092ec9a12b63fceb50",
+    "qemu_sha256": "a2e19b188f6253928ad47630896e0967fb99f55abbddaf98212f312e8194ee1b",
+    "original_launch_call_timed_out": true,
+    "result_retrieved_after_connection_recovered": true,
+    "smem_driver_success_path_observed": true,
+    "driver_consistency_checks": 23,
+    "previous_48198_abort_absent": true,
+    "next_fatal_physical_address": "0x0010f060",
+    "native_dt_boot_passed": false,
+    "android_boot_passed": false,
+    "receipt": "native-ci-0a.json"
+  },
+  "generator_regeneration": {
+    "python_syntax_check_passed": true,
+    "actual_generator_exit": 0,
+    "pinned_inputs_verified": 2,
+    "generated_outputs_byte_identical": 2,
+    "clock_descriptors": 198,
+    "external_input_slots": 84,
+    "registers": 460,
+    "resets": 45,
+    "power_domains": 11,
+    "receipt": "gcc-regeneration-0a617ba.json"
+  },
+  "history_preservation": {
+    "original_default_commit": "5fd52c120058fb2addedfa74fe5c855b138b590f",
+    "merge_commit": "f8ffcbf4f3d4bca959c040efa264791e8b44637f",
+    "default_only_evidence_blobs_restored_unchanged": 239,
+    "earlier_frozen_binary_receipts_retained_separately": true
+  },
+  "retained_nonpassing_runs": [
+    {
+      "source_commit": "28194623740c1e50fa100bdf7101c586b0cd0fd7",
+      "workflow_run": 45162621780,
+      "board_components_passed": 52,
+      "board_components_expected": 53,
+      "failed_gate": "gpu-gdsc",
+      "cause": "QMP test argument command_line instead of command-line",
+      "correction_commit": "408d82ae4acc0fce05d16d3f17ee3123eda82ab4"
+    },
+    {
+      "source_commit": "4f271b59f04e3e0d8c750952b41600812b48d394",
+      "workflow_run": 45170123040,
+      "classification": "superseded and cancelled before gates ran",
+      "replacement_commit": "0a617bab7cb2277073aa24092ec9a12b63fceb50",
+      "replacement_reason": "Independent review found an asynchronous reset observation race in a new test; device model unchanged."
+    }
+  ],
+  "doesvm_checkpoint": {
+    "container": "CT102 / qemu-tb371fc-dev",
+    "work_root": "/work/continue-gdsc-20261123",
+    "source_worktree": "/work/continue-gdsc-20261123/source",
+    "source_worktree_contains_final_gcc_correction": false,
+    "local_gdsc_only_binary": "/work/continue-gdsc-20261123/frozen-gdsc/qemu-system-aarch64",
+    "local_gdsc_only_binary_sha256": "d913611ad240206867ee4a3c8fe06ab052064da7c5b48d920f75729d9ade29be",
+    "local_gdsc_only_checks_passed": 29,
+    "ci408_binary_verified_on_doesvm": "/work/continue-gdsc-20261123/ci-408d82a/qemu-system-aarch64",
+    "combined_local_build_and_acceptance_receipts_retrieved": false,
+    "local_final_source_synchronization_confirmed": false,
+    "prior_user_source_and_frozen12_preserved": true,
+    "ci0a_binary_verified_on_doesvm": "/work/continue-gdsc-20261123/ci-0a617ba/qemu-system-aarch64",
+    "combined_local_build_completed": true,
+    "combined_local_full_acceptance_completed": false,
+    "combined_full_acceptance_watcher_exit": 1,
+    "watch_failure_requires_separate_diagnosis": true
+  },
+  "boundaries": {
+    "native_sbl_state_captured": false,
+    "smem_socinfo_or_remote_identity_fabricated": false,
+    "secure_services_emulated": false,
+    "gpu_execution_verified": false,
+    "complete_tablet_hardware_equivalence": false,
+    "raw_private_firmware_device_tree_and_kernel_logs_published": false
+  },
+  "receipts": [
+    "ci-408d82a.json",
+    "ci-0a617ba.json",
+    "artifact-0a617ba.json",
+    "components-408d82a.json",
+    "linux-408d82a.json",
+    "components-0a617ba.json",
+    "linux-0a617ba.json",
+    "gdsc-0a617ba.json",
+    "smem-0a617ba.json",
+    "gcc-registers-0a617ba.json",
+    "gcc-migration-0a617ba.json",
+    "native-ci-408.json",
+    "gcc-regeneration-0a617ba.json",
+    "native-ci-0a.json"
+  ],
+  "prior_native_kernel_observation": {
+    "source_commit": "408d82ae4acc0fce05d16d3f17ee3123eda82ab4",
+    "board_binary_sha256": "0190794d7890fcc34caeff3c7f30d00218a6f0027bddc4500c34f79c45051a93",
+    "production_image_unmodified": true,
+    "complete_device_tree_input": true,
+    "runtime_loader_device_tree_fixups": true,
+    "explicit_reference_profiles": true,
+    "smem_driver_success_path_observed": true,
+    "driver_object_consistency_checks": 23,
+    "observer_guest_memory_writes": false,
+    "gdsc_original_abort_absent": true,
+    "latest_confirmed_pre_correction_fatal": "GCC read32 at physical 0x00148198 via clk_branch2_check_halt and gcc_kona_probe",
+    "native_dt_boot_passed": false,
+    "android_boot_passed": false
+  }
+}
