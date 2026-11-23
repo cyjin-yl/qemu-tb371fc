@@ -53,7 +53,8 @@
   },
   "prior_metadata": {
     "path": "../xbl-smem-static-20261123/metadata.json",
-    "sha256": "b90cbf0373fcfb08b4b8cb0c54aa2eda302f784922dfc23b23de304cdc04eff4"
+    "sha256": "b90cbf0373fcfb08b4b8cb0c54aa2eda302f784922dfc23b23de304cdc04eff4",
+    "representation": "Bounded tablet summary with canonical hashes computed before projection"
   },
   "metadata_parser": {
     "path": "../xbl-smem-static-20261123/method/xbl_metadata.py",
@@ -67,18 +68,7 @@
     "transport_audit_covers_successful_batches_after_offset": 1380352,
     "transport_audit_is_complete_failure_chronology": false
   },
-  "additional_files_known_by_executed_receipts_but_not_yet_archived": [
-    {
-      "name": "CT transfer-completion receipt",
-      "sha256": "76f98af1c413e25331f370ccbbab20eaaff58c00b900cd0eb5d6967b5b631674",
-      "original_text_read_for_archive": false
-    },
-    {
-      "name": "CT results-v1/metadata.json",
-      "sha256": "b917606a36b52cbdcf4d86f573a7c38bdc445c719edfe3c73c01de3003e6152d",
-      "original_text_read_for_archive": false
-    }
-  ],
+  "additional_files_known_by_executed_receipts_but_not_yet_archived": [],
   "files": [
     {
       "name": "job.result.json",
@@ -139,6 +129,46 @@
       "bytes": 4433,
       "sha256": "58ff877543ffb6e404a674f488973726acf9cc7744c15c4e8cacb0b3fae8455d",
       "git_blob_sha": "494a2c8b6d732aff7c47f51f2d89d28905a53b0c"
+    },
+    {
+      "name": "transfer-checkpoint.json",
+      "bytes": 2646,
+      "sha256": "76f98af1c413e25331f370ccbbab20eaaff58c00b900cd0eb5d6967b5b631674",
+      "git_blob_sha": "d6a7e521f4f3bc8f729f98c9b4bfce03791bfd40"
+    },
+    {
+      "name": "ct-metadata.json",
+      "bytes": 17399,
+      "sha256": "b917606a36b52cbdcf4d86f573a7c38bdc445c719edfe3c73c01de3003e6152d",
+      "git_blob_sha": "26886d6ad08e9e6c2f32434bfc444a937467a91b"
     }
-  ]
+  ],
+  "updated_utc": "2026-11-23T14:20:00Z",
+  "ct_metadata": {
+    "path": "ct-metadata.json",
+    "representation": "Complete safe metadata parser output",
+    "sha256": "b917606a36b52cbdcf4d86f573a7c38bdc445c719edfe3c73c01de3003e6152d"
+  },
+  "transfer_checkpoint_scope": "transfer-checkpoint.json predates metadata execution and correctly retains overall_complete=false and metadata.state=not_started. completion-receipt.json and job.result.json record the subsequent successful stages.",
+  "independent_review": {
+    "ct_canonical_hashes_recomputed_from_archived_full_safe_metadata": true,
+    "tablet_hash_basis": "captured pre-summary canonical anchors",
+    "exported_json_shapes_expected_to_differ": true,
+    "comparisons": [
+      {
+        "name": "xbl_a",
+        "ct_canonical_sha256": "255aaf0cb2718ac10e81bd0bb11a0a98ea4e31cfa2bc9addec51b0966e2a4789",
+        "tablet_captured_canonical_sha256": "255aaf0cb2718ac10e81bd0bb11a0a98ea4e31cfa2bc9addec51b0966e2a4789",
+        "equal": true,
+        "tablet_representation": "bounded summary with pre-summary canonical hash"
+      },
+      {
+        "name": "xbl_config_a",
+        "ct_canonical_sha256": "eb568b572d79d80a2ab3e1a2377ddb9efc6f33211205326fcba68071e07a7d3f",
+        "tablet_captured_canonical_sha256": "eb568b572d79d80a2ab3e1a2377ddb9efc6f33211205326fcba68071e07a7d3f",
+        "equal": true,
+        "tablet_representation": "bounded summary with pre-summary canonical hash"
+      }
+    ]
+  }
 }

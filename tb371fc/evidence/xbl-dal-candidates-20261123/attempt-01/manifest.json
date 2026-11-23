@@ -1,0 +1,112 @@
+{
+  "schema": "tb371fc-xbl-dal-v1-evidence-manifest",
+  "scope": "Synthetic parser tests and bounded static metadata scan; no firmware execution.",
+  "source_package": {
+    "blob": "052c57b7f66d250de96161e555244d67cfccb779",
+    "bytes": 70587,
+    "sha256": "48fe59fcb6ac6c7a4e44a73001182b9fa6f6d13f5eea1be0e26f28061324e0cb"
+  },
+  "sources": [
+    {
+      "name": "dal_smem_candidates.py",
+      "blob": "ea87e93b651149321d8776947209cb490612c6c7",
+      "bytes": 23692,
+      "sha256": "d112e764b5c984d23d45cc4a92311f64ae0f1c5374d50233655475ddc0604d7f"
+    },
+    {
+      "name": "test_dal_smem_candidates.py",
+      "blob": "53cb48c258181d372af956dcdc562afbc2875ba6",
+      "bytes": 14572,
+      "sha256": "196d5215c4988c5806754482334d13ebe7c239b26aa56e6a03cccec0387f9d3a"
+    },
+    {
+      "name": "METHOD.md",
+      "blob": "d0fd436147e974e6ea5512c9ca184c8194f72ecd",
+      "bytes": 5082,
+      "sha256": "61b503960e9f5d24bd68adee935700fcdc0445eebef5aecdefe018d1e23b9d24"
+    }
+  ],
+  "fixtures": {
+    "actual_count": 34,
+    "passed": true,
+    "log_sha256": "2dc216071e44483b20dfd5f3f620d013337f3f197a19bbb6ce8731d5710ce552"
+  },
+  "actual_scan": {
+    "completed": true,
+    "accepted_candidate_count": 0,
+    "processed_candidates": 1,
+    "bounded_geometric_candidates": 1,
+    "geometric_candidates": 184,
+    "scanned_heads": 21481,
+    "rejected_reasons": {
+      "property_name_offset": 1,
+      "string_device_limit": 183
+    },
+    "candidate_processing_truncated": false
+  },
+  "platform_selected": false,
+  "reachable_from_entry_proven": false,
+  "smem_initialized_proven": false,
+  "firmware_executed": false,
+  "input": {
+    "name": "xbl_a.bin",
+    "size": 3670016,
+    "sha256": "eaf27cf49114d144282e86880c017fbadb3442df97bd30449e386f77e804da55",
+    "capture_kind": "current-active-a-partition-backup"
+  },
+  "input_and_source_sha256_before_after_equal": true,
+  "files": [
+    {
+      "name": "install-receipt.json",
+      "source_path": "/work/xbl-dal-candidates-20261123-01/install-receipt.json",
+      "bytes": 1674,
+      "sha256": "2e47e62be8017b4b2a396cd8efcaad137079c7cd160b05f565ac372619714999",
+      "blob": "57a3b1bf45cdaa4417792422bc166a1ebe64a91d",
+      "readback_verified": true,
+      "original_bytes_preserved": true
+    },
+    {
+      "name": "job.exit",
+      "source_path": "/work/xbl-dal-candidates-20261123-01/job.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "blob": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56",
+      "readback_verified": true,
+      "original_bytes_preserved": true
+    },
+    {
+      "name": "job.result.json",
+      "source_path": "/work/xbl-dal-candidates-20261123-01/job.result.json",
+      "bytes": 4173,
+      "sha256": "a3a8bc6aa7303b426c6862cd3af89d50ab258e2a6bb5e3bdfc7b0f64d09c4211",
+      "blob": "0a2d3540fd31e69549e243fb0e1d41748edb6e71",
+      "readback_verified": true,
+      "original_bytes_preserved": true
+    },
+    {
+      "name": "fixtures.stderr",
+      "source_path": "/work/xbl-dal-candidates-20261123-01/results/fixtures.stderr",
+      "bytes": 133,
+      "sha256": "2dc216071e44483b20dfd5f3f620d013337f3f197a19bbb6ce8731d5710ce552",
+      "blob": "0daa2253a4bfc4cbaf3185a6d8ae5da1fdc09c15",
+      "readback_verified": true,
+      "original_bytes_preserved": true
+    },
+    {
+      "name": "scan.stdout",
+      "source_path": "/work/xbl-dal-candidates-20261123-01/results/scan.stdout",
+      "bytes": 1888,
+      "sha256": "b66ff967fec5f0e8e7ee1fdd0e9b9a5657b733124153b60c4edb839c83d90db6",
+      "blob": "9f692a6b4cc7e0a52f0290fe10e467f77259dfe8",
+      "readback_verified": true,
+      "original_bytes_preserved": true
+    }
+  ],
+  "notes": [
+    "The job's overall_complete=true means the bounded analysis completed, not that a DAL configuration was accepted or SMEM was initialized.",
+    "All v1 files and logs remain in the original private CT directory. Later diagnostic versions must use a new directory.",
+    "Only selected small original receipts/logs are mirrored as these blobs; the complete private directory remains in CT.",
+    "The 34 tests use self-authored synthetic in-memory data. They are not 34 real-device or firmware behavior tests."
+  ],
+  "git_tree_or_ref_changed": false
+}
