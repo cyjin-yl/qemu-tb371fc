@@ -26,15 +26,17 @@ def connect(path, process):
     raise TimeoutError(str(path))
 
 class Rig:
-    def __init__(self,qemu,directory):
+    def __init__(self,qemu,directory,*,disk=None,incoming=False,
+                 extra_args=(),autostart=True):
         self.d=directory
         self.irq={}
         self.events=[]
         self.connections=[]
         self.log=(directory/"qemu.stderr").open("wb")
-        self.disk=directory/"disk.raw"
-        with self.disk.open("xb") as f:
-            f.truncate(64*1024*1024)
+        self.disk=Path(disk) if disk is not None else directory/"disk.raw"
+        if disk is None:
+            with self.disk.open("xb") as f:
+                f.truncate(64*1024*1024)
         self.cmd=[str(qemu),"-M","tb371fc","-accel","qtest","-m","128M",
             "-display","none","-serial","null","-monitor","none",
             "-qtest",f"unix:{directory}/qtest,server=on,wait=off",
@@ -44,6 +46,9 @@ class Rig:
             "-blockdev","driver=raw,node-name=disk0,file=file0",
             "-device","ufs-lu,bus=ufs0,drive=disk0,lun=0",
             "-d","unimp,guest_errors"]
+        self.cmd.extend(extra_args)
+        if not autostart or incoming:self.cmd.append("-S")
+        if incoming:self.cmd.extend(["-incoming","defer"])
         self.p=subprocess.Popen(self.cmd,stdin=subprocess.DEVNULL,
                                 stdout=subprocess.DEVNULL,stderr=self.log)
         try:
@@ -54,7 +59,7 @@ class Rig:
             assert "QMP" in json.loads(self.m.readline())
             self.monitor("qmp_capabilities")
             self.command("irq_intercept_out /machine/ufs sysbus-irq")
-            if not self.monitor("query-status")["running"]:
+            if autostart and not incoming and not self.monitor("query-status")["running"]:
                 self.monitor("cont")
         except BaseException:
             self.close();raise
@@ -102,14 +107,16 @@ class Rig:
         result_value=self.r(HCI+0x9c)
         self.w(HCI+0x20,0xffffffff)
         return result,result_value
+    def dma_address(self,physical):
+        return physical
     def transfer(self,req,*,data=None,buffer_size=0,direction=0,expected=0):
         self.w(HCI+0x20,0xffffffff)
         self.write(CMD,bytes(4096))
         self.write(CMD,req)
         if buffer_size:
             self.write(DATA, data if data is not None else b"\xcc"*buffer_size)
-            self.write(CMD+2048,struct.pack("<QII",DATA,0,buffer_size-1))
-        desc=struct.pack("<6I4H",0x11000000|direction,0,15,0,CMD,0,
+            self.write(CMD+2048,struct.pack("<QII",self.dma_address(DATA),0,buffer_size-1))
+        desc=struct.pack("<6I4H",0x11000000|direction,0,15,0,self.dma_address(CMD),0,
                          128,256,1 if buffer_size else 0,512)
         self.write(UTRL,desc)
         self.w(HCI+0x58,1)

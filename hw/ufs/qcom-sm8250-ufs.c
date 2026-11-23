@@ -17,8 +17,10 @@
 #include "hw/core/qdev-clock.h"
 #include "hw/core/qdev-properties.h"
 #include "hw/ufs/qcom-sm8250-ufs.h"
+#include "migration/qemu-file.h"
 #include "migration/vmstate.h"
 #include "system/address-spaces.h"
+#include "system/block-backend.h"
 #include "ufs.h"
 
 #define PHY_START       0xc00
@@ -70,6 +72,7 @@ struct QcomSm8250UfsState {
     QcomUfsLink link;
     bool power_on, reset_held, device_reset_held;
     bool phy_ready, initialized, uic_busy;
+    uint8_t migration_config[32];
 };
 
 static void qcom_ufs_update_phy(QcomSm8250UfsState *s);
@@ -806,11 +809,8 @@ static const Property qcom_ufs_properties[] = {
                      TYPE_MEMORY_REGION, MemoryRegion *),
 };
 
-static const VMStateDescription vmstate_qcom_ufs = {
-    .name = TYPE_QCOM_SM8250_UFS,
-    /* Inherits the upstream core's lack of in-flight UFS migration support. */
-    .unmigratable = 1,
-};
+/* The bounded migration contract is specific to this legacy QCOM wrapper. */
+#include "qcom-sm8250-ufs-migration.inc"
 
 static void qcom_ufs_class_init(ObjectClass *oc, const void *data)
 {

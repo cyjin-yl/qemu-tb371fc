@@ -1922,6 +1922,11 @@ static int get_scsi_requests(QEMUFile *f, void *pv, size_t size,
         req->retry = (sbyte == 1);
         if (bus->info->load_request) {
             req->hba_private = bus->info->load_request(f, req);
+            /* An HBA may support only checkpoints with an empty queue. */
+            if (qemu_file_get_error(f)) {
+                scsi_req_unref(req);
+                return qemu_file_get_error(f);
+            }
         }
         if (req->ops->load_request) {
             req->ops->load_request(f, req);
