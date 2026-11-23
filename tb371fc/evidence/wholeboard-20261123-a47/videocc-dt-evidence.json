@@ -1,0 +1,171 @@
+{
+  "schema": "tb371fc-videocc-dt-evidence-v1",
+  "source_path": "/work/device-assets/live-android-20261123.dtb",
+  "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "dtb_file_bytes": 973052,
+  "fdt_total_bytes": 973052,
+  "selection": "compatible contains videocc/video-cc or node name contains videocc",
+  "read_only": true,
+  "guest_boot_performed": false,
+  "full_dtb_exported": false,
+  "selected_node_count": 1,
+  "nodes": [
+    {
+      "path": "/soc/qcom,videocc@abf0000",
+      "name": "qcom,videocc@abf0000",
+      "properties": {
+        "reg": {
+          "bytes": 8,
+          "raw_hex": "0abf000000010000",
+          "be32": [
+            180289536,
+            65536
+          ]
+        },
+        "reg-names": {
+          "bytes": 8,
+          "raw_hex": "63635f6261736500",
+          "be32": [
+            1667456866,
+            1634952448
+          ],
+          "strings": [
+            "cc_base"
+          ]
+        },
+        "compatible": {
+          "bytes": 28,
+          "raw_hex": "71636f6d2c766964656f63632d6b6f6e612d763200737973636f6e00",
+          "be32": [
+            1902341997,
+            745957732,
+            1701798755,
+            762015598,
+            1630369330,
+            7567731,
+            1668247040
+          ],
+          "strings": [
+            "qcom,videocc-kona-v2",
+            "syscon"
+          ]
+        },
+        "clocks": {
+          "bytes": 8,
+          "raw_hex": "00000016000000cd",
+          "be32": [
+            22,
+            205
+          ]
+        },
+        "clock-names": {
+          "bytes": 12,
+          "raw_hex": "6366675f6168625f636c6b00",
+          "be32": [
+            1667655519,
+            1634230879,
+            1668049664
+          ],
+          "strings": [
+            "cfg_ahb_clk"
+          ]
+        },
+        "phandle": {
+          "bytes": 4,
+          "raw_hex": "0000006a",
+          "be32": [
+            106
+          ]
+        },
+        "#clock-cells": {
+          "bytes": 4,
+          "raw_hex": "00000001",
+          "be32": [
+            1
+          ]
+        }
+      },
+      "parent_bus": {
+        "path": "/soc",
+        "properties": {
+          "#address-cells": {
+            "bytes": 4,
+            "raw_hex": "00000001",
+            "be32": [
+              1
+            ]
+          },
+          "#size-cells": {
+            "bytes": 4,
+            "raw_hex": "00000001",
+            "be32": [
+              1
+            ]
+          },
+          "ranges": {
+            "bytes": 16,
+            "raw_hex": "000000000000000000000000ffffffff",
+            "be32": [
+              0,
+              0,
+              0,
+              4294967295
+            ]
+          }
+        }
+      },
+      "direct_clock_references": {
+        "clocks": [
+          {
+            "cell_index": 0,
+            "phandle": 22,
+            "args": [
+              205
+            ],
+            "provider": {
+              "path": "/soc/qcom,gcc@100000",
+              "name": "qcom,gcc@100000",
+              "properties": {
+                "compatible": {
+                  "bytes": 21,
+                  "raw_hex": "71636f6d2c6763632d6b6f6e6100737973636f6e00",
+                  "strings": [
+                    "qcom,gcc-kona",
+                    "syscon"
+                  ]
+                },
+                "phandle": {
+                  "bytes": 4,
+                  "raw_hex": "00000016",
+                  "be32": [
+                    22
+                  ]
+                },
+                "#clock-cells": {
+                  "bytes": 4,
+                  "raw_hex": "00000001",
+                  "be32": [
+                    1
+                  ]
+                },
+                "reg": {
+                  "bytes": 8,
+                  "raw_hex": "00100000001f0000",
+                  "be32": [
+                    1048576,
+                    2031616
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "absent_requested_properties": [
+        "assigned-clocks",
+        "assigned-clock-parents",
+        "assigned-clock-rates"
+      ]
+    }
+  ]
+}

@@ -18,8 +18,9 @@
 - [x] NPUCC 三窗口数字 PLL/RCG/branch/reset、37 项组件/2 完成/2 拒绝迁移；统一 `d790` 的 63/63 组件 + 4/4 Linux 和独立 A77/UFS 全部通过，同一二进制原厂完整 DT 已完成 NPUCC 注册。
 - [x] 统一整合默认分支 `339b9cd` 的 SMMUv2 迁移几何保护与历史证据；`0508` 实际通过 65/65 组件 + 4/4 Linux 和独立 A77/UFS，默认分支保持原位。
 - [x] MPM sleep counter：固定 32768 Hz、单个只读 word、精确分数及 VMState 1；17 项检查、2 次完成迁移、1 次损坏流拒绝通过，同一 `0508` 原厂完整 DT 实际输出 MPM timestamp/frequency 并继续启动。
-- [ ] NoC QoS：`0508` 下一实际 fatal 为 `msm_bus_noc_qos_init+0x48`；QEMU 直接确认物理读地址 `0x016e9008`。实际 DT 与内嵌 RPMh 配置已核对 47 独立端口 / 188 有效 word；已加入显式 reference 寄存器与迁移模型；70 项计划及其原厂复验尚待执行。VIDEOCC 仍延后 probe。
-- [ ] 原厂完整 DT 用户态及 Android 启动；不能将 69 项公共成功、控制器注册或 MPM 读取当作整板可用。
+- [x] NoC QoS：47 物理端口 / 188 有效 word；20 项、2 次完成迁移、2 次 profile 拒绝、2 次损坏流拒绝通过。统一 `99ef` 完成 66/66 组件 + 4/4 Linux 和独立 A77/UFS；同一原厂运行只读核验 47 地址及 46 非延迟配置，越过 `0x016e9008`。
+- [ ] QSMMUv500 TCU/TBU 扩展：`99ef` 下一实际 fatal 为 `qsmmuv500_arch_init+0x88` 读取 `0x15182018`；DT 确认 apps TCU +0x18。需有状态 HALT、真实共享翻译路径的 ECATS、复位与迁移；版本、时序及早期固件状态未实测，KGSL clock 和其他 TBU 供电依赖继续保留。
+- [ ] 原厂完整 DT 用户态及 Android 启动；不能将 70 项公共成功、控制器注册或 NoC 配置匹配当作整板可用。
 
 本轮精确构建与原厂证据见 [README](../README.md) 和
 [原厂对照](evidence/wholeboard-20261123-a47/native-progression.json)。

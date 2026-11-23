@@ -1,0 +1,355 @@
+{
+  "schema": "tb371fc-noc-qos-v1",
+  "passed": true,
+  "expected_checks": 20,
+  "checks": [
+    {
+      "name": "cold_reference_has_47_physical_identities_and_188_zero_words",
+      "passed": true
+    },
+    {
+      "name": "every_documented_bit_is_immediate_and_independent",
+      "passed": true
+    },
+    {
+      "name": "full_word_replacement_clears_fields_without_a_merge_or_ack",
+      "passed": true
+    },
+    {
+      "name": "all_188_words_high_port_ids_and_display_aliases_are_independent",
+      "passed": true
+    },
+    {
+      "name": "literal_vendor_13_write_sequence_keeps_its_actual_rmw_side_effects",
+      "passed": true
+    },
+    {
+      "name": "aligned_byte_buffers_have_little_endian_word_order",
+      "passed": true
+    },
+    {
+      "name": "reserved_bits_reject_the_whole_write_without_changing_any_word",
+      "passed": true
+    },
+    {
+      "name": "narrow_and_unaligned_accesses_have_exact_core_failures_and_no_partial_write",
+      "passed": true
+    },
+    {
+      "name": "raw_qom_state_identity_and_realized_profile_are_read_only",
+      "passed": true
+    },
+    {
+      "name": "virtual_time_and_repeated_reads_do_not_invent_commits_or_ack_bits",
+      "passed": true
+    },
+    {
+      "name": "system_reset_clears_all_reference_words_with_an_independent_reset_witness",
+      "passed": true
+    },
+    {
+      "name": "default_profile_never_exposes_reference_zero_or_accepts_mmio",
+      "passed": true
+    },
+    {
+      "name": "exactly_188_four_byte_windows_leave_legacy_sbm_and_unlisted_ports_unmapped",
+      "passed": true
+    },
+    {
+      "name": "v1_all_188_nonzero_words_and_identities_restore_before_device_mmio",
+      "passed": true,
+      "target_device_mmio_before_first_observation": false
+    },
+    {
+      "name": "v1_destination_writes_remain_isolated_and_restored_ports_reset",
+      "passed": true
+    },
+    {
+      "name": "v1_default_profile_remains_unknown_after_actual_transfer",
+      "passed": true
+    },
+    {
+      "name": "reference_to_default_profile_is_rejected",
+      "passed": true,
+      "stream_modified": false
+    },
+    {
+      "name": "default_to_reference_profile_is_rejected",
+      "passed": true,
+      "stream_modified": false
+    },
+    {
+      "name": "one_physical_port_identity_corruption_is_rejected",
+      "passed": true,
+      "stream_modified": true,
+      "only_one_field_modified": true
+    },
+    {
+      "name": "one_reserved_register_bit_corruption_is_rejected",
+      "passed": true,
+      "stream_modified": true,
+      "only_one_field_modified": true
+    }
+  ],
+  "expected_completed_migrations": 2,
+  "migrations": [
+    {
+      "name": "v1_reference_all_47_physical_ports_and_ram_roundtrip",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 0,
+        "downtime": 14,
+        "total-time": 20,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 895.604,
+          "transferred": 2239010,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "destination": {
+        "status": "completed"
+      },
+      "source_reference": true,
+      "target_reference": true,
+      "source_virtual_ns": 456789,
+      "destination_virtual_ns": 987654321,
+      "target_device_mmio_before_first_observation": false,
+      "actual_device_sections_verified": 47,
+      "actual_register_words_verified": 188,
+      "stream_modified": false,
+      "snapshot_sha256": "b48a8590fc6b6c82424ceca341b41f9c6bbac6a8caee5cf8fe35d7943f55752a",
+      "snapshot_bytes": 2239010
+    },
+    {
+      "name": "v1_default_profile_unknown_boundary_and_ram_roundtrip",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 0,
+        "downtime": 14,
+        "total-time": 20,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 895.604,
+          "transferred": 2239010,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "destination": {
+        "status": "completed"
+      },
+      "source_reference": false,
+      "target_reference": false,
+      "source_virtual_ns": 345679,
+      "destination_virtual_ns": 17,
+      "target_device_mmio_before_first_observation": false,
+      "actual_device_sections_verified": 47,
+      "actual_register_words_verified": 188,
+      "stream_modified": false,
+      "snapshot_sha256": "ef090ac34bf3b8e238ce2a95373b0dbf910631b6e03a145be58a63a0fc395f84",
+      "snapshot_bytes": 2239010
+    }
+  ],
+  "expected_rejected_migrations": 2,
+  "rejected_migrations": [
+    {
+      "name": "reference_to_default_profile_is_rejected",
+      "passed": true,
+      "source_status": "completed",
+      "source_reference": true,
+      "target_reference": false,
+      "actual_source_stream": true,
+      "stream_modified": false,
+      "profile_mismatch": "0 != 1",
+      "snapshot_sha256": "b48a8590fc6b6c82424ceca341b41f9c6bbac6a8caee5cf8fe35d7943f55752a",
+      "snapshot_bytes": 2239010,
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-noc-qos",
+      "expected_diagnostic": "0 != 1",
+      "specific_load_failure_observed": true
+    },
+    {
+      "name": "default_to_reference_profile_is_rejected",
+      "passed": true,
+      "source_status": "completed",
+      "source_reference": false,
+      "target_reference": true,
+      "actual_source_stream": true,
+      "stream_modified": false,
+      "profile_mismatch": "1 != 0",
+      "snapshot_sha256": "ef090ac34bf3b8e238ce2a95373b0dbf910631b6e03a145be58a63a0fc395f84",
+      "snapshot_bytes": 2239010,
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-noc-qos",
+      "expected_diagnostic": "1 != 0",
+      "specific_load_failure_observed": true
+    }
+  ],
+  "expected_corrupted_stream_rejections": 2,
+  "corrupted_stream_rejections": [
+    {
+      "name": "one_physical_port_identity_corruption_is_rejected",
+      "passed": true,
+      "stream_modified": true,
+      "actual_source_stream": true,
+      "legitimate_alternate_configuration": false,
+      "source_status": "completed",
+      "original_stream_unchanged": true,
+      "original_snapshot_sha256": "b48a8590fc6b6c82424ceca341b41f9c6bbac6a8caee5cf8fe35d7943f55752a",
+      "corrupted_snapshot_sha256": "01c97d82c64c3734fa6c5ce11a5e70b78cfcc34f89b85aa193c0ff16083a28eb",
+      "original_snapshot_bytes": 2239010,
+      "corrupted_snapshot_bytes": 2239010,
+      "section_header_offset": 2119963,
+      "section_name": "qcom-noc-qos",
+      "section_id": 45,
+      "instance_id": 7,
+      "section_version": 1,
+      "profile_field_offset": 2119989,
+      "address_field_offset": 2119993,
+      "register_fields_offset": 2120001,
+      "saved_profile": 1,
+      "physical_port_address": 24023040,
+      "saved_registers": [
+        9,
+        7930217,
+        4864,
+        24838815
+      ],
+      "device_payload_bytes": 28,
+      "modified_field": "physical-port-address",
+      "field_offset": 2119993,
+      "modified_field_bytes": 8,
+      "old_field_value": 24023040,
+      "new_field_value": 24027136,
+      "only_one_field_modified": true,
+      "changed_byte_count": 1,
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-noc-qos",
+      "expected_diagnostic": "16e9000 != 16ea000",
+      "specific_load_failure_observed": true
+    },
+    {
+      "name": "one_reserved_register_bit_corruption_is_rejected",
+      "passed": true,
+      "stream_modified": true,
+      "actual_source_stream": true,
+      "legitimate_alternate_configuration": false,
+      "source_status": "completed",
+      "original_stream_unchanged": true,
+      "original_snapshot_sha256": "b48a8590fc6b6c82424ceca341b41f9c6bbac6a8caee5cf8fe35d7943f55752a",
+      "corrupted_snapshot_sha256": "7a9c51eb0cfca38b390769c1414721e3604350a12ca2dff9f1b5693e4a67a61a",
+      "original_snapshot_bytes": 2239010,
+      "corrupted_snapshot_bytes": 2239010,
+      "section_header_offset": 2119963,
+      "section_name": "qcom-noc-qos",
+      "section_id": 45,
+      "instance_id": 7,
+      "section_version": 1,
+      "profile_field_offset": 2119989,
+      "address_field_offset": 2119993,
+      "register_fields_offset": 2120001,
+      "saved_profile": 1,
+      "physical_port_address": 24023040,
+      "saved_registers": [
+        9,
+        7930217,
+        4864,
+        24838815
+      ],
+      "device_payload_bytes": 28,
+      "modified_field": "reserved-mainctl-bit",
+      "field_offset": 2120001,
+      "modified_field_bytes": 4,
+      "old_field_value": 9,
+      "new_field_value": 11,
+      "only_one_field_modified": true,
+      "changed_byte_count": 1,
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-noc-qos",
+      "expected_diagnostic": "qcom-noc-qos: invalid migrated bits at port 0x16e9000 +0x8",
+      "specific_load_failure_observed": true
+    }
+  ],
+  "vmstate_version": 1,
+  "port_count": 47,
+  "fabric_count": 6,
+  "register_count": 188,
+  "sparse_window_count": 188,
+  "mapped_bytes": 752,
+  "register_offsets": [
+    8,
+    24,
+    64,
+    72
+  ],
+  "register_masks": [
+    121,
+    67045375,
+    30467,
+    67045375
+  ],
+  "logical_port_references": 54,
+  "display_alias_references": 7,
+  "reference_profile_is_default": false,
+  "reference_system_reset_policy": "zero-all-four-stored-configuration-words",
+  "reference_policy_is_measured_hardware_reset_behavior": false,
+  "bandwidth_enforcement_observed": false,
+  "sbm_implemented": false,
+  "qemu_sha256": "226f826f02a97978f9f0afbcc1241dbcd6c25faca4840f8e1f72cee22f3d0000",
+  "script_sha256": "b2d3ff9127b4a7967e8fe89a4fce9cbeee4ceb5d4e0d655eea042c24407ead00",
+  "guest_cpu_executed": false,
+  "native_kernel_probe_observed": false,
+  "android_boot_passed": false,
+  "scope": "Actual compiled-device QTest/QMP transactions and real migration of source-bounded NoC QoS raw configuration words",
+  "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+  "source_url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/msm_bus/msm_bus_noc_rpmh.c",
+  "source_sha256": {
+    "msm_bus_noc_rpmh.c": "9e408e18745857c575be792a92cb3eb7bcab1fb51b181cc389fd2b81213560a6"
+  },
+  "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "layout_evidence_blob": "77b1851faf6063d4c1a88d11c524de1b239005e6",
+  "raw_dt_evidence_blob": "c300271fab1acabb6d1b45ddcf626f5e2f091d25",
+  "independent_dt_decode_blob": "86be9c194406e6853aca493eefed1049358fde92",
+  "binary_unchanged": true,
+  "duration_seconds": 5.372
+}
