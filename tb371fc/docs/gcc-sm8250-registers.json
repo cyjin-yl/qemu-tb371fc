@@ -3725,10 +3725,10 @@
       "name": "gcc_sys_noc_cpuss_ahb_clk",
       "kind": "BRANCH",
       "line": 3652,
-      "reg": 4294967295,
+      "reg": 295320,
       "enable_reg": 335872,
       "enable_mask": 1,
-      "parent": -4,
+      "parent": 18,
       "mnd_width": 0,
       "hid_width": 0,
       "hwcg_reg": 0,
@@ -3744,7 +3744,22 @@
         -127
       ],
       "external": 63,
-      "halt_check": "probe-only CBCR"
+      "halt_check": "BRANCH_HALT_VOTED",
+      "source_supplement": {
+        "source_url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/gcc-kona.c",
+        "sha256": "ed208678508c983d0989f1f135fac898c5a9a91c14af1fa42cd7ea2f24cd14cd",
+        "line": 3265,
+        "fields": [
+          "reg",
+          "parent",
+          "halt_check"
+        ],
+        "driver_flags": [
+          "CLK_IS_CRITICAL",
+          "CLK_SET_RATE_PARENT"
+        ],
+        "legacy_external_slot": 63
+      }
     },
     {
       "id": 144,
@@ -7021,6 +7036,11 @@
       "offset": 295308,
       "write_mask": 1,
       "status_mask": 0
+    },
+    {
+      "offset": 295320,
+      "write_mask": 0,
+      "status_mask": 4026531840
     },
     {
       "offset": 315392,

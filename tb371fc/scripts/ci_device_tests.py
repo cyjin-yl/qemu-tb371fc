@@ -98,9 +98,11 @@ def plan(args, runtime):
         device("geni-migration", "test_geni_migration.py",
                verdict="success", count=6)
         device("gcc-registers", "test_gcc_sm8250.py",
-               output="--work-dir", verdict="success", count=19)
+               output="--work-dir", verdict="success", count=24,
+               expected={"expected_checks": 24})
         device("gcc-migration", "test_gcc_sm8250.py", "--migration-only",
-               output="--work-dir", verdict="success", count=5)
+               output="--work-dir", verdict="success", count=8,
+               expected={"expected_checks": 8})
         device("geni-clock-reset", "test_geni_clock_reset.py",
                output="--work-dir", verdict="success", count=6)
         device("geni-clock-migration", "test_geni_clock_reset.py",
