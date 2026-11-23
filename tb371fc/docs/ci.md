@@ -15,7 +15,7 @@ after an earlier component failure so their independent results remain visible.
 
 ## Gates
 
-The current public plan has **52 gates: 48 component/parser gates and four
+The current public plan has **55 gates: 51 component/parser gates and four
 Linux boots**, plus the separate A77 and PCI UFS compatibility job. The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
@@ -141,3 +141,17 @@ The expanded [49-gate run](../evidence/display-rsc-20261123/public-49/result.jso
 ## QSEE and DCC integration
 
 The [52-gate run](../evidence/qsee-dcc-20261123/public-52/result.json) passed on binary SHA256 51fe61d35213a6602a8eaa865faba04bc85f88df341947ca8a2e6300a8ab5be6. Its [51 targeted checks](../evidence/qsee-dcc-20261123/workflow.json) also passed. The initial QSEE migration harness attempted a non-increasing QTest clock before transfer; that failed receipt and the one-nanosecond harness correction remain archived. Device C and the binary were unchanged. The native diagnostic still fails in AOP mailbox and REFGEN accesses; observer exit 0 is not a guest boot verdict.
+
+## TCSR mutex, AOP SRAM and REFGEN integration
+
+The [55-gate frozen run](../evidence/boot-resources-20261123-1005/public-55/result.json) passed on binary SHA256 2173fa4da68f8f769c53942b056124c5621e4714652c7f572deacc9440ec09cf.
+The [targeted run](../evidence/boot-resources-20261123-1005/workflow.json) passed all 50 checks:
+
+| Suite | Checks | Actual migration attempts |
+| --- | --- | --- |
+| TCSR mutex | 24 | 2 success; 1 expected profile mismatch rejection |
+| AOP message SRAM | 10 | 1 success |
+| REFGEN request | 16 | 4 success; 2 expected profile mismatch rejections |
+
+All 22 CI-plan unit tests also passed. This validates the documented component protocols and storage.
+The production kernel/full DT panics in both unknown and explicit-reference REFGEN configurations; observer exit 0 is not boot success.

@@ -1,0 +1,39 @@
+{
+  "name": "reject-legacy-to-exact",
+  "command": [
+    "/usr/bin/python3",
+    "/work/tb371fc-verified-root-0820/tb371fc/tests/test_mmio_timer_migration.py",
+    "--qemu",
+    "/work/boot-resources-root-1005/qemu-system-aarch64",
+    "--machine",
+    "tb371fc,ufs-enabled=off,counter-exact=off",
+    "--counter-mode",
+    "legacy",
+    "--target-machine",
+    "tb371fc,ufs-enabled=off",
+    "--expect-mode-rejection",
+    "--out",
+    "/tmp/tbci-xlugwfw8/22/data"
+  ],
+  "started_utc": "2026-11-23T10:26:09.106568+00:00",
+  "timeout_seconds": 180,
+  "fixture": "/tmp/tbci-xlugwfw8/22",
+  "environment": {
+    "QTEST_QEMU_BINARY": "/work/boot-resources-root-1005/qemu-system-aarch64",
+    "TMPDIR": "/tmp/tbci-xlugwfw8/22/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "passed": true,
+  "exit_code": 0,
+  "verified": {
+    "verdict_field": "passed",
+    "verdict": true,
+    "check_count": 2
+  },
+  "elapsed_seconds": 0.571,
+  "completed_utc": "2026-11-23T10:26:09.677788+00:00",
+  "log_sha256": {
+    "stdout.log": "141768bc24e7ce7d38178f31e1a34c83782c0a1c2d72cb27550ac566fc687f6a",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

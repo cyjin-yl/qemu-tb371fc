@@ -1,0 +1,201 @@
+{
+  "all_passed": true,
+  "checks": [
+    {
+      "name": "instance_present_and_default_profile_unknown",
+      "passed": true
+    },
+    {
+      "name": "unknown_read_and_claim_report_missing_state",
+      "passed": true
+    },
+    {
+      "name": "explicit_release_establishes_known_free_slot",
+      "passed": true
+    },
+    {
+      "name": "other_slot_remains_unknown_after_release",
+      "passed": true
+    },
+    {
+      "name": "unknown_reset_restores_unknown_state",
+      "passed": true
+    },
+    {
+      "name": "explicit_reference_property",
+      "passed": true
+    },
+    {
+      "name": "all_32_slots_start_known_free",
+      "passed": true
+    },
+    {
+      "name": "independent_first_claims",
+      "passed": true
+    },
+    {
+      "name": "competing_claim_retains_winner",
+      "passed": true
+    },
+    {
+      "name": "repeated_owner_has_no_recursion",
+      "passed": true
+    },
+    {
+      "name": "zero_release_has_no_owner_acl",
+      "passed": true
+    },
+    {
+      "name": "high_bit_owner_word_roundtrip_reference",
+      "passed": true
+    },
+    {
+      "name": "holes_do_not_alias_live_words",
+      "passed": true
+    },
+    {
+      "name": "invalid_width_alignment_do_not_mutate_state",
+      "passed": true
+    },
+    {
+      "name": "reference_reset_restores_free_state",
+      "passed": true
+    },
+    {
+      "name": "held_owner_survives_actual_migration",
+      "passed": true
+    },
+    {
+      "name": "known_free_slot_survives_migration",
+      "passed": true
+    },
+    {
+      "name": "ram_marker_survives_migration",
+      "passed": true
+    },
+    {
+      "name": "post_migration_competition_release",
+      "passed": true
+    },
+    {
+      "name": "unsupported_access_diagnostics",
+      "passed": true
+    },
+    {
+      "name": "partial_known_bitmap_survives_actual_migration",
+      "passed": true
+    },
+    {
+      "name": "migrated_known_slot_continues",
+      "passed": true
+    },
+    {
+      "name": "unknown_slot_still_reports_missing_state_after_migration",
+      "passed": true
+    },
+    {
+      "name": "different_reset_profile_rejected",
+      "passed": true
+    }
+  ],
+  "elapsed_seconds": 0.6070786159834825,
+  "expected_checks": 24,
+  "external_processor_emulated": false,
+  "memtx_error_observation": "callback diagnostics plus non-mutation; qtest wire OK is not interpreted as MemTxResult; no guest exception-handler test",
+  "migrations": [
+    {
+      "destination": {
+        "status": "completed"
+      },
+      "expected_rejection": false,
+      "source": {
+        "downtime": 27,
+        "ram": {
+          "dirty-pages-rate": 0,
+          "dirty-sync-count": 2,
+          "dirty-sync-missed-zero-copy": 0,
+          "downtime-bytes": 307340,
+          "duplicate": 32773,
+          "mbps": 478.3718918918919,
+          "multifd-bytes": 0,
+          "normal": 3,
+          "normal-bytes": 12288,
+          "page-size": 4096,
+          "pages-per-second": 0,
+          "postcopy-bytes": 0,
+          "postcopy-requests": 0,
+          "precopy-bytes": 0,
+          "remaining": 0,
+          "total": 134250496,
+          "transferred": 2212470
+        },
+        "setup-time": 1,
+        "status": "completed",
+        "total-time": 38
+      }
+    },
+    {
+      "destination": {
+        "status": "completed"
+      },
+      "expected_rejection": false,
+      "source": {
+        "downtime": 26,
+        "ram": {
+          "dirty-pages-rate": 0,
+          "dirty-sync-count": 2,
+          "dirty-sync-missed-zero-copy": 0,
+          "downtime-bytes": 303245,
+          "duplicate": 32774,
+          "mbps": 477.4864864864865,
+          "multifd-bytes": 0,
+          "normal": 2,
+          "normal-bytes": 8192,
+          "page-size": 4096,
+          "pages-per-second": 0,
+          "postcopy-bytes": 0,
+          "postcopy-requests": 0,
+          "precopy-bytes": 0,
+          "remaining": 0,
+          "total": 134250496,
+          "transferred": 2208375
+        },
+        "setup-time": 0,
+        "status": "completed",
+        "total-time": 37
+      }
+    },
+    {
+      "destination": {
+        "socket-address": [
+          {
+            "path": "/tmp/tbci-xlugwfw8/37/tmp/tb371fc-mutex-mcdymns8/migration",
+            "type": "unix"
+          }
+        ],
+        "status": "active"
+      },
+      "destination_exit": 1,
+      "destination_stderr": "qemu-system-aarch64: load of migration failed: Invalid argument: error while loading state for instance 0x0 of device 'qcom-tcsr-mutex': post load hook failed for: qcom-tcsr-mutex, version_id: 1, minimum_version: 1, ret: -22\n",
+      "expected_rejection": true,
+      "source": {
+        "error-desc": "Failed to flush QEMUFile: Unable to write to socket: Broken pipe",
+        "status": "failed"
+      }
+    }
+  ],
+  "native_reset_observed": false,
+  "passed": true,
+  "qemu_sha256": "2173fa4da68f8f769c53942b056124c5621e4714652c7f572deacc9440ec09cf",
+  "qmp_version": {
+    "package": "v11.1.3-7-g5f8bca7-dirty",
+    "qemu": {
+      "major": 11,
+      "micro": 3,
+      "minor": 1
+    }
+  },
+  "schema": "tb371fc-tcsr-mutex-test-v1",
+  "script_sha256": "1715808b65c984792677eafec1d8610dff46130a0c0a106047cb4f0e07dfb52a",
+  "started_utc": "2026-11-23T10:26:31.853293+00:00"
+}

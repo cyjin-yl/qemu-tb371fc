@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "suite": "QSEE digital notification actual QTest",
+  "qemu": "/work/boot-resources-root-1005/qemu-system-aarch64",
+  "qemu_sha256": "2173fa4da68f8f769c53942b056124c5621e4714652c7f572deacc9440ec09cf",
+  "machine": "tb371fc,ufs-enabled=off",
+  "test_sha256": "45383c7c19b1a1131593663504e7e7ae45f38783cc6864443a23700b3e14d4f3",
+  "work_dir": "/tmp/tbci-xlugwfw8/35/data",
+  "scope": "Two four-bit notification banks; reference GPIO event adapter; no TEE/SCM or full-board migration",
+  "checks": [
+    {
+      "test": "reset_masks_all_and_has_no_pending_notification",
+      "status": "pass",
+      "seconds": 0.0344
+    },
+    {
+      "test": "masked_notification_is_retained_and_unmask_asserts",
+      "status": "pass",
+      "seconds": 0.0679
+    },
+    {
+      "test": "w1c_clears_only_selected_pending_bits",
+      "status": "pass",
+      "seconds": 0.0524
+    },
+    {
+      "test": "both_banks_are_independent",
+      "status": "pass",
+      "seconds": 0.0384
+    },
+    {
+      "test": "all_four_inputs_and_selective_mask",
+      "status": "pass",
+      "seconds": 0.0347
+    },
+    {
+      "test": "held_input_does_not_relatch_after_w1c",
+      "status": "pass",
+      "seconds": 0.0346
+    },
+    {
+      "test": "reset_preserves_external_level_without_fake_edge",
+      "status": "pass",
+      "seconds": 0.0392
+    },
+    {
+      "test": "read_only_status_write_only_clear_and_unknown_registers",
+      "status": "pass",
+      "seconds": 0.0364
+    },
+    {
+      "test": "reserved_mask_and_clear_bits_are_rejected",
+      "status": "pass",
+      "seconds": 0.0344
+    },
+    {
+      "test": "invalid_width_and_alignment_do_not_modify_registers",
+      "status": "pass",
+      "seconds": 0.0401
+    },
+    {
+      "test": "unmasking_does_not_invent_secure_firmware_events",
+      "status": "pass",
+      "seconds": 0.033
+    },
+    {
+      "test": "real_gic_spis348_349_pending_mask_clear_and_deassert",
+      "status": "pass",
+      "seconds": 0.0352
+    }
+  ],
+  "expected_checks": 12,
+  "success": true
+}

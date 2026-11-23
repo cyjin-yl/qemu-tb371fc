@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "suite": "Arm Generic Timer MMIO actual QTest",
+  "qemu_sha256": "2173fa4da68f8f769c53942b056124c5621e4714652c7f572deacc9440ec09cf",
+  "test_sha256": "eec9cb95d215c0b8ff987d6e3496586fd891702d54856a45aaa3854582679f48",
+  "test_ram": "128 MiB",
+  "machine": "tb371fc,ufs-enabled=off",
+  "expected_groups": 10,
+  "checks": [
+    {
+      "name": "capability_and_security",
+      "passed": true
+    },
+    {
+      "name": "common_counter_and_atomic_reads",
+      "passed": true
+    },
+    {
+      "name": "counter_rate_quantization",
+      "passed": true
+    },
+    {
+      "name": "physical_deadline_mask_and_disable",
+      "passed": true
+    },
+    {
+      "name": "first_nanosecond_of_deadline",
+      "passed": true
+    },
+    {
+      "name": "negative_tval_and_split_compare",
+      "passed": true
+    },
+    {
+      "name": "el0_second_view_permissions",
+      "passed": true
+    },
+    {
+      "name": "virtual_offset_independence",
+      "passed": true
+    },
+    {
+      "name": "virtual_wraparound_transition",
+      "passed": true
+    },
+    {
+      "name": "reset_preserves_system_counter",
+      "passed": true
+    }
+  ],
+  "scope": "MMIO semantics, IRQs and virtual-time deadlines; no real silicon timing",
+  "nominal_frequency_hz": 19200000,
+  "counter_mode": "exact",
+  "qemu_counter_period_ns": null,
+  "passed": true,
+  "rate_measurement": {
+    "virtual_elapsed_ns": 1000000000,
+    "counter_start": 100321,
+    "counter_end": 19300321,
+    "observed_ticks": 19200000,
+    "nominal_cntfrq_hz": 19200000,
+    "effective_rate_numerator": 19200000,
+    "effective_rate_denominator": 1,
+    "effective_rate_hz": 19200000.0,
+    "error_relative_to_nominal_ppm": 0.0
+  },
+  "elapsed_seconds": 0.153
+}

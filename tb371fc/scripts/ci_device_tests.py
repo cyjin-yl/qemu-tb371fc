@@ -163,6 +163,23 @@ def plan(args, runtime):
                output="--work-dir", verdict="success", count=12)
         device("qsee-notification-migration", "test_qsee_irq.py",
                "--migration-only", output="--work-dir", verdict="success", count=6)
+        device("tcsr-mutex", "test_tcsr_mutex.py",
+               output="--out", result="file", count=24,
+               expected={"all_passed": True, "expected_checks": 24,
+                         "native_reset_observed": False,
+                         "external_processor_emulated": False},
+               expected_lengths={"migrations": 3})
+        device("refgen-request", "test_refgen.py",
+               output="--out", result="file", count=16,
+               expected={"all_passed": True, "success": True,
+                         "expected_checks": 16, "migration_expected_checks": 6,
+                         "socket_directories_retained": True},
+               expected_lengths={"migrations": 6})
+        device("aop-msgram", "test_aop_msgram.py",
+               output="--out", result="file", count=10,
+               expected={"all_passed": True, "expected_checks": 10,
+                         "output_interception_installed": False},
+               expected_lengths={"migrations": 1})
         device("dcc-operations", "test_dcc_ops.py",
                output="--out", result="file", count=16)
         device("ufs-register-dma", "test_ufs_sm8250.py",

@@ -1,0 +1,150 @@
+{
+  "all_passed": true,
+  "checks": [
+    {
+      "name": "source-real-gic-level-edge-and-masked-input",
+      "passed": true
+    },
+    {
+      "name": "real-gic-actual-migration-completed",
+      "passed": true
+    },
+    {
+      "name": "registers-ram-and-real-gic-pending-restored",
+      "observed": {
+        "0x17c000f4": 2147483648,
+        "0x17c0012c": 2,
+        "0xb220010": 2,
+        "0xb220018": 0,
+        "0xb22001c": 536870912,
+        "0xb220020": 512,
+        "0xb220114": 4,
+        "0xb220288": 6,
+        "0xb220304": 6,
+        "0xb220334": 6,
+        "0xb221000": 131072
+      },
+      "passed": true
+    },
+    {
+      "name": "cleared-edge-not-replayed-on-load",
+      "passed": true
+    },
+    {
+      "name": "gic-ack-does-not-replay-migrated-edge",
+      "passed": true
+    },
+    {
+      "name": "destination-new-edges-and-masked-history",
+      "passed": true
+    },
+    {
+      "name": "migrated-level-mask-unmask-and-release-reaches-gic",
+      "passed": true
+    },
+    {
+      "name": "level-wires-actual-migration-completed",
+      "passed": true
+    },
+    {
+      "name": "active-high-and-inverted-low-output-wires-restored",
+      "passed": true
+    },
+    {
+      "name": "destination-output-wires-continue-independently",
+      "passed": true
+    }
+  ],
+  "completed_utc": "2026-11-23T10:26:50.184678+00:00",
+  "elapsed_seconds": 0.35787,
+  "explicit_reference_version": "0x20000 (not a native version read)",
+  "kind": "tb371fc-pdc-process-migration",
+  "limits": [
+    "No hardware electrical timing, power-domain wake or firmware execution equivalence.",
+    "Native PDC version remains unknown; this test explicitly selects a legacy reference profile.",
+    "GPIO interception disconnects GIC; the real-GIC migration never installs interception."
+  ],
+  "machine": "tb371fc,ufs-enabled=off",
+  "migrations": [
+    {
+      "destination": {
+        "status": "completed"
+      },
+      "mode": "real-gic",
+      "source": {
+        "downtime": 52,
+        "ram": {
+          "dirty-pages-rate": 0,
+          "dirty-sync-count": 2,
+          "dirty-sync-missed-zero-copy": 0,
+          "downtime-bytes": 307340,
+          "duplicate": 32773,
+          "mbps": 268.1781818181818,
+          "multifd-bytes": 0,
+          "normal": 3,
+          "normal-bytes": 12288,
+          "page-size": 4096,
+          "pages-per-second": 0,
+          "postcopy-bytes": 0,
+          "postcopy-requests": 0,
+          "precopy-bytes": 0,
+          "remaining": 0,
+          "total": 134250496,
+          "transferred": 2212470
+        },
+        "setup-time": 0,
+        "status": "completed",
+        "total-time": 66
+      }
+    },
+    {
+      "destination": {
+        "status": "completed"
+      },
+      "mode": "level-wires",
+      "source": {
+        "downtime": 30,
+        "ram": {
+          "dirty-pages-rate": 0,
+          "dirty-sync-count": 2,
+          "dirty-sync-missed-zero-copy": 0,
+          "downtime-bytes": 303245,
+          "duplicate": 32774,
+          "mbps": 430.9024390243902,
+          "multifd-bytes": 0,
+          "normal": 2,
+          "normal-bytes": 8192,
+          "page-size": 4096,
+          "pages-per-second": 0,
+          "postcopy-bytes": 0,
+          "postcopy-requests": 0,
+          "precopy-bytes": 0,
+          "remaining": 0,
+          "total": 134250496,
+          "transferred": 2208375
+        },
+        "setup-time": 0,
+        "status": "completed",
+        "total-time": 41
+      }
+    }
+  ],
+  "qemu_version": {
+    "package": "v11.1.3-7-g5f8bca7-dirty",
+    "qemu": {
+      "major": 11,
+      "micro": 3,
+      "minor": 1
+    }
+  },
+  "ram_per_process": "128 MiB",
+  "schema_version": 1,
+  "scope": "Two actual QMP transfers: real GIC connection, then separate level-wire interception.",
+  "sha256": {
+    "migration_helper": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8",
+    "qemu": "2173fa4da68f8f769c53942b056124c5621e4714652c7f572deacc9440ec09cf",
+    "test": "36b911bc0f7a466b7b5a29da45d7a642374cae3c6c77575fbec502c0c60cce5a",
+    "transport": "4ab5857e40f3d320656677812abb86d2683c310764d35baa7a32b4aa53572fbd"
+  },
+  "started_utc": "2026-11-23T10:26:49.470058+00:00"
+}

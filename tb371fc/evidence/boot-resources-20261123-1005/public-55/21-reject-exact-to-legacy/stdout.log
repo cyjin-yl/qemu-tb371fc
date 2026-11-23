@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "suite": "MMIO timer QMP process-to-process migration",
+  "qemu_sha256": "2173fa4da68f8f769c53942b056124c5621e4714652c7f572deacc9440ec09cf",
+  "test_sha256": "cc9cdcbd61f849b172424377a1bf778a3bef805313fde6673abd012dd6222b31",
+  "machine": "tb371fc,ufs-enabled=off",
+  "counter_mode": "exact",
+  "test_ram_per_process": "128 MiB",
+  "checks": [
+    {
+      "name": "source_future_physical_and_asserted_virtual_irq",
+      "passed": true
+    },
+    {
+      "name": "counter_mode_mismatch_rejected",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "clock_fixture": "QTest external time is not migrated; destination aligned after incoming load and before timer assertions",
+  "scope": "Actual transfer of timer registers, absolute deadlines, permission and IRQ continuation",
+  "target_machine": "tb371fc,ufs-enabled=off,counter-exact=off",
+  "qtest_timestamp_ns": 52083334,
+  "source_migration": {
+    "status": "failed",
+    "error-desc": "Failed to flush QEMUFile: Unable to write to socket: Broken pipe"
+  },
+  "target_stderr": "qemu-system-aarch64: Incoming CPU uses cntfrq-exact but destination does not\nqemu-system-aarch64: load of migration failed: Invalid argument: error while loading state for instance 0x0 of device 'cpu': Loading VM subsection 'cpu/gt-exact-frequency' in 'cpu' failed: post load hook failed for: cpu/gt-exact-frequency, version_id: 1, minimum_version: 1, ret: -22\n",
+  "elapsed_seconds": 0.104
+}

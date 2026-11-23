@@ -320,3 +320,15 @@ The four-voter APPS/display model passes [49 public gates](../evidence/display-r
 ## QSEE notification and DCC operation follow-up
 
 The [52-gate frozen result](../evidence/qsee-dcc-20261123/public-52/result.json) and [51 targeted checks](../evidence/qsee-dcc-20261123/workflow.json) pass. QSEE maps only 0x20-byte banks at 0x01886000 and 0x01888000, with real GIC SPI348/349 outputs; the rest of that syscon is not a success stub. DCC executes the documented bounded operation subset as actual bus transactions. See [QSEE](qsee-irq.md) and [DCC operations](dcc-operations.md). The production kernel and full DT progress past QSEE but fail at AOP shared-memory and REFGEN reads; TEE/SCM, native firmware handoff and Android userspace remain unimplemented or unverified.
+
+## Additional boot resources
+
+| QOM device | Mapped resource | Contract |
+| --- | --- | --- |
+| /machine/tcsr-mutex | 0x01f40000 / 0x20000 | 32 owner words, 0x1000 stride; initial owners unknown unless explicit unlocked reference |
+| /machine/aop-msgram | 0x0c300000 / 0x1000 | Migrating RAM; reference cold zero and reset retention; no AOP peer |
+| /machine/refgen | 0x088e7080 / 4 | CTRL5 bit 0 software request with validity; initial request unknown unless explicit disabled reference |
+
+The [50 targeted checks and 55 public gates](../evidence/boot-resources-20261123-1005/publication.json) passed on one frozen binary.
+[Native observations](../evidence/boot-resources-20261123-1005/native-progression.json) separate the default REFGEN read abort from the later GDSC abort under explicit reference state.
+No SMEM initialization, secure firmware, QMP remote service, analog reference voltage, or native reset value is claimed by these models.

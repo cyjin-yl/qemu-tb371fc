@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "suite": "AOP message SRAM without peer",
+  "machine": "tb371fc,ufs-enabled=off",
+  "qemu_sha256": "2173fa4da68f8f769c53942b056124c5621e4714652c7f572deacc9440ec09cf",
+  "test_sha256": "167874876e9e5882b49f9729d5a8b35b660c6e36336f7698208271b27557879e",
+  "expected_checks": 10,
+  "scope": "Captured SRAM aperture; no AOP descriptor initialization or firmware execution",
+  "output_interception_installed": false,
+  "checks": [
+    {
+      "name": "cold_zero_is_protocol_unready",
+      "passed": true,
+      "cold_zero_is_model_convention": true,
+      "firmware_descriptor_present": false
+    },
+    {
+      "name": "full_aperture_stores_all_bytes",
+      "passed": true,
+      "bytes_compared_per_pattern": 4096,
+      "patterns": 2
+    },
+    {
+      "name": "subword_and_64bit_little_endian",
+      "passed": true,
+      "access_widths": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "scope": "QEMU RAM contract; no silicon bus-width or atomicity claim"
+    },
+    {
+      "name": "unaligned_ram_accesses_preserve_neighbors",
+      "passed": true,
+      "scope": "QTest RAM transactions; no ARM alignment-policy claim"
+    },
+    {
+      "name": "boundary_writes_do_not_alias",
+      "passed": true,
+      "first_byte": 204472320,
+      "last_byte": 204476415
+    },
+    {
+      "name": "descriptor_is_storage_not_auto_handshake",
+      "passed": true,
+      "descriptor_bytes_read": 64,
+      "auto_acknowledged": false
+    },
+    {
+      "name": "apss_doorbell_does_not_ack_or_consume",
+      "passed": true,
+      "actual_ipcc_sends": 4,
+      "receive_pending": false,
+      "gic_intid": 261,
+      "gic_pending": false,
+      "output_interception_installed": false
+    },
+    {
+      "name": "elapsed_time_does_not_execute_firmware",
+      "passed": true,
+      "elapsed_virtual_ns": 1000000000,
+      "message_consumed": false
+    },
+    {
+      "name": "warm_reset_retains_entire_sram",
+      "passed": true,
+      "retained_bytes": 4096,
+      "retention_is_model_convention": true
+    },
+    {
+      "name": "actual_migration",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "transferred_bytes": 4096,
+      "source_contents_sha256": "c5002e5787f10e205ec7cbee7ee4e83e8e671ac7221384bbbc8dfb053ecb3946",
+      "pending_message_preserved": true,
+      "no_replay_after_time": true,
+      "post_migration_reset_retained": true,
+      "post_migration_ram_writable": true
+    }
+  ],
+  "migrations": [
+    {
+      "source_status": "completed",
+      "target_status": "completed",
+      "transferred_bytes": 4096,
+      "source_contents_sha256": "c5002e5787f10e205ec7cbee7ee4e83e8e671ac7221384bbbc8dfb053ecb3946",
+      "pending_message_preserved": true,
+      "no_replay_after_time": true,
+      "post_migration_reset_retained": true,
+      "post_migration_ram_writable": true
+    }
+  ],
+  "passed": true,
+  "all_passed": true,
+  "elapsed_seconds": 1.024
+}

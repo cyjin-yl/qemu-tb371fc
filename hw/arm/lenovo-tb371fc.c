@@ -47,6 +47,9 @@
 #include "hw/misc/qcom-dcc.h"
 #include "hw/misc/qcom-ipcc.h"
 #include "hw/misc/qcom-qsee-irq.h"
+#include "hw/misc/qcom-tcsr-mutex.h"
+#include "hw/misc/qcom-aop-msgram.h"
+#include "hw/misc/qcom-refgen.h"
 #include "hw/misc/qcom-spmi-pmic-arb.h"
 #include "hw/gpio/qcom-tb371fc-tlmm.h"
 #include "hw/misc/qcom-sm8250-rpmh.h"
@@ -939,6 +942,9 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
     DeviceState *dcc = qdev_new(TYPE_QCOM_DCC);
     DeviceState *ipcc = qdev_new(TYPE_QCOM_IPCC);
     DeviceState *qsee = qdev_new(TYPE_QCOM_QSEE_IRQ);
+    DeviceState *mutex = qdev_new(TYPE_QCOM_TCSR_MUTEX);
+    DeviceState *msgram = qdev_new(TYPE_QCOM_AOP_MSGRAM);
+    DeviceState *refgen = qdev_new(TYPE_QCOM_REFGEN);
 
     /* Captured IMEM SRAM aperture, initially empty without firmware input. */
     /*
@@ -975,6 +981,22 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
         sysbus_connect_irq(SYS_BUS_DEVICE(qsee), i,
                            qdev_get_gpio_in(s->gic, 348 + i));
     }
+
+    /* Captured SMEM hardware-lock geometry; initial owners remain unknown. */
+    object_property_add_child(OBJECT(s), "tcsr-mutex", OBJECT(mutex));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(mutex), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(mutex), 0, 0x01f40000);
+
+    /* Actual shared storage, without an invented AOP descriptor or peer. */
+    object_property_add_child(OBJECT(s), "aop-msgram", OBJECT(msgram));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(msgram), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(msgram), 0, 0x0c300000);
+
+    /* Kona CTRL5 software request; firmware handoff is unknown by default. */
+    object_property_add_child(OBJECT(s), "refgen", OBJECT(refgen));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(refgen), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(refgen), 0,
+                    0x088e7000 + QCOM_REFGEN_CTRL5_OFFSET);
 
     s->tlmm = qdev_new(TYPE_QCOM_TB371FC_TLMM);
     object_property_add_child(OBJECT(s), "tlmm", OBJECT(s->tlmm));

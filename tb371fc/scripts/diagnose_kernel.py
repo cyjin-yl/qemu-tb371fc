@@ -24,6 +24,9 @@ def main():
     p.add_argument("--qemu",type=Path,required=True)
     p.add_argument("--machine",default="tb371fc",
                    help="TB371FC machine plus explicit device-profile properties")
+    p.add_argument("--global-property", action="append", default=[],
+                   metavar="DRIVER.PROPERTY=VALUE",
+                   help="Explicit QEMU device property; recorded in the diagnostic")
     p.add_argument("--kernel",type=Path,required=True)
     p.add_argument("--initrd",type=Path,required=True)
     p.add_argument("--dtb",type=Path)
@@ -56,7 +59,10 @@ def main():
          (",in_asm" if a.trace_code else ""),"-D",str(out/"qemu.log")]
     if a.dtb:
         cmd+=["-dtb",str(a.dtb.resolve())]
+    for value in a.global_property:
+        cmd += ["-global", value]
     report={"schema_version":1,"scope":"Diagnostic only; no success verdict",
+            "global_properties":a.global_property,
             "command":cmd,"kernel_sha256":sha256(a.kernel),
             "qemu_sha256":sha256(a.qemu),"machine":a.machine,"events":[]}
     if a.dtb:

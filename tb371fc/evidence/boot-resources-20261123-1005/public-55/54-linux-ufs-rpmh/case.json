@@ -1,0 +1,39 @@
+{
+  "name": "linux-ufs-rpmh",
+  "command": [
+    "/usr/bin/python3",
+    "/work/tb371fc-verified-root-0820/tb371fc/scripts/boot_ufs.py",
+    "--qemu",
+    "/work/boot-resources-root-1005/qemu-system-aarch64",
+    "--kernel",
+    "/work/linux-rpmh/artifacts/Image",
+    "--timeout",
+    "120",
+    "--machine",
+    "tb371fc,rpmh-profile=reference",
+    "--require-rpmh",
+    "--out",
+    "/tmp/tbci-xlugwfw8/54/data"
+  ],
+  "started_utc": "2026-11-23T10:27:16.564375+00:00",
+  "timeout_seconds": 180,
+  "fixture": "/tmp/tbci-xlugwfw8/54",
+  "environment": {
+    "QTEST_QEMU_BINARY": "/work/boot-resources-root-1005/qemu-system-aarch64",
+    "TMPDIR": "/tmp/tbci-xlugwfw8/54/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "passed": true,
+  "exit_code": 0,
+  "verified": {
+    "verdict_field": "passed",
+    "verdict": true,
+    "check_count": 23
+  },
+  "elapsed_seconds": 3.827,
+  "completed_utc": "2026-11-23T10:27:20.391393+00:00",
+  "log_sha256": {
+    "stdout.log": "6d75b5b974db038a5063256bbc2d984edba59b0f4975c3410d95ac9a207d62bb",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

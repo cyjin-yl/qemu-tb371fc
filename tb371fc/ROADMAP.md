@@ -124,3 +124,13 @@ clean kernel 成功不验证该 patch，也不解决真实平板的原始 handof
 - [x] QSEE 两组通知锁存和真实 SPI 348/349：12 项行为、6 项真实迁移。
 - [x] 同一冻结二进制公共 52/52 gate、专项 51 项通过；[初次失败与修正均保留](evidence/qsee-dcc-20261123/publication.json)。
 - [ ] 原厂完整 DT 仍失败：AOP mailbox 共享内存读与 REFGEN 控制位读；SMEM/SBL、原生 PMIC 和未解析 regulator 等依赖仍缺。
+
+### TCSR, AOP SRAM and REFGEN follow-up
+
+- [x] TCSR 32-slot owner/known-state protocol, reset policy and migration: 24 checks.
+- [x] AOP 4 KiB message RAM, all-byte storage, boundaries, reset retention and real migration: 10 checks.
+- [x] REFGEN CTRL5 software request, explicit state validity, GPIO transitions and migration: 16 checks.
+- [x] Same frozen binary: 55/55 public gates, 50 targeted checks.
+- [ ] Native full DT: default REFGEN handoff remains unknown; explicit disabled reference advances to GDSC probe and still panics.
+- [ ] Evidence-backed SBL/SMEM initialization and remote-processor services; AOP firmware execution and QMP handshake.
+- [ ] Original PMIC routing/identity and unresolved RPMh regulator resources; display/GPU and remaining platform power domains.
