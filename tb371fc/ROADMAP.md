@@ -16,9 +16,10 @@
 - [x] 整合后的 `a813` 65 gate 和独立 A77/UFS job；已解包核对精确二进制，并在同一板级二进制上获得 SMEM 23/23 和 AOP reference 交换证据。
 - [x] GPUCC 数字 PLL/GMU/branch/reset 模型的 30 项、2 完成/2 拒绝迁移；统一 `df667` 的 62/62 组件 + 4/4 Linux 和独立 A77/UFS 全部通过，同一二进制原厂完整 DT 已完成 GPUCC 注册。
 - [x] NPUCC 三窗口数字 PLL/RCG/branch/reset、37 项组件/2 完成/2 拒绝迁移；统一 `d790` 的 63/63 组件 + 4/4 Linux 和独立 A77/UFS 全部通过，同一二进制原厂完整 DT 已完成 NPUCC 注册。
-- [ ] 统一整合默认分支 `339b9cd` 的 SMMUv2 迁移几何保护与历史证据，并实际重跑新增后的 69 gate；默认分支保持原位。
-- [ ] MPM sleep counter：`d790` 下一实际 fatal 为 `boot_stats_init+0x14c` 的 read32；官方源码与实际 DT 指向 `0x0c221000` / 32768 Hz，尚未独立翻译故障 VA。VIDEOCC 此时延后 probe；不把它当作已出现的 fatal。
-- [ ] 原厂完整 DT 用户态及 Android 启动；不能将 67 项公共成功或 GCC/GPUCC/NPUCC 注册当作整板可用。
+- [x] 统一整合默认分支 `339b9cd` 的 SMMUv2 迁移几何保护与历史证据；`0508` 实际通过 65/65 组件 + 4/4 Linux 和独立 A77/UFS，默认分支保持原位。
+- [x] MPM sleep counter：固定 32768 Hz、单个只读 word、精确分数及 VMState 1；17 项检查、2 次完成迁移、1 次损坏流拒绝通过，同一 `0508` 原厂完整 DT 实际输出 MPM timestamp/frequency 并继续启动。
+- [ ] NoC QoS：`0508` 下一实际 fatal 为 `msm_bus_noc_qos_init+0x48`；QEMU 直接确认物理读地址 `0x016e9008`。实际 DT 与内嵌 RPMh 配置已核对 47 独立端口 / 188 有效 word；需完成有边界的寄存器、迁移与原厂复验。VIDEOCC 仍延后 probe。
+- [ ] 原厂完整 DT 用户态及 Android 启动；不能将 69 项公共成功、控制器注册或 MPM 读取当作整板可用。
 
 本轮精确构建与原厂证据见 [README](../README.md) 和
 [原厂对照](evidence/wholeboard-20261123-a47/native-progression.json)。
