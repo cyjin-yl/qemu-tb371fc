@@ -1,0 +1,246 @@
+{
+  "chosen_addresses": {
+    "linux,initrd-end": {
+      "be32": [
+        0,
+        2952785811
+      ],
+      "present": true,
+      "property_bytes": 8,
+      "sha256": "8f94fd8d17550d7a1a3a3f707a89acbf56023667987b318463b00b9c9b2c9cdf",
+      "value": 2952785811
+    },
+    "linux,initrd-start": {
+      "be32": [
+        0,
+        2951487488
+      ],
+      "present": true,
+      "property_bytes": 8,
+      "sha256": "ea437a7a035f73fb5928b37b384c3f963758cb96e03c36604f7c33a6c0b5c663",
+      "value": 2951487488
+    }
+  },
+  "derivation": "Observed Kernel code start minus AArch64 Image text_offset. This is an inference about this boot, not a read of bootloader state.",
+  "derived_loader_base": 2684354560,
+  "generated_utc": "2026-11-23T06:45:07.035910+00:00",
+  "image_header": {
+    "flags": 10,
+    "image_size": 44785664,
+    "text_offset": 524288
+  },
+  "interval_convention": "All derived intervals are [start, end_exclusive).",
+  "kind": "tb371fc-current-boot-numeric-layout",
+  "limitations": [
+    "No bootargs, serials, seeds or firmware payload values are emitted.",
+    "Current partition kernel is not certified pristine factory firmware.",
+    "Observed Android initrd addresses do not prescribe QEMU's initrd size or address.",
+    "No-overlap findings apply to queried intervals; QEMU DTB/initrd must be checked at their final generated locations.",
+    "Only statically addressed reserved-memory entries and FDT memreserve entries can be checked; dynamic reservations without reg need separate allocation."
+  ],
+  "memreserve_entries_in_scope": [],
+  "native_iomem": [
+    {
+      "end_exclusive": 2154823680,
+      "kind": "System RAM",
+      "start": 2153775104
+    },
+    {
+      "end_exclusive": 2156920832,
+      "kind": "System RAM",
+      "start": 2156478464
+    },
+    {
+      "end_exclusive": 2250244096,
+      "kind": "System RAM",
+      "start": 2246049792
+    },
+    {
+      "end_exclusive": 2257584128,
+      "kind": "System RAM",
+      "start": 2256650240
+    },
+    {
+      "end_exclusive": 2952790016,
+      "kind": "System RAM",
+      "start": 2421161984
+    },
+    {
+      "end_exclusive": 2715811840,
+      "kind": "Kernel code",
+      "start": 2684878848
+    },
+    {
+      "end_exclusive": 2729664512,
+      "kind": "Kernel data",
+      "start": 2720006144
+    },
+    {
+      "end_exclusive": 3148873728,
+      "kind": "System RAM",
+      "start": 2953314304
+    },
+    {
+      "end_exclusive": 4290772992,
+      "kind": "System RAM",
+      "start": 3221225472
+    },
+    {
+      "end_exclusive": 8589934592,
+      "kind": "System RAM",
+      "start": 4290904064
+    },
+    {
+      "end_exclusive": 9126805504,
+      "kind": "System RAM",
+      "start": 8589934592
+    },
+    {
+      "end_exclusive": 9663676416,
+      "kind": "System RAM",
+      "start": 9126805504
+    },
+    {
+      "end_exclusive": 10200547328,
+      "kind": "System RAM",
+      "start": 9663676416
+    },
+    {
+      "end_exclusive": 10737418240,
+      "kind": "System RAM",
+      "start": 10200547328
+    }
+  ],
+  "queries": [
+    {
+      "end_exclusive": 2156396544,
+      "name": "command-db",
+      "overlapping_no_map_nodes": [
+        "/reserved-memory/reserved-memory@80860000"
+      ],
+      "overlapping_reserved_nodes": [
+        "/reserved-memory/reserved-memory@80860000"
+      ],
+      "overlaps_memreserve": false,
+      "size": 131072,
+      "start": 2156265472
+    },
+    {
+      "end_exclusive": 2785017856,
+      "name": "loader-neighborhood",
+      "overlapping_no_map_nodes": [],
+      "overlapping_reserved_nodes": [
+        "/reserved-memory/cont_splash_region@9c000000",
+        "/reserved-memory/dfps_data_region@9e300000"
+      ],
+      "overlaps_memreserve": false,
+      "size": 134217728,
+      "start": 2650800128
+    },
+    {
+      "end_exclusive": 2715811840,
+      "name": "Kernel code",
+      "overlapping_no_map_nodes": [],
+      "overlapping_reserved_nodes": [],
+      "overlaps_memreserve": false,
+      "size": 30932992,
+      "start": 2684878848
+    },
+    {
+      "end_exclusive": 2729664512,
+      "name": "Kernel data",
+      "overlapping_no_map_nodes": [],
+      "overlapping_reserved_nodes": [],
+      "overlaps_memreserve": false,
+      "size": 9658368,
+      "start": 2720006144
+    },
+    {
+      "end_exclusive": 2729664512,
+      "name": "Image-memory-footprint-at-native-base",
+      "overlapping_no_map_nodes": [],
+      "overlapping_reserved_nodes": [],
+      "overlaps_memreserve": false,
+      "size": 44785664,
+      "start": 2684878848
+    },
+    {
+      "end_exclusive": 2684878848,
+      "name": "candidate-kernel-base",
+      "overlapping_no_map_nodes": [],
+      "overlapping_reserved_nodes": [],
+      "overlaps_memreserve": false,
+      "size": 524288,
+      "start": 2684354560
+    },
+    {
+      "end_exclusive": 2952785811,
+      "name": "native-initrd",
+      "overlapping_no_map_nodes": [],
+      "overlapping_reserved_nodes": [],
+      "overlaps_memreserve": false,
+      "size": 1298323,
+      "start": 2951487488
+    }
+  ],
+  "reserved_regions_in_scope": [
+    {
+      "end_exclusive": 2156396544,
+      "no_map": true,
+      "node": "/reserved-memory/reserved-memory@80860000",
+      "overlaps_queries": [
+        "command-db"
+      ],
+      "reg_property_sha256": "9d04881a31205b37710e81e835c0de17ad264ea2df84821a5d866c7ff9cff81e",
+      "reusable": false,
+      "size": 131072,
+      "start": 2156265472,
+      "status": "okay"
+    },
+    {
+      "end_exclusive": 2653945856,
+      "no_map": false,
+      "node": "/reserved-memory/cont_splash_region@9c000000",
+      "overlaps_queries": [
+        "loader-neighborhood"
+      ],
+      "reg_property_sha256": "3b4ab59dc363fc84e45d7854b9e020dafc01af6dd176b934ea71df42e571f4a1",
+      "reusable": false,
+      "size": 36700160,
+      "start": 2617245696,
+      "status": "okay"
+    },
+    {
+      "end_exclusive": 2654994432,
+      "no_map": false,
+      "node": "/reserved-memory/dfps_data_region@9e300000",
+      "overlaps_queries": [
+        "loader-neighborhood"
+      ],
+      "reg_property_sha256": "799e09c64dd3fde027b79347466a57cf18f408019f07c20b9a25cbec03dd8288",
+      "reusable": false,
+      "size": 1048576,
+      "start": 2653945856,
+      "status": "okay"
+    }
+  ],
+  "schema_version": 1,
+  "source": {
+    "analyzer_sha256": "82b361373ed997760d30145da289bf344202b6e0325edc2a4214265b46773e4d",
+    "current_active_partition_kernel": {
+      "bytes": 37445648,
+      "filename": "current-boot_a-kernel.Image",
+      "sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f"
+    },
+    "native_hardware_receipt": {
+      "captured_utc": "2026-11-23T06:39:32.381757+00:00",
+      "filename": "native-memory-command-db-availability.json",
+      "sha256": "0b4a5c6e35d5a70b316f403782ba965d185a09f9c89cf5688a7c8696438320cc"
+    },
+    "private_live_dtb": {
+      "filename": "live-android-20261123.dtb",
+      "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207"
+    }
+  },
+  "unresolved_reserved_translations": []
+}

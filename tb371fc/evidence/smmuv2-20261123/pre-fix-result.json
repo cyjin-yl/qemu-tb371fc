@@ -1,0 +1,519 @@
+{
+  "all_passed": false,
+  "build_command": [
+    "ninja",
+    "-C",
+    "/work/build-next",
+    "-j2",
+    "tests/qtest/tb371fc-smmuv2-test"
+  ],
+  "build_exit": 0,
+  "completed_utc": "2026-11-23T06:36:25.795176+00:00",
+  "expected_tests": 23,
+  "kind": "tb371fc-smmuv2-qtest-regression-diagnosis",
+  "note": "Normative syndrome/RAZ assertions run against frozen pre-fix model. Source snapshot is exact pre-fix model; live /src has subsequent correction.",
+  "passed_tests": 14,
+  "qtest_log_sha256": "cf3b9e82e16aeb05f3c7b7aa45a79b011c969339d7a4e35e4ccfc671fde0303d",
+  "sha256": {
+    "header_source": "233a3d4295d7c70de1889cff2821c720abe6d77ca017f7b11227eccc34cce3bb",
+    "model_source_from_frozen_binary": "bd17e60e71f3eac1af6dc03e84deb064b5427a8101dbb1501cf40d62171e6dc2",
+    "qemu_binary": "ddb2b5e4ef7719c7812d0fec01cd5c4b0bf296bd1a0198270b55d9599aaaadd0",
+    "qtest_source": "b3abc89c208c87cdcd6f2e218c00a0337291eb04900348d50935ab69be8f58dc",
+    "test_binary": "d6d29aebb26a48a85e69087727a6718ceba05f769f8c9a044b77c0a200209318"
+  },
+  "started_utc": "2026-11-23T06:36:18.974371+00:00",
+  "test_results": [
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/capabilities"
+      ],
+      "exit_code": -6,
+      "failure": [
+        "ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:103:capabilities: assertion failed (qtest_readl(s, APPS) & (1 << 3) == 0): (0x00000008 == 0x00000000)",
+        "not ok /aarch64/tb371fc/smmuv2/capabilities - ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:103:capabilities: assertion failed (qtest_readl(s, APPS) & (1 << 3) == 0): (0x00000008 == 0x00000000)"
+      ],
+      "log_file": "capabilities.log",
+      "log_sha256": "5eddb9ffc9bdfb4619ee042f975c1346acdf962a3e2cae1ce1fc090ccdf15ce5",
+      "name": "/tb371fc/smmuv2/capabilities",
+      "passed": false,
+      "tap_pass": []
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/dma-page-read-write"
+      ],
+      "exit_code": 0,
+      "failure": [],
+      "log_file": "dma-page-read-write.log",
+      "log_sha256": "7633ba5663a9fbfb03a622b28c7b17f11d43cda8f595673da2c3a94f812af249",
+      "name": "/tb371fc/smmuv2/dma-page-read-write",
+      "passed": true,
+      "tap_pass": [
+        "ok 1 /aarch64/tb371fc/smmuv2/dma-page-read-write"
+      ]
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/stream-mask"
+      ],
+      "exit_code": 0,
+      "failure": [],
+      "log_file": "stream-mask.log",
+      "log_sha256": "5051edb5513d1982c2b2bd1487d7521e87813d38edc22e9a226790172df8fb20",
+      "name": "/tb371fc/smmuv2/stream-mask",
+      "passed": true,
+      "tap_pass": [
+        "ok 1 /aarch64/tb371fc/smmuv2/stream-mask"
+      ]
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/unidentified-stream"
+      ],
+      "exit_code": -6,
+      "failure": [
+        "ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:82:assert_global: assertion failed (qtest_readq(s, APPS + 0x40) == IOVA): (0x00000000 == 0x00001000)",
+        "not ok /aarch64/tb371fc/smmuv2/unidentified-stream - ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:82:assert_global: assertion failed (qtest_readq(s, APPS + 0x40) == IOVA): (0x00000000 == 0x00001000)"
+      ],
+      "log_file": "unidentified-stream.log",
+      "log_sha256": "bc89fd05d15b862fa5ce9e0e746714b6ed8fa6c8d513b44120713b27654591b3",
+      "name": "/tb371fc/smmuv2/unidentified-stream",
+      "passed": false,
+      "tap_pass": []
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/stream-conflict"
+      ],
+      "exit_code": -6,
+      "failure": [
+        "ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:82:assert_global: assertion failed (qtest_readq(s, APPS + 0x40) == IOVA): (0x00000000 == 0x00001000)",
+        "not ok /aarch64/tb371fc/smmuv2/stream-conflict - ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:82:assert_global: assertion failed (qtest_readq(s, APPS + 0x40) == IOVA): (0x00000000 == 0x00001000)"
+      ],
+      "log_file": "stream-conflict.log",
+      "log_sha256": "2f8e395d8159be7911fb1be57b09379ca19d60e5501fc94ba37451ccd65bf976",
+      "name": "/tb371fc/smmuv2/stream-conflict",
+      "passed": false,
+      "tap_pass": []
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/fault-context"
+      ],
+      "exit_code": -6,
+      "failure": [
+        "ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:82:assert_global: assertion failed (qtest_readq(s, APPS + 0x40) == IOVA): (0x00000000 == 0x00001000)",
+        "not ok /aarch64/tb371fc/smmuv2/fault-context - ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:82:assert_global: assertion failed (qtest_readq(s, APPS + 0x40) == IOVA): (0x00000000 == 0x00001000)"
+      ],
+      "log_file": "fault-context.log",
+      "log_sha256": "1d41cf05e185454f29489429e34c3f62b973a35ef60c1292c330c1d60e355bce",
+      "name": "/tb371fc/smmuv2/fault-context",
+      "passed": false,
+      "tap_pass": []
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/unimplemented-context"
+      ],
+      "exit_code": -6,
+      "failure": [
+        "ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:82:assert_global: assertion failed (qtest_readq(s, APPS + 0x40) == IOVA): (0x00000000 == 0x00001000)",
+        "not ok /aarch64/tb371fc/smmuv2/unimplemented-context - ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:82:assert_global: assertion failed (qtest_readq(s, APPS + 0x40) == IOVA): (0x00000000 == 0x00001000)"
+      ],
+      "log_file": "unimplemented-context.log",
+      "log_sha256": "2f028ab57967277975a68fc57e10700ab9a88af6b68ecc0026cad013c1edd35c",
+      "name": "/tb371fc/smmuv2/unimplemented-context",
+      "passed": false,
+      "tap_pass": []
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/readonly-dma-fault"
+      ],
+      "exit_code": -6,
+      "failure": [
+        "ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:192:readonly_dma_fault: assertion failed (qtest_readl(s, CB(0) + 0x68) & (1 << 5) != 0): (0x00000000 != 0x00000000)",
+        "not ok /aarch64/tb371fc/smmuv2/readonly-dma-fault - ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:192:readonly_dma_fault: assertion failed (qtest_readl(s, CB(0) + 0x68) & (1 << 5) != 0): (0x00000000 != 0x00000000)"
+      ],
+      "log_file": "readonly-dma-fault.log",
+      "log_sha256": "f96b9161ca957050a17304725e989556425d40a58bdaea7f0cbae11f8d846f35",
+      "name": "/tb371fc/smmuv2/readonly-dma-fault",
+      "passed": false,
+      "tap_pass": []
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/access-flag"
+      ],
+      "exit_code": 0,
+      "failure": [],
+      "log_file": "access-flag.log",
+      "log_sha256": "be5f8245ca77b4948ec25eaac0b7fb22636bc9a0deb0a5d6126f457250bf4de4",
+      "name": "/tb371fc/smmuv2/access-flag",
+      "passed": true,
+      "tap_pass": [
+        "ok 1 /aarch64/tb371fc/smmuv2/access-flag"
+      ]
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/invalid-leaf"
+      ],
+      "exit_code": 0,
+      "failure": [],
+      "log_file": "invalid-leaf.log",
+      "log_sha256": "def11eab223c883f310a84f3b9e1e5d6aff34d67d177d47bfa1c66ac858f2734",
+      "name": "/tb371fc/smmuv2/invalid-leaf",
+      "passed": true,
+      "tap_pass": [
+        "ok 1 /aarch64/tb371fc/smmuv2/invalid-leaf"
+      ]
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/hierarchical-readonly"
+      ],
+      "exit_code": 0,
+      "failure": [],
+      "log_file": "hierarchical-readonly.log",
+      "log_sha256": "1e77de07438ca096b7a312cfa71292280e6496852ea407953c1b73bc751b2dea",
+      "name": "/tb371fc/smmuv2/hierarchical-readonly",
+      "passed": true,
+      "tap_pass": [
+        "ok 1 /aarch64/tb371fc/smmuv2/hierarchical-readonly"
+      ]
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/unprivileged-permission"
+      ],
+      "exit_code": -6,
+      "failure": [
+        "ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:249:unprivileged_permission: assertion failed (qtest_readl(s, CB(0) + 0x68) & (1 << 5) == 0): (0x00000020 == 0x00000000)",
+        "not ok /aarch64/tb371fc/smmuv2/unprivileged-permission - ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:249:unprivileged_permission: assertion failed (qtest_readl(s, CB(0) + 0x68) & (1 << 5) == 0): (0x00000020 == 0x00000000)"
+      ],
+      "log_file": "unprivileged-permission.log",
+      "log_sha256": "58d1b2524e4e0ed6f7a90099cd7e9315635f47ca3177448fa79e715dda880549",
+      "name": "/tb371fc/smmuv2/unprivileged-permission",
+      "passed": false,
+      "tap_pass": []
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/output-address-size"
+      ],
+      "exit_code": 0,
+      "failure": [],
+      "log_file": "output-address-size.log",
+      "log_sha256": "f13c5c20d3380c226ebf9e146177e36a0ae58fadbd61454e59ffb84005a21596",
+      "name": "/tb371fc/smmuv2/output-address-size",
+      "passed": true,
+      "tap_pass": [
+        "ok 1 /aarch64/tb371fc/smmuv2/output-address-size"
+      ]
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/external-walk-fault"
+      ],
+      "exit_code": 0,
+      "failure": [],
+      "log_file": "external-walk-fault.log",
+      "log_sha256": "c9bf14cd716d134fb6750a6a8967b854607b914b2a58db31a83b4f88863a7f1f",
+      "name": "/tb371fc/smmuv2/external-walk-fault",
+      "passed": true,
+      "tap_pass": [
+        "ok 1 /aarch64/tb371fc/smmuv2/external-walk-fault"
+      ]
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/block-translation"
+      ],
+      "exit_code": 0,
+      "failure": [],
+      "log_file": "block-translation.log",
+      "log_sha256": "1bfeb8ea475b178ed7dc5452aab06b14031cdc826594980addf764ed3402a007",
+      "name": "/tb371fc/smmuv2/block-translation",
+      "passed": true,
+      "tap_pass": [
+        "ok 1 /aarch64/tb371fc/smmuv2/block-translation"
+      ]
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/invalidation"
+      ],
+      "exit_code": 0,
+      "failure": [],
+      "log_file": "invalidation.log",
+      "log_sha256": "210fe9807eff22bdb1ccc012aad1a9ab06cdee5f0dea8cc61ce1a2b6beda60f4",
+      "name": "/tb371fc/smmuv2/invalidation",
+      "passed": true,
+      "tap_pass": [
+        "ok 1 /aarch64/tb371fc/smmuv2/invalidation"
+      ]
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/ats-fault-par-only"
+      ],
+      "exit_code": 0,
+      "failure": [],
+      "log_file": "ats-fault-par-only.log",
+      "log_sha256": "7047c60a93487bef822788391e412e30df0251c93ca85d683c0bf107651b0946",
+      "name": "/tb371fc/smmuv2/ats-fault-par-only",
+      "passed": true,
+      "tap_pass": [
+        "ok 1 /aarch64/tb371fc/smmuv2/ats-fault-par-only"
+      ]
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/ttbr1-distinct"
+      ],
+      "exit_code": 0,
+      "failure": [],
+      "log_file": "ttbr1-distinct.log",
+      "log_sha256": "9ae381c68cb16b40feb259d1a47e78e7aa60f2088f357e9f1929fd1d1aa65fe2",
+      "name": "/tb371fc/smmuv2/ttbr1-distinct",
+      "passed": true,
+      "tap_pass": [
+        "ok 1 /aarch64/tb371fc/smmuv2/ttbr1-distinct"
+      ]
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/ttbr1-tbi"
+      ],
+      "exit_code": 0,
+      "failure": [],
+      "log_file": "ttbr1-tbi.log",
+      "log_sha256": "2a64a6989c9a0ad5c47ad33e013a9642177fe1ccec7238a358af0a22db4c0fe9",
+      "name": "/tb371fc/smmuv2/ttbr1-tbi",
+      "passed": true,
+      "tap_pass": [
+        "ok 1 /aarch64/tb371fc/smmuv2/ttbr1-tbi"
+      ]
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/unsupported-granules"
+      ],
+      "exit_code": -6,
+      "failure": [
+        "ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:82:assert_global: assertion failed (qtest_readq(s, APPS + 0x40) == IOVA): (0x00000000 == 0x00001000)",
+        "not ok /aarch64/tb371fc/smmuv2/unsupported-granules - ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:82:assert_global: assertion failed (qtest_readq(s, APPS + 0x40) == IOVA): (0x00000000 == 0x00001000)"
+      ],
+      "log_file": "unsupported-granules.log",
+      "log_sha256": "3ce91d998e414c535b5659215752f38ddf4c37dfeb87d5afad90983db9e4b8cc",
+      "name": "/tb371fc/smmuv2/unsupported-granules",
+      "passed": false,
+      "tap_pass": []
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/unsupported-stages-aarch32"
+      ],
+      "exit_code": -6,
+      "failure": [
+        "ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:82:assert_global: assertion failed (qtest_readq(s, APPS + 0x40) == IOVA): (0x00000000 == 0x00001000)",
+        "not ok /aarch64/tb371fc/smmuv2/unsupported-stages-aarch32 - ERROR:../../src/tests/qtest/tb371fc-smmuv2-test.c:82:assert_global: assertion failed (qtest_readq(s, APPS + 0x40) == IOVA): (0x00000000 == 0x00001000)"
+      ],
+      "log_file": "unsupported-stages-aarch32.log",
+      "log_sha256": "3548f2136cc9c0ba94f5577b6ab68725e282407c789258222b6d79b27dde80f0",
+      "name": "/tb371fc/smmuv2/unsupported-stages-aarch32",
+      "passed": false,
+      "tap_pass": []
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/pending-fault-blocks"
+      ],
+      "exit_code": 0,
+      "failure": [],
+      "log_file": "pending-fault-blocks.log",
+      "log_sha256": "e70b1e3683854cddec9c59d319c94215a65f9986af54d7456207273a1e2754a1",
+      "name": "/tb371fc/smmuv2/pending-fault-blocks",
+      "passed": true,
+      "tap_pass": [
+        "ok 1 /aarch64/tb371fc/smmuv2/pending-fault-blocks"
+      ]
+    },
+    {
+      "command": [
+        "timeout",
+        "--signal=TERM",
+        "--kill-after=2s",
+        "12s",
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--verbose",
+        "-p",
+        "/aarch64/tb371fc/smmuv2/multi-fault"
+      ],
+      "exit_code": 0,
+      "failure": [],
+      "log_file": "multi-fault.log",
+      "log_sha256": "95cb11759fa9e28860dd51584239f99fffc66ea19e1b06c402407e68110a2edf",
+      "name": "/tb371fc/smmuv2/multi-fault",
+      "passed": true,
+      "tap_pass": [
+        "ok 1 /aarch64/tb371fc/smmuv2/multi-fault"
+      ]
+    }
+  ]
+}

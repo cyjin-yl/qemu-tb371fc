@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "suite": "IMEM SRAM and PS_HOLD output",
+  "qemu_sha256": "8a8b8ab64f41b89878271baac1ad421b1e7e9fe0b22e78f0125fc32d198e7687",
+  "test_sha256": "baa0a5adbd14728e40c735be0be679ec6b4e16c75bee7f1ac9f6b7ea1bb2a349",
+  "scope": "Captured aperture and digital pin; no initialized firmware data or PMIC power policy",
+  "checks": [
+    {
+      "name": "imem_initial_and_boundaries",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_boot_resources.py\", line 169, in main\n    rig = BootRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 91, in __init__\n    self.monitor('qmp_capabilities')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 118, in monitor\n    raw = self.qmpfile.readline()\n  File \"/usr/lib/python3.13/socket.py\", line 719, in readinto\n    return self._sock.recv_into(b)\n           ~~~~~~~~~~~~~~~~~~~~^^^\nConnectionResetError: [Errno 104] Connection reset by peer\n"
+    },
+    {
+      "name": "imem_subword_little_endian",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_boot_resources.py\", line 169, in main\n    rig = BootRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 91, in __init__\n    self.monitor('qmp_capabilities')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 118, in monitor\n    raw = self.qmpfile.readline()\n  File \"/usr/lib/python3.13/socket.py\", line 719, in readinto\n    return self._sock.recv_into(b)\n           ~~~~~~~~~~~~~~~~~~~~^^^\nConnectionResetError: [Errno 104] Connection reset by peer\n"
+    },
+    {
+      "name": "imem_guest_owned_handoff_fields",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_boot_resources.py\", line 169, in main\n    rig = BootRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 91, in __init__\n    self.monitor('qmp_capabilities')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 118, in monitor\n    raw = self.qmpfile.readline()\n  File \"/usr/lib/python3.13/socket.py\", line 719, in readinto\n    return self._sock.recv_into(b)\n           ~~~~~~~~~~~~~~~~~~~~^^^\nConnectionResetError: [Errno 104] Connection reset by peer\n"
+    },
+    {
+      "name": "imem_retained_on_machine_reset",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_boot_resources.py\", line 169, in main\n    rig = BootRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 91, in __init__\n    self.monitor('qmp_capabilities')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 118, in monitor\n    raw = self.qmpfile.readline()\n  File \"/usr/lib/python3.13/socket.py\", line 719, in readinto\n    return self._sock.recv_into(b)\n           ~~~~~~~~~~~~~~~~~~~~^^^\nConnectionResetError: [Errno 104] Connection reset by peer\n"
+    },
+    {
+      "name": "pshold_digital_output_and_reserved_bits",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_boot_resources.py\", line 169, in main\n    rig = BootRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 91, in __init__\n    self.monitor('qmp_capabilities')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 118, in monitor\n    raw = self.qmpfile.readline()\n  File \"/usr/lib/python3.13/socket.py\", line 719, in readinto\n    return self._sock.recv_into(b)\n           ~~~~~~~~~~~~~~~~~~~~^^^\nConnectionResetError: [Errno 104] Connection reset by peer\n"
+    },
+    {
+      "name": "pshold_invalid_width_does_not_mutate",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_boot_resources.py\", line 169, in main\n    rig = BootRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 91, in __init__\n    self.monitor('qmp_capabilities')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 118, in monitor\n    raw = self.qmpfile.readline()\n  File \"/usr/lib/python3.13/socket.py\", line 719, in readinto\n    return self._sock.recv_into(b)\n           ~~~~~~~~~~~~~~~~~~~~^^^\nConnectionResetError: [Errno 104] Connection reset by peer\n"
+    },
+    {
+      "name": "actual_migration",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_boot_resources.py\", line 167, in main\n    details = test(a, directory)\n  File \"/src/tb371fc/tests/test_boot_resources.py\", line 114, in actual_migration\n    source = BootRig(args, sd)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 91, in __init__\n    self.monitor('qmp_capabilities')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 118, in monitor\n    raw = self.qmpfile.readline()\n  File \"/usr/lib/python3.13/socket.py\", line 719, in readinto\n    return self._sock.recv_into(b)\n           ~~~~~~~~~~~~~~~~~~~~^^^\nConnectionResetError: [Errno 104] Connection reset by peer\n"
+    }
+  ],
+  "passed": false,
+  "elapsed_seconds": 0.546
+}

@@ -407,6 +407,174 @@ static void aarch64_a76_initfn(Object *obj)
     cpu->isar.reset_pmcr_el0 = 0x410b3000;
 }
 
+/*
+ * Cortex-A77 r1p0.  The public r1p1 TRM, 101111_0101_05, documents
+ * the common architectural registers and records PBHA as an r1p1 addition.
+ * This model does not add the r1p1 PBHA implementation-defined registers.
+ *
+ * Several ISA registers intentionally match Cortex-A76: both implement
+ * Armv8.2 plus the same selected later extensions.  Keep the A77 definition
+ * independent so its revision, PMU and configurable cache hierarchy do not
+ * silently follow a different core's definition.
+ */
+static void a77_get_cache_size(Object *obj, Visitor *v, const char *name,
+                               void *opaque, Error **errp)
+{
+    ARMCPU *cpu = ARM_CPU(obj);
+    unsigned level = (uintptr_t)opaque;
+    uint64_t ccsidr = cpu->ccsidr[level * 2];
+    uint64_t size = ccsidr ? (((ccsidr >> 13) & 0x7fff) + 1) *
+                            (((ccsidr >> 3) & 0x3ff) + 1) *
+                            (1ULL << ((ccsidr & 7) + 4)) : 0;
+
+    visit_type_size(v, name, &size, errp);
+}
+
+static void a77_set_cache_size(Object *obj, Visitor *v, const char *name,
+                               void *opaque, Error **errp)
+{
+    ARMCPU *cpu = ARM_CPU(obj);
+    unsigned level = (uintptr_t)opaque;
+    uint64_t size;
+
+    if (DEVICE(obj)->realized) {
+        error_setg(errp, "%s cannot be changed after realization", name);
+        return;
+    }
+    if (!visit_type_size(v, name, &size, errp)) {
+        return;
+    }
+    /*
+     * TRM 13.23, table 13-26.  These describe cache geometry only.
+     * TCG does not model cache timing or the DynamIQ coherency fabric.
+     */
+    if (level == 1) {
+        if (size != 128 * KiB && size != 256 * KiB && size != 512 * KiB) {
+            error_setg(errp, "Cortex-A77 L2 size must be 128K, 256K or 512K");
+            return;
+        }
+        cpu->ccsidr[2] = make_ccsidr(CCSIDR_FORMAT_LEGACY, 8, 64, size, 7);
+    } else {
+        if (size != 0 && size != 512 * KiB && size != 1 * MiB &&
+            size != 2 * MiB && size != 4 * MiB) {
+            error_setg(errp,
+                       "Cortex-A77 L3 size must be 0, 512K, 1M, 2M or 4M");
+            return;
+        }
+        cpu->ccsidr[4] = size ?
+            make_ccsidr(CCSIDR_FORMAT_LEGACY, 16, 64, size, 7) : 0;
+        SET_IDREG(&cpu->isar, CLIDR, size ? 0xc3000123 : 0x82000023);
+    }
+}
+
+static bool a77_get_crypto(Object *obj, Error **errp)
+{
+    return FIELD_EX64(GET_IDREG(&ARM_CPU(obj)->isar, ID_AA64ISAR0),
+                      ID_AA64ISAR0, AES) != 0;
+}
+
+static void a77_set_crypto(Object *obj, bool enabled, Error **errp)
+{
+    ARMCPU *cpu = ARM_CPU(obj);
+    ARMISARegisters *isar = &cpu->isar;
+
+    if (DEVICE(obj)->realized) {
+        error_setg(errp, "crypto cannot be changed after realization");
+        return;
+    }
+    /*
+     * 101113_0101_02, sections 2.2, 2.4 and 2.5: CRYPTODISABLE is
+     * sampled at reset.  Disable both AArch64 and AArch32 crypto features,
+     * retaining CRC32, dot product, RDM and LSE.
+     */
+    FIELD_DP64_IDREG(isar, ID_AA64ISAR0, AES, enabled ? 2 : 0);
+    FIELD_DP64_IDREG(isar, ID_AA64ISAR0, SHA1, enabled ? 1 : 0);
+    FIELD_DP64_IDREG(isar, ID_AA64ISAR0, SHA2, enabled ? 1 : 0);
+    FIELD_DP32_IDREG(isar, ID_ISAR5, AES, enabled ? 2 : 0);
+    FIELD_DP32_IDREG(isar, ID_ISAR5, SHA1, enabled ? 1 : 0);
+    FIELD_DP32_IDREG(isar, ID_ISAR5, SHA2, enabled ? 1 : 0);
+}
+
+static const Property a77_revidr_property =
+    DEFINE_PROP_UINT32("revidr", ARMCPU, revidr, 0);
+
+static void aarch64_a77_initfn(Object *obj)
+{
+    ARMCPU *cpu = ARM_CPU(obj);
+    ARMISARegisters *isar = &cpu->isar;
+
+    cpu->dtb_compatible = "arm,cortex-a77";
+    set_feature(&cpu->env, ARM_FEATURE_V8);
+    set_feature(&cpu->env, ARM_FEATURE_NEON);
+    set_feature(&cpu->env, ARM_FEATURE_GENERIC_TIMER);
+    set_feature(&cpu->env, ARM_FEATURE_AARCH64);
+    set_feature(&cpu->env, ARM_FEATURE_CBAR_RO);
+    set_feature(&cpu->env, ARM_FEATURE_EL2);
+    set_feature(&cpu->env, ARM_FEATURE_EL3);
+    set_feature(&cpu->env, ARM_FEATURE_PMU);
+
+    /* TRM 13.4, 13.63-13.88: crypto enabled, AArch32 at EL0 only. */
+    SET_IDREG(isar, ID_AA64DFR0, 0x0000000010305408ull);
+    SET_IDREG(isar, ID_AA64ISAR0, 0x0000100010211120ull);
+    SET_IDREG(isar, ID_AA64ISAR1, 0x0000000000100001ull);
+    SET_IDREG(isar, ID_AA64MMFR0, 0x0000000000101122ull);
+    SET_IDREG(isar, ID_AA64MMFR1, 0x0000000010212122ull);
+    SET_IDREG(isar, ID_AA64MMFR2, 0x0000000000001011ull);
+    SET_IDREG(isar, ID_AA64PFR0, 0x1100000010111112ull);
+    SET_IDREG(isar, ID_AA64PFR1, 0x0000000000000010ull);
+    SET_IDREG(isar, ID_AFR0, 0);
+    SET_IDREG(isar, ID_DFR0, 0x04010088);
+    SET_IDREG(isar, ID_ISAR0, 0x02101110);
+    SET_IDREG(isar, ID_ISAR1, 0x13112111);
+    SET_IDREG(isar, ID_ISAR2, 0x21232042);
+    SET_IDREG(isar, ID_ISAR3, 0x01112131);
+    SET_IDREG(isar, ID_ISAR4, 0x00010142);
+    SET_IDREG(isar, ID_ISAR5, 0x01011121);
+    SET_IDREG(isar, ID_ISAR6, 0x00000010);
+    SET_IDREG(isar, ID_MMFR0, 0x10201105);
+    SET_IDREG(isar, ID_MMFR1, 0x40000000);
+    SET_IDREG(isar, ID_MMFR2, 0x01260000);
+    SET_IDREG(isar, ID_MMFR3, 0x02122211);
+    SET_IDREG(isar, ID_MMFR4, 0x00021110);
+    SET_IDREG(isar, ID_PFR0, 0x10010131);
+    SET_IDREG(isar, ID_PFR1, 0x00010000); /* GIC filled in by the machine. */
+    SET_IDREG(isar, ID_PFR2, 0x00000011);
+
+    /* TRM 13.93: Arm implementer, variant 1, part 0xd0d, revision 0. */
+    cpu->midr = 0x411fd0d0; /* r1p0, as observed on TB371FC CPU4-7. */
+    cpu->revidr = 0;      /* Board may supply its observed ECO revision. */
+
+    /* TRM 13.23-13.24, 13.42-13.43.  Default: 512 KiB L2, no DSU L3. */
+    SET_IDREG(isar, CLIDR, 0x82000023);
+    cpu->ctr = 0x8444c004;
+    set_dczid_bs(cpu, 4);
+    cpu->ccsidr[0] = make_ccsidr(CCSIDR_FORMAT_LEGACY, 4, 64, 64 * KiB, 7);
+    cpu->ccsidr[1] = make_ccsidr(CCSIDR_FORMAT_LEGACY, 4, 64, 64 * KiB, 2);
+    cpu->ccsidr[2] = make_ccsidr(CCSIDR_FORMAT_LEGACY, 8, 64, 512 * KiB, 7);
+    cpu->reset_sctlr = 0x30c50838; /* TRM 13.101. */
+
+    /* TRM 15.23: four list registers, five priority/preemption bits. */
+    cpu->gic_num_lrs = 4;
+    cpu->gic_vpribits = 5;
+    cpu->gic_vprebits = 5;
+    cpu->gic_pribits = 5;
+
+    /* TRM 16.1. */
+    isar->mvfr0 = 0x10110222;
+    isar->mvfr1 = 0x13211111;
+    isar->mvfr2 = 0x00000043;
+
+    /* TRM 25.4: IMP=0x41, IDCODE=0x10, six event counters. */
+    isar->reset_pmcr_el0 = 0x41103000;
+
+    qdev_property_add_static(DEVICE(obj), &a77_revidr_property);
+    object_property_add(obj, "l2-cache-size", "size", a77_get_cache_size,
+                        a77_set_cache_size, NULL, (void *)(uintptr_t)1);
+    object_property_add(obj, "l3-cache-size", "size", a77_get_cache_size,
+                        a77_set_cache_size, NULL, (void *)(uintptr_t)2);
+    object_property_add_bool(obj, "crypto", a77_get_crypto, a77_set_crypto);
+}
+
 static void aarch64_a78ae_initfn(Object *obj)
 {
     ARMCPU *cpu = ARM_CPU(obj);
@@ -1450,6 +1618,7 @@ static const ARMCPUInfo aarch64_cpus[] = {
     { .name = "cortex-a55",         .initfn = aarch64_a55_initfn },
     { .name = "cortex-a72",         .initfn = aarch64_a72_initfn },
     { .name = "cortex-a76",         .initfn = aarch64_a76_initfn },
+    { .name = "cortex-a77",         .initfn = aarch64_a77_initfn },
     /*
      * The Cortex-A78AE differs slightly from the plain Cortex-A78. We don't
      * currently model the latter.

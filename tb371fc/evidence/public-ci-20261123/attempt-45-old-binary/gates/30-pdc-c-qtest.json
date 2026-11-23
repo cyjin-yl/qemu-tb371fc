@@ -1,0 +1,24 @@
+{
+  "name": "pdc-c-qtest",
+  "command": [
+    "/work/build-next/tests/qtest/tb371fc-pdc-test",
+    "--tap"
+  ],
+  "started_utc": "2026-11-23T08:09:16.258466+00:00",
+  "timeout_seconds": 180,
+  "fixture": "/tmp/tbci-piu4wefp/30",
+  "environment": {
+    "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+    "TMPDIR": "/tmp/tbci-piu4wefp/30/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "passed": false,
+  "exit_code": 0,
+  "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/scripts/ci_device_tests.py\", line 317, in run_case\n    report[\"verified\"] = judge(case, stdout)\n                         ~~~~~^^^^^^^^^^^^^^\n  File \"/src/tb371fc/scripts/ci_device_tests.py\", line 247, in judge\n    raise ValueError(\n    ...<2 lines>...\n        f\"skipped={skipped}, failed={bool(bad)}, valid_plan={valid_plan}\")\nValueError: TAP required plan 1..18 and unique ordered passes with no skips/TODO; got 17, skipped=False, failed=False, valid_plan=False\n",
+  "elapsed_seconds": 2.432,
+  "completed_utc": "2026-11-23T08:09:18.690198+00:00",
+  "log_sha256": {
+    "stdout.log": "60ccba83895210b4e050df4269f2dc3b57e2bcf98bb3c9b42d81bd3336c30dd3",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

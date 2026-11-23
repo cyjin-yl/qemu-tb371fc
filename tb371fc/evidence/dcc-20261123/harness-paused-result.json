@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "suite": "Qualcomm DCC v2 SRAM capture subset",
+  "qemu_sha256": "fe71b5c9a65761910294e6cf690f615ca3c8c0da132207860dc4550b5f28668d",
+  "test_sha256": "ed5b4743ddd29fd86ff3229e70ca24dcebeb42da7c01d032abae81a8103918e6",
+  "scope": "Reference map2 identity; real read-descriptor DMA, bounded failures and component migration; no CRC/CTI/IRQ claim",
+  "checks": [
+    {
+      "name": "reference_probe_and_widths",
+      "passed": true
+    },
+    {
+      "name": "all_eight_banks_are_independent",
+      "passed": true
+    },
+    {
+      "name": "sram_aperture_and_subword_access",
+      "passed": true
+    },
+    {
+      "name": "actual_dma_from_ram_after_timer",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_dcc.py\", line 374, in main\n    test(rig)\n    ~~~~^^^^^\n  File \"/src/tb371fc/tests/test_dcc.py\", line 147, in actual_dma_from_ram_after_timer\n    r.expect_busy(False)\n    ~~~~~~~~~~~~~^^^^^^^\n  File \"/src/tb371fc/tests/test_dcc.py\", line 74, in expect_busy\n    assert bool(self.get(BASE + STATUS) & 3) == busy\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    {
+      "name": "two_link_pairs_and_cumulative_offsets",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_dcc.py\", line 374, in main\n    test(rig)\n    ~~~~^^^^^\n  File \"/src/tb371fc/tests/test_dcc.py\", line 156, in two_link_pairs_and_cumulative_offsets\n    r.expect_busy(False)\n    ~~~~~~~~~~~~~^^^^^^^\n  File \"/src/tb371fc/tests/test_dcc.py\", line 74, in expect_busy\n    assert bool(self.get(BASE + STATUS) & 3) == busy\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    {
+      "name": "multiple_addresses_and_device_mmio",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_dcc.py\", line 374, in main\n    test(rig)\n    ~~~~^^^^^\n  File \"/src/tb371fc/tests/test_dcc.py\", line 167, in multiple_addresses_and_device_mmio\n    r.expect_busy(False)\n    ~~~~~~~~~~~~~^^^^^^^\n  File \"/src/tb371fc/tests/test_dcc.py\", line 74, in expect_busy\n    assert bool(self.get(BASE + STATUS) & 3) == busy\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    {
+      "name": "separate_lists_capture_independently",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_dcc.py\", line 374, in main\n    test(rig)\n    ~~~~^^^^^\n  File \"/src/tb371fc/tests/test_dcc.py\", line 183, in separate_lists_capture_independently\n    assert r.collect(0x2000, 2) == [11, 22]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    {
+      "name": "writes_to_pending_configuration_rejected",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_dcc.py\", line 374, in main\n    test(rig)\n    ~~~~^^^^^\n  File \"/src/tb371fc/tests/test_dcc.py\", line 204, in writes_to_pending_configuration_rejected\n    assert r.collect(0x2000, 2) == [11, 22]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    {
+      "name": "unsupported_modes_never_complete",
+      "passed": true
+    },
+    {
+      "name": "unsupported_descriptors_never_complete",
+      "passed": true
+    },
+    {
+      "name": "invalid_pointer_and_output_overlap",
+      "passed": true
+    },
+    {
+      "name": "bad_lists_and_source_fault_do_not_succeed",
+      "passed": true
+    },
+    {
+      "name": "unimplemented_source_register_fails_without_zero_payload",
+      "passed": true
+    },
+    {
+      "name": "empty_list_and_unowned_trigger",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_dcc.py\", line 374, in main\n    test(rig)\n    ~~~~^^^^^\n  File \"/src/tb371fc/tests/test_dcc.py\", line 275, in empty_list_and_unowned_trigger\n    r.expect_busy(False)\n    ~~~~~~~~~~~~~^^^^^^^\n  File \"/src/tb371fc/tests/test_dcc.py\", line 74, in expect_busy\n    assert bool(self.get(BASE + STATUS) & 3) == busy\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    {
+      "name": "reset_cancels_and_retains_sram",
+      "passed": true
+    },
+    {
+      "name": "release_cancels_pending_model_work",
+      "passed": true
+    },
+    {
+      "name": "migrate_pending_capture",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_dcc.py\", line 371, in main\n    details = test(a, directory)\n  File \"/src/tb371fc/tests/test_dcc.py\", line 328, in migrate_pending_capture\n    target.expect_busy(False)\n    ~~~~~~~~~~~~~~~~~~^^^^^^^\n  File \"/src/tb371fc/tests/test_dcc.py\", line 74, in expect_busy\n    assert bool(self.get(BASE + STATUS) & 3) == busy\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    }
+  ],
+  "passed": false,
+  "elapsed_seconds": 0.69
+}

@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/work/integration-20261123-3/qemu-system-aarch64",
+    "-M",
+    "tb371fc,ufs-enabled=off",
+    "-accel",
+    "tcg,thread=single",
+    "-m",
+    "128M",
+    "-display",
+    "none",
+    "-serial",
+    "none",
+    "-monitor",
+    "none",
+    "-semihosting-config",
+    "enable=on,target=native",
+    "-kernel",
+    "/work/mmio-timer/exact-cpu-migration-4/probe.elf",
+    "-no-reboot"
+  ],
+  "exit_code": 8,
+  "output": "TB371FC-CPU-TIMER-MIGRATION:FAIL\n",
+  "scope": "Same CPU timer ELF with no migration or debugger"
+}

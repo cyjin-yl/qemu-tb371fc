@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "qemu_sha256": "8a8b8ab64f41b89878271baac1ad421b1e7e9fe0b22e78f0125fc32d198e7687",
+  "method": "Actual GDB batch run of the frozen binary; SIGABRT backtrace",
+  "stack": [
+    "object_dynamic_cast_assert",
+    "DEVICE",
+    "memory_region_register_ram",
+    "memory_region_init_ram",
+    "tb371fc_create_boot_resources",
+    "tb371fc_init"
+  ],
+  "cause": "MachineState was incorrectly passed as the migratable RAM DeviceState owner.",
+  "fix": "NULL owner for global board SRAM registration, as required by memory_region_register_ram.",
+  "device_behavior_checks_executed": 0,
+  "scope": "Startup integration error, not a TLMM/PS_HOLD/SRAM behavior verdict."
+}

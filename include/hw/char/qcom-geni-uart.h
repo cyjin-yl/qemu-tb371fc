@@ -4,6 +4,7 @@
 #define HW_CHAR_QCOM_GENI_UART_H
 
 #include "hw/core/sysbus.h"
+#include "hw/core/clock.h"
 #include "chardev/char-fe.h"
 #include "qom/object.h"
 
@@ -19,6 +20,9 @@ struct QcomGeniUartState {
     MemoryRegion mmio;
     CharFrontend chr;
     qemu_irq irq;
+    Clock *se_clk;
+    Clock *m_ahb;
+    Clock *s_ahb;
     uint32_t regs[QCOM_GENI_UART_REG_COUNT];
     uint8_t tx_fifo[QCOM_GENI_UART_FIFO_SIZE];
     uint8_t rx_fifo[QCOM_GENI_UART_FIFO_SIZE];
@@ -29,6 +33,9 @@ struct QcomGeniUartState {
     uint32_t rx_received;
     bool tx_active;
     bool rx_active;
+    bool tx_zero_pending;
+    bool reset_held;
+    bool ready;
     guint tx_watch;
 };
 

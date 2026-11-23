@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "suite": "GCC-wired GENI actual process-to-process migration",
+  "qemu": "/work/integration-20261123-4/qemu-system-aarch64",
+  "machine": "tb371fc,ufs-enabled=off",
+  "qemu_sha256": "781d6ae66e9918bf1e3eed08c4bfaa3cdb6381cb1d63495d6ef5cc1a97dabb39",
+  "work_dir": "/work/component-tests-4/geni-clock-migration",
+  "ram_per_process": "128 MiB",
+  "scope": "Actual device clock/reset wiring and FIFO continuity; no silicon electrical or baud timing equivalence",
+  "success": true,
+  "checks": [
+    {
+      "check": "source_queued_tx_rx_and_clock_gated_irq",
+      "status": "pass"
+    },
+    {
+      "check": "actual_qmp_migration_completed",
+      "status": "pass"
+    },
+    {
+      "check": "clock_gate_fifo_and_latched_status_preserved",
+      "status": "pass"
+    },
+    {
+      "check": "destination_clock_restore_continues_without_duplicate_bytes",
+      "status": "pass"
+    }
+  ],
+  "migration": {
+    "source": {
+      "status": "completed",
+      "setup-time": 0,
+      "downtime": 20,
+      "total-time": 29,
+      "ram": {
+        "total": 134217728,
+        "postcopy-requests": 0,
+        "dirty-sync-count": 2,
+        "multifd-bytes": 0,
+        "pages-per-second": 0,
+        "downtime-bytes": 303122,
+        "page-size": 4096,
+        "remaining": 0,
+        "postcopy-bytes": 0,
+        "mbps": 598.8496551724138,
+        "transferred": 2170830,
+        "dirty-sync-missed-zero-copy": 0,
+        "precopy-bytes": 0,
+        "duplicate": 32766,
+        "dirty-pages-rate": 0,
+        "normal-bytes": 8192,
+        "normal": 2
+      }
+    },
+    "target": {
+      "status": "completed"
+    }
+  },
+  "expected_checks": 4,
+  "exit_code": 0,
+  "completed_utc": "2026-11-23T07:07:31.186162+00:00",
+  "raw_report_sha256": "480dcd3532d5b33916c3b39c6a142cdcf07efd6bc70f12995e8f19a18d0291cf",
+  "scope_note": "Component configuration with ufs-enabled=off; no whole-board or native physical timing claim"
+}

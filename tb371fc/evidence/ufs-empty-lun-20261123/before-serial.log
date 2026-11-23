@@ -1,0 +1,230 @@
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x412fd050]
+[    0.000000] Linux version 6.12.114-tb371fc-qemu-smoke (tb371fc-qemu@isolated-builder) (aarch64-linux-gnu-gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44) #1 SMP 2026-11-22 00:00:00 +0000
+[    0.000000] Machine model: QEMU experimental Lenovo TB371FC functional subset
+[    0.000000] earlycon: qcom_geni0 at MMIO 0x0000000000a90000 (options '')
+[    0.000000] printk: legacy bootconsole [qcom_geni0] enabled
+[    0.000000] OF: reserved mem: 0x00000000bbb00000..0x00000000bfffffff (70656 KiB) nomap non-reusable firmware-hole@bbb00000
+[    0.000000] Zone ranges:
+[    0.000000]   Normal   [mem 0x0000000080000000-0x000000027fffffff]
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000080000000-0x00000000bbafffff]
+[    0.000000]   node   0: [mem 0x00000000c0000000-0x000000027fffffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000080000000-0x000000027fffffff]
+[    0.000000] On node 0, zone Normal: 17664 pages in unavailable ranges
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.1 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: Trusted OS migration not required
+[    0.000000] psci: SMC Calling Convention v1.0
+[    0.000000] percpu: Embedded 17 pages/cpu s37344 r0 d32288 u69632
+[    0.000000] Detected VIPT I-cache on CPU0
+[    0.000000] CPU features: detected: GIC system register CPU interface
+[    0.000000] CPU features: detected: Virtualization Host Extensions
+[    0.000000] alternatives: applying boot alternatives
+[    0.000000] Kernel command line: earlycon=qcom_geni,0xa90000 console=ttyMSM0,115200n8 rdinit=/init loglevel=7 panic=-1 nokaslr
+[    0.000000] Unknown kernel command line parameters "nokaslr", will be passed to user space.
+[    0.000000] Dentry cache hash table entries: 1048576 (order: 11, 8388608 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 524288 (order: 10, 4194304 bytes, linear)
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 2079488
+[    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+[    0.000000] software IO TLB: SWIOTLB bounce buffer size adjusted to 7MB
+[    0.000000] software IO TLB: area num 8.
+[    0.000000] software IO TLB: mapped [mem 0x0000000275a00000-0x0000000276200000] (8MB)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=8, Nodes=1
+[    0.000000] rcu: Hierarchical RCU implementation.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[    0.000000] GICv3: GIC: Using split EOI/Deactivate mode
+[    0.000000] GICv3: 960 SPIs implemented
+[    0.000000] GICv3: 0 Extended SPIs implemented
+[    0.000000] Root IRQ handler: 0xffff800080010088
+[    0.000000] GICv3: GICv3 features: 16 PPIs
+[    0.000000] GICv3: GICD_CTRL.DS=1, SCR_EL3.FIQ=0
+[    0.000000] GICv3: CPU0: found redistributor 0 region 0:0x0000000017a60000
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.000000] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.000000] arch_timer: cp15 and mmio timer(s) running at 19.20MHz (phys/virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x46d987e47, max_idle_ns: 440795202767 ns
+[    0.000072] sched_clock: 56 bits at 19MHz, resolution 52ns, wraps every 4398046511078ns
+[    0.007689] Calibrating delay loop (skipped), value calculated using timer frequency.. 38.40 BogoMIPS (lpj=76800)
+[    0.008331] pid_max: default: 32768 minimum: 301
+[    0.010245] Mount-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.010672] Mountpoint-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.052097] rcu: Hierarchical SRCU implementation.
+[    0.052447] rcu: 	Max phase no-delay instances is 1000.
+[    0.056904] smp: Bringing up secondary CPUs ...
+[    0.061183] CPU features: detected: Spectre-v4
+[    0.061336] CPU features: detected: Spectre-BHB
+[    0.061404] Detected VIPT I-cache on CPU1
+[    0.062460] GICv3: CPU1: found redistributor 700 region 0:0x0000000017b40000
+[    0.062731] CPU1: Booted secondary processor 0x0000000700 [0x411fd0d0]
+[    0.068334] Detected VIPT I-cache on CPU2
+[    0.068616] GICv3: CPU2: found redistributor 600 region 0:0x0000000017b20000
+[    0.068797] CPU2: Booted secondary processor 0x0000000600 [0x411fd0d0]
+[    0.071170] Detected VIPT I-cache on CPU3
+[    0.071328] GICv3: CPU3: found redistributor 500 region 0:0x0000000017b00000
+[    0.071440] CPU3: Booted secondary processor 0x0000000500 [0x411fd0d0]
+[    0.073371] Detected VIPT I-cache on CPU4
+[    0.073699] GICv3: CPU4: found redistributor 400 region 0:0x0000000017ae0000
+[    0.073952] CPU4: Booted secondary processor 0x0000000400 [0x411fd0d0]
+[    0.076117] Detected VIPT I-cache on CPU5
+[    0.076353] GICv3: CPU5: found redistributor 300 region 0:0x0000000017ac0000
+[    0.076520] CPU5: Booted secondary processor 0x0000000300 [0x412fd050]
+[    0.078310] Detected VIPT I-cache on CPU6
+[    0.078548] GICv3: CPU6: found redistributor 200 region 0:0x0000000017aa0000
+[    0.078677] CPU6: Booted secondary processor 0x0000000200 [0x412fd050]
+[    0.081343] Detected VIPT I-cache on CPU7
+[    0.081527] GICv3: CPU7: found redistributor 100 region 0:0x0000000017a80000
+[    0.081676] CPU7: Booted secondary processor 0x0000000100 [0x412fd050]
+[    0.082334] smp: Brought up 1 node, 8 CPUs
+[    0.088560] SMP: Total of 8 processors activated.
+[    0.088866] CPU: All CPU(s) started at EL2
+[    0.089094] CPU features: detected: 32-bit EL0 Support
+[    0.089413] CPU features: detected: Data cache clean to the PoU not required for I/D coherence
+[    0.089745] CPU features: detected: CRC32 instructions
+[    0.090075] CPU features: detected: RCpc load-acquire (LDAPR)
+[    0.090373] CPU features: detected: Speculative Store Bypassing Safe (SSBS)
+[    0.096055] spectre-bhb mitigation disabled by compile time option
+[    0.096061] spectre-bhb mitigation disabled by compile time option
+[    0.113793] alternatives: applying system-wide alternatives
+[    0.161625] Memory: 8138684K/8317952K available (2240K kernel code, 1082K rwdata, 492K rodata, 384K init, 341K bss, 174648K reserved, 0K cma-reserved)
+[    0.184540] devtmpfs: initialized
+[    0.206303] futex hash table entries: 2048 (order: 5, 131072 bytes, linear)
+[    0.207127] pinctrl core: initialized pinctrl subsystem
+[    0.227040] DMA: preallocated 1024 KiB GFP_KERNEL pool for atomic allocations
+[    0.230300] ASID allocator initialised with 65536 entries
+[    0.242291] /soc/phy@1d87000: Fixed dependency cycle(s) with /soc/ufshc@1d84000
+[    0.242917] /soc/ufshc@1d84000: Fixed dependency cycle(s) with /soc/phy@1d87000
+[    0.243379] /soc/interrupt-controller@17a00000: Fixed dependency cycle(s) with /soc/interrupt-controller@17a00000
+[    0.245130] /soc/phy@1d87000: Fixed dependency cycle(s) with /soc/ufshc@1d84000
+[    0.246059] /soc/phy@1d87000: Fixed dependency cycle(s) with /soc/ufshc@1d84000
+[    0.247275] /soc/ufshc@1d84000: Fixed dependency cycle(s) with /soc/phy@1d87000
+[    0.290210] iommu: Default domain type: Translated
+[    0.290578] iommu: DMA domain TLB invalidation policy: strict mode
+[    0.294737] SCSI subsystem initialized
+[    0.303008] clocksource: Switched to clocksource arch_sys_counter
+[    0.319630] Unpacking initramfs...
+[    0.335226] workingset: timestamp_bits=62 max_order=21 bucket_order=0
+[    0.347903] qcom-qmp-ufs-phy 1d87000.phy: supply vdda-phy not found, using dummy regulator
+[    0.348690] Freeing initrd memory: 296K
+[    0.349435] qcom-qmp-ufs-phy 1d87000.phy: supply vdda-pll not found, using dummy regulator
+[    0.365675] a90000.serial: ttyMSM0 at MMIO 0xa90000 (irq = 17, base_baud = 0) is a MSM
+[    0.371684] printk: legacy console [ttyMSM0] enabled
+[    0.371684] printk: legacy console [ttyMSM0] enabled
+[    0.372526] printk: legacy bootconsole [qcom_geni0] disabled
+[    0.372526] printk: legacy bootconsole [qcom_geni0] disabled
+[    0.384989] arm-smmu 3da0000.iommu: probing hardware configuration...
+[    0.385348] arm-smmu 3da0000.iommu: SMMUv2 with:
+[    0.385635] arm-smmu 3da0000.iommu: 	stage 1 translation
+[    0.385928] arm-smmu 3da0000.iommu: 	address translation ops
+[    0.386187] arm-smmu 3da0000.iommu: 	coherent table walk
+[    0.386900] arm-smmu 3da0000.iommu: 	stream matching with 128 register groups
+[    0.387350] arm-smmu 3da0000.iommu: 	8 context banks (0 stage-2 only)
+[    0.388117] arm-smmu 3da0000.iommu: 	Supported page sizes: 0x40201000
+[    0.388392] arm-smmu 3da0000.iommu: 	Stage-1: 48-bit VA -> 48-bit IPA
+[    0.389878] arm-smmu 3da0000.iommu: 	preserved 0 boot mappings
+[    0.403372] arm-smmu 15000000.iommu: probing hardware configuration...
+[    0.403696] arm-smmu 15000000.iommu: SMMUv2 with:
+[    0.403915] arm-smmu 15000000.iommu: 	stage 1 translation
+[    0.404121] arm-smmu 15000000.iommu: 	address translation ops
+[    0.404352] arm-smmu 15000000.iommu: 	coherent table walk
+[    0.404575] arm-smmu 15000000.iommu: 	stream matching with 128 register groups
+[    0.404863] arm-smmu 15000000.iommu: 	96 context banks (0 stage-2 only)
+[    0.405137] arm-smmu 15000000.iommu: 	Supported page sizes: 0x40201000
+[    0.405393] arm-smmu 15000000.iommu: 	Stage-1: 48-bit VA -> 48-bit IPA
+[    0.406025] arm-smmu 15000000.iommu: 	preserved 0 boot mappings
+[    0.419575] ufshcd-qcom 1d84000.ufshc: Adding to iommu group 0
+[    0.426166] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vdd-hba-supply regulator, assuming enabled
+[    0.427024] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vcc-supply regulator, assuming enabled
+[    0.427547] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vccq-supply regulator, assuming enabled
+[    0.428008] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vccq2-supply regulator, assuming enabled
+[    0.445535] scsi host0: ufshcd
+[    0.472776] ufshcd-qcom 1d84000.ufshc: Undefined ref clk gating wait time, use default 255us
+[    0.498780] scsi 0:0:0:49488: Well-known LUN    QEMU     QEMU UFS              PQ: 0 ANSI: 6
+[    0.515319] scsi 0:0:0:49476: Well-known LUN    QEMU     QEMU UFS              PQ: 0 ANSI: 6
+[    0.515903] clk: Disabling unused clocks
+[    0.519380] PM: genpd: Disabling unused power domains
+[    0.524552] scsi 0:0:0:49456: Well-known LUN    QEMU     QEMU UFS              PQ: 0 ANSI: 6
+[    0.535897] ufshcd-qcom 1d84000.ufshc: __ufshcd_query_descriptor: opcode 0x01 for idn 2 failed, index 0, err = 1
+[    0.536843] ufshcd-qcom 1d84000.ufshc: __ufshcd_query_descriptor: opcode 0x01 for idn 2 failed, index 0, err = 1
+[    0.537547] ufshcd-qcom 1d84000.ufshc: __ufshcd_query_descriptor: opcode 0x01 for idn 2 failed, index 0, err = 1
+[    0.538128] ufshcd-qcom 1d84000.ufshc: ufshcd_read_desc_param: Failed reading descriptor. desc_id 2, desc_index 0, param_offset 0, ret 1
+[    0.539765] ufshcd-qcom 1d84000.ufshc: OCS error from controller = 1 for tag 3
+[    0.540612] host_regs: 00000000: 0107021f 00000000 00000300 00000000
+[    0.540928] host_regs: 00000010: 00000000 00000000 00000000 00000000
+[    0.541184] host_regs: 00000020: 00000000 00071ef5 00000000 00000000
+[    0.541434] host_regs: 00000030: 0000010f 00000001 00000000 00000000
+[    0.541694] host_regs: 00000040: 00000000 00000000 00000000 00000000
+[    0.541960] host_regs: 00000050: fffdf000 0000ffff 00000000 00000000
+[    0.542220] host_regs: 00000060: 00000001 8000000f 00000000 00000000
+[    0.542560] host_regs: 00000070: fffde000 0000ffff 00000000 00000000
+[    0.543081] host_regs: 00000080: 00000001 00000000 00000000 00000000
+[    0.543400] host_regs: 00000090: 00000000 15710000 00000000 00000011
+[    0.543812] ufshcd-qcom 1d84000.ufshc: No record of pa_err
+[    0.544084] ufshcd-qcom 1d84000.ufshc: No record of dl_err
+[    0.544308] ufshcd-qcom 1d84000.ufshc: No record of nl_err
+[    0.544537] ufshcd-qcom 1d84000.ufshc: No record of tl_err
+[    0.544774] ufshcd-qcom 1d84000.ufshc: No record of dme_err
+[    0.545019] ufshcd-qcom 1d84000.ufshc: No record of auto_hibern8_err
+[    0.545279] ufshcd-qcom 1d84000.ufshc: No record of fatal_err
+[    0.545507] ufshcd-qcom 1d84000.ufshc: No record of link_startup_fail
+[    0.545779] ufshcd-qcom 1d84000.ufshc: No record of resume_fail
+[    0.546081] ufshcd-qcom 1d84000.ufshc: No record of suspend_fail
+[    0.546439] ufshcd-qcom 1d84000.ufshc: No record of wlun resume_fail
+[    0.546841] ufshcd-qcom 1d84000.ufshc: No record of wlun suspend_fail
+[    0.547227] ufshcd-qcom 1d84000.ufshc: dev_reset[0] = 0x0 at 455231 us
+[    0.547566] ufshcd-qcom 1d84000.ufshc: dev_reset: total cnt=1
+[    0.547840] ufshcd-qcom 1d84000.ufshc: No record of host_reset
+[    0.548112] ufshcd-qcom 1d84000.ufshc: No record of task_abort
+[    0.549071] Internal error: synchronous external abort: 0000000096000210 [#1] SMP
+[    0.549826] CPU: 0 UID: 0 PID: 11 Comm: kworker/u32:0 Tainted: G   M               6.12.114-tb371fc-qemu-smoke #1
+[    0.550526] Tainted: [M]=MACHINE_CHECK
+[    0.550818] Hardware name: QEMU experimental Lenovo TB371FC functional subset (DT)
+[    0.551901] pstate: 200000c9 (nzCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    0.552233] pc : 0xffff8000801e4b10
+[    0.552427] lr : 0xffff8000801e4ec0
+[    0.552580] sp : ffff0001fef7a2d0
+[    0.552740] x29: ffff0001fef7a2d0 x28: ffff0000000e0d00 x27: 0000000000000001
+[    0.553582] x26: 0000000000071880 x25: ffff0000000ee080 x24: ffff0000000ec7f8
+[    0.553921] x23: ffff8000802ac29d x22: 00000000000000c0 x21: ffff000000cd43c0
+[    0.554219] x20: 0000000000000040 x19: 0000000000000014 x18: 000000000000000a
+[    0.554698] x17: 0063687366752e30 x16: 3030343864313a6d x15: ffff0001fef79d48
+[    0.555261] x14: 000000000000000d x13: 00000000ffffffea x12: ffff0001fef79fc8
+[    0.555569] x11: ffff80008033e7d8 x10: ffff8000803ee800 x9 : ffff80008033e858
+[    0.555947] x8 : ffff000000cd4400 x7 : 0000000000000000 x6 : ffff000000cd43c0
+[    0.556246] x5 : 00000000000001af x4 : 0000000000000000 x3 : 0000000000000000
+[    0.556549] x2 : 0000000000000000 x1 : ffff8000804d8000 x0 : ffff8000804d80d4
+[    0.556967] Call trace:
+[    0.557188]  0xffff8000801e4b10
+[    0.557471]  0xffff8000801f593c
+[    0.557662]  0xffff8000802285f4
+[    0.557808]  0xffff8000801e9a78
+[    0.557949]  0xffff8000801e9b00
+[    0.558206]  0xffff8000801e9bbc
+[    0.558407]  0xffff8000801e9c7c
+[    0.558780]  0xffff8000801edcb4
+[    0.559060]  0xffff8000800596fc
+[    0.559207]  0xffff800080059780
+[    0.559363]  0xffff8000800597ec
+[    0.559504]  0xffff80008005d934
+[    0.559648]  0xffff800080059050
+[    0.559777]  0xffff8000800590c8
+[    0.559926]  0xffff8000800100d8
+[    0.560052]  0xffff8000800128bc
+[    0.560179]  0xffff80008001319c
+[    0.560326]  0xffff800080229df0
+[    0.560454]  0xffff80008022a044
+[    0.560581]  0xffff80008001126c
+[    0.560722]  0xffff8000800c0900
+[    0.560862]  0xffff800080030c40
+[    0.561004]  0xffff8000800327ac
+[    0.561136]  0xffff800080037ba4
+[    0.561278]  0xffff80008001287c
+[    0.561650] Code: 97fffff7 a8c17bfd d65f03c0 d65f03c0 (b9400000) 
+[    0.562133] ---[ end trace 0000000000000000 ]---
+[    0.562906] Kernel panic - not syncing: synchronous external abort: Fatal exception in interrupt
+[    0.563389] SMP: stopping secondary CPUs
+[    0.564234] Kernel Offset: disabled
+[    0.564400] CPU features: 0x00,00000007,00080008,4200500b
+[    0.564911] Memory Limit: none

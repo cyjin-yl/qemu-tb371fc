@@ -360,6 +360,35 @@ static const VMStateDescription vmstate_irq_line_state = {
     }
 };
 
+static bool gt_exact_frequency_needed(void *opaque)
+{
+    return ARM_CPU(opaque)->gt_cntfrq_exact;
+}
+
+static int gt_exact_frequency_loaded(void *opaque, int version_id)
+{
+    ARMCPU *cpu = opaque;
+
+    if (!cpu->gt_cntfrq_exact) {
+        error_report("Incoming CPU uses cntfrq-exact but destination does not");
+        return -EINVAL;
+    }
+    cpu->gt_cntfrq_exact_received = true;
+    return 0;
+}
+
+static const VMStateDescription vmstate_gt_exact_frequency = {
+    .name = "cpu/gt-exact-frequency",
+    .version_id = 1,
+    .minimum_version_id = 1,
+    .needed = gt_exact_frequency_needed,
+    .post_load = gt_exact_frequency_loaded,
+    .fields = (const VMStateField[]) {
+        VMSTATE_UINT64_EQUAL(gt_cntfrq_hz, ARMCPU),
+        VMSTATE_END_OF_LIST()
+    }
+};
+
 static bool wfxt_timer_needed(void *opaque)
 {
     ARMCPU *cpu = opaque;
@@ -1034,6 +1063,8 @@ static int cpu_pre_load(void *opaque)
     ARMCPU *cpu = opaque;
     CPUARMState *env = &cpu->env;
 
+    cpu->gt_cntfrq_exact_received = false;
+
     /*
      * In an inbound migration where on the source FPSCR/FPSR/FPCR are 0,
      * there will be no fpcr_fpsr subsection so we won't call vfp_set_fpcr()
@@ -1124,6 +1155,11 @@ static int cpu_post_load(void *opaque, int version_id)
 
     trace_cpu_post_load(cpu->cpreg_vmstate_array_len,
                         cpu->cpreg_array_len);
+
+    if (cpu->gt_cntfrq_exact != cpu->gt_cntfrq_exact_received) {
+        error_report("Incoming CPU counter mode differs from cntfrq-exact");
+        return -EINVAL;
+    }
 
     /*
      * Handle migration compatibility from old QEMU which didn't
@@ -1339,6 +1375,7 @@ const VMStateDescription vmstate_arm_cpu = {
         &vmstate_serror,
         &vmstate_irq_line_state,
         &vmstate_wfxt_timer,
+        &vmstate_gt_exact_frequency,
         &vmstate_syndrome64,
         &vmstate_pstate64,
         &vmstate_event,

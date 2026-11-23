@@ -1355,7 +1355,8 @@ uint64_t gt_get_countervalue(CPUARMState *env)
 {
     ARMCPU *cpu = env_archcpu(env);
 
-    return qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL) / gt_cntfrq_period_ns(cpu);
+    return gt_countervalue_at_ns(cpu,
+                                  qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL));
 }
 
 static void gt_update_gicv5_ppi(CPUARMState *env, int timeridx, bool level)
@@ -1546,7 +1547,10 @@ static void gt_recalc_timer(ARMCPU *cpu, int timeridx)
          * set the timer for as far in the future as possible. When the
          * timer expires we will reset the timer for any remaining period.
          */
-        if (nexttick > INT64_MAX / gt_cntfrq_period_ns(cpu)) {
+        if (cpu->gt_cntfrq_exact) {
+            timer_mod_ns(cpu->gt_timer[timeridx],
+                         gt_counter_tick_to_ns(cpu, nexttick));
+        } else if (nexttick > INT64_MAX / gt_cntfrq_period_ns(cpu)) {
             timer_mod_ns(cpu->gt_timer[timeridx], INT64_MAX);
         } else {
             timer_mod(cpu->gt_timer[timeridx], nexttick);
@@ -1622,6 +1626,22 @@ static void gt_tval_write(CPUARMState *env, const ARMCPRegInfo *ri,
     do_tval_write(env, timeridx, value, offset);
 }
 
+static uint64_t gt_ctl_read(CPUARMState *env, int timeridx)
+{
+    ARMCPU *cpu = env_archcpu(env);
+
+    /*
+     * In real-time TCG a vCPU may read the counter past a deadline before
+     * the main loop has dispatched the timer callback. Exact mode must
+     * expose the live architected condition, not that cached ISTATUS.
+     * ARM_CP_IO serializes this just as it does the existing timer writes.
+     */
+    if (cpu->gt_cntfrq_exact) {
+        gt_recalc_timer(cpu, timeridx);
+    }
+    return env->cp15.c14_timer[timeridx].ctl;
+}
+
 static void gt_ctl_write(CPUARMState *env, const ARMCPRegInfo *ri,
                          int timeridx,
                          uint64_t value)
@@ -1631,8 +1651,8 @@ static void gt_ctl_write(CPUARMState *env, const ARMCPRegInfo *ri,
 
     trace_arm_gt_ctl_write(timeridx, value);
     env->cp15.c14_timer[timeridx].ctl = deposit64(oldval, 0, 2, value);
-    if ((oldval ^ value) & 1) {
-        /* Enable toggled */
+    if (cpu->gt_cntfrq_exact || ((oldval ^ value) & 1)) {
+        /* Exact mode also samples the live condition when changing IMASK. */
         gt_recalc_timer(cpu, timeridx);
     } else if ((oldval ^ value) & 2) {
         /*
@@ -1664,6 +1684,12 @@ static void gt_phys_tval_write(CPUARMState *env, const ARMCPRegInfo *ri,
                                uint64_t value)
 {
     gt_tval_write(env, ri, GTIMER_PHYS, value);
+}
+
+static uint64_t gt_phys_ctl_read(CPUARMState *env,
+                                       const ARMCPRegInfo *ri)
+{
+    return gt_ctl_read(env, GTIMER_PHYS);
 }
 
 static void gt_phys_ctl_write(CPUARMState *env, const ARMCPRegInfo *ri,
@@ -1728,7 +1754,7 @@ static uint64_t gt_phys_redir_ctl_read(CPUARMState *env,
                                        const ARMCPRegInfo *ri)
 {
     int timeridx = gt_phys_redir_timeridx(env);
-    return env->cp15.c14_timer[timeridx].ctl;
+    return gt_ctl_read(env, timeridx);
 }
 
 static void gt_phys_redir_ctl_write(CPUARMState *env, const ARMCPRegInfo *ri,
@@ -1766,6 +1792,12 @@ static void gt_virt_tval_write(CPUARMState *env, const ARMCPRegInfo *ri,
 {
     /* Similarly for writes to CNTV_TVAL_EL02 */
     do_tval_write(env, GTIMER_VIRT, value, env->cp15.cntvoff_el2);
+}
+
+static uint64_t gt_virt_ctl_read(CPUARMState *env,
+                                       const ARMCPRegInfo *ri)
+{
+    return gt_ctl_read(env, GTIMER_VIRT);
 }
 
 static void gt_virt_ctl_write(CPUARMState *env, const ARMCPRegInfo *ri,
@@ -1863,7 +1895,7 @@ static uint64_t gt_virt_redir_ctl_read(CPUARMState *env,
                                        const ARMCPRegInfo *ri)
 {
     int timeridx = gt_virt_redir_timeridx(env);
-    return env->cp15.c14_timer[timeridx].ctl;
+    return gt_ctl_read(env, timeridx);
 }
 
 static void gt_virt_redir_ctl_write(CPUARMState *env, const ARMCPRegInfo *ri,
@@ -1895,6 +1927,12 @@ static void gt_hyp_tval_write(CPUARMState *env, const ARMCPRegInfo *ri,
     gt_tval_write(env, ri, GTIMER_HYP, value);
 }
 
+static uint64_t gt_hyp_ctl_read(CPUARMState *env,
+                                       const ARMCPRegInfo *ri)
+{
+    return gt_ctl_read(env, GTIMER_HYP);
+}
+
 static void gt_hyp_ctl_write(CPUARMState *env, const ARMCPRegInfo *ri,
                               uint64_t value)
 {
@@ -1921,6 +1959,12 @@ static void gt_sec_tval_write(CPUARMState *env, const ARMCPRegInfo *ri,
                               uint64_t value)
 {
     gt_tval_write(env, ri, GTIMER_SEC, value);
+}
+
+static uint64_t gt_sec_ctl_read(CPUARMState *env,
+                                       const ARMCPRegInfo *ri)
+{
+    return gt_ctl_read(env, GTIMER_SEC);
 }
 
 static void gt_sec_ctl_write(CPUARMState *env, const ARMCPRegInfo *ri,
@@ -1951,6 +1995,12 @@ static void gt_sec_pel2_tval_write(CPUARMState *env, const ARMCPRegInfo *ri,
     gt_tval_write(env, ri, GTIMER_S_EL2_PHYS, value);
 }
 
+static uint64_t gt_sec_pel2_ctl_read(CPUARMState *env,
+                                       const ARMCPRegInfo *ri)
+{
+    return gt_ctl_read(env, GTIMER_S_EL2_PHYS);
+}
+
 static void gt_sec_pel2_ctl_write(CPUARMState *env, const ARMCPRegInfo *ri,
                               uint64_t value)
 {
@@ -1979,6 +2029,12 @@ static void gt_sec_vel2_tval_write(CPUARMState *env, const ARMCPRegInfo *ri,
     gt_tval_write(env, ri, GTIMER_S_EL2_VIRT, value);
 }
 
+static uint64_t gt_sec_vel2_ctl_read(CPUARMState *env,
+                                       const ARMCPRegInfo *ri)
+{
+    return gt_ctl_read(env, GTIMER_S_EL2_VIRT);
+}
+
 static void gt_sec_vel2_ctl_write(CPUARMState *env, const ARMCPRegInfo *ri,
                               uint64_t value)
 {
@@ -2005,6 +2061,12 @@ static void gt_hv_tval_write(CPUARMState *env, const ARMCPRegInfo *ri,
                              uint64_t value)
 {
     gt_tval_write(env, ri, GTIMER_HYPVIRT, value);
+}
+
+static uint64_t gt_hv_ctl_read(CPUARMState *env,
+                                       const ARMCPRegInfo *ri)
+{
+    return gt_ctl_read(env, GTIMER_HYPVIRT);
 }
 
 static void gt_hv_ctl_write(CPUARMState *env, const ARMCPRegInfo *ri,
@@ -2105,6 +2167,7 @@ static const ARMCPRegInfo generic_timer_cp_reginfo[] = {
       .accessfn = gt_ptimer_access,
       .fieldoffset = offsetoflow32(CPUARMState,
                                    cp15.c14_timer[GTIMER_SEC].ctl),
+      .readfn = gt_sec_ctl_read, .raw_readfn = raw_read,
       .writefn = gt_sec_ctl_write, .raw_writefn = raw_write,
     },
     { .name = "CNTP_CTL_EL0", .state = ARM_CP_STATE_AA64,
@@ -2251,6 +2314,7 @@ static const ARMCPRegInfo generic_timer_cp_reginfo[] = {
       .accessfn = gt_stimer_access,
       .fieldoffset = offsetof(CPUARMState, cp15.c14_timer[GTIMER_SEC].ctl),
       .resetvalue = 0,
+      .readfn = gt_sec_ctl_read, .raw_readfn = raw_read,
       .writefn = gt_sec_ctl_write, .raw_writefn = raw_write,
     },
     { .name = "CNTPS_CVAL_EL1", .state = ARM_CP_STATE_AA64,
@@ -2335,7 +2399,7 @@ static uint64_t gt_virt_cnt_read(CPUARMState *env, const ARMCPRegInfo *ri)
      * can't call gt_get_countervalue(env), instead we directly
      * call the lower level functions.
      */
-    return cpu_get_clock() / gt_cntfrq_period_ns(cpu);
+    return gt_countervalue_at_ns(cpu, cpu_get_clock());
 }
 
 static const ARMCPRegInfo generic_timer_cp_reginfo[] = {
@@ -4291,6 +4355,7 @@ static const ARMCPRegInfo el2_cp_reginfo[] = {
       .access = PL2_RW,
       .fieldoffset = offsetof(CPUARMState, cp15.c14_timer[GTIMER_HYP].ctl),
       .resetvalue = 0,
+      .readfn = gt_hyp_ctl_read, .raw_readfn = raw_read,
       .writefn = gt_hyp_ctl_write, .raw_writefn = raw_write },
 #endif
     { .name = "HPFAR", .state = ARM_CP_STATE_AA32,
@@ -4353,6 +4418,7 @@ static const ARMCPRegInfo el2_sec_cp_reginfo[] = {
       .accessfn = gt_sel2timer_access,
       .fieldoffset = offsetof(CPUARMState, cp15.c14_timer[GTIMER_S_EL2_PHYS].ctl),
       .resetvalue = 0,
+      .readfn = gt_sec_pel2_ctl_read, .raw_readfn = raw_read,
       .writefn = gt_sec_pel2_ctl_write, .raw_writefn = raw_write,
     },
     { .name = "CNTHPS_CVAL_EL2", .state = ARM_CP_STATE_AA64,
@@ -4377,6 +4443,7 @@ static const ARMCPRegInfo el2_sec_cp_reginfo[] = {
       .accessfn = gt_sel2timer_access,
       .fieldoffset = offsetof(CPUARMState, cp15.c14_timer[GTIMER_S_EL2_VIRT].ctl),
       .resetvalue = 0,
+      .readfn = gt_sec_vel2_ctl_read, .raw_readfn = raw_read,
       .writefn = gt_sec_vel2_ctl_write, .raw_writefn = raw_write,
     },
     { .name = "CNTHVS_CVAL_EL2", .state = ARM_CP_STATE_AA64,
@@ -5983,6 +6050,7 @@ static const ARMCPRegInfo vhe_reginfo[] = {
       .opc0 = 3, .opc1 = 4, .crn = 14, .crm = 3, .opc2 = 1,
       .access = PL2_RW,
       .fieldoffset = offsetof(CPUARMState, cp15.c14_timer[GTIMER_HYPVIRT].ctl),
+      .readfn = gt_hv_ctl_read, .raw_readfn = raw_read,
       .writefn = gt_hv_ctl_write, .raw_writefn = raw_write },
     { .name = "CNTP_CTL_EL02", .state = ARM_CP_STATE_AA64,
       .opc0 = 3, .opc1 = 5, .crn = 14, .crm = 2, .opc2 = 1,
@@ -5990,6 +6058,7 @@ static const ARMCPRegInfo vhe_reginfo[] = {
       .access = PL2_RW, .accessfn = access_el1nvpct,
       .nv2_redirect_offset = 0x180 | NV2_REDIR_NO_NV1,
       .fieldoffset = offsetof(CPUARMState, cp15.c14_timer[GTIMER_PHYS].ctl),
+      .readfn = gt_phys_ctl_read, .raw_readfn = raw_read,
       .writefn = gt_phys_ctl_write, .raw_writefn = raw_write },
     { .name = "CNTV_CTL_EL02", .state = ARM_CP_STATE_AA64,
       .opc0 = 3, .opc1 = 5, .crn = 14, .crm = 3, .opc2 = 1,
@@ -5997,6 +6066,7 @@ static const ARMCPRegInfo vhe_reginfo[] = {
       .access = PL2_RW, .accessfn = access_el1nvvct,
       .nv2_redirect_offset = 0x170 | NV2_REDIR_NO_NV1,
       .fieldoffset = offsetof(CPUARMState, cp15.c14_timer[GTIMER_VIRT].ctl),
+      .readfn = gt_virt_ctl_read, .raw_readfn = raw_read,
       .writefn = gt_virt_ctl_write, .raw_writefn = raw_write },
     { .name = "CNTP_TVAL_EL02", .state = ARM_CP_STATE_AA64,
       .opc0 = 3, .opc1 = 5, .crn = 14, .crm = 2, .opc2 = 0,

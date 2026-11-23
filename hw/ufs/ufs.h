@@ -11,9 +11,11 @@
 #ifndef HW_UFS_UFS_H
 #define HW_UFS_UFS_H
 
-#include "hw/pci/pci_device.h"
+#include "hw/core/qdev.h"
 #include "hw/scsi/scsi.h"
 #include "block/ufs.h"
+#include "scsi/constants.h"
+#include "system/dma.h"
 
 #define UFS_MAX_LUS 32
 #define UFS_MAX_MCQ_QNUM 32
@@ -27,6 +29,7 @@ typedef struct UfsBusClass {
 
 typedef struct UfsBus {
     BusState parent_bus;
+    struct UfsHc *hc;
 } UfsBus;
 
 #define TYPE_UFS_BUS "ufs-bus"
@@ -44,6 +47,8 @@ typedef enum UfsReqResult {
     UFS_REQUEST_SUCCESS = 0,
     UFS_REQUEST_FAIL = 1,
     UFS_REQUEST_NO_COMPLETE = 2,
+    /* The PRDT describes less data than the command moves */
+    UFS_REQUEST_MISMATCH_DATA_BUF = 3,
 } UfsReqResult;
 
 #define UFS_INVALID_SLOT (-1)
@@ -57,6 +62,7 @@ typedef struct UfsRequest {
     UtpUpiuRsp rsp_upiu;
 
     /* for scsi command */
+    SCSIRequest *sreq;
     QEMUSGList *sg;
     uint32_t data_len;
 
@@ -141,7 +147,8 @@ typedef struct UfsWb {
 } UfsWb;
 
 typedef struct UfsHc {
-    PCIDevice parent_obj;
+    DeviceState *dev;
+    AddressSpace *dma_as;
     UfsBus bus;
     MemoryRegion iomem;
     UfsReg reg;
@@ -168,6 +175,9 @@ typedef struct UfsHc {
     /* MCQ properties */
     UfsSq *sq[UFS_MAX_MCQ_QNUM];
     UfsCq *cq[UFS_MAX_MCQ_QNUM];
+
+    bool resetting;
+    bool link_hibern8; /* Link state controls WriteBooster background flushing. */
 
     /* Extended features */
     UfsWb wb;
@@ -268,9 +278,6 @@ static inline bool ufs_is_write_req(UfsRequest *req)
     return (cmd == WRITE_6) || (cmd == WRITE_10) || (cmd == WRITE_16);
 }
 
-#define TYPE_UFS "ufs"
-#define UFS(obj) OBJECT_CHECK(UfsHc, (obj), TYPE_UFS)
-
 #define TYPE_UFS_LU "ufs-lu"
 #define UFSLU(obj) OBJECT_CHECK(UfsLu, (obj), TYPE_UFS_LU)
 
@@ -300,6 +307,15 @@ void ufs_build_upiu_header(UfsRequest *req, uint8_t trans_type, uint8_t flags,
                            uint16_t data_segment_length);
 void ufs_build_query_response(UfsRequest *req);
 void ufs_complete_req(UfsRequest *req, UfsReqResult req_result);
+bool ufs_fit_data_buffer(UfsRequest *req, uint64_t len);
+UfsReqResult ufs_emulate_missing_lun(UfsRequest *req);
 void ufs_wb_update_avail_buffer(UfsHc *u);
 void ufs_init_wlu(UfsLu *wlu, uint8_t wlun);
+bool ufs_realize(UfsHc *u, DeviceState *dev, AddressSpace *dma_as,
+                 Error **errp);
+void ufs_unrealize(UfsHc *u);
+void ufs_reset_controller(UfsHc *u);
+/* Direct register helpers for wrappers inside the same device IO guard. */
+uint64_t ufs_mmio_read(void *opaque, hwaddr addr, unsigned size);
+void ufs_mmio_write(void *opaque, hwaddr addr, uint64_t data, unsigned size);
 #endif /* HW_UFS_UFS_H */

@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "suite": "SM8250 RPMh actual QTest",
+  "qemu": "/work/root-pdc-0804/qemu-system-aarch64",
+  "qemu_sha256": "5a5c76062c5345d2be5960932a3a7ccefc73c6523e1531ea1b65088f5cdad555",
+  "machine": "tb371fc,rpmh-profile=reference,rpmh-boot-configured=off,ufs-enabled=off",
+  "work_dir": "/tmp/tbci-vn72jzuk/30/data",
+  "native_command_db": false,
+  "reference_command_db_sha256": "416efcf69817cc7b0465a33724bace31e576040b3ec775e0a184a2d051f8c6f8",
+  "scope": "Typed digital TCS/ARC/VRM/BCM behavior; synthetic addresses and aux; no AOP firmware, analog PMIC or full-board equivalence",
+  "checks": [
+    {
+      "test": "identity_geometry_and_explicit_handoff",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/00",
+      "seconds": 0.0395
+    },
+    {
+      "test": "exact_reference_command_db_and_read_only_mapping",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/01",
+      "seconds": 0.7844
+    },
+    {
+      "test": "timer_not_early_and_mask_pending_w1c",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/02",
+      "seconds": 0.0424
+    },
+    {
+      "test": "sparse_multicommand_ordered_vrm_state",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/03",
+      "seconds": 0.0381
+    },
+    {
+      "test": "independent_drv_vote_aggregation_and_release",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/04",
+      "seconds": 0.043
+    },
+    {
+      "test": "vrm_clock_enable_offset_and_input_divider",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/05",
+      "seconds": 0.0394
+    },
+    {
+      "test": "bcm_staging_commit_and_release",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/06",
+      "seconds": 0.0526
+    },
+    {
+      "test": "explicit_sleep_wake_tcs_do_not_run_on_programming",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/07",
+      "seconds": 0.0456
+    },
+    {
+      "test": "cancellation_retains_only_completed_commands",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/08",
+      "seconds": 0.0477
+    },
+    {
+      "test": "busy_programming_is_rejected",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/09",
+      "seconds": 0.034
+    },
+    {
+      "test": "unknown_resource_has_no_false_ack",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/10",
+      "seconds": 0.0377
+    },
+    {
+      "test": "unsupported_read_opcode_has_no_ack",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/11",
+      "seconds": 0.0359
+    },
+    {
+      "test": "malformed_message_length_has_no_ack",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/12",
+      "seconds": 0.0327
+    },
+    {
+      "test": "arc_level_outside_aux_mapping_has_no_ack",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/13",
+      "seconds": 0.0345
+    },
+    {
+      "test": "invalid_vrm_field_value_and_mode_have_no_ack",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/14",
+      "seconds": 0.0418
+    },
+    {
+      "test": "reserved_bcm_bits_have_no_ack",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/15",
+      "seconds": 0.0519
+    },
+    {
+      "test": "no_enabled_commands_and_unknown_mmio_are_diagnosed",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/16",
+      "seconds": 0.0475
+    },
+    {
+      "test": "response_not_requested_completes_tcs_after_issue",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/17",
+      "seconds": 0.0445
+    },
+    {
+      "test": "guest_reset_clears_votes_pending_irq_and_execution",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/18",
+      "seconds": 0.0471
+    },
+    {
+      "test": "external_file_profile_uses_loaded_resource_address",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/19",
+      "seconds": 0.0965
+    },
+    {
+      "test": "external_aux_only_alias_and_zero_width_bcm_are_valid",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/20",
+      "seconds": 0.0873
+    },
+    {
+      "test": "malformed_external_databases_are_rejected",
+      "status": "pass",
+      "fixture": "/tmp/tbci-vn72jzuk/30/data/21",
+      "seconds": 0.443
+    }
+  ],
+  "expected_checks": 22,
+  "success": true
+}

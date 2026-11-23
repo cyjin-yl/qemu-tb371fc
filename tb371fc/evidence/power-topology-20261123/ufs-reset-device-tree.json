@@ -1,0 +1,266 @@
+{
+  "collector_sha256": "cfb09d0d9c2b9ba48a664f49ec4eb633518f2f254c7051e0b831502f92aa82b2",
+  "generated_utc": "2026-11-23T07:28:00.810854+00:00",
+  "interpretation": [
+    "Native pinctrl names identify assert/deassert states.",
+    "Assert has output-low; deassert has output-high for dedicated ufs_reset.",
+    "The same states specify bias-pull-down and drive-strength 8.",
+    "GCC core_reset is distinct from the dedicated UFS device-reset pad.",
+    "This declaration establishes polarity, not measured pulse timing."
+  ],
+  "kind": "native-ufs-reset-dependencies",
+  "nodes": {
+    "/soc/pinctrl@f000000": {
+      "omitted_property_names": [
+        "#gpio-cells",
+        "#interrupt-cells",
+        "gpio-controller",
+        "interrupt-controller",
+        "interrupts",
+        "irqdomain-map",
+        "irqdomain-map-mask",
+        "irqdomain-map-pass-thru",
+        "wakeup-parent"
+      ],
+      "properties": {
+        "compatible": {
+          "base64": "cWNvbSxrb25hLXBpbmN0cmwA",
+          "sha256": "b4e899cf58a08bb0c4ed803a6662725bac6299714c683335140ac0a16dc445d5",
+          "size": 18,
+          "strings": [
+            "qcom,kona-pinctrl"
+          ]
+        },
+        "phandle": {
+          "base64": "AAAAZQ==",
+          "be32": [
+            101
+          ],
+          "sha256": "1f5ff885ceb5bf1350c4449316b7d703034c1278ab25bcc923d5347645a0117e",
+          "size": 4
+        },
+        "reg": {
+          "base64": "DwAAAAEAAAA=",
+          "be32": [
+            251658240,
+            16777216
+          ],
+          "sha256": "0e450eb40faf06b92e97d0937546cbd459a3d25165752e405b4613b08aac5533",
+          "size": 8
+        }
+      }
+    },
+    "/soc/pinctrl@f000000/ufs_dev_reset_assert": {
+      "omitted_property_names": [],
+      "properties": {
+        "phandle": {
+          "base64": "AAAAeA==",
+          "be32": [
+            120
+          ],
+          "sha256": "3c733359aa795e441a75414a7905e59fb4619ce55f39856dd88f7d8c283f168f",
+          "size": 4
+        }
+      }
+    },
+    "/soc/pinctrl@f000000/ufs_dev_reset_assert/config": {
+      "omitted_property_names": [],
+      "properties": {
+        "bias-pull-down": {
+          "base64": "",
+          "boolean": true,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "drive-strength": {
+          "base64": "AAAACA==",
+          "be32": [
+            8
+          ],
+          "sha256": "17eb70034b5b71092521d184c5e7b069d47de657e51aef2be11a00c115036943",
+          "size": 4
+        },
+        "output-low": {
+          "base64": "",
+          "boolean": true,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "pins": {
+          "base64": "dWZzX3Jlc2V0AA==",
+          "sha256": "4cf7d78447f9fcd4c4f0f93dd00bd0350908cf5388dda7c159b15f5134cda071",
+          "size": 10,
+          "strings": [
+            "ufs_reset"
+          ]
+        }
+      }
+    },
+    "/soc/pinctrl@f000000/ufs_dev_reset_deassert": {
+      "omitted_property_names": [],
+      "properties": {
+        "phandle": {
+          "base64": "AAAAeQ==",
+          "be32": [
+            121
+          ],
+          "sha256": "decbc2e1d7892c7309077bbe97cf39b83458c6b1434ea6a028957c6ae667c4fb",
+          "size": 4
+        }
+      }
+    },
+    "/soc/pinctrl@f000000/ufs_dev_reset_deassert/config": {
+      "omitted_property_names": [],
+      "properties": {
+        "bias-pull-down": {
+          "base64": "",
+          "boolean": true,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "drive-strength": {
+          "base64": "AAAACA==",
+          "be32": [
+            8
+          ],
+          "sha256": "17eb70034b5b71092521d184c5e7b069d47de657e51aef2be11a00c115036943",
+          "size": 4
+        },
+        "output-high": {
+          "base64": "",
+          "boolean": true,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "pins": {
+          "base64": "dWZzX3Jlc2V0AA==",
+          "sha256": "4cf7d78447f9fcd4c4f0f93dd00bd0350908cf5388dda7c159b15f5134cda071",
+          "size": 10,
+          "strings": [
+            "ufs_reset"
+          ]
+        }
+      }
+    },
+    "/soc/ufshc@1d84000": {
+      "omitted_property_names": [
+        "clock-names",
+        "clocks",
+        "dev-ref-clk-freq",
+        "freq-table-hz",
+        "interrupts",
+        "lanes-per-direction",
+        "phy-names",
+        "phys",
+        "qcom,bus-vector-names",
+        "qcom,msm-bus,name",
+        "qcom,msm-bus,num-cases",
+        "qcom,msm-bus,num-paths",
+        "qcom,msm-bus,vectors-KBps",
+        "qcom,pm-qos-cpu-group-latency-us",
+        "qcom,pm-qos-cpu-groups",
+        "qcom,pm-qos-default-cpu",
+        "qcom,vccq-parent-max-microamp",
+        "qcom,vccq-parent-supply",
+        "qcom,vddp-ref-clk-max-microamp",
+        "qcom,vddp-ref-clk-supply",
+        "reg-names",
+        "vcc-low-voltage-sup",
+        "vcc-max-microamp",
+        "vcc-supply",
+        "vcc-voltage-level",
+        "vccq-max-microamp",
+        "vccq-supply",
+        "vccq2-max-microamp",
+        "vccq2-supply",
+        "vdd-hba-fixed-regulator",
+        "vdd-hba-supply"
+      ],
+      "properties": {
+        "compatible": {
+          "base64": "cWNvbSx1ZnNoYwA=",
+          "sha256": "d226bc0c82f7eeb97d93e80bb9a07af4a018e4aa6c4e5fbfc380faa76d547d09",
+          "size": 11,
+          "strings": [
+            "qcom,ufshc"
+          ]
+        },
+        "phandle": {
+          "base64": "AAADeA==",
+          "be32": [
+            888
+          ],
+          "sha256": "8628a785936592157886c3065122c6b1bd7f9f328a46220ff5d34225b68a1879",
+          "size": 4
+        },
+        "pinctrl-0": {
+          "base64": "AAAAeA==",
+          "be32": [
+            120
+          ],
+          "sha256": "3c733359aa795e441a75414a7905e59fb4619ce55f39856dd88f7d8c283f168f",
+          "size": 4
+        },
+        "pinctrl-1": {
+          "base64": "AAAAeQ==",
+          "be32": [
+            121
+          ],
+          "sha256": "decbc2e1d7892c7309077bbe97cf39b83458c6b1434ea6a028957c6ae667c4fb",
+          "size": 4
+        },
+        "pinctrl-names": {
+          "base64": "ZGV2LXJlc2V0LWFzc2VydABkZXYtcmVzZXQtZGVhc3NlcnQA",
+          "sha256": "f8bfc0774f1d8ffe84f558492afadf9f133e3d6dc6ad6028cb3df725b7276f50",
+          "size": 36,
+          "strings": [
+            "dev-reset-assert",
+            "dev-reset-deassert"
+          ]
+        },
+        "reg": {
+          "base64": "AdhAAAAAMAAB2QAAAACAAA==",
+          "be32": [
+            30949376,
+            12288,
+            30998528,
+            32768
+          ],
+          "sha256": "16e22b22b4cebe608db4014cdbfd37db3cd3233c8327e0d7ea56206f34d93dc8",
+          "size": 16
+        },
+        "reset-names": {
+          "base64": "Y29yZV9yZXNldAA=",
+          "sha256": "56126a0d0469f31058ea50a48f9517618c5e39170511157e87157d3146eb0043",
+          "size": 11,
+          "strings": [
+            "core_reset"
+          ]
+        },
+        "resets": {
+          "base64": "AAAAFgAAACE=",
+          "be32": [
+            22,
+            33
+          ],
+          "sha256": "cfb357b312d5c4860a4b7a3fb85374d9f5c71836b7e1604b1f85fff40d41ca47",
+          "size": 8
+        },
+        "status": {
+          "base64": "b2sA",
+          "sha256": "e75f5a71e974f738de7fb29ecafb8072554c66a1e3074e59409b6f1e4615ca83",
+          "size": 3,
+          "strings": [
+            "ok"
+          ]
+        }
+      }
+    }
+  },
+  "schema_version": 1,
+  "scope": "Allowed static hardware DT fields; no native register contents.",
+  "source": {
+    "filename": "live-android-20261123.dtb",
+    "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207"
+  }
+}

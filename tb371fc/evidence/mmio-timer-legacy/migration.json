@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "suite": "MMIO timer QMP process-to-process migration",
+  "qemu_sha256": "c5c60a3aa4b9f74653c9d770a5a1689d0d41ad6b96bab58f31c1f3b0f8e71eeb",
+  "test_sha256": "b0c6ae60a63acbed523fb307872723bf65091a356fa21e7994a6b528cc8d10e9",
+  "machine": "tb371fc,ufs-enabled=off",
+  "test_ram_per_process": "128 MiB",
+  "checks": [
+    {
+      "name": "source_future_physical_and_asserted_virtual_irq",
+      "passed": true
+    },
+    {
+      "name": "actual_qmp_migration_completed",
+      "passed": true
+    },
+    {
+      "name": "registers_permissions_alias_ram_irq_preserved",
+      "passed": true
+    },
+    {
+      "name": "pending_deadline_fires_once_at_original_tick",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "clock_fixture": "QTest external time is not migrated; destination aligned after incoming load and before timer assertions",
+  "scope": "Actual transfer of timer registers, absolute deadlines, permission and IRQ continuation",
+  "qtest_timestamp_ns": 52000000,
+  "source_migration": {
+    "status": "completed",
+    "setup-time": 3,
+    "downtime": 24,
+    "total-time": 38,
+    "ram": {
+      "total": 134217728,
+      "postcopy-requests": 0,
+      "dirty-sync-count": 2,
+      "multifd-bytes": 0,
+      "pages-per-second": 0,
+      "downtime-bytes": 307217,
+      "page-size": 4096,
+      "remaining": 0,
+      "postcopy-bytes": 0,
+      "mbps": 496.7956571428571,
+      "transferred": 2173481,
+      "dirty-sync-missed-zero-copy": 0,
+      "precopy-bytes": 0,
+      "duplicate": 32765,
+      "dirty-pages-rate": 0,
+      "normal-bytes": 12288,
+      "normal": 3
+    }
+  },
+  "target_migration": {
+    "status": "completed"
+  },
+  "elapsed_seconds": 0.113
+}

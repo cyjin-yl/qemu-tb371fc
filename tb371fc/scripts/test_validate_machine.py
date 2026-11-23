@@ -71,7 +71,7 @@ def synthetic_reader():
     }
     for index in range(8):
         nodes[f'/cpus/cpu@{index * 0x100:x}'] = {
-            'device_type': ['cpu'], 'compatible': ['arm,cortex-a55' if index < 4 else 'arm,cortex-a76'],
+            'device_type': ['cpu'], 'compatible': ['arm,cortex-a55' if index < 4 else 'arm,cortex-a77'],
             'reg': [0, index * 0x100], 'enable-method': ['psci'],
         }
     return FakeFdtReader(nodes)
@@ -81,8 +81,8 @@ def synthetic_runtime():
     return {'version': {'qemu': {'major': 11, 'minor': 1, 'micro': 3}, 'package': 'synthetic-test-fixture'},
             'status': {'running': False, 'status': 'prelaunch'},
             'cpus': [{'cpu-index': index, 'mp-affinity': index * 0x100,
-                      'qom-type': 'cortex-a55-arm-cpu' if index < 4 else 'cortex-a76-arm-cpu',
-                      'midr': 0x412fd050 if index < 4 else 0x414fd0b1, 'cntfrq': 19200000}
+                      'qom-type': 'cortex-a55-arm-cpu' if index < 4 else 'cortex-a77-arm-cpu',
+                      'midr': 0x412fd050 if index < 4 else 0x411fd0d0, 'cntfrq': 19200000}
                      for index in range(8)]}
 
 

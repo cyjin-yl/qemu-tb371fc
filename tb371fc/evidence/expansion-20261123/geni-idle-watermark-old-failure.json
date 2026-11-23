@@ -1,0 +1,9 @@
+{
+  "qemu": "/work/integration-20261123-3/qemu-system-aarch64",
+  "expected_old_failure": true,
+  "test": "idle_watermark_restarts_tty_transfers",
+  "qemu_sha256": "a70862bfa8aa957ea26e362b5defd9ae60b4cc4bb53f2ac2c70c0b4fe3b67e2a",
+  "passed": false,
+  "error": "Traceback (most recent call last):\n  File \"/work/run-geni-idle-repro.py\", line 12, in <module>\n    r=Rig(a,out);idle_watermark_restarts_tty_transfers(r);result['passed']=True\n                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 197, in idle_watermark_restarts_tty_transfers\n    assert r.read(M_STATUS) & TX_WATERMARK, 'idle empty FIFO lost watermark'\n           ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~\nAssertionError: idle empty FIFO lost watermark\n",
+  "scope": "Expected regression reproducer failure on the pre-fix binary, not a passing validation"
+}

@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "suite": "GENI QMP process-to-process migration",
+  "qemu": "/work/build-next/qemu-system-aarch64",
+  "test_ram_per_process": "128 MiB",
+  "checks": [
+    {
+      "check": "source_active_tx_rx_and_pending_irq",
+      "status": "pass"
+    },
+    {
+      "check": "qmp_migration_completed",
+      "status": "pass"
+    },
+    {
+      "check": "registers_ram_and_pending_irq_preserved",
+      "status": "pass"
+    },
+    {
+      "check": "unfinished_tx_continues_without_duplicate_prefix",
+      "status": "pass"
+    },
+    {
+      "check": "unread_rx_partial_word_and_w1c_irq_restored",
+      "status": "pass"
+    },
+    {
+      "check": "destination_chardev_receives_and_interrupts",
+      "status": "pass"
+    }
+  ],
+  "scope": "Actual paused machine migration and GENI FIFO/IRQ continuation; no hardware timing equivalence",
+  "source_migration": {
+    "status": "completed",
+    "setup-time": 0,
+    "downtime": 9,
+    "total-time": 17,
+    "ram": {
+      "total": 134217728,
+      "postcopy-requests": 0,
+      "dirty-sync-count": 2,
+      "multifd-bytes": 0,
+      "pages-per-second": 0,
+      "downtime-bytes": 303122,
+      "page-size": 4096,
+      "remaining": 0,
+      "postcopy-bytes": 0,
+      "mbps": 518.72,
+      "transferred": 1102280,
+      "dirty-sync-missed-zero-copy": 0,
+      "precopy-bytes": 0,
+      "duplicate": 32766,
+      "dirty-pages-rate": 0,
+      "normal-bytes": 8192,
+      "normal": 2
+    }
+  },
+  "target_migration": {
+    "status": "completed"
+  },
+  "success": true,
+  "recorded_exit_code": 0,
+  "verified_binary_sha256": "56717a3c95ba31da84ed46da8c305bc6de910370a359eee475b3587b93d5cabf",
+  "execution_completed_at_utc": "2026-11-23T05:47:20.142422+00:00",
+  "migration_scope": "Pre-UFS configured components only; this receipt does not establish full expanded-board migration",
+  "tested_machine_options": "tb371fc",
+  "source_report_sha256": "9fb4f141cdbed522ba00a082c756e74045f7b84847e1726d696ca4651b80d3b1"
+}

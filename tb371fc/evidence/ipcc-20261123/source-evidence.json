@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "kind": "tb371fc-ipcc-source-and-native-dt-evidence",
+  "recorded_utc": "2026-11-23T08:17:12.088872+00:00",
+  "native_dt_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "native_node": {
+    "path": "/soc/qcom,ipcc@408000",
+    "compatible": "qcom,ipcc",
+    "reg_hex": [
+      "0x00408000",
+      "0x1000"
+    ],
+    "interrupt_cells_hex": [
+      "0x0",
+      "0xe5",
+      "0x4"
+    ],
+    "gic_spi": 229,
+    "gic_intid": 261,
+    "trigger": "level-high",
+    "#interrupt-cells": 3,
+    "#mbox-cells": 2
+  },
+  "native_self_ping": {
+    "path": "/soc/ipcc-self-ping-apss",
+    "client_id": 8,
+    "signal_id": 2,
+    "uses_matching_mailbox_and_interrupt": true
+  },
+  "pinned_reference_downloads": [
+    {
+      "file": "qcom-ipcc-linux.c",
+      "url": "https://raw.githubusercontent.com/gregkh/linux/v6.12.114/drivers/mailbox/qcom-ipcc.c",
+      "sha256": "2015e9a0c29f2cf947ed2f93c4a2b4701b946f20e014d152ef85da7a85b926a3",
+      "bytes": 9307
+    },
+    {
+      "file": "qcom-ipcc-downstream.c",
+      "url": "https://android.googlesource.com/kernel/msm/+/129c41b37ca84cc74569f71fa20a1d8f58609931/drivers/soc/qcom/qcom_ipcc.c?format=TEXT",
+      "sha256": "99d27e38912f687febbeee171cf8f2788f2409efada025e479350cd363c2785c",
+      "bytes": 11126
+    },
+    {
+      "file": "qcom-ipcc-candidate.c",
+      "url": "https://raw.githubusercontent.com/tem423/android_kernel_lenovo_tb371fc/9d8abebf4ac4d45cf4cc11b5b6bc5e4483d10fd1/drivers/soc/qcom/qcom_ipcc.c",
+      "sha256": "5cfb28e31e8d97e047f3a59022a3c29d193c416df6c70a56ce4a9bdce5f2d880",
+      "bytes": 12124
+    },
+    {
+      "file": "qcom-ipcc-header.h",
+      "url": "https://raw.githubusercontent.com/gregkh/linux/v6.12.114/include/dt-bindings/mailbox/qcom-ipcc.h",
+      "sha256": "e49a0b0731c1a56fea0ad82863e1daa905fad71c5d5780c11976f097d485b677",
+      "bytes": 1045
+    }
+  ],
+  "clear_on_read_source": "https://android.googlesource.com/kernel/common/+/b2426b5bc9b062c2d87d00ca37c9215a80701e42/drivers/mailbox/qcom-ipcc.c",
+  "provenance": [
+    "Only allowlisted native-DT fields are published; full native DT remains private.",
+    "MMIO register layout and behavior derive from pinned upstream/downstream source.",
+    "This evidence does not claim raw IPCC register values or silicon interrupt timings were read.",
+    "Lowest-ID arbitration, masked-message retention and sparse capacity are documented reference choices.",
+    "A native self-ping DT route establishes APPS client 8 signal 2; absent remote firmware does not acknowledge sends."
+  ],
+  "tested_qemu_sha256": "f22f5f844d3b12229ca159c8435235ba483dea22854e0b755eb2602442f3ea77",
+  "tested_groups": 16
+}

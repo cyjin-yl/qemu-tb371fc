@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "suite": "SM8250 GCC actual QTest",
+  "qemu": "/work/root-pdc-0804/qemu-system-aarch64",
+  "machine": "tb371fc,gcc-boot-configured=off,ufs-enabled=off",
+  "qemu_sha256": "5a5c76062c5345d2be5960932a3a7ccefc73c6523e1531ea1b65088f5cdad555",
+  "work_dir": "/tmp/tbci-vn72jzuk/10/data",
+  "checks": [
+    {
+      "test": "cold_defaults",
+      "status": "pass",
+      "seconds": 0.0372
+    },
+    {
+      "test": "invalid_pll_does_not_lock",
+      "status": "pass",
+      "seconds": 0.0519
+    },
+    {
+      "test": "pll_vote_lock_and_stop",
+      "status": "pass",
+      "seconds": 0.0468
+    },
+    {
+      "test": "pll_manual_output_gate",
+      "status": "pass",
+      "seconds": 0.0429
+    },
+    {
+      "test": "pll_shadow_and_latch",
+      "status": "pass",
+      "seconds": 0.0489
+    },
+    {
+      "test": "pll_disabled_latch",
+      "status": "pass",
+      "seconds": 0.0336
+    },
+    {
+      "test": "independent_pll_vote_bits",
+      "status": "pass",
+      "seconds": 0.0561
+    },
+    {
+      "test": "rcg_exact_fraction_and_shadow",
+      "status": "pass",
+      "seconds": 0.0343
+    },
+    {
+      "test": "invalid_rcg_keeps_previous_active_config",
+      "status": "pass",
+      "seconds": 0.0314
+    },
+    {
+      "test": "invalid_fraction_does_not_ack",
+      "status": "pass",
+      "seconds": 0.0479
+    },
+    {
+      "test": "stopped_parent_keeps_requested_branch_off",
+      "status": "pass",
+      "seconds": 0.0385
+    },
+    {
+      "test": "shared_votes_and_remote_voter",
+      "status": "pass",
+      "seconds": 0.0446
+    },
+    {
+      "test": "hwcg_consumer_request",
+      "status": "pass",
+      "seconds": 0.0382
+    },
+    {
+      "test": "absent_external_parent_is_not_success",
+      "status": "pass",
+      "seconds": 0.0306
+    },
+    {
+      "test": "sleep_parent_and_integer_divider",
+      "status": "pass",
+      "seconds": 0.0311
+    },
+    {
+      "test": "reset_lines_and_shared_cbcr_bits",
+      "status": "pass",
+      "seconds": 0.0459
+    },
+    {
+      "test": "software_power_transition",
+      "status": "pass",
+      "seconds": 0.0359
+    },
+    {
+      "test": "reset_cancels_pending_transitions",
+      "status": "pass",
+      "seconds": 0.0468
+    },
+    {
+      "test": "unsupported_registers_are_diagnosed",
+      "status": "pass",
+      "seconds": 0.0332
+    }
+  ],
+  "ram_per_process": "128 MiB",
+  "scope": "Clock register/gate state, software reset/power and controlled virtual-time transitions; no analog, silicon timing, voltage or full-SoC equivalence",
+  "expected_checks": 19,
+  "success": true
+}

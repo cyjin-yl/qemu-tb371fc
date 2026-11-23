@@ -6,6 +6,7 @@ Uses 128 MiB per process (a board-supported device-test configuration) rather
 than scanning the board's default 8 GiB. No tablet access and no firmware.
 """
 import argparse
+import contextlib
 import json
 import os
 from pathlib import Path
@@ -44,13 +45,14 @@ def main():
     parser.add_argument('--qemu', required=True)
     parser.add_argument('--base', type=lambda s: int(s, 0), default=0xa90000)
     parser.add_argument('--qom-path', default='/machine/uart')
+    parser.add_argument('--machine', default='tb371fc,ufs-enabled=off')
     args = parser.parse_args()
     args.qemu = os.path.abspath(args.qemu)
     checks = []
     report = {'schema_version': 1, 'suite': 'GENI QMP process-to-process migration',
-              'qemu': args.qemu, 'test_ram_per_process': '128 MiB', 'checks': checks,
+              'qemu': args.qemu, 'machine': args.machine, 'test_ram_per_process': '128 MiB', 'checks': checks,
               'scope': 'Actual paused machine migration and GENI FIFO/IRQ continuation; no hardware timing equivalence'}
-    with tempfile.TemporaryDirectory(prefix='tb371fc-migrate-') as directory:
+    with contextlib.nullcontext(tempfile.mkdtemp(prefix='tb371fc-migrate-')) as directory:
         source_dir, target_dir = Path(directory, 'src'), Path(directory, 'dst')
         source_dir.mkdir()
         target_dir.mkdir()
@@ -107,6 +109,11 @@ def main():
             assert target.read(RX_STATUS) == 0
             target.write(M_CLEAR, 0xffffffff)
             target.write(S_CLEAR, 0xffffffff)
+            # W1C cannot suppress the still-enabled empty FIFO watermark.
+            target.assert_irq(True)
+            assert target.read(M_STATUS) & TX_WATERMARK
+            target.write(TX_WM, 0)
+            target.write(M_CLEAR, TX_WATERMARK)
             target.assert_irq(False)
             checks.append({'check': 'unread_rx_partial_word_and_w1c_irq_restored', 'status': 'pass'})
 

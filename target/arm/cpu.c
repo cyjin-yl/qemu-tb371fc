@@ -19,6 +19,7 @@
  */
 
 #include "qemu/osdep.h"
+#include "hw/timer/arm-gt-counter.h"
 #include "qemu/qemu-print.h"
 #include "qemu/timer.h"
 #include "qemu/log.h"
@@ -1305,6 +1306,9 @@ static void arm_cpu_initfn(Object *obj)
 static const Property arm_cpu_gt_cntfrq_property =
             DEFINE_PROP_UINT64("cntfrq", ARMCPU, gt_cntfrq_hz, 0);
 
+static const Property arm_cpu_gt_cntfrq_exact_property =
+            DEFINE_PROP_BOOL("cntfrq-exact", ARMCPU, gt_cntfrq_exact, false);
+
 static const Property arm_cpu_reset_cbar_property =
             DEFINE_PROP_UINT64("reset-cbar", ARMCPU, reset_cbar, 0);
 
@@ -1449,6 +1453,16 @@ unsigned int gt_cntfrq_period_ns(ARMCPU *cpu)
      */
     return NANOSECONDS_PER_SECOND > cpu->gt_cntfrq_hz ?
       NANOSECONDS_PER_SECOND / cpu->gt_cntfrq_hz : 1;
+}
+
+uint64_t gt_countervalue_at_ns(ARMCPU *cpu, uint64_t ns)
+{
+    return arm_gt_ns_to_ticks(ns, cpu->gt_cntfrq_hz, cpu->gt_cntfrq_exact);
+}
+
+int64_t gt_counter_tick_to_ns(ARMCPU *cpu, uint64_t tick)
+{
+    return arm_gt_ticks_to_ns(tick, cpu->gt_cntfrq_hz, cpu->gt_cntfrq_exact);
 }
 
 static void arm_cpu_propagate_feature_implications(ARMCPU *cpu)
@@ -1692,6 +1706,7 @@ static void arm_cpu_post_init(Object *obj)
 
     if (arm_feature(&cpu->env, ARM_FEATURE_GENERIC_TIMER)) {
         qdev_property_add_static(DEVICE(cpu), &arm_cpu_gt_cntfrq_property);
+        qdev_property_add_static(DEVICE(cpu), &arm_cpu_gt_cntfrq_exact_property);
     }
 
     if (kvm_enabled()) {
@@ -1923,8 +1938,15 @@ static void arm_cpu_realizefn(DeviceState *dev, Error **errp)
         }
     }
 #ifndef CONFIG_USER_ONLY
+    if (cpu->gt_cntfrq_exact &&
+        (cpu->gt_cntfrq_hz > NANOSECONDS_PER_SECOND ||
+         kvm_enabled() || hvf_enabled() || whpx_enabled())) {
+        error_setg(errp, "cntfrq-exact requires software emulation and "
+                   "a counter frequency no greater than 1 GHz");
+        return;
+    }
     {
-        uint64_t scale = gt_cntfrq_period_ns(cpu);
+        uint64_t scale = cpu->gt_cntfrq_exact ? 1 : gt_cntfrq_period_ns(cpu);
 
         cpu->gt_timer[GTIMER_PHYS] = timer_new(QEMU_CLOCK_VIRTUAL, scale,
                                                arm_gt_ptimer_cb, cpu);

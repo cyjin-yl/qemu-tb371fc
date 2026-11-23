@@ -1,0 +1,45 @@
+{
+  "all_passed": true,
+  "commands": [
+    [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tb371fc/tests",
+      "-p",
+      "test_tlmm_map.py",
+      "-v"
+    ],
+    [
+      "python3",
+      "tb371fc/scripts/generate_tlmm_map.py",
+      "--linux-source",
+      "/work/clean-linux/source/linux-6.12.114",
+      "--header",
+      "hw/gpio/qcom-tb371fc-tlmm-map.h",
+      "--receipt",
+      "tb371fc/evidence/power-topology-20261123/tlmm-map-source.json",
+      "--check"
+    ]
+  ],
+  "completed_utc": "2026-11-23T07:51:23.568416+00:00",
+  "exit_codes": [
+    0,
+    0
+  ],
+  "generated_header_check": {
+    "checked": true,
+    "header_sha256": "d93de75193846a9f02ba52c726daf4e328e1707f50d55167a383c165c16e08a4",
+    "ordinary_gpio_count": 180
+  },
+  "schema_version": 1,
+  "sha256": {
+    "generator": "c486ab180e852ccf36bee520da8649bca12c4384d32b7cef512c599b6c46c776",
+    "log": "7af543bb56f4b744ce63524297330e8f02eace736db2cbadac15eeed7bd2c8a8",
+    "test": "915ee83ee729ced8fb410593a71dc486a0959da23323c3307f010444a91fe155"
+  },
+  "started_utc": "2026-11-23T07:51:23.419858+00:00",
+  "unittest_count": 9
+}

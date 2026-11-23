@@ -6,6 +6,7 @@ No tablet access. No mocked implementation. Python standard library only.
 The default QOM path is the TB371FC board's stable /machine/uart child.
 """
 import argparse
+import contextlib
 import json
 import os
 from pathlib import Path
@@ -60,7 +61,7 @@ class Rig:
         self.log_path = self.directory / 'qemu.stderr'
         self.log = self.log_path.open('wb')
         command = [
-            args.qemu, '-machine', 'tb371fc', '-accel', 'qtest',
+            args.qemu, '-machine', getattr(args, 'machine', 'tb371fc,ufs-enabled=off'), '-accel', 'qtest',
             '-m', '128M', '-display', 'none', '-monitor', 'none',
             '-qtest', f'unix:{directory}/qtest,server=on,wait=off',
             '-qtest-log', '/dev/null',
@@ -68,6 +69,7 @@ class Rig:
             '-chardev', f'socket,id=testserial,path={directory}/serial,server=on,wait=off',
             '-serial', 'chardev:testserial', '-S',
         ]
+        command.extend(getattr(args, 'extra_qemu_args', []))
         if incoming:
             command.extend(['-incoming', 'defer'])
         self.process = subprocess.Popen(command, stdin=subprocess.DEVNULL,
@@ -185,6 +187,28 @@ class Rig:
             self.log.close()
 
 
+def idle_watermark_restarts_tty_transfers(r):
+    """Linux start_tx_fifo enables watermark before issuing a new command."""
+    r.write(GLOBAL_EN, 4)
+    for payload in (b'first', b'second write', b'third'):
+        assert not r.read(STATUS) & 1, 'expected idle before new TTY write'
+        assert r.read(TX_STATUS) == 0, 'expected empty FIFO'
+        r.write(TX_WM, 2)
+        r.write(M_EN, TX_WATERMARK | DONE)
+        assert r.read(M_STATUS) & TX_WATERMARK, 'idle empty FIFO lost watermark'
+        r.assert_irq(True)
+        r.write(M_CLEAR, TX_WATERMARK)
+        r.assert_irq(True)
+        r.tx(payload)
+        assert r.serial_read(len(payload)) == payload
+        assert r.read(M_STATUS) & DONE
+        # Linux stop_tx_fifo masks both events and sets the watermark to zero.
+        r.write(TX_WM, 0)
+        r.write(M_EN, 0)
+        r.write(M_CLEAR, 0xffffffff)
+        r.assert_irq(False)
+
+
 def identity(r):
     assert r.read(FW_REV) & 0xff00 == 0x200
     assert r.read(0xe24) == 0x20100000
@@ -244,6 +268,11 @@ def watermark_reassertion(r):
     r.write(TX_FIFO, 0x44434241)
     r.write(TX_FIFO, 0x48474645)
     assert r.serial_read(8) == b'ABCDEFGH'
+    # Empty FIFO remains below threshold after command completion. Linux
+    # explicitly disables the watermark in stop_tx_fifo().
+    r.assert_irq(True)
+    r.write(TX_WM, 0)
+    r.write(M_CLEAR, TX_WATERMARK)
     r.assert_irq(False)
     assert r.read(M_STATUS) & DONE
 
@@ -365,7 +394,7 @@ def reset_clears_state(r):
         assert r.read(register) == 0, (hex(register), hex(r.read(register)))
 
 
-TESTS = [identity, exact_tx_and_padding, latched_masked_w1c_irq, global_gate,
+TESTS = [idle_watermark_restarts_tty_transfers, identity, exact_tx_and_padding, latched_masked_w1c_irq, global_gate,
          watermark_reassertion, enable_aliases, cancel_abort_overrun,
          rx_partial_word_irq, rx_underflow, rx_backpressure, rx_abort,
          unsupported_commands, reset_clears_state]
@@ -376,10 +405,11 @@ def main():
     parser.add_argument('--qemu', required=True)
     parser.add_argument('--base', type=lambda s: int(s, 0), default=0xa90000)
     parser.add_argument('--qom-path', default='/machine/uart')
+    parser.add_argument('--machine', default='tb371fc,ufs-enabled=off')
     args = parser.parse_args()
     args.qemu = os.path.abspath(args.qemu)
     results = []
-    with tempfile.TemporaryDirectory(prefix='tb371fc-geni-') as directory:
+    with contextlib.nullcontext(tempfile.mkdtemp(prefix='tb371fc-geni-')) as directory:
         rig = None
         try:
             rig = Rig(args, directory)
@@ -402,7 +432,7 @@ def main():
                 rig.close()
         success = len(results) == len(TESTS) and all(r['status'] == 'pass' for r in results)
         report = {'schema_version': 1, 'suite': 'GENI actual QTest/chardev',
-                  'success': success, 'qemu': args.qemu,
+                  'success': success, 'qemu': args.qemu, 'machine': args.machine,
                   'checks': results, 'expected_checks': len(TESTS), 'test_ram': '128 MiB',
                   'scope': 'FIFO behavioral model; no silicon timing or DMA validation'}
         if not success:

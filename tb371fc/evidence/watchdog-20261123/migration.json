@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "suite": "KPSS watchdog migration",
+  "qemu_sha256": "99dfb4fc3ff472624f0a079c67ba26b99e60935a4afc859d1e66afc8942e8c4c",
+  "test_sha256": "0a3147edb38a0d481ea043393f9c80f4502ae26fb6bf42541a7118c1521ccd1b",
+  "frequency_hz": 32765,
+  "frequency_provenance": "explicit reference profile; not measured hardware",
+  "scope": "Digital MMIO counter, IRQ and QEMU watchdog action; no secure firmware",
+  "checks": [
+    {
+      "name": "actual_pending_bite_migration",
+      "passed": true,
+      "details": {
+        "source": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 23,
+          "total-time": 34,
+          "ram": {
+            "total": 134217728,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303122,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 510.9329411764706,
+            "transferred": 2171465,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32766,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "target": {
+          "status": "completed"
+        },
+        "preserved": [
+          "counter_phase",
+          "registers",
+          "asserted_bark",
+          "pending_bite_deadline",
+          "post_migration_pet"
+        ]
+      }
+    }
+  ],
+  "passed": true,
+  "passed_count": 1,
+  "elapsed_seconds": 0.112
+}

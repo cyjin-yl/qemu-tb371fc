@@ -1,0 +1,20 @@
+{
+  "derivation": [
+    "Captured native DT resolves qsee syscon phandle0x84 to base0x01880000,size0x10000.",
+    "Native QSEE IRQ parent interrupts are GIC SPI348 and349, both level-high.",
+    "Actual production-kernel fault trace identifies qsee_irq_probe+0x140 and offset0x601c,value0xf.",
+    "Physical target0x0188601c is computed from captured DT base plus observed offset."
+  ],
+  "primary_reference": {
+    "qualification": "This primary snapshot matches qcom,sm8150-qsee-irq; captured native DT names qcom,kona-qsee-irq. It is not asserted to be the exact complete source of the installed production kernel.",
+    "role": "Corroborating Qualcomm source for probe-time bank masking and bank0 offset0x601c.",
+    "url": "https://android.googlesource.com/kernel/msm/+/1a4b384857a9b5ec3dceebc060096f7cf88f82ec/drivers/soc/qcom/qsee_ipc_irq.c"
+  },
+  "private_evidence_hashes": {
+    "captured_kernel_printk": "bcd4625e30d9891f7e2e4ce7478f1a05eaf25c63ebd600c625d0a9bd486db33e",
+    "diagnostic_report": "b49f6e3300e431c7b83ddbae9665990638c382522449e93316bcbb84d884c4b4",
+    "native_dt": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "production_kernel": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f"
+  },
+  "schema_version": 1
+}

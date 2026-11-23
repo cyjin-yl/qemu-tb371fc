@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "suite": "Real CPU physical/virtual timer migration",
+  "qemu_sha256": "99dfb4fc3ff472624f0a079c67ba26b99e60935a4afc859d1e66afc8942e8c4c",
+  "elf_sha256": "37e1b51ffc5ab43a34f794aa264fbe5cf5cea015501ff61722538a95e682d35f",
+  "machine": "tb371fc,ufs-enabled=off",
+  "ram_per_process": "128 MiB",
+  "compile_command": null,
+  "passed": true,
+  "provided_elf": "/work/mmio-timer/exact-cpu-migration-4/probe.elf",
+  "scope": "Read-only GDB checkpoint, actual QMP migration and guest timer expiry",
+  "symbols": {
+    "timer_migration_checkpoint": 2148016212,
+    "timer_migration_done": 2148016216,
+    "timer_migration_result": 2148016912
+  },
+  "source_command": [
+    "/work/integration-20261123-5/qemu-system-aarch64",
+    "-M",
+    "tb371fc,ufs-enabled=off",
+    "-accel",
+    "tcg,thread=single",
+    "-m",
+    "128M",
+    "-display",
+    "none",
+    "-serial",
+    "none",
+    "-monitor",
+    "none",
+    "-semihosting-config",
+    "enable=on,target=native",
+    "-kernel",
+    "/work/mmio-timer/exact-cpu-migration-4/probe.elf",
+    "-no-reboot",
+    "-S",
+    "-qmp",
+    "unix:/work/mmio-timer/exact-preserved-elf-migration-5/source/qmp,server=on,wait=off",
+    "-gdb",
+    "unix:/work/mmio-timer/exact-preserved-elf-migration-5/source/gdb,server=on,wait=off"
+  ],
+  "target_command": [
+    "/work/integration-20261123-5/qemu-system-aarch64",
+    "-M",
+    "tb371fc,ufs-enabled=off",
+    "-accel",
+    "tcg,thread=single",
+    "-m",
+    "128M",
+    "-display",
+    "none",
+    "-serial",
+    "none",
+    "-monitor",
+    "none",
+    "-semihosting-config",
+    "enable=on,target=native",
+    "-kernel",
+    "/work/mmio-timer/exact-cpu-migration-4/probe.elf",
+    "-no-reboot",
+    "-S",
+    "-qmp",
+    "unix:/work/mmio-timer/exact-preserved-elf-migration-5/target/qmp,server=on,wait=off",
+    "-gdb",
+    "unix:/work/mmio-timer/exact-preserved-elf-migration-5/target/gdb,server=on,wait=off",
+    "-incoming",
+    "defer"
+  ],
+  "source_stop": {
+    "reply": "T05thread:p01.01;",
+    "pc": 2148016212,
+    "pstate": 1610613705
+  },
+  "source_result": {
+    "magic": 6073470532614703431,
+    "before": 30907,
+    "offset": 15453,
+    "physical_compare": 1950907,
+    "virtual_compare": 2415454,
+    "resumed": 0,
+    "physical_expired": 0,
+    "virtual_expired": 0,
+    "passed": 0
+  },
+  "source_runstate": {
+    "status": "paused",
+    "running": false
+  },
+  "source_pause_reply": "T02thread:p01.01;",
+  "source_migration": {
+    "status": "completed",
+    "setup-time": 0,
+    "downtime": 26,
+    "total-time": 39,
+    "ram": {
+      "total": 134217728,
+      "postcopy-requests": 0,
+      "dirty-sync-count": 2,
+      "multifd-bytes": 0,
+      "pages-per-second": 0,
+      "downtime-bytes": 311312,
+      "page-size": 4096,
+      "remaining": 0,
+      "postcopy-bytes": 0,
+      "mbps": 447.3368205128205,
+      "transferred": 2180767,
+      "dirty-sync-missed-zero-copy": 0,
+      "precopy-bytes": 0,
+      "duplicate": 32764,
+      "dirty-pages-rate": 0,
+      "normal-bytes": 16384,
+      "normal": 4
+    }
+  },
+  "target_migration": {
+    "status": "completed"
+  },
+  "target_stop": {
+    "reply": "T05thread:p01.01;",
+    "pc": 2148016216,
+    "pstate": 2147484617
+  },
+  "target_result": {
+    "magic": 6073470532614703431,
+    "before": 30907,
+    "offset": 15453,
+    "physical_compare": 1950907,
+    "virtual_compare": 2415454,
+    "resumed": 991348,
+    "physical_expired": 1951312,
+    "virtual_expired": 2415476,
+    "passed": 1
+  },
+  "target_exit_code": 0,
+  "process_exit_codes_before_cleanup": [
+    null,
+    0
+  ],
+  "elapsed_seconds": 0.245
+}

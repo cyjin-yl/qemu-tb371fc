@@ -283,9 +283,9 @@ def compare(profile: dict, observed: dict, runtime: dict) -> dict:
     check('qmp.cpu_mpidrs', expected_mpidrs, [cpu.get('mp-affinity') for cpu in qcpus])
     check('dt.cpu_enable_method', [['psci']] * len(expected_mpidrs),
           [cpu['enable_method'] for cpu in observed['cpus']])
-    expected_models = ['cortex-a55'] * 4 + ['cortex-a76'] * 4
+    expected_models = ['cortex-a55'] * 4 + ['cortex-a77'] * 4
     actual_models = [cpu.get('qom-type', '').removesuffix('-arm-cpu') for cpu in qcpus]
-    check('model.declared_cpu_surrogates', expected_models, actual_models,
+    check('model.declared_cpu_types', expected_models, actual_models,
           detail='This is an explicit model choice, not a comparison with real CPU identities.')
     check('dt.cpu_compatible_matches_qom', [['arm,' + model] for model in actual_models],
           [cpu['compatible'] for cpu in observed['cpus']])
@@ -294,7 +294,7 @@ def compare(profile: dict, observed: dict, runtime: dict) -> dict:
     check('hardware.cpu_midr', [f'0x{value:08x}' for value in live_midr],
           [f"0x{cpu['midr']:08x}" if isinstance(cpu.get('midr'), int) else None for cpu in qcpus],
           required=False,
-          detail='QEMU A55/A76 CPU models are architectural surrogates; they do not reproduce Kryo/A77 identity or timing.')
+          detail='The small-core A55 model remains a Kryo surrogate. A77 r1p0 MIDR matches the measured big cores; timing and reference cache geometry are not silicon measurements.')
     expected_gic = profile['interrupt_controllers'][0]
     gic = observed['gics'][0] if len(observed['gics']) == 1 else {}
     check('dt.gic_regions', expected_gic['regions'], gic.get('regions'))
@@ -382,7 +382,7 @@ class QMP:
         self.stream = self.socket.makefile('rb')
         greeting = self.receive()
         if 'QMP' not in greeting:
-            raise ValidationError('missing QMP greeting')
+            raise ValidationError(f'missing QMP greeting: {greeting!r}')
         self.command('qmp_capabilities')
 
     def receive(self):

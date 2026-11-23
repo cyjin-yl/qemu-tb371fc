@@ -116,3 +116,4 @@ arm_common_ss.add(files('boot.c'))
 arm_common_ss.add(when: 'CONFIG_LENOVO_TB371FC', if_true: files('lenovo-tb371fc.c'))
 
 hw_common_arch += {'arm': arm_common_ss}
+arm_common_ss.add(when: 'CONFIG_ARM_SMMUV2', if_true: files('arm-smmuv2.c'))

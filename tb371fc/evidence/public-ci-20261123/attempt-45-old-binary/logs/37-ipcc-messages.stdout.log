@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "suite": "Qualcomm IPCC APPS message frame",
+  "qemu_sha256": "5a5c76062c5345d2be5960932a3a7ccefc73c6523e1531ea1b65088f5cdad555",
+  "test_sha256": "ed1cb2aa3334164be636eac44329003acb763f9af4be7ad9dcbb4abab7440c94",
+  "scope": "Actual message latches/masks/summary IRQ; APPS self-loop; explicit test peer events; no DSP/firmware reply claim",
+  "checks": [
+    {
+      "name": "initial_state_and_client_clear",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 334, in main\n    rig = IpccRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 92, in __init__\n    self.command(f'irq_intercept_out {args.qom_path} sysbus-irq')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: irq_intercept_out /machine/ipcc sysbus-irq: FAIL Unknown device\n"
+    },
+    {
+      "name": "apps_self_send_is_real_receive",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 334, in main\n    rig = IpccRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 92, in __init__\n    self.command(f'irq_intercept_out {args.qom_path} sysbus-irq')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: irq_intercept_out /machine/ipcc sysbus-irq: FAIL Unknown device\n"
+    },
+    {
+      "name": "masked_arrival_remains_pending",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 334, in main\n    rig = IpccRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 92, in __init__\n    self.command(f'irq_intercept_out {args.qom_path} sysbus-irq')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: irq_intercept_out /machine/ipcc sysbus-irq: FAIL Unknown device\n"
+    },
+    {
+      "name": "explicit_peer_receive_uses_sender_id",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 334, in main\n    rig = IpccRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 92, in __init__\n    self.command(f'irq_intercept_out {args.qom_path} sysbus-irq')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: irq_intercept_out /machine/ipcc sysbus-irq: FAIL Unknown device\n"
+    },
+    {
+      "name": "remote_send_never_fabricates_reply",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 334, in main\n    rig = IpccRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 92, in __init__\n    self.command(f'irq_intercept_out {args.qom_path} sysbus-irq')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: irq_intercept_out /machine/ipcc sysbus-irq: FAIL Unknown device\n"
+    },
+    {
+      "name": "masking_and_unmasking_preserve_pending",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 334, in main\n    rig = IpccRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 92, in __init__\n    self.command(f'irq_intercept_out {args.qom_path} sysbus-irq')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: irq_intercept_out /machine/ipcc sysbus-irq: FAIL Unknown device\n"
+    },
+    {
+      "name": "clear_only_selected_pair",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 334, in main\n    rig = IpccRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 92, in __init__\n    self.command(f'irq_intercept_out {args.qom_path} sysbus-irq')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: irq_intercept_out /machine/ipcc sysbus-irq: FAIL Unknown device\n"
+    },
+    {
+      "name": "duplicate_messages_coalesce_as_latches",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 334, in main\n    rig = IpccRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 92, in __init__\n    self.command(f'irq_intercept_out {args.qom_path} sysbus-irq')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: irq_intercept_out /machine/ipcc sysbus-irq: FAIL Unknown device\n"
+    },
+    {
+      "name": "deterministic_reference_arbitration",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 334, in main\n    rig = IpccRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 92, in __init__\n    self.command(f'irq_intercept_out {args.qom_path} sysbus-irq')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: irq_intercept_out /machine/ipcc sysbus-irq: FAIL Unknown device\n"
+    },
+    {
+      "name": "clear_on_read_selects_next_message",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 334, in main\n    rig = IpccRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 92, in __init__\n    self.command(f'irq_intercept_out {args.qom_path} sysbus-irq')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: irq_intercept_out /machine/ipcc sysbus-irq: FAIL Unknown device\n"
+    },
+    {
+      "name": "protocol_clear_resets_masks_pending_and_config",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 334, in main\n    rig = IpccRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 92, in __init__\n    self.command(f'irq_intercept_out {args.qom_path} sysbus-irq')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: irq_intercept_out /machine/ipcc sysbus-irq: FAIL Unknown device\n"
+    },
+    {
+      "name": "full_packed_id_and_zero_id_are_distinct",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 334, in main\n    rig = IpccRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 92, in __init__\n    self.command(f'irq_intercept_out {args.qom_path} sysbus-irq')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: irq_intercept_out /machine/ipcc sysbus-irq: FAIL Unknown device\n"
+    },
+    {
+      "name": "invalid_width_and_configuration_do_not_mutate",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 334, in main\n    rig = IpccRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 92, in __init__\n    self.command(f'irq_intercept_out {args.qom_path} sysbus-irq')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: irq_intercept_out /machine/ipcc sysbus-irq: FAIL Unknown device\n"
+    },
+    {
+      "name": "bounded_sparse_capacity_preserves_live_entries",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 334, in main\n    rig = IpccRig(a, directory)\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 92, in __init__\n    self.command(f'irq_intercept_out {args.qom_path} sysbus-irq')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: irq_intercept_out /machine/ipcc sysbus-irq: FAIL Unknown device\n"
+    },
+    {
+      "name": "actual_pending_mask_and_irq_migration",
+      "passed": false,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 332, in main\n    details = test(a, directory)\n  File \"/src/tb371fc/tests/test_ipcc.py\", line 261, in actual_pending_mask_and_irq_migration\n    source, target = IpccRig(args, sd), IpccRig(args, td, incoming=True)\n                     ~~~~~~~^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 92, in __init__\n    self.command(f'irq_intercept_out {args.qom_path} sysbus-irq')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 109, in command\n    raise AssertionError(f'{command}: {line}')\nAssertionError: irq_intercept_out /machine/ipcc sysbus-irq: FAIL Unknown device\n"
+    }
+  ],
+  "passed": false,
+  "elapsed_seconds": 0.618
+}

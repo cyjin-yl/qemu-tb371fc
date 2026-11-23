@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "suite": "SM8250 GCC actual process-to-process migration",
+  "qemu": "/work/integration-20261123-4/qemu-system-aarch64",
+  "machine": "tb371fc,gcc-boot-configured=off,ufs-enabled=off",
+  "qemu_sha256": "781d6ae66e9918bf1e3eed08c4bfaa3cdb6381cb1d63495d6ef5cc1a97dabb39",
+  "work_dir": "/work/component-tests-4/gcc-migration",
+  "checks": [
+    {
+      "check": "active_clock_pending_update_power_and_reset",
+      "status": "pass"
+    },
+    {
+      "check": "actual_qmp_migration_completed",
+      "status": "pass"
+    },
+    {
+      "check": "registers_clock_remote_vote_gpio_and_ram_preserved",
+      "status": "pass"
+    },
+    {
+      "check": "pending_timers_resume_at_test_controlled_deadlines",
+      "status": "pass"
+    },
+    {
+      "check": "destination_clocks_votes_and_reset_continue",
+      "status": "pass"
+    }
+  ],
+  "ram_per_process": "128 MiB",
+  "scope": "Clock register/gate state, software reset/power and controlled virtual-time transitions; no analog, silicon timing, voltage or full-SoC equivalence",
+  "success": true,
+  "migration": {
+    "source": {
+      "status": "completed",
+      "setup-time": 0,
+      "downtime": 25,
+      "total-time": 34,
+      "ram": {
+        "total": 134217728,
+        "postcopy-requests": 0,
+        "dirty-sync-count": 2,
+        "multifd-bytes": 0,
+        "pages-per-second": 0,
+        "downtime-bytes": 307217,
+        "page-size": 4096,
+        "remaining": 0,
+        "postcopy-bytes": 0,
+        "mbps": 511.7470588235294,
+        "transferred": 2174925,
+        "dirty-sync-missed-zero-copy": 0,
+        "precopy-bytes": 0,
+        "duplicate": 32765,
+        "dirty-pages-rate": 0,
+        "normal-bytes": 12288,
+        "normal": 3
+      }
+    },
+    "target": {
+      "status": "completed"
+    }
+  },
+  "qtest_virtual_ns_at_transfer": 6000,
+  "expected_checks": 5,
+  "exit_code": 0,
+  "completed_utc": "2026-11-23T07:07:32.492233+00:00",
+  "raw_report_sha256": "953ca8c3e58ef4ddbd761605a0df02e06d624734128dad785865095b4ea76241",
+  "scope_note": "Component configuration with ufs-enabled=off; no whole-board or native physical timing claim"
+}
