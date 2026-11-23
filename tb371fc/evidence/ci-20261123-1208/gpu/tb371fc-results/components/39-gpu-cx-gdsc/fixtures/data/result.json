@@ -1,0 +1,1548 @@
+{
+  "schema_version": 1,
+  "suite": "GPU CX GDSC normal/votable actual QTest",
+  "expected_checks": 26,
+  "migration_expected_checks": 8,
+  "expected_migration_attempts": 9,
+  "migration_attempts": [
+    {
+      "attempt": 1,
+      "source": "/tmp/tbci-5oly3byr/39/data/18/source",
+      "uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-vhhpq5z_/m",
+      "request_sent": true,
+      "request_accepted": true,
+      "expected_receiver_outcome": "completed",
+      "receiver_outcome": "completed",
+      "sender_status": "completed",
+      "receiver_state_verified": true
+    },
+    {
+      "attempt": 2,
+      "source": "/tmp/tbci-5oly3byr/39/data/19/source",
+      "uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-imfacf76/m",
+      "request_sent": true,
+      "request_accepted": true,
+      "expected_receiver_outcome": "completed",
+      "receiver_outcome": "completed",
+      "sender_status": "completed",
+      "receiver_state_verified": true
+    },
+    {
+      "attempt": 3,
+      "source": "/tmp/tbci-5oly3byr/39/data/20/source",
+      "uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-mrx8lmk3/m",
+      "request_sent": true,
+      "request_accepted": true,
+      "expected_receiver_outcome": "completed",
+      "receiver_outcome": "completed",
+      "sender_status": "completed",
+      "receiver_state_verified": true
+    },
+    {
+      "attempt": 4,
+      "source": "/tmp/tbci-5oly3byr/39/data/21/source",
+      "uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-9ng8i2rd/m",
+      "request_sent": true,
+      "request_accepted": true,
+      "expected_receiver_outcome": "completed",
+      "receiver_outcome": "completed",
+      "sender_status": "completed",
+      "receiver_state_verified": true
+    },
+    {
+      "attempt": 5,
+      "source": "/tmp/tbci-5oly3byr/39/data/22/first",
+      "uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-r3m8wd9j/m",
+      "request_sent": true,
+      "request_accepted": true,
+      "expected_receiver_outcome": "completed",
+      "receiver_outcome": "completed",
+      "sender_status": "completed",
+      "receiver_state_verified": true
+    },
+    {
+      "attempt": 6,
+      "source": "/tmp/tbci-5oly3byr/39/data/22/second",
+      "uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-2p06tvk2/m",
+      "request_sent": true,
+      "request_accepted": true,
+      "expected_receiver_outcome": "completed",
+      "receiver_outcome": "completed",
+      "sender_status": "completed",
+      "receiver_state_verified": true
+    },
+    {
+      "attempt": 7,
+      "source": "/tmp/tbci-5oly3byr/39/data/23/source",
+      "uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-reject-e0y9tjhi/m",
+      "request_sent": true,
+      "request_accepted": true,
+      "expected_receiver_outcome": "rejected",
+      "receiver_outcome": "rejected",
+      "sender_status": "completed",
+      "destination_exit": 1,
+      "rejection_diagnostic": "reset profile or transition-ns differs between source and destination"
+    },
+    {
+      "attempt": 8,
+      "source": "/tmp/tbci-5oly3byr/39/data/24/source",
+      "uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-reject-gjuoo89s/m",
+      "request_sent": true,
+      "request_accepted": true,
+      "expected_receiver_outcome": "rejected",
+      "receiver_outcome": "rejected",
+      "sender_status": "completed",
+      "destination_exit": 1,
+      "rejection_diagnostic": "reset profile or transition-ns differs between source and destination"
+    },
+    {
+      "attempt": 9,
+      "source": "/tmp/tbci-5oly3byr/39/data/25/source",
+      "uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-reject-ekc13eea/m",
+      "request_sent": true,
+      "request_accepted": true,
+      "expected_receiver_outcome": "rejected",
+      "receiver_outcome": "rejected",
+      "sender_status": "completed",
+      "destination_exit": 1,
+      "rejection_diagnostic": "reset profile or transition-ns differs between source and destination"
+    }
+  ],
+  "passed": true,
+  "all_passed": true,
+  "success": true,
+  "checks": [
+    {
+      "test": "default_unknown_is_not_initialized_by_time",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": null,
+        "intercepted_output": "state-known",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-f_aqssp6/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-f_aqssp6/t"
+        }
+      },
+      "seconds": 0.0341,
+      "directory": "/tmp/tbci-5oly3byr/39/data/00"
+    },
+    {
+      "test": "explicit_reference_does_not_assume_parent_on",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "state-known",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-pc3u80ih/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-pc3u80ih/t"
+        }
+      },
+      "seconds": 0.0417,
+      "directory": "/tmp/tbci-5oly3byr/39/data/01"
+    },
+    {
+      "test": "all_three_valued_and_or_combinations",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "truth_table": [
+          {
+            "parent": null,
+            "external": null,
+            "software": null,
+            "expected": null
+          },
+          {
+            "parent": null,
+            "external": null,
+            "software": false,
+            "expected": null
+          },
+          {
+            "parent": null,
+            "external": null,
+            "software": true,
+            "expected": null
+          },
+          {
+            "parent": null,
+            "external": false,
+            "software": null,
+            "expected": null
+          },
+          {
+            "parent": null,
+            "external": false,
+            "software": false,
+            "expected": false
+          },
+          {
+            "parent": null,
+            "external": false,
+            "software": true,
+            "expected": null
+          },
+          {
+            "parent": null,
+            "external": true,
+            "software": null,
+            "expected": null
+          },
+          {
+            "parent": null,
+            "external": true,
+            "software": false,
+            "expected": null
+          },
+          {
+            "parent": null,
+            "external": true,
+            "software": true,
+            "expected": null
+          },
+          {
+            "parent": false,
+            "external": null,
+            "software": null,
+            "expected": false
+          },
+          {
+            "parent": false,
+            "external": null,
+            "software": false,
+            "expected": false
+          },
+          {
+            "parent": false,
+            "external": null,
+            "software": true,
+            "expected": false
+          },
+          {
+            "parent": false,
+            "external": false,
+            "software": null,
+            "expected": false
+          },
+          {
+            "parent": false,
+            "external": false,
+            "software": false,
+            "expected": false
+          },
+          {
+            "parent": false,
+            "external": false,
+            "software": true,
+            "expected": false
+          },
+          {
+            "parent": false,
+            "external": true,
+            "software": null,
+            "expected": false
+          },
+          {
+            "parent": false,
+            "external": true,
+            "software": false,
+            "expected": false
+          },
+          {
+            "parent": false,
+            "external": true,
+            "software": true,
+            "expected": false
+          },
+          {
+            "parent": true,
+            "external": null,
+            "software": null,
+            "expected": null
+          },
+          {
+            "parent": true,
+            "external": null,
+            "software": false,
+            "expected": null
+          },
+          {
+            "parent": true,
+            "external": null,
+            "software": true,
+            "expected": true
+          },
+          {
+            "parent": true,
+            "external": false,
+            "software": null,
+            "expected": null
+          },
+          {
+            "parent": true,
+            "external": false,
+            "software": false,
+            "expected": false
+          },
+          {
+            "parent": true,
+            "external": false,
+            "software": true,
+            "expected": true
+          },
+          {
+            "parent": true,
+            "external": true,
+            "software": null,
+            "expected": true
+          },
+          {
+            "parent": true,
+            "external": true,
+            "software": false,
+            "expected": true
+          },
+          {
+            "parent": true,
+            "external": true,
+            "software": true,
+            "expected": true
+          }
+        ],
+        "reference": false,
+        "intercepted_output": "state-known",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-2y81evz0/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-2y81evz0/t"
+        }
+      },
+      "seconds": 0.2012,
+      "directory": "/tmp/tbci-5oly3byr/39/data/02"
+    },
+    {
+      "test": "two_windows_change_only_at_feedback_deadline",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "power-on",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-3nyehukk/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-3nyehukk/t"
+        }
+      },
+      "seconds": 0.0521,
+      "directory": "/tmp/tbci-5oly3byr/39/data/03"
+    },
+    {
+      "test": "parent_off_preserves_request_and_mmio_access",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "power-on",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-ke1zm4gv/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-ke1zm4gv/t"
+        }
+      },
+      "seconds": 0.0479,
+      "directory": "/tmp/tbci-5oly3byr/39/data/04"
+    },
+    {
+      "test": "unknown_parent_cancels_pending_on_without_late_success",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "state-known",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-fu8r7l1x/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-fu8r7l1x/t"
+        }
+      },
+      "seconds": 0.0595,
+      "directory": "/tmp/tbci-5oly3byr/39/data/05"
+    },
+    {
+      "test": "known_parent_off_cancels_pending_enable",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "power-on",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-tuuoplfu/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-tuuoplfu/t"
+        }
+      },
+      "seconds": 0.0415,
+      "directory": "/tmp/tbci-5oly3byr/39/data/06"
+    },
+    {
+      "test": "repeated_votes_and_config_do_not_postpone_deadline",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "power-on",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-qslcowhs/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-qslcowhs/t"
+        }
+      },
+      "seconds": 0.0476,
+      "directory": "/tmp/tbci-5oly3byr/39/data/07"
+    },
+    {
+      "test": "reverse_and_reenable_cancel_old_transition",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "power-on",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-p_rzecwf/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-p_rzecwf/t"
+        }
+      },
+      "seconds": 0.0465,
+      "directory": "/tmp/tbci-5oly3byr/39/data/08"
+    },
+    {
+      "test": "external_vote_keeps_power_without_hlos_vote",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "power-on",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-8nav_b9s/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-8nav_b9s/t"
+        }
+      },
+      "seconds": 0.0529,
+      "directory": "/tmp/tbci-5oly3byr/39/data/09"
+    },
+    {
+      "test": "validity_tracks_unknown_votes_with_hlos_dominance",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "state-known",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-5ygbpyp1/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-5ygbpyp1/t"
+        }
+      },
+      "seconds": 0.0558,
+      "directory": "/tmp/tbci-5oly3byr/39/data/10"
+    },
+    {
+      "test": "retain_and_clock_wait_config_are_latched_without_new_power_vote",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "power-on",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-prmg7tht/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-prmg7tht/t"
+        }
+      },
+      "seconds": 0.0588,
+      "directory": "/tmp/tbci-5oly3byr/39/data/11"
+    },
+    {
+      "test": "status_window_is_read_only_and_power_bit_cannot_be_forged",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "power-on",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-nc5jqvdu/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-nc5jqvdu/t"
+        }
+      },
+      "seconds": 0.0558,
+      "directory": "/tmp/tbci-5oly3byr/39/data/12"
+    },
+    {
+      "test": "unsupported_modes_and_bits_preserve_request_timer_and_feedback",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "power-on",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-tfiqhebx/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-tfiqhebx/t"
+        }
+      },
+      "seconds": 0.0632,
+      "directory": "/tmp/tbci-5oly3byr/39/data/13"
+    },
+    {
+      "test": "invalid_subword_accesses_do_not_initialize_or_mutate",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": false,
+        "intercepted_output": "state-known",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-nv9vkxa5/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-nv9vkxa5/t"
+        }
+      },
+      "seconds": 0.0442,
+      "directory": "/tmp/tbci-5oly3byr/39/data/14"
+    },
+    {
+      "test": "reset_cancels_old_timer_and_preserves_held_external_input",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": true,
+        "intercepted_output": "power-on",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-4g1g3pxp/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-4g1g3pxp/t"
+        }
+      },
+      "seconds": 0.0526,
+      "directory": "/tmp/tbci-5oly3byr/39/data/15"
+    },
+    {
+      "test": "default_reset_restores_unknown_control_without_erasing_inputs",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "reference": false,
+        "intercepted_output": "state-known",
+        "rpmh_fixture": false,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-0k67xs10/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-0k67xs10/t"
+        }
+      },
+      "seconds": 0.0389,
+      "directory": "/tmp/tbci-5oly3byr/39/data/16"
+    },
+    {
+      "test": "actual_shared_rpmh_cx_votes_drive_parent_and_feedback",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "cx_address": 253968,
+        "rpmh_power_gpio": 1,
+        "apps_and_display_share_resource": true,
+        "reference": true,
+        "intercepted_output": "power-on",
+        "rpmh_fixture": true,
+        "sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-4jlv4c8v/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-4jlv4c8v/t"
+        }
+      },
+      "seconds": 0.0763,
+      "directory": "/tmp/tbci-5oly3byr/39/data/17"
+    },
+    {
+      "test": "migration_unknown",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_state": {
+          "control": 0,
+          "control-known": false,
+          "state-known": false,
+          "power-on": false,
+          "transition-pending": false,
+          "transition-deadline-ns": -1,
+          "parent-known": false,
+          "parent-on": false,
+          "external-known": false,
+          "external-vote": false
+        },
+        "source_transfer": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 14,
+          "total-time": 19,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 930.2063157894737,
+            "transferred": 2209240,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "virtual_ns": 1,
+        "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-vhhpq5z_/m",
+        "source_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-b6h0ss58/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-b6h0ss58/t"
+        },
+        "destination_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-avd3jz2y/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-avd3jz2y/t"
+        }
+      },
+      "seconds": 0.0949,
+      "directory": "/tmp/tbci-5oly3byr/39/data/18"
+    },
+    {
+      "test": "migration_pending_on",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_state": {
+          "control": 0,
+          "control-known": true,
+          "state-known": true,
+          "power-on": false,
+          "transition-pending": true,
+          "transition-deadline-ns": 2000,
+          "parent-known": true,
+          "parent-on": true,
+          "external-known": true,
+          "external-vote": false
+        },
+        "source_transfer": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 17,
+          "total-time": 23,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 768.4313043478261,
+            "transferred": 2209240,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "virtual_ns": 1501,
+        "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-imfacf76/m",
+        "source_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-7yxc6oat/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-7yxc6oat/t"
+        },
+        "destination_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-aab2qf_n/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-aab2qf_n/t"
+        }
+      },
+      "seconds": 0.1138,
+      "directory": "/tmp/tbci-5oly3byr/39/data/19"
+    },
+    {
+      "test": "migration_pending_off",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_state": {
+          "control": 1,
+          "control-known": true,
+          "state-known": true,
+          "power-on": true,
+          "transition-pending": true,
+          "transition-deadline-ns": 3000,
+          "parent-known": true,
+          "parent-on": true,
+          "external-known": true,
+          "external-vote": false
+        },
+        "source_transfer": {
+          "status": "completed",
+          "setup-time": 1,
+          "downtime": 16,
+          "total-time": 23,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 803.36,
+            "transferred": 2209240,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "virtual_ns": 2501,
+        "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-mrx8lmk3/m",
+        "source_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-olgzg96p/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-olgzg96p/t"
+        },
+        "destination_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-_xygj8pb/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-_xygj8pb/t"
+        }
+      },
+      "seconds": 0.1148,
+      "directory": "/tmp/tbci-5oly3byr/39/data/20"
+    },
+    {
+      "test": "migration_external",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_state": {
+          "control": 1,
+          "control-known": true,
+          "state-known": true,
+          "power-on": true,
+          "transition-pending": false,
+          "transition-deadline-ns": -1,
+          "parent-known": true,
+          "parent-on": true,
+          "external-known": true,
+          "external-vote": true
+        },
+        "source_transfer": {
+          "status": "completed",
+          "setup-time": 1,
+          "downtime": 17,
+          "total-time": 24,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 768.4313043478261,
+            "transferred": 2209240,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "virtual_ns": 2001,
+        "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-9ng8i2rd/m",
+        "source_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-ww0p08y0/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-ww0p08y0/t"
+        },
+        "destination_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-w3ru7tr1/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-w3ru7tr1/t"
+        }
+      },
+      "seconds": 0.1095,
+      "directory": "/tmp/tbci-5oly3byr/39/data/21"
+    },
+    {
+      "test": "migration_actual_rpmh_and_gdsc_pending_in_two_stages",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "transfers": [
+          {
+            "source_state": {
+              "control": 0,
+              "control-known": true,
+              "state-known": true,
+              "power-on": false,
+              "transition-pending": false,
+              "transition-deadline-ns": -1,
+              "parent-known": true,
+              "parent-on": false,
+              "external-known": true,
+              "external-vote": false
+            },
+            "source_transfer": {
+              "status": "completed",
+              "setup-time": 0,
+              "downtime": 14,
+              "total-time": 20,
+              "ram": {
+                "total": 134250496,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 2,
+                "multifd-bytes": 0,
+                "pages-per-second": 0,
+                "downtime-bytes": 303245,
+                "page-size": 4096,
+                "remaining": 0,
+                "postcopy-bytes": 0,
+                "mbps": 892.2748,
+                "transferred": 2230687,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 32774,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 8192,
+                "normal": 2
+              }
+            },
+            "virtual_ns": 1401,
+            "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-r3m8wd9j/m",
+            "source_sockets": {
+              "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-smkhd2bs/m",
+              "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-smkhd2bs/t"
+            },
+            "destination_sockets": {
+              "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-p2awn79m/m",
+              "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-p2awn79m/t"
+            }
+          },
+          {
+            "source_state": {
+              "control": 0,
+              "control-known": true,
+              "state-known": true,
+              "power-on": false,
+              "transition-pending": true,
+              "transition-deadline-ns": 3000,
+              "parent-known": true,
+              "parent-on": true,
+              "external-known": true,
+              "external-vote": false
+            },
+            "source_transfer": {
+              "status": "completed",
+              "setup-time": 1,
+              "downtime": 14,
+              "total-time": 19,
+              "ram": {
+                "total": 134250496,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 2,
+                "multifd-bytes": 0,
+                "pages-per-second": 0,
+                "downtime-bytes": 303245,
+                "page-size": 4096,
+                "remaining": 0,
+                "postcopy-bytes": 0,
+                "mbps": 991.4164444444446,
+                "transferred": 2230687,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 32774,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 8192,
+                "normal": 2
+              }
+            },
+            "virtual_ns": 2401,
+            "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-2p06tvk2/m",
+            "source_sockets": {
+              "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-p2awn79m/m",
+              "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-p2awn79m/t"
+            },
+            "destination_sockets": {
+              "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-_j_7sohg/m",
+              "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-_j_7sohg/t"
+            }
+          }
+        ],
+        "scope": "actual shared RPMh output; two process transfers"
+      },
+      "seconds": 0.1877,
+      "directory": "/tmp/tbci-5oly3byr/39/data/22"
+    },
+    {
+      "test": "migration_unknown_to_reference_profile_rejected",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_reference": false,
+        "destination_reference": true,
+        "source_delay_ns": 1000,
+        "destination_delay_ns": 1000,
+        "source_transfer": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 17,
+          "total-time": 24,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 736.4133333333334,
+            "transferred": 2209240,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "destination_exit": 1,
+        "rejection_diagnostic": "reset profile or transition-ns differs between source and destination",
+        "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-reject-e0y9tjhi/m",
+        "source_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-ljo8zvb9/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-ljo8zvb9/t"
+        },
+        "destination_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-jmchw4b3/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-jmchw4b3/t"
+        }
+      },
+      "seconds": 0.0937,
+      "directory": "/tmp/tbci-5oly3byr/39/data/23"
+    },
+    {
+      "test": "migration_reference_to_unknown_profile_rejected",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_reference": true,
+        "destination_reference": false,
+        "source_delay_ns": 1000,
+        "destination_delay_ns": 1000,
+        "source_transfer": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 14,
+          "total-time": 20,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 883.696,
+            "transferred": 2209240,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "destination_exit": 1,
+        "rejection_diagnostic": "reset profile or transition-ns differs between source and destination",
+        "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-reject-gjuoo89s/m",
+        "source_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-4o8h7ak8/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-4o8h7ak8/t"
+        },
+        "destination_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-om3dr8pd/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-om3dr8pd/t"
+        }
+      },
+      "seconds": 0.0946,
+      "directory": "/tmp/tbci-5oly3byr/39/data/24"
+    },
+    {
+      "test": "migration_transition_delay_mismatch_rejected",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_reference": true,
+        "destination_reference": true,
+        "source_delay_ns": 1000,
+        "destination_delay_ns": 2000,
+        "source_transfer": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 14,
+          "total-time": 19,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 930.2063157894737,
+            "transferred": 2209240,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "destination_exit": 1,
+        "rejection_diagnostic": "reset profile or transition-ns differs between source and destination",
+        "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-reject-ekc13eea/m",
+        "source_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-wrmuu2w7/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-wrmuu2w7/t"
+        },
+        "destination_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-4lqhb_c9/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-4lqhb_c9/t"
+        }
+      },
+      "seconds": 0.0742,
+      "directory": "/tmp/tbci-5oly3byr/39/data/25"
+    }
+  ],
+  "migrations": [
+    {
+      "test": "migration_unknown",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_state": {
+          "control": 0,
+          "control-known": false,
+          "state-known": false,
+          "power-on": false,
+          "transition-pending": false,
+          "transition-deadline-ns": -1,
+          "parent-known": false,
+          "parent-on": false,
+          "external-known": false,
+          "external-vote": false
+        },
+        "source_transfer": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 14,
+          "total-time": 19,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 930.2063157894737,
+            "transferred": 2209240,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "virtual_ns": 1,
+        "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-vhhpq5z_/m",
+        "source_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-b6h0ss58/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-b6h0ss58/t"
+        },
+        "destination_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-avd3jz2y/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-avd3jz2y/t"
+        }
+      },
+      "seconds": 0.0949,
+      "directory": "/tmp/tbci-5oly3byr/39/data/18"
+    },
+    {
+      "test": "migration_pending_on",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_state": {
+          "control": 0,
+          "control-known": true,
+          "state-known": true,
+          "power-on": false,
+          "transition-pending": true,
+          "transition-deadline-ns": 2000,
+          "parent-known": true,
+          "parent-on": true,
+          "external-known": true,
+          "external-vote": false
+        },
+        "source_transfer": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 17,
+          "total-time": 23,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 768.4313043478261,
+            "transferred": 2209240,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "virtual_ns": 1501,
+        "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-imfacf76/m",
+        "source_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-7yxc6oat/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-7yxc6oat/t"
+        },
+        "destination_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-aab2qf_n/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-aab2qf_n/t"
+        }
+      },
+      "seconds": 0.1138,
+      "directory": "/tmp/tbci-5oly3byr/39/data/19"
+    },
+    {
+      "test": "migration_pending_off",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_state": {
+          "control": 1,
+          "control-known": true,
+          "state-known": true,
+          "power-on": true,
+          "transition-pending": true,
+          "transition-deadline-ns": 3000,
+          "parent-known": true,
+          "parent-on": true,
+          "external-known": true,
+          "external-vote": false
+        },
+        "source_transfer": {
+          "status": "completed",
+          "setup-time": 1,
+          "downtime": 16,
+          "total-time": 23,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 803.36,
+            "transferred": 2209240,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "virtual_ns": 2501,
+        "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-mrx8lmk3/m",
+        "source_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-olgzg96p/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-olgzg96p/t"
+        },
+        "destination_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-_xygj8pb/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-_xygj8pb/t"
+        }
+      },
+      "seconds": 0.1148,
+      "directory": "/tmp/tbci-5oly3byr/39/data/20"
+    },
+    {
+      "test": "migration_external",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_state": {
+          "control": 1,
+          "control-known": true,
+          "state-known": true,
+          "power-on": true,
+          "transition-pending": false,
+          "transition-deadline-ns": -1,
+          "parent-known": true,
+          "parent-on": true,
+          "external-known": true,
+          "external-vote": true
+        },
+        "source_transfer": {
+          "status": "completed",
+          "setup-time": 1,
+          "downtime": 17,
+          "total-time": 24,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 768.4313043478261,
+            "transferred": 2209240,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "virtual_ns": 2001,
+        "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-9ng8i2rd/m",
+        "source_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-ww0p08y0/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-ww0p08y0/t"
+        },
+        "destination_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-w3ru7tr1/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-w3ru7tr1/t"
+        }
+      },
+      "seconds": 0.1095,
+      "directory": "/tmp/tbci-5oly3byr/39/data/21"
+    },
+    {
+      "test": "migration_actual_rpmh_and_gdsc_pending_in_two_stages",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "transfers": [
+          {
+            "source_state": {
+              "control": 0,
+              "control-known": true,
+              "state-known": true,
+              "power-on": false,
+              "transition-pending": false,
+              "transition-deadline-ns": -1,
+              "parent-known": true,
+              "parent-on": false,
+              "external-known": true,
+              "external-vote": false
+            },
+            "source_transfer": {
+              "status": "completed",
+              "setup-time": 0,
+              "downtime": 14,
+              "total-time": 20,
+              "ram": {
+                "total": 134250496,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 2,
+                "multifd-bytes": 0,
+                "pages-per-second": 0,
+                "downtime-bytes": 303245,
+                "page-size": 4096,
+                "remaining": 0,
+                "postcopy-bytes": 0,
+                "mbps": 892.2748,
+                "transferred": 2230687,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 32774,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 8192,
+                "normal": 2
+              }
+            },
+            "virtual_ns": 1401,
+            "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-r3m8wd9j/m",
+            "source_sockets": {
+              "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-smkhd2bs/m",
+              "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-smkhd2bs/t"
+            },
+            "destination_sockets": {
+              "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-p2awn79m/m",
+              "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-p2awn79m/t"
+            }
+          },
+          {
+            "source_state": {
+              "control": 0,
+              "control-known": true,
+              "state-known": true,
+              "power-on": false,
+              "transition-pending": true,
+              "transition-deadline-ns": 3000,
+              "parent-known": true,
+              "parent-on": true,
+              "external-known": true,
+              "external-vote": false
+            },
+            "source_transfer": {
+              "status": "completed",
+              "setup-time": 1,
+              "downtime": 14,
+              "total-time": 19,
+              "ram": {
+                "total": 134250496,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 2,
+                "multifd-bytes": 0,
+                "pages-per-second": 0,
+                "downtime-bytes": 303245,
+                "page-size": 4096,
+                "remaining": 0,
+                "postcopy-bytes": 0,
+                "mbps": 991.4164444444446,
+                "transferred": 2230687,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 32774,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 8192,
+                "normal": 2
+              }
+            },
+            "virtual_ns": 2401,
+            "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-migration-2p06tvk2/m",
+            "source_sockets": {
+              "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-p2awn79m/m",
+              "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-p2awn79m/t"
+            },
+            "destination_sockets": {
+              "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-_j_7sohg/m",
+              "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-_j_7sohg/t"
+            }
+          }
+        ],
+        "scope": "actual shared RPMh output; two process transfers"
+      },
+      "seconds": 0.1877,
+      "directory": "/tmp/tbci-5oly3byr/39/data/22"
+    },
+    {
+      "test": "migration_unknown_to_reference_profile_rejected",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_reference": false,
+        "destination_reference": true,
+        "source_delay_ns": 1000,
+        "destination_delay_ns": 1000,
+        "source_transfer": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 17,
+          "total-time": 24,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 736.4133333333334,
+            "transferred": 2209240,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "destination_exit": 1,
+        "rejection_diagnostic": "reset profile or transition-ns differs between source and destination",
+        "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-reject-e0y9tjhi/m",
+        "source_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-ljo8zvb9/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-ljo8zvb9/t"
+        },
+        "destination_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-jmchw4b3/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-jmchw4b3/t"
+        }
+      },
+      "seconds": 0.0937,
+      "directory": "/tmp/tbci-5oly3byr/39/data/23"
+    },
+    {
+      "test": "migration_reference_to_unknown_profile_rejected",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_reference": true,
+        "destination_reference": false,
+        "source_delay_ns": 1000,
+        "destination_delay_ns": 1000,
+        "source_transfer": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 14,
+          "total-time": 20,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 883.696,
+            "transferred": 2209240,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "destination_exit": 1,
+        "rejection_diagnostic": "reset profile or transition-ns differs between source and destination",
+        "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-reject-gjuoo89s/m",
+        "source_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-4o8h7ak8/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-4o8h7ak8/t"
+        },
+        "destination_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-om3dr8pd/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-om3dr8pd/t"
+        }
+      },
+      "seconds": 0.0946,
+      "directory": "/tmp/tbci-5oly3byr/39/data/24"
+    },
+    {
+      "test": "migration_transition_delay_mismatch_rejected",
+      "status": "pass",
+      "passed": true,
+      "detail": {
+        "source_reference": true,
+        "destination_reference": true,
+        "source_delay_ns": 1000,
+        "destination_delay_ns": 2000,
+        "source_transfer": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 14,
+          "total-time": 19,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 930.2063157894737,
+            "transferred": 2209240,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "destination_exit": 1,
+        "rejection_diagnostic": "reset profile or transition-ns differs between source and destination",
+        "migration_uri": "unix:/tmp/tbci-5oly3byr/39/tmp/qgdsc-reject-ekc13eea/m",
+        "source_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-wrmuu2w7/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-wrmuu2w7/t"
+        },
+        "destination_sockets": {
+          "qmp": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-4lqhb_c9/m",
+          "qtest": "/tmp/tbci-5oly3byr/39/tmp/qgdsc-4lqhb_c9/t"
+        }
+      },
+      "seconds": 0.0742,
+      "directory": "/tmp/tbci-5oly3byr/39/data/25"
+    }
+  ],
+  "qemu": "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+  "qemu_sha256": "4be01de351f13b81e72d4cfbaee477ab5df4f66012a35df723bc2e2a8730b422",
+  "test_sha256": "f56b85ff6557c3d4c3fcd6a4fda93fb181a4f20a16c122c7b47fa35907da8d11",
+  "transport_sha256": "08754321c8bd6e361ea33f722bd0a4c813419e053618f4d4a48a9dd1bffaa1bf",
+  "machine": "tb371fc,ufs-enabled=off",
+  "qom_path": "/machine/gpu-cx-gdsc",
+  "output": "/tmp/tbci-5oly3byr/39/data",
+  "socket_directories_retained": true,
+  "scope": "Two four-byte register windows; digital reference feedback; three-valued parent/votes; UFS disabled for component migration; no analogue/GPU/full-board claim",
+  "completed_migration_attempts": 6,
+  "rejected_migration_attempts": 3,
+  "completed_checks": 26,
+  "passed_checks": 26
+}

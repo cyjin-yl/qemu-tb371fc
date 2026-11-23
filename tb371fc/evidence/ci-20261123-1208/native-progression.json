@@ -1,0 +1,81 @@
+{
+  "schema": "tb371fc-native-dt-gpu-cx-progression-v1",
+  "source_commit": "e47e361d760d528bc99201db1c8b1eefae3cd27e",
+  "qemu_sha256": "4be01de351f13b81e72d4cfbaee477ab5df4f66012a35df723bc2e2a8730b422",
+  "binary_provenance": {
+    "workflow_run_id": 45169333977,
+    "artifact_id": 14816377510,
+    "artifact_sha256": "5f371cfc783942109fb65f2411c6a2c854993f2998bc98128dc1ffe39ccc19cb"
+  },
+  "private_execution_receipt": {
+    "sha256": "f54ff5f0b829df251a1fb17334171d2e53b7b812a681004bac6ad2b3de10f800",
+    "bytes": 5748
+  },
+  "started_utc": "2026-11-23T12:44:45.510667+00:00",
+  "finished_utc": "2026-11-23T12:45:26.277681+00:00",
+  "native_boot_passed": false,
+  "android_boot_passed": false,
+  "full_tablet_equivalence": false,
+  "firmware_write_requested": false,
+  "inputs_unchanged": true,
+  "qemu_unchanged": true,
+  "inputs": {
+    "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "full_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+    "partial_cmd_db_sha256": "a971809c06fa1a3ff44c9d28463bc6ff53203d9375ffd0f76dc73d4c8a3ea6f9",
+    "initrd_sha256": "8c2f582b72f19ba6043af7e85f91a3936c3c8fcb3c2a306ae4f76efe6d72ae7e"
+  },
+  "observer": {
+    "diagnose_kernel_sha256": "bf72854382d0b0ae8c38dca4413503a041f2ec6588e25afd3358eb839aefa9aa",
+    "legacy_printk_sha256": "6b7d18188ef8987c32135fef179f271dcf7284766a233626d09269696cada27d",
+    "wrapper_sha256": "027b3e3e61dd6362208c5c9d4cb213e1c8cd9f209ced9269a454da28665658b3",
+    "window_seconds": 12,
+    "outer_process_group_limit_seconds": 90,
+    "completed": true
+  },
+  "shared_reference_assumptions": [
+    "partial command database, not full native AOP handoff",
+    "SPMI reference profile",
+    "REFGEN boot-disabled-reference enabled"
+  ],
+  "experiments": [
+    {
+      "profile": "GPU CX unknown",
+      "gpu_boot_collapsed_reference": false,
+      "captured_printk_records": 337,
+      "diagnostic_sha256": "e9c8be8d475ff7644aa5e1bf9bc0a8478ff6ea6d2e7a843915f8c0fc68f79c7e",
+      "printk_log_sha256": "b19b72601ca1db1e1944188d2b48edb0fa169147b6f4a6f5b95a94491efda14c",
+      "qemu_log_sha256": "618ddfdb579eee942256860b042c5b4929da5f6a8a06beae677987ff94a10758",
+      "observer_and_qemu_exit_code": 0,
+      "stopped_for_capture_at_timeout": true,
+      "capture_errors": false,
+      "smem_error": -22,
+      "last_gdsc_node": "3d9106c.qcom,gdsc",
+      "qemu_diagnostic": "GDSCR unknown modeled state; refusing read (control-known=0 status-known=0)",
+      "fault_pc": "regmap_mmio_read32le+0x8/0x20",
+      "caller": "gdsc_probe+0x770/0x9d0",
+      "kernel_panicked_killing_init": true
+    },
+    {
+      "profile": "GPU CX collapsed reference",
+      "gpu_boot_collapsed_reference": true,
+      "captured_printk_records": 339,
+      "diagnostic_sha256": "9eea1b8bc8dd4aece227a993f67e2d5168d2e48f390377180a56f795dc05f5fc",
+      "printk_log_sha256": "84190b17b63de9970f6f802f18c63e53a92f3f5137a1b3a580e019032e4d7706",
+      "qemu_log_sha256": "e9c6112b55482ef605edc7a0f0f5fca426ac67f1406ccef64cca485ad5ebe230",
+      "observer_and_qemu_exit_code": 0,
+      "stopped_for_capture_at_timeout": true,
+      "capture_errors": false,
+      "smem_error": -22,
+      "observed_cx_message": "gpu_cx_gdsc: supplied by pm8150_s3_level",
+      "last_gdsc_node": "3d9100c.qcom,gdsc",
+      "fault_pc": "regmap_mmio_read32le+0x8/0x20",
+      "caller": "gdsc_probe+0x770/0x9d0",
+      "kernel_panicked_killing_init": true,
+      "interpretation": "The last GDSC probe before the abort is the GPU GX node. The selected QEMU logs contained no physical fault-address line; the exact failing physical transaction is not independently established here."
+    }
+  ],
+  "private_payload_exported": false,
+  "scope": "Two bounded production-kernel/full-DT diagnostic observations with explicit reference inputs. Observer completion and QEMU quit success are not guest boot success."
+}

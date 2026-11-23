@@ -4,28 +4,44 @@
 
 面向 **Lenovo TB371FC / SM8250（Kona）** 的整机模拟开发分支，基于 QEMU **11.1.3**，提供独立的 `-M tb371fc`。目标是实现真实来宾驱动可使用的软件可见硬件接口，并用平板的只读证据和实际运行的测试逐项核对。
 
-**当前已实现并实际验证 Cortex-A77 架构模型、GENI FIFO、GCC、精确架构计数器与 MMIO timer、SMMUv2 stage 1、UFS 主机/PHY，以及显式启用的 RPMh 数字资源模型。**
+**当前已实现并实际验证 Cortex-A77 架构模型、GENI FIFO、GCC、精确架构计数器与 MMIO timer、SMMUv2 stage 1、UFS 主机/PHY，以及显式启用的 RPMh 数字资源模型和 GPU CX 数字电源控制。**
 独立的 upstream Linux 6.12.114 已完成八核用户态启动和真实 UFS/SMMU 驱动 I/O；未修改的平板生产内核也已在生成的设备树和测试 initramfs 下完成八项用户态检查及真实 guest shutdown。
 
 **完整 Android 启动和整台平板等价仍是未通过的目标。**
 生产内核加测试 initramfs 的成功不等于原厂 Android 系统启动。小核仍用 A55 代替 Qualcomm Kryo；显示、Adreno 650、触控、无线、音频、摄像头以及完整电源/固件契约仍有大量实现工作。缓存容量、功耗、射频、电气行为和真实芯片时序不由这些功能测试证明。
 
-## GPU CX 独立 CI 检查点（2026-11-23，结果待验证）
+## GPU CX 与公开 CI 验收（2026-11-23）
 
-本分支新增 [GPU CX GDSC 数字控制器](tb371fc/docs/gpu-cx-gdsc.md)，连接已有 RPMh `cx.lvl` 资源，并增加严格的公开测试入口。
-**这是待验证的检查点；本段不宣称新增模型的全套测试已通过。**
+提交 `e47e361d760d528bc99201db1c8b1eefae3cd27e` 的[公开 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45169333977)已实际通过 **56/56 个 gate：52 组组件/解析检查与四次 Linux 验证**。
+[归档说明与完整性清单](tb371fc/evidence/ci-20261123-1208/README.md)保留所选原始 JSON 字节、artifact 摘要和各自二进制哈希；归档过程未重新运行模型或测试。
 
-模型已在 doesvm 的 CT102 开发容器内编译。首轮专项测试执行了 7 项检查：6 项通过，第 7 项失败后停止，未执行迁移。
-审查确认测试 helper 在已知输入切换时插入了非预期的 unknown 脉冲；本分支只修正两个 helper 的输入波形，C 模型及原断言保持不变。
-公开 CI 将执行 56 个 gate，其中 GPU CX 要求 26 项检查、8 个迁移场景、9 次实际迁移尝试（6 次成功、3 次预期拒绝）；以实际运行回执为准。
-[检查点记录](tb371fc/evidence/gpu-cx-ci-20261123/checkpoint.json) 保存源码哈希、已观察到的失败和未执行的验证项。
+| 验证 | 实际结果与原始回执 |
+| --- | --- |
+| 组件与解析 | [52/52](tb371fc/evidence/ci-20261123-1208/gpu/tb371fc-results/components/result.json) |
+| 主线 Linux | [4/4](tb371fc/evidence/ci-20261123-1208/gpu/tb371fc-results/linux/result.json)，包括两次 console/userspace、strict UFS/SMMU 和 reference RPMh 联合验证 |
+| GPU CX GDSC | [26 项行为检查、8 项迁移场景断言](tb371fc/evidence/ci-20261123-1208/gpu/tb371fc-results/components/39-gpu-cx-gdsc/fixtures/data/result.json)；9 次实际迁移尝试中 6 次完成、3 次按预期拒绝配置不匹配 |
+| Cortex-A77 | [9 种配置合计 852 项 guest 检查及 2 项非法配置拒绝](tb371fc/evidence/ci-20261123-1208/a77/a77-probe/result.json) |
+| PCI UFS 兼容 | [15/15](tb371fc/evidence/ci-20261123-1208/a77/ufs-pci-results/result.json) |
 
-doesvm 执行/写入通道暂时排队超时，原始失败目录及完整拓扑提取保留在那里。当前分支提供的是明确标记的拓扑摘要。
-**新增 GPU CX 模型尚未完成完整原生 DT 复测；原厂 Android 启动与整机等价仍未通过。**
-以下 55/55 等历史成功记录对应各自注明的先前提交，不能充当本次 GPU CX 新增部分的通过回执。
+组件/Linux/GPU CX 的 QEMU SHA-256 为 `4be01de351f13b81e72d4cfbaee477ab5df4f66012a35df723bc2e2a8730b422`。
+A77/PCI 使用同一源码提交的独立构建，QEMU SHA-256 为 `cfe3b6a38d43b51eafef6efa8c82a4b68a9d23c5d3dd4c91613af536c58b48d1`。
+[GPU CX 模型](tb371fc/docs/gpu-cx-gdsc.md)验证的是请求、状态有效性、RPMh 数字父资源与迁移契约；这些检查不证明 Adreno 渲染、GPU GX 或模拟电路的电源状态。
 
-独立 CI 的首次实际运行已保存到 [attempt-01](tb371fc/evidence/gpu-cx-ci-20261123/attempt-01/manifest.json)：组件 47/52 通过；GPU CX 前 17 项行为检查通过，实际 RPMh 接线场景在启动时失败，迁移与 Linux 套件尚未执行。
-已定位并修正 board 中两处 QOM 类型错误：RPMh 的 `present/enabled` 是 `uint64` 属性，应按整数读取后转为逻辑电平。设备模型和测试断言不变，修正后的结果仍待新 CI 回执。
+GitHub 保留两次早期失败的可公开记录：[CT 初轮检查点摘要](tb371fc/evidence/gpu-cx-ci-20261123/checkpoint.json)记录 6 项通过、第 7 项失败后停止，尚未执行迁移；完整 CT 失败目录仍在 doesvm，未由该摘要链接发布。
+[首次公开 CI 的所选原始回执](tb371fc/evidence/gpu-cx-ci-20261123/attempt-01/manifest.json)记录组件 47/52、GPU CX 前 17 项通过后因 board 的 QOM 属性类型错误中止，迁移与 Linux 未执行。
+之后分别修正测试 helper 的输入波形及 board 的整数属性读取；本次成功归档没有改写这两次失败回执。
+
+### 同一二进制的原厂内核与完整 DT 诊断
+
+[两次 12 秒诊断](tb371fc/evidence/ci-20261123-1208/native-progression.json)均完成观察和 printk 捕获，**两次来宾启动均失败**。
+共享输入明确包含部分 command-db、SPMI reference 和 REFGEN disabled reference；内核、完整 DT、其他输入及 QEMU 的前后摘要一致。
+
+默认 GPU CX unknown 状态捕获 337 条 printk 记录，在 CX 状态拒读后于 `gdsc_probe` 中止。
+显式启用 collapsed reference 后捕获 339 条记录，出现 `gpu_cx_gdsc: supplied by pm8150_s3_level`，
+中止前最后一个 GDSC probe 节点变为 `3d9100c.qcom,gdsc`（GPU GX）。
+所选 QEMU 日志没有物理故障地址行，**该节点地址不是已独立确定的故障事务地址**。
+两次均记录 SMEM `-22` 和 init panic。观察器退出 0 与成功保存日志不等于 guest boot 成功；
+**完整原生 DT、Android 启动与整台平板等价仍未通过。**
 
 ## TCSR、AOP 消息内存与 REFGEN 增量验证（2026-11-23）
 
@@ -207,6 +223,17 @@ python3 tb371fc/scripts/boot_ufs.py \
 
 后续启动诊断另外读取了授权的活动槽启动资产，私下保留原始 Image/AOP 输入；公开仓库只放必要的哈希、解码结构、来源和实验结果。没有将分区内容、凭据或用户数据作为 CI 输入。
 采集与测试未刷写或重启真实平板，未为获取寄存器而开放裸 MMIO 权限。软件配置、DT 声明和直接测量在各设备文档中分别标注。
+
+### XBL / SMEM 的只读静态证据
+
+[静态证据归档](tb371fc/evidence/xbl-smem-static-20261123/README.md)包含既有活动槽备份的格式元数据、A/B/C 三轮有限地址引用、
+局部控制流推导，以及各次采集的原样方法源码。原始固件、证书、完整反汇编和私有内存转储未纳入公开仓库。
+这些记录确认了允许范围内的字符串/地址候选和输出截断情况；**实际配置选择、从真实入口可达性及 SMEM 写入值仍未知**。
+
+[固定内核镜像源码的消费者 ABI](tb371fc/evidence/xbl-smem-static-20261123/linux-consumer-abi.md)单独记录 Linux 接受条件。
+其中 `partition_header.size` 是 +0x08 的整个分区声明长度，不是 32 字节结构体大小。
+消费者校验规则和 XBL 静态候选尚未形成经过证据支持的 SBL/SMEM 初始化服务，也没有生成可供原厂启动使用的 SMEM handoff。
+[方法说明](tb371fc/evidence/xbl-smem-static-20261123/METHOD.md)明确各 wrapper 需要注入冻结 parser/validator 源码；原 parser 的 12 项测试不能作为新增 wrapper 或完整固件执行的验收。
 
 完整依赖和剩余验收见 [ROADMAP.md](tb371fc/ROADMAP.md)。上游基线为
 `005c61c0ef6f6ae615283440b4bb7be51b2c6ddd`；各源文件保留自己的 SPDX、版权和上游来源，Linux 派生的表继续使用其原许可证。原始 QEMU 说明保留于 [README.rst](README.rst)。

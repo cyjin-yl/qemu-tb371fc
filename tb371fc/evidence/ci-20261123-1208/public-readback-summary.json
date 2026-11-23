@@ -1,0 +1,151 @@
+{
+  "schema": 1,
+  "purpose": "Read original public GitHub CI artifacts only; no QEMU executed locally",
+  "original_text_files": {
+    "aop": {
+      "path": "aop-selected/aop-reference-results/preflight/result.json",
+      "bytes": 2102,
+      "sha256": "7090d8cee4fedd594629db745b40161043ecd9b8c42d9191b00a572b46264ec6"
+    },
+    "aop_execution": {
+      "path": "aop-selected/aop-reference-results/ci-execution.json",
+      "bytes": 1698,
+      "sha256": "55532eadaabb487e5d37b70bdc3c21003a2ad0bacc8259f835f61d7a88d5d517"
+    },
+    "components": {
+      "path": "gpu-selected/tb371fc-results/components/result.json",
+      "bytes": 59238,
+      "sha256": "34310fa632b1f29e86c953ae3753dc7978f731525bd2279d6e452c08f5cebc27"
+    },
+    "linux": {
+      "path": "gpu-selected/tb371fc-results/linux/result.json",
+      "bytes": 8948,
+      "sha256": "4737fb6194fd01d048f80429a1f18df0a597a388f0c0e7c0ec38f2f6c500ae4d"
+    },
+    "gdsc": {
+      "path": "gpu-selected/tb371fc-results/components/39-gpu-cx-gdsc/fixtures/data/result.json",
+      "bytes": 49695,
+      "sha256": "6f6e7361a44f6e933c032463691e2088bf61d6248cb69d63fab4322b9e49c9fb"
+    },
+    "a77": {
+      "path": "a77-selected/a77-probe/result.json",
+      "bytes": 43294,
+      "sha256": "cafdf659d5130458a7eb7026c31223b472e0b4ba918665f294c07c2efb789674"
+    },
+    "ufs_pci": {
+      "path": "a77-selected/ufs-pci-results/result.json",
+      "bytes": 8332,
+      "sha256": "f90e233391f8a2b391c69e33e26466078f7d13bd815d5a7a9c79850afdeafc1d"
+    }
+  },
+  "zip_files": {
+    "aop": {
+      "path": "aop.zip",
+      "bytes": 23316862,
+      "sha256": "308442ec2dc6c41f2b0d106028e344fa3316f7092b2c0b859cb49382cff76dcd",
+      "sha256_verified": true,
+      "artifact_id": 14816876626
+    },
+    "gpu": {
+      "path": "gpu.zip",
+      "bytes": 32983070,
+      "sha256": "5f371cfc783942109fb65f2411c6a2c854993f2998bc98128dc1ffe39ccc19cb",
+      "sha256_verified": true,
+      "artifact_id": 14816377510
+    },
+    "a77": {
+      "path": "a77.zip",
+      "bytes": 28317476,
+      "sha256": "0864a0469672fc304bb4d926d42beaa4ce2bc1f717749dac6da1f9985861f639",
+      "sha256_verified": true,
+      "artifact_id": 14816537411
+    }
+  },
+  "observations": {
+    "aop": {
+      "passed": false,
+      "all_passed": false,
+      "expected_checks": 14,
+      "qemu_sha256": "b215e1be94fd13157185f5a2305a7c37a534f9768117729694d929854fae0043",
+      "firmware_read": false,
+      "firmware_executed": false,
+      "checks_length": 1
+    },
+    "aop_execution": {
+      "passed": false,
+      "expected_checks": 14,
+      "firmware_read": false,
+      "firmware_executed": false,
+      "group_present_after_wait": false
+    },
+    "components": {
+      "passed": true,
+      "expected_gates": 52,
+      "passed_gates": 52,
+      "qemu_sha256": "4be01de351f13b81e72d4cfbaee477ab5df4f66012a35df723bc2e2a8730b422",
+      "qemu_unchanged": true,
+      "source_commit": "e47e361d760d528bc99201db1c8b1eefae3cd27e",
+      "elapsed_seconds": 26.582,
+      "gates_length": 52
+    },
+    "linux": {
+      "passed": true,
+      "expected_gates": 4,
+      "passed_gates": 4,
+      "qemu_sha256": "4be01de351f13b81e72d4cfbaee477ab5df4f66012a35df723bc2e2a8730b422",
+      "qemu_unchanged": true,
+      "source_commit": "e47e361d760d528bc99201db1c8b1eefae3cd27e",
+      "elapsed_seconds": 5.199,
+      "gates_length": 4
+    },
+    "gdsc": {
+      "passed": true,
+      "all_passed": true,
+      "success": true,
+      "expected_checks": 26,
+      "qemu_sha256": "4be01de351f13b81e72d4cfbaee477ab5df4f66012a35df723bc2e2a8730b422",
+      "migration_expected_checks": 8,
+      "expected_migration_attempts": 9,
+      "completed_migration_attempts": 6,
+      "rejected_migration_attempts": 3,
+      "checks_length": 26,
+      "migrations_length": 8,
+      "migration_attempts_length": 9
+    },
+    "a77": {
+      "passed": true,
+      "qemu_sha256": "cfe3b6a38d43b51eafef6efa8c82a4b68a9d23c5d3dd4c91613af536c58b48d1",
+      "elapsed_seconds": 0.988,
+      "variants_length": 9,
+      "invalid_configurations_length": 2,
+      "instruction_and_id_passes": 852,
+      "all_variants_passed": true,
+      "all_invalid_configurations_rejected": true
+    },
+    "ufs_pci": {
+      "passed": true,
+      "qemu_sha256": "cfe3b6a38d43b51eafef6efa8c82a4b68a9d23c5d3dd4c91613af536c58b48d1",
+      "qemu_unchanged": true,
+      "elapsed_seconds": 7.151,
+      "checks_length": 15
+    }
+  },
+  "aop_build_marker": {
+    "path_in_zip": "aop-reference-results/build.log",
+    "sha256": "e0dfef6c2c13699925b75e2628cf35a3e7041defe9545ca8a6fd5d83c88a97d6",
+    "lines": [
+      "[1356/1378] Compiling C object libsystem_arm.a.p/hw_arm_qcom-aop-reference.c.o"
+    ]
+  },
+  "aop_startup_failure": {
+    "bytes": 114,
+    "sha256": "253831a177c514491bb198cc51f882d678046554aaa2e7948fee3426c4bd1d90",
+    "original_text": "qemu-system-aarch64: unsupported machine type: \"aop-entry-reference\"\nUse -machine help to list supported machines\n",
+    "classification": "QEMU target machine interface registration missing; synthetic guest not started",
+    "minimal_source_fix": [
+      "include hw/arm/machines-qom.h",
+      "TypeInfo.interfaces = arm_machine_interfaces"
+    ],
+    "assertions_changed": false
+  }
+}

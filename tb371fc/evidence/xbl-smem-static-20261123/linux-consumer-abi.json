@@ -1,0 +1,394 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "source-derived-smem-consumer-abi",
+  "analysis_date": "2026-11-23",
+  "scope": "Read-only Linux consumer ABI from fixed third-party kernel mirror; no proof of exact production source, XBL initializer values, firmware execution or native SMEM image.",
+  "provenance": {
+    "repository_kind": "fixed third-party kernel source mirror",
+    "exact_production_kernel_source_verified": false,
+    "commit": "9d8abebf4ac4d45cf4cc11b5b6bc5e4483d10fd1",
+    "repository": "tem423/android_kernel_lenovo_tb371fc",
+    "inputs": "Public fixed-revision kernel sources; board SMEM base/size supplied in the project task.",
+    "firmware_payload_included": false,
+    "firmware_disassembly_included": false,
+    "private_firmware_identifiers_or_offsets_included": false,
+    "doesvm_access_performed": false,
+    "model_created": false,
+    "runtime_tests_performed": false,
+    "classifications": {
+      "SOURCE_CONTRACT": "Behavior and checks read from the pinned consumer source; not proof that firmware initialized compatible data.",
+      "LAYOUT_DERIVATION": "Byte offsets/sizes derived from the fixed-width C structure layout; not a live RAM measurement.",
+      "SUPPLIED_BOARD_GEOMETRY": "Base/size supplied by the project task from earlier board evidence; not independently recaptured during this analysis.",
+      "UNOBSERVED_BOOT_STATE": "Actual initializer values and final shared-memory state remain unknown."
+    }
+  },
+  "sources": [
+    {
+      "path": "drivers/soc/qcom/smem.c",
+      "url": "https://github.com/tem423/android_kernel_lenovo_tb371fc/blob/9d8abebf4ac4d45cf4cc11b5b6bc5e4483d10fd1/drivers/soc/qcom/smem.c",
+      "bytes": 33090,
+      "sha256": "3ba12c3fdeca5fea8e0df97d30a7c13d8ce6a7553610b9a3700b036bd48af380",
+      "git_blob": "173e1ecdc86ca145f4a8de5df848dc5145e1a4b1"
+    },
+    {
+      "path": "include/linux/soc/qcom/smem.h",
+      "url": "https://github.com/tem423/android_kernel_lenovo_tb371fc/blob/9d8abebf4ac4d45cf4cc11b5b6bc5e4483d10fd1/include/linux/soc/qcom/smem.h",
+      "bytes": 348,
+      "sha256": "771dc38216ed963f1abaa40100d1d1376538149822dd814fbd52cb42a544cb86",
+      "git_blob": "86e1b358688aa45c121c4972d78aa8e0804010e3"
+    },
+    {
+      "path": "drivers/hwspinlock/qcom_hwspinlock.c",
+      "url": "https://github.com/tem423/android_kernel_lenovo_tb371fc/blob/9d8abebf4ac4d45cf4cc11b5b6bc5e4483d10fd1/drivers/hwspinlock/qcom_hwspinlock.c",
+      "bytes": 4141,
+      "sha256": "19722f9e4e3a8ddeb11500185745e8bf72911be1a3e751f5d62986d9d66e6778",
+      "git_blob": "6da7447d277dce9931eaca7c791063bfa07c8e55"
+    },
+    {
+      "path": "drivers/hwspinlock/hwspinlock_core.c",
+      "url": "https://github.com/tem423/android_kernel_lenovo_tb371fc/blob/9d8abebf4ac4d45cf4cc11b5b6bc5e4483d10fd1/drivers/hwspinlock/hwspinlock_core.c",
+      "bytes": 27210,
+      "sha256": "49e00d6858bc805734eecb039ff1a47ba177df6c9c4b3ab2f4ad21bb23dbc8ac",
+      "git_blob": "2bad40d42210dbe2250caae353e600fae090dd50"
+    },
+    {
+      "path": "drivers/soc/qcom/socinfo.c",
+      "url": "https://github.com/tem423/android_kernel_lenovo_tb371fc/blob/9d8abebf4ac4d45cf4cc11b5b6bc5e4483d10fd1/drivers/soc/qcom/socinfo.c",
+      "bytes": 59167,
+      "sha256": "489ffdd5b94e958c09a7f5641551dbbc93d1a1226f5834aaa511df315bbeeb1e",
+      "git_blob": "38dd1116341b4c1541eb3e50a9fab072c4dcf318"
+    },
+    {
+      "path": "include/soc/qcom/socinfo.h",
+      "url": "https://github.com/tem423/android_kernel_lenovo_tb371fc/blob/9d8abebf4ac4d45cf4cc11b5b6bc5e4483d10fd1/include/soc/qcom/socinfo.h",
+      "bytes": 10688,
+      "sha256": "4765258d271e0a55bcf7c895117d424f6731690fb56410e9a2a321b3bcb9e2c4",
+      "git_blob": "70aa770f6da70d1c1b11310d388737345390597e"
+    },
+    {
+      "path": "drivers/rpmsg/qcom_glink_smem.c",
+      "url": "https://github.com/tem423/android_kernel_lenovo_tb371fc/blob/9d8abebf4ac4d45cf4cc11b5b6bc5e4483d10fd1/drivers/rpmsg/qcom_glink_smem.c",
+      "bytes": 7773,
+      "sha256": "8385231087688deb6a4eee861d340941b80a2af1b804e659d088eac0df389b5f",
+      "git_blob": "949d113c39efcdbfae49e529dacede50f246d88a"
+    },
+    {
+      "path": "drivers/soc/qcom/smp2p.c",
+      "url": "https://github.com/tem423/android_kernel_lenovo_tb371fc/blob/9d8abebf4ac4d45cf4cc11b5b6bc5e4483d10fd1/drivers/soc/qcom/smp2p.c",
+      "bytes": 18621,
+      "sha256": "4c2f3b054b69cad4a5f7868b058f2060f2657ef0dd7e84a1e2818e8a53daf0e2",
+      "git_blob": "0530cf920f1be48d864e915d77974fbef120c11b"
+    }
+  ],
+  "supplied_board_geometry": {
+    "classification": "SUPPLIED_BOARD_GEOMETRY",
+    "base": 2156920832,
+    "size": 2097152,
+    "derived": {
+      "classification": "LAYOUT_DERIVATION",
+      "exclusive_end": 2159017984,
+      "partition_table": 2159013888
+    },
+    "independently_measured_during_this_analysis": false
+  },
+  "source_contract": {
+    "structure_layout_classification": "LAYOUT_DERIVATION",
+    "integer_endianness": "little",
+    "header": {
+      "size": 8400,
+      "proc_comm": {
+        "offset": 0,
+        "stride": 16,
+        "count": 4
+      },
+      "versions": {
+        "offset": 64,
+        "count": 32,
+        "sbl_index": 7,
+        "sbl_offset": 92,
+        "accepted_high16": [
+          11,
+          12
+        ]
+      },
+      "initialized": {
+        "offset": 192,
+        "width": 4,
+        "required": 1
+      },
+      "free_offset": {
+        "offset": 196,
+        "width": 4
+      },
+      "available": {
+        "offset": 200,
+        "width": 4
+      },
+      "reserved": {
+        "offset": 204,
+        "width": 4,
+        "required": 0
+      },
+      "legacy_toc": {
+        "offset": 208,
+        "stride": 16,
+        "count": 512
+      }
+    },
+    "legacy_global_entry": {
+      "size": 16,
+      "fields": {
+        "allocated": {
+          "offset": 0,
+          "width": 4
+        },
+        "offset": {
+          "offset": 4,
+          "width": 4
+        },
+        "size": {
+          "offset": 8,
+          "width": 4
+        },
+        "aux_base": {
+          "offset": 12,
+          "width": 4
+        }
+      },
+      "aux_base_mask": 4294967292,
+      "aux_base_zero_means_primary_region": true
+    },
+    "ptable": {
+      "location": "base + size - 0x1000",
+      "header_size": 32,
+      "magic": "$TOC",
+      "version_offset": 4,
+      "required_version": 1,
+      "num_entries_offset": 8,
+      "entry_size": 48,
+      "entry_fields": {
+        "offset": 0,
+        "size": 4,
+        "flags": 8,
+        "host0": 12,
+        "host1": 14,
+        "cacheline": 16,
+        "reserved": 20
+      }
+    },
+    "partition": {
+      "magic": "$PRT",
+      "header_size": 32,
+      "fields": {
+        "magic": 0,
+        "host0": 4,
+        "host1": 6,
+        "size": 8,
+        "offset_free_uncached": 12,
+        "offset_free_cached": 16,
+        "reserved": 20
+      }
+    },
+    "item_header": {
+      "size": 16,
+      "fields": {
+        "canary": 0,
+        "item": 2,
+        "size": 4,
+        "padding_data": 8,
+        "padding_hdr": 10,
+        "reserved": 12
+      },
+      "canary": 42405
+    },
+    "info": {
+      "location": "ptable + 0x20 + 0x30 * num_entries",
+      "struct_size": 20,
+      "fields": {
+        "magic": 0,
+        "size": 4,
+        "base_addr": 8,
+        "reserved": 12,
+        "num_items": 16
+      },
+      "magic": "SIII",
+      "num_items_width": 2,
+      "invalid_magic_fallback_count": 512,
+      "bound_is_exclusive": true
+    },
+    "host_ids": {
+      "apps": 0,
+      "global_partition": 65534,
+      "api_any": 4294967295,
+      "private_descriptor_count": 11,
+      "other_names": "not defined in allocator; remote IDs supplied by consumer DT"
+    },
+    "lock": {
+      "specifier_index": 0,
+      "source": "DT hwlocks, not literal hardcoded 3",
+      "timeout_ms": 1000,
+      "apps_mutex_owner": 1,
+      "bank_size": 32,
+      "claim": "write 1 then read 1",
+      "release": "write 0",
+      "reserve_after_header_validation": true,
+      "v12_probe_does_not_claim_owner": true,
+      "v11_legacy_mapping_claims_owner": true,
+      "get_and_alloc_claim_owner": true
+    },
+    "probe_order": [
+      "Map primary first 4KiB and final 4KiB from memory-region; optionally map qcom,rpm-msg-ram.",
+      "Require initialized == 1 and reserved == 0 before resolving or reserving hwlock.",
+      "Resolve DT hwlocks specifier index 0; propagate lookup errors including -EPROBE_DEFER.",
+      "Reserve specific hwlock; NULL result yields -ENXIO. Reservation is not a cross-processor owner claim.",
+      "Read version[7]; select major 12 global partition or major 11 legacy heap; any other high16 yields -EINVAL.",
+      "Major12 must validate global partition, then obtains exclusive item bound; major11 uses 512 and invokes legacy mapping.",
+      "Enumerate APPS private partitions; tolerate only -ENOENT among negative enumeration outcomes.",
+      "Publish __smem only after the preceding successful path."
+    ],
+    "ptable_validation": {
+      "magic_failure": "-ENOENT",
+      "version_failure": "-EINVAL",
+      "required_magic": "$TOC",
+      "required_version": 1,
+      "explicit_final_page_entry_count_bound": false
+    },
+    "global_partition_validation": {
+      "table_host_predicate": "host0 == 0xfffe AND host1 == 0xfffe",
+      "missing_entry": "-EINVAL",
+      "zero_offset_or_size": "-EINVAL",
+      "mapping_failure": "-ENOMEM",
+      "header_magic": "$PRT",
+      "header_host_rejection_predicate": "host0 != 0xfffe AND host1 != 0xfffe",
+      "partition_declared_size_equals_toc_entry_size": true,
+      "uncached_free_must_not_exceed_partition_declared_size": true,
+      "explicit_cached_free_pointer_probe_validation": false,
+      "header_host_check_accepts_a_single_matching_host": true,
+      "partition_declared_size_definition": "le32_to_cpu(partition_header.size) at offset 0x08: the total partition length in bytes, not sizeof(struct smem_partition_header) (0x20 bytes).",
+      "uncached_free_rejection_expression": "le32_to_cpu(header->offset_free_uncached) > le32_to_cpu(header->size)"
+    },
+    "private_partition_validation": {
+      "non_APPS_entries": "skip",
+      "zero_offset_or_size": "skip",
+      "remote_host_must_be_below": 11,
+      "duplicate_remote_host": "-EINVAL",
+      "header_magic": "$PRT",
+      "header_must_contain_local_and_remote_hosts": true,
+      "partition_declared_size_equals_toc_entry_size": true,
+      "uncached_free_must_not_exceed_partition_declared_size": true,
+      "partition_declared_size_definition": "le32_to_cpu(partition_header.size) at offset 0x08: the total partition length in bytes, not sizeof(struct smem_partition_header) (0x20 bytes).",
+      "uncached_free_rejection_expression": "le32_to_cpu(header->offset_free_uncached) > le32_to_cpu(header->size)"
+    },
+    "api": {
+      "alloc": "int qcom_smem_alloc(unsigned host, unsigned item, size_t size)",
+      "get": "void *qcom_smem_get(unsigned host, unsigned item, size_t *size)",
+      "unavailable_allocator": "-EPROBE_DEFER",
+      "exclusive_item_bound": true,
+      "alloc_static_item_rejection": "item < 8 returns -EINVAL",
+      "get_may_access_static_items": true,
+      "route": [
+        "private partition for host if host < 11 and descriptor exists",
+        "version12 global partition if present",
+        "legacy global heap otherwise"
+      ],
+      "alloc_and_get_claim_hwlock": true,
+      "allocation_only_no_free_api": true,
+      "duplicate_alloc": "-EEXIST",
+      "legacy_unallocated_get": "-ENXIO",
+      "private_item_not_found": "-ENOENT",
+      "legacy_alloc_no_space": "-ENOMEM",
+      "private_alloc_no_space": "-ENOSPC",
+      "get_free_space_claims_hwlock": false
+    },
+    "traversal": {
+      "uncached_first_header": "P + 0x20",
+      "uncached_payload": "H + 0x10 + padding_hdr",
+      "uncached_next": "H + 0x10 + padding_hdr + size",
+      "cached_first_header": "P + partition_size - ALIGN(0x10, cacheline)",
+      "cached_payload": "H - size",
+      "cached_next": "H - size - ALIGN(0x10, cacheline)",
+      "reported_payload_size": "size - padding_data",
+      "linux_allocator_creates_uncached_items": true,
+      "linux_payload_alignment": 8,
+      "linux_padding_hdr": 0,
+      "publication_order": "item header, wmb(), then advance offset_free_uncached",
+      "runtime_checks": [
+        "canary == 0xa5a5",
+        "free cursor ordering and partition bounds",
+        "monotonic traversal",
+        "matching item size < partition_size",
+        "matching item padding_data < size",
+        "returned payload within its uncached or cached allocation bounds"
+      ]
+    },
+    "source_gaps_not_hardware_authorization": [
+      "Probe ignores qcom_smem_map_legacy return in major11 branch.",
+      "Global partition header host check rejects only if both hosts differ from 0xfffe; the TOC entry search itself requires both equal 0xfffe.",
+      "Probe has no explicit TOC entry count/page bound, partition offset+size/main-region bound, cacheline power-of-two check or cached free-pointer validation.",
+      "SMEM info size/base/reserved and a lower/nonzero bound on num_items are not validated.",
+      "Private runtime range checks are present but are not proof of correct XBL initialization."
+    ]
+  },
+  "derived_sanity_condition": {
+    "classification": "LAYOUT_DERIVATION",
+    "formula": "0x20 + 0x30 * num_entries + 0x14 <= 0x1000",
+    "max_entries_with_info_in_last_page": 84,
+    "explicitly_checked_by_fixed_consumer": false
+  },
+  "consumers": [
+    {
+      "name": "socinfo",
+      "host": "QCOM_SMEM_HOST_ANY",
+      "item_ids": {
+        "hardware_software_build_id": 137,
+        "image_version_table": 469
+      },
+      "missing_socinfo_behavior": "falls back to dummy values; not proof of authentic platform data"
+    },
+    {
+      "name": "GLINK SMEM",
+      "host_source": "qcom,remote-pid from consumer DT",
+      "descriptor_item": 478,
+      "descriptor_required_bytes": 32,
+      "tx_fifo_item": 479,
+      "tx_fifo_allocation_bytes": 16384,
+      "rx_fifo_item": 480,
+      "remote_rx_created_by_linux_registration": false
+    },
+    {
+      "name": "SMP2P",
+      "host_sources": [
+        "qcom,local-pid",
+        "qcom,remote-pid"
+      ],
+      "item_source": "two qcom,smem cells",
+      "linux_initializes_own_outbound": true,
+      "remote_inbound_not_implied_by_allocator_success": true
+    }
+  ],
+  "boot_state_observation": {
+    "classification": "UNOBSERVED_BOOT_STATE",
+    "initialized": null,
+    "reserved": null,
+    "sbl_version_word": null,
+    "partition_table_version": null,
+    "num_entries": null,
+    "partition_entries": null,
+    "global_partition_free_offsets": null,
+    "private_partition_free_offsets": null,
+    "item_count": null,
+    "preallocated_items": null,
+    "hwlock_initial_owner": null,
+    "note": "No initializer values, firmware execution, native RAM image, or full native boot result were established by this source review."
+  },
+  "required_bootloader_evidence": [
+    "Configuration selection and decoded value actually written to version[7], including high16 major and low16 minor.",
+    "Actual initialized/reserved writes, completion ordering, and prerequisites before publication.",
+    "TOC location, magic/version, entry count, and complete bounded partition list.",
+    "Each partition host pair, offset, size, cacheline, header, and both allocation cursors.",
+    "Optional SIII presence and LE16 exclusive item count, including transformations or truncation.",
+    "Legacy free_offset/available if major11 is used.",
+    "Fixed and preallocated item identities, sizes, data provenance, and cursor changes.",
+    "DT remote-pid to partition-host consistency and actual hardware mutex initial/ownership behavior."
+  ]
+}
