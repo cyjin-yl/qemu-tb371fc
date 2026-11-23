@@ -10,6 +10,13 @@
 **完整 Android 启动和整台平板等价仍是未通过的目标。**
 生产内核加测试 initramfs 的成功不等于原厂 Android 系统启动。小核仍用 A55 代替 Qualcomm Kryo；显示、Adreno 650、触控、无线、音频、摄像头以及完整电源/固件契约仍有大量实现工作。缓存容量、功耗、射频、电气行为和真实芯片时序不由这些功能测试证明。
 
+
+## L3 Devfreq：已接入，等待新的正式验收
+
+当前源码新增 [L3 Devfreq 请求参考模型](tb371fc/docs/devfreq-qcom-fw-reference.md)及 20 项检查，将统一计划扩至 **75 项：71 组件 + 4 Linux**。它只覆盖实际 DT 的三个稀疏窗口、42 个寄存器和四档合成请求表，不实现物理缓存时钟、IRQ 或固件执行。两次完成迁移、两次 profile 拒绝、两次单字段损坏拒绝均须实际运行通过。
+
+模型和最终测试的[独立静审](tb371fc/evidence/wholeboard-20261123-a47/devfreq-model-test-review.json)已完成，测试隔离配置在执行前修正。**下方 74 项通过仅属于 `1fe4e1`；新增 75 项及同二进制完整 DT 复测尚未执行通过。**
+
 ## 本次整板推进与统一验收（2026-11-23）
 
 统一提交 `1fe4e1a8d3e4d1f1d64e800aa10bd355a007eac5` 已实际通过 **74 个 gate：70/70 组件检查 + 4/4 Linux 启动，以及独立 A77/UFS job**。见[正式 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45240510512)和[冻结回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-1fe4e1.json)。板级 QEMU SHA-256 为 `4edcf24e59963b2e33942c042cdd04f8a96c2d6faf6891dfd372b8eb219f5b95`；已直接读取 ZIP、包内二进制、两份 clean-source 汇总、13 份组件报告及 **22 个实际迁移文件**。三组 CI unit 实际为 29、17、14 项。

@@ -190,3 +190,5 @@ system_ss.add(when: 'CONFIG_QCOM_NOC_QOS', if_true: files('qcom-noc-qos.c'))
 system_ss.add(when: 'CONFIG_QCOM_TSENS24XX', if_true: files('qcom-tsens24xx.c'))
 
 system_ss.add(when: 'CONFIG_QCOM_CPUFREQ_HW', if_true: files('qcom-cpufreq-hw.c'))
+
+system_ss.add(when: 'CONFIG_QCOM_DEVFREQ_FW', if_true: files('qcom-devfreq-fw.c'))

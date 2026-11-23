@@ -1,0 +1,80 @@
+{
+  "schema": "tb371fc-devfreq-independent-static-review-v1",
+  "result": "no-blocking-static-findings-after-fixture-isolation-fix",
+  "scope": "Read-only source/test/document audit; no QEMU, build, test execution or guest/device access performed by this review.",
+  "model": {
+    "commit": "cfda4e5c9e17ca540425b809ab21dbb983d26eda",
+    "files": [
+      {
+        "path": "hw/misc/qcom-devfreq-fw.c",
+        "bytes": 14889,
+        "sha256": "ce529e9ce637958039c7072512628b1ccd757a5b7aaf80ac59a04edb398d21fe"
+      },
+      {
+        "path": "include/hw/misc/qcom-devfreq-fw.h",
+        "bytes": 524,
+        "sha256": "ad3754e2af8508560874b6861fe1ef0f782cefa0c80d60aebf4ac39053b52c04"
+      },
+      {
+        "path": "hw/arm/lenovo-tb371fc.c",
+        "bytes": 83575,
+        "sha256": "1bb62f188b53a44ade4c6e7971400459e4da4c7d96a62d36c43f9aff6a12eaa0"
+      },
+      {
+        "path": "tb371fc/docs/devfreq-qcom-fw-reference.md",
+        "bytes": 10882,
+        "sha256": "56c284fc555c8d4dbf09dc72a3a64b7f39f39b6c547b1bca0dea21b90547fd15"
+      }
+    ]
+  },
+  "test": {
+    "commit": "c1bd8c03a625115f037d09518d0ccaca48167e1c",
+    "path": "tb371fc/tests/test_devfreq_qcom_fw.py",
+    "bytes": 50325,
+    "sha256": "8c4e49817f58cb2dca002d446486e75fee45c65ee2142963ed9112fbe24669cf",
+    "expected_checks": 20,
+    "expected_completed_roundtrips": 2,
+    "expected_profile_rejections": 2,
+    "expected_corrupted_stream_rejections": 2,
+    "formal_execution": "pending"
+  },
+  "source_dt_review_blob": "0e12d22da7a6eb3afc4876f5d450c47f95a690eb",
+  "resolved_fixture_blocker": {
+    "original_bytes": 50075,
+    "original_sha256": "bcb3516a14b0dd1024f658fe125807412b7b8bea0cb747ae02d0f6361389ae19",
+    "original_default_machine": "lenovo-tb371fc",
+    "findings": [
+      "Board defaults gcc-boot-configured and ufs-enabled to true. GCC reset with boot handoff rewrites register+4 to31, contradicting the existing reset witness requiring0.",
+      "Whole-board UFS migration is blocked. The CI device() helper only adds --qemu; it does not add an isolated --machine."
+    ],
+    "fixed_default_machine": "tb371fc,gcc-boot-configured=off,ufs-enabled=off,rpmh-profile=off,rpmh-boot-configured=off",
+    "change_scope": "Only the default machine string and explanatory comment changed. Reset assertions, all20 checks and migration thresholds are unchanged.",
+    "independent_change_check": "Replacing the new default/comment block with the original line reproduced exactly50075 bytes and the original bcb3516a SHA256.",
+    "actual_failure_claimed": false
+  },
+  "model_review": [
+    "Three exact actual-DT resources,42 words/168 bytes, with intervening holes and no CPUFreq-domain overlap.",
+    "Always-present SysBus realization attaches /machine/devfreq-l3 to the actual reset tree, preserving bidirectional profile checks.",
+    "Default unknown profile rejects MMIO and runtime QOM; immutable geometry remains observable. No writable runtime/QTest-only injection property.",
+    "RO ENABLE/40-row synthetic ROM; four legal PERF states replace the whole request, including decreases. No hidden hardware voter maximum.",
+    "Requested/nominal frequency is clearly distinguished from an effective Clock, cache performance, firmware execution or DVFS acknowledgement.",
+    "VMState1 serializes68 bytes of immutable EQUAL configuration and4 bytes of PERF. Identity/boot/profile are checked before runtime; post_load rejects PERF>=4 and nonzero unknown-profile state.",
+    "No timer, IRQ, Clock, deadline or derived mutable state requires restoration. Reset restores only the explicit boot request.",
+    "Header/build registration and documentation identities/source links match the reviewed implementation."
+  ],
+  "test_review": [
+    "9 ordinary +3 special +4 positive roundtrip checks +2 profile mismatches +2 corruptions =20 unique expected checks.",
+    "All40 actual ROM words and all four legal PERF choices are observed, including lower writes; source-only decoder vectors are explicitly distinguished from writable hardware support.",
+    "Width diagnostics use invalid size for core-rejected narrow/misaligned device transactions; unassigned holes use exact physical address, (null) and rejected.",
+    "Wide accesses are treated as split32-bit transactions: first PERF write remains visible when the following hole rejects; no whole-request rollback assumption.",
+    "Actual reset is witnessed independently through GCC and an observed RESET event; nonzero explicit boot-index reset policy is covered.",
+    "Each72-byte source section is located in a real saved stream and every field is checked against fixed geometry/actual source QOM. Unknown-profile zero PERF is labeled a serialization invariant, not a successful hidden QOM observation.",
+    "Target has different pre-load request and RAM state; first restored device observation is pure QOM, followed by independent RAM witness, before any target Devfreq MMIO or cont.",
+    "Different virtual origins are exercised without claiming timer/deadline preservation for this timerless device.",
+    "Two genuine source/target roundtrips are distinguished from the additional unknown-profile source save; exactly two completed roundtrips are counted.",
+    "Both profile directions require a live destination, real migrate-incoming, exit1 and device-specific load failure.",
+    "Corruptions change only one bit in one real payload field: PERF at68 changes1to5; LUT identity at52 changes44463031to44463030. Exact failure diagnostics and unchanged original stream hashes are required.",
+    "Aggregate verdict requires exact counts, completed source/target reports, resumed legal request changes, and unchanged executable; no native-kernel/userspace/Android/Clock/IRQ success is claimed."
+  ],
+  "validation_limit": "Static consistency and the isolated default correction are established; compilation and actual20/2+2+2 outcomes remain the responsibility of the forthcoming formal CI."
+}

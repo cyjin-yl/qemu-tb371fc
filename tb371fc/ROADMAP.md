@@ -22,7 +22,7 @@
 - [x] apps QSMMUv500 TCU/10 TBU reference：36 项检查、2 次完成迁移、2 次 profile 拒绝和 2 次损坏流拒绝；统一 `3ef98` 的 67/67 组件 + 4/4 Linux 与独立 A77/UFS 全部通过。同一原厂运行越过 VERSION 异常、注册 TBU 资源客户端，继续到 SCSI/USB；未证明 native DMA、物理电源耦合或固件上下文交接。
 - [x] TSENS 有限数字参考：两控制器/32 通道的 [34 项检查、2 次完成迁移、2 次 profile 拒绝及 2 次损坏流拒绝](evidence/wholeboard-20261123-a47/tsens24xx-52492a.json)实际通过；[72 项统一 CI](evidence/wholeboard-20261123-a47/public-ci-52492a.json)与[同二进制完整原生 DT 运行](evidence/wholeboard-20261123-a47/native-52492a.json)已确认各 16670 轮参考采样并越过旧 TSENS fatal。温度/使能/1 ms 为显式假设，两个虚拟温度区 EINVAL、校准和物理热行为仍未通过。
 - [x] CPUFreq EPSS：[三域参考模型](docs/cpufreq-hw-reference.md)实际通过 30 项、2/2/2 迁移及拒绝检查；`1fe4e1` 的[74 项统一 CI](evidence/wholeboard-20261123-a47/public-ci-1fe4e1.json)与同二进制原厂复测已完成，printk 明确注册成功。合成表不声称原厂频率或电压。
-- [ ] L3 devfreq：最新实际阻塞为 `devfreq_qcom_fw_driver_probe+0x94` 读取 `0x18590000`；[固定 DT/符号](evidence/wholeboard-20261123-a47/devfreq-dt-symbols-1fe4e1.json)与[源代码审查](evidence/wholeboard-20261123-a47/devfreq-dt-review-1fe4e1.json)限定三段资源，共 168 字节、四个软件 voter。
+- [ ] L3 devfreq：最新实际阻塞为 `devfreq_qcom_fw_driver_probe+0x94` 读取 `0x18590000`；[固定 DT/符号](evidence/wholeboard-20261123-a47/devfreq-dt-symbols-1fe4e1.json)与[源代码审查](evidence/wholeboard-20261123-a47/devfreq-dt-review-1fe4e1.json)限定三段资源，共 168 字节、四个软件 voter。 [显式请求模型](docs/devfreq-qcom-fw-reference.md)和 20 项检查已静审接入新的 75 项计划，正式 CI 与同二进制原厂复测仍待执行；不能计为已通过。
 - [ ] 原厂完整 DT 用户态及 Android 启动；不能将 74 项公共成功、控制器注册或 NoC 配置匹配当作整板可用。
 
 本轮精确构建与原厂证据见 [README](../README.md) 和

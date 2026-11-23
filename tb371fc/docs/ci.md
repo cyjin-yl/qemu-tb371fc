@@ -67,7 +67,7 @@ separate.
 
 ## Gates
 
-The current public plan has **74 gates: 70 component/parser gates and four
+The current public plan has **75 gates: 71 component/parser gates and four
 Linux boots**, plus the separate A77 and PCI UFS compatibility job. The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
@@ -92,6 +92,7 @@ pass does not attest newly added devices.
 | Apps SMMUv500 | 36 checks; one TCU / ten TBUs, HALT/cache invalidation and captured ECATS through the core SMMUv2 walker, two completed transfers, two profile mismatches and two corrupted-field rejections |
 | TSENS24xx | 34 checks; two controllers / 32 channels, captured sampling, signed thresholds, four real GIC routes, two completed transfers, two profile mismatches and two corrupted-field rejections |
 | CPUFreq EPSS | 30 checks; three domains / eight per-core counters, four synthetic all-XO states, actual Clock and IRQ behavior, two completed transfers, two profile mismatches and two single-bit corruptions |
+| L3 firmware devfreq | 20 checks; one parent, 42 words in three exact DT windows, four nominal request indices, two completed transfers, two profile mismatches and two single-field corruptions; no actual Clock, IRQ, timer or firmware execution | 
 | SMMUv2 explicit granules | 26 checks; opt-in 16/64 KiB ATS/DMA, permissions and faults, matching profile and two profile mismatches; no historical binary is fetched by this CI invocation |
 | NoC QoS | 20 checks; 47 independent ports / 188 words, two completed transfers, two profile mismatches and two deliberately corrupted-stream rejections; no traffic or SBM synthesis |
 | NPUCC | 37 checks across three physical banks, actual Clock outputs, source-bound CRC/dividers, two completed migrations and two profile rejections; full NPU/DSP execution remains outside scope |
@@ -269,3 +270,9 @@ The reviewed fix `4dbcb3e07a3c844e75043c4589a63125906174ae` changes only that me
 The [1fe4e1 receipt](../evidence/wholeboard-20261123-a47/public-ci-1fe4e1.json) binds source `1fe4e1a8d3e4d1f1d64e800aa10bd355a007eac5` to board binary `4edcf24e59963b2e33942c042cdd04f8a96c2d6faf6891dfd372b8eb219f5b95`: 70/70 components in 164.14 seconds and 4/4 Linux gates in 5.609 seconds. Both aggregates report clean source and unchanged QEMU. The raw ZIP, binary, thirteen selected reports and twenty-two migration files were directly read. The separate CPU job passed 852 guest checks, two invalid configurations and fifteen UFS regressions with its own binary.
 
 CPUFreq actually passed 30 checks and 2/2/2 completed/profile/corrupt cases. Its independent verifier decoded all fifteen 84-byte domain sections across five files, checked actual QMP state and unchanged source anchors, and verified restored state before first target MMIO. The unknown source is not a third roundtrip. The [same-binary native run](../evidence/wholeboard-20261123-a47/native-1fe4e1.json) reports CPUFreq registered, then aborts in L3 devfreq at 0x18590000; this is not native userspace or Android success.
+
+## L3 firmware devfreq increment: formal run pending
+
+The [explicit request reference](devfreq-qcom-fw-reference.md) adds one `devfreq-qcom-fw-reference` gate after CPUFreq, with twenty unique checks, two completed transfers, two profile rejections and two single-bit corruption rejections. The three DT resources map exactly 168 bytes; four child voters aggregate in guest software. VMState v1 has 72 bytes: 68 immutable configuration bytes and the actual 32-bit PERF request. Every target must be observed through pure QOM before its first device MMIO. Different virtual origins do not imply a Clock or timer model.
+
+The [independent review](../evidence/wholeboard-20261123-a47/devfreq-model-test-review.json) records the pre-execution isolation fix: the component fixture explicitly disables UFS and GCC/RPMh boot handoffs. No assertion or count was relaxed. The [plan-only preflight](../evidence/wholeboard-20261123-a47/development-validation-devfreq75.json) confirms 71+4 gates and preserves all previous 74 contracts; it executes neither public tests nor QEMU. The new source requires its own formal build and run. The actual 1fe4e1 74-gate result above remains unchanged and does not attest this increment.

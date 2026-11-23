@@ -54,6 +54,7 @@
 #include "hw/misc/qcom-tcsr-mutex.h"
 #include "hw/misc/qcom-tsens24xx.h"
 #include "hw/misc/qcom-cpufreq-hw.h"
+#include "hw/misc/qcom-devfreq-fw.h"
 #include "hw/misc/qcom-smem-handoff.h"
 #include "hw/misc/qcom-aop-msgram.h"
 #include "hw/misc/qcom-aop-qmp.h"
@@ -1002,6 +1003,19 @@ static void tb371fc_create_cpufreq(TB371FCMachineState *s)
     }
 }
 
+static void tb371fc_create_devfreq(TB371FCMachineState *s)
+{
+    DeviceState *dev = qdev_new(TYPE_QCOM_DEVFREQ_FW);
+    unsigned i;
+
+    object_property_add_child(OBJECT(s), "devfreq-l3", OBJECT(dev));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    for (i = 0; i < QCOM_DEVFREQ_FW_WINDOWS; i++) {
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), i,
+                       qcom_devfreq_fw_regions[i].physical_base);
+    }
+}
+
 static void tb371fc_create_gpucc(TB371FCMachineState *s)
 {
     DeviceState *gpucc = qdev_new(TYPE_QCOM_SM8250_GPUCC);
@@ -1546,6 +1560,7 @@ static void tb371fc_init(MachineState *ms)
     }
     tb371fc_create_gcc(s);
     tb371fc_create_cpufreq(s);
+    tb371fc_create_devfreq(s);
     tb371fc_create_gpucc(s);
     tb371fc_create_npucc(s);
     tb371fc_create_noc_qos(s);
