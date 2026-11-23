@@ -58,6 +58,7 @@ and its public API is in
 | `mmio-size` | Total architectural aperture, power of two | `0x10000` |
 | `num-context-banks` | Implemented context banks | 8 |
 | `num-smrs` | Stream-match entries | 128 |
+| `aarch64-granules` | Capability mask: bit 0 = 4 KiB, bit 1 = 16 KiB, bit 2 = 64 KiB; 4 KiB required | `1` |
 | `memory` | Target physical MemoryRegion | System memory |
 
 After realization, `arm_smmuv2_get_dma_as(dev, sid)` returns an AddressSpace for
@@ -74,9 +75,14 @@ output. The IRQs belong to the named `sysbus-irq` GPIO group.
 ## Implemented behavior
 
 The IDRs describe **this model**: stage 1, stream matching, 15-bit stream IDs,
-4 KiB AArch64 tables, 48-bit input/output translation limits, coherent table
+4 KiB AArch64 tables by default, 48-bit input/output translation limits, coherent table
 reads, and the configured context-bank count. Extended stream IDs, stage 2,
 nesting and AArch32 contexts are not advertised.
+An explicit `aarch64-granules` profile can add 16/64 KiB architectural table
+formats; the IDR2 PTFS fields follow that profile. Neither TB371FC instance
+enables them by default, and no native IDR measurements establish support.
+The [granule profile contract and acceptance vectors](smmuv2-granules.md)
+describe these opt-in capabilities and their limits.
 
 SMRs are matched using their valid/ID/mask fields. Missing, conflicting and
 out-of-range mappings record global faults when the configured architectural
@@ -86,7 +92,8 @@ architecturally selected no-match/conflict policies. A failed translation never
 falls back to bypass.
 
 The stage-1 walker supports separate TTBR0 and TTBR1 regions, canonical-address
-checks, TnSZ 16 through 39, 4 KiB pages, level-1 and level-2 blocks, hierarchical
+checks, TnSZ 16 through 39, configured page sizes, 4 KiB level-1/level-2 blocks,
+16/64 KiB level-2 blocks, hierarchical
 APTable restrictions, leaf AP permissions, access flags and output-address-size
 checks. TTBR1 is selected independently; a noncanonical upper address cannot
 silently alias TTBR0. ATS supports TBI0/TBI1 and returns PAR without generating a
@@ -177,20 +184,25 @@ QTEST_QEMU_BINARY="$PWD/build/qemu-system-aarch64" \
 
 ## Remaining limits
 
-Stage 2/nesting, AArch32 translation tables, 16/64 KiB granules, hardware AF/dirty
+Stage 2/nesting, AArch32 translation tables, LPA/LPA2, hardware AF/dirty
 updates, transaction stalls/resume, secure-world allocation, Qualcomm TCU/TBU,
 ACTLR implementation effects, performance counters and hardware timing are not
 implemented. Unsupported configured translation modes fault rather than being
 treated as TTBR0 or bypass. Generic configuration-access fault generation is not
 complete even though the second global IRQ output exists.
+Reserved or disabled TG values keep the model's explicit GFSR.ICF rejection
+policy. IHI0062D.c specifies an implementation-defined supported-granule
+selection for these cases; the model's conservative rejection is a documented
+deviation, not an architectural requirement.
 
 GFRE/CFRE-masked upstream RAZ/WI responses are not modeled as a separate bus
 sink: failed DMA receives IOMMU_NONE. Cacheability/shareability metadata in PAR
 is represented, but data-cache behavior is not simulated.
 
-Migration format version 2 binds the aperture, context-bank count and SMR
-capacity before restoring register arrays; unqualified version 1 streams are
-rejected. The separate [process migration gate](smmuv2-migration.md) exercises
+Migration format version 3 additionally binds `aarch64-granules`, after the
+aperture, context-bank count and SMR capacity introduced in version 2. Version 2
+input is accepted only by the default 4 KiB profile; version 1 remains rejected.
+The separate [process migration gate](smmuv2-migration.md) exercises
 translation, RAM page tables, fault IRQs and reset continuation, and requires
 incompatible geometry to fail. The QTests establish selected
 architectural behavior against the implementation, not native SMMU silicon

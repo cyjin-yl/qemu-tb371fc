@@ -222,6 +222,10 @@ def plan(args, runtime):
                output="--out", result="file", verdict="all_passed", count=10)
         device("smmuv2-migration", "test_smmuv2_migration.py",
                output="--out", result="file", verdict="all_passed", count=18)
+        device("smmuv2-granules", "test_smmuv2_granules.py",
+               output="--out", result="file", verdict="all_passed", count=26,
+               expected={"expected_checks": 26, "legacy_v2_transfer_tested": False},
+               expected_lengths={"migrations": 3})
 
     if args.suite in ("all", "linux"):
         kernel = str(args.kernel.resolve()) if args.kernel else "@KERNEL@"

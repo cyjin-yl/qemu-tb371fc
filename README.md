@@ -204,12 +204,12 @@ TLMM、IMEM/PS_HOLD、普通 Linux UFS19 和 reference RPMh 联合 Linux23 已�
 | GIC / PSCI | QEMU GICv3 按实机地址和 affinity 接线；SMC PSCI 支持已验证的 SMP 与 system-off 路径。没有 Qualcomm EL3/TrustZone 或完整 OEM 启动链。 |
 | Timer | CPU 和 MMIO 计数器默认用准确有理换算，`floor(ns×19200000/10^9)`；deadline 向上取整。`counter-exact=off` 只用于保留旧量化模式的兼容检查。 |
 | GENI / GCC | FIFO 串口接入有状态 GCC 时钟/复位。QUP 2.5 version 寄存器仍明确为合成兼容值；部分 fabric 输入和启动时钟状态仍为公开的 bootstrap 假设。DMA/GSI、流控和真实 baud timing 未实现。 |
-| SMMUv2 | apps/GPU 两个架构窗口，非安全 AArch64 stage-1、4 KiB 页表和真实 DMA 翻译；不冒充已实现 Qualcomm TCU/TBU、stage 2 或全部 QSMMU v500 扩展。GPU SMMU 的存在不等于 GPU 已实现。 |
+| SMMUv2 | apps/GPU 两个架构窗口，非安全 AArch64 stage-1、默认 4 KiB 页表和真实 DMA 翻译；16/64 KiB 需[显式架构 profile](tb371fc/docs/smmuv2-granules.md)，原生能力未测量。未实现 Qualcomm TCU/TBU、stage 2 或全部 QSMMU v500 扩展。GPU SMMU 的存在不等于 GPU 已实现。 |
 | UFS | Sysbus HCI、Qualcomm wrapper、QMP PHY、GCC 依赖、SMMU DMA 与 SCSI 后端。使用显式测试磁盘。ICE、RPMB 认证、完整原生 LU 启动属性、全部错误/复位模式和物理 PHY/闪存时序仍未完成。 |
 | RPMh | `rpmh-profile=off` 为默认值；`reference` 和 `file` 必须显式选择。file 解析外部 cmd-db 并核对内容；未知资源不会自动获得成功 ACK。它不执行 AOP 固件，也不模拟真实 PMIC 电压。 |
 | GPU GDSC | CX/GX 五个独立四字节窗口；`gdsc-profile=none` 默认不映射，`reference-off`/`reference-on` 明示初始数字请求。状态由软件或硬件请求与独立外部 vote 产生，未知位写入失败；GPU/GMU、GPUCC 和真实供电/retention 尚未由此实现。 |
 | SMEM | `smem-profile=off` 默认不初始化；`reference-empty` 加显式 TCSR unlocked-reference 提供普通 RAM 中的空 v12 交接格式。来宾拥有分配器操作，缺失的固件 item 保持缺失；没有 SBL、socinfo、remoteproc 或 IPC 服务替身。 |
-| 迁移 | GENI、GCC、timer、RPMh、watchdog、TLMM、IMEM/PS_HOLD、DCC、PDC、IPCC、SPMI、QSEE、TCSR、AOP SRAM 和 REFGEN 有各自的实际迁移回执。**上游 UFS core 当前阻止整板迁移**；组件测试显式使用 `ufs-enabled=off`。SMMUv2 另有 [18 项独立进程迁移／配置拒绝回执](tb371fc/evidence/smmuv2-migration-20261123/publication.json)，使用 VMState v2；旧 v1 stream 明确拒绝。其他未验收状态不能由这些回执推定。 |
+| 迁移 | GENI、GCC、timer、RPMh、watchdog、TLMM、IMEM/PS_HOLD、DCC、PDC、IPCC、SPMI、QSEE、TCSR、AOP SRAM 和 REFGEN 有各自的实际迁移回执。**上游 UFS core 当前阻止整板迁移**；组件测试显式使用 `ufs-enabled=off`。SMMUv2 原 [18 项独立进程迁移／配置拒绝回执](tb371fc/evidence/smmuv2-migration-20261123/publication.json)使用 VMState v2；当前 v3 增加 granule profile 相等检查，旧 v2 仅能迁入默认 profile，v1 仍拒绝。原回执不证明新 granule 或跨版本传输。 |
 
 地址、属性、启动接口、生成 DT 与原生 DT 的差异见 [machine.md](tb371fc/docs/machine.md)。独立设备文档和来源索引见 [SOURCES.md](tb371fc/SOURCES.md)。
 

@@ -28,5 +28,17 @@
     "/soc/apps-smmu@15000000",
     "/soc/kgsl-smmu@3da0000"
   ],
-  "implementation_identity": "Generic architectural SMMUv2 stage-1 AArch64 4K subset; not Qualcomm QSMMUv500 or MMU-500 implementation identity"
+  "implementation_identity": "Generic architectural SMMUv2 stage-1 AArch64 subset; default 4K, explicit 16K/64K profiles; not Qualcomm QSMMUv500 or MMU-500 implementation identity",
+  "granule_primary_sources": {
+    "arm_document": "IHI0062D.c",
+    "linux_commit": "adc218676eef25575469234709c2d87185ca223a",
+    "linux_path": "drivers/iommu/io-pgtable-arm.c",
+    "linux_blob_sha1": "0e67f1721a3d980de842052cb37006492769e6d3",
+    "qemu_fixed_base": "339b9cd277aeae84fba52b60ae34ede90b7ff101",
+    "qemu_paths": [
+      "target/arm/ptw.c",
+      "hw/arm/smmu-common.c"
+    ],
+    "scope": "Architecture and upstream software references only; no native granule capability measurements."
+  }
 }

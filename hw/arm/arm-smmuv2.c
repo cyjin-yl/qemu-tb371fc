@@ -4,8 +4,8 @@
  * Arm SMMUv2 functional AArch64 stage-1 model.
  * Sources: Arm IHI0062D.c and Linux drivers/iommu/arm/arm-smmu/.
  *
- * Implemented: stream matching, per-context 4 KiB AArch64 walks (including
- * blocks), permissions/AF, ATS/PAR, faults, IRQs, invalidation and migration.
+ * Implemented: stream matching, per-context AArch64 walks (4 KiB by default,
+ * opt-in 16/64 KiB), blocks, permissions/AF, ATS/PAR, faults and migration.
  * Not implemented: stage 2/nesting, AArch32 tables, stalls, hardware AF/DBM,
  * Qualcomm TCU/TBU extensions, secure-world contexts or timing fidelity.
  * Capability registers describe this model, not measured Qualcomm IDRs.
@@ -20,6 +20,7 @@
 #include "migration/vmstate.h"
 #include "qapi/error.h"
 #include "qemu/bitops.h"
+#include "qemu/error-report.h"
 #include "qemu/log.h"
 #include "qemu/module.h"
 #include "qemu/thread.h"
@@ -72,6 +73,10 @@ enum {
 #define GFSR_CAF BIT32(5)
 #define GFSR_UUT BIT32(8)
 #define PA_MASK UINT64_C(0x0000fffffffff000)
+#define GRANULE_4K BIT32(0)
+#define GRANULE_16K BIT32(1)
+#define GRANULE_64K BIT32(2)
+#define GRANULE_MASK (GRANULE_4K | GRANULE_16K | GRANULE_64K)
 
 typedef struct SMMUv2Stream {
     IOMMUMemoryRegion iommu;
@@ -90,6 +95,7 @@ struct ArmSMMUv2State {
     uint32_t mmio_size;
     uint32_t num_context_banks;
     uint32_t num_smrs;
+    uint32_t aarch64_granules;
     uint32_t gr0[WORDS];
     uint32_t gr1[WORDS];
     uint32_t cb[MAX_CB][WORDS];
@@ -208,6 +214,8 @@ static WalkResult smmuv2_walk(ArmSMMUv2State *s, unsigned cb,
     unsigned oas = pa_bits[tcr2 & 7];
     uint64_t addr = original, base, pte, mask;
     unsigned which, bits = 0, start, level, shift, top_bits, tsz, tg;
+    unsigned granule_shift, stride, granule;
+    uint64_t table_mask;
     bool table_ro = false, table_no_user = false;
     WalkResult out = {.mask = 0xfff};
 
@@ -257,12 +265,31 @@ static WalkResult smmuv2_walk(ArmSMMUv2State *s, unsigned cb,
         goto fault;
     }
     tg = (tcr >> (which ? 30 : 14)) & 3;
-    if ((!which && tg != 0) || (which && tg != 2)) {
+    /* TG0: 4K, 64K, 16K, reserved; TG1: reserved, 16K, 4K, 64K. */
+    if ((!which && tg == 3) || (which && tg == 0)) {
         out.global_fault = GFSR_ICF;
         goto fault;
     }
-    start = 4 - DIV_ROUND_UP(bits - 12, 9);
-    top_bits = bits - (12 + 9 * (3 - start));
+    if (tg == (which ? 2 : 0)) {
+        granule_shift = 12;
+        granule = GRANULE_4K;
+    } else if (tg == (which ? 1 : 2)) {
+        granule_shift = 14;
+        granule = GRANULE_16K;
+    } else {
+        granule_shift = 16;
+        granule = GRANULE_64K;
+    }
+    if (!(s->aarch64_granules & granule)) {
+        /* Deliberate fail-closed model policy, not architectural TG fallback. */
+        out.global_fault = GFSR_ICF;
+        goto fault;
+    }
+    stride = granule_shift - 3;
+    start = 4 - DIV_ROUND_UP(bits - granule_shift, stride);
+    top_bits = bits - (granule_shift + stride * (3 - start));
+    table_mask = PA_MASK & ~((UINT64_C(1) << granule_shift) - 1);
+    /* An initial table may be smaller than one translation granule. */
     base = reg64(r, which ? TTBR1 : TTBR0) & UINT64_C(0x0000ffffffffffff);
     base &= ~((UINT64_C(1) << (top_bits + 3)) - 1);
     if (base >> oas) {
@@ -275,9 +302,10 @@ static WalkResult smmuv2_walk(ArmSMMUv2State *s, unsigned cb,
         uint64_t mair;
 
         out.level = level;
-        shift = 12 + 9 * (3 - level);
+        shift = granule_shift + stride * (3 - level);
         index = (addr >> shift) & (level == start ?
-                ((UINT64_C(1) << top_bits) - 1) : 0x1ff);
+                ((UINT64_C(1) << top_bits) - 1) :
+                ((UINT64_C(1) << stride) - 1));
         pa = base + index * 8;
         if (pa >> oas) {
             out.fsr = FSR_ASF;
@@ -289,15 +317,16 @@ static WalkResult smmuv2_walk(ArmSMMUv2State *s, unsigned cb,
             out.ptw = true;
             goto fault;
         }
-        if (!(pte & 1) || (level == 0 && !(pte & 2)) ||
-            (level == 3 && !(pte & 2))) {
+        if (!(pte & 1) || (!(pte & 2) &&
+            (level == 0 || level == 3 ||
+             (level == 1 && granule_shift != 12)))) {
             out.fsr = FSR_TF;
             goto fault;
         }
         if (level < 3 && (pte & 2)) {
             table_no_user |= !!(pte & (UINT64_C(1) << 61));
             table_ro |= !!(pte & (UINT64_C(1) << 62));
-            base = pte & PA_MASK;
+            base = pte & table_mask;
             if (base >> oas) {
                 out.fsr = FSR_ASF;
                 out.ptw = true;
@@ -543,7 +572,7 @@ static uint32_t smmuv2_read32(ArmSMMUv2State *s, hwaddr offset)
     case ID1:
         return ((ctz32(s->mmio_size) - 14) << 28) | s->num_context_banks;
     case ID2:
-        return BIT32(12) | (15 << 8) | (5 << 4) | 5;
+        return (s->aarch64_granules << 12) | (15 << 8) | (5 << 4) | 5;
     case 0x2c ... 0x3c:
     case TLBGSTATUS:
         return 0;
@@ -751,6 +780,11 @@ static int smmuv2_post_load(void *opaque, int version)
 {
     ArmSMMUv2State *s = opaque;
 
+    /* Version 2 could only expose 4K; do not change its guest-visible IDR2. */
+    if (version < 3 && s->aarch64_granules != GRANULE_4K) {
+        error_report("arm-smmuv2: version 2 requires aarch64-granules=1");
+        return -EINVAL;
+    }
     s->gr0[CR0 / 4] |= CR0_STALLD;
     smmuv2_update_irqs(s);
     smmuv2_invalidate(s);
@@ -760,13 +794,14 @@ static int smmuv2_post_load(void *opaque, int version)
 static const VMStateDescription vmstate_smmuv2 = {
     .name = TYPE_ARM_SMMUV2,
     /* Version 1 did not identify the geometry; it cannot be checked safely. */
-    .version_id = 2,
+    .version_id = 3,
     .minimum_version_id = 2,
     .post_load = smmuv2_post_load,
     .fields = (const VMStateField[]) {
         VMSTATE_UINT32_EQUAL(mmio_size, ArmSMMUv2State),
         VMSTATE_UINT32_EQUAL(num_context_banks, ArmSMMUv2State),
         VMSTATE_UINT32_EQUAL(num_smrs, ArmSMMUv2State),
+        VMSTATE_UINT32_EQUAL_V(aarch64_granules, ArmSMMUv2State, 3),
         VMSTATE_UINT32_ARRAY(gr0, ArmSMMUv2State, WORDS),
         VMSTATE_UINT32_ARRAY(gr1, ArmSMMUv2State, WORDS),
         VMSTATE_UINT32_2DARRAY(cb, ArmSMMUv2State, MAX_CB, WORDS),
@@ -786,6 +821,12 @@ static void smmuv2_realize(DeviceState *dev, Error **errp)
         s->num_context_banks > s->mmio_size / 8192 ||
         !s->num_smrs || s->num_smrs > MAX_SMR) {
         error_setg(errp, "invalid arm-smmuv2 aperture/context/SMR geometry");
+        return;
+    }
+    if (!(s->aarch64_granules & GRANULE_4K) ||
+        (s->aarch64_granules & ~GRANULE_MASK)) {
+        error_setg(errp, "arm-smmuv2 aarch64-granules must include 4K (bit 0) "
+                   "and may include 16K (bit 1) and 64K (bit 2)");
         return;
     }
     if (!s->memory) {
@@ -834,6 +875,8 @@ static const Property smmuv2_properties[] = {
     DEFINE_PROP_UINT32("mmio-size", ArmSMMUv2State, mmio_size, 0x10000),
     DEFINE_PROP_UINT32("num-context-banks", ArmSMMUv2State, num_context_banks, 8),
     DEFINE_PROP_UINT32("num-smrs", ArmSMMUv2State, num_smrs, 128),
+    DEFINE_PROP_UINT32("aarch64-granules", ArmSMMUv2State, aarch64_granules,
+                       GRANULE_4K),
     DEFINE_PROP_LINK("memory", ArmSMMUv2State, memory,
                      TYPE_MEMORY_REGION, MemoryRegion *),
 };

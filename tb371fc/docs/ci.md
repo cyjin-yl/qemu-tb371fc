@@ -15,7 +15,7 @@ after an earlier component failure so their independent results remain visible.
 
 ## Gates
 
-The current public plan registers **57 gates: 53 component/parser gates and
+The current public plan registers **59 gates: 55 component/parser gates and
 four Linux boots**, plus the separate A77 and PCI UFS compatibility job.
 The [run for commit 408d82a](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45164018326) completed all 53 component/parser gates
 and four clean Linux gates successfully; the separate A77/shared-UFS-PCI job
@@ -71,7 +71,7 @@ pass does not attest newly added devices.
 | CPU counters and timers | Independent icount rate measurement in both modes; physical/virtual CVAL, signed TVAL, mask and wrap behavior |
 | CPU timer migration | Two real QEMU processes, guest RAM checkpoints, counter/compare/offset continuity and actual guest expiry; an uninstrumented control reuses the same ELF bytes |
 | CPU timer output wires | 16 GIC input-line observations in each of real-time exact, icount exact and icount legacy mode |
-| SMMUv2 | 23 C QTests with no skips |
+| SMMUv2 | 23 C QTests with no skips, 18 default-profile process migration checks, and 26 explicit-granule ATS/DMA/fault/migration groups |
 | RPMh | 22 reference-profile tests, including the synthetic command-db parser cases, and 5 migration checks |
 | Display RSC | 11 shared-service and real SPI 129 checks, plus 6 actual component migration checks |
 | UFS | 56 MMIO/PHY/clock/DMA/SCSI/WriteBooster/hibernation checks against a synthetic disk, including absent-LUN responses and DMA bounds |
