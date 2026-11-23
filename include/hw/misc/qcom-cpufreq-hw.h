@@ -12,7 +12,7 @@ OBJECT_DECLARE_SIMPLE_TYPE(QcomCpufreqHwState, QCOM_CPUFREQ_HW_EPSS)
 typedef struct QcomCpufreqHwDomain {
     hwaddr base;
     uint32_t size;
-    uint32_t first_cpu;
+    uint32_t first_cpu_index;
     uint32_t cpu_count;
     uint32_t max_cores;
     uint32_t cpu_mask;
