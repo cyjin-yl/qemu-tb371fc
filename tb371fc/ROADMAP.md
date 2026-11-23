@@ -19,8 +19,9 @@
 - [x] 统一整合默认分支 `339b9cd` 的 SMMUv2 迁移几何保护与历史证据；`0508` 实际通过 65/65 组件 + 4/4 Linux 和独立 A77/UFS，默认分支保持原位。
 - [x] MPM sleep counter：固定 32768 Hz、单个只读 word、精确分数及 VMState 1；17 项检查、2 次完成迁移、1 次损坏流拒绝通过，同一 `0508` 原厂完整 DT 实际输出 MPM timestamp/frequency 并继续启动。
 - [x] NoC QoS：47 物理端口 / 188 有效 word；20 项、2 次完成迁移、2 次 profile 拒绝、2 次损坏流拒绝通过。统一 `99ef` 完成 66/66 组件 + 4/4 Linux 和独立 A77/UFS；同一原厂运行只读核验 47 地址及 46 非延迟配置，越过 `0x016e9008`。
-- [ ] apps QSMMUv500 TCU/10 TBU reference 已实现，待本轮编译与完整 71 项公共计划验证：`99ef` 实际 fatal 为 `qsmmuv500_arch_init+0x88` 读取 apps TCU VERSION `0x15182018`。新模型包含有状态 HALT、真实共享翻译路径的 ECATS、外部缓存 UNMAP、复位与迁移；非 v1 协议版本、1 µs 时序及初始状态为显式假设。KGSL 扩展、clock/TBU 供电与固件 stream/context 交接仍未完成。
-- [ ] 原厂完整 DT 用户态及 Android 启动；不能将 70 项公共成功、控制器注册或 NoC 配置匹配当作整板可用。
+- [x] apps QSMMUv500 TCU/10 TBU reference：36 项检查、2 次完成迁移、2 次 profile 拒绝和 2 次损坏流拒绝；统一 `3ef98` 的 67/67 组件 + 4/4 Linux 与独立 A77/UFS 全部通过。同一原厂运行越过 VERSION 异常、注册 TBU 资源客户端，继续到 SCSI/USB；未证明 native DMA、物理电源耦合或固件上下文交接。
+- [ ] TSENS：已加入[两控制器数字参考模型](docs/tsens24xx-reference.md)及 34 项检查，明确外部温度输入、捕获采样轮次、VALID/TRDY、阈值/四路 IRQ、复位和 375-byte VMState。72 项统一计划及同二进制原厂验证尚待执行；`3ef98` 的 `0x0c222004` fatal 仍是已观测的最近阻塞。
+- [ ] 原厂完整 DT 用户态及 Android 启动；不能将 71 项公共成功、控制器注册或 NoC 配置匹配当作整板可用。
 
 本轮精确构建与原厂证据见 [README](../README.md) 和
 [原厂对照](evidence/wholeboard-20261123-a47/native-progression.json)。
