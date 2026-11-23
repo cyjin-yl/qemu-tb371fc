@@ -28,6 +28,17 @@ PATTERN_B = bytes((i * 19 + 83) & 255 for i in range(4096))
 
 
 class UFSRig(Rig):
+    def step(self, ns=20000):
+        # QTest owns an external clock and cannot warp while the VM is paused.
+        running = self.monitor("query-status")["running"]
+        if not running:
+            self.monitor("cont")
+        try:
+            return super().step(ns)
+        finally:
+            if not running:
+                self.monitor("stop")
+
     def dma_address(self, physical):
         return physical - 0x80000000
 
@@ -159,6 +170,7 @@ def main():
         "scope": "Paused file checkpoints with UFS enabled and SID e0 stage-1 nonidentity DMA.",
         "limits": ["Only quiescent legacy storage queues; no in-flight SCSI or MCQ migration.",
                    "One QEMU process at a time, each with 128 MiB RAM.",
+                   "QTest's external clock is explicitly aligned after load; it is not migrated device state.",
                    "The same external disk file is reused with locking enabled; media bytes are not migrated.",
                    "No native-DT boot, Android, silicon or complete-board compatibility claim."],
     }
@@ -195,6 +207,7 @@ def main():
     def checkpoint(name, r):
         path = args.out / (name + ".migration")
         assert not r.monitor("query-status")["running"]
+        clock_ns = r.step(0)
         r.monitor("migrate", {"uri": "file:" + str(path)})
         outgoing = wait_migration(r)
         assert r.monitor("query-status")["status"] == "postmigrate"
@@ -203,7 +216,12 @@ def main():
         target.monitor("migrate-incoming", {"uri": "file:" + str(path)})
         incoming = wait_migration(target)
         assert not target.monitor("query-status")["running"]
+        target.monitor("cont")
+        restored_ns = int(target.command(f"clock_set {clock_ns}")[0], 0)
+        target.monitor("stop")
+        assert restored_ns == clock_ns
         migrations.append({"name": name, "source": outgoing, "target": incoming,
+                           "external_qtest_clock_ns": clock_ns,
                            "stream_sha256": sha(path), "stream_bytes": path.stat().st_size})
         passed(name + "-qmp-completed-and-receiver-paused")
         return target, path
@@ -286,6 +304,8 @@ def main():
         assert r.qread(CB + 0x50) & 0x0000fffffffff001 == DATA
         assert r.r(CB + 0x58) & 0x800001fe == 0
         passed("receiver-smmu-translation-dma-write-read-and-host-media-match")
+        # Hold the WB workload while wall time runs during fixture alignment.
+        assert r.query(7, 0x10) == (0, 0, 0)
         assert r.uic(0x17)[0] == 0
         r.w(PHY + 0xc08, 1)
         r.w(PHY + 0xc00, 0)
@@ -312,8 +332,10 @@ def main():
         passed("phy-ready-deadline-and-symbol-clock-propagation-preserved")
         assert r.uic(0x18)[0] == 0
         assert r.query(3, 0x1d) == (0, 0, 9)
+        assert r.query(5, 0x10) == (0, 0, 0)
         assert io(r, 4) == PATTERN_A and io(r, 7) == PATTERN_B
         passed("second-and-third-receivers-continue-real-media-io")
+        assert r.query(6, 0x10) == (0, 0, 1)
         assert r.uic(0x17)[0] == 0
         r.monitor("cont")
         time.sleep(0.35)
@@ -356,7 +378,8 @@ def main():
         fake = bytes([2]) + bytes(16) + struct.pack(">II", 0, 0)
         path = args.out / "bad-scsi-queue.migration"
         path.write_bytes(raw[:requests] + fake + raw[requests:])
-        rejected("reject-incoming-scsi-request", path, "scsi-disk")
+        rejected("reject-incoming-scsi-request", path,
+                 "UFS migration rejects an incoming SCSI request")
 
         r = start("reject-source-busy")
         setup(r)

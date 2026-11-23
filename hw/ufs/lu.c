@@ -16,6 +16,7 @@
 #include "scsi/constants.h"
 #include "system/block-backend.h"
 #include "qemu/cutils.h"
+#include "qemu/error-report.h"
 #include "migration/qemu-file.h"
 #include "trace.h"
 #include "ufs.h"
@@ -211,6 +212,7 @@ static QEMUSGList *ufs_get_sg_list(SCSIRequest *scsi_req)
 static void *ufs_load_request(QEMUFile *f, SCSIRequest *req)
 {
     /* Only empty queues migrate; there is no serialized UfsRequest to bind. */
+    error_report("UFS migration rejects an incoming SCSI request");
     qemu_file_set_error(f, -EINVAL);
     return NULL;
 }

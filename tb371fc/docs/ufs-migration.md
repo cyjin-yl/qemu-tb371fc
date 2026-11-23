@@ -71,7 +71,7 @@ rejection scenarios, with at most one 128 MiB QEMU process at a time:
 - Source and receivers use nonidentity stage-1 translations for actual UTRD,
   UPIU and data DMA on UFS SID `0xe0`. Writes are flushed and compared to the
   host file; resumed reads check exact payloads.
-- HCI version profile, transfer-slot count and LUN capacity mismatches reject
+- Controller version profile, transfer-slot count and LUN capacity mismatches reject
   the receiver. Corrupt doorbell, WB bound and SCSI queue streams also reject.
 - A real unmapped UTRD produces an unfinished source DMA request and a failed
   checkpoint. The test then clears its SMMU fault, resets HCE and continues
@@ -80,6 +80,10 @@ rejection scenarios, with at most one 128 MiB QEMU process at a time:
 Every process command, exit status, QMP migration result, stream hash and log
 hash is retained in `result.json`. Any missing scenario, failed assertion or
 changed binary fails the test. A sent stream alone is never a receiver pass.
+QTest's external clock is not part of migrated device state. As in the existing
+MMIO timer migration test, the receiver explicitly aligns that test fixture to
+the recorded source timestamp before checking remaining deadlines. QTest
+clock steps briefly resume the VM and return it to its prior paused state.
 
 ## Fixed implementation sources
 
