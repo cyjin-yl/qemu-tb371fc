@@ -1,0 +1,480 @@
+{
+  "all_passed": true,
+  "aop_startup_validated": false,
+  "checks": [
+    {
+      "detail": {
+        "cpu_type": "cortex-m3-arm-cpu",
+        "executed_public_probe": "MRS r0, MSP",
+        "hardware_cpu_identity_established": false,
+        "reference_initial_state": {
+          "basepri": 0,
+          "control": 0,
+          "faultmask": 0,
+          "lr": 4294967295,
+          "msp": 0,
+          "pc": 0,
+          "primask": 0,
+          "psp": 0,
+          "r0": 0,
+          "r1": 0,
+          "r10": 0,
+          "r11": 0,
+          "r12": 0,
+          "r2": 0,
+          "r3": 0,
+          "r4": 0,
+          "r5": 0,
+          "r6": 0,
+          "r7": 0,
+          "r8": 0,
+          "r9": 0,
+          "sp": 0,
+          "xpsr": 1073741824
+        }
+      },
+      "name": "cortex-m3-and-architectural-msp",
+      "passed": true
+    },
+    {
+      "detail": {
+        "store_and_load_executed": true
+      },
+      "name": "permitted-store-and-load",
+      "passed": true
+    },
+    {
+      "detail": {
+        "earlier_legal_byte_writes": [],
+        "fault_address": 1073741824,
+        "invalid_backing_padding_unchanged": true,
+        "pc_after": 184549632,
+        "pc_before": 184549632,
+        "register_changes": {},
+        "resumed_after_fault": false,
+        "stop": "T05thread:p01.01;awatch:b0e604c;",
+        "unsupported_callbacks_unchanged": true,
+        "watchpoint_evidence": {
+          "all_marked_entries": [
+            {
+              "cpu": false,
+              "flags": 87,
+              "gdb": true,
+              "hitaddr": 1073741824,
+              "len": 1970380724,
+              "read_hit": true,
+              "rsp_type": "awatch",
+              "stop_before_access": true,
+              "vaddr": 185491532,
+              "write_hit": false
+            }
+          ],
+          "flags": 87,
+          "hitaddr": 1073741824,
+          "range_base": 185491532,
+          "range_length": 1970380724,
+          "raw_rsp": "T05thread:p01.01;awatch:b0e604c;",
+          "rsp_kind": "awatch"
+        }
+      },
+      "name": "unmapped-read-stops-before-value",
+      "passed": true
+    },
+    {
+      "detail": {
+        "earlier_legal_byte_writes": [],
+        "fault_address": 1073741824,
+        "invalid_backing_padding_unchanged": true,
+        "pc_after": 184549632,
+        "pc_before": 184549632,
+        "register_changes": {},
+        "resumed_after_fault": false,
+        "stop": "T05thread:p01.01;awatch:b0e604c;",
+        "unsupported_callbacks_unchanged": true,
+        "watchpoint_evidence": {
+          "all_marked_entries": [
+            {
+              "cpu": false,
+              "flags": 151,
+              "gdb": true,
+              "hitaddr": 1073741824,
+              "len": 1970380724,
+              "read_hit": false,
+              "rsp_type": "awatch",
+              "stop_before_access": true,
+              "vaddr": 185491532,
+              "write_hit": true
+            }
+          ],
+          "flags": 151,
+          "hitaddr": 1073741824,
+          "range_base": 185491532,
+          "range_length": 1970380724,
+          "raw_rsp": "T05thread:p01.01;awatch:b0e604c;",
+          "rsp_kind": "awatch"
+        }
+      },
+      "name": "unmapped-write-stops-before-dispatch",
+      "passed": true
+    },
+    {
+      "detail": {
+        "read": {
+          "earlier_legal_byte_writes": [],
+          "fault_address": 3758157056,
+          "invalid_backing_padding_unchanged": true,
+          "pc_after": 184549632,
+          "pc_before": 184549632,
+          "register_changes": {},
+          "resumed_after_fault": false,
+          "stop": "T05thread:p01.01;awatch:8081c7b0;",
+          "unsupported_callbacks_unchanged": true,
+          "watchpoint_evidence": {
+            "all_marked_entries": [
+              {
+                "cpu": false,
+                "flags": 87,
+                "gdb": true,
+                "hitaddr": 3758157056,
+                "len": 2138978384,
+                "read_hit": true,
+                "rsp_type": "awatch",
+                "stop_before_access": true,
+                "vaddr": 2155988912,
+                "write_hit": false
+              }
+            ],
+            "flags": 87,
+            "hitaddr": 3758157056,
+            "range_base": 2155988912,
+            "range_length": 2138978384,
+            "raw_rsp": "T05thread:p01.01;awatch:8081c7b0;",
+            "rsp_kind": "awatch"
+          }
+        },
+        "write": {
+          "earlier_legal_byte_writes": [],
+          "fault_address": 3758153744,
+          "invalid_backing_padding_unchanged": true,
+          "pc_after": 184549632,
+          "pc_before": 184549632,
+          "register_changes": {},
+          "resumed_after_fault": false,
+          "stop": "T05thread:p01.01;awatch:8081c7b0;",
+          "unsupported_callbacks_unchanged": true,
+          "watchpoint_evidence": {
+            "all_marked_entries": [
+              {
+                "cpu": false,
+                "flags": 151,
+                "gdb": true,
+                "hitaddr": 3758153744,
+                "len": 2138978384,
+                "read_hit": false,
+                "rsp_type": "awatch",
+                "stop_before_access": true,
+                "vaddr": 2155988912,
+                "write_hit": true
+              }
+            ],
+            "flags": 151,
+            "hitaddr": 3758153744,
+            "range_base": 2155988912,
+            "range_length": 2138978384,
+            "raw_rsp": "T05thread:p01.01;awatch:8081c7b0;",
+            "rsp_kind": "awatch"
+          }
+        }
+      },
+      "name": "ppb-read-and-write-no-implicit-success",
+      "passed": true
+    },
+    {
+      "detail": {
+        "earlier_legal_byte_writes": [],
+        "fault_address": 185491532,
+        "invalid_backing_padding_unchanged": true,
+        "pc_after": 184549632,
+        "pc_before": 184549632,
+        "register_changes": {},
+        "resumed_after_fault": false,
+        "stop": "T05thread:p01.01;awatch:b0e604c;",
+        "unsupported_callbacks_unchanged": true,
+        "watchpoint_evidence": {
+          "all_marked_entries": [
+            {
+              "cpu": false,
+              "flags": 87,
+              "gdb": true,
+              "hitaddr": 185491532,
+              "len": 1970380724,
+              "read_hit": true,
+              "rsp_type": "awatch",
+              "stop_before_access": true,
+              "vaddr": 185491532,
+              "write_hit": false
+            }
+          ],
+          "flags": 87,
+          "hitaddr": 185491532,
+          "range_base": 185491532,
+          "range_length": 1970380724,
+          "raw_rsp": "T05thread:p01.01;awatch:b0e604c;",
+          "rsp_kind": "awatch"
+        }
+      },
+      "name": "same-page-tail-read",
+      "passed": true
+    },
+    {
+      "detail": {
+        "earlier_legal_byte_writes": [],
+        "fault_address": 185491532,
+        "invalid_backing_padding_unchanged": true,
+        "pc_after": 184549632,
+        "pc_before": 184549632,
+        "register_changes": {},
+        "resumed_after_fault": false,
+        "stop": "T05thread:p01.01;awatch:b0e604c;",
+        "unsupported_callbacks_unchanged": true,
+        "watchpoint_evidence": {
+          "all_marked_entries": [
+            {
+              "cpu": false,
+              "flags": 151,
+              "gdb": true,
+              "hitaddr": 185491532,
+              "len": 1970380724,
+              "read_hit": false,
+              "rsp_type": "awatch",
+              "stop_before_access": true,
+              "vaddr": 185491532,
+              "write_hit": true
+            }
+          ],
+          "flags": 151,
+          "hitaddr": 185491532,
+          "range_base": 185491532,
+          "range_length": 1970380724,
+          "raw_rsp": "T05thread:p01.01;awatch:b0e604c;",
+          "rsp_kind": "awatch"
+        }
+      },
+      "name": "same-page-tail-write",
+      "passed": true
+    },
+    {
+      "detail": {
+        "earlier_legal_byte_writes": [],
+        "fault_address": 185491532,
+        "invalid_backing_padding_unchanged": true,
+        "pc_after": 184549632,
+        "pc_before": 184549632,
+        "register_changes": {},
+        "resumed_after_fault": false,
+        "stop": "T05thread:p01.01;awatch:b0e604c;",
+        "unsupported_callbacks_unchanged": true,
+        "watchpoint_evidence": {
+          "all_marked_entries": [
+            {
+              "cpu": false,
+              "flags": 151,
+              "gdb": true,
+              "hitaddr": 185491532,
+              "len": 1970380724,
+              "read_hit": false,
+              "rsp_type": "awatch",
+              "stop_before_access": true,
+              "vaddr": 185491532,
+              "write_hit": true
+            }
+          ],
+          "flags": 151,
+          "hitaddr": 185491532,
+          "range_base": 185491532,
+          "range_length": 1970380724,
+          "raw_rsp": "T05thread:p01.01;awatch:b0e604c;",
+          "rsp_kind": "awatch"
+        }
+      },
+      "name": "unaligned-str-crosses-exact-boundary",
+      "passed": true
+    },
+    {
+      "detail": {
+        "boundary": {
+          "earlier_legal_byte_writes": [],
+          "fault_address": 185491532,
+          "invalid_backing_padding_unchanged": true,
+          "pc_after": 184549632,
+          "pc_before": 184549632,
+          "register_changes": {},
+          "resumed_after_fault": false,
+          "stop": "T05thread:p01.01;awatch:b0e604c;",
+          "unsupported_callbacks_unchanged": true,
+          "watchpoint_evidence": {
+            "all_marked_entries": [
+              {
+                "cpu": false,
+                "flags": 151,
+                "gdb": true,
+                "hitaddr": 185491532,
+                "len": 1970380724,
+                "read_hit": false,
+                "rsp_type": "awatch",
+                "stop_before_access": true,
+                "vaddr": 185491532,
+                "write_hit": true
+              }
+            ],
+            "flags": 151,
+            "hitaddr": 185491532,
+            "range_base": 185491532,
+            "range_length": 1970380724,
+            "raw_rsp": "T05thread:p01.01;awatch:b0e604c;",
+            "rsp_kind": "awatch"
+          }
+        },
+        "permitted_control": {
+          "actual_two_word_store": true,
+          "base_writeback": false
+        }
+      },
+      "name": "strd-crosses-exact-boundary",
+      "passed": true
+    },
+    {
+      "detail": {
+        "boundary": {
+          "earlier_legal_byte_writes": [
+            {
+              "address": 185491528,
+              "new": 136,
+              "old": 0
+            },
+            {
+              "address": 185491529,
+              "new": 119,
+              "old": 0
+            },
+            {
+              "address": 185491530,
+              "new": 102,
+              "old": 0
+            },
+            {
+              "address": 185491531,
+              "new": 85,
+              "old": 0
+            }
+          ],
+          "fault_address": 185491532,
+          "invalid_backing_padding_unchanged": true,
+          "pc_after": 184549632,
+          "pc_before": 184549632,
+          "register_changes": {},
+          "resumed_after_fault": false,
+          "stop": "T05thread:p01.01;awatch:b0e604c;",
+          "unsupported_callbacks_unchanged": true,
+          "watchpoint_evidence": {
+            "all_marked_entries": [
+              {
+                "cpu": false,
+                "flags": 151,
+                "gdb": true,
+                "hitaddr": 185491532,
+                "len": 1970380724,
+                "read_hit": false,
+                "rsp_type": "awatch",
+                "stop_before_access": true,
+                "vaddr": 185491532,
+                "write_hit": true
+              }
+            ],
+            "flags": 151,
+            "hitaddr": 185491532,
+            "range_base": 185491532,
+            "range_length": 1970380724,
+            "raw_rsp": "T05thread:p01.01;awatch:b0e604c;",
+            "rsp_kind": "awatch"
+          }
+        },
+        "permitted_control": {
+          "actual_two_word_store": true,
+          "base_writeback": true
+        }
+      },
+      "name": "stm-records-earlier-permitted-beats",
+      "passed": true
+    },
+    {
+      "detail": {
+        "earlier_legal_byte_writes": [],
+        "fault_address": 184549888,
+        "invalid_backing_padding_unchanged": true,
+        "pc_after": 184549632,
+        "pc_before": 184549632,
+        "register_changes": {},
+        "resumed_after_fault": false,
+        "stop": "T05thread:p01.01;watch:b000000;",
+        "unsupported_callbacks_unchanged": true,
+        "watchpoint_evidence": {
+          "all_marked_entries": [
+            {
+              "cpu": false,
+              "flags": 150,
+              "gdb": true,
+              "hitaddr": 184549888,
+              "len": 85768,
+              "read_hit": false,
+              "rsp_type": "watch",
+              "stop_before_access": true,
+              "vaddr": 184549376,
+              "write_hit": true
+            }
+          ],
+          "flags": 150,
+          "hitaddr": 184549888,
+          "range_base": 184549376,
+          "range_length": 85768,
+          "raw_rsp": "T05thread:p01.01;watch:b000000;",
+          "rsp_kind": "watch"
+        }
+      },
+      "name": "read-only-code-write",
+      "passed": true
+    },
+    {
+      "detail": {
+        "bidirectional_guest_writes_share_backing": true,
+        "code_executed_from_alias": true
+      },
+      "name": "real-shared-code-and-data-aliases",
+      "passed": true
+    },
+    {
+      "detail": {
+        "guest_instruction_executed": false,
+        "host_fetch_guard_stopped_before_s_packet": true
+      },
+      "name": "t32-tail-and-nonexecutable-fetch-guards",
+      "passed": true
+    },
+    {
+      "detail": {
+        "explicit_additional_dtcm_bytes": 8116,
+        "extra_ram_measured_on_hardware": false
+      },
+      "name": "extra-dtcm-only-in-explicit-reference-profile",
+      "passed": true
+    }
+  ],
+  "expected_checks": 14,
+  "firmware_executed": false,
+  "firmware_read": false,
+  "hardware_reset_verified": false,
+  "passed": true,
+  "qemu_sha256": "3bd0d1d124cc9c3f3cf010bddf2b634a6e7e8f9d5a464c29c895005e04e64bc0",
+  "runner_sha256": "18896b8b53720df6809441624b68342245bb7e09bfab8eee26b161dbb3ab613b",
+  "schema": "aop-qemu-reference-preflight-v1"
+}

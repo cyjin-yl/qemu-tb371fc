@@ -1,14 +1,25 @@
 # Bounded QEMU AOP entry reference
 
 This is an independent diagnostic reference. Its public workflow reads no
-private firmware. The current instrumentation fix still requires a new build
-and all fourteen actual synthetic preflight checks.
+private firmware. Fixed source commit `fe89e5a553fe038babe07abb279a0975d4306715`
+passed all eleven XML regressions and fourteen actual synthetic preflight checks
+in [CI run 45183148964](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45183148964).
+The tested binary SHA256 is
+`3bd0d1d124cc9c3f3cf010bddf2b634a6e7e8f9d5a464c29c895005e04e64bc0`.
+The independent doesvm CT build remains pending; this CI result is not CT acceptance.
 
 | Preserved attempt | Actual result |
 | --- | --- |
 | [attempt-01](../evidence/aop-reference-ci-20261123/attempt-01/manifest.json) | Build completed; missing ARM target interface prevented machine selection. No synthetic guest instruction ran. |
 | [attempt-02](../evidence/aop-reference-ci-20261123/attempt-02/manifest.json) | CI run 45175027472 built and registered the machine. Unbound `xi:` in QEMU's `target.xml` then failed ElementTree parsing before guest execution. The separate CT1230 build reproduced that parser failure. |
 | [CT attempt-03](../evidence/aop-reference-ci-20261123/ct-attempt-03/manifest.json) | Same frozen CT binary; all 11 XML regressions passed. The first two CPU checks passed, the third failed, and the remaining eleven were not reached. The old runner confused the RSP range base with the actual overlap address. |
+
+The original successful CI receipts are archived in
+[CI attempt-04](../evidence/aop-reference-ci-20261123/ci-attempt-04/manifest.json).
+They record the raw RSP base `0x0b0e604c` separately from the actual unmapped
+read overlap `0x40000000`. The STM boundary case records four earlier legal
+bytes while retaining the forbidden-tail and unrelated-memory requirements.
+No private firmware was read or executed.
 
 The XML adapter only normalizes the exact source-derived QEMU target envelope.
 Malformed XML, unknown prefixes, other annexes, duplicate attributes and recursive
@@ -168,7 +179,7 @@ command's separate ten-second profile bound does not apply to preflight.
 
 ## Public preflight first
 
-The proposed preflight has 14 top-level checks:
+The preflight has 14 top-level checks:
 
 1. Actual Cortex-M3 QOM type and an authored MRS MSP instruction.
 2. Permitted guest STR/LDR.

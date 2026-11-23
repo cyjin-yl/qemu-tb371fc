@@ -1,0 +1,78 @@
+{
+  "schema": "aop-reference-ci-attempt-04-archive-v1",
+  "date": "2026-11-23",
+  "source_commit": "fe89e5a553fe038babe07abb279a0975d4306715",
+  "scope": "Public synthetic Cortex-M3 reference instrumentation only; independent doesvm CT build remains pending.",
+  "workflow": {
+    "run_id": 45183148964,
+    "job_id": 137721834893,
+    "url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45183148964",
+    "conclusion": "success"
+  },
+  "artifact": {
+    "id": 14822248633,
+    "bytes": 23326691,
+    "sha256": "de25187909df20972d55e0496b9c33bf988574ea3df37a6af28ae8ab9db3b61a",
+    "archived_here": false
+  },
+  "binary": {
+    "member": "aop-reference-build/qemu-system-aarch64",
+    "bytes": 60372056,
+    "sha256": "3bd0d1d124cc9c3f3cf010bddf2b634a6e7e8f9d5a464c29c895005e04e64bc0",
+    "archived_here": false,
+    "inspection_scope": "ZIP member bytes hashed independently during archival; not executed during archival.",
+    "executed_during_archival": false
+  },
+  "result": {
+    "xml_tests_passed": 11,
+    "expected_preflight_checks": 14,
+    "passed_preflight_checks": 14,
+    "firmware_read": false,
+    "firmware_executed": false,
+    "hardware_reset_verified": false,
+    "aop_startup_validated": false,
+    "internal_exception_before_access_proven": false,
+    "full_tablet_equivalence": false
+  },
+  "observed_regression": {
+    "rsp_stop": "T05thread:p01.01;awatch:b0e604c;",
+    "rsp_range_base": "0x0b0e604c",
+    "first_forbidden_overlap_byte": "0x40000000",
+    "read_hit": true,
+    "stop_before_access": true,
+    "pc_unchanged": true,
+    "unsupported_callbacks_unchanged": true,
+    "all_ram_unchanged": true
+  },
+  "multiaccess_observation": "The STM boundary case retained four earlier legal bytes at 0x0b0e6048..0x0b0e604b. The first forbidden overlap was 0x0b0e604c; unrelated RAM and hidden padding stayed unchanged. This is not whole-instruction rollback.",
+  "ct_status": {
+    "controller_installed_and_syntax_checked": true,
+    "build_started": false,
+    "preflight_passed": null,
+    "scope": "No CT acceptance is attributed to this CI result. See a later CT receipt for its actual outcome.",
+    "preflight_state": "not-run"
+  },
+  "selection_note": "Listed files are original UTF-8 CI members copied byte-for-byte. Full ZIP retained separately; no signed URL, binary, private firmware or guest RAM dump is included here.",
+  "files": {
+    "ci-execution.json": {
+      "bytes": 1026,
+      "sha256": "1da9a7d6296e8ec51fa59448bbe858731a1458743ed5d956391910c5e1ed36eb"
+    },
+    "machines.txt": {
+      "bytes": 145,
+      "sha256": "6f692f475b6b4a158b0553c487cad112774901837b83a91b2867d31175bbb641"
+    },
+    "preflight/result.json": {
+      "bytes": 14308,
+      "sha256": "b71cfd989bf6ca90c54b5cc53dc3ed3b21968fa417071734e46293ad016874ff"
+    },
+    "source-inputs.json": {
+      "bytes": 891,
+      "sha256": "8e52a8489daab6a559a062dc5c9b4df0af2688284cc1f2cc247964a0e957adb0"
+    },
+    "xml-unit.log": {
+      "bytes": 1468,
+      "sha256": "15b12018e3401ea05d3c509eea0de3aa85bec57e0b6880065595b7e6ffcb1240"
+    }
+  }
+}
