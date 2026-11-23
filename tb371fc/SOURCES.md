@@ -53,12 +53,15 @@ Use their per-run hashes rather than treating a source table as execution proof.
 | Generic Timer | [mmio-timer.md](docs/mmio-timer.md), Arm ARM external-register contract, exact-count arithmetic and retained regression controls |
 | GENI | [geni-uart.md](docs/geni-uart.md), Linux FIFO/IRQ contract and actual clock/reset integration |
 | GCC | [gcc-sm8250.md](docs/gcc-sm8250.md), pinned Linux-derived register manifest and clock-parent assumptions |
+| GPU CX/GX GDSC | [gdsc.md](docs/gdsc.md), captured five-window topology, pinned Android/Qualcomm downstream register fields, and explicit digital request/reset assumptions |
 | SMMUv2 | [smmuv2.md](docs/smmuv2.md), architectural stage-1 model and explicit Qualcomm-extension limits |
 | UFS | [ufs-sm8250.md](docs/ufs-sm8250.md), [clock diagnosis](docs/ufs-clock-diagnosis.md), [pinned upstream backports](docs/ufs-upstream-backports.json) |
 | RPMh | [rpmh-sm8250.md](docs/rpmh-sm8250.md), synthetic reference database versus optional external-file and AOP-derived partial metadata |
 | TLMM | [tlmm.md](docs/tlmm.md), native enclosing aperture and pinned Linux per-pin layout |
 | Watchdog | [watchdog.md](docs/watchdog.md), software-derived rate, digital timer/action behavior and migration |
 | IMEM / PS_HOLD | [boot-resources.md](docs/boot-resources.md), scoped SRAM/pin contracts and boot dependency evidence |
+| Empty SMEM handoff | [smem-reference.md](docs/smem-reference.md), [captured SMEM/TCSR geometry](evidence/smem-mutex-20261123/geometry.json), published shared-memory ABI and explicit loader/reference choices |
+| Production SMEM observation | [smem-driver-observer.md](docs/smem-driver-observer.md), exact-image symbol/disassembly validation and live successful-probe state, separate from handoff-image presence |
 | Guest acceptance | [guest-acceptance.md](docs/guest-acceptance.md), console-independent read-only GDB record and real shutdown requirement |
 | Public CI | [ci.md](docs/ci.md), mandatory component and unpatched-Linux gates with retained failures |
 
@@ -95,3 +98,32 @@ pinned driver sources, reference identity choices and unsupported modes.
 [QSEE notification banks](docs/qsee-irq.md) combine selected captured Kona topology, the actual native mask-write abort and fixed Android/vendor register tables. [DCC ordered operations](docs/dcc-operations.md) retain the vendor descriptor formats and Qualcomm author clarification; source ambiguity and reference timing are explicit. Their [actual validation receipts](evidence/qsee-dcc-20261123/publication.json) preserve the initial harness failure.
 
 The [TCSR mutex](docs/tcsr-mutex.md), [AOP message SRAM](docs/aop-msgram.md), and [REFGEN request](docs/refgen.md) use selected captured DT fields and pinned driver sources. Each document distinguishes protocol evidence from unknown native initialization. The [integrated receipts](evidence/boot-resources-20261123-1005/publication.json) record actual checks and separately configured, unsuccessful native diagnostics.
+
+
+## GPU GDSC and SMEM reference interfaces
+
+The [GPU GDSC contract](docs/gdsc.md) separates captured CX/GX register
+addresses from the unmeasured reset state and modeled external requests. Its
+field definitions are corroborated by the [official Android downstream
+driver at b6410c3f75259c0ca2df45a01838d2e46272723e](https://android.googlesource.com/kernel/msm/+/b6410c3f75259c0ca2df45a01838d2e46272723e/drivers/clk/qcom/gdsc-regulator.c)
+and the pinned TB371FC mirror cited in the component document. The source
+hashes and private-capture hash are recorded there. No physical supply timing,
+native power-on reset value, GPUCC or GPU/GMU implementation is inferred from
+those register fields.
+
+The [SMEM handoff](docs/smem-reference.md) uses the published shared-memory
+structures in [Linux v6.12](https://github.com/torvalds/linux/blob/v6.12/drivers/soc/qcom/smem.c)
+and the [official OnePlus SM8250 source at
+94304e12a3509eac7b3716bf574ce0b1fcaacbae](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/smem.c).
+The document records their exact hashes and corroboration from the pinned
+TB371FC mirror. The range and TCSR lock index come from captured geometry;
+empty v12 contents, cacheline, item capacity and reference lock ownership are
+explicit model choices. No original SBL RAM image or firmware-owned items
+are supplied.
+
+Shared-memory ABI agreement does not establish the production driver's
+private object layout. The [real-driver observation procedure](docs/smem-driver-observer.md)
+requires verifying that layout and the final successful-probe store against
+the exact production instructions before decoding live state. Component test
+definitions, actual compiled-binary receipts, driver-probe observations and
+full native-DT/Android boot outcomes remain separate evidence categories.

@@ -209,6 +209,22 @@ also records the complete 47-gate run. These results cover the explicit
 reference configuration described above; they do not establish a native
 VERSION, APID table or complete PMIC implementation.
 
+The separate historical frozen12 run on 2026-11-23 passed **25/25 checks** in 1.616 seconds, including
+actual migration of the pending transaction and asserted IRQ. The binary SHA256
+was `178bace28c84bced9471b824d413feb18e76ddb15212ec32412ad7a7ec32a675`.
+The checks cover geometry/identity provenance, byte packing, data snapshots,
+ownership, strict errors, atomic failure, malformed MMIO, IRQ
+configuration/ACK/masking/polarity/level handling, reset, the opt-in boundary,
+EE1 isolation and in-flight migration.
+
+The [sanitized result](../evidence/spmi-reference-20261123/result.json),
+[allowlisted source hashes](../evidence/spmi-reference-20261123/source-sha256.json)
+and [receipt manifest](../evidence/spmi-reference-20261123/sha256.json)
+preserve the individual outcomes and provenance. All peripheral data in this
+receipt is synthetic or explicitly qualified reference data. This passing
+component gate does not establish native PMIC operation or an unmodified Linux
+SPMI guest gate.
+
 Run inside the development container, against a frozen binary:
 
 ```sh

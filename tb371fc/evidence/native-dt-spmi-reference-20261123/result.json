@@ -1,0 +1,92 @@
+{
+  "diagnostic_observer_completed": true,
+  "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "elapsed_seconds": 7.539,
+  "initramfs_sha256": "8c2f582b72f19ba6043af7e85f91a3936c3c8fcb3c2a306ae4f76efe6d72ae7e",
+  "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+  "kind": "tb371fc-native-dt-progression-diagnostic",
+  "limits": [
+    "Diagnostic timeout/observer exit0 is not a guest boot pass.",
+    "SPMI reference profile is not native ownership, PMIC identity or firmware equivalence.",
+    "No QSEE controller implementation or secure-firmware response is claimed."
+  ],
+  "machine": "tb371fc,spmi-profile=reference",
+  "native_kernel_boot_passed": false,
+  "native_qsee_allowlisted_mapping": {
+    "/soc/qcom,qsee_irq": {
+      "compatible": [
+        "qcom,kona-qsee-irq"
+      ],
+      "interrupt-names": [
+        "sp_ipc0",
+        "sp_ipc1"
+      ],
+      "interrupts": [
+        "0x0",
+        "0x15c",
+        "0x4",
+        "0x0",
+        "0x15d",
+        "0x4"
+      ],
+      "phandle": [
+        "0x85"
+      ],
+      "syscon": [
+        "0x84"
+      ]
+    },
+    "/soc/syscon@1880000": {
+      "compatible": [
+        "syscon"
+      ],
+      "phandle": [
+        "0x84"
+      ],
+      "reg": [
+        "0x1880000",
+        "0x10000"
+      ]
+    }
+  },
+  "next_fatal": {
+    "call_chain": [
+      "qsee_irq_probe",
+      "regmap_write",
+      "_regmap_write",
+      "_regmap_bus_reg_write",
+      "regmap_mmio_write32le"
+    ],
+    "driver": "qsee_irq_probe",
+    "driver_offset": "0x140/0x238",
+    "fault": "synchronous external abort",
+    "faulting_function": "regmap_mmio_write32le+0xc/0x18",
+    "kernel_outcome": "init was killed and kernel panicked; no full native-DT boot success.",
+    "physical_address": "0x0188601c",
+    "physical_address_provenance": "Native DT syscon reg base plus offset held in the faulting production-kernel register context.",
+    "register_offset": "0x601c",
+    "syscon_base": "0x01880000",
+    "syscon_size": "0x10000",
+    "write_value": "0x0000000f"
+  },
+  "observer_exit_code": 0,
+  "observer_source_sha256": "da2241d9ab7f311c9a9e6df99c241d81883b37927c38bb1d16e23a6ef598213d",
+  "privacy": "Only allowlisted controller facts, function names, verdicts and hashes are published; full native DT, production Image, symbols, raw guest memory and raw serial/printk/QEMU logs remain private.",
+  "progress_observed": {
+    "dcc_driver_configured_lists": [
+      3,
+      6,
+      7
+    ],
+    "dcc_scope": "Probe configured native lists; this does not claim descriptor execution/capture completion.",
+    "spmi_driver_reported_arbiter_version": "v5 (0x50000000)",
+    "spmi_version_scope": "Explicit emulator reference profile, not a captured native VERSION register.",
+    "unsupported_pmic_child_operations": "Timeouts, unimplemented transaction errors and unavailable IRQ translation remained diagnosed."
+  },
+  "qemu_sha256": "178bace28c84bced9471b824d413feb18e76ddb15212ec32412ad7a7ec32a675",
+  "recorded_utc": "2026-11-23T08:27:27.190318+00:00",
+  "schema_version": 1,
+  "scope": "Unmodified production kernel with captured full native DT and validation initramfs; explicit SPMI reference profile; bounded private-log diagnosis.",
+  "stopped_by_timeout": true,
+  "symbol_input_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0"
+}

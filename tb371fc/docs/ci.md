@@ -15,8 +15,15 @@ after an earlier component failure so their independent results remain visible.
 
 ## Gates
 
-The current public plan has **55 gates: 51 component/parser gates and four
-Linux boots**, plus the separate A77 and PCI UFS compatibility job. The archived
+The current public plan registers **57 gates: 53 component/parser gates and
+four Linux boots**, plus the separate A77 and PCI UFS compatibility job.
+The [run for commit 408d82a](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45164018326) completed all 53 component/parser gates
+and four clean Linux gates successfully; the separate A77/shared-UFS-PCI job
+also succeeded. These results belong to that CI build and its inputs.
+The same-frozen-binary local replay on doesvm was started, but its final
+result remains uncollected after connection loss; it is not recorded as a
+local aggregate pass. Full native-DT boot and the production SMEM driver's
+successful-probe observation remain unconfirmed. The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
 The [same-boundary A77 and PCI results](../evidence/verified-20261123-0820/final-verification.json)
@@ -52,6 +59,8 @@ pass does not attest newly added devices.
 | QSEE notification | 12 state/real SPI348/349/invalid-access checks and 6 actual migration checks; no secure-service replies |
 | SPMI arbiter | 25 checks against explicit reference fixtures; missing physical PMIC behavior is not inferred from a passing arbiter test |
 | SPMI → PDC → GIC | 8 checks with the real parent IRQ wiring preserved and exactly one actual migration, including the remaining transaction deadline |
+| GPU CX/GX GDSC | 29 groups and exactly 10 migration records: six accepted transfers and four expected profile-mismatch rejections; supported fields, GPIO state, errors, reset, domain independence and the default-none boundary |
+| Empty SMEM reference handoff | 22 groups and exactly four migration records: matching reference/off transfers and both profile-mismatch directions; image ABI, real writable RAM and TCSR transactions, continued allocation fixtures, reset and neighbor preservation; no guest CPU execution |
 | Clean Linux user space | 8 PID 1 checks with 8 CPUs, 8 GiB RAM, normal GENI console handoff and a native AArch64 counter probe; a newly created synthetic UFS disk is attached |
 | Clean Linux empty UFS bus | The same 8 PID 1 checks and shutdown with UFS enabled and no logical unit attached; missing-LUN recovery is an independent required gate |
 | Clean Linux UFS and SMMU | 19 guest checks plus a host check of the bytes written to the synthetic disk |
@@ -155,3 +164,47 @@ The [targeted run](../evidence/boot-resources-20261123-1005/workflow.json) passe
 
 All 22 CI-plan unit tests also passed. This validates the documented component protocols and storage.
 The production kernel/full DT panics in both unknown and explicit-reference REFGEN configurations; observer exit 0 is not boot success.
+
+
+## GDSC and SMEM gate contracts
+
+The [GDSC test](../tests/test_gdsc.py) explicitly selects reference-off/on for
+the five captured CX/GX register windows, and separately verifies that the
+default none profile has no mapping or known power state. It exercises
+software collapse, read-only status, retained wait/retention requests,
+hardware and external votes, GX clamp/reset, invalid accesses, reset and
+independent domains. It checks both register/QOM state and GPIO outputs.
+Migration must retain controls and input levels, and reject mismatched
+reference-on or enabled-reference settings in both directions.
+
+The verdict reader requires true `all_passed` and `success` fields, exactly
+29 checks, `expected_checks=29`, `migration_expected_checks=10`,
+`socket_directories_retained=true`, and a ten-entry migration list. The six
+accepted and four expected-rejection transfers are component evidence; they
+do not establish GPU/GMU execution or physical power sequencing. See
+[gdsc.md](gdsc.md) for the explicit digital timing and profile boundaries.
+
+The [SMEM test](../tests/test_smem_reference.py) selects
+`smem-profile=reference-empty` together with explicit TCSR unlocked-reference,
+and also tests default/off and invalid configurations. It independently
+decodes the initialized 2 MiB ordinary-RAM image, writes allocation fixtures
+through the actual mutex/MMIO/RAM interfaces, migrates the complete region,
+continues allocations, checks exact reset restoration and confirms that
+neighboring RAM is preserved. Both off/reference mismatch tests keep the
+TCSR profile matched, so rejection must come from the SMEM marker itself.
+
+The verdict reader requires true `all_passed`, exactly 22 checks,
+`expected_checks=22`, a four-entry migration list, and explicit false values
+for `guest_cpu_executed`, `native_sbl_captured` and
+`remote_firmware_emulated`. QTest allocation fixtures validate the RAM layout
+and loader/reset/migration contract; they do not execute Linux's allocator or
+establish that `qcom_smem_probe` succeeded.
+
+Both runners use `ufs-enabled=off` for their component migrations. The four
+public Linux gates retain their own recorded configurations; their success
+does not automatically exercise the optional SMEM reference profile. The
+[SMEM driver observation](smem-driver-observer.md) is a separate native-kernel
+diagnostic requiring exact-image symbol and instruction verification, bounded
+live-state checks, explicit profiles and its own outcome. A successful probe
+would still leave firmware-populated items, remote services and full Android
+operation to be implemented and tested.

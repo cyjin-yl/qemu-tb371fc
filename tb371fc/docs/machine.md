@@ -22,7 +22,22 @@ byte-identical canonical-name success. The
 [The source index](../SOURCES.md) links each device's precise register contract,
 primary references, assumptions and executed receipts.
 
-## Current executed scope
+## Independent frozen-build receipts
+
+The separate [frozen12 public-input run](../evidence/resume-final-20261123/result.json)
+passed **46/46 gates** in 74.755 seconds on frozen build12, SHA256
+`178bace28c84bced9471b824d413feb18e76ddb15212ec32412ad7a7ec32a675`, with an unchanged executable.
+It includes 42 component/validation gates and four Linux gates. A separate
+[production-kernel receipt](../evidence/production-gdb-frozen12-20261123/result.json)
+passes eight PID1 checks and actual guest-requested power-off on the same build.
+
+The associated generic build separately passed [all 15 UFS PCI cases without skips](../evidence/compat-final-20261123/ufs-pci/result.json)
+and [852 A77 guest checks across nine configurations plus two invalid-configuration rejections](../evidence/compat-final-20261123/a77/result.json).
+Both use SHA256 `c06bb42b52bc47839fbe40eb5a247c04d70b64840411af6efff1497d0a1d16c0`,
+which differs from the board executable above. Their [source provenance](../evidence/compat-final-20261123/a77/source-provenance.json)
+records 4,444 matching tree files, 1,088 matching actual target inputs and the wrap-pinned keymap check.
+
+## Executed component scope
 
 These are separate, versioned receipts. Their QEMU, kernel and payload hashes
 identify exactly what was exercised; a later source edit does not inherit a
@@ -30,17 +45,23 @@ passing result automatically.
 
 | Gate | Recorded evidence |
 | --- | --- |
-| A77 architectural CPU | [852 guest checks across nine configurations and two invalid configurations](../evidence/cpu-a77-r1p0/result.json) |
+| A77 architectural CPU | [852 guest checks across nine configurations and two invalid configurations](../evidence/cpu-a77-r1p0/result.json); [frozen12-associated generic rerun](../evidence/compat-final-20261123/a77/result.json) and [08:20 isolated verification](../evidence/verified-20261123-0820/final-verification.json) retain separate binary hashes |
 | GENI and GCC | [14 GENI groups, 6 GENI migration checks, GCC 19/5 and wired clock/reset 6/4](../evidence/expansion-20261123/revalidation-4/summary.json) |
 | CPU/MMIO timer | [Exact/legacy rates, strict CPU and MMIO migration, mode rejection, and direct GIC input checks](../evidence/mmio-timer-live-status-20261123/) |
 | SMMUv2 | [23 architectural C QTests](../evidence/smmuv2-20261123/qtest-result.json) |
 | UFS | [56 controller/PHY/DMA tests](../evidence/resume-20261123/reports/32-ufs-register-dma.json) and [19 real Linux driver/I/O checks](../evidence/ufs-bringup-20261123/linux-strict-iommu-19.json) |
+| Shared UFS core / PCI | [15/15 unskipped cases in the frozen12-associated generic build](../evidence/compat-final-20261123/ufs-pci/result.json) and [15/15 in the 08:20 isolated build](../evidence/verified-20261123-0820/pci-ufs/result.json); generic ARM virt/PCI compatibility, separate from board acceptance |
 | RPMh | [22 reference/file-ABI tests and five migrations](../evidence/expansion-20261123/revalidation-5/rpmh-summary.json) |
 | Watchdog | [16 groups](../evidence/watchdog-20261123/qtest-16.json) and [actual pending-bite migration](../evidence/watchdog-20261123/migration.json) |
 | TLMM | [25 C QTests](../evidence/tlmm-20261123/qtest-result.json) and [15 checks across four actual migrations](../evidence/tlmm-20261123/migration-result.json) |
 | IMEM / PS_HOLD | [Seven groups including actual migration](../evidence/boot-resources-20261123/qtest-migration-7.json) |
 | Linux RPMh providers | [23 guest and 3 host checks](../evidence/rpmh-linux-20261123/result.json), including CCF rate, real TCS interrupt activity, completed XO transaction and cleared pending IRQ |
-| Production kernel with generated DT | [Eight PID 1 checks and actual guest shutdown](../evidence/production-gdb-exact-20261123/result.json), with the unmodified production Image |
+| Production kernel with generated DT | [Original eight PID 1 checks and actual guest shutdown](../evidence/production-gdb-exact-20261123/result.json), plus [independent frozen12 rerun](../evidence/production-gdb-frozen12-20261123/result.json), both with the unmodified production Image |
+| DCC | [17 original checks](../evidence/qsee-dcc-20261123/dcc-existing/report.json) and [16 ordered-operation checks](../evidence/qsee-dcc-20261123/dcc-operations/report.json), including actual pending-operation migration |
+| QSEE notification | [12 state and real SPI348/349 checks](../evidence/qsee-dcc-20261123/qsee/report.json) and [6 actual migration checks](../evidence/qsee-dcc-20261123/qsee-migration/report.json); no secure-service execution |
+| PDC | [18 C QTests and ten migration checks](../evidence/verified-20261123-0820/public-47/result.json); four-range GIC routing and no replay of acknowledged edges |
+| IPCC | [16 message/IRQ/migration checks](../evidence/verified-20261123-0820/public-47/37-ipcc-messages/fixtures/data/result.json); real GIC SPI229 and no absent-peer replies |
+| SPMI reference and interrupt route | [25 arbiter checks](../evidence/verified-20261123-0820/public-47/39-spmi-pmic-arb/fixtures/data/result.json) and [eight real SPMI/PDC/GIC route checks](../evidence/verified-20261123-0820/public-47/40-spmi-pdc-gic-route/fixtures/data/result.json); explicit reference identities/ownership and a synthetic IRQ fixture |
 | Loader layout | [13 paused-QEMU checks](../evidence/boot-layout-20261123/runtime-layout-frozen4.json), including the corrected memory-node fixup; not a guest boot verdict |
 
 The production kernel run uses a test initramfs and the generated subset DT.
@@ -70,8 +91,11 @@ that probe and programmed lists 3/6/7, then faulted in IPCC and concurrent
 SPMI probes. The [progression receipt](../evidence/native-dt-progression-20261123/progress.json)
 records each boundary without proving complete DCC capture. This advances the diagnostic path;
 it does not establish a complete native-DT boot or Android userspace.
-The [current replay](../evidence/resume-20261123/result.json) records later
-build-specific results without replacing earlier failed receipts.
+The separate [frozen12 reference-profile diagnostic](../evidence/native-dt-spmi-reference-20261123/result.json)
+passed the prior IPCC/SPMI probe blockers and failed at `qsee_irq_probe+0x140`,
+a write of `0xf` to physical `0x0188601c`. Subsequent QSEE, AOP and REFGEN
+work has its own receipts below. These observations retain each build and
+configuration boundary; none establishes full native-DT PID 1 or Android boot.
 
 ## Tablet evidence and memory map
 
@@ -91,6 +115,8 @@ configuration, not all register contents or hardware behavior.
 | GENI console | `0x00a90000/0x4000`, SPI 357 |
 | GCC | `0x00100000/0x001f0000` |
 | Apps / GPU SMMU | `0x15000000/0x100000` and `0x03da0000/0x10000` |
+| GPU CX/GX GDSC | Five separate four-byte windows listed below; mapped only by `gdsc-profile=reference-off` or `reference-on` |
+| SMEM reserved RAM | Captured `0x80900000/0x200000`; `smem-profile=reference-empty` initializes this range in ordinary board RAM with an explicitly synthetic empty v12 handoff |
 | UFS HCI / QMP PHY | `0x01d84000/0x3000` and `0x01d87000/0x1000`, SPI 265 |
 | RPMh DRVs / cmd-db | `0x18200000`, `0x18210000`, `0x18220000`; command-db mapping `0x80860000` when an explicit profile is enabled |
 | Display RSC | `0x0af20000` / `0x10000`, TCS offset `0x1c00`, two banks, SPI 129; shares the enabled RPMh profile |
@@ -98,7 +124,23 @@ configuration, not all register contents or hardware behavior.
 | TLMM | `0x0f000000/0x01000000`, SPI 208; 180 ordinary digital GPIOs plus a separate UFS reset output |
 | IMEM / PS_HOLD | `0x146bf000/0x1000` writable SRAM and `0x0c264000/4` digital hold output; no initialized OEM firmware state |
 | DCC register / SRAM | `0x01023000/0x1000` and `0x0103a000/0x6000`; internal word-address offset `0x1a000`; reference map2 identity with bounded READ, single-word WRITE, flat LOOP and single-register RMW |
+| PDC | `0x0b220000/0x30000`, SPI-type bitmap `0x17c000f0/0x60`; 138 DT-mapped pins, including pin 1 → SPI 481 |
+| IPCC APPS | `0x00408000/0x1000`, SPI 229; local client ID 8 from the captured APPS self-ping node |
+| SPMI arbiter | Five native windows below, mapped only with `spmi-profile=reference`; IRQ output through PDC input 1 |
 | PSCI | SMC |
+
+The explicit SPMI reference profile maps these captured CPU physical ranges:
+
+| SPMI region | Base | Size |
+| --- | --- | --- |
+| core | `0x0c440000` | `0x1100` |
+| chnls | `0x0c600000` | `0x02000000` |
+| obsrvr | `0x0e600000` | `0x00100000` |
+| intr | `0x0e700000` | `0x000a0000` |
+| cnfg | `0x0c40a000` | `0x00026000` |
+
+The window addresses are DT observations; arbiter v5 identity, APID numbering
+and ownership are explicit reference inputs. They are not measured reset values.
 
 PPI and SPI numbers are DT interrupt-specifier numbers. Architectural INTIDs
 are PPI + 16 or SPI + 32; for example the console uses INTID 389.
@@ -177,6 +219,9 @@ and the retained live-ISTATUS regression.
 | `ufs-enabled` | `on`; use `off` for independent component migration tests |
 | `gcc-boot-configured` | `on`; explicit GPLL0/UART firmware handoff state, not cold silicon reset |
 | `bootstrap-fabric-hz` | `100000000`; explicit reference for presently unmodeled fabric parents, not a measured rate |
+| `spmi-profile` | `off`; `reference` explicitly enables the bounded v5 arbiter/identity model; it does not enable a complete PMIC or fabricate generated-DT PMIC children |
+| `gdsc-profile` | `none`; `reference-off` or `reference-on` explicitly enables the GPU CX/GX digital controls below; no measured silicon reset state |
+| `smem-profile` | `off`; `reference-empty` seeds an empty SMEM v12 image in ordinary RAM and requires the independent TCSR unlocked-reference option |
 | `rpmh-profile` | `off`; `reference` or `file` must be requested explicitly |
 | `rpmh-cmd-db` | External file path for `rpmh-profile=file` |
 | `rpmh-boot-configured` | `on` seeds the explicit DRV2 XO handoff vote when RPMh is enabled |
@@ -186,6 +231,141 @@ is checked, only catalogued typed resources are bound, and an unknown
 request remains uncompleted. The reference database's addresses and some
 auxiliary values are synthetic. A privately derived AOP partial table is
 not a complete live cmd-db. See [rpmh-sm8250.md](rpmh-sm8250.md).
+
+### DCC, PDC, IPCC and SPMI boundaries
+
+[DCC](dcc.md) implements reference-map2 SRAM capture and propagates source
+transaction failures. Its [ordered-operation subset](dcc-operations.md) adds
+single-word WRITE, flat LOOP and single-register RMW as real bus transactions.
+CRC/ATB/CTI, nested loops, multiword RMW and full native-list execution remain
+unsupported or unvalidated. [PDC](pdc.md) converts five legacy level/edge modes into the
+captured GIC routes. Its default VERSION read fails because native identity is
+unmeasured; mainline experiments can explicitly select
+`-global qcom-pdc.reference-version=0x20000`. The parent GIC owns pending/EOI.
+
+[IPCC](ipcc.md) implements pending latches, masks, clear-on-read and APPS self
+routing. An absent remote endpoint produces no invented incoming message.
+Its priority ordering and sparse capacity are explicit model choices.
+
+The [SPMI reference model](../../hw/misc/qcom-spmi-pmic-arb.c) performs bounded
+1–8-byte transactions with status/error and ownership checks. Known or
+source/firmware-derived primary PMIC identity bytes are separate from unknown
+revision fields, which fail. Native APID/ownership and raw chip versions remain
+unmeasured. The optional SID15 IRQ peripheral is a synthetic controller fixture;
+its tests prove the SPMI→PDC→GIC route, not real regulator, ADC, charger or PON
+behavior. No power-domain wake or secure-firmware completion is implied.
+
+### GPU GDSC reference controls
+
+[gdsc.md](gdsc.md) records the captured topology and pinned downstream driver
+fields. The GPU controls are independent of the GDSCs already implemented by
+the GCC model. Selecting `gdsc-profile=reference-off` or `reference-on` maps
+exactly these resources:
+
+| QOM device | Register | Physical address | Size |
+| --- | --- | --- | --- |
+| `/machine/gpu-cx-gdsc` | CX GDSCR | `0x03d9106c` | 4 bytes |
+| `/machine/gpu-cx-gdsc` | CX hardware power status | `0x03d91540` | 4 bytes |
+| `/machine/gpu-gx-gdsc` | GX GDSCR | `0x03d9100c` | 4 bytes |
+| `/machine/gpu-gx-gdsc` | GX domain clamp/reset | `0x03d91508` | 4 bytes |
+| `/machine/gpu-gx-gdsc` | GX software block reset | `0x03d91008` | 4 bytes |
+
+The default `none` leaves all five windows unmapped. Both devices remain
+present with `enabled-reference=false` and read-only `state-known=false`, so
+migration can reject profile changes in either direction. Their inactive
+outputs are low; this is an absence of a modeled signal, not a measured
+power-off state. No whole GPUCC or syscon aperture is mapped as a fallback.
+
+GDSCR stores software collapse (bit 0), hardware-control selection (bit 1),
+retention request (bit 11), and the clock-disable-wait field (bits 15:12).
+Power-on (bit 31) is derived and read-only; a read/modify/write may include
+that bit, but its written value is ignored. Unsupported written bits,
+including software override (bit 2), reject the transaction before changing
+supported fields. The CX status window is read-only. The GX domain word
+stores clamp bit 0 and reset bit 4, and the block-reset word stores bit 0.
+Unimplemented registers and access sizes are not successful zero devices.
+QEMU may split wider accesses at four-byte window boundaries, so cross-window
+atomic rejection is not part of this contract.
+
+In an enabled profile, each domain uses its explicit `hw-enable` and
+`external-vote` inputs:
+
+```text
+selected_request = HW_CONTROL ? hw_enable : !SW_COLLAPSE
+power_on = external_vote || selected_request
+```
+
+Both inputs start low and are not synthesized by guest writes. The derived
+`power-on`, requested `clamp-io`, and OR-combined `reset-asserted` signals are
+GPIO outputs and read-only QOM properties. Updates are synchronous digital
+transitions. Retention and wait encodings are retained for software readback;
+they do not reproduce a retention circuit or physical transition timing.
+There is no GPU/GMU, parent-regulator, GPUCC-clock or secure-firmware consumer
+connected by this model.
+
+An ordinary reference-off reset sets collapse and clamp; reference-on clears
+both. Both reset profiles clear the two reset-request bits and preserve the
+external input levels. An external vote can therefore keep power-on high
+across a reference-off reset. Migration saves controls and inputs, recomputes
+outputs and rejects different `enabled-reference` or `reference-on` values.
+The profile choices are fixed before device realization.
+
+### Empty SMEM reference handoff
+
+`smem-profile=reference-empty` is a loader convention for direct-kernel boot.
+It writes an explicitly synthetic 2 MiB empty SMEM v12 image into ordinary
+board RAM at `0x80900000`, with one global partition and 512 initially empty
+item slots. The image uses the documented header, `$TOC` directory and `$PRT`
+partition format. It is not a separate ROM mapping: the guest can write RAM,
+acquire the TCSR lock and execute its own allocation and lookup code.
+
+The default `smem-profile=off` does not seed a handoff image. Enabling the
+reference format requires the separate, explicit mutex assumption:
+
+```sh
+qemu-system-aarch64 \
+  -machine tb371fc,smem-profile=reference-empty \
+  -global qcom-tcsr-mutex.boot-unlocked-reference=on \
+  -accel tcg -smp 8 -m 8G \
+  -kernel /path/to/Image -initrd /path/to/initramfs.cpio.gz
+```
+
+Without that TCSR option, machine creation fails. The handoff does not change
+unknown mutex owners implicitly. TCSR lock index 3 and the RAM extent come
+from captured geometry; version 12, the empty global partition, 512-item
+capacity, cacheline 64 and unlocked reference owners are model choices.
+The execution-environment lock token is not a CPU identifier.
+
+QEMU's ROM loader copies the initialization image into RAM and checks for
+overlap with other loader inputs. It does not move or shrink SMEM to hide a
+kernel or initramfs collision. The usual 8 GiB configuration places a raw
+kernel at the board's higher loading base; smaller RAM and explicit load-base
+choices still require nonoverlapping inputs.
+
+With the generated DT, the profile adds the reserved region, TCSR syscon and
+hwlock nodes, and a SMEM consumer explicitly labeled as an empty reference.
+With an external DT, this profile retains the supplied device nodes and adds
+the fixed SMEM extent to the FDT reservation map. It does not reinterpret an
+arbitrary supplied DT as a new captured SMEM layout.
+
+The `/machine/smem-handoff` marker exists with both profiles. It migrates the
+profile selection and rejects off/reference mismatches in both directions.
+Actual heap contents and allocation frontiers migrate as ordinary RAM;
+incoming migration does not reseed the empty image. A later normal system
+reset restores the complete empty image when reference-empty is enabled,
+discarding previous allocations under this declared loader convention. Off
+does not reseed the range. The separate TCSR device also checks its own
+initial-owner profile on migration.
+
+There are no fabricated socinfo, restart-state, SMD/GLINK channel or remote
+identity items. Missing items remain missing when a real driver requests
+them. This model executes no SBL or remote firmware and supplies no firmware
+IPC replies. The [SMEM contract](smem-reference.md) distinguishes its
+QTest-written allocation fixtures from guest-driver execution; the separate
+[production-driver observation procedure](smem-driver-observer.md) requires
+verified kernel symbols/instructions and live probe-success state. A seeded
+image, a successful allocator probe and a complete Android boot are separate
+results.
 
 ## Boot and diagnostic interfaces
 
@@ -227,7 +407,8 @@ attached explicitly for storage I/O. The public
 attaches LU0 to `ufs0`. No native tablet partition is required.
 
 Whole-board migration with UFS is currently blocked by the upstream core.
-GENI/GCC/timer/RPMh/watchdog/TLMM/boot-resource migration receipts use
+GENI/GCC/timer/RPMh/watchdog/TLMM/boot-resource/DCC/PDC/IPCC/SPMI/QSEE
+migration receipts use
 `-M tb371fc,ufs-enabled=off` and establish only their declared component
 continuity. SMMU state fields alone do not establish a passed SMMU migration.
 See [ufs-sm8250.md](ufs-sm8250.md) for the remaining ICE/RPMB/LU/PHY limits.
@@ -247,6 +428,9 @@ See [ufs-sm8250.md](ufs-sm8250.md) for the remaining ICE/RPMB/LU/PHY limits.
 | RPMh resources | Nodes and command-db appear only with an explicit profile; reference addresses/aux data remain synthetic |
 | TLMM and device reset | Upstream west/south/north pinctrl ranges, 180 ordinary GPIOs plus UFS_RESET group 180; active-low UFS reset is connected separately from GCC controller reset |
 | IMEM / PS_HOLD | Native physical mappings exist, but the generated DT does not advertise an incomplete PMIC poweroff path; lifecycle gates use PSCI |
+| DCC / PDC / IPCC / SPMI | Native-address component models and explicit test profiles do not advertise nonexistent PMIC children or remote firmware services; reference SPMI is off by default |
+| GPU GDSC | Reference profiles map only the five captured register windows; no generated node claims a working GPU/GMU or complete GPUCC |
+| SMEM reference | Off adds no handoff nodes; reference-empty adds the captured reserved range, TCSR/hwlock and labeled SMEM node, without firmware-populated items or remote services |
 | Optional services | No implicit all-success SCM, regulator, interconnect, firmware or absent-peripheral service |
 
 Instantiating the GPU SMMU does not create Adreno or display engines.
@@ -305,8 +489,9 @@ the original physical-tablet handoff issue.
 
 Adreno/GMU, DPU/DSI/DSC/panel, touchscreen and pen, keyboard, USB, microSD,
 Wi-Fi/BT/PCIe/MHI, audio/DSP, camera, sensors, charging, native PMIC behavior,
-SMEM/SCM/TrustZone and complete low-power/wakeup contracts remain incomplete
-or absent. SMMUv2, UFS and RPMh each implement their documented subsets.
+native SBL/SMEM contents, SCM/TrustZone and complete low-power/wakeup contracts
+remain incomplete or absent. The explicit empty SMEM handoff and GPU GDSC
+digital controls do not supply those missing firmware or GPU functions. SMMUv2, UFS and RPMh each implement their documented subsets.
 No virtio substitute is silently inserted as proof of a native peripheral.
 
 Full native-DT kernel boot and Android end-to-end operation require actual
@@ -331,4 +516,4 @@ The [52-gate frozen result](../evidence/qsee-dcc-20261123/public-52/result.json)
 
 The [50 targeted checks and 55 public gates](../evidence/boot-resources-20261123-1005/publication.json) passed on one frozen binary.
 [Native observations](../evidence/boot-resources-20261123-1005/native-progression.json) separate the default REFGEN read abort from the later GDSC abort under explicit reference state.
-No SMEM initialization, secure firmware, QMP remote service, analog reference voltage, or native reset value is claimed by these models.
+These TCSR/AOP/REFGEN devices do not themselves initialize SMEM or implement secure firmware, QMP remote service, analog reference voltage or measured native reset values. The separate empty SMEM loader profile is described above.

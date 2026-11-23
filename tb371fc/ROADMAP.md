@@ -3,7 +3,7 @@
 目标是让原生来宾驱动面对一致的软件可见硬件接口，并最终运行完整 Android 的显示、输入、存储、连接和设备生命周期。
 每个完成项需要来源、实现、实际运行回执及明确的实机对照范围。功能测试、驱动 probe 和真实芯片等价是不同门槛；TCG 执行速度不代表 Snapdragon 性能。
 
-以下状态按已归档回执填写。最早的 Linux 八项/GENI 十三项结果保留为历史；当前组件验收索引见 [README](../README.md)，公共 CI 计划见 [ci.md](docs/ci.md)，新隔离构建已通过的 47 项、A77 852 + 2 项和 PCI UFS 15 项见[最终回执](evidence/verified-20261123-0820/final-verification.json)，后续计划与失败记录见[持续验证账本](evidence/VALIDATION-continued-20261123.md)。CI 中已注册的门槛仍须在对应提交实际执行成功。
+以下状态按已归档回执填写。最早的 Linux 八项/GENI 十三项结果保留为历史；当前组件验收索引见 [README](../README.md)，公共 CI 计划见 [ci.md](docs/ci.md)，08:20 隔离构建已通过的 47 项、A77 852 + 2 项和 PCI UFS 15 项见[该轮回执](evidence/verified-20261123-0820/final-verification.json)；独立冻结构建 12 的 [46 项历史回执](evidence/resume-final-20261123/result.json)与后续 49/52/55 项增量及失败记录均见[持续验证账本](evidence/VALIDATION-continued-20261123.md)。CI 中已注册的门槛仍须在对应提交实际执行成功。
 
 ## 1. CPU、内存、中断与启动基础
 
@@ -35,7 +35,11 @@
 - [x] 可外部输入 cmd-db，检查边界、别名、aux 数据及内容哈希；未知或不支持资源不获得成功 ACK。
 - [x] **显式 reference profile 的 RSC/clk-rpmh provider、CCF 19.2 MHz 和实际 TCS IRQ；连同 UFS/SMMU 的 23 项 guest 检查及 3 项宿主 QOM/寄存器检查通过。**
 - [ ] 完整实机 live cmd-db 与动态 VRM 注册的对应关系；AOP 静态部分数据不等于 live RAM。
-- [ ] 原厂 AOP/SMEM/SCM/TrustZone 服务、secure-world 状态和完整 interconnect/电源依赖。
+- [x] 实现显式 `smem-profile=reference-empty`：loader 初始化普通 RAM 的空 SMEM v12 交接格式，要求独立选择 TCSR unlocked-reference；默认 `off` 不初始化。包含普通 reset 恢复空堆、普通 RAM 迁移与双向 profile 不匹配拒绝的协议。
+- [x] 提交 `408d82a` 的 [GitHub Actions 运行 45164018326](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45164018326)通过 53 组组件 gate 与四组无补丁 Linux gate；独立 A77/PCI 任务成功，范围限于该次 CI 构建与配置。
+- [ ] 收取 doesvm 上同一冻结二进制的完整本地复验结果；连接失效后的 SMEM 联合流程尚无最终通过回执。
+- [ ] 原厂 `qcom_smem_probe` 成功路径观察和完整原生 DT 启动；QTest 分配 fixture 不能替代真实驱动执行。
+- [ ] 原厂 SBL/SMEM 内容、AOP/SCM/TrustZone 服务、secure-world 状态和完整 interconnect/电源依赖。
 - [ ] 数字电压请求到真实 PMIC/供电行为的完整模型；不把 reference profile 当作 native 资源地址或测量结果。
 - [x] KPSS watchdog 的 16 项数字行为检查及实际 pending-bite 迁移。
 - [ ] watchdog 与原生整机 suspend/reset/secure 路由的完整联合验收。
@@ -46,11 +50,15 @@
 - [x] DCC map2 read-capture 子集、17 项实际事务/负向/迁移检查；原生驱动已完成列表 3/6/7 编程。
 - [x] DCC 单字 WRITE、平坦 LOOP、单寄存器 RMW：16 项新增操作与迁移检查，原有 17 项保持通过。
 - [ ] DCC CRC/ATB/CTI、嵌套循环、多字 RMW 及原生三列表完整执行。
-- [x] IPCC 16 项、SPMI reference 25 项，以及真实 SPMI → PDC → GIC 连线/迁移 8 项通过；PDC 18/10 在同一冻结构建通过。
+- [x] PDC 原生四段 pin→SPI 路由、level/edge 转换：18 项 C QTest 与 10 项检查/两次实际迁移通过；VERSION 仅有显式 reference 选项，实机值仍未知。
+- [x] IPCC APPS 消息 latch、self-send、实际 SPI 229、mask/clear/clear-on-read 与真实迁移：16 项检查；不伪造缺失远端的回复。
+- [x] SPMI v5 显式 reference profile：25 项字节事务、ownership、错误、IRQ 和迁移检查；真实 SPMI → PDC → GIC 连线另有 8 项检查与一次迁移。
+- [ ] 实测 SPMI VERSION/APID/ownership、完整 PMIC 身份/寄存器、PON/charger/regulator 和真实电源行为；合成 IRQ fixture 不替代 PMIC 外设。
 - [ ] 原生 PMIC、远端固件服务及其余完整 DT 依赖与完整引导验收。
 - [x] **IMEM/PS_HOLD 七项 gate 纳入公开 CI，并以计划回归验证 components/all 均强制执行。**
 
 RPMh 默认 `off`，`reference` / `file` 必须显式选择。
+SMEM reference 的布局、loader 重叠检查、reset/迁移与 DT 处理见 [smem-reference.md](docs/smem-reference.md)；真实驱动证据要求见 [smem-driver-observer.md](docs/smem-driver-observer.md)。空交接格式不提供 socinfo、远端身份、SMD/GLINK item 或固件回复。
 GCC bootstrap 状态、部分 fabric 输入、QUP version 和设备排序延时仍是明确的模型假设。来源和限制见 [GCC](docs/gcc-sm8250.md)、[RPMh](docs/rpmh-sm8250.md)、[TLMM](docs/tlmm.md)、[watchdog](docs/watchdog.md)及 [boot resources](docs/boot-resources.md)。
 
 ## 3. DMA、存储、USB 与输入
@@ -58,6 +66,8 @@ GCC bootstrap 状态、部分 fabric 输入、QUP version 和设备排序延时�
 - [x] apps/GPU SMMUv2 的非安全 AArch64 stage-1、4 KiB 页表、stream/context、权限、fault、ATS、TLB invalidate：23 项 C QTest。
 - [x] UFS Sysbus HCI、Qualcomm wrapper/QMP PHY、GCC 依赖和实际 guest-memory DMA/SCSI 后端。
 - [x] UFS 56 项控制器/DMA/错误/Hibern8/WriteBooster/无 LUN 检查；原先 48 项及修复前失败继续保留。
+- [x] [共享 UFS core/PCI 的冻结构建 12 配套通用构建检查](evidence/compat-final-20261123/ufs-pci/result.json)和 [08:20 独立通用构建检查](evidence/verified-20261123-0820/pci-ufs/result.json)均为 15/15，无跳过；各自二进制与板级验收分开记录。
+- [x] 无 LU 的 upstream Linux 完成八项 PID 1 检查及 guest shutdown；普通 console、空 UFS、UFS/SMMU、RPMh 四个 Linux gate 均在 [冻结构建 12](evidence/resume-final-20261123/result.json)复验，后续公共套件分别保留自己的回执。
 - [x] 主线 Qualcomm UFS/QMP/GCC/SMMU 驱动运行：19 项 guest 检查，strict translated DMA domain，宿主独立核对写入数据。
 - [ ] Qualcomm TCU/TBU、完整 QSMMU v500 扩展、stage 2/nesting、16/64 KiB/AArch32 等未实现翻译模式。
 - [ ] SMMU 独立迁移验收；已有 VMState 不是迁移成功回执。
@@ -72,11 +82,15 @@ GCC bootstrap 状态、部分 fabric 输入、QUP version 和设备排序延时�
 
 ## 4. 显示与 Adreno 650
 
+- [x] GPU CX/GX 的 GDSC 数字控制接口：显式 `reference-off`/`reference-on` 映射五个四字节窗口，软件 collapse、硬件/外部请求、retention/wait、clamp/reset 和配置匹配迁移；默认 `none` 不映射，输出未知状态不解释为实机掉电。
+- [ ] GPU GDSC 与实际 parent regulator、GPUCC、GMU、retained memory 及完整电源状态转换的联合实现与验收。
 - [ ] 需要时建立明确标为辅助输出的 framebuffer，独立于 GPU 验收。
 - [ ] SM8250 DPU、双 DSI、DSC、面板初始化和模式切换。
 - [ ] A650 GMU/HFI、ringbuffer、命令包、interrupt/fence、错误恢复。
 - [ ] GPU 内存访问与 SMMU、同步、cache 可见性的一致契约。
 - [ ] 实际命令执行和渲染，并与固定测试图像及允许误差比较。
+
+GDSC 接口与来源见 [gdsc.md](docs/gdsc.md)；它只描述数字请求和状态，不执行 GPU/GMU 或 secure firmware，也不实现物理供电时序。
 
 验收顺序为 driver probe、提交/完成/fault、实际图像。固定成功 ACK、virtio-gpu、主机 GPU 转发或其他 Adreno 世代的身份都不能作为 A650 完成证据。
 
@@ -98,8 +112,8 @@ GCC bootstrap 状态、部分 fabric 输入、QUP version 和设备排序延时�
 - [ ] reset、snapshot/migration、错误注入和多次启动的一致性。
 - [ ] 完整逐设备覆盖清单、合成服务表、实机差分及未覆盖行为。
 
-[生产内核 GDB 回执](evidence/production-gdb-exact-20261123/result.json)证明其明示配置下的八项检查；
-[原生 DT 推进索引](evidence/native-dt-progression-20261123/progress.json)保留实际故障边界。
+[生产内核 GDB 回执](evidence/production-gdb-exact-20261123/result.json)和[冻结构建 12 独立复验](evidence/production-gdb-frozen12-20261123/result.json)分别证明其明示配置下的八项检查及实际 guest shutdown。
+[冻结构建 12 原生 DT 诊断](evidence/native-dt-spmi-reference-20261123/result.json)保留 QSEE 写异常；[原生 DT 推进索引](evidence/native-dt-progression-20261123/progress.json)及各轮增量回执保留后续实际故障边界。
 不能通过替换生产内核、删除需要的设备或放宽断言把未通过的门槛改写成成功。
 
 ## 历史结果保留
