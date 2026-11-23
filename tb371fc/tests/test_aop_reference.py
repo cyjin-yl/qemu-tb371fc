@@ -723,11 +723,18 @@ def reject_migration_profile(args, directory, source_profile, target_profile):
         exit_code = target.process.returncode
         stderr = target.log_path.read_text(errors="replace")
         assert exit_code not in (None, 0), (exit_code, stderr)
-        assert "reference_peer" in stderr and "qcom-aop-msgram" in stderr, stderr
+        source_value = int(source_profile == PROFILE)
+        target_value = int(target_profile == PROFILE)
+        comparison = (f"device 'qcom-aop-msgram': "
+                      f"{target_value} != {source_value}")
+        assert ("load of migration failed:" in stderr and
+                "error while loading state" in stderr and
+                comparison in stderr), stderr
         return {"source_profile": source_profile, "target_profile": target_profile,
                 "expected_rejection": True, "destination_exit": exit_code,
                 "source_migration": outgoing, "destination_stderr": stderr,
-                "profile_equality_marker_rejected": True}
+                "profile_equality_marker_rejected": True,
+                "expected_profile_comparison": comparison}
     finally:
         if source:
             source.close()

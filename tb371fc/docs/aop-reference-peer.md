@@ -93,9 +93,12 @@ outstanding notification and retries after 100,000 virtual ns. A retry never
 reexecutes the command. Notification state, phase, votes, counters and virtual
 timer migrate; SRAM and IPCC retain their existing migration machinery.
 The always-present SRAM device carries a fixed migration configuration marker.
-Both directions of a none/reference profile mismatch must fail, including
-migration into a destination that has an extra peer device. The marker is
-set only by the board before realization and cannot be changed through QOM.
+For source and destination running this same binary, both directions of a
+none/reference profile mismatch must fail, including migration into a
+destination that has an extra peer device. The marker is set only by the
+board before realization and cannot be changed through QOM. Cross-version
+migration is unsupported: older raw-SRAM builds (including 79d7e978) did not
+emit this marker, so these checks do not establish their mismatch rejection.
 All peer RAM writes mark the SRAM dirty. Post-load restores outputs and the
 timer only: it never rewrites a descriptor or reads SRAM before RAM migration
 has finished.
@@ -138,7 +141,8 @@ The six completed migrations cover idle votes/GPIO output restoration, a
 message with one virtual ns left, a pending link negotiation, an unconsumed
 unknown command, a masked real IPCC reply and a notification retry while the
 IPCC pending table is full. The two expected failures require a nonzero
-destination exit and the SRAM profile-marker diagnostic. They are recorded
+destination exit plus the SRAM device's load-failure diagnostic with the
+specific expected source/destination 0/1 inequality. They are recorded
 separately as rejected attempts, never counted as completed migrations.
 
 The tests observe actual named vote GPIO outputs where needed. They never

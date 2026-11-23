@@ -65,7 +65,7 @@ enum {
 };
 
 struct QcomAopQmpState {
-    DeviceState parent_obj;
+    SysBusDevice parent_obj;
     QcomAopMsgramState *msgram;
     DeviceState *ipcc;
     QEMUTimer *timer;
@@ -494,7 +494,7 @@ static void aop_class_init(ObjectClass *klass, const void *data)
 
 static const TypeInfo aop_info = {
     .name = TYPE_QCOM_AOP_QMP,
-    .parent = TYPE_DEVICE,
+    .parent = TYPE_SYS_BUS_DEVICE,
     .instance_size = sizeof(QcomAopQmpState),
     .instance_init = aop_init,
     .instance_finalize = aop_finalize,

@@ -1142,7 +1142,7 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
                                  &error_fatal);
         object_property_set_link(OBJECT(peer), "ipcc", OBJECT(ipcc),
                                  &error_fatal);
-        qdev_realize_and_unref(peer, NULL, &error_fatal);
+        sysbus_realize_and_unref(SYS_BUS_DEVICE(peer), &error_fatal);
     }
 
     /* Kona CTRL5 software request; firmware handoff is unknown by default. */
