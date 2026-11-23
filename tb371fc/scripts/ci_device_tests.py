@@ -83,6 +83,7 @@ def plan(args, runtime):
         for name, script in (
             ("ci-verdict-unit", scripts / "test_ci_device_tests.py"),
             ("smem-observer-unit", scripts / "test_observe_smem.py"),
+            ("aop-observer-unit", scripts / "test_observe_aop.py"),
             ("board-profile-unit", scripts / "test_board_profile.py"),
             ("machine-validator-unit", scripts / "test_validate_machine.py"),
             ("dt-inventory-unit", scripts / "test_inventory_dtb.py"),

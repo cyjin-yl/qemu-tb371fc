@@ -149,3 +149,36 @@ The tests observe actual named vote GPIO outputs where needed. They never
 intercept the IPCC IRQ; those cases inspect the real GIC pending state.
 QTest drives registers and shared RAM directly and does not execute the
 vendor CPU driver. Native driver validation remains a separate requirement.
+
+## Read-only production-kernel observation
+
+Add `--observe-aop-peer` to `tb371fc/scripts/diagnose_kernel.py` together
+with an explicit `aop-profile=reference-qdss-vote` machine option. The
+diagnostic stops the guest and stores the observation under `aop_peer`
+in its existing `diagnostic.json`. The kernel, QEMU and supplied DT hashes
+remain part of the surrounding diagnostic.
+
+The observer uses only QMP `query-status` and `qom-get`. It checks a
+stable stopped state before and after reading all nine peer properties:
+state, accepted/rejected counters, last-error, both votes, notification count,
+pending work and pending notification. Boolean fields must be booleans;
+counters must be nonnegative uint64 integers, with booleans explicitly rejected
+as integers. Unknown states or missing QOM fields make the result inconclusive.
+
+| Verdict | Required evidence |
+| --- | --- |
+| `reference-exchange-observed` | Connected peer, a positive accepted-command counter, a positive notification counter and no outstanding completion notification |
+| `reference-exchange-not-observed` | Complete, well-typed stopped snapshot that does not meet those conditions |
+| `observation-inconclusive` | Missing device/property, malformed data, an unstable/running guest, wrong profile or no completed observation point |
+
+The notification counter includes handshake traffic. A pending completion
+therefore prevents an observed verdict even when the notification total is
+positive. A current off vote does not erase evidence of earlier supported
+commands. This observer establishes a reference model exchange; it does not
+prove a particular guest function's return value or that the guest handled
+the delivered IRQ. It always states `aop_firmware_executed=false`,
+`android_boot_passed=false` and `guest_memory_written=false`.
+
+Fourteen unit-test methods cover the classifier and diagnostic option guard.
+Those tests use monitor fixtures and are not production-kernel execution
+receipts. A native diagnostic must provide the separate actual QMP snapshot.
