@@ -64,7 +64,7 @@ GCC bootstrap 状态、部分 fabric 输入、QUP version 和设备排序延时�
 - [x] 无 LU 的 upstream Linux 完成八项 PID 1 检查及 guest shutdown；普通 console、空 UFS、UFS/SMMU、RPMh 四个 Linux gate 均在冻结构建 12 复验。
 - [x] 主线 Qualcomm UFS/QMP/GCC/SMMU 驱动运行：19 项 guest 检查，strict translated DMA domain，宿主独立核对写入数据。
 - [ ] Qualcomm TCU/TBU、完整 QSMMU v500 扩展、stage 2/nesting、16/64 KiB/AArch32 等未实现翻译模式。
-- [ ] SMMU 独立迁移验收；已有 VMState 不是迁移成功回执。
+- [x] SMMUv2 独立迁移验收：18 项双进程恢复／拒绝检查通过，覆盖页表、DMA、fault IRQ 与 reset；[证据](evidence/smmuv2-migration-20261123/publication.json)。UFS 仍关闭，整板迁移未通过。
 - [ ] UFS ICE、RPMB 认证、原生 LU 启动选择/保护、完整 task management/reset/error 模式及物理链路行为。
 - [ ] UFS core 迁移和有未完成存储 I/O 的整板迁移。现有组件迁移均显式关闭 UFS。
 - [ ] SDHCI/microSD、DWC3/USB PHY、GENI I²C/SPI 和各连接器生命周期。

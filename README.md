@@ -84,7 +84,7 @@ TLMM、IMEM/PS_HOLD、普通 Linux UFS19 和 reference RPMh 联合 Linux23 已�
 | RPMh | `rpmh-profile=off` 为默认值；`reference` 和 `file` 必须显式选择。file 解析外部 cmd-db 并核对内容；未知资源不会自动获得成功 ACK。它不执行 AOP 固件，也不模拟真实 PMIC 电压。 |
 | DCC / PDC / IPCC | 分别实现有界 SRAM read-capture、原生 pin→GIC 中断转换和 APPS 消息 latch。各自的参考身份、仲裁和未覆盖模式见设备文档；不提供未实现的协处理器服务。 |
 | SPMI / PMIC | 默认 `spmi-profile=off`；`reference` 显式映射五个原生窗口。v5/APID/owner 表为参考输入，只返回有来源的身份字节，未知字段失败；合成 SID15 IRQ fixture 与真实 PMIC 分开。 |
-| 迁移 | GENI、GCC、timer、RPMh、watchdog、TLMM、IMEM/PS_HOLD、DCC、PDC、IPCC 和 SPMI reference 有各自的实际迁移回执。**上游 UFS core 当前阻止整板迁移**；组件测试显式使用 `ufs-enabled=off`。SMMU 与其他未验收状态不能由这些回执推定。 |
+| 迁移 | GENI、GCC、timer、RPMh、watchdog、TLMM、IMEM/PS_HOLD、DCC、PDC、IPCC 和 SPMI reference 有各自的实际迁移回执。**上游 UFS core 当前阻止整板迁移**；组件测试显式使用 `ufs-enabled=off`。SMMUv2 另有 [18 项独立进程迁移／配置拒绝回执](tb371fc/evidence/smmuv2-migration-20261123/publication.json)，使用 VMState v2；旧 v1 stream 明确拒绝。其他未验收状态不能由这些回执推定。 |
 
 地址、属性、启动接口、生成 DT 与原生 DT 的差异见 [machine.md](tb371fc/docs/machine.md)。独立设备文档和来源索引见 [SOURCES.md](tb371fc/SOURCES.md)。
 
