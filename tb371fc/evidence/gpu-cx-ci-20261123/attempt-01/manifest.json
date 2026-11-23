@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-11-23 11:52:19 UTC",
+  "source_commit": "db9229c31e6b16309d86c8cd60e60e938a816dfb",
+  "workflow_run": 45167475284,
+  "artifact_id": 14816350135,
+  "artifact_url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45167475284/artifacts/14816350135",
+  "archive_sha256": "eb777d65b8b23aff46c583c32b319c0aa308e360ed8caa85e3a205ade3b2887f",
+  "archive_bytes": 28759166,
+  "qemu_sha256": "176fb3de4b555db6492b10ac355cbfb84b431f0a65fc7a035d52ef9e9aad895d",
+  "files": {
+    "components-result.json": {
+      "sha256": "330bb5435eabae89a9916356b04332a9b3c9a904b8efc9ea1703476c967a0703",
+      "bytes": 59854
+    },
+    "components.log": {
+      "sha256": "a436ec055786b42b359ed59c7986e9f54a8b40a1ce09c133afdcb4afa87007c9",
+      "bytes": 2616
+    },
+    "gpu-cx-result.json": {
+      "sha256": "0a426941fc6ddcdf98b8d30f81680855ff818096e45534dd29069d8bf6d47b6d",
+      "bytes": 14477
+    },
+    "gpu-cx-startup.stderr": {
+      "sha256": "a9c0b91fa16324ad6439409b97b83b44f51154f8ff1a3fa2dde9aa69ebfe4350",
+      "bytes": 88
+    },
+    "gpu-cx-startup-command.json": {
+      "sha256": "eeaf5c711e2aa1007e0d0970bc4bc99dda0ba95d52396d5707bcdace17bdf628",
+      "bytes": 712
+    },
+    "rpmh-startup.stderr": {
+      "sha256": "a9c0b91fa16324ad6439409b97b83b44f51154f8ff1a3fa2dde9aa69ebfe4350",
+      "bytes": 88
+    }
+  },
+  "failure": {
+    "components_passed": 47,
+    "components_expected": 52,
+    "gpu_behavior_passed": 17,
+    "gpu_checks_executed": 18,
+    "actual_migration_attempts": 0,
+    "linux_suite_executed": false,
+    "message": "qemu-system-aarch64: Invalid parameter type for 'res.cx.lvl.enabled', expected: boolean"
+  },
+  "correction": {
+    "kind": "board QOM type fix",
+    "board_sha256_before": "5752690f7adbf778f3eee1f6e2a8b22e2fb03d9ff6529bc7f585f32c994eda8e",
+    "board_sha256_after": "0aedb7a81e0344e8c84d3988abcac76bf0e38f0378ebf54a454346ff5ae5da24",
+    "reason": "RPMh resource fields are uint64 QOM properties with integer 0/1 values. Read with object_property_get_uint and explicitly convert to a logic level.",
+    "changed_properties": [
+      "res.cx.lvl.enabled",
+      "res.cx.lvl.present"
+    ],
+    "device_models_unchanged": true,
+    "tests_unchanged": true,
+    "verified_after_correction": false
+  },
+  "full_device_complete": false
+}

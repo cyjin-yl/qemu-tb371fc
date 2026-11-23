@@ -864,11 +864,11 @@ static void tb371fc_create_gpu_cx_gdsc(TB371FCMachineState *s)
         qdev_connect_gpio_out_named(s->rpmh, "power", 1,
             qdev_get_gpio_in_named(gdsc, "parent-on", 0));
         qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-on", 0),
-            object_property_get_bool(OBJECT(s->rpmh), "res.cx.lvl.enabled",
-                                     &error_fatal));
+            object_property_get_uint(OBJECT(s->rpmh), "res.cx.lvl.enabled",
+                                     &error_fatal) != 0);
         qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-known", 0),
-            object_property_get_bool(OBJECT(s->rpmh), "res.cx.lvl.present",
-                                     &error_fatal));
+            object_property_get_uint(OBJECT(s->rpmh), "res.cx.lvl.present",
+                                     &error_fatal) != 0);
     }
 }
 

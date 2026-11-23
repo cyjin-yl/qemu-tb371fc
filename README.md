@@ -24,6 +24,9 @@ doesvm 执行/写入通道暂时排队超时，原始失败目录及完整拓扑
 **新增 GPU CX 模型尚未完成完整原生 DT 复测；原厂 Android 启动与整机等价仍未通过。**
 以下 55/55 等历史成功记录对应各自注明的先前提交，不能充当本次 GPU CX 新增部分的通过回执。
 
+独立 CI 的首次实际运行已保存到 [attempt-01](tb371fc/evidence/gpu-cx-ci-20261123/attempt-01/manifest.json)：组件 47/52 通过；GPU CX 前 17 项行为检查通过，实际 RPMh 接线场景在启动时失败，迁移与 Linux 套件尚未执行。
+已定位并修正 board 中两处 QOM 类型错误：RPMh 的 `present/enabled` 是 `uint64` 属性，应按整数读取后转为逻辑电平。设备模型和测试断言不变，修正后的结果仍待新 CI 回执。
+
 ## TCSR、AOP 消息内存与 REFGEN 增量验证（2026-11-23）
 
 本轮冻结二进制 SHA-256 为 `2173fa4da68f8f769c53942b056124c5621e4714652c7f572deacc9440ec09cf`。
