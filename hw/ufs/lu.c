@@ -16,6 +16,7 @@
 #include "scsi/constants.h"
 #include "system/block-backend.h"
 #include "qemu/cutils.h"
+#include "migration/qemu-file.h"
 #include "trace.h"
 #include "ufs.h"
 
@@ -207,6 +208,13 @@ static QEMUSGList *ufs_get_sg_list(SCSIRequest *scsi_req)
     return req->sg;
 }
 
+static void *ufs_load_request(QEMUFile *f, SCSIRequest *req)
+{
+    /* Only empty queues migrate; there is no serialized UfsRequest to bind. */
+    qemu_file_set_error(f, -EINVAL);
+    return NULL;
+}
+
 static const struct SCSIBusInfo ufs_scsi_info = {
     .tcq = true,
     .max_target = 0,
@@ -216,6 +224,7 @@ static const struct SCSIBusInfo ufs_scsi_info = {
     .get_sg_list = ufs_get_sg_list,
     .complete = ufs_scsi_command_complete,
     .cancel = ufs_scsi_command_cancelled,
+    .load_request = ufs_load_request,
 };
 
 static bool ufs_append_lun(uint8_t *outbuf, uint32_t outbuf_len, int *len,

@@ -48,6 +48,13 @@ jobs:
           sha256sum "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
             > "$RUNNER_TEMP/tb371fc-results/qemu.sha256"
           git rev-parse HEAD > "$RUNNER_TEMP/tb371fc-results/source-commit.txt"
+      - name: Run quiescent UFS process checkpoints and rejection gates
+        run: |
+          set -euo pipefail
+          python3 tb371fc/tests/test_ufs_migration.py \
+            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            --out "$RUNNER_TEMP/tb371fc-results/ufs-migration" \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/ufs-migration.log"
       - name: Run every public component gate sequentially
         run: |
           set -euo pipefail
