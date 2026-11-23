@@ -246,6 +246,8 @@ def system_reset_preserves_reference_count_and_fraction_with_a_real_reset_witnes
     rig.monitor("system_reset")
     rig.wait_for(lambda: rig.raw_read(GCC + 4) == 0,
                  "GCC nonzero register witness clears during actual system reset")
+    # RESET may follow the command response; QTest cannot drain QMP events.
+    rig.monitor("query-status")
     assert any(event.get("event") == "RESET" for event in rig.events), rig.events
     rig.assert_count(0)
     rig.step(1)
@@ -548,7 +550,8 @@ def migration_checks(args, out, report):
         exit_code = rejected.process.wait(timeout=20)
         stderr = rejected.log_path.read_text(errors="replace")
         assert request_sent and exit_code == 1, (request_sent, exit_code, stderr)
-        assert TYPE in stderr and "32768 != 32000" in stderr, stderr
+        # load_uint32_equal in migration/vmstate-types.c uses PRIx32.
+        assert TYPE in stderr and "8000 != 7d00" in stderr, stderr
         assert "load of migration failed" in stderr and "error while loading state" in stderr, stderr
         report["corrupted_stream_rejections"].append({
             "name": "frequency_field_corruption_is_rejected",
@@ -556,7 +559,7 @@ def migration_checks(args, out, report):
             "legitimate_alternate_frequency_profile": False,
             "source_status": sent["status"], "destination_exit": exit_code,
             "request_sent": request_sent, "command_error": command_error,
-            "device": TYPE, "frequency_mismatch": "32768 != 32000",
+            "device": TYPE, "frequency_mismatch": "8000 != 7d00",
             "original_snapshot_sha256": original_hash,
             "corrupted_snapshot_sha256": digest(corrupted),
             "original_stream_unchanged": digest(first_path) == original_hash,
