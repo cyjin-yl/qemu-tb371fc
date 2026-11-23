@@ -12,7 +12,11 @@
 
 ## 本次整板推进与统一验收（2026-11-23）
 
-新一轮 [apps SMMUv500 companion](tb371fc/docs/smmuv500-reference.md) 已实现 TCU 与 10 个 TBU 的有限 reference 协议：显式 `0x02000000` 协议身份、有状态 HALT/ECATS、共享 SMMUv2 页表与故障路径、真实 DMA 缓存失效，以及复位/迁移。版本和 1 µs 延时属于模型假设；KGSL 扩展、未就绪的供电/时钟及固件 stream/context 交接没有因此完成。新增编译设备验收将使公共计划成为 **71 个 gate：67 个组件/解析检查 + 4 次 Linux 启动**；本提交的新增计划仍须实际运行，以下 99ef 的 70 项成功保持其原始源码和二进制身份。
+统一提交 `3ef98a8afb49a873d677288693d6491c50fd75e1` 已实际通过 **71 个 gate：67/67 组件检查 + 4/4 Linux 启动，以及独立 A77/UFS job**。见[实际 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45216035665)和[冻结回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-3ef98.json)。板级 QEMU SHA-256 为 `703af9a899455c1c32636a9e3535294031c93cd9624fdc193177c61cb8ff7600`；已实际读取 ZIP、包内二进制、两份 clean-source 汇总、十份组件报告及 12 个 MPM/NoC/SMMUv500 迁移文件。
+
+[apps SMMUv500 companion](tb371fc/docs/smmuv500-reference.md)的 [36 项实际检查](tb371fc/evidence/wholeboard-20261123-a47/smmuv500-3ef98.json)、2 次完成迁移、2 次 profile 拒绝和 2 次损坏流拒绝全部通过。它实现 TCU 与 10 个 TBU 的有限 reference 协议，包含有状态 HALT/ECATS、共享 SMMUv2 页表与故障路径、真实 DMA 缓存失效和迁移；`0x02000000` 身份及 1 µs 延时均是明示参考假设。
+
+同一二进制的[原厂完整 DT 运行](tb371fc/evidence/wholeboard-20261123-a47/native-3ef98.json)已越过 TCU VERSION 异常：4 个 MNOC TBU 连接 regulator，父 apps SMMU 与随后十个资源客户端注册，启动继续到 SCSI/USB。停机观察的 10/10 TBU 几何匹配实际 DT；所有请求保持冷态，**没有把它算作原厂 DMA 或 ECATS 验证**。SMEM 23/23、AOP QDSS、MPM 32768 Hz 和 NoC 46/46 非延迟配置仍保留。下一实际 fatal 是 **`__tsens2xxx_hw_init+0x10` 读取 `0x0c222004`**；[实际 TSENS DT](tb371fc/evidence/wholeboard-20261123-a47/tsens-dt-evidence-3ef98.json)声明两组 24xx 控制器。完整原生 DT 用户态、原厂 Android 和整板等价仍未通过。
 
 统一提交 `99ef6052e3e10e84c67f3482471f4bde12ab295a` 已实际通过 **70 个 gate：66/66 组件检查 + 4/4 Linux 启动，以及独立 A77/UFS job**。见[实际 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45206934707)和[冻结回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-99ef.json)。板级二进制 SHA-256 为 `226f826f02a97978f9f0afbcc1241dbcd6c25faca4840f8e1f72cee22f3d0000`；ZIP、包内 QEMU、两份 clean-source 汇总、九份组件报告及七个 MPM/NoC 迁移文件均已实际读取核验。
 

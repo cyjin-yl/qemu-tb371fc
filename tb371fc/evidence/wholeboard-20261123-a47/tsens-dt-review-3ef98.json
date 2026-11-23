@@ -1,0 +1,341 @@
+{
+  "schema": "tb371fc-tsens-dt-source-review-v1",
+  "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+  "sources": [
+    {
+      "path": "drivers/thermal/msm-tsens.c",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/thermal/msm-tsens.c",
+      "bytes": 9925,
+      "sha256": "07de996bd2b5e4f4bcf06508535a75f70fa59b9b174f9dad397284753658e282"
+    },
+    {
+      "path": "drivers/thermal/tsens2xxx.c",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/thermal/tsens2xxx.c",
+      "bytes": 24020,
+      "sha256": "8e3bcb1179ecbb482cb2e7a32ad0daff28caace4ee2582b9521e016fb5ce1283"
+    },
+    {
+      "path": "drivers/thermal/tsens.h",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/thermal/tsens.h",
+      "bytes": 6107,
+      "sha256": "dc878c52e6d0cd41b102759018c15b7982004957562ade83db3cd3fa5db0970e"
+    },
+    {
+      "path": "drivers/thermal/tsens-calib.c",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/thermal/tsens-calib.c",
+      "bytes": 10027,
+      "sha256": "c097358170c1c7c82dfd6f79078becf5732143119cd757361f1d2f01113b2f6d"
+    },
+    {
+      "path": "arch/arm64/mm/ioremap.c",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/arch/arm64/mm/ioremap.c",
+      "bytes": 2980,
+      "sha256": "dadfd8a5f87fad54a9b97a59b6f36603faad1f95b5104a1d5abe175f36f10218"
+    },
+    {
+      "path": "include/dt-bindings/interrupt-controller/arm-gic.h",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/include/dt-bindings/interrupt-controller/arm-gic.h",
+      "bytes": 529,
+      "sha256": "0343e3fe31d7e6b694c0b25a2da29dc51dc1715d69fef4bd66df33f832f20910"
+    },
+    {
+      "path": "include/dt-bindings/interrupt-controller/irq.h",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/include/dt-bindings/interrupt-controller/irq.h",
+      "bytes": 604,
+      "sha256": "41209dee029601b0151a03734122e62e07bbd3a694e2549af1742347776969fe"
+    }
+  ],
+  "capture": {
+    "raw_blob": "b6110a64c701db6727f35234cbbb27f932c6f098",
+    "raw_bytes": 27153,
+    "raw_sha256": "bc480840a9c84d6725c4ead4f07edcb4021a03720df9279a1c3ad59cf9325259",
+    "raw_format": "Original compact JSON stdout plus one LF",
+    "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "dtb_bytes": 973052,
+    "hash_checked_before_parsing": true,
+    "controller_count": 2,
+    "thermal_reference_node_count": 45,
+    "physical_registers_or_fuses_read": false,
+    "guest_memory_written": false,
+    "dtb_modified": false,
+    "qemu_started": false,
+    "build_started": false,
+    "selection": "TSENS-compatible controller node subtrees, direct provider identities, and direct thermal-sensors referring node properties only; no thermal-zone child subtrees"
+  },
+  "controllers": [
+    {
+      "index": 0,
+      "path": "/soc/tsens@c222000",
+      "compatible": [
+        "qcom,tsens24xx"
+      ],
+      "phandle": 25,
+      "resources": [
+        {
+          "name": "tsens_srot_physical",
+          "base": 203563008,
+          "declared_bytes": 4
+        },
+        {
+          "name": "tsens_tm_physical",
+          "base": 203829248,
+          "declared_bytes": 511
+        }
+      ],
+      "interrupts": [
+        {
+          "name": "tsens-upper-lower",
+          "raw_cells": [
+            0,
+            506,
+            4
+          ],
+          "kind": "GIC_SPI",
+          "spi": 506,
+          "gic_intid": 538,
+          "trigger": "IRQ_TYPE_LEVEL_HIGH"
+        },
+        {
+          "name": "tsens-critical",
+          "raw_cells": [
+            0,
+            508,
+            4
+          ],
+          "kind": "GIC_SPI",
+          "spi": 508,
+          "gic_intid": 540,
+          "trigger": "IRQ_TYPE_LEVEL_HIGH"
+        }
+      ],
+      "thermal_sensor_cells": 1,
+      "reference_nodes": 28,
+      "referenced_channel_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "reference_channel_mask": 65535,
+      "referenced_channels_are_not_measured_enabled_mask": true,
+      "tsens_reinit_wa": true,
+      "min_temp_0c_property_present": false,
+      "firmware_enabled_bit_known": false,
+      "firmware_sensor_enable_mask_known": false,
+      "measured_temperature_known": false,
+      "calibration_eeprom_resource_present": false,
+      "nvmem_cells_present": false,
+      "resource_provider_refs": [
+        {
+          "node": "/soc/tsens@c222000",
+          "property": "inherited-interrupt-parent",
+          "inherited_from": "/",
+          "provider_phandle": 1,
+          "provider": "/soc/interrupt-controller@17a00000",
+          "args": []
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "path": "/soc/tsens@c223000",
+      "compatible": [
+        "qcom,tsens24xx"
+      ],
+      "phandle": 26,
+      "resources": [
+        {
+          "name": "tsens_srot_physical",
+          "base": 203567104,
+          "declared_bytes": 4
+        },
+        {
+          "name": "tsens_tm_physical",
+          "base": 203837440,
+          "declared_bytes": 511
+        }
+      ],
+      "interrupts": [
+        {
+          "name": "tsens-upper-lower",
+          "raw_cells": [
+            0,
+            507,
+            4
+          ],
+          "kind": "GIC_SPI",
+          "spi": 507,
+          "gic_intid": 539,
+          "trigger": "IRQ_TYPE_LEVEL_HIGH"
+        },
+        {
+          "name": "tsens-critical",
+          "raw_cells": [
+            0,
+            509,
+            4
+          ],
+          "kind": "GIC_SPI",
+          "spi": 509,
+          "gic_intid": 541,
+          "trigger": "IRQ_TYPE_LEVEL_HIGH"
+        }
+      ],
+      "thermal_sensor_cells": 1,
+      "reference_nodes": 17,
+      "referenced_channel_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "reference_channel_mask": 511,
+      "referenced_channels_are_not_measured_enabled_mask": true,
+      "tsens_reinit_wa": true,
+      "min_temp_0c_property_present": false,
+      "firmware_enabled_bit_known": false,
+      "firmware_sensor_enable_mask_known": false,
+      "measured_temperature_known": false,
+      "calibration_eeprom_resource_present": false,
+      "nvmem_cells_present": false,
+      "resource_provider_refs": [
+        {
+          "node": "/soc/tsens@c223000",
+          "property": "inherited-interrupt-parent",
+          "inherited_from": "/",
+          "provider_phandle": 1,
+          "provider": "/soc/interrupt-controller@17a00000",
+          "args": []
+        }
+      ]
+    }
+  ],
+  "distinct_referenced_sensor_channels": 25,
+  "software_sensor_namespace_per_controller": 16,
+  "software_sensor_namespace_source": "drivers/thermal/tsens.h:19; drivers/thermal/msm-tsens.c:212-228; drivers/thermal/tsens2xxx.c:61,670-682",
+  "shared_interrupt_provider": {
+    "path": "/soc/interrupt-controller@17a00000",
+    "properties": {
+      "compatible": {
+        "hex": "61726d2c6769632d763300",
+        "bytes": 11,
+        "strings": [
+          "arm,gic-v3"
+        ]
+      },
+      "#interrupt-cells": {
+        "hex": "00000003",
+        "bytes": 4,
+        "be32": [
+          3
+        ]
+      },
+      "interrupt-controller": {
+        "hex": "",
+        "bytes": 0,
+        "be32": []
+      },
+      "reg": {
+        "hex": "17a000000001000017a6000000100000",
+        "bytes": 16,
+        "be32": [
+          396361728,
+          65536,
+          396754944,
+          1048576
+        ]
+      },
+      "phandle": {
+        "hex": "00000001",
+        "bytes": 4,
+        "be32": [
+          1
+        ]
+      }
+    }
+  },
+  "native_fault_correlation": {
+    "observation_source": "Root's native3ef98 QEMU/printk report; no native log or execution was repeated by this reviewer",
+    "physical_address": 203563012,
+    "width": 4,
+    "qemu_log_line": 10238,
+    "reported_function": "__tsens2xxx_hw_init+0x10",
+    "source_function": "tsens2xxx_hw_init",
+    "source_pointer": "drivers/thermal/tsens2xxx.c:685-697",
+    "dt_resource": "/soc/tsens@c222000:tsens_srot_physical",
+    "source_offset": 4,
+    "first_srot_ctrl_address_equals_observed_fault": true
+  },
+  "source_correlated_facts": [
+    {
+      "fact": "Both controllers select data_tsens24xx, not 26xx. The 24xx table enables cycle monitoring with its interrupt masked, enables watchdog monitoring with the bark interrupt unmasked, and disables MTC. Its ver_major/ver_minor fields are not explicitly assigned.",
+      "pointer": "drivers/thermal/msm-tsens.c:87-95; drivers/thermal/tsens2xxx.c:829-848"
+    },
+    {
+      "fact": "The controller's enable bit is read from SROT+4 bit 0 before any initialization writes. Missing enable causes -ENODEV. Individual sensor enables come from SROT+4 bits 18:3. DT references do not provide those firmware register values.",
+      "pointer": "drivers/thermal/tsens2xxx.c:60-61,670-697"
+    },
+    {
+      "fact": "The actual DT declares each SROT resource as exactly 4 bytes, despite the driver's +4 control read. Preserve that DT identity. The fixed arm64 ioremap implementation rounds the mapping size to pages, explaining how the driver can reach that source-evidenced word; it does not justify emulating an entire page as RAM.",
+      "pointer": "drivers/thermal/msm-tsens.c:146-158; arch/arm64/mm/ioremap.c:32-73"
+    },
+    {
+      "fact": "The actual TM length is 0x1ff bytes, not a silently normalized 0x200 or 0x1000. Each implemented register still needs a source-backed offset and access width.",
+      "pointer": "Captured reg raw be32 cells"
+    },
+    {
+      "fact": "There is no tsens_eeprom_physical resource or nvmem reference in either complete controller node. The common parser only calls tsens_calib when that optional resource exists, and ops_tsens2xxx has no calibrate callback. The QFPROM routines for 8937/405 are not a Kona calibration contract.",
+      "pointer": "drivers/thermal/msm-tsens.c:178-196; drivers/thermal/tsens2xxx.c:800-807; drivers/thermal/tsens-calib.c:159-290"
+    },
+    {
+      "fact": "Temperature status carries a signed 12-bit value in 0.1 degree C units, converted to millicelsius by multiplying by 100. This is the driver's digital readout interface; no physical calibration coefficients or measured temperature have been captured.",
+      "pointer": "drivers/thermal/tsens2xxx.c:47-56,73-83"
+    },
+    {
+      "fact": "TRDY bit 3 is checked before reading a channel. STATUS valid is bit 21. The driver may still return success after three invalid status reads by accepting repeated raw codes; a returned temperature alone does not establish a real conversion or valid sample.",
+      "pointer": "drivers/thermal/tsens2xxx.c:85-202"
+    },
+    {
+      "fact": "Both actual nodes set tsens-reinit-wa. If TRDY remains clear after five 500 us waits, the fixed driver calls SCM_SVC_TSENS function 5; transport or returned failure leads to BUG(). A model must not manufacture a successful secure-firmware reinitialization to hide missing conversions.",
+      "pointer": "drivers/thermal/msm-tsens.c:203-204; drivers/thermal/tsens2xxx.c:99-155"
+    },
+    {
+      "fact": "Neither node has 0C-sensor-num, a tsens-0C IRQ, or a thermal-sensors reference outside ordinary channel IDs. The default minimum-temperature id is 0xff, so the special minimum/0C registration path is not selected for this DT.",
+      "pointer": "drivers/thermal/tsens.h:34; drivers/thermal/msm-tsens.c:198-201,235-244; drivers/thermal/tsens2xxx.c:751-794"
+    },
+    {
+      "fact": "Probe order is DT resources, hardware initialization, thermal-zone registration, and interrupt registration. With this DT each controller requests its upper/lower and critical IRQs as level-high threaded IRQs.",
+      "pointer": "drivers/thermal/msm-tsens.c:291-340; drivers/thermal/tsens2xxx.c:751-794"
+    },
+    {
+      "fact": "No controller clocks, supplies, resets, power-domain or additional calibration providers appear in the complete captured properties. The sole direct resource provider is the inherited GIC. This does not prove the silicon has no physical clock, rail, fuse or firmware dependency.",
+      "pointer": "Complete captured controller node property sets"
+    }
+  ],
+  "acceptance_implications": [
+    "The opt-in model's boot enable/mask, temperature input values, conversion interval, reset policy and any watchdog timing are declared reference choices. Neither the DT nor the native abort measures those values.",
+    "Prove TRDY/VALID changes at real virtual-time conversion boundaries independently of get_temp's three-read fallback; status and result fields must not be writable success hooks.",
+    "Check the 25 distinct referenced channels without miscounting 45 thermal-zone references as 45 sensors or inferring the controller-1 hardware enable mask from its 0-8 references.",
+    "Test actual upper/lower and critical routing for each controller. Raw DT SPI values are 506/508 and 507/509; absolute GIC INTIDs add 32.",
+    "Keep no-calibration-resource evidence distinct from a claim that firmware calibration executed or calibrated physical temperature is reproduced.",
+    "Do not claim native thermal-zone probe, temperature conversion, SCM firmware reinitialization or Android boot based on this static source/DT review."
+  ],
+  "no_model_or_registry_change": true
+}

@@ -26,8 +26,13 @@ The research includes both apps and KGSL SMMUs, twelve TBUs in total.
 This implementation covers only **apps TCU plus its ten TBUs**. Existing
 KGSL architectural state remains unchanged; its vendor TCU/TBU resources
 are not mapped here. Its unresolved GCC parent-clock warning is not fixed
-by enabling this companion. The four multimedia TBU GDSCs and PCIe TBU
-clock dependency likewise remain independent unresolved dependencies.
+by enabling this companion. The four MNOC TBU GDSC control words are already owned by the existing
+GCC model (power domains 7–10); their native provider and consumer
+readiness require separate run evidence. The PCIe TBU CBCR is also
+modeled, while its external parent remains unknown and unconnected.
+The apps companion does not add power-state coupling to those dependencies.
+The [complete GDSC DT and ownership review](../evidence/wholeboard-20261123-a47/smmuv500-tbu-gdsc-review.json)
+records this distinction.
 
 ## Explicit reference identity
 
@@ -203,3 +208,9 @@ GPU execution remain outside this companion. Existing architectural
 stage-1 restrictions continue to fail through the original walker.
 Acceptance must distinguish compiled-device QTests and real migrations
 from observed original-kernel behavior; neither proves Android boot.
+
+## Actual 3ef98 validation
+
+Commit `3ef98a8afb49a873d677288693d6491c50fd75e1` passed the complete 71-gate plan and the separate A77/UFS job. Its [original component report](../evidence/wholeboard-20261123-a47/smmuv500-3ef98.json) passed 36 checks, two complete migrations, two profile rejections and two deliberately corrupted-stream rejections. The [artifact audit](../evidence/wholeboard-20261123-a47/public-ci-3ef98.json) independently decoded all ten states in both actual 744-byte device sections and hashed all five source/corruption streams. The unknown-profile source supports a rejection test and is not an additional roundtrip.
+
+The [matching native run](../evidence/wholeboard-20261123-a47/native-3ef98.json) passed the TCU VERSION fault. It logged the four MNOC regulator consumer links and ten subsequent bus resource clients, then continued through SCSI/USB initialization before a new TSENS external abort. Stopped QOM observed all ten TBU geometries correctly with no active halt, owner or ECATS request; PAR remained the initial fault value. This is consistent with initialization without debug translation. It does not prove original-firmware context handoff, native DMA or full Android boot. The next actual read fault is `0x0c222004` in `__tsens2xxx_hw_init+0x10`.

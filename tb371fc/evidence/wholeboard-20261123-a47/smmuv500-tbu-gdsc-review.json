@@ -1,0 +1,197 @@
+{
+  "schema": "tb371fc-mnoc-tbu-gdsc-dt-review-v1",
+  "capture": {
+    "raw_blob": "c35e145940109bc72bd5dd2f15ad0c89012d3491",
+    "raw_bytes": 3034,
+    "raw_sha256": "e31050f5b43c8be5a52b6f8f3066fbf75993d36061ccbbe204360ad196fa16c0",
+    "raw_format": "Original compact JSON stdout plus one LF",
+    "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "dtb_bytes": 973052,
+    "hash_verified_before_parsing": true,
+    "selected_node_count": 4,
+    "direct_provider_count": 0,
+    "only_existing_file_read": true,
+    "hardware_mmio_accessed": false,
+    "guest_memory_written": false,
+    "source_dtb_modified": false,
+    "qemu_started": false,
+    "build_started": false
+  },
+  "nodes": [
+    {
+      "path": "/soc/qcom,gdsc@17d050",
+      "phandle": 380,
+      "regulator_name": "hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc",
+      "physical_address": 1560656,
+      "mmio_bytes": 4,
+      "gcc_offset": 512080,
+      "gcc_power_index": 7,
+      "no_status_check_on_disable": true,
+      "gds_timeout_poll_iterations": 500,
+      "gds_timeout_poll_delay_us": 1,
+      "direct_resource_dependencies": []
+    },
+    {
+      "path": "/soc/qcom,gdsc@17d058",
+      "phandle": 381,
+      "regulator_name": "hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc",
+      "physical_address": 1560664,
+      "mmio_bytes": 4,
+      "gcc_offset": 512088,
+      "gcc_power_index": 8,
+      "no_status_check_on_disable": true,
+      "gds_timeout_poll_iterations": 500,
+      "gds_timeout_poll_delay_us": 1,
+      "direct_resource_dependencies": []
+    },
+    {
+      "path": "/soc/qcom,gdsc@17d054",
+      "phandle": 382,
+      "regulator_name": "hlos1_vote_mmnoc_mmu_tbu_sf0_gdsc",
+      "physical_address": 1560660,
+      "mmio_bytes": 4,
+      "gcc_offset": 512084,
+      "gcc_power_index": 9,
+      "no_status_check_on_disable": true,
+      "gds_timeout_poll_iterations": 500,
+      "gds_timeout_poll_delay_us": 1,
+      "direct_resource_dependencies": []
+    },
+    {
+      "path": "/soc/qcom,gdsc@17d06c",
+      "phandle": 383,
+      "regulator_name": "hlos1_vote_mmnoc_mmu_tbu_sf1_gdsc",
+      "physical_address": 1560684,
+      "mmio_bytes": 4,
+      "gcc_offset": 512108,
+      "gcc_power_index": 10,
+      "no_status_check_on_disable": true,
+      "gds_timeout_poll_iterations": 500,
+      "gds_timeout_poll_delay_us": 1,
+      "direct_resource_dependencies": []
+    }
+  ],
+  "fixed_primary": {
+    "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+    "commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+    "sources": [
+      {
+        "path": "drivers/clk/qcom/gdsc-regulator.c",
+        "bytes": 24838,
+        "sha256": "41acd7aa326c656db5b9dbe57c5fe05f1783abf8a299aaf9f8d4c58b9ecea3d2",
+        "ranges": {
+          "field_definitions": "26-46",
+          "poll": "100-135",
+          "enable": "205-378",
+          "disable": "381-457",
+          "dt_parsing": "605-694",
+          "provider_resources": "697-804",
+          "probe": "807-929"
+        }
+      },
+      {
+        "path": "drivers/iommu/arm-smmu.c",
+        "bytes": 175613,
+        "sha256": "ccc4b09010c420ea42c9838d397b0b81fe6a0a4e345e95cb935c2e70308fbf49",
+        "ranges": {
+          "power_sequence": "880-1120",
+          "resource_acquisition": "4584-4721",
+          "ecats_power_on": "5579-5585",
+          "child_requirement": "5816-5832",
+          "parent_child_registration": "6500-6507",
+          "tbu_probe": "6524-6594"
+        }
+      },
+      {
+        "path": "drivers/clk/qcom/gcc-kona.c",
+        "bytes": 115577,
+        "sha256": "ed208678508c983d0989f1f135fac898c5a9a91c14af1fa42cd7ea2f24cd14cd",
+        "ranges": {
+          "pcie_tbu_branch": "1567-1578"
+        }
+      },
+      {
+        "path": "include/dt-bindings/clock/qcom,gcc-kona.h",
+        "bytes": 10232,
+        "sha256": "ec7b2a775a7f96a543c064c7fc733fb83ffa7e3dae3c4bb517200627ae5f7fed",
+        "ranges": {
+          "vendor_clock_id": "15"
+        }
+      }
+    ]
+  },
+  "current_model": {
+    "repository": "cyjin-yl/qemu-tb371fc",
+    "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+    "sources": [
+      {
+        "path": "hw/arm/lenovo-tb371fc.c",
+        "bytes": 80541,
+        "sha256": "cb538dfb911b970d16c0d0bed37dee959a97aa88d0425d08c5e721b0bad0acc3"
+      },
+      {
+        "path": "hw/misc/qcom-sm8250-gcc.c",
+        "bytes": 29024,
+        "sha256": "f9f0dc291e6a183298a0114082df1f5ea65a369dc4f1685dfc330996121da95a"
+      },
+      {
+        "path": "include/hw/misc/qcom-sm8250-gcc.h",
+        "bytes": 1340,
+        "sha256": "d1c18e0f20bbd792fa27de71ea34a13c31f3c023ef4952b8adce8d4c099f1667"
+      },
+      {
+        "path": "hw/misc/qcom-sm8250-gcc-data.inc",
+        "bytes": 63115,
+        "sha256": "a59a7102bca443094c77b4212ca35b6ab595cec473705b371db6e4ef4f76410c"
+      }
+    ],
+    "owner_path": "/machine/gcc",
+    "owner_type": "qcom-sm8250-gcc",
+    "base": 1048576,
+    "mmio_size": 2031616,
+    "table_pointer": "hw/misc/qcom-sm8250-gcc-data.inc:1064-1067",
+    "whitelist_pointer": "hw/misc/qcom-sm8250-gcc-data.inc:1503-1506",
+    "register_write_mask": 16773127,
+    "register_status_mask": 2147483648,
+    "semantics_pointer": "hw/misc/qcom-sm8250-gcc.c:350-366,451-478,555-602",
+    "reset_collapse_bit": true,
+    "reset_power_on": false,
+    "power_transition_reference_ns": 3000,
+    "power_transition_requires_nonzero_xo": true,
+    "hardware_control_not_implemented_and_rejected": true,
+    "board_mapping_pointer": "hw/arm/lenovo-tb371fc.c:1084-1118",
+    "independent_gpu_gdsc_instances_do_not_define_the_complete_gcc_power_ownership": true,
+    "native_provider_probe_proved_by_this_review": false,
+    "native_consumer_probe_proved_by_this_review": false,
+    "tbu_companion_power_coupling_proved": false,
+    "power_coupling_scope": "The board connects GCC power output 4 to UFS. It does not connect GCC power outputs 7-10 to the apps SMMUv500 companion; no TBU power-gating claim follows from register ownership."
+  },
+  "pci_tbu_clock": {
+    "vendor_binding_id": 3,
+    "current_gcc_internal_descriptor_id": 4,
+    "name": "gcc_aggre_noc_pcie_tbu_clk",
+    "physical_cbcr": 1638412,
+    "gcc_offset": 589836,
+    "model_descriptor_pointer": "hw/misc/qcom-sm8250-gcc-data.inc:29-32",
+    "whitelist_pointer": "hw/misc/qcom-sm8250-gcc-data.inc:1531",
+    "enable_mask": 1,
+    "status_mask": 4026531840,
+    "parent_descriptor": -4,
+    "external_input_index": 0,
+    "external_input": "gcc_aggre_noc_pcie_tbu_clk_parent",
+    "external_input_connected_by_board": false,
+    "unknown_parent_must_not_be_forced_on": true
+  },
+  "source_correlated_interpretation": [
+    "The exact four provider nodes have no supplies, clocks, resets, separate domain/sw-reset/hw-control syscons, bus-scaling properties, root-clock flags, retain flags, boot-on/always-on constraints or skip-logic-collapse flag. These absences are established from complete properties, not the earlier limited summary.",
+    "The pinned GDSC parser therefore selects toggle_logic=true, root_en=false, force_root_en=false, retain_ff_enable=false, no separate status register, and no provider-local bus or parent supply dependency for these nodes.",
+    "Provider probe can read GDSCR directly after ordinary allocation/regmap setup, clears HW_CONTROL bit 1 and SW_OVERRIDE bit 2, and registers the regulator. Because skip-logic-collapse is absent, toggle_logic=true and the conditional early enable/poll branch at source lines 861-871 is not taken during this provider probe.",
+    "On a later consumer enable, SW_COLLAPSE bit 0 is cleared and PWR_ON bit 31 is polled with 500 iterations separated by 1 us. On disable, the no-status-check flag takes the fixed 100 us delay path; it does not mean a 500 us disable poll.",
+    "The TBU consumers still have their own bus clients and resource acquisition requirements in the prior DT slice; provider-local absence of bus properties does not remove those consumer requirements.",
+    "All four control addresses already have stateful entries in the current GCC model. Their presence is not proof that the corresponding native regulator driver or TBU consumer has bound or successfully operated.",
+    "No extra power model or hardware-on feedback was added by this capture/review. Existing transition timing and reset state are digital reference policy, not measured hardware values."
+  ],
+  "supersedes_evidence_gap": "The earlier read-only power note (blob 8c6047b36540d2cb98bac3145b3fe5f843f1fe4b) deliberately left exact provider flags unresolved. This bounded capture resolves that gap without changing the older evidence bytes.",
+  "blocking_findings": [],
+  "proposed_doc_replacement": "The four MNOC TBU GDSC control words are already owned by the existing GCC model (power domains 7-10); their native provider and consumer readiness require separate run evidence. The PCIe TBU CBCR is also modeled, while its external parent remains unknown and unconnected. The apps SMMUv500 companion does not add power-state coupling to those dependencies."
+}

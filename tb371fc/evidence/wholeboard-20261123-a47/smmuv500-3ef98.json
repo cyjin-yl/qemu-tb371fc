@@ -1,0 +1,415 @@
+{
+  "schema": "tb371fc-smmuv500-v1",
+  "passed": true,
+  "expected_checks": 36,
+  "checks": [
+    {
+      "name": "cold_state_exposes_explicit_reference_identity_without_success",
+      "passed": true
+    },
+    {
+      "name": "halt_blocks_real_dma_at_request_and_ack_has_an_exact_deadline",
+      "passed": true
+    },
+    {
+      "name": "all_tbu_halt_ranges_are_independent_and_do_not_block_another_sid",
+      "passed": true
+    },
+    {
+      "name": "cancelling_halt_prevents_late_ack_and_releases_dma_immediately",
+      "passed": true
+    },
+    {
+      "name": "read_to_acquire_is_a_shared_mutex_and_qom_observation_does_not_acquire",
+      "passed": true
+    },
+    {
+      "name": "real_external_cache_hits_are_invalidated_by_the_halt_notifier",
+      "passed": true
+    },
+    {
+      "name": "literal_ecats_sequence_translates_real_tables_while_ordinary_dma_is_halted",
+      "passed": true
+    },
+    {
+      "name": "every_tbu_restores_the_full_sid_and_selects_its_own_context",
+      "passed": true
+    },
+    {
+      "name": "ecats_write_permissions_fault_in_the_real_context_and_assert_its_irq",
+      "passed": true
+    },
+    {
+      "name": "missing_leaf_faults_and_a_repaired_table_is_walked_again",
+      "passed": true
+    },
+    {
+      "name": "stream_selection_errors_do_not_become_identity_translations",
+      "passed": true
+    },
+    {
+      "name": "unsupported_stages_granules_and_aarch32_remain_real_configuration_faults",
+      "passed": true
+    },
+    {
+      "name": "pending_request_captures_sid_va_and_attributes_without_rewriting_staging",
+      "passed": true
+    },
+    {
+      "name": "semaphore_release_requires_the_owner_and_no_pending_request",
+      "passed": true
+    },
+    {
+      "name": "invalid_request_state_and_attributes_do_not_start_or_claim_success",
+      "passed": true
+    },
+    {
+      "name": "retrigger_and_resume_are_atomic_errors_while_a_request_is_pending",
+      "passed": true
+    },
+    {
+      "name": "clearing_trigger_cancels_work_and_a_later_deadline_cannot_publish_a_result",
+      "passed": true
+    },
+    {
+      "name": "read_only_feedback_and_qom_state_cannot_be_forged",
+      "passed": true
+    },
+    {
+      "name": "aligned_32_bit_halves_and_64_bit_transactions_preserve_little_endian_fields",
+      "passed": true
+    },
+    {
+      "name": "reserved_bits_narrow_and_unaligned_accesses_do_not_partially_change_state",
+      "passed": true
+    },
+    {
+      "name": "unrepresentable_physical_results_fault_without_truncating_into_a_mapping",
+      "passed": true
+    },
+    {
+      "name": "system_reset_cancels_requests_releases_mutex_and_restores_dma_permissions",
+      "passed": true
+    },
+    {
+      "name": "paused_virtual_time_and_pure_observation_do_not_complete_a_late_request",
+      "passed": true
+    },
+    {
+      "name": "architectural_ats_retains_standard_par_and_its_own_fault_contract",
+      "passed": true
+    },
+    {
+      "name": "default_profile_rejects_vendor_state_without_breaking_architectural_dma",
+      "passed": true
+    },
+    {
+      "name": "an_explicit_supported_non_v1_identity_is_required_at_realization",
+      "passed": true
+    },
+    {
+      "name": "normal_paused_tcg_has_no_external_cache_fixture_or_dma_test_alias",
+      "passed": true
+    },
+    {
+      "name": "exact_sparse_windows_preserve_kgsl_testbus_capture_and_reserved_holes",
+      "passed": true
+    },
+    {
+      "name": "v1_all_tbu_requests_and_actual_cache_revocation_restore_before_companion_mmio",
+      "passed": true
+    },
+    {
+      "name": "v1_all_ten_remaining_halt_deadlines_fire_before_mmio_and_ecats_continues",
+      "passed": true,
+      "remaining_deadlines_ns": [
+        50,
+        150,
+        250,
+        350,
+        450,
+        550,
+        650,
+        750,
+        850,
+        950
+      ]
+    },
+    {
+      "name": "v1_owner_captured_request_staging_and_pending_halt_restore_before_companion_mmio",
+      "passed": true
+    },
+    {
+      "name": "v1_deadlines_use_captured_real_walk_then_new_fault_irq_and_cached_dma_continue",
+      "passed": true,
+      "ecats_remaining_ns": 600,
+      "other_halt_remaining_ns": 1000
+    },
+    {
+      "name": "reference_to_unknown_profile_is_rejected",
+      "passed": true,
+      "stream_modified": false
+    },
+    {
+      "name": "unknown_to_reference_profile_is_rejected",
+      "passed": true,
+      "stream_modified": false
+    },
+    {
+      "name": "one_real_owner_out_of_range_field_corruption_is_rejected",
+      "passed": true,
+      "stream_modified": true,
+      "only_one_field_modified": true
+    },
+    {
+      "name": "one_real_captured_sid_wrong_tbu_field_corruption_is_rejected",
+      "passed": true,
+      "stream_modified": true,
+      "only_one_field_modified": true
+    }
+  ],
+  "expected_completed_migrations": 2,
+  "migrations": [
+    {
+      "name": "v1_ten_halt_requests_live_dma_gate_cache_and_ram_roundtrip",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 11,
+        "total-time": 16,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 475235,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 1284.7472,
+          "transferred": 2408901,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32732,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 180224,
+          "normal": 44
+        }
+      },
+      "destination": {
+        "status": "completed"
+      },
+      "source_virtual_ns": 950,
+      "destination_virtual_ns": 950,
+      "target_companion_mmio_before_first_observation": false,
+      "target_external_cache_was_primed": true,
+      "target_external_cache_invalid_before_first_observation": true,
+      "stream_modified": false,
+      "snapshot_sha256": "01e7836becece4d6e6614525e8193a89dda518ee499e834c9e3cce68888c9db8",
+      "snapshot_bytes": 2408901,
+      "section_header_offset": 1641004,
+      "payload_offset": 1641031,
+      "section_version": 1,
+      "instance_id": 0,
+      "payload_bytes": 744,
+      "tbu_payload_bytes": 72,
+      "tbu_count": 10,
+      "all_serialized_fields_match_source_qom": true
+    },
+    {
+      "name": "v1_captured_ecats_owner_shadow_context_and_ram_roundtrip",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 0,
+        "downtime": 10,
+        "total-time": 16,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 344195,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 1138.9305,
+          "transferred": 2277861,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32764,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 49152,
+          "normal": 12
+        }
+      },
+      "destination": {
+        "status": "completed"
+      },
+      "source_virtual_ns": 1400,
+      "destination_virtual_ns": 1400,
+      "target_companion_mmio_before_first_observation": false,
+      "target_external_cache_was_primed": true,
+      "target_external_cache_invalid_before_first_observation": true,
+      "stream_modified": false,
+      "snapshot_sha256": "41d93bc48ce48f9ac87ea8a00efc5d2516192f3508fd3c8d26fb2382025f89dd",
+      "snapshot_bytes": 2277861,
+      "section_header_offset": 1509964,
+      "payload_offset": 1509991,
+      "section_version": 1,
+      "instance_id": 0,
+      "payload_bytes": 744,
+      "tbu_payload_bytes": 72,
+      "tbu_count": 10,
+      "all_serialized_fields_match_source_qom": true
+    }
+  ],
+  "expected_rejected_migrations": 2,
+  "rejected_migrations": [
+    {
+      "name": "reference_to_unknown_profile_is_rejected",
+      "passed": true,
+      "actual_source_stream": true,
+      "stream_modified": false,
+      "source_status": "completed",
+      "source_reference": true,
+      "target_reference": false,
+      "snapshot_sha256": "01e7836becece4d6e6614525e8193a89dda518ee499e834c9e3cce68888c9db8",
+      "snapshot_bytes": 2408901,
+      "profile_mismatch": "0 != 1",
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-smmuv500",
+      "expected_diagnostic": "0 != 1",
+      "specific_load_failure_observed": true
+    },
+    {
+      "name": "unknown_to_reference_profile_is_rejected",
+      "passed": true,
+      "actual_source_stream": true,
+      "stream_modified": false,
+      "source_status": "completed",
+      "source_reference": false,
+      "target_reference": true,
+      "snapshot_sha256": "dd7869e9b91a1d6e02501371cedff197c728b6fc200bdeb52ea594421f9253f6",
+      "snapshot_bytes": 2241006,
+      "profile_mismatch": "1 != 0",
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-smmuv500",
+      "expected_diagnostic": "1 != 0",
+      "specific_load_failure_observed": true
+    }
+  ],
+  "expected_corrupted_stream_rejections": 2,
+  "corrupted_stream_rejections": [
+    {
+      "name": "owner-out-of-range",
+      "passed": true,
+      "actual_source_stream": true,
+      "stream_modified": true,
+      "source_status": "completed",
+      "legitimate_alternate_configuration": false,
+      "original_stream_unchanged": true,
+      "original_snapshot_sha256": "41d93bc48ce48f9ac87ea8a00efc5d2516192f3508fd3c8d26fb2382025f89dd",
+      "corrupted_snapshot_sha256": "5fffc3f12b39022335e73a039d59e96fec5a6c09852a4b6d705abf8ffceb7fe7",
+      "original_snapshot_bytes": 2277861,
+      "corrupted_snapshot_bytes": 2277861,
+      "section_header_offset": 1509964,
+      "payload_offset": 1509991,
+      "section_version": 1,
+      "instance_id": 0,
+      "payload_bytes": 744,
+      "tbu_payload_bytes": 72,
+      "tbu_count": 10,
+      "all_serialized_fields_match_source_qom": true,
+      "modified_field": "owner-out-of-range",
+      "field_offset": 1510011,
+      "modified_field_bytes": 4,
+      "old_value": 7,
+      "new_value": 10,
+      "only_one_field_modified": true,
+      "changed_byte_count": 1,
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-smmuv500",
+      "expected_diagnostic": "qcom-smmuv500: invalid migrated ECATS owner",
+      "specific_load_failure_observed": true
+    },
+    {
+      "name": "captured-sid-wrong-tbu",
+      "passed": true,
+      "actual_source_stream": true,
+      "stream_modified": true,
+      "source_status": "completed",
+      "legitimate_alternate_configuration": false,
+      "original_stream_unchanged": true,
+      "original_snapshot_sha256": "41d93bc48ce48f9ac87ea8a00efc5d2516192f3508fd3c8d26fb2382025f89dd",
+      "corrupted_snapshot_sha256": "44094b0a65c65afe78d021eb75bd827ba9f56f50a2295c1423db33a8fa7f6776",
+      "original_snapshot_bytes": 2277861,
+      "corrupted_snapshot_bytes": 2277861,
+      "section_header_offset": 1509964,
+      "payload_offset": 1509991,
+      "section_version": 1,
+      "instance_id": 0,
+      "payload_bytes": 744,
+      "tbu_payload_bytes": 72,
+      "tbu_count": 10,
+      "all_serialized_fields_match_source_qom": true,
+      "modified_field": "captured-sid-wrong-tbu",
+      "field_offset": 1510586,
+      "modified_field_bytes": 4,
+      "old_value": 7234,
+      "new_value": 66,
+      "only_one_field_modified": true,
+      "changed_byte_count": 1,
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-smmuv500",
+      "expected_diagnostic": "qcom-smmuv500: invalid migrated TBU 7 state",
+      "specific_load_failure_observed": true
+    }
+  ],
+  "vmstate_version": 1,
+  "architectural_smmuv2_vmstate_version": 2,
+  "tcu_count": 1,
+  "tbu_count": 10,
+  "register_count": 71,
+  "sparse_window_count": 71,
+  "mapped_bytes": 484,
+  "register_slots_32_bit": 21,
+  "register_slots_64_bit": 50,
+  "reference_hw_version": 33554432,
+  "reference_delay_ns": 1000,
+  "reference_hw_version_is_measured": false,
+  "reference_profile_is_default": false,
+  "hardware_stall_queue_implemented": false,
+  "kgsl_vendor_extension_implemented": false,
+  "qtest_cache_fixture_used": true,
+  "qemu_sha256": "703af9a899455c1c32636a9e3535294031c93cd9624fdc193177c61cb8ff7600",
+  "script_sha256": "8e276985641ded77090a245412ea7bcf1f5ab161dc3582ee5882c33fedc00395",
+  "guest_cpu_executed": false,
+  "native_kernel_probe_observed": false,
+  "android_boot_passed": false,
+  "scope": "Actual compiled apps companion QTest/QMP transactions, shared SMMUv2 stream matching and S1 walking, real IOMMU notifier cache revocation, and real state/RAM migration",
+  "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+  "source_url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/iommu/arm-smmu.c",
+  "source_sha256": {
+    "arm-smmu.c": "ccc4b09010c420ea42c9838d397b0b81fe6a0a4e345e95cb935c2e70308fbf49"
+  },
+  "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "dt_evidence_blob": "8306d244d2f785ce0efb8c2071b8badc77b252e7",
+  "binary_unchanged": true,
+  "duration_seconds": 10.862
+}
