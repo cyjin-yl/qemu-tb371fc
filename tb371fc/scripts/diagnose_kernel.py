@@ -36,11 +36,16 @@ def main():
     p.add_argument("--trace-code",action="store_true")
     p.add_argument("--legacy-printk-symbols",type=Path,
                    help="Matching Linux 4.x kallsyms; capture stopped guest log privately")
+    p.add_argument("--observe-smem-probe", action="store_true",
+                   help="Read the verified production kernel's published SMEM driver object")
     a=p.parse_args()
     if a.seconds<=0 or a.seconds>120:
         p.error("--seconds must be in (0, 120]")
     if a.machine.split(",", 1)[0] != "tb371fc":
         p.error("--machine must select tb371fc")
+    if a.observe_smem_probe and (not a.legacy_printk_symbols or
+                                 "nokaslr" not in a.append.split()):
+        p.error("--observe-smem-probe requires matching symbols and nokaslr")
     for name in ("qemu", "kernel", "initrd", "dtb", "legacy_printk_symbols"):
         path = getattr(a, name)
         if path is not None and not path.is_file():
@@ -65,6 +70,13 @@ def main():
             "global_properties":a.global_property,
             "command":cmd,"kernel_sha256":sha256(a.kernel),
             "qemu_sha256":sha256(a.qemu),"machine":a.machine,"events":[]}
+    report["smem_probe_requested"] = a.observe_smem_probe
+    if a.observe_smem_probe:
+        report["smem_probe"] = {
+            "success_path_observed": False,
+            "verdict": "observation-not-performed",
+            "reason": "Guest did not reach a stopped observation point",
+        }
     if a.dtb:
         report["dtb_sha256"]=sha256(a.dtb)
     start=time.monotonic()
@@ -148,6 +160,10 @@ def main():
                                 command,a.legacy_printk_symbols,out)
                         except Exception as exc:
                             report["legacy_printk_error"]=str(exc)
+                    if a.observe_smem_probe:
+                        from observe_smem import capture_smem_probe
+                        report["smem_probe"] = capture_smem_probe(
+                            command, a.legacy_printk_symbols, a.kernel)
                     send("quit")
                     break
                 messages=receive(.1)

@@ -100,3 +100,69 @@ stop state, bounded raw observations and individual validation results. Keep
 the final verdict explicit: success path observed, not observed, or decoding
 inconclusive. A later kernel exception does not erase an earlier successful
 SMEM probe, but it must remain visible as the next boot blocker.
+
+## Executable observer
+
+Use the bounded diagnostic runner with the original matching kernel and
+kallsyms files. Include `nokaslr` in the kernel command line and select
+the SMEM and mutex reference profiles explicitly:
+
+```sh
+python3 tb371fc/scripts/diagnose_kernel.py \
+  --qemu /absolute/path/to/qemu-system-aarch64 \
+  --machine tb371fc,smem-profile=reference-empty \
+  --global-property qcom-tcsr-mutex.boot-unlocked-reference=on \
+  --kernel /private/path/to/original-Image \
+  --initrd /private/path/to/diagnostic-initramfs.cpio.gz \
+  --dtb /private/path/to/original.dtb \
+  --append 'nokaslr console=ttyMSM0' \
+  --legacy-printk-symbols /private/path/to/matching-kallsyms \
+  --observe-smem-probe --seconds 30 --out /private/path/to/new-diagnostic
+```
+
+Other device profiles may be needed for a particular boot experiment; record
+them with its input hashes. The command above does not guarantee that this
+kernel reaches SMEM probing.
+
+The observer is deliberately limited to kernel SHA256
+`ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f`.
+It verifies the three expected symbol addresses and the 16-byte publication
+tail in that exact image, confirms the stopped guest and reference profiles,
+then performs bounded virtual-memory reads of the published driver object,
+directory, partition and header. It records 23 consistency checks on a complete
+successful observation. A changed kernel or unresolved address is inconclusive.
+
+Read `smem_probe` in the resulting `diagnostic.json`:
+
+- `production-driver-success-path-observed` means the publication and
+  checked live object were observed.
+- `success-path-not-observed` means the published pointer was zero.
+- `observation-inconclusive` means an input, profile, read or consistency
+  check failed.
+- `observation-not-performed` means the diagnostic did not reach its
+  stopped observation point.
+
+The diagnostic process exit code is a transport/tool result, not a successful
+driver or Android boot result. The observer never writes guest memory and keeps
+`native_sbl_captured` and `android_boot_passed` false. A prior
+observation belongs to its recorded binary and input hashes; it is not a result
+for a subsequently rebuilt QEMU.
+
+## Observer regression gate
+
+```sh
+python3 tb371fc/scripts/test_observe_smem.py
+```
+
+The public `smem-observer-unit` gate tests the observer without private
+kernel inputs or guest execution. Its explicitly synthetic fixture substitutes
+a test-only hash; the production observer retains the fixed kernel hash above.
+
+The cases cover a published live object, initialized shared memory without
+publication, altered kernel or publication instructions, missing/shifted/duplicate
+symbols, running or malformed status, absent or nonboolean reference profiles,
+read errors, wrong returned addresses, oversized fields, invalid pointers,
+inconsistent driver/header fields, valid allocated heaps, crossed allocation
+frontiers, and diagnostic argument rejection before launching QEMU. Passing
+this unit gate validates the observer's decisions; it is not a native probe
+receipt.
