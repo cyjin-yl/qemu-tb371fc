@@ -1,6 +1,18 @@
 # QEMU TB371FC
 
-[![TB371FC public functional gates](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml/badge.svg?branch=tb371fc-verified-20261123-0820)](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml)
+[![AOP synthetic preflight](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/aop-entry-reference.yml/badge.svg?branch=tb371fc-aop-reference-ci-20261123-1148)](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/aop-entry-reference.yml)
+
+## AOP 独立诊断参考：合成 CI 检查点
+
+本分支加入独立的 `-M aop-entry-reference` 和单独的 `aop-reference` 构建配置，用于先验证后续固件诊断所依赖的访存监测方法。
+**当前提交尚无实际通过回执；CI 要求 14 项合成检查全部通过，并核对源码、测试脚本和二进制哈希。**
+
+Cortex-M3、1 MHz 时钟、可选的低地址别名及额外 DTCM 都是明确的诊断参考配置，平板实际 AOP CPU 和冷启动映射尚未确认。
+CI 只执行自编测试指令，不读取或运行私有固件。普通访存的 watchpoint 测试也不证明异常内部 vector/stack 访问具有停前保证。
+脚本保留日志、失败结果和 socket 目录；测试阶段具有 180 秒独立进程组总时限。
+
+详见 [方法与边界](tb371fc/docs/aop-entry-reference.md) 和 [待验证检查点](tb371fc/evidence/aop-reference-ci-20261123/checkpoint.json)。
+以下 TB371FC 功能测试记录属于已有的独立验证范围；本分支不宣称完整 AOP 服务、原厂 Android 或整机等价已经通过。
 
 面向 **Lenovo TB371FC / SM8250（Kona）** 的整机模拟开发分支，基于 QEMU **11.1.3**，提供独立的 `-M tb371fc`。目标是实现真实来宾驱动可使用的软件可见硬件接口，并用平板的只读证据和实际运行的测试逐项核对。
 

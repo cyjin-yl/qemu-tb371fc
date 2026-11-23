@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "kind": "pending-synthetic-preflight-checkpoint",
+  "created_utc": "2026-11-23 11:57:00 UTC",
+  "parent": "3b938b23f4ce3e9cde88f31ae39d6280524624e0",
+  "branch": "tb371fc-aop-reference-ci-20261123-1148",
+  "preflight_checks_expected": 14,
+  "preflight_executed_before_commit": false,
+  "firmware_read": false,
+  "firmware_executed": false,
+  "hardware_reset_verified": false,
+  "aop_startup_validated": false,
+  "actual_aop_cpu": "unknown",
+  "reference_cpu": "cortex-m3",
+  "synthetic_timeout_seconds": 180,
+  "temporary_directories_retained": true,
+  "source_blobs": [
+    {
+      "path": "hw/arm/qcom-aop-reference.c",
+      "blob": "58aa1d111e00570825e1aa6a8d85f797a8a6a4bb",
+      "sha256": "be63acb6a9dbd3abb2249dfdc31aeff9338fa49f178fe479fe0e4969d3895b86"
+    },
+    {
+      "path": "configs/devices/aarch64-softmmu/aop-reference.mak",
+      "blob": "87a40958c8aaad8fb3b43deb3fd3c13c2ece95c1",
+      "sha256": "2b2e0bd62de9febac1c71ff80b53160b1637ab90928c2fcb1b4d89e976c0df1a"
+    },
+    {
+      "path": "tb371fc/tests/test_aop_entry_reference.py",
+      "blob": "63dde53dfb54b7ad4e190267f362fe31c245a71c",
+      "sha256": "476c2997df433d57105c851b2467f234f1ae2203d3dd09a15f369333f3d327a8"
+    },
+    {
+      "path": ".github/workflows/aop-entry-reference.yml",
+      "blob": "3bb7deab798e4e4cf28b742be81aa511b1bf5f05",
+      "sha256": "7d5ec7df269e1f50e4879407bdfd595a404f24b5288bccfbaad651898f2e30b1"
+    }
+  ],
+  "integration_sha256": {
+    "hw/arm/Kconfig": "54ec7ce1e7db291d4958dab2fe3aeb5ad335b3a0fceb7f40c6cad432b7eb506b",
+    "hw/arm/meson.build": "3219ce17fc10ab829a52dc4ad38a24425a731ccebc1e2e1a17b838495557e656",
+    "tb371fc/docs/aop-entry-reference.md": "95d2036969a1364eac82ee6ba091b697a315accc830a1d610b7d676625105eec",
+    "README.md": "e3424cf808f5b075645bf61efdbc4d993788faa0d43a78678e5769c038a75cf0"
+  },
+  "code_origin": "Independent source draft already saved in CT102. Publish a separate synthetic CI while doesvm execution/write requests time out. Retain the original CT files and original unexecuted source blobs.",
+  "runner_correction": {
+    "original_sha256": "70cc4dd48ddc7363d0235be626e404c4cb20d3f29bb71d9f073453c9be45003c",
+    "current_sha256": "476c2997df433d57105c851b2467f234f1ae2203d3dd09a15f369333f3d327a8",
+    "changes": [
+      "Remove temporary socket-directory deletion and unused shutil import",
+      "Save launch.json before each QEMU process"
+    ],
+    "preflight_function_byte_identical": true
+  },
+  "internal_exception_before_access_guarantee": false,
+  "internal_exception_source": {
+    "path": "target/arm/tcg/m_helper.c",
+    "sha256": "8238f84c72ddd082387603d6b11e03133d734f984702d0bfbee072a7e7b51925"
+  },
+  "gicv5_build_note": "CONFIG_ARM_GICV5 supplies link dependencies in this fixed QEMU base; the reference machine does not instantiate a GIC.",
+  "private_execution_not_part_of_this_ci": true,
+  "private_execution_pending_requirements": [
+    "Actual same-runner, same-binary preflight succeeds",
+    "Machine-readable private exception verdict explicitly states the internal-access limitation"
+  ]
+}

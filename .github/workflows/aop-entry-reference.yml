@@ -1,0 +1,192 @@
+name: AOP entry reference synthetic preflight
+
+on:
+  push:
+    branches: [tb371fc-aop-reference-ci-20261123-1148]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aop-entry-reference-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  cortex-m3-reference:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install native QEMU build dependencies
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/aop-reference-results"
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential git ca-certificates \
+            python3 python3-venv python3-distlib ninja-build meson pkg-config \
+            libglib2.0-dev libpixman-1-dev zlib1g-dev libfdt-dev
+      - name: Record public inputs and check source syntax
+        run: |
+          set -euo pipefail
+          python3 - "$RUNNER_TEMP/aop-reference-results" <<'PY'
+          import hashlib, json, pathlib, subprocess, sys
+          out = pathlib.Path(sys.argv[1])
+          names = ["hw/arm/qcom-aop-reference.c", "hw/arm/Kconfig",
+                   "hw/arm/meson.build",
+                   "configs/devices/aarch64-softmmu/aop-reference.mak",
+                   "tb371fc/tests/test_aop_entry_reference.py",
+                   "tb371fc/docs/aop-entry-reference.md"]
+          def sha(path):
+              with pathlib.Path(path).open("rb") as stream:
+                  return hashlib.file_digest(stream, "sha256").hexdigest()
+          data = {"source_commit": subprocess.check_output(
+                      ["git", "rev-parse", "HEAD"], text=True).strip(),
+                  "sha256": {name: sha(name) for name in names},
+                  "firmware_read": False, "firmware_executed": False}
+          (out / "source-inputs.json").write_text(
+              json.dumps(data, indent=2, sort_keys=True) + "\n")
+          PY
+          PYTHONPYCACHEPREFIX="$RUNNER_TEMP/aop-reference-pycache" \
+            python3 -m py_compile tb371fc/tests/test_aop_entry_reference.py
+          perl scripts/checkpatch.pl --no-tree --file hw/arm/qcom-aop-reference.c \
+            2>&1 | tee "$RUNNER_TEMP/aop-reference-results/checkpatch.log"
+          cc --version > "$RUNNER_TEMP/aop-reference-results/compiler-version.txt"
+          python3 --version > "$RUNNER_TEMP/aop-reference-results/python-version.txt"
+      - name: Build only the standalone reference configuration
+        run: |
+          set -euo pipefail
+          repo="$PWD"
+          mkdir -p "$RUNNER_TEMP/aop-reference-build"
+          cd "$RUNNER_TEMP/aop-reference-build"
+          "$repo/configure" --target-list=aarch64-softmmu \
+            --with-devices-aarch64=aop-reference --without-default-devices \
+            --without-default-features --enable-system --enable-tcg --enable-fdt \
+            --disable-docs --disable-tools --disable-guest-agent \
+            2>&1 | tee "$RUNNER_TEMP/aop-reference-results/configure.log"
+          ninja -j1 qemu-system-aarch64 \
+            2>&1 | tee "$RUNNER_TEMP/aop-reference-results/build.log"
+          ./qemu-system-aarch64 --version \
+            > "$RUNNER_TEMP/aop-reference-results/qemu-version.txt"
+          sha256sum qemu-system-aarch64 \
+            > "$RUNNER_TEMP/aop-reference-results/qemu.sha256"
+      - name: Run the fourteen public cases within an isolated process group
+        run: |
+          set -euo pipefail
+          python3 - "$RUNNER_TEMP/aop-reference-build/qemu-system-aarch64" \
+            "$RUNNER_TEMP/aop-reference-results" <<'PY'
+          import datetime, hashlib, json, os, pathlib, signal
+          import subprocess, sys, time, traceback
+          qemu = pathlib.Path(sys.argv[1]).resolve()
+          out = pathlib.Path(sys.argv[2]).resolve()
+          runner = pathlib.Path("tb371fc/tests/test_aop_entry_reference.py").resolve()
+          inputs = json.loads((out / "source-inputs.json").read_text())
+          def sha(path):
+              with pathlib.Path(path).open("rb") as stream:
+                  return hashlib.file_digest(stream, "sha256").hexdigest()
+          def group_exists(pgid):
+              try:
+                  os.killpg(pgid, 0)
+              except ProcessLookupError:
+                  return False
+              return True
+          command = [sys.executable, str(runner), "preflight", "--qemu",
+                     str(qemu), "--out", str(out / "preflight")]
+          receipt = {"schema": "aop-reference-public-ci-v1", "passed": False,
+                     "command": command, "expected_checks": 14,
+                     "firmware_read": False, "firmware_executed": False,
+                     "maximum_seconds": 180,
+                     "qemu_sha256_before": sha(qemu),
+                     "runner_sha256_before": sha(runner),
+                     "started_utc": datetime.datetime.now(
+                         datetime.timezone.utc).isoformat()}
+          process = None
+          started = time.monotonic()
+          try:
+              with (out / "preflight.log").open("xb") as log:
+                  process = subprocess.Popen(command, stdout=log,
+                      stderr=subprocess.STDOUT, start_new_session=True)
+                  receipt["process_group"] = process.pid
+                  try:
+                      receipt["exit_code"] = process.wait(timeout=180)
+                  except subprocess.TimeoutExpired as exc:
+                      receipt["timeout"] = {"type": type(exc).__name__,
+                                            "message": str(exc)}
+                      try:
+                          os.killpg(process.pid, signal.SIGKILL)
+                          receipt["own_group_sigkill_sent"] = True
+                      except ProcessLookupError:
+                          receipt["group_already_exited"] = True
+                      try:
+                          receipt["exit_code"] = process.wait(timeout=5)
+                      except subprocess.TimeoutExpired as reap_exc:
+                          receipt["post_kill_wait_failure"] = str(reap_exc)
+                          receipt["exit_code"] = process.poll()
+              remaining = group_exists(process.pid)
+              receipt["group_present_after_wait"] = remaining
+              if remaining:
+                  receipt["orphan_group_found"] = True
+                  try:
+                      os.killpg(process.pid, signal.SIGKILL)
+                      receipt["orphan_group_sigkill_sent"] = True
+                  except ProcessLookupError:
+                      receipt["group_exited_before_cleanup"] = True
+              assert "timeout" not in receipt, receipt
+              assert receipt["exit_code"] == 0, receipt
+              assert not remaining, "Synthetic runner left its process group alive"
+              proof = json.loads((out / "preflight/result.json").read_text())
+              assert proof["passed"] is True and proof["all_passed"] is True
+              assert proof["expected_checks"] == len(proof["checks"]) == 14
+              assert all(check["passed"] is True for check in proof["checks"])
+              assert proof["firmware_read"] is False
+              assert proof["firmware_executed"] is False
+              assert proof["qemu_sha256"] == receipt["qemu_sha256_before"] == sha(qemu)
+              assert proof["runner_sha256"] == receipt["runner_sha256_before"] == sha(runner)
+              actual = {name: sha(name) for name in inputs["sha256"]}
+              assert actual == inputs["sha256"], "Source changed during build or preflight"
+              receipt["source_unchanged"] = True
+              receipt["binary_unchanged"] = True
+              receipt["result_sha256"] = sha(out / "preflight/result.json")
+              receipt["passed_checks"] = 14
+              receipt["passed"] = True
+          except BaseException:
+              receipt["failure"] = traceback.format_exc()
+          finally:
+              if process is not None and process.poll() is None:
+                  try:
+                      os.killpg(process.pid, signal.SIGKILL)
+                      receipt["final_cleanup_sigkill_sent"] = True
+                  except ProcessLookupError:
+                      pass
+                  try:
+                      process.wait(timeout=5)
+                  except subprocess.TimeoutExpired:
+                      receipt["worker_not_reaped"] = True
+              receipt["wall_seconds"] = time.monotonic() - started
+              (out / "ci-execution.json").write_text(
+                  json.dumps(receipt, indent=2, sort_keys=True) + "\n")
+          print(json.dumps(receipt, indent=2, sort_keys=True))
+          sys.exit(0 if receipt["passed"] else 1)
+          PY
+      - name: Upload all public logs and the tested binary
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: aop-entry-reference-synthetic-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/aop-reference-results/
+            ${{ runner.temp }}/aop-reference-build/qemu-system-aarch64
+      - name: State the measured boundary
+        if: always()
+        run: |
+          printf '%s\n' \
+            'This job builds the independent aop-entry-reference machine and requires fourteen synthetic Cortex-M3 checks.' \
+            'Read ci-execution.json and preflight/result.json for the actual verdict; build failure, timeout, leaked process group or changed input fails the job.' \
+            'The guest opcodes are authored test inputs. No private firmware is read or executed, and no AOP or TB371FC hardware boot is attested.' \
+            'Before-access watchpoint checks cover the tested ordinary TCG accesses; they do not establish that internal exception stack/vector accesses stop before bus dispatch.' \
+            >> "$GITHUB_STEP_SUMMARY"
