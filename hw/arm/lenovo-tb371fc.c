@@ -61,6 +61,7 @@
 #include "hw/misc/qcom-sm8250-rpmh.h"
 #include "hw/ufs/qcom-sm8250-ufs.h"
 #include "hw/timer/arm-arch-timer-mmio.h"
+#include "hw/timer/qcom-mpm2-sleep-counter.h"
 #include "hw/watchdog/qcom-kpss.h"
 #include "system/address-spaces.h"
 #include "system/device_tree.h"
@@ -1289,6 +1290,20 @@ static void tb371fc_create_watchdog(TB371FCMachineState *s)
     sysbus_connect_irq(SYS_BUS_DEVICE(dev), 1, qdev_get_gpio_in(s->gic, 1));
 }
 
+static void tb371fc_create_mpm2_sleep_counter(TB371FCMachineState *s)
+{
+    DeviceState *dev = qdev_new(TYPE_QCOM_MPM2_SLEEP_COUNTER);
+
+    object_property_add_child(OBJECT(s), "mpm2-sleep-counter", OBJECT(dev));
+    /*
+     * Original DT declares 32768 Hz. This is a separate fixed reference
+     * domain, not the existing 32000 Hz GCC sleep input. Only offset zero
+     * is established by boot_stats.c; the rest of the DT's 4 KiB is absent.
+     */
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, 0x0c221000);
+}
+
 static void tb371fc_create_mmio_timer(TB371FCMachineState *s)
 {
     DeviceState *dev = qdev_new(TYPE_ARM_ARCH_TIMER_MMIO);
@@ -1391,6 +1406,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_pdc(s);
     tb371fc_create_spmi(s);
     tb371fc_create_mmio_timer(s);
+    tb371fc_create_mpm2_sleep_counter(s);
     tb371fc_create_watchdog(s);
     tb371fc_create_boot_resources(s);
     tb371fc_create_smmus(s);
