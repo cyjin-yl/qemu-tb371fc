@@ -42,6 +42,14 @@ transfers and both directions of mask mismatch. Historical version-2 results
 below belong to their original binaries and do not establish a cross-version
 transfer or the new opt-in formats.
 
+The later [extended granule report](../evidence/smmuv2-granules-20261123/ct102-with-glib.json)
+does exercise actual v2-to-v3 transfer using the retained 339b9cd CI executable
+as the source: mask 1 continues ATS and DMA after load, while mask 7 exits with
+the dedicated version-2 compatibility error. Its 28 groups include the 26
+large-granule checks and two cross-version cases; see the
+[publication record](../evidence/smmuv2-granules-20261123/publication.json)
+for both executable hashes and the independent CI results.
+
 The first CI run already rejected the incompatible receiver, but failed because
 the test expected a field-name diagnostic that this QEMU version does not emit.
 That [failed CI report](../evidence/smmuv2-migration-20261123/first-ci-diagnostic-failure.json)

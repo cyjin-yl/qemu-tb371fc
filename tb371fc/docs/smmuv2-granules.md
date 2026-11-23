@@ -70,8 +70,15 @@ then continues actual ATS and DMA on the receiver. It separately requires a
 nonzero receiver exit and the SMMUv2 equality diagnostic for `1 -> 7` and
 `7 -> 1`. The existing 18-check gate retains its default-profile fault/IRQ
 restoration and both SMR-capacity mismatch cases. The new gate does not claim
-a tested cross-version v2 transfer without an actual old source executable;
-its result explicitly records `legacy_v2_transfer_tested: false`.
+a tested cross-version v2 transfer without an actual old source executable.
+The public CI invocation explicitly records `legacy_v2_transfer_tested: false`.
+Supplying `--legacy-qemu /path/to/actual-v2-qemu` adds two separate checks:
+v2-to-mask-1 ATS/DMA continuation and v2-to-mask-7 rejection with the dedicated
+version-2 diagnostic. Both executables are hashed before and after the run.
+A passing extended run has 28 groups and five migration attempts; a current
+v3 executable cannot pass as the legacy input because its rejection diagnostic
+differs. This optional path does not add an expiring binary-artifact dependency
+to the public CI gate.
 
 ## Executable acceptance contract
 
@@ -81,7 +88,7 @@ python3 tb371fc/tests/test_smmuv2_granules.py \
 ```
 
 The script contains 26 required semantic groups and is a required public
-component gate. Its presence is an acceptance plan, not a passing receipt.
+component gate. Its presence alone is an acceptance plan, not a passing receipt.
 Every run records its own verdict, QEMU/test/helper hashes, migration results,
 retained stderr and failure traceback. An incomplete run or changed binary
 cannot pass. Existing 23 C QTests and 18 default migration checks remain
@@ -100,6 +107,57 @@ L1 blocks are checked independently. Reset keeps the configured capabilities.
 UFS is disabled in these 128 MiB paused-process tests. There is no native-DT
 boot, Android, rendering, hardware timing, external DMA-client cache or
 whole-board migration claim.
+
+## Measured CI result
+
+The [run for b5f4415](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45219017052)
+completed both jobs successfully. The retained
+[granule report](../evidence/smmuv2-granules-20261123/ci-granules.json)
+passes all 26 groups and three migration attempts. The
+[component report](../evidence/smmuv2-granules-20261123/ci-components.json)
+passes 55/55 gates, including the 23 C QTests without skips and all 18 default
+SMMUv2 migration checks. The separate
+[Linux report](../evidence/smmuv2-granules-20261123/ci-linux.json)
+passes all four integration gates. The A77/shared-UFS job also passed its
+852 guest checks, two rejected CPU configurations and 15 PCI cases.
+
+Public artifact `14842111035` contains source commit
+`b5f441554b01900a33ada617054f6e7f2729e5b8` and QEMU SHA-256
+`3d3ece4d21e3806210920a2cb83531c02f825d1cdb428980590e4fc49bc82336`.
+The executable bytes were hashed independently against the artifact's receipt.
+These are exact-build observations; the CI invocation did not supply a legacy
+v2 executable and therefore does not attest the cross-version path.
+
+### Actual v2-to-v3 transfer in CT102
+
+The [extended CT102 report](../evidence/smmuv2-granules-20261123/ct102-with-glib.json)
+then passed **28/28 groups and five migration attempts** in 2.358 seconds,
+using that unchanged CI executable and the extended test script with SHA-256
+`9a83189384fb9f1f07bfc7d2a744b579a08bc459c231c2639ac7cefa0759111a`.
+The old source was the actual CI-built v2 executable from commit
+`339b9cd277aeae84fba52b60ae34ede90b7ff101`, SHA-256
+`7964b2a21fccede724639f6503f5e19ae91d71b0df4051b10a6f51fd8337b0f0`.
+Both binary hashes were checked before and after the run. The v2-to-mask-1
+receiver continued ATS and real DMA reads/writes; the v2-to-mask-7 receiver
+exited nonzero with the dedicated version-2 compatibility error. The extended
+script also checks profile 9, which combines the required 4 KiB bit with an
+unknown capability bit, and requires realization to reject it.
+
+The [first CT102 attempt](../evidence/smmuv2-granules-20261123/ct102-missing-glib.json)
+failed before any check because this Docker image lacked `libglib-2.0.so.0`.
+Its [original loader stderr](../evidence/smmuv2-granules-20261123/ct102-missing-glib.stderr)
+is retained. This was an environment failure, not a SMMU counterexample.
+The same Debian 13 runtime package was downloaded, SHA-256 checked, and
+extracted under the isolated test directory without a global installation.
+The [dependency receipt](../evidence/smmuv2-granules-20261123/ct102-deps.json)
+binds the package and library bytes; the
+[run receipt](../evidence/smmuv2-granules-20261123/ct102-run.json)
+records the process-local library path. No QEMU executable was rebuilt or
+patched to obtain the passing result. At most two paused 128 MiB QEMU
+processes existed at once; none remained after the test. The
+[publication record](../evidence/smmuv2-granules-20261123/publication.json)
+binds the CI and CT102 inputs and receipts without promoting either to native
+hardware or whole-board evidence.
 
 ## Fixed primary sources
 

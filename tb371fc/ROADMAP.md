@@ -76,8 +76,9 @@ GCC bootstrap 状态、部分 fabric 输入、QUP version 和设备排序延时�
 - [x] 无 LU 的 upstream Linux 完成八项 PID 1 检查及 guest shutdown；普通 console、空 UFS、UFS/SMMU、RPMh 四个 Linux gate 均在 [冻结构建 12](evidence/resume-final-20261123/result.json)复验，后续公共套件分别保留自己的回执。
 - [x] 主线 Qualcomm UFS/QMP/GCC/SMMU 驱动运行：19 项 guest 检查，strict translated DMA domain，宿主独立核对写入数据。
 - [ ] Qualcomm TCU/TBU、完整 QSMMU v500 扩展、stage 2/nesting、AArch32 与 LPA/LPA2 等未实现翻译模式。
-- [ ] 16/64 KiB 架构页表模型已通过显式 granule profile 实现，26 组真实 QEMU 验收已纳入 CI，具体通过状态以对应二进制回执为准；[实现与验证契约](docs/smmuv2-granules.md)。默认仍只广告 4 KiB，未测量原生 SMMU 大页能力。
+- [x] 16/64 KiB 架构页表模型通过显式 granule profile 实现，b5f4415 CI 的 [26 组真实 QEMU 验收](evidence/smmuv2-granules-20261123/ci-granules.json)及独立 55 组件/4 Linux 套件均通过；[实现与边界](docs/smmuv2-granules.md)。默认仍只广告 4 KiB，未测量原生 SMMU 大页能力。
 - [x] SMMUv2 独立迁移验收：18 项双进程恢复／拒绝检查通过，覆盖页表、DMA、fault IRQ 与 reset；[证据](evidence/smmuv2-migration-20261123/publication.json)。UFS 仍关闭，整板迁移未通过。
+- [x] VMState v3 绑定 granule profile；[CT102 扩展验收](evidence/smmuv2-granules-20261123/ct102-with-glib.json)28/28、5 次转移，包含实际旧 v2→新 v3 默认 profile 的 ATS/DMA 延续与旧 v2→扩展 profile 的拒绝。两个 CI 二进制摘要固定，未全局安装依赖。
 - [ ] UFS ICE、RPMB 认证、原生 LU 启动选择/保护、完整 task management/reset/error 模式及物理链路行为。
 - [ ] UFS core 迁移和有未完成存储 I/O 的整板迁移。现有组件迁移均显式关闭 UFS。
 - [ ] SDHCI/microSD、DWC3/USB PHY、GENI I²C/SPI 和各连接器生命周期。

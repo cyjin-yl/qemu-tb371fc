@@ -122,6 +122,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--qemu", required=True, type=Path)
     parser.add_argument("--out", required=True, type=Path)
+    parser.add_argument("--legacy-qemu", type=Path,
+                        help="Actual pre-granule VMState-v2 binary for two additional transfer checks")
     args = parser.parse_args()
     args.qemu, args.out = str(args.qemu.resolve()), args.out.resolve()
     args.out.mkdir(parents=True, exist_ok=False)
@@ -151,10 +153,12 @@ def main():
             item["observed"] = observed
         checks.append(item)
 
-    def spawn(name, profile, incoming=False):
+    def spawn(name, profile, incoming=False, legacy=False):
         directory = args.out / name
         directory.mkdir(parents=True)
         config = profile_args(args, profile)
+        if legacy:
+            config.qemu = str(args.legacy_qemu.resolve())
         return SMMURig(config, directory, incoming=incoming, intercept=True)
 
     try:
@@ -343,7 +347,7 @@ def main():
             rig.close()
 
         # Reject malformed capability profiles before exposing a device.
-        for profile in (0, 2, 4, 8):
+        for profile in (0, 2, 4, 8, 9):
             command = [args.qemu, "-machine", args.machine, "-accel", "qtest",
                        "-m", "128M", "-display", "none", "-monitor", "none", "-S",
                        "-global", f"arm-smmuv2.aarch64-granules={profile}"]
@@ -418,8 +422,58 @@ def main():
                     target.close()
 
         report["legacy_v2_transfer_tested"] = False
-        report["expected_checks"] = 26
+        if args.legacy_qemu:
+            report["sha256"]["legacy_qemu"] = sha(args.legacy_qemu)
+            for dst_profile in (1, 7):
+                source = target = None
+                mode = f"legacy-v2-to-profile-{dst_profile}"
+                try:
+                    source = spawn(mode + "/source", None, legacy=True)
+                    target = spawn(mode + "/target", dst_profile, incoming=True)
+                    assert (source.get(APPS + 0x28) >> 12) & 7 == 1
+                    v = {"tsz": 25, "tg0": 0, "tg1": 2,
+                         "root": TABLE, "upper_root": TABLE}
+                    source.put(TABLE, (TABLE + 0x1000) | 3, "q")
+                    source.put(TABLE + 0x1000, (TABLE + 0x2000) | 3, "q")
+                    source.put(TABLE + 0x2008, PA | RW, "q")
+                    configure(source, v)
+                    source.put(DMA + 0x1234, 0x76543210)
+                    assert source.get(PA + 0x234) == 0x76543210
+                    uri = "unix:" + str(args.out / mode / "migration.sock")
+                    target.monitor("migrate-incoming", {"uri": uri})
+                    source.monitor("migrate", {"uri": uri})
+                    if dst_profile == 1:
+                        report["migrations"].append({"mode": mode,
+                            "source": wait_migration(source),
+                            "destination": wait_migration(target)})
+                        assert source.monitor("query-status")["status"] == "postmigrate"
+                        assert not target.monitor("query-status")["running"]
+                        assert (target.get(APPS + 0x28) >> 12) & 7 == 1
+                        success(target, 0x1234, PA + 0x234)
+                        assert target.get(DMA + 0x1234) == 0x76543210
+                        target.put(DMA + 0x1234, 0xabcdef01)
+                        assert target.get(PA + 0x234) == 0xabcdef01
+                    else:
+                        target.process.wait(timeout=15)
+                        error = target.log_path.read_text(errors="replace")
+                        assert target.process.returncode != 0
+                        assert "version 2 requires aarch64-granules=1" in error, error
+                        assert "error while loading state" in error and "'arm-smmuv2'" in error
+                        report["migrations"].append({"mode": mode,
+                            "source": source.monitor("query-migrate"),
+                            "destination_exit": target.process.returncode,
+                            "destination_error": error})
+                    passed(mode)
+                finally:
+                    if source:
+                        source.close()
+                    if target:
+                        target.close()
+            assert sha(args.legacy_qemu) == report["sha256"]["legacy_qemu"]
+            report["legacy_v2_transfer_tested"] = True
+        report["expected_checks"] = 28 if args.legacy_qemu else 26
         assert len(checks) == report["expected_checks"], len(checks)
+        assert len(report["migrations"]) == (5 if args.legacy_qemu else 3)
         assert sha(args.qemu) == report["sha256"]["qemu"], "QEMU binary changed during validation"
         report["all_passed"] = True
     except Exception:

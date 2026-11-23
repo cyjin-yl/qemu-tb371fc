@@ -168,6 +168,7 @@ SPMI 原有 [25 项参考模型回执及来源](tb371fc/evidence/spmi-reference-
 | GCC 与串口接线 | [19 项 GCC、5 项 GCC 迁移、6 项 clock/reset、4 项接线迁移](tb371fc/evidence/expansion-20261123/revalidation-4/summary.json) | 状态、父时钟、分频、门控、复位、GDSC 及未完成 TX/RX 恢复。 |
 | CPU/MMIO timer | [精确计数及修前/修后回执](tb371fc/evidence/mmio-timer-live-status-20261123/) | 每虚拟秒准确 19,200,000 tick；独立 icount 参考、10 项 exact/10 项 legacy MMIO、真实 CPU 与 MMIO 迁移、模式不匹配拒绝，以及 16 次 CPU→GIC 线状态检查。 |
 | SMMUv2 | [23/23 C QTest](tb371fc/evidence/smmuv2-20261123/qtest-result.json) | RAM 页表遍历、权限、fault、stream/context bank、ATS、TTBR1、无效模式；保留修前反例。 |
+| SMMUv2 显式大页 profile | [CI 26/26](tb371fc/evidence/smmuv2-granules-20261123/ci-granules.json)；[CT102 扩展 28/28](tb371fc/evidence/smmuv2-granules-20261123/ct102-with-glib.json) | 16/64 KiB ATS/DMA、权限与故障、profile 迁移相等检查；另有真实 v2→v3 接受/拒绝。默认仍为 4 KiB，原生能力未测量。 |
 | UFS 与 DMA | [56 项控制器/PHY/DMA 检查](tb371fc/evidence/resume-20261123/reports/32-ufs-register-dma.json)、[19 项 Linux UFS/SMMU 检查](tb371fc/evidence/ufs-bringup-20261123/linux-strict-iommu-19.json) | 真实 SCSI 块 I/O、strict DMA domain、flush/reopen、错误路径、Hibern8，以及宿主独立核对写入的 32 KiB 数据。 |
 | 共享 UFS core / PCI | [冻结构建 12 配套通用构建 15/15](tb371fc/evidence/compat-final-20261123/ufs-pci/result.json)、[08:20 通用构建 15/15](tb371fc/evidence/verified-20261123-0820/pci-ufs/result.json) | 所有用例实际执行，无跳过；两次通用构建的哈希和失败修正记录分别保留。 |
 | RPMh reference/file | [22 项 reference/文件 ABI 检查、5 项迁移](tb371fc/evidence/expansion-20261123/revalidation-5/rpmh-summary.json) | TCS 执行、ARC/VRM/BCM 请求、IRQ、sleep/wake 输入、取消及非法请求不完成。reference 数据显式为合成数据。 |

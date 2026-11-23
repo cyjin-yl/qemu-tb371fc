@@ -17,6 +17,14 @@ after an earlier component failure so their independent results remain visible.
 
 The current public plan registers **59 gates: 55 component/parser gates and
 four Linux boots**, plus the separate A77 and PCI UFS compatibility job.
+The [b5f4415 run](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45219017052)
+passed all 55 component gates and four Linux gates, including the new explicit
+SMMUv2 granule gate. Its separate A77/shared-PCI job also passed. Retained
+[component](../evidence/smmuv2-granules-20261123/ci-components.json),
+[Linux](../evidence/smmuv2-granules-20261123/ci-linux.json), and
+[26-group granule](../evidence/smmuv2-granules-20261123/ci-granules.json)
+reports bind these results to the actual tested binary. Historical counts
+below remain observations of their original source revisions.
 The [run for commit 408d82a](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45164018326) completed all 53 component/parser gates
 and four clean Linux gates successfully; the separate A77/shared-UFS-PCI job
 also succeeded. These results belong to that CI build and its inputs.

@@ -1,0 +1,28 @@
+{
+  "all_passed": false,
+  "checks": [],
+  "completed_utc": "2026-11-23T16:58:34.674447+00:00",
+  "elapsed_seconds": 0.584119,
+  "error": "Traceback (most recent call last):\n  File \"/work/qg1123-b5/scripts/test_smmuv2_granules.py\", line 165, in main\n    rig = spawn(\"default\", None)\n  File \"/work/qg1123-b5/scripts/test_smmuv2_granules.py\", line 162, in spawn\n    return SMMURig(config, directory, incoming=incoming, intercept=True)\n  File \"/work/qg1123-b5/scripts/test_smmuv2_migration.py\", line 46, in __init__\n    super().__init__(args, str(directory), incoming=incoming)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/qg1123-b5/scripts/test_geni_uart.py\", line 79, in __init__\n    self.qtest = connect_unix(self.directory / 'qtest', self.process)\n                 ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/qg1123-b5/scripts/test_geni_uart.py\", line 45, in connect_unix\n    raise RuntimeError(f\"QEMU exited early: {process.returncode}\")\nRuntimeError: QEMU exited early: 127\n",
+  "kind": "tb371fc-smmuv2-granules",
+  "limits": [
+    "Default IDR2 still advertises only 4 KiB; no measured native large-granule support.",
+    "Reserved/unsupported TG rejection is a deliberate model deviation from architectural fallback.",
+    "48-bit PA/VA, stage 1 only; no LPA/LPA2, hardware AF/DBM, GPU execution or timing evidence.",
+    "UFS disabled; no whole-board migration or external DMA-client IOTLB cache tested."
+  ],
+  "migrations": [],
+  "schema_version": 1,
+  "scope": "Explicit architectural granule profiles, hand-written tables, ATS, real apps SID 0x42 DMA and paused process migration.",
+  "sha256": {
+    "migration_helper": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8",
+    "qemu": "3d3ece4d21e3806210920a2cb83531c02f825d1cdb428980590e4fc49bc82336",
+    "smmu_helper": "3b11bab007060d80dfc24ac577d02d51b8320fac7e4e151a707c21bea245721c",
+    "test": "9a83189384fb9f1f07bfc7d2a744b579a08bc459c231c2639ac7cefa0759111a",
+    "transport": "4ab5857e40f3d320656677812abb86d2683c310764d35baa7a32b4aa53572fbd"
+  },
+  "started_utc": "2026-11-23T16:58:33.761422+00:00",
+  "stderr_tails": {
+    "default/qemu.stderr": "/work/qg1123-b5/v3/qemu-system-aarch64: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory\n"
+  }
+}
