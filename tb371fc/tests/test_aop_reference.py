@@ -34,6 +34,10 @@ def digest(data):
 
 
 class AopRig(MsgramRig):
+    def __init__(self, args, directory, incoming=False):
+        self.virtual_ns = 0
+        super().__init__(args, directory, incoming=incoming)
+
     def command(self, command):
         if command == f"irq_intercept_out {self.args.qom_path} sysbus-irq":
             # Never replace IPCC -> real GIC SPI229 with a test sink.
@@ -45,7 +49,8 @@ class AopRig(MsgramRig):
 
     def advance(self, ns=WORK):
         self.monitor("cont")
-        self.command(f"clock_step {ns}")
+        result = self.command(f"clock_step {ns}")
+        self.virtual_ns = int(result[0], 0)
 
     def kick(self, advance=True, recipient=0, signal=0):
         self.put(IPCC + SEND, (recipient << 16) | signal)
@@ -497,6 +502,13 @@ def with_migration(args, directory, prepare, verify, target_prepare=None):
             target_prepare(target)
         context = prepare(source)
         source.monitor("stop")
+        # QTest's clock counter is test-harness state, not migration state.
+        # Align it before loading absolute VMState timer deadlines.
+        if source.virtual_ns:
+            result = target.command(f"clock_set {source.virtual_ns}")
+            target.virtual_ns = int(result[0], 0)
+            assert target.virtual_ns == source.virtual_ns
+        target_before_migration_ns = target.virtual_ns
         uri = "unix:" + str(directory / "migration.sock")
         target.monitor("migrate-incoming", {"uri": uri})
         source.monitor("migrate", {"uri": uri})
@@ -505,7 +517,10 @@ def with_migration(args, directory, prepare, verify, target_prepare=None):
         assert source.monitor("query-status")["status"] == "postmigrate"
         details = verify(target, context) or {}
         return {"source_status": sm["status"], "target_status": tm["status"],
-                "actual_two_process_migration": True, **details}
+                "actual_two_process_migration": True,
+                "source_virtual_ns_at_migration": source.virtual_ns,
+                "target_virtual_ns_before_migration": target_before_migration_ns,
+                **details}
     finally:
         if source:
             source.close()
@@ -556,7 +571,7 @@ def migrate_pending_message_exactly_once(args, directory):
         assert r.get(BASE + TX) == 96
         assert r.bytes_at(TX + 4, 96) == data
         assert r.stat("accepted-messages") == 0
-        r.advance(0)
+        r.monitor("cont")
         assert r.stat("accepted-messages") == 0
         r.advance(1)
         assert r.get(BASE + TX) == 0
