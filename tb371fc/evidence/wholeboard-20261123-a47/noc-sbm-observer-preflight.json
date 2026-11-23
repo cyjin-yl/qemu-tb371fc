@@ -1,0 +1,232 @@
+{
+  "schema": "tb371fc-noc-sbm-observer-memory-preflight-v1",
+  "scope": "Pure AST and in-memory command callback checks; no QEMU or native run",
+  "source_sha256": "dfe825b0da0159ea140048be1f9f320178ffe9c456b2790ad5ae8817a0e85ce1",
+  "observer_sha256": "3ba7fb09cf6d8bbdffc52d13b50ddf6ff325ae5bd7867168452a99eca3c5cba7",
+  "allowed_direct_commands": [
+    "qom-get",
+    "query-status"
+  ],
+  "cases": [
+    {
+      "name": "cold connected reference",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "complete",
+      "expected_error": null
+    },
+    {
+      "name": "pending ordinary deadline",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "complete",
+      "expected_error": null
+    },
+    {
+      "name": "zero remaining pending before dispatch",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "complete",
+      "expected_error": null
+    },
+    {
+      "name": "stalled zero remaining stays pending",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "complete",
+      "expected_error": null
+    },
+    {
+      "name": "disconnect response settled",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "complete",
+      "expected_error": null
+    },
+    {
+      "name": "reconnect pending with command history",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "complete",
+      "expected_error": null
+    },
+    {
+      "name": "disabled profile is inconclusive and avoids state reads",
+      "result": "passed",
+      "qom_reads": 14,
+      "unique_qom_properties": 14,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "wrong DT address",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "wrong reference latency",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "MMIO still disabled",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "reserved mask bit",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "pending xor mismatch",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "disconnect without set history",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "reconnect without clear history",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "idle retains invalid remainder",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "unstalled pending lacks deadline",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "stalled pending has active deadline",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "remaining exceeds reference latency",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "second snapshot changes",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "numeric bool rejected",
+      "result": "passed",
+      "qom_reads": 18,
+      "unique_qom_properties": 18,
+      "status_reads": 2,
+      "expected_observation": null,
+      "expected_error": "unexpected QOM type/range"
+    },
+    {
+      "name": "uint64 overflow rejected",
+      "result": "passed",
+      "qom_reads": 19,
+      "unique_qom_properties": 19,
+      "status_reads": 2,
+      "expected_observation": null,
+      "expected_error": "unexpected QOM type/range"
+    },
+    {
+      "name": "signed deadline overflow rejected",
+      "result": "passed",
+      "qom_reads": 24,
+      "unique_qom_properties": 24,
+      "status_reads": 2,
+      "expected_observation": null,
+      "expected_error": "unexpected QOM type/range"
+    },
+    {
+      "name": "running guest rejected before QOM",
+      "result": "passed",
+      "qom_reads": 0,
+      "unique_qom_properties": 0,
+      "status_reads": 1,
+      "expected_observation": null,
+      "expected_error": "requires a stopped guest"
+    },
+    {
+      "name": "changed stopped status rejected",
+      "result": "passed",
+      "qom_reads": 62,
+      "unique_qom_properties": 38,
+      "status_reads": 2,
+      "expected_observation": null,
+      "expected_error": "status changed during observation"
+    }
+  ],
+  "all_passed": true,
+  "qemu_executed": false,
+  "guest_executed": false,
+  "external_commands_or_sockets_used": false
+}

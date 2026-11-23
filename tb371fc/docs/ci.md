@@ -65,9 +65,33 @@ the component verdict. This combined 70+4 plan actually passed on source
 records all 74 gates and the exact artifact. The older 52492a 68+4 pass remains
 separate.
 
+## Config NoC SBM candidate
+
+The `noc-sbm-reference` gate is inserted immediately after `noc-qos` without
+changing any prior gate contract or relative order. It requires 28 unique
+successful checks, two completed file migrations, two bidirectional profile
+rejections and two single-field corruptions. Its [source-bounded contract](noc-sbm-reference.md)
+has one device, eight ports, three sparse words, 12 mapped bytes and a 152-byte
+VMState v1. The fixed 1000-ns latency and connected reset state are explicit
+reference choices. Eight logical port deadlines share one QEMU virtual timer.
+
+The tests require independent delayed SET/CLR responses, duplicate and reverse
+requests, stalls including zero remaining time, pure reads, reset cancellation,
+strict access rejection and migration rebasing onto a different virtual epoch.
+First restored observations must precede device MMIO. An unknown-profile source
+is saved for reverse rejection, not counted as a third completed roundtrip.
+The exact-artifact native guard will inspect fifteen component reports and
+thirty-two actual migration files, including five SBM files.
+
+This is a 72+4 candidate plan, not a new passed CI result. The previous
+[b95f97 71+4 pass](../evidence/wholeboard-20261123-a47/public-ci-b95f97.json)
+and its native worker abort remain the latest accepted execution evidence
+until this exact source's formal run is recorded. Neither a reference response
+nor a component pass establishes actual endpoint traffic or Android boot.
+
 ## Gates
 
-The current public plan has **75 gates: 71 component/parser gates and four
+The current public plan has **76 gates: 72 component/parser gates and four
 Linux boots**, plus the separate A77 and PCI UFS compatibility job. The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
@@ -95,6 +119,7 @@ pass does not attest newly added devices.
 | L3 firmware devfreq | 20 checks; one parent, 42 words in three exact DT windows, four nominal request indices, two completed transfers, two profile mismatches and two single-field corruptions; no actual Clock, IRQ, timer or firmware execution | 
 | SMMUv2 explicit granules | 26 checks; opt-in 16/64 KiB ATS/DMA, permissions and faults, matching profile and two profile mismatches; no historical binary is fetched by this CI invocation |
 | NoC QoS | 20 checks; 47 independent ports / 188 words, two completed transfers, two profile mismatches and two deliberately corrupted-stream rejections; no traffic or SBM synthesis |
+| Config NoC SBM reference | 28 checks; eight independent logical deadlines, three words, pure stopped state, two completed transfers, two profile mismatches and two corrupted-field rejections; no real traffic drain |
 | NPUCC | 37 checks across three physical banks, actual Clock outputs, source-bound CRC/dividers, two completed migrations and two profile rejections; full NPU/DSP execution remains outside scope |
 | GPUCC | 30 actual digital PLL/RCG/branch/reset checks, two completed migrations and two profile rejections; actual Clock providers and sparse ownership boundaries |
 | GPU CX and GX power domains | CX 26 checks with 9 migration attempts (6 completed, 3 rejected); GX 37 checks with 12 attempts (8 completed, 4 rejected); explicit digital reference states only |

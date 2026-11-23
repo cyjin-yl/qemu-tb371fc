@@ -1,0 +1,118 @@
+{
+  "schema": "tb371fc-sbm-model-observer-independent-static-review-v1",
+  "reviewer": "board_gaps",
+  "scope": "Read-only static review; no QEMU, public component tests, native run, or new remote capture performed by this review.",
+  "result": "no-static-blocker-found",
+  "model_commit": "8acb748b8626ef8d574e0dc72a95e8318a2def0d",
+  "source_contract_blob": "6346b2fab8d6ec380eaaab42ef9a21c5e27b5be5",
+  "files": {
+    "model_c": {
+      "path": "/run/tb371fc-sbm-model-a47/hw/misc/qcom-noc-sbm.c",
+      "bytes": 21751,
+      "sha256": "b1cc7de22074682f4cb7fe706cfb79a4fb90ff9bbe33315c61d1275ddacce758"
+    },
+    "model_header": {
+      "path": "/run/tb371fc-sbm-model-a47/include/hw/misc/qcom-noc-sbm.h",
+      "bytes": 484,
+      "sha256": "5b38aea52d094a074766321ee61151f0d7db9526ea7e9e8ff13ca6afbcd45ca2"
+    },
+    "board": {
+      "path": "/run/tb371fc-sbm-model-a47/hw/arm/lenovo-tb371fc.c",
+      "bytes": 84069,
+      "sha256": "c73b5d1e6f1a5b8265490856b870e47d7ced8b2fff2b8578bbbd7f8b0c8f7e22"
+    },
+    "model_document": {
+      "path": "/run/tb371fc-sbm-model-a47/tb371fc/docs/noc-sbm-reference.md",
+      "bytes": 12953,
+      "sha256": "d896e067bb5892f95e2790f37568a48c4aec1626e8acb78893ebf754f0f75a0d"
+    },
+    "observer_base": {
+      "path": "/run/tb371fc-devfreq-observer-a47/native-devfreq-observer.py",
+      "bytes": 46491,
+      "sha256": "df8e9b2a2330b283c432f2908fd096c6e8dd1555ac293b0d9cc4df4e338f27bb"
+    },
+    "observer_combined": {
+      "path": "/run/tb371fc-root76-a47/native-noc-sbm-observer.py",
+      "bytes": 56340,
+      "sha256": "3ba7fb09cf6d8bbdffc52d13b50ddf6ff325ae5bd7867168452a99eca3c5cba7"
+    },
+    "observer_function": {
+      "path": "/run/tb371fc-root76-a47/capture_noc_sbm.py",
+      "bytes": 9661,
+      "sha256": "dfe825b0da0159ea140048be1f9f320178ffe9c456b2790ad5ae8817a0e85ce1"
+    },
+    "root_memory_preflight": {
+      "path": "/run/tb371fc-root76-a47/sbm-observer-memory-preflight.json",
+      "bytes": 6433,
+      "sha256": "19daa58d30bc4ad00ab062a5ab93b07ec8ae8ac0977aadcbb425c545b4104ade"
+    }
+  },
+  "model_findings": [
+    "The always-present SysBus instance applies enabled-reference after global properties in realize; disabled MemoryRegions preserve existing unassigned SBM holes.",
+    "CLR/SET/SENSE use only three isolated four-byte windows. Unsupported masks and invalid command directions cannot update state or diagnostics.",
+    "Each port has independent requested/sense/pending state. Duplicate requests preserve their interval and reversing to current sense cancels outstanding work.",
+    "Only the virtual timer commits sense. Reads and host stall changes do not acknowledge due requests, including a paused or stalled zero remainder.",
+    "Multi-bit request and unstall overflow is prevalidated before any port or diagnostic mutation.",
+    "System reset clears request/sense/pending, local deadlines and accepted counters, while retaining the explicitly external stall input.",
+    "The 152-byte VMState prefix binds profile and geometry; runtime validation rejects unsupported masks, inconsistent pending, invalid remaining phases and impossible zero-count histories.",
+    "Pre-save samples a single virtual now without dispatch. Pre-load disables the timer. Post-load checks all active additions before rebasing remaining phases to the target virtual origin and scheduling the earliest timer.",
+    "The runtime has no Clock, IRQ or DMA coupling; the document accurately limits feedback to an explicit reference peer, not physical NoC drain."
+  ],
+  "observer_findings": {
+    "old_wrapper_preserved_byte_for_byte_except_two_insertions": true,
+    "diff_changes": [
+      {
+        "operation": "insert",
+        "old_zero_based_lines": [
+          480,
+          480
+        ],
+        "new_zero_based_lines": [
+          480,
+          675
+        ]
+      },
+      {
+        "operation": "insert",
+        "old_zero_based_lines": [
+          510,
+          510
+        ],
+        "new_zero_based_lines": [
+          705,
+          709
+        ]
+      }
+    ],
+    "inserted_bytes": [
+      9661,
+      188
+    ],
+    "qom_get_count_enabled": 62,
+    "unique_qom_property_count_enabled": 38,
+    "query_status_count": 2,
+    "qom_properties_match_c_names_and_integer_widths": true,
+    "bool_is_not_accepted_as_integer": true,
+    "running_is_false_and_same_status_required_before_after": true,
+    "two_full_runtime_snapshots_must_match": true,
+    "pending_zero_remaining_is_valid": true,
+    "complete_means_reference_snapshot_consistency_only": true,
+    "no_device_mmio_guest_write_property_write_clock_advance_or_guest_execution": true,
+    "kernel_driver_success_userspace_and_android_require_separate_evidence": true
+  },
+  "verification_performed_here": {
+    "source_read": true,
+    "observer_ast_parse": true,
+    "byte_diff_and_hash_checks": true,
+    "observer_function_called": false,
+    "public_tests_executed": false,
+    "qemu_executed": false,
+    "remote_tools_called": false,
+    "root_memory_preflight_report_read": true,
+    "root_memory_preflight_is_runtime_qemu_evidence": false
+  },
+  "remaining_gates": [
+    "The new component test and exact formal CI artifact still need actual execution.",
+    "Native progress, accepted requests and timeout log evidence must be assessed separately; an idempotent CLR is not a delayed transition or drain witness."
+  ]
+}

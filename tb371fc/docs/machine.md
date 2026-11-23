@@ -35,6 +35,7 @@ describe reference contracts, not captured SBL state or AOP firmware execution.
 | `qcom-cpufreq-hw-epss.enabled-reference=on` | Explicit four-state all-XO LUT, PERF, limit IRQ and fractional virtual-cycle model on three actual-DT domains; [contract](cpufreq-hw-reference.md). Default unknown rejects MMIO. `reference-boot-perf-index=0` explicitly selects the reference initial row. |
 | `qcom-devfreq-fw.enabled-reference=on` | Explicit L3 firmware-handoff reference with four synthetic nominal request indices; 42 words in three actual DT windows. `reference-boot-perf-index=0` selects reset request zero. Default unknown rejects MMIO; no physical cache Clock, IRQ, timer, counter or firmware execution is modeled. [Contract](devfreq-qcom-fw-reference.md). |
 | `qcom-noc-qos.enabled-reference=on` | Explicit four-word configuration reference at 47 actual-DT ports; default off rejects reads and writes. No traffic, power or SBM acknowledgement is synthesized. |
+| `qcom-noc-sbm.enabled-reference=on` | Separate config-NoC reference at CLR 0x01506080, SET 0x01506088 and SENSE 0x01506100; default off disables all three regions. Eight independent logical deadlines use a declared 1000-ns virtual delay; no endpoint traffic is drained. |
 | `smem-profile=off` or `smem-profile=reference-empty` | Default off; the reference initializes the documented empty SMEM v12 handoff. |
 | `aop-profile=none` or `aop-profile=reference-qdss-vote` | Default none retains raw SRAM. The reference adds real IPCC link/channel processing and only QDSS/QDSS_AO off/dynamic votes. |
 | `qcom-sm8250-npucc.enabled-reference=on` | Explicit three-bank digital PLL/RCG/branch/reset profile; [contract](npucc-sm8250.md). Default MMIO errors, unknown parents remain stopped; no NPU/DSP/GDSC execution claim. |
@@ -453,4 +454,27 @@ The board creates `/machine/cpufreq0..2` at `0x18591000`, `0x18592000` and `0x18
 
 ## L3 firmware devfreq request reference
 
-The board creates `/machine/devfreq-l3` with only `0x18590000/4`, `0x18590100/160` and `0x18590320/4`. Four actual-DT child voters are guest software consumers of the one parent request register. The [contract](devfreq-qcom-fw-reference.md) defines the enabled handoff, synthetic LUT, exact access boundaries, reset policy, pure read-only QOM observations and 72-byte VMState v1. The [b95f97 75-gate run](../evidence/wholeboard-20261123-a47/public-ci-b95f97.json) actually passes its twenty checks, two completed migrations, two profile mismatches and two single-field corruptions. The [same accepted binary](../evidence/wholeboard-20261123-a47/native-b95f97.json) registers all four voter children and initializes the parent with the unchanged production Image and complete live DT. Its stopped PERF is 3 and all forty synthetic rows match. The next actual boundary is a deferred-probe worker's external abort writing 0x01506080 in msm_bus_noc_sbm_config; the model still has no SBM registers. Full-DT userspace, native DMA, Android and physical cache behavior are not established.
+The board creates `/machine/devfreq-l3` with only `0x18590000/4`, `0x18590100/160` and `0x18590320/4`. Four actual-DT child voters are guest software consumers of the one parent request register. The [contract](devfreq-qcom-fw-reference.md) defines the enabled handoff, synthetic LUT, exact access boundaries, reset policy, pure read-only QOM observations and 72-byte VMState v1. The [b95f97 75-gate run](../evidence/wholeboard-20261123-a47/public-ci-b95f97.json) actually passes its twenty checks, two completed migrations, two profile mismatches and two single-field corruptions. The [same accepted binary](../evidence/wholeboard-20261123-a47/native-b95f97.json) registers all four voter children and initializes the parent with the unchanged production Image and complete live DT. Its stopped PERF is 3 and all forty synthetic rows match. The next actual boundary is a deferred-probe worker's external abort writing 0x01506080 in msm_bus_noc_sbm_config; that b95f97 binary has no SBM registers. Full-DT userspace, native DMA, Android and physical cache behavior are not established.
+
+## Config NoC SBM handshake reference candidate
+
+The board always creates `/machine/noc-sbm-config`; its explicit profile is
+disabled by default. The three four-byte regions remain absent from FlatView
+until `qcom-noc-sbm.enabled-reference=on`. This keeps the existing 47-port QoS
+device, its negative hole accesses and its VMState unchanged. The [separate
+contract](noc-sbm-reference.md) describes W1 SET/CLR requests, committed SENSE,
+independent per-port deadlines, a mutable reference-peer stall mask and
+relative-time migration. Shared timer scheduling does not merge the eight
+port deadlines or allow a stalled zero remainder to complete implicitly.
+
+The connected reset state and 1000 virtual nanoseconds are reference policies,
+not a measured hardware handoff or silicon latency. Model command counters
+are pure QOM diagnostics; they are not new hardware registers. The [stopped
+observer](../evidence/wholeboard-20261123-a47/native-noc-sbm-observer.py) reads
+QOM state and guest run status only for this device, without MMIO, writes or
+time advancement. Its in-memory checks are observer checks, not a native run.
+
+This implementation awaits its exact 76-gate formal CI and same-binary native
+result. Full-DT userspace, native DMA, endpoint rendering and Android remain
+separate unaccepted milestones. The preserved b95f97 worker exception above
+motivated this increment; it did not establish PID1 failure.

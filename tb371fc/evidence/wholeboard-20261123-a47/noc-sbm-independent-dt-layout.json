@@ -1,0 +1,469 @@
+{
+  "scope": "Independently derived only from c300 raw property hex; not its printable-string hints or the earlier decoded layout",
+  "input_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "raw_evidence_blob": "c300271fab1acabb6d1b45ddcf626f5e2f091d25",
+  "resource_tuple_decoding_note": "The existing actual capture uses /soc address-cells=1 and size-cells=1; a fresh bounded collector will record those parent cells explicitly if run.",
+  "bus_parent_property_names": [
+    "compatible",
+    "reg",
+    "reg-names",
+    "phandle"
+  ],
+  "resources": [
+    {
+      "name": "aggre1_noc-base",
+      "base": 23986176,
+      "size": 127360,
+      "base_hex": "0x16e0000",
+      "size_hex": "0x1f180"
+    },
+    {
+      "name": "aggre2_noc-base",
+      "base": 24117248,
+      "size": 250240,
+      "base_hex": "0x1700000",
+      "size_hex": "0x3d180"
+    },
+    {
+      "name": "config_noc-base",
+      "base": 22020096,
+      "size": 163840,
+      "base_hex": "0x1500000",
+      "size_hex": "0x28000"
+    },
+    {
+      "name": "dc_noc-base",
+      "base": 151781376,
+      "size": 16896,
+      "base_hex": "0x90c0000",
+      "size_hex": "0x4200"
+    },
+    {
+      "name": "mc_virt-base",
+      "base": 152043520,
+      "size": 713216,
+      "base_hex": "0x9100000",
+      "size_hex": "0xae200"
+    },
+    {
+      "name": "gem_noc-base",
+      "base": 152043520,
+      "size": 713216,
+      "base_hex": "0x9100000",
+      "size_hex": "0xae200"
+    },
+    {
+      "name": "mmss_noc-base",
+      "base": 24379392,
+      "size": 127104,
+      "base_hex": "0x1740000",
+      "size_hex": "0x1f080"
+    },
+    {
+      "name": "system_noc-base",
+      "base": 23199744,
+      "size": 115200,
+      "base_hex": "0x1620000",
+      "size_hex": "0x1c200"
+    },
+    {
+      "name": "ipa_virt-base",
+      "base": 23199744,
+      "size": 262144,
+      "base_hex": "0x1620000",
+      "size_hex": "0x40000"
+    },
+    {
+      "name": "compute_noc-base",
+      "base": 24117248,
+      "size": 250240,
+      "base_hex": "0x1700000",
+      "size_hex": "0x3d180"
+    },
+    {
+      "name": "npu_noc-base",
+      "base": 161021952,
+      "size": 5632,
+      "base_hex": "0x9990000",
+      "size_hex": "0x1600"
+    }
+  ],
+  "fabrics": [
+    {
+      "path": "/soc/ad-hoc-bus/fab-aggre1_noc",
+      "phandle": 183,
+      "id": 6146,
+      "name": "aggre1_noc-base",
+      "base": 23986176,
+      "size": 127360,
+      "base_hex": "0x16e0000",
+      "size_hex": "0x1f180",
+      "sbm_offset": 0,
+      "base_offset": 8192,
+      "qos_stride": 4096,
+      "bus_type": 1,
+      "bypass_qos": false,
+      "clock_property_bytes": 0,
+      "interrupt_property_present": false
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-aggre2_noc",
+      "phandle": 189,
+      "id": 6147,
+      "name": "aggre2_noc-base",
+      "base": 24117248,
+      "size": 250240,
+      "base_hex": "0x1700000",
+      "size_hex": "0x3d180",
+      "sbm_offset": 0,
+      "base_offset": 12288,
+      "qos_stride": 4096,
+      "bus_type": 1,
+      "bypass_qos": false,
+      "clock_property_bytes": 0,
+      "interrupt_property_present": false
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-compute_noc",
+      "phandle": 194,
+      "id": 6155,
+      "name": "compute_noc-base",
+      "base": 24117248,
+      "size": 250240,
+      "base_hex": "0x1700000",
+      "size_hex": "0x3d180",
+      "sbm_offset": 0,
+      "base_offset": 208896,
+      "qos_stride": 2048,
+      "bus_type": 1,
+      "bypass_qos": false,
+      "clock_property_bytes": 0,
+      "interrupt_property_present": false
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-config_noc",
+      "phandle": 245,
+      "id": 5120,
+      "name": "config_noc-base",
+      "base": 22020096,
+      "size": 163840,
+      "base_hex": "0x1500000",
+      "size_hex": "0x28000",
+      "sbm_offset": 24576,
+      "base_offset": 0,
+      "qos_stride": 0,
+      "bus_type": 1,
+      "bypass_qos": false,
+      "clock_property_bytes": 0,
+      "interrupt_property_present": false
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-dc_noc",
+      "phandle": 251,
+      "id": 6150,
+      "name": "dc_noc-base",
+      "base": 151781376,
+      "size": 16896,
+      "base_hex": "0x90c0000",
+      "size_hex": "0x4200",
+      "sbm_offset": 0,
+      "base_offset": 0,
+      "qos_stride": 0,
+      "bus_type": 1,
+      "bypass_qos": false,
+      "clock_property_bytes": 0,
+      "interrupt_property_present": false
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-gem_noc",
+      "phandle": 253,
+      "id": 6156,
+      "name": "gem_noc-base",
+      "base": 152043520,
+      "size": 713216,
+      "base_hex": "0x9100000",
+      "size_hex": "0xae200",
+      "sbm_offset": 0,
+      "base_offset": 135168,
+      "qos_stride": 4096,
+      "bus_type": 1,
+      "bypass_qos": false,
+      "clock_property_bytes": 0,
+      "interrupt_property_present": false
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-ipa_virt",
+      "phandle": 262,
+      "id": 6153,
+      "name": "ipa_virt-base",
+      "base": 23199744,
+      "size": 262144,
+      "base_hex": "0x1620000",
+      "size_hex": "0x40000",
+      "sbm_offset": 0,
+      "base_offset": 0,
+      "qos_stride": 0,
+      "bus_type": null,
+      "bypass_qos": true,
+      "clock_property_bytes": 0,
+      "interrupt_property_present": false
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-mc_virt",
+      "phandle": 264,
+      "id": 6151,
+      "name": "mc_virt-base",
+      "base": 152043520,
+      "size": 713216,
+      "base_hex": "0x9100000",
+      "size_hex": "0xae200",
+      "sbm_offset": 0,
+      "base_offset": 0,
+      "qos_stride": 0,
+      "bus_type": null,
+      "bypass_qos": true,
+      "clock_property_bytes": 0,
+      "interrupt_property_present": false
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-mmss_noc",
+      "phandle": 266,
+      "id": 2048,
+      "name": "mmss_noc-base",
+      "base": 24379392,
+      "size": 127104,
+      "base_hex": "0x1740000",
+      "size_hex": "0x1f080",
+      "sbm_offset": 0,
+      "base_offset": 40960,
+      "qos_stride": 2048,
+      "bus_type": 1,
+      "bypass_qos": false,
+      "clock_property_bytes": 0,
+      "interrupt_property_present": false
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-npu_noc",
+      "phandle": 272,
+      "id": 6157,
+      "name": "npu_noc-base",
+      "base": 161021952,
+      "size": 5632,
+      "base_hex": "0x9990000",
+      "size_hex": "0x1600",
+      "sbm_offset": 0,
+      "base_offset": 0,
+      "qos_stride": 0,
+      "bus_type": 1,
+      "bypass_qos": false,
+      "clock_property_bytes": 0,
+      "interrupt_property_present": false
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-system_noc",
+      "phandle": 283,
+      "id": 1024,
+      "name": "system_noc-base",
+      "base": 23199744,
+      "size": 115200,
+      "base_hex": "0x1620000",
+      "size_hex": "0x1c200",
+      "sbm_offset": 0,
+      "base_offset": 73728,
+      "qos_stride": 4096,
+      "bus_type": 1,
+      "bypass_qos": false,
+      "clock_property_bytes": 0,
+      "interrupt_property_present": false
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-gem_noc_display",
+      "phandle": 300,
+      "id": 26003,
+      "name": "gem_noc-base",
+      "base": 152043520,
+      "size": 713216,
+      "base_hex": "0x9100000",
+      "size_hex": "0xae200",
+      "sbm_offset": 0,
+      "base_offset": 135168,
+      "qos_stride": 4096,
+      "bus_type": 1,
+      "bypass_qos": true,
+      "clock_property_bytes": 0,
+      "interrupt_property_present": false
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-mc_virt_display",
+      "phandle": 302,
+      "id": 26000,
+      "name": "mc_virt-base",
+      "base": 152043520,
+      "size": 713216,
+      "base_hex": "0x9100000",
+      "size_hex": "0xae200",
+      "sbm_offset": 0,
+      "base_offset": 0,
+      "qos_stride": 0,
+      "bus_type": null,
+      "bypass_qos": true,
+      "clock_property_bytes": 0,
+      "interrupt_property_present": false
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-mmss_noc_display",
+      "phandle": 304,
+      "id": 26002,
+      "name": "mmss_noc-base",
+      "base": 24379392,
+      "size": 127104,
+      "base_hex": "0x1740000",
+      "size_hex": "0x1f080",
+      "sbm_offset": 0,
+      "base_offset": 40960,
+      "qos_stride": 2048,
+      "bus_type": 1,
+      "bypass_qos": true,
+      "clock_property_bytes": 0,
+      "interrupt_property_present": false
+    }
+  ],
+  "disable_port_clients": [
+    {
+      "path": "/soc/ad-hoc-bus/slv-qhs-camera-cfg",
+      "id": 589,
+      "phandle": 197,
+      "bus_dev": 245,
+      "fabric_path": "/soc/ad-hoc-bus/fab-config_noc",
+      "ports": [
+        0,
+        1,
+        2
+      ],
+      "mmcx_supply": 104,
+      "node_reg_names": [
+        "mmcx"
+      ],
+      "bcm_phandles": [
+        246
+      ],
+      "words": [
+        {
+          "port": 0,
+          "mask32": 1,
+          "clear": 22044800,
+          "set": 22044808,
+          "sense": 22044928
+        },
+        {
+          "port": 1,
+          "mask32": 2,
+          "clear": 22044800,
+          "set": 22044808,
+          "sense": 22044928
+        },
+        {
+          "port": 2,
+          "mask32": 4,
+          "clear": 22044800,
+          "set": 22044808,
+          "sense": 22044928
+        }
+      ]
+    },
+    {
+      "path": "/soc/ad-hoc-bus/slv-qhs-display-cfg",
+      "id": 590,
+      "phandle": 211,
+      "bus_dev": 245,
+      "fabric_path": "/soc/ad-hoc-bus/fab-config_noc",
+      "ports": [
+        3,
+        4
+      ],
+      "mmcx_supply": 104,
+      "node_reg_names": [
+        "mmcx"
+      ],
+      "bcm_phandles": [
+        246
+      ],
+      "words": [
+        {
+          "port": 3,
+          "mask32": 8,
+          "clear": 22044800,
+          "set": 22044808,
+          "sense": 22044928
+        },
+        {
+          "port": 4,
+          "mask32": 16,
+          "clear": 22044800,
+          "set": 22044808,
+          "sense": 22044928
+        }
+      ]
+    },
+    {
+      "path": "/soc/ad-hoc-bus/slv-qhs-venus-cfg",
+      "id": 596,
+      "phandle": 223,
+      "bus_dev": 245,
+      "fabric_path": "/soc/ad-hoc-bus/fab-config_noc",
+      "ports": [
+        5,
+        6,
+        7
+      ],
+      "mmcx_supply": 104,
+      "node_reg_names": [
+        "mmcx"
+      ],
+      "bcm_phandles": [
+        246
+      ],
+      "words": [
+        {
+          "port": 5,
+          "mask32": 32,
+          "clear": 22044800,
+          "set": 22044808,
+          "sense": 22044928
+        },
+        {
+          "port": 6,
+          "mask32": 64,
+          "clear": 22044800,
+          "set": 22044808,
+          "sense": 22044928
+        },
+        {
+          "port": 7,
+          "mask32": 128,
+          "clear": 22044800,
+          "set": 22044808,
+          "sense": 22044928
+        }
+      ]
+    }
+  ],
+  "resource_count": 11,
+  "fabric_count": 14,
+  "disable_client_count": 3,
+  "unique_disable_ports": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "unique_sbm_register_addresses": [
+    22044800,
+    22044808,
+    22044928
+  ]
+}

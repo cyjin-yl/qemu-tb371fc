@@ -51,6 +51,7 @@ Use their per-run hashes rather than treating a source table as execution proof.
 | Board and loader | [machine.md](docs/machine.md), [runtime layout evidence](evidence/boot-layout-20261123/runtime-layout-frozen4.json) |
 | A77 CPU and PMU | [cpu.md](docs/cpu.md), Arm Cortex-A77 TRM references and native MIDR/REVIDR observations |
 | NoC QoS | [noc-qos-reference.md](docs/noc-qos-reference.md), pinned RPMh programming sequence and bounded DT; [actual 20-check receipt](evidence/wholeboard-20261123-a47/noc-qos-99ef.json) and [47-port native snapshot](evidence/wholeboard-20261123-a47/native-99ef.json); no traffic or SBM claim |
+| Config NoC SBM | [noc-sbm-reference.md](docs/noc-sbm-reference.md), [fixed vendor source/actual-DT contract](evidence/wholeboard-20261123-a47/noc-sbm-source-contract.json), [independent DT geometry](evidence/wholeboard-20261123-a47/noc-sbm-independent-dt-layout.json); candidate reference, formal CI/native still pending |
 | QSMMUv500 reference | [source contract](docs/smmuv500-source-contract.md) and [14-node actual DT slice](evidence/wholeboard-20261123-a47/smmuv500-dt-evidence-99ef.json); directly observed TCU VERSION fault, source-defined HALT/ECATS, [apps-only companion](docs/smmuv500-reference.md), and [exact Image IKCONFIG](evidence/wholeboard-20261123-a47/smmuv500-kernel-config.json); version, timing and firmware handoff remain unmeasured. Absent in 99ef; [3ef98 passed 36 checks and real migrations](evidence/wholeboard-20261123-a47/smmuv500-3ef98.json), with [separate native TBU resource progress](evidence/wholeboard-20261123-a47/native-3ef98.json) |
 | TBU power ownership | [Four complete GDSC DT nodes](evidence/wholeboard-20261123-a47/smmuv500-tbu-gdsc-dt.json) and [current GCC ownership/source review](evidence/wholeboard-20261123-a47/smmuv500-tbu-gdsc-review.json); existing GCC domains 7–10 own the words, while traffic/power coupling is not added by the companion |
 | TSENS24xx digital reference | [Two actual controllers and direct thermal references](evidence/wholeboard-20261123-a47/tsens-dt-evidence-3ef98.json), [pinned vendor/upstream source review](evidence/wholeboard-20261123-a47/tsens-dt-review-3ef98.json) and [model contract](docs/tsens24xx-reference.md); actual PA `0x0c222004` abort in [3ef98 native run](evidence/wholeboard-20261123-a47/native-3ef98.json). SROT DT size 4 remains distinct from sourced +4 access. Explicit temperature, boot mask, 1-ms timing, reset defaults and held-clear policy are reference assumptions. [52492a CI](evidence/wholeboard-20261123-a47/public-ci-52492a.json) and its [original TSENS 34/2/2/2 receipt](evidence/wholeboard-20261123-a47/tsens24xx-52492a.json) passed; the [same-binary full-DT run](evidence/wholeboard-20261123-a47/native-52492a.json) completed reference sampling on both controllers and next aborted in CPUFreq at `0x18591100` |
@@ -110,3 +111,25 @@ The [TCSR mutex](docs/tcsr-mutex.md), [AOP message SRAM](docs/aop-msgram.md), an
 The [exact-DT and production-symbol capture](evidence/wholeboard-20261123-a47/devfreq-dt-symbols-1fe4e1.json) has 6381 bytes, SHA256 `3b4d663de9e5ea33f5a86fc7d9f49f26223a6217657594423691d59f0ded124b`. It identifies one `qcom,devfreq-fw` parent, en-base `0x18590000/4`, ftbl-base `0x18590100/160`, perf-base `0x18590320/4`, and four software voters. The [source/DT review](evidence/wholeboard-20261123-a47/devfreq-dt-review-1fe4e1.json) pins `drivers/devfreq/devfreq_qcom_fw.c` at `94304e12a3509eac7b3716bf574ce0b1fcaacbae`, SHA256 `745457c2a20c90521772ef29c5f572570f481541d01ef427707d3da35bc5eb16`. Its first enable read agrees with the actual abort, but exact production C provenance remains source-correlated. No L3 hardware frequency table, firmware handoff or physical cache rate was measured.
 
 The [implemented request-reference contract](docs/devfreq-qcom-fw-reference.md) keeps this source boundary: four synthetic all-XO rows, the driver's adjacent-frequency sentinel, guest software vote aggregation, and no hardware Clock/IRQ/timer/counter claims. The [independent model/test review](evidence/wholeboard-20261123-a47/devfreq-model-test-review.json) binds model commit `cfda4e5c9e17ca540425b809ab21dbb983d26eda` and final test commit `c1bd8c03a625115f037d09518d0ccaca48167e1c` (test SHA256 `8c4e49817f58cb2dca002d446486e75fee45c65ee2142963ed9112fbe24669cf`). The [actual b95f97 75-gate run](evidence/wholeboard-20261123-a47/public-ci-b95f97.json) and [raw 20/2/2/2 receipt](evidence/wholeboard-20261123-a47/devfreq-qcom-fw-b95f97.json) passed. The same accepted binary's full-DT printk explicitly registers all four voters and initializes the parent, then records a new configuration-NoC SBM worker abort at 0x01506080. Synthetic nominal rates remain model data, not physical cache or firmware measurements.
+
+## Config NoC SBM and startup-input boundary
+
+The [SBM source contract](evidence/wholeboard-20261123-a47/noc-sbm-source-contract.json)
+pins OnePlus vendor commit `94304e12a3509eac7b3716bf574ce0b1fcaacbae` and
+the RPMh NoC implementation selected by the recorded production configuration.
+The actual DT supplies config NoC base 0x01500000, SBM offset 0x6000 and
+ports 0..7. The source defines low CLR/SET/SENSE offsets 0x80/0x88/0x100.
+Polling and software timeout do not establish physical response latency;
+the model's 1000 ns, connected cold state and external stalls are explicit
+reference policies. The vendor commit is correlated source, not a proven
+byte-for-byte reproduction of the production kernel build.
+
+The [actual fixed-symbol and fstab collector result](evidence/wholeboard-20261123-a47/boot-fstab-and-sbm-symbols-b95f97.json)
+hashes the existing production kallsyms and locates the observed PC at
+`msm_bus_noc_sbm_config+0x84`. The next distinct symbol is 0x1e8 bytes away;
+that span is not an independent ELF function-size measurement. The same
+bounded read-only collection reports sanitized mount requirements from the
+already-hashed ramdisk slice, without opening any referenced partition or
+key path. The separate [boot metadata receipt](evidence/wholeboard-20261123-a47/boot-ramdisk-inputs-b95f97.json)
+records the full existing boot-file hash and raw init ELF metadata. Neither
+collector executes init, authenticates AVB or proves complete Android inputs.

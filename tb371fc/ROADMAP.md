@@ -23,7 +23,7 @@
 - [x] TSENS 有限数字参考：两控制器/32 通道的 [34 项检查、2 次完成迁移、2 次 profile 拒绝及 2 次损坏流拒绝](evidence/wholeboard-20261123-a47/tsens24xx-52492a.json)实际通过；[72 项统一 CI](evidence/wholeboard-20261123-a47/public-ci-52492a.json)与[同二进制完整原生 DT 运行](evidence/wholeboard-20261123-a47/native-52492a.json)已确认各 16670 轮参考采样并越过旧 TSENS fatal。温度/使能/1 ms 为显式假设，两个虚拟温度区 EINVAL、校准和物理热行为仍未通过。
 - [x] CPUFreq EPSS：[三域参考模型](docs/cpufreq-hw-reference.md)实际通过 30 项、2/2/2 迁移及拒绝检查；`1fe4e1` 的[74 项统一 CI](evidence/wholeboard-20261123-a47/public-ci-1fe4e1.json)与同二进制原厂复测已完成，printk 明确注册成功。合成表不声称原厂频率或电压。
 - [x] L3 devfreq：[请求参考模型](docs/devfreq-qcom-fw-reference.md)已在 `b95f97` 实际通过 20 项及 2/2/2 迁移和拒绝检查，全部 75 项统一验收与[同二进制完整 DT 诊断](evidence/wholeboard-20261123-a47/native-b95f97.json)完成；内核明确注册四个 voter 并初始化父设备。只证明数字请求接口，不代表物理缓存频率或固件执行。
-- [ ] 配置 NoC SBM：最新实际边界为延迟 probe 工作线程在 `msm_bus_noc_sbm_config+0x84` 向 `0x01506080` 写入时外部异常；现有 47 端口 QoS 保持通过，SBM 尚未实现。
+- [ ] 配置 NoC SBM：最新已验收边界仍为 b95f97 延迟 probe 工作线程在 `msm_bus_noc_sbm_config+0x84` 向 `0x01506080` 写入时外部异常。独立八端口参考模型及 28/2/2/2 检查已加入 76 项候选计划，待正式 CI 和同二进制原厂复测；现有 47 端口 QoS 不变，真实端点流量排空仍未实现。
 - [ ] 原厂完整 DT 用户态及 Android 启动；不能将 75 项公共成功、控制器注册或 NoC 配置匹配当作整板可用。
 
 本轮精确构建与原厂证据见 [README](../README.md) 和
@@ -161,3 +161,13 @@ clean kernel 成功不验证该 patch，也不解决真实平板的原始 handof
 - [ ] Native full DT: default REFGEN handoff remains unknown; explicit disabled reference advances to GDSC probe and still panics.
 - [ ] Native SBL/SMEM handoff and AOP firmware execution. Later explicit SMEM reference and AOP reference QMP handshake are separately validated above; they do not complete this native-firmware milestone.
 - [ ] Original PMIC routing/identity and unresolved RPMh regulator resources; display/GPU and remaining platform power domains.
+
+## 只读启动输入检查点（b95f97 之后）
+
+[启动镜像元数据](evidence/wholeboard-20261123-a47/boot-ramdisk-inputs-b95f97.json)
+核对既有 boot 文件、固定 ramdisk slice、gzip/CPIO 和一个 AArch64 init ELF。
+[fstab 配置核验](evidence/wholeboard-20261123-a47/boot-fstab-and-sbm-symbols-b95f97.json)
+识别 system、system_ext、product、vendor、odm 五个首阶段 logical 挂载，
+以及 metadata、userdata 和其它配置分区；前三个 logical 项引用 vbmeta_system。
+这不是分区镜像存在性、AVB 认证、用户数据读取或 Android 启动回执。
+继续使用既有测试 initramfs 验证完整 DT 用户态，Android 文件系统与完整设备链另行验收。
