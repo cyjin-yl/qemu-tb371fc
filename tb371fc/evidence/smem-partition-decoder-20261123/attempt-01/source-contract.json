@@ -1,0 +1,151 @@
+{
+  "schema": "tb371fc.smem-partition-candidates-source-contract.v1",
+  "status": "synthetic-tests-passed-native-adapter-unavailable",
+  "native_pin": null,
+  "native_receipt_adapter_reviewed": false,
+  "native_input_opened": false,
+  "platform_static_selection_proven": false,
+  "entry_reachable": false,
+  "smem_initialized": false,
+  "handoff_generated": false,
+  "python_executed": true,
+  "syntax_checked": true,
+  "tests": {
+    "authored_unittest_methods": 28,
+    "executed": 28,
+    "passed": 28,
+    "execution_scope": "Synthetic fixtures only; no firmware input opened.",
+    "result_sha256": "a6e81d2428c8ad728d52f33b898c710942ac5d7958c0530b22cadb9dcaf633d2",
+    "completed_utc": "2026-11-23T14:51:35.174248+00:00"
+  },
+  "sources": [
+    {
+      "repository": "Rivko/android-firmware-qti-sdm670",
+      "commit": "20bb8ae36c93fc16bbadda0e0a83f930c0c8a271",
+      "path": "boot_images/QcomPkg/Library/SmemLib/src/smem_boot.c",
+      "git_blob_sha": "890714e91822a112097e70f5dabf82e7642fb4d1",
+      "bytes": 20389,
+      "sha256": "dbccac1b77e33972517fc49486f63b63cee64b5bcba91e1cd04b98e9c93c50b0",
+      "url": "https://github.com/Rivko/android-firmware-qti-sdm670/blob/20bb8ae36c93fc16bbadda0e0a83f930c0c8a271/boot_images/QcomPkg/Library/SmemLib/src/smem_boot.c"
+    },
+    {
+      "repository": "Rivko/android-firmware-qti-sdm670",
+      "commit": "20bb8ae36c93fc16bbadda0e0a83f930c0c8a271",
+      "path": "boot_images/QcomPkg/Library/SmemLib/inc/smem_toc.h",
+      "git_blob_sha": "708a7878c9045b2e6a983cc7e94e41fba6211ee1",
+      "bytes": 4438,
+      "sha256": "16559f7f4731449378aef09c4bc75b4af53365b96e6e81b701fd0337db9440a7",
+      "url": "https://github.com/Rivko/android-firmware-qti-sdm670/blob/20bb8ae36c93fc16bbadda0e0a83f930c0c8a271/boot_images/QcomPkg/Library/SmemLib/inc/smem_toc.h"
+    },
+    {
+      "repository": "Rivko/android-firmware-qti-sdm670",
+      "commit": "20bb8ae36c93fc16bbadda0e0a83f930c0c8a271",
+      "path": "boot_images/QcomPkg/SDM670Pkg/Include/smem_type.h",
+      "git_blob_sha": "b84a79000ac8989df5c319222042b3a24c876d4b",
+      "bytes": 12284,
+      "sha256": "be5b89dfa479cf23610db2dc46dcc7a72c47773deef31c3dbeb321de518672af",
+      "url": "https://github.com/Rivko/android-firmware-qti-sdm670/blob/20bb8ae36c93fc16bbadda0e0a83f930c0c8a271/boot_images/QcomPkg/SDM670Pkg/Include/smem_type.h"
+    },
+    {
+      "repository": "ARM-software/abi-aa",
+      "commit": "c51addc3dc03e73a016a1e4edf25440bcac76431",
+      "tag": "2025Q1",
+      "path": "aapcs64/aapcs64.rst",
+      "git_blob_sha": "aebdac981e675623c30432c87229a35e8c875d4b",
+      "bytes": 198763,
+      "sha256": "5862a326f202ed68e21e27b35716481ff610825484d2a088191759b76fddcc03",
+      "url": "https://github.com/ARM-software/abi-aa/blob/c51addc3dc03e73a016a1e4edf25440bcac76431/aapcs64/aapcs64.rst"
+    }
+  ],
+  "layouts": [
+    {
+      "name": "enum32_stride36",
+      "enum_bytes": 4,
+      "stride": 36,
+      "condition": "ordinary AAPCS64 word-sized enum; native compiler/selection unproven",
+      "offsets": {
+        "size": 0,
+        "flags": 4,
+        "host0": 8,
+        "host1": 12,
+        "size_cacheline": 16,
+        "exclusion_sizes": 20
+      }
+    },
+    {
+      "name": "enum16_stride32",
+      "enum_bytes": 2,
+      "stride": 32,
+      "condition": "counterhypothesis; not the ordinary AAPCS64 layout",
+      "offsets": {
+        "size": 0,
+        "flags": 4,
+        "host0": 8,
+        "host1": 10,
+        "size_cacheline": 12,
+        "exclusion_sizes": 16
+      }
+    }
+  ],
+  "excluded_input_layouts": [
+    {
+      "name": "smem_toc_entry_type",
+      "bytes": 48,
+      "reason": "consumer output TOC, not configuration structure"
+    }
+  ],
+  "source_walk": {
+    "stop_if_either_host": 65535,
+    "host0_short_circuit": true,
+    "zero_size_skipped": true,
+    "ignore_bit": 4,
+    "ignore_reserves_space": true,
+    "ignore_emits_toc": false
+  },
+  "restrictions": {
+    "no_native_defaults": true,
+    "no_arbitrary_offset_search": true,
+    "no_automatic_layout_selection": true,
+    "array_total_length_known": false,
+    "raw_firmware_output": false,
+    "nonallowlisted_image_strings_output": false
+  },
+  "prior_draft": {
+    "git_blob": "8ac82d64bba5cf526a1716847b5180ba603d6327",
+    "sha256": "f4c36ab92e245f311c98932ff4b293367152dd83510cf93f2dbaa9eb548d49bc",
+    "status_when_created": "unexecuted-review-draft",
+    "test_import_change": "Only the fixed sibling import was corrected for isolated Python. All 28 original test method bodies were preserved."
+  },
+  "executed_files": [
+    {
+      "name": "install.py",
+      "bytes": 6258,
+      "sha256": "148586a2e57368dca6bd5570bcde86d629cc233e384c70343d208d2cdca4c332"
+    },
+    {
+      "name": "run-job.py",
+      "bytes": 10205,
+      "sha256": "5e62023e3b33267c4c094a722f436084b56a7eb6d7982864794a3fc84c8cc184"
+    },
+    {
+      "name": "host-launch.py",
+      "bytes": 4438,
+      "sha256": "a2de27af27ccd42f5bce837ee0e9bfb6cd5f0edcfd061ac6cd884b64e0cd1d9b"
+    },
+    {
+      "name": "smem_partition_candidates.py",
+      "bytes": 16046,
+      "sha256": "17ce02aae0f4c24d68824d69e3421408e1bf58ab03ad08b28c3059c4ca4caf18"
+    },
+    {
+      "name": "test_smem_partition_candidates.py",
+      "bytes": 17885,
+      "sha256": "234f1919b775f6272c4e65215a85cba12ac6d28bac33b13edc5a8478b0595240"
+    },
+    {
+      "name": "METHOD.md",
+      "bytes": 5399,
+      "sha256": "acc6b7d1d09302f7a79fd438b6d10905c7e9f21a61868c8d00a1b56176b19ced"
+    }
+  ]
+}
