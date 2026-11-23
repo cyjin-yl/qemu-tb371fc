@@ -728,7 +728,12 @@ def narrow_and_unaligned_accesses_fail_while_wide_bus_accesses_split_into_words(
         else:
             rig.read(address, width)
         observed = core_diagnostics(rig.log_path.read_text(errors="replace"))[count:]
-        expected = [(kind, off, size, name, "rejected") for off, size, name in chunks]
+        # memory_region_access_valid() checks an optional accepts callback,
+        # alignment, then width. TSENS has no accepts callback; physmem splits
+        # the unaligned bus write into naturally aligned 1/2/1-byte chunks.
+        # Every chunk here therefore fails the exact 4-byte width constraint.
+        expected = [(kind, off, size, name, "invalid size (min:4 max:4)")
+                    for off, size, name in chunks]
         assert observed == expected, (observed, expected)
         assert snapshot(rig) == before
     # address_space_rw splits a 64-bit bus operation into two legal 32-bit
