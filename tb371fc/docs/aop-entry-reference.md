@@ -6,7 +6,7 @@ passed all eleven XML regressions and fourteen actual synthetic preflight checks
 in [CI run 45183148964](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45183148964).
 The tested binary SHA256 is
 `3bd0d1d124cc9c3f3cf010bddf2b634a6e7e8f9d5a464c29c895005e04e64bc0`.
-The independent doesvm CT build remains pending; this CI result is not CT acceptance.
+[Independent CT attempt 04](../evidence/aop-reference-ci-20261123/ct-attempt-04/README.md) failed during Git source fetch before compilation or tests. Its original failure is preserved. A separate attempt 05 uses the exact same commit through verified public Git objects; no successful CT result is claimed here.
 
 | Preserved attempt | Actual result |
 | --- | --- |
@@ -260,3 +260,7 @@ https://github.com/qemu/qemu/blob/master/hw/arm/armv7m.c
 
 The public documentation is background; the proposed build uses the captured
 local revision and must record its own actual resulting binary hash.
+
+## Public loader evidence
+
+[Fixed public source analysis](../evidence/aop-loading-public-20261123/README.md) distinguishes the SDM670 AP/XBL address convention from AOP-local instruction and vector addresses. The ELF builder rewrites selected program headers and entry metadata, without rewriting the payload. These cross-platform source facts do not identify the native Kona core, RAM size, reset vector mapping or reset-release sequence.

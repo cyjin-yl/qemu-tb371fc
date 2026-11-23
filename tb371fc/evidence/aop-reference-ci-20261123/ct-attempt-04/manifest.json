@@ -1,0 +1,88 @@
+{
+  "schema": "tb371fc-aop-ct-attempt-04-preserved-failure-v1",
+  "source_commit": "fe89e5a553fe038babe07abb279a0975d4306715",
+  "scope": "Independent doesvm CT source acquisition failed before checkout, compilation and tests.",
+  "actual_result": {
+    "passed": false,
+    "all_passed": false,
+    "build_succeeded": false,
+    "source_acquisition_succeeded": false,
+    "xml_tests_executed": false,
+    "cpu_preflight_executed": false,
+    "firmware_read": false,
+    "firmware_executed": false,
+    "android_boot_passed": false
+  },
+  "failure": {
+    "command": "git-fetch",
+    "exit_code": 128,
+    "reported_error": "Send failure: Broken pipe",
+    "controller_exception": "Command left its process group alive: git-fetch",
+    "group_present_after_wait": true,
+    "own_group_sigkill_sent": true,
+    "group_present_after_cleanup": true
+  },
+  "files": [
+    {
+      "name": "result.json",
+      "blob": "a66a7f32fc3381f8aa8421454656adff37e63392",
+      "bytes": 4504,
+      "sha256": "a5a7c31a5968c1980c17f651752dabea934064b424ffede40632e429b8b8c87d",
+      "source_path": "/work/aop-reference-watchpoint-attempt-04/results/result.json",
+      "original_bytes_preserved": true
+    },
+    {
+      "name": "02-git-fetch.json",
+      "blob": "0503573853056fef24877caeaa648b578c6a8bbf",
+      "bytes": 1217,
+      "sha256": "834040d0e01eb99fb6aecbfc5c313ded82be4e177aad38dc7923d7968d8050b7",
+      "source_path": "/work/aop-reference-watchpoint-attempt-04/results/02-git-fetch.json",
+      "original_bytes_preserved": true
+    },
+    {
+      "name": "02-git-fetch.log",
+      "blob": "8d397b832f549b4e393ee77f2488a0f66a89cd39",
+      "bytes": 99,
+      "sha256": "1efababbd9d23f753872be4dcc13639d96900b98f49a1a6537959e88bee76272",
+      "source_path": "/work/aop-reference-watchpoint-attempt-04/results/02-git-fetch.log",
+      "original_bytes_preserved": true
+    },
+    {
+      "name": "process-group-observation.json",
+      "bytes": 766,
+      "sha256": "34f0bad5a8a4540dc3d4d7de482f1c5c71350f716123ea5159e1801f7b332e0d",
+      "blob": "f48323b70e66dae9ff5a8b6ddeaf42994aacbd55",
+      "original_bytes_preserved": true
+    },
+    {
+      "name": "method/build_and_preflight.py",
+      "bytes": 21073,
+      "sha256": "783db1b9526202070e56e9a69bf8266a45bfc19133b18d97e376b5b7ec206d90",
+      "blob": "1b8ff0869f7f7585675d03d423901e2d0fd0b243",
+      "original_bytes_preserved": true
+    }
+  ],
+  "later_read_only_observation": {
+    "observed_utc": "2026-11-23T14:26:20.448606+00:00",
+    "process_group": 241481,
+    "leader_absent": true,
+    "members": 1,
+    "member_pid": 241482,
+    "member_state": "Z",
+    "member_ppid": 1,
+    "member_start_utc": "2026-11-23T13:53:17.990000+00:00",
+    "no_signals_sent": true,
+    "interpretation": "One orphaned zombie was observed later. This does not change the original cleanup-failure flags or turn the failed attempt into a success."
+  },
+  "next_attempt": {
+    "number": 5,
+    "method": "New directory; local preserved parent plus independently verified exact public Git objects.",
+    "source_and_gate_changes": "No change to the target commit, eight source hashes, original fourteen preflight cases or eleven XML tests.",
+    "status": "Separate attempt; no successful CT result claimed by this archive."
+  },
+  "preservation": {
+    "old_result_hashes_unchanged": true,
+    "earlier_failures_retained": true,
+    "private_firmware_payload_included": false
+  }
+}

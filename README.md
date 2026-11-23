@@ -13,7 +13,9 @@
 本次加入严格 XML envelope 适配、11 项独立回归，以及仅在 vCPU 停止且持有 BQL 时可读的 watchpoint 命中快照。
 runner 唯一关联 RSP 区间和实际命中，保留原精确地址、PC、总线、RAM 与 padding 检查。
 **固定提交 `fe89e5a` 的 [CI 45183148964](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45183148964) 已实际通过 11/11 XML 回归和 14/14 CPU 预检。** [原始成功回执](tb371fc/evidence/aop-reference-ci-20261123/ci-attempt-04/manifest.json)保留实际地址、PC、总线与内存断言，QEMU 二进制 SHA256 为 `3bd0d1d124cc9c3f3cf010bddf2b634a6e7e8f9d5a464c29c895005e04e64bc0`。
-独立 doesvm CT 构建仍待启动与实际验证；本次 CI 成功不替代 CT 结果。
+[独立 CT attempt 04](tb371fc/evidence/aop-reference-ci-20261123/ct-attempt-04/README.md) 在 Git 拉取源码时失败，尚未进入编译和测试；原始失败完整保留。后续 attempt 05 在新目录中用已核实的精确 Git 对象重建同一提交，仍须通过原来的所有门槛。这里没有宣称 CT 验收成功。
+
+[公开加载器来源分析](tb371fc/evidence/aop-loading-public-20261123/README.md)记录 AP/XBL 与 AOP 局部地址的区别、ELF 头改写规则及尚未证明的原生复位路径。
 
 Cortex-M3、1 MHz 时钟、可选的低地址别名及额外 DTCM 都是明确的诊断参考配置，平板实际 AOP CPU 和冷启动映射尚未确认。
 CI 只执行自编测试指令，不读取或运行私有固件。普通访存的 watchpoint 测试也不证明异常内部 vector/stack 访问具有停前保证。
