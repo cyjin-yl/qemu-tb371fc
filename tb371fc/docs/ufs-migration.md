@@ -1,24 +1,11 @@
 # SM8250 UFS quiescent checkpoints
 
 This change replaces the QCOM wrapper's unconditional migration blocker with
-a bounded, versioned checkpoint format. **Runtime migration validation is
-still incomplete.** The second executed gate completed all three source and
-receiver migrations and passed 15 groups, including resumed DMA/I/O, pending
-UIC/PHY deadlines, SCSI sense and the Hibern8 background timer. The LUN-capacity
-mismatch was correctly rejected, but its generic byte-equality diagnostic did
-not contain the field name required by the fixture. The remaining rejection
-cases did not run. Its unmodified [partial report](../evidence/ufs-migration-20261123/second-attempt-b2a9131/result.json)
-and [source/artifact binding](../evidence/ufs-migration-20261123/second-attempt-b2a9131/source-binding.json)
-are retained. The configuration comparison now reports an explicit
-`SM8250 UFS migration: configuration mismatch` without changing the 32 wire
-bytes or accepting a mismatched configuration.
-
-The first executed gate passed its source DMA/I/O group but failed before
-sending a migration command, because QTest rejects
-`clock_step 0`. Its unmodified [failure report](../evidence/ufs-migration-20261123/first-attempt-c0ebdb7/result.json)
-and [source/artifact binding](../evidence/ufs-migration-20261123/first-attempt-c0ebdb7/source-binding.json)
-are retained. The fixture now caches the actual timestamp returned by each
-successful nonzero step and uses that value to align the receiver.
+a bounded, versioned checkpoint format. The complete runtime gate passed at
+`03cd8843de48b55de6ef6aa9ee28255052f8b2c8`: **21 check groups, three completed
+source/receiver migrations and seven rejection scenarios**. The
+[recorded validation](#recorded-validation) below retains the raw receipts and
+binds them to the tested source tree and binaries.
 
 The generic `ufs` PCI and `ufs-sysbus` devices remain unmigratable. Enabling this
 format does not establish a whole-board boot or migration claim.
@@ -109,6 +96,72 @@ MMIO timer migration test, the receiver explicitly aligns that test fixture to
 the recorded source timestamp before checking remaining deadlines. QTest
 clock steps briefly resume the VM and return it to its prior paused state.
 
+## Recorded validation
+
+### Profile and QMP-drain follow-up
+
+The stricter quiescent UFS gate passed at exact source commit
+`839ae46791ecf9db3bc6f622fd69b4ffd4496f6c`:
+[21 groups](../evidence/ufs-migration-20261123/verified-839ae467/ufs-migration-result.json),
+three actual process transfers, seven rejection scenarios and three additional
+profile captures. All six rejected receivers were drained to QMP EOF before
+the no-RESUME check, closing the earlier fixture's gap after the command reply.
+The same unchanged QEMU binary passed
+[55 component gates](../evidence/ufs-migration-20261123/verified-839ae467/components-result.json)
+and [four Linux gates](../evidence/ufs-migration-20261123/verified-839ae467/linux-result.json).
+The [artifact/source binding](../evidence/ufs-migration-20261123/verified-839ae467/source-binding.json)
+records every hash and the separately pending A77/PCI job at collection; the
+full workflow is not described as complete from the board job alone.
+
+### Original UFS acceptance
+
+[CI run 45260760828](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45260760828)
+completed successfully. It checked out merge commit
+`48246223abcaaabbc3a9b33cbdca2c2a40dc8ecf`, whose tree
+`ce17eabc680d6eef5f9984530e541e544623a948` is identical to implementation head
+`03cd8843de48b55de6ef6aa9ee28255052f8b2c8`.
+
+| Gate | Actual result | Unmodified receipt |
+| --- | --- | --- |
+| UFS process checkpoints | 21/21 groups, three completed transfers, seven rejections | [UFS result](../evidence/ufs-migration-20261123/accepted-03cd8843/ufs-migration/result.json) |
+| Existing public components | 55/55 gates; C QTests include 23 SMMUv2, 25 TLMM and 18 PDC cases with no skips | [Component result](../evidence/ufs-migration-20261123/accepted-03cd8843/components/result.json) |
+| Public unpatched Linux | 4/4 boots/driver gates, including UFS with SMMU and RPMh | [Linux result](../evidence/ufs-migration-20261123/accepted-03cd8843/linux/result.json) |
+| Shared PCI UFS regression | 15/15 cases with no skips | [PCI result](../evidence/ufs-migration-20261123/accepted-03cd8843/ufs-pci/result.json) |
+| Isolated architectural A77 | 852 guest checks across nine configurations and two invalid-configuration rejections | [A77 result](../evidence/ufs-migration-20261123/accepted-03cd8843/a77/result.json) |
+
+The [source/artifact binding](../evidence/ufs-migration-20261123/accepted-03cd8843/source-binding.json)
+records both archive digests, tested QEMU/QTest binaries, test/helper hashes,
+the Linux image hash and hashes of every retained file. The downloaded archives,
+binary contents, successful migration streams, process stderr, all 909 component
+and Linux manifest entries, A77 payload/log hashes and PCI manifest entries were
+checked against their original receipts. Process stderr and PCI/A77 logs are
+retained beside the reports.
+
+The six invalid incoming streams/configurations exited with status 1, before
+resume and without changing their media. The incoming SCSI-queue case emitted
+the UFS-specific rejection hook diagnostic. The seventh rejection came from an
+actual unfinished UTRD DMA request on the source; its migration failed with the
+quiescent-queue diagnostic while the request remained visible. HCE reset and
+fault clearing then restored actual I/O on that same source.
+
+### Earlier attempts
+
+The first executed gate at `c0ebdb7` passed source DMA/I/O but failed before
+sending a migration command, because QTest rejects `clock_step 0`. Its unmodified
+[failure report](../evidence/ufs-migration-20261123/first-attempt-c0ebdb7/result.json)
+and [binding](../evidence/ufs-migration-20261123/first-attempt-c0ebdb7/source-binding.json)
+are retained. The fixture now caches the actual timestamp returned by each
+successful nonzero step and uses it to align the receiver.
+
+The next gate at `b2a9131` completed three migrations and 15 groups. It correctly
+rejected the LUN-capacity mismatch, but the generic byte-equality diagnostic
+omitted the field name required by the fixture. Later rejection cases had not
+run. Its unmodified [partial report](../evidence/ufs-migration-20261123/second-attempt-b2a9131/result.json)
+and [binding](../evidence/ufs-migration-20261123/second-attempt-b2a9131/source-binding.json)
+are retained. The final configuration comparison reports an explicit
+`SM8250 UFS migration: configuration mismatch`, preserving the same 32 wire
+bytes and equality requirement.
+
 ## Fixed implementation sources
 
 This work extends QEMU's existing software contract; it does not infer a new
@@ -125,3 +178,4 @@ The existing [UFS model notes](ufs-sm8250.md) retain the fixed Linux driver
 references and hardware-equivalence limits. This checkpoint gate does not
 cover ICE, RPMB, analog PHY behavior, stock Android, a native-DT boot, an XNU
 boot or arbitrary active storage queues.
+

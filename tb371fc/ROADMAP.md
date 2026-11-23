@@ -11,7 +11,8 @@
 - [x] 实机只读 DT/sysfs 核对型号、CPU affinity、MIDR/REVIDR、RAM、GIC、timer、UART 和外设依赖。
 - [x] 新增 Cortex-A77 r1p0 架构模型，替换大核 A76 surrogate；9 种配置合计 852 项 guest 指令/ID/PMU 检查、2 项非法配置拒绝。
 - [ ] Qualcomm 小核 Kryo 的完整架构差分；当前 CPU0–3 仍用 A55 surrogate。
-- [ ] 实测 cache 容量、ways/sets、DSU 与实现寄存器；当前 cache 参数是模型选择，不能由 MIDR 或 DT 推断为已测。
+- [x] **20:45 UTC 新一轮真机 sysfs 复核：八核均声明 L1 D/I、私有 L2 与共享 `0-7` 的 L3，保留逐核 MIDR、调度容量 313/777/1024 及完整只读采集器。**[原始回执与哈希](evidence/stock-cpu-cache-20261123/source-binding.json)。
+- [ ] 实测 cache 容量、ways/sets、line size、DSU 与实现寄存器；新采集的 128 个几何字段均因文件不存在而未知。当前 cache 参数仍是模型选择，不能由已知共享拓扑或 MIDR 推断为已测。
 - [x] GICv3、八核 PSCI CPU_ON/SMC system-off 和 8 GiB RAM 的直接 Linux 启动。
 - [x] 修正 raw Image 大 RAM 加载基址为 `0xa0000000`，恢复两个 Android 可见 memory 段；13 项运行时布局检查通过。
 - [x] 同一 ELF 在平板与 guest 验证 EL0 `CNTFRQ`/计数递增。
