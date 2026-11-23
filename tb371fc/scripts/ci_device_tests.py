@@ -177,6 +177,15 @@ def plan(args, runtime):
                          "expected_checks": 16, "migration_expected_checks": 6,
                          "socket_directories_retained": True},
                expected_lengths={"migrations": 6})
+        device("gpu-gx-gdsc", "test_gpu_gx_gdsc.py",
+               output="--out", result="file", count=37,
+               expected={"all_passed": True, "success": True,
+                         "expected_checks": 37, "migration_expected_checks": 12,
+                         "expected_migration_attempts": 12,
+                         "completed_migration_attempts": 8,
+                         "rejected_migration_attempts": 4,
+                         "passed_checks": 37},
+               expected_lengths={"migrations": 12, "migration_attempts": 12})
         device("gpu-cx-gdsc", "test_gpu_cx_gdsc.py",
                output="--out", result="file", count=26,
                expected={"all_passed": True, "success": True,

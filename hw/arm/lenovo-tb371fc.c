@@ -52,6 +52,7 @@
 #include "hw/misc/qcom-aop-msgram.h"
 #include "hw/misc/qcom-refgen.h"
 #include "hw/misc/qcom-gpu-cx-gdsc.h"
+#include "hw/misc/qcom-gdsc.h"
 #include "hw/misc/qcom-spmi-pmic-arb.h"
 #include "hw/gpio/qcom-tb371fc-tlmm.h"
 #include "hw/misc/qcom-sm8250-rpmh.h"
@@ -944,6 +945,29 @@ static void tb371fc_create_gpu_cx_gdsc(TB371FCMachineState *s)
     }
 }
 
+static void tb371fc_create_gpu_gx_gdsc(TB371FCMachineState *s)
+{
+    DeviceState *gdsc = qdev_new(TYPE_QCOM_GDSC);
+
+    /* Only the captured GX windows; CX keeps its independent timed model. */
+    object_property_add_child(OBJECT(s), "gpu-gx-gdsc", OBJECT(gdsc));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(gdsc), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gdsc), QCOM_GDSC_CONTROL, 0x03d9100c);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gdsc), QCOM_GDSC_DOMAIN_CONTROL, 0x03d91508);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gdsc), QCOM_GDSC_SW_RESET, 0x03d91008);
+    if (s->rpmh) {
+        /* Kona GX parent is VDD_GFX_LEVEL, not CX. res.* has uint64 type. */
+        qdev_connect_gpio_out_named(s->rpmh, "power", 4,
+            qdev_get_gpio_in_named(gdsc, "parent-on", 0));
+        qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-on", 0),
+            object_property_get_uint(OBJECT(s->rpmh), "res.gfx.lvl.enabled",
+                                     &error_fatal) != 0);
+        qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-known", 0),
+            object_property_get_uint(OBJECT(s->rpmh), "res.gfx.lvl.present",
+                                     &error_fatal) != 0);
+    }
+}
+
 static void tb371fc_create_gcc(TB371FCMachineState *s)
 {
     DeviceState *gcc;
@@ -1306,6 +1330,7 @@ static void tb371fc_init(MachineState *ms)
     }
     tb371fc_create_gcc(s);
     tb371fc_create_gpu_cx_gdsc(s);
+    tb371fc_create_gpu_gx_gdsc(s);
     if (s->ufs) {
         tb371fc_realize_ufs(s);
         /* Native pinctrl states: output-low asserts the dedicated pad. */

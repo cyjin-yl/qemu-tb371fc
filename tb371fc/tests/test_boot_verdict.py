@@ -102,6 +102,25 @@ class ShutdownAndQMPTests(unittest.TestCase):
         self.assertTrue(has_guest_shutdown([
             {"event": "SHUTDOWN", "data": {"guest": True, "reason": "guest-shutdown"}}]))
 
+    def test_drain_consumes_all_ready_fragments(self):
+        event = {"event": "SHUTDOWN", "data": {"guest": True, "reason": "guest-shutdown"}}
+        payload = json.dumps(event).encode() + b"\n"
+
+        class SocketFixture:
+            def __init__(self):
+                self.fragments = [payload[:17], payload[17:], b""]
+
+            def recv(self, size):
+                return self.fragments.pop(0)
+
+        sock = SocketFixture()
+        qmp = QMP(sock)
+        with patch("boot_qmp.select.select", return_value=([sock], [], [])):
+            qmp.drain()
+        self.assertTrue(qmp.closed)
+        self.assertEqual(sock.fragments, [])
+        self.assertTrue(has_guest_shutdown(qmp.messages))
+
     def test_fragmented_shutdown_and_eof_retained(self):
         event = {"event": "SHUTDOWN", "data": {"guest": True, "reason": "guest-shutdown"}}
         payload = json.dumps(event).encode() + b"\n"
