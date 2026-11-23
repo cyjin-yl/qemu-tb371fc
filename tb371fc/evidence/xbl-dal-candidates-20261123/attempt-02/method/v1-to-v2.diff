@@ -1,0 +1,259 @@
+--- a/dal_smem_candidates.py
++++ b/dal_smem_candidates.py
+@@ -34,6 +34,7 @@
+ MAX_STRUCT_INDEX = 4095
+ MAX_GEOMETRIC_CANDIDATES = 64
+ MAX_REPORTED_CANDIDATES = 4
++MAX_FAILURE_DETAILS = 4
+ MAX_OUTPUT = 12288
+ FORMAT_SOURCES = {
+     "commit": "20bb8ae36c93fc16bbadda0e0a83f930c0c8a271",
+@@ -48,8 +49,9 @@
+ 
+ class Reject(Exception):
+     """A fixed reason code, never private bytes or arbitrary exception text."""
+-    def __init__(self, code):
++    def __init__(self, code, context=None):
+         self.code = code
++        self.context = context
+         super().__init__(code)
+ 
+ def need(condition, code):
+@@ -180,9 +182,23 @@
+         need(off % 4 == 0 and self.header_size <= off < self.length,
+              "property_list_start_invalid")
+ 
+-    def prop_name(self, word):
++    def prop_name(self, word, list_context=None):
+         rel = self.name_off + (word & 0x7fffffff)
+-        extent(rel, 1, self.length, "property_name_offset")
++        try:
++            extent(rel, 1, self.length, "property_name_offset")
++        except Reject as exc:
++            # Diagnostics only: preserve the same rejection and export no
++            # string or payload bytes from the rejected record.
++            exc.context = {
++                "propbin_va": self.va, "propbin_length": self.length,
++                "name_section_offset": self.name_off,
++                "name_or_id_word": word,
++                "calculated_name_relative_offset": rel,
++                "scope": {"load_indices": list(self.view.scope),
++                          "file_backed_nonexecuting": True},
++                **(list_context or {}),
++            }
++            raise
+         end = self.raw.find(b"\0", rel, min(self.length, rel + MAX_NAME_BYTES))
+         need(end >= rel, "property_name_unterminated")
+         value = self.raw[rel:end]
+@@ -191,7 +207,7 @@
+         text = value.decode("ascii")
+         return text if text in NAMES else None
+ 
+-    def parse_list(self, start, all_starts):
++    def parse_list(self, start, all_starts, list_kind="unspecified"):
+         self.check_start(start)
+         next_start = min((v for v in all_starts if v > start),
+                          default=self.length)
+@@ -208,7 +224,11 @@
+             need(entries <= MAX_PROPERTIES, "property_count_limit")
+             extent(pos, 8, end, "property_prefix_extent")
+             word = self.u32(pos + 4)
+-            name = self.prop_name(word)
++            name = self.prop_name(word, {
++                "list_start_offset": start, "list_start_va": self.va + start,
++                "list_kind": list_kind, "entry_va": self.va + pos,
++                "type_word": typ,
++            })
+             base_type, payload = typ & 0x7fffffff, pos + 8
+             if base_type in FIXED_TYPES:
+                 payload_size = 4
+@@ -310,7 +330,7 @@
+         selected_index = next((i for i in first["collision_indices"]
+                                if names[i] == device_name), None)
+     need(selected_index == target_index, "format_lookup_does_not_select_known_descriptor")
+-    local = prop.parse_list(target["offset"], starts)
++    local = prop.parse_list(target["offset"], starts, "local")
+     zero_rows = [(i, off) for i, (ident, off) in enumerate(prop.numeric) if ident == 0]
+     global_result = None
+     global_state = "not_present"
+@@ -318,7 +338,7 @@
+         if zero_rows[0][0] == 0:
+             global_state = "device0_is_first_numeric_entry"
+             if any(name not in local["allowlisted"] for name in NAMES):
+-                global_result = prop.parse_list(zero_rows[0][1], starts)
++                global_result = prop.parse_list(zero_rows[0][1], starts, "global")
+         else:
+             # The cited DALProps.c checks device0 exists, but then jumps to
+             # numeric entry 0 rather than using the returned device0 handle.
+@@ -377,6 +397,8 @@
+          "known_descriptor_name_pointer_mismatch")
+     need(known["hash"] == djb2(device_name), "known_descriptor_hash_mismatch")
+     accepted, rejected = [], collections.Counter()
++    failure_details = []
++    failure_detail_count = 0
+     scanned_heads = geometric = bounded_geometry = processed = 0
+     for va in view.scan_heads():
+         scanned_heads += 1
+@@ -407,8 +429,13 @@
+             accepted.append(validate_candidate(view, va, descriptor_va, device_name))
+         except Reject as exc:
+             rejected[exc.code] += 1
++            if exc.code == "property_name_offset" and exc.context is not None:
++                failure_detail_count += 1
++                if len(failure_details) < MAX_FAILURE_DETAILS:
++                    failure_details.append({**exc.context, "head_va": va,
++                                            "reason": exc.code})
+     return {
+-        "schema": "tb371fc-xbl-dal-static-candidates-v1",
++        "schema": "tb371fc-xbl-dal-static-candidates-v2",
+         "analysis_completed": True,
+         "scope": {"load_indices": list(view.scope), "alignment": 8,
+                   "known_descriptor_va": descriptor_va,
+@@ -425,12 +452,16 @@
+                    "max_properties_per_list": MAX_PROPERTIES,
+                    "max_name_bytes": MAX_NAME_BYTES,
+                    "max_structure_index": MAX_STRUCT_INDEX,
+-                   "max_geometric_candidates_processed": MAX_GEOMETRIC_CANDIDATES},
++                   "max_geometric_candidates_processed": MAX_GEOMETRIC_CANDIDATES,
++                   "max_failure_details": MAX_FAILURE_DETAILS},
+         "scanned_heads": scanned_heads, "geometric_candidates": geometric,
+         "bounded_geometric_candidates": bounded_geometry,
+         "processed_candidates": processed,
+         "candidate_processing_truncated": bounded_geometry > processed,
+         "rejected_reasons": dict(sorted(rejected.items())),
++        "failure_detail_count": failure_detail_count,
++        "failure_details_omitted": failure_detail_count - len(failure_details),
++        "failure_details": failure_details,
+         "accepted_candidate_count": len(accepted),
+         "candidate_details_omitted": max(0, len(accepted) - MAX_REPORTED_CANDIDATES),
+         "candidates": accepted[:MAX_REPORTED_CANDIDATES],
+@@ -448,6 +479,10 @@
+             report["candidates"].pop()
+             report["candidate_details_omitted"] += 1
+             continue
++        if report.get("failure_details"):
++            report["failure_details"].pop()
++            report["failure_details_omitted"] += 1
++            continue
+         raise Reject("metadata_output_limit")
+ 
+ def read_pinned_input():
+@@ -492,14 +527,14 @@
+     try:
+         status = main()
+     except Reject as exc:
+-        sys.stdout.write(json.dumps({"schema": "tb371fc-xbl-dal-static-candidates-v1",
++        sys.stdout.write(json.dumps({"schema": "tb371fc-xbl-dal-static-candidates-v2",
+                                     "analysis_completed": False, "error": exc.code,
+                                     "firmware_executed": False},
+                                    sort_keys=True, separators=(",", ":")) + "\n")
+         status = 2
+     except Exception as exc:
+         # Avoid echoing arbitrary file contents or environment paths.
+-        sys.stdout.write(json.dumps({"schema": "tb371fc-xbl-dal-static-candidates-v1",
++        sys.stdout.write(json.dumps({"schema": "tb371fc-xbl-dal-static-candidates-v2",
+                                     "analysis_completed": False,
+                                     "error": "unexpected_" + type(exc).__name__,
+                                     "firmware_executed": False},
+--- a/test_dal_smem_candidates.py
++++ b/test_dal_smem_candidates.py
+@@ -346,5 +346,99 @@
+                          20 - len(loaded["candidates"]))
+         self.assertGreater(loaded["candidate_details_omitted"], 0)
+ 
++
++class FailureContextTests(unittest.TestCase):
++    @staticmethod
++    def bad_local_fixture():
++        fix = Fixture()
++        fix.u32(PROP + LOCAL + 4, 0x80000500)
++        return fix
++
++    def test_local_context_preserves_original_rejection(self):
++        fix = self.bad_local_fixture()
++        with self.assertRaises(scan.Reject) as error:
++            fix.validate()
++        self.assertEqual(error.exception.code, "property_name_offset")
++        report = fix.report()
++        self.assertEqual(report["accepted_candidate_count"], 0)
++        self.assertEqual(report["rejected_reasons"]["property_name_offset"], 1)
++        self.assertEqual(report["failure_detail_count"], 1)
++        self.assertEqual(report["failure_details_omitted"], 0)
++        row = report["failure_details"][0]
++        self.assertEqual(row["head_va"], HEAD)
++        self.assertEqual(row["propbin_va"], PROP)
++        self.assertEqual(row["propbin_length"], 0x400)
++        self.assertEqual(row["name_section_offset"], 0x40)
++        self.assertEqual(row["list_start_offset"], LOCAL)
++        self.assertEqual(row["list_start_va"], PROP + LOCAL)
++        self.assertEqual(row["list_kind"], "local")
++        self.assertEqual(row["entry_va"], PROP + LOCAL)
++        self.assertEqual(row["type_word"], 0x2)
++        self.assertEqual(row["name_or_id_word"], 0x80000500)
++        self.assertEqual(row["calculated_name_relative_offset"], 0x540)
++        self.assertEqual(row["scope"], {"load_indices": [0, 1],
++                                       "file_backed_nonexecuting": True})
++
++    def test_global_context_is_distinguished(self):
++        fix = Fixture(omit=("smem_toc_vers",))
++        fix.u32(PROP + GLOBAL + 4, 0x80000600)
++        report = fix.report()
++        self.assertEqual(report["accepted_candidate_count"], 0)
++        self.assertEqual(report["rejected_reasons"]["property_name_offset"], 1)
++        row = report["failure_details"][0]
++        self.assertEqual(row["list_kind"], "global")
++        self.assertEqual(row["list_start_offset"], GLOBAL)
++        self.assertEqual(row["entry_va"], PROP + GLOBAL)
++        self.assertEqual(row["name_or_id_word"], 0x80000600)
++        self.assertEqual(row["calculated_name_relative_offset"], 0x640)
++
++    def test_valid_candidate_has_no_failure_context(self):
++        report = Fixture().report()
++        self.assertEqual(report["accepted_candidate_count"], 1)
++        self.assertEqual(report["failure_detail_count"], 0)
++        self.assertEqual(report["failure_details_omitted"], 0)
++        self.assertEqual(report["failure_details"], [])
++
++    def test_other_rejections_do_not_export_new_context(self):
++        fix = Fixture()
++        fix.u32(PROP, scan.MAX_PROP_BIN + 1)
++        report = fix.report()
++        self.assertEqual(report["accepted_candidate_count"], 0)
++        self.assertEqual(report["rejected_reasons"]["propbin_length_limit"], 1)
++        self.assertEqual(report["failure_detail_count"], 0)
++        self.assertEqual(report["failure_details"], [])
++
++    def test_four_detail_limit_preserves_total_and_rejection_count(self):
++        fix = self.bad_local_fixture()
++        for offset in (0x420, 0x440, 0x460, 0x480):
++            fix.put(BASE + offset, struct.pack("<QQI4xQ", PROP, STRUCTS, 2, DESC))
++        report = fix.report()
++        self.assertEqual(report["accepted_candidate_count"], 0)
++        self.assertEqual(report["rejected_reasons"]["property_name_offset"], 5)
++        self.assertEqual(report["failure_detail_count"], 5)
++        self.assertEqual(len(report["failure_details"]), 4)
++        self.assertEqual(report["failure_details_omitted"], 1)
++        self.assertEqual({x["head_va"] for x in report["failure_details"]},
++                         {HEAD, BASE + 0x420, BASE + 0x440, BASE + 0x460})
++
++    def test_output_truncation_and_redaction_include_failure_details(self):
++        report = self.bad_local_fixture().report()
++        row = report["failure_details"][0]
++        report["failure_details"] = [row for _ in range(100)]
++        report["failure_detail_count"] = 100
++        report["failure_details_omitted"] = 0
++        encoded = scan.bounded_json(report)
++        loaded = json.loads(encoded)
++        self.assertLessEqual(len(encoded), scan.MAX_OUTPUT)
++        self.assertEqual(loaded["failure_detail_count"], 100)
++        self.assertEqual(loaded["failure_details_omitted"],
++                         100 - len(loaded["failure_details"]))
++        self.assertGreater(loaded["failure_details_omitted"], 0)
++        self.assertNotIn(b"/fixture/aux", encoded)
++        self.assertNotIn(b"SELF_AUTHORED_FIXTURE", encoded)
++        for detail in loaded["failure_details"]:
++            self.assertNotIn("payload", detail)
++            self.assertNotIn("string", detail)
++
+ if __name__ == "__main__":
+     unittest.main()
