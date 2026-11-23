@@ -34,7 +34,8 @@ class UFSRig(Rig):
         if not running:
             self.monitor("cont")
         try:
-            return super().step(ns)
+            self.clock_ns = super().step(ns)
+            return self.clock_ns
         finally:
             if not running:
                 self.monitor("stop")
@@ -207,7 +208,7 @@ def main():
     def checkpoint(name, r):
         path = args.out / (name + ".migration")
         assert not r.monitor("query-status")["running"]
-        clock_ns = r.step(0)
+        clock_ns = r.clock_ns
         r.monitor("migrate", {"uri": "file:" + str(path)})
         outgoing = wait_migration(r)
         assert r.monitor("query-status")["status"] == "postmigrate"
@@ -220,6 +221,7 @@ def main():
         restored_ns = int(target.command(f"clock_set {clock_ns}")[0], 0)
         target.monitor("stop")
         assert restored_ns == clock_ns
+        target.clock_ns = restored_ns
         migrations.append({"name": name, "source": outgoing, "target": incoming,
                            "external_qtest_clock_ns": clock_ns,
                            "stream_sha256": sha(path), "stream_bytes": path.stat().st_size})

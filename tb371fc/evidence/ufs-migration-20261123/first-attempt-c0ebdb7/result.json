@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "kind": "sm8250-ufs-quiescent-migration",
+  "started_utc": "2026-11-23T19:42:20.166671+00:00",
+  "all_passed": false,
+  "checks": [
+    {
+      "name": "source-translated-write-read-flush-and-host-media-match",
+      "passed": true
+    }
+  ],
+  "migrations": [],
+  "rejections": [],
+  "processes": [
+    {
+      "name": "source",
+      "command": [
+        "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "qtest",
+        "-m",
+        "128M",
+        "-display",
+        "none",
+        "-serial",
+        "null",
+        "-monitor",
+        "none",
+        "-qtest",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/source/qtest,server=on,wait=off",
+        "-qtest-log",
+        "/dev/null",
+        "-qmp",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/source/qmp,server=on,wait=off",
+        "-blockdev",
+        "driver=file,node-name=file0,filename=/home/runner/work/_temp/tb371fc-results/ufs-migration/disk.raw",
+        "-blockdev",
+        "driver=raw,node-name=disk0,file=file0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-S"
+      ],
+      "exit_code": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "qemu_sha256": "18e9ee4126d4c65830dd0212c3858eeda4bccc65d16e84acbc18d7daf834b317",
+  "test_sha256": "d10f27ba2509b3f83dd75622c313b1457df61bbd4396aeff613f377154295df8",
+  "helpers_sha256": {
+    "test_ufs_sm8250.py": "ff55615ebcb5c60271dec2187fe959c52cb48a601fe1bf201a4273f2a62687c2",
+    "test_geni_migration.py": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8"
+  },
+  "scope": "Paused file checkpoints with UFS enabled and SID e0 stage-1 nonidentity DMA.",
+  "limits": [
+    "Only quiescent legacy storage queues; no in-flight SCSI or MCQ migration.",
+    "One QEMU process at a time, each with 128 MiB RAM.",
+    "QTest's external clock is explicitly aligned after load; it is not migrated device state.",
+    "The same external disk file is reused with locking enabled; media bytes are not migrated.",
+    "No native-DT boot, Android, silicon or complete-board compatibility claim."
+  ],
+  "error": "AssertionError: ('clock_step 0', 'FAIL could not advance time')",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_ufs_migration.py\", line 278, in main\n    r, original = checkpoint(\"active-uic\", r)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_ufs_migration.py\", line 210, in checkpoint\n    clock_ns = r.step(0)\n               ^^^^^^^^^\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_ufs_migration.py\", line 37, in step\n    return super().step(ns)\n           ^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_ufs_sm8250.py\", line 91, in step\n    return int(self.command(f\"clock_step {ns}\")[0])\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_ufs_sm8250.py\", line 73, in command\n    assert v.startswith(\"OK\"),(line,v)\n           ^^^^^^^^^^^^^^^^^^\nAssertionError: ('clock_step 0', 'FAIL could not advance time')\n",
+  "elapsed_seconds": 0.087,
+  "passed_checks": 1
+}

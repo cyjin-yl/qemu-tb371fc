@@ -1,7 +1,13 @@
 # SM8250 UFS quiescent checkpoints
 
 This change replaces the QCOM wrapper's unconditional migration blocker with
-a bounded, versioned checkpoint format. **Its first CI verdict is pending.**
+a bounded, versioned checkpoint format. **Runtime migration validation is
+still incomplete.** The first executed gate passed its source DMA/I/O group
+but failed before sending a migration command, because QTest rejects
+`clock_step 0`. Its unmodified [failure report](../evidence/ufs-migration-20261123/first-attempt-c0ebdb7/result.json)
+and [source/artifact binding](../evidence/ufs-migration-20261123/first-attempt-c0ebdb7/source-binding.json)
+are retained. The fixture now caches the actual timestamp returned by each
+successful nonzero step and uses that value to align the receiver.
 The generic `ufs` PCI and `ufs-sysbus` devices remain unmigratable. Enabling this
 format does not establish a whole-board boot or migration claim.
 
