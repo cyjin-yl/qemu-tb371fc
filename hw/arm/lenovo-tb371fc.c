@@ -62,6 +62,7 @@
 #include "hw/misc/qcom-refgen.h"
 #include "hw/misc/qcom-gpu-cx-gdsc.h"
 #include "hw/misc/qcom-gdsc.h"
+#include "hw/misc/qcom-camera-gdsc.h"
 #include "hw/misc/qcom-spmi-pmic-arb.h"
 #include "hw/gpio/qcom-tb371fc-tlmm.h"
 #include "hw/misc/qcom-sm8250-rpmh.h"
@@ -980,6 +981,33 @@ static void tb371fc_create_gpu_gx_gdsc(TB371FCMachineState *s)
 }
 
 
+static void tb371fc_create_camera_gdsc(TB371FCMachineState *s)
+{
+    DeviceState *gdsc = qdev_new(TYPE_QCOM_CAMERA_GDSC);
+
+    object_property_add_child(OBJECT(s), "camera-gdsc", OBJECT(gdsc));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(gdsc), &error_fatal);
+    for (unsigned i = 0; i < QCOM_CAMERA_GDSC_DOMAINS; i++) {
+        sysbus_mmio_map(SYS_BUS_DEVICE(gdsc), i,
+                       qcom_camera_gdsc_domains[i].address);
+    }
+    if (s->rpmh) {
+        /*
+         * Actual DT phandle 104 is the mmcx.lvl ARC regulator. One aggregate
+         * input fans out internally to the six sibling camera domains.
+         * This is existing digital availability, not measured PMIC voltage.
+         */
+        qdev_connect_gpio_out_named(s->rpmh, "power", 3,
+            qdev_get_gpio_in_named(gdsc, "parent-on", 0));
+        qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-on", 0),
+            object_property_get_uint(OBJECT(s->rpmh), "res.mmcx.lvl.enabled",
+                                     &error_fatal) != 0);
+        qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-known", 0),
+            object_property_get_uint(OBJECT(s->rpmh), "res.mmcx.lvl.present",
+                                     &error_fatal) != 0);
+    }
+}
+
 static void tb371fc_create_cpufreq(TB371FCMachineState *s)
 {
     for (unsigned i = 0; i < QCOM_CPUFREQ_HW_DOMAINS; i++) {
@@ -1581,6 +1609,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_noc_qos(s);
     tb371fc_create_gpu_cx_gdsc(s);
     tb371fc_create_gpu_gx_gdsc(s);
+    tb371fc_create_camera_gdsc(s);
     if (s->ufs) {
         tb371fc_realize_ufs(s);
         /* Native pinctrl states: output-low asserts the dedicated pad. */
