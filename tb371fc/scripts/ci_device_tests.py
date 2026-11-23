@@ -170,6 +170,8 @@ def plan(args, runtime):
                output="--out", result="file", verdict="all_passed", count=15)
         device("pdc-migration", "test_pdc_migration.py",
                output="--out", result="file", verdict="all_passed", count=10)
+        device("smmuv2-migration", "test_smmuv2_migration.py",
+               output="--out", result="file", verdict="all_passed", count=18)
 
     if args.suite in ("all", "linux"):
         kernel = str(args.kernel.resolve()) if args.kernel else "@KERNEL@"

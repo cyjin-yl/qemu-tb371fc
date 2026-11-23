@@ -759,10 +759,14 @@ static int smmuv2_post_load(void *opaque, int version)
 
 static const VMStateDescription vmstate_smmuv2 = {
     .name = TYPE_ARM_SMMUV2,
-    .version_id = 1,
-    .minimum_version_id = 1,
+    /* Version 1 did not identify the geometry; it cannot be checked safely. */
+    .version_id = 2,
+    .minimum_version_id = 2,
     .post_load = smmuv2_post_load,
     .fields = (const VMStateField[]) {
+        VMSTATE_UINT32_EQUAL(mmio_size, ArmSMMUv2State),
+        VMSTATE_UINT32_EQUAL(num_context_banks, ArmSMMUv2State),
+        VMSTATE_UINT32_EQUAL(num_smrs, ArmSMMUv2State),
         VMSTATE_UINT32_ARRAY(gr0, ArmSMMUv2State, WORDS),
         VMSTATE_UINT32_ARRAY(gr1, ArmSMMUv2State, WORDS),
         VMSTATE_UINT32_2DARRAY(cb, ArmSMMUv2State, MAX_CB, WORDS),
