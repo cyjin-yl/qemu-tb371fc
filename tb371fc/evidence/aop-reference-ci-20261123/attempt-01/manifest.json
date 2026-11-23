@@ -1,0 +1,52 @@
+{
+  "schema": "tb371fc-aop-reference-first-ci-failure-v1",
+  "source_commit": "aecf5a6ce7e155f21131bbbdb0ffc87aad6ca77c",
+  "workflow_run_id": 45169894426,
+  "job_id": 137676379855,
+  "artifact": {
+    "id": 14816876626,
+    "bytes": 23316862,
+    "sha256": "308442ec2dc6c41f2b0d106028e344fa3316f7092b2c0b859cb49382cff76dcd"
+  },
+  "qemu_sha256": "b215e1be94fd13157185f5a2305a7c37a534f9768117729694d929854fae0043",
+  "runner_sha256": "476c2997df433d57105c851b2467f234f1ae2203d3dd09a15f369333f3d327a8",
+  "compiled_model_object": "libsystem_arm.a.p/hw_arm_qcom-aop-reference.c.o",
+  "failure_phase": "machine selection before guest execution",
+  "exact_error": "unsupported machine type: \"aop-entry-reference\"",
+  "passed": false,
+  "passed_preflight_checks": 0,
+  "expected_preflight_checks": 14,
+  "firmware_read": false,
+  "firmware_executed": false,
+  "diagnosis": "The TypeInfo omitted arm_machine_interfaces. QEMU 11 machine selection filters by target_machine_typename(); the model was compiled but invisible to that filter.",
+  "fix": {
+    "source_sha256_before": "be63acb6a9dbd3abb2249dfdc31aeff9338fa49f178fe479fe0e4969d3895b86",
+    "source_sha256_after": "3461305d3218456089fc87b01cbf8f64a8667d05ee302f6be0a640ea0d5af7da",
+    "model_change": "Include hw/arm/machines-qom.h and set TypeInfo.interfaces=arm_machine_interfaces.",
+    "test_assertions_changed": false,
+    "configuration_changed": false,
+    "validation": "pending new build and unchanged 14-check preflight"
+  },
+  "original_selected_files": {
+    "ci-execution.json": {
+      "bytes": 1698,
+      "sha256": "55532eadaabb487e5d37b70bdc3c21003a2ad0bacc8259f835f61d7a88d5d517"
+    },
+    "preflight/result.json": {
+      "bytes": 2102,
+      "sha256": "7090d8cee4fedd594629db745b40161043ecd9b8c42d9191b00a572b46264ec6"
+    },
+    "preflight/00/qemu.log": {
+      "bytes": 114,
+      "sha256": "253831a177c514491bb198cc51f882d678046554aaa2e7948fee3426c4bd1d90"
+    },
+    "preflight/00/launch.json": {
+      "bytes": 577,
+      "sha256": "65db777ab46b3175d5831a316cb372c8893a08121f3bbde78be4f43a0b33c3e0"
+    },
+    "preflight.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

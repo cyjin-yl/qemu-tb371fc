@@ -73,6 +73,14 @@ jobs:
             > "$RUNNER_TEMP/aop-reference-results/qemu-version.txt"
           sha256sum qemu-system-aarch64 \
             > "$RUNNER_TEMP/aop-reference-results/qemu.sha256"
+          ./qemu-system-aarch64 -machine help \
+            > "$RUNNER_TEMP/aop-reference-results/machines.txt"
+          python3 - "$RUNNER_TEMP/aop-reference-results/machines.txt" <<'PY'
+          import pathlib, sys
+          listing = pathlib.Path(sys.argv[1]).read_text()
+          names = {line.split()[0] for line in listing.splitlines() if line.split()}
+          assert "aop-entry-reference" in names, "AOP reference machine was not registered"
+          PY
       - name: Run the fourteen public cases within an isolated process group
         run: |
           set -euo pipefail

@@ -5,7 +5,9 @@
 ## AOP 独立诊断参考：合成 CI 检查点
 
 本分支加入独立的 `-M aop-entry-reference` 和单独的 `aop-reference` 构建配置，用于先验证后续固件诊断所依赖的访存监测方法。
-**当前提交尚无实际通过回执；CI 要求 14 项合成检查全部通过，并核对源码、测试脚本和二进制哈希。**
+首次 CI 已完成编译，但机型缺少 QEMU 11 的 ARM target interface，启动时报告 `unsupported machine type`，尚未执行合成来宾指令。
+[原始失败回执](tb371fc/evidence/aop-reference-ci-20261123/attempt-01/manifest.json) 已保留；本次补齐接口注册并增加 `-machine help` 门槛。
+**修复后的 14 项预检尚待实际通过；源码、测试脚本和二进制哈希继续作为门槛。**
 
 Cortex-M3、1 MHz 时钟、可选的低地址别名及额外 DTCM 都是明确的诊断参考配置，平板实际 AOP CPU 和冷启动映射尚未确认。
 CI 只执行自编测试指令，不读取或运行私有固件。普通访存的 watchpoint 测试也不证明异常内部 vector/stack 访问具有停前保证。

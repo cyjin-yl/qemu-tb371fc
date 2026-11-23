@@ -1,8 +1,13 @@
 # Bounded QEMU AOP entry reference
 
 This is a public synthetic CI checkpoint for an independent diagnostic
-reference. At publication, no successful build or preflight result is claimed.
-The CI workflow does not read or execute the private firmware.
+reference. The first CI build compiled the model, but machine selection failed
+before any synthetic guest instruction ran. Its TypeInfo omitted the ARM target
+interface required by QEMU 11's machine filter. The preserved original result is
+[attempt-01](../evidence/aop-reference-ci-20261123/attempt-01/manifest.json).
+The interface registration is now supplied; a new build, machine-list check and
+the same fourteen preflight checks must still pass. The CI workflow does not
+read or execute the private firmware.
 
 The selected CPU is upstream QEMU Cortex-M3. The captured AOP image establishes
 ELF32 little endian, EM_ARM=40 and Thumb entry candidates; it does not identify

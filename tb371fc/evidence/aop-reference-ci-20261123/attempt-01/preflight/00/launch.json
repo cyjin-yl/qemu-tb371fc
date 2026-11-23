@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/home/runner/work/_temp/aop-reference-build/qemu-system-aarch64",
+    "-M",
+    "aop-entry-reference,profile=elf-physical-entry",
+    "-accel",
+    "tcg,thread=single",
+    "-S",
+    "-nodefaults",
+    "-display",
+    "none",
+    "-monitor",
+    "none",
+    "-serial",
+    "none",
+    "-no-reboot",
+    "-no-shutdown",
+    "-qmp",
+    "unix:/tmp/aopq-7umwl4ft/qmp,server=on,wait=off",
+    "-gdb",
+    "unix:/tmp/aopq-7umwl4ft/gdb,server=on,wait=off"
+  ],
+  "phase": "before-process-start",
+  "retained": true,
+  "socket_directory": "/tmp/aopq-7umwl4ft"
+}

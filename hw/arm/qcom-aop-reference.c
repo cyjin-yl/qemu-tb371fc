@@ -18,6 +18,7 @@
 #include "hw/core/qdev-properties.h"
 #include "hw/arm/armv7m.h"
 #include "hw/arm/boot.h"
+#include "hw/arm/machines-qom.h"
 #include "system/address-spaces.h"
 #include "target/arm/cpu.h"
 
@@ -316,6 +317,7 @@ static const TypeInfo aop_ref_info = {
     .instance_init = aop_ref_instance_init,
     .instance_finalize = aop_ref_instance_finalize,
     .class_init = aop_ref_class_init,
+    .interfaces = arm_machine_interfaces,
 };
 
 static void aop_ref_register_types(void)
