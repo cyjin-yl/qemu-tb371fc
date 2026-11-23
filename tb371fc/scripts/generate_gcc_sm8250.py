@@ -210,7 +210,7 @@ def main():
                     source_supplements=[dict(name='oneplus-kona', revision=VENDOR_REVISION,
                                              path=VENDOR_PATH, url=VENDOR_URL,
                                              sha256=VENDOR_SHA256,
-                                             clock_ids=[clock_ids['gcc_sys_noc_cpuss_ahb_clk']])],
+                                             clock_ids=[ids['GCC_SYS_NOC_CPUSS_AHB_CLK']])],
                     clocks=clocks, resets=resets, power_domains=gdscs,
                     registers=[dict(offset=reg, write_mask=rw, status_mask=ro) for reg, (rw, ro) in sorted(regs.items())])
     (args.output_root / 'tb371fc/docs/gcc-sm8250-registers.json').write_text(json.dumps(manifest, indent=2) + '\n')
