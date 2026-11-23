@@ -111,3 +111,9 @@ GCC bootstrap 状态、部分 fabric 输入、QUP version 和设备排序延时�
 [失败回执](evidence/linux-research-kernel-failure.json)与[日志](evidence/linux-research-kernel-failure.log)。
 [可选 research-kernel patch](patches/linux-6.12-qemu-early-pgtable.patch)没有应用；
 clean kernel 成功不验证该 patch，也不解决真实平板的原始 handoff 问题。
+
+### 显示 RSC 后续增量
+
+- [x] 捕获拓扑对应的显示 RSC、四 voter 共享服务、真实 SPI 129 路径与组件迁移：11 + 6 项通过。
+- [x] 新二进制公共 49/49 gate 和 RPMh 专项 53 项通过；见 [新增回执](evidence/display-rsc-20261123/publication.json)。
+- [ ] 完整原生 DT 启动：当前失败于 qsee_irq_probe；SPMI 原生映射、未解析 regulator 与 SMEM/SBL handoff 仍缺。

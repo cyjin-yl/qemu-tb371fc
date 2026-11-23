@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "suite": "Real CPU timer expiry without migration",
+  "qemu_sha256": "05c617462f87d5bacea9b86007ca8e37de5ed9a2644a5e3af5ac0d60485ec55b",
+  "elf_sha256": "848af63038c03d6a3e99631f41c7d1d327a3be38be3636d0d1b7d863acc13461",
+  "machine": "tb371fc,ufs-enabled=off",
+  "ram_per_process": "128 MiB",
+  "compile_command": null,
+  "passed": true,
+  "provided_elf": "/tmp/tbci-1fuyy_g9/23/data/probe.elf",
+  "scope": "Identical guest ELF, no debugger and no migration",
+  "symbols": {
+    "timer_migration_checkpoint": 2148016212,
+    "timer_migration_done": 2148016216,
+    "timer_migration_result": 2148016912
+  },
+  "command": [
+    "/work/display-root-0903/qemu-system-aarch64",
+    "-M",
+    "tb371fc,ufs-enabled=off",
+    "-accel",
+    "tcg,thread=single",
+    "-m",
+    "128M",
+    "-display",
+    "none",
+    "-serial",
+    "none",
+    "-monitor",
+    "none",
+    "-semihosting-config",
+    "enable=on,target=native",
+    "-kernel",
+    "/tmp/tbci-1fuyy_g9/23/data/probe.elf",
+    "-no-reboot"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.162
+}

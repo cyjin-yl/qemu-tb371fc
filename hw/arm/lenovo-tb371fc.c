@@ -840,6 +840,9 @@ static void tb371fc_create_rpmh(TB371FCMachineState *s)
     }
     /* A read-only firmware-owned region overlays the reserved physical RAM. */
     sysbus_mmio_map_overlap(SYS_BUS_DEVICE(dev), 3, 0x80860000, 1);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), RPMH_DISPLAY_MMIO, 0x0af20000);
+    sysbus_connect_irq(SYS_BUS_DEVICE(dev), RPMH_DISPLAY_DRV,
+                       qdev_get_gpio_in(s->gic, 129));
     clock_set_source(s->xo, qdev_get_clock_out(dev, "bi_tcxo"));
 }
 

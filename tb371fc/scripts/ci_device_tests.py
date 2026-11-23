@@ -155,6 +155,10 @@ def plan(args, runtime):
                output="--work-dir", verdict="success", count=22)
         device("rpmh-reference-migration", "test_rpmh_sm8250.py",
                "--migration-only", output="--work-dir", verdict="success", count=5)
+        device("rpmh-display", "test_rpmh_display.py",
+               output="--work-dir", verdict="success", count=11)
+        device("rpmh-display-migration", "test_rpmh_display.py",
+               "--migration-only", output="--work-dir", verdict="success", count=6)
         device("ufs-register-dma", "test_ufs_sm8250.py",
                output="--out", result="file", count=56)
         device("watchdog-registers", "test_watchdog_kpss.py",

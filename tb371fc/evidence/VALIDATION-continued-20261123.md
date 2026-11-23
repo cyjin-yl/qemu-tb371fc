@@ -186,3 +186,7 @@ Full captured DTs, original partition/firmware inputs, complete native-DT
 diagnostic logs and process core dumps remain outside the published set.
 Where a receipt is an allowlisted summary rather than an unchanged original
 log, its scope and source hashes must say so explicitly.
+
+## 2026-11-23 display RSC integration
+
+Frozen binary 05c617462f87d5bacea9b86007ca8e37de5ed9a2644a5e3af5ac0d60485ec55b passes 49/49 public gates and 53 targeted RPMh checks. Source hashes remain unchanged across the public run. Evidence: [display-rsc-20261123](display-rsc-20261123/publication.json). Untouched production kernel/full private DT still fails at qsee_irq_probe+0x140 under explicit reference SPMI and partial RPMh file profiles; no stock Android success is claimed.

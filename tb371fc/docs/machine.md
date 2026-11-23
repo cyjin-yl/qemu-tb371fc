@@ -93,6 +93,7 @@ configuration, not all register contents or hardware behavior.
 | Apps / GPU SMMU | `0x15000000/0x100000` and `0x03da0000/0x10000` |
 | UFS HCI / QMP PHY | `0x01d84000/0x3000` and `0x01d87000/0x1000`, SPI 265 |
 | RPMh DRVs / cmd-db | `0x18200000`, `0x18210000`, `0x18220000`; command-db mapping `0x80860000` when an explicit profile is enabled |
+| Display RSC | `0x0af20000` / `0x10000`, TCS offset `0x1c00`, two banks, SPI 129; shares the enabled RPMh profile |
 | KPSS watchdog | `0x17c10000`; bark/bite SPIs 0 and 1 |
 | TLMM | `0x0f000000/0x01000000`, SPI 208; 180 ordinary digital GPIOs plus a separate UFS reset output |
 | IMEM / PS_HOLD | `0x146bf000/0x1000` writable SRAM and `0x0c264000/4` digital hold output; no initialized OEM firmware state |
@@ -311,3 +312,7 @@ No virtio substitute is silently inserted as proof of a native peripheral.
 Full native-DT kernel boot and Android end-to-end operation require actual
 new implementations and independent tests. The remaining gates are tracked
 in [ROADMAP.md](../ROADMAP.md).
+
+## Display RSC follow-up
+
+The four-voter APPS/display model passes [49 public gates](../evidence/display-rsc-20261123/public-49/result.json) and [53 targeted checks](../evidence/display-rsc-20261123/tests-final.json). Version 2 RPMh migration is required; legacy three-voter streams are rejected. See [display RSC behavior and reference assumptions](rpmh-display-rsc.md). Full native-DT Android boot remains unverified and currently fails later in qsee_irq_probe.

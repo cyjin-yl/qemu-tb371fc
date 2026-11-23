@@ -9,14 +9,21 @@
 #define TYPE_QCOM_SM8250_RPMH "qcom-sm8250-rpmh"
 OBJECT_DECLARE_SIMPLE_TYPE(QcomSm8250RpmhState, QCOM_SM8250_RPMH)
 
-#define RPMH_DRVS 3
+#define RPMH_DRVS 3 /* APPS controller windows; preserved board API. */
+#define RPMH_VOTERS 4
+#define RPMH_DISPLAY_DRV 3
+#define RPMH_DISPLAY_MMIO 4
 #define RPMH_TCS_PER_DRV 8
 #define RPMH_COMMANDS 16
 #define RPMH_RESOURCES 98
 #define RPMH_DRV_SIZE 0x10000
 #define RPMH_CMD_DB_SIZE 0x20000
 
-/* MMIO indices 0..2: DRV0..2, index 3: command-db (board maps explicitly). */
+/*
+ * MMIO 0..2: APPS DRV0..2, 3: command-db, 4: display DRV0.
+ * IRQ and sleep GPIO indices 0..2 are APPS, index 3 is display.
+ * All four voter slots share one typed resource backend.
+ */
 typedef struct QcomRpmhCommand {
     uint32_t msgid;
     uint32_t address;
@@ -58,14 +65,14 @@ typedef struct QcomRpmhResource {
     uint8_t vcd;
     bool present;
     /* Per-DRV requests and BCM staging; only these fields migrate. */
-    uint32_t votes[RPMH_DRVS][4];
-    uint32_t staged[RPMH_DRVS];
-    bool dirty[RPMH_DRVS];
+    uint32_t votes[RPMH_VOTERS][4];
+    uint32_t staged[RPMH_VOTERS];
+    bool dirty[RPMH_VOTERS];
 } QcomRpmhResource;
 
 struct QcomSm8250RpmhState {
     SysBusDevice parent_obj;
-    QcomRpmhDrv drv[RPMH_DRVS];
+    QcomRpmhDrv drv[RPMH_VOTERS];
     QcomRpmhResource resources[RPMH_RESOURCES];
     MemoryRegion command_db_region;
     uint8_t command_db[RPMH_CMD_DB_SIZE];

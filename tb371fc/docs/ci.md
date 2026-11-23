@@ -15,7 +15,7 @@ after an earlier component failure so their independent results remain visible.
 
 ## Gates
 
-The current public plan has **47 gates: 43 component/parser gates and four
+The current public plan has **49 gates: 45 component/parser gates and four
 Linux boots**, plus the separate A77 and PCI UFS compatibility job. The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
@@ -41,6 +41,7 @@ pass does not attest newly added devices.
 | CPU timer output wires | 16 GIC input-line observations in each of real-time exact, icount exact and icount legacy mode |
 | SMMUv2 | 23 C QTests with no skips |
 | RPMh | 22 reference-profile tests, including the synthetic command-db parser cases, and 5 migration checks |
+| Display RSC | 11 shared-service and real SPI 129 checks, plus 6 actual component migration checks |
 | UFS | 56 MMIO/PHY/clock/DMA/SCSI/WriteBooster/hibernation checks against a synthetic disk, including absent-LUN responses and DMA bounds |
 | Watchdog | 16 register/timing/action/negative groups and actual pending-bite migration |
 | IMEM and PS_HOLD | 7 groups covering SRAM boundaries, byte order, guest-owned handoff fields, reset retention, digital output, invalid widths and an actual two-process migration |
@@ -131,3 +132,7 @@ equivalence. Those claims require their own implemented devices and actual
 end-to-end evidence.
 
 The route receipt must contain literal true aggregate verdicts, eight checks, an explicit false output-interception flag, and exactly one migration record. Missing or incorrectly typed secondary evidence lists are rejected. The 22 local verdict and plan tests include these failure cases.
+
+## Display RSC integration
+
+The expanded [49-gate run](../evidence/display-rsc-20261123/public-49/result.json) passed all gates on the matching frozen binary. The preceding 47-gate receipt remains an immutable baseline. [53 additional RPMh checks](../evidence/display-rsc-20261123/tests-final.json) include the private partial-file clock suite; those six checks are not public CI inputs. The native full-DT run remains a failure at qsee_irq_probe.

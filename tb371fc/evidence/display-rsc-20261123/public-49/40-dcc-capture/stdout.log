@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "suite": "Qualcomm DCC v2 SRAM capture subset",
+  "qemu_sha256": "05c617462f87d5bacea9b86007ca8e37de5ed9a2644a5e3af5ac0d60485ec55b",
+  "test_sha256": "6d3dd521c59b8fae80b13f5fb312bac4b83b1952f70f127f6f8a7f355b461708",
+  "scope": "Reference map2 identity; real read-descriptor DMA, bounded failures and component migration; no CRC/CTI/IRQ claim",
+  "checks": [
+    {
+      "name": "reference_probe_and_widths",
+      "passed": true
+    },
+    {
+      "name": "all_eight_banks_are_independent",
+      "passed": true
+    },
+    {
+      "name": "sram_aperture_and_subword_access",
+      "passed": true
+    },
+    {
+      "name": "actual_dma_from_ram_after_timer",
+      "passed": true
+    },
+    {
+      "name": "two_link_pairs_and_cumulative_offsets",
+      "passed": true
+    },
+    {
+      "name": "multiple_addresses_and_device_mmio",
+      "passed": true
+    },
+    {
+      "name": "separate_lists_capture_independently",
+      "passed": true
+    },
+    {
+      "name": "writes_to_pending_configuration_rejected",
+      "passed": true
+    },
+    {
+      "name": "unsupported_modes_never_complete",
+      "passed": true
+    },
+    {
+      "name": "unsupported_descriptors_never_complete",
+      "passed": true
+    },
+    {
+      "name": "invalid_pointer_and_output_overlap",
+      "passed": true
+    },
+    {
+      "name": "bad_lists_and_source_fault_do_not_succeed",
+      "passed": true
+    },
+    {
+      "name": "unimplemented_source_register_fails_without_zero_payload",
+      "passed": true
+    },
+    {
+      "name": "empty_list_and_unowned_trigger",
+      "passed": true
+    },
+    {
+      "name": "reset_cancels_and_retains_sram",
+      "passed": true
+    },
+    {
+      "name": "release_cancels_pending_model_work",
+      "passed": true
+    },
+    {
+      "name": "migrate_pending_capture",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "pending_capture_and_sram_preserved": true,
+      "qtest_virtual_ns_at_transfer": 400
+    }
+  ],
+  "passed": true,
+  "elapsed_seconds": 0.836
+}

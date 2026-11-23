@@ -1,5 +1,5 @@
 /*
- * Qualcomm SM8250 apps RSC and typed RPMh resource service.
+ * Qualcomm SM8250 APPS/display RSC and shared typed RPMh resource service.
  *
  * SPDX-License-Identifier: GPL-2.0-only
  *
@@ -22,7 +22,8 @@
 #include "qemu/log.h"
 #include "qemu/module.h"
 
-#define TCS_BASE                0xd00
+#define APPS_TCS_BASE           0xd00
+#define DISPLAY_TCS_BASE        0x1c00
 #define TCS_STRIDE              0x2a0
 #define CMD_BASE                0x30
 #define CMD_STRIDE              0x14
@@ -59,13 +60,56 @@ typedef struct RpmhResourceDesc {
 
 #include "qcom-sm8250-rpmh-data.inc"
 
+/*
+ * Geometry comes from the captured TB371FC live DT. Capability values describe
+ * the implemented digital model, not sampled silicon register/reset values.
+ */
+typedef struct RpmhDrvLayout {
+    unsigned tcs_base;
+    unsigned tcs_count;
+    unsigned sleep_first;
+    unsigned wake_first;
+    unsigned low_power_count;
+    uint32_t child_config;
+} RpmhDrvLayout;
+
+static const RpmhDrvLayout apps_layout = {
+    .tcs_base = APPS_TCS_BASE,
+    .tcs_count = RPMH_TCS_PER_DRV,
+    .sleep_first = 2,
+    .wake_first = 5,
+    .low_power_count = 3,
+    .child_config = ((uint32_t)RPMH_COMMANDS << 27) | (RPMH_TCS_PER_DRV << 12) |
+                    (RPMH_TCS_PER_DRV << 6) | RPMH_TCS_PER_DRV,
+};
+
+static const RpmhDrvLayout display_layout = {
+    .tcs_base = DISPLAY_TCS_BASE,
+    .tcs_count = 2,
+    .sleep_first = 0,
+    .wake_first = 1,
+    .low_power_count = 1,
+    .child_config = ((uint32_t)RPMH_COMMANDS << 27) | 2,
+};
+
+static const RpmhDrvLayout *rpmh_layout(unsigned voter)
+{
+    assert(voter < RPMH_VOTERS);
+    return voter == RPMH_DISPLAY_DRV ? &display_layout : &apps_layout;
+}
+
+static uint32_t rpmh_irq_mask(unsigned voter)
+{
+    return (1U << rpmh_layout(voter)->tcs_count) - 1;
+}
+
 static uint32_t rpmh_aggregate(QcomSm8250RpmhState *s, unsigned res,
                                 unsigned field)
 {
     uint32_t value = 0;
     unsigned i;
 
-    for (i = 0; i < RPMH_DRVS; i++) {
+    for (i = 0; i < RPMH_VOTERS; i++) {
         value = MAX(value, s->resources[res].votes[i][field]);
     }
     return value;
@@ -93,7 +137,7 @@ static void rpmh_outputs(QcomSm8250RpmhState *s)
     if (!s->ready) {
         return;
     }
-    for (i = 0; i < RPMH_DRVS; i++) {
+    for (i = 0; i < RPMH_VOTERS; i++) {
         qemu_set_irq(s->drv[i].irq,
                      (s->drv[i].irq_status & s->drv[i].irq_enable) != 0);
     }
@@ -127,8 +171,8 @@ static void rpmh_schedule(QcomSm8250RpmhState *s)
     int64_t next = INT64_MAX;
     unsigned d, t;
 
-    for (d = 0; d < RPMH_DRVS; d++) {
-        for (t = 0; t < RPMH_TCS_PER_DRV; t++) {
+    for (d = 0; d < RPMH_VOTERS; d++) {
+        for (t = 0; t < rpmh_layout(d)->tcs_count; t++) {
             QcomRpmhTcs *tcs = &s->drv[d].tcs[t];
             if (tcs->running && !tcs->stalled) {
                 next = MIN(next, tcs->deadline);
@@ -252,8 +296,8 @@ static void rpmh_timer(void *opaque)
     int64_t now = qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL);
     unsigned d, t;
 
-    for (d = 0; d < RPMH_DRVS; d++) {
-        for (t = 0; t < RPMH_TCS_PER_DRV; t++) {
+    for (d = 0; d < RPMH_VOTERS; d++) {
+        for (t = 0; t < rpmh_layout(d)->tcs_count; t++) {
             QcomRpmhTcs *tcs = &s->drv[d].tcs[t];
             while (tcs->running && !tcs->stalled && tcs->deadline <= now) {
                 QcomRpmhCommand *cmd = &tcs->commands[tcs->cursor];
@@ -303,20 +347,21 @@ static void rpmh_start(QcomSm8250RpmhState *s, unsigned d, unsigned t)
 static void rpmh_sleep(void *opaque, int drv, int level)
 {
     QcomSm8250RpmhState *s = opaque;
-    unsigned t, first = level ? 2 : 5;
+    const RpmhDrvLayout *layout = rpmh_layout(drv);
+    unsigned t, first = level ? layout->sleep_first : layout->wake_first;
 
     if (!s->ready || s->drv[drv].sleeping == !!level) {
         return;
     }
-    for (t = 0; t < RPMH_TCS_PER_DRV; t++) {
+    for (t = 0; t < layout->tcs_count; t++) {
         if (s->drv[drv].tcs[t].running) {
             qemu_log_mask(LOG_GUEST_ERROR, TYPE_QCOM_SM8250_RPMH
-                          ": DRV%d sleep/wake transition while busy\n", drv);
+                          ": voter%d sleep/wake transition while busy\n", drv);
             return;
         }
     }
     s->drv[drv].sleeping = !!level;
-    for (t = first; t < first + 3; t++) {
+    for (t = first; t < first + layout->low_power_count; t++) {
         if (s->drv[drv].tcs[t].enable) {
             rpmh_start(s, drv, t);
         }
@@ -337,6 +382,7 @@ static MemTxResult rpmh_read(void *opaque, hwaddr addr, uint64_t *value,
                               unsigned size, MemTxAttrs attrs)
 {
     QcomRpmhDrv *drv = opaque;
+    const RpmhDrvLayout *layout = rpmh_layout(drv - drv->owner->drv);
     QcomRpmhTcs *tcs;
     QcomRpmhCommand *cmd;
     unsigned t, reg, index;
@@ -352,8 +398,7 @@ static MemTxResult rpmh_read(void *opaque, hwaddr addr, uint64_t *value,
     case 4:
         return MEMTX_OK; /* No autonomous hardware solver advertised. */
     case 0xc:
-        *value = (RPMH_COMMANDS << 27) | (RPMH_TCS_PER_DRV << 12) |
-                 (RPMH_TCS_PER_DRV << 6) | RPMH_TCS_PER_DRV;
+        *value = layout->child_config;
         return MEMTX_OK;
     case 0x38:
         *value = drv->wake_hi;
@@ -361,20 +406,24 @@ static MemTxResult rpmh_read(void *opaque, hwaddr addr, uint64_t *value,
     case 0x40:
         *value = drv->wake_lo;
         return MEMTX_OK;
-    case TCS_BASE:
+    }
+    if (addr == layout->tcs_base) {
         *value = drv->irq_enable;
         return MEMTX_OK;
-    case TCS_BASE + 4:
+    }
+    if (addr == layout->tcs_base + 4) {
         *value = drv->irq_status;
         return MEMTX_OK;
-    case TCS_BASE + 8:
+    }
+    if (addr == layout->tcs_base + 8) {
         return MEMTX_OK;
     }
-    if (addr < TCS_BASE || addr >= TCS_BASE + RPMH_TCS_PER_DRV * TCS_STRIDE) {
+    if (addr < layout->tcs_base ||
+        addr >= layout->tcs_base + layout->tcs_count * TCS_STRIDE) {
         return rpmh_bad_access(drv, addr, false, 0);
     }
-    t = (addr - TCS_BASE) / TCS_STRIDE;
-    reg = (addr - TCS_BASE) % TCS_STRIDE;
+    t = (addr - layout->tcs_base) / TCS_STRIDE;
+    reg = (addr - layout->tcs_base) % TCS_STRIDE;
     tcs = &drv->tcs[t];
     switch (reg) {
     case 0x10:
@@ -383,11 +432,14 @@ static MemTxResult rpmh_read(void *opaque, hwaddr addr, uint64_t *value,
     case 0x14:
         *value = tcs->control;
         return MEMTX_OK;
+    case 0x18:
+        /* Downstream print_tcs_info() interprets nonzero as IDLE. */
+        *value = !tcs->running;
+        return MEMTX_OK;
     case 0x1c:
         *value = tcs->enable;
         return MEMTX_OK;
     }
-    /* RSC_DRV_STATUS polarity is not specified by the cited drivers. */
     if (reg < CMD_BASE || reg >= CMD_BASE + RPMH_COMMANDS * CMD_STRIDE) {
         return rpmh_bad_access(drv, addr, false, 0);
     }
@@ -420,6 +472,8 @@ static MemTxResult rpmh_write(void *opaque, hwaddr addr, uint64_t value,
 {
     QcomRpmhDrv *drv = opaque;
     QcomSm8250RpmhState *s = drv->owner;
+    unsigned voter = drv - s->drv;
+    const RpmhDrvLayout *layout = rpmh_layout(voter);
     QcomRpmhTcs *tcs;
     QcomRpmhCommand *cmd;
     unsigned t, reg;
@@ -438,26 +492,25 @@ static MemTxResult rpmh_write(void *opaque, hwaddr addr, uint64_t value,
     case 0x40:
         drv->wake_lo = value;
         return MEMTX_OK;
-    case TCS_BASE:
-        if (value & ~0xffU) {
+    }
+    if (addr == layout->tcs_base || addr == layout->tcs_base + 8) {
+        if (value & ~rpmh_irq_mask(voter)) {
             return rpmh_bad_access(drv, addr, true, value);
         }
-        drv->irq_enable = value;
-        rpmh_outputs(s);
-        return MEMTX_OK;
-    case TCS_BASE + 8:
-        if (value & ~0xffU) {
-            return rpmh_bad_access(drv, addr, true, value);
+        if (addr == layout->tcs_base) {
+            drv->irq_enable = value;
+        } else {
+            drv->irq_status &= ~value;
         }
-        drv->irq_status &= ~value;
         rpmh_outputs(s);
         return MEMTX_OK;
     }
-    if (addr < TCS_BASE || addr >= TCS_BASE + RPMH_TCS_PER_DRV * TCS_STRIDE) {
+    if (addr < layout->tcs_base ||
+        addr >= layout->tcs_base + layout->tcs_count * TCS_STRIDE) {
         return rpmh_bad_access(drv, addr, true, value);
     }
-    t = (addr - TCS_BASE) / TCS_STRIDE;
-    reg = (addr - TCS_BASE) % TCS_STRIDE;
+    t = (addr - layout->tcs_base) / TCS_STRIDE;
+    reg = (addr - layout->tcs_base) % TCS_STRIDE;
     tcs = &drv->tcs[t];
     if (reg == 0x14) {
         bool trigger = (value & AMC_TRIGGER) && !(tcs->control & AMC_TRIGGER);
@@ -474,7 +527,8 @@ static MemTxResult rpmh_write(void *opaque, hwaddr addr, uint64_t value,
             tcs->deadline = -1;
             rpmh_schedule(s);
         } else if (trigger) {
-            rpmh_start(s, drv - s->drv, t);
+            /* Display active requests legitimately borrow its wake TCS. */
+            rpmh_start(s, voter, t);
         }
         return MEMTX_OK;
     }
@@ -770,7 +824,7 @@ static void rpmh_reset(DeviceState *dev)
     unsigned d, t, i;
 
     timer_del(s->timer);
-    for (d = 0; d < RPMH_DRVS; d++) {
+    for (d = 0; d < RPMH_VOTERS; d++) {
         QcomRpmhDrv *drv = &s->drv[d];
         drv->irq_status = drv->irq_enable = 0;
         drv->wake_hi = drv->wake_lo = 0;
@@ -794,6 +848,24 @@ static void rpmh_reset(DeviceState *dev)
     rpmh_outputs(s);
 }
 
+static bool rpmh_tcs_is_reset(const QcomRpmhTcs *tcs)
+{
+    unsigned i;
+
+    if (tcs->wait || tcs->control || tcs->enable || tcs->running ||
+        tcs->stalled || tcs->cursor != -1 || tcs->deadline != -1) {
+        return false;
+    }
+    for (i = 0; i < RPMH_COMMANDS; i++) {
+        const QcomRpmhCommand *cmd = &tcs->commands[i];
+        if (cmd->msgid || cmd->address || cmd->data || cmd->status ||
+            cmd->response) {
+            return false;
+        }
+    }
+    return true;
+}
+
 static int rpmh_post_load(void *opaque, int version_id)
 {
     QcomSm8250RpmhState *s = opaque;
@@ -804,7 +876,7 @@ static int rpmh_post_load(void *opaque, int version_id)
     }
     for (i = 0; i < RPMH_RESOURCES; i++) {
         QcomRpmhResource *r = &s->resources[i];
-        for (d = 0; d < RPMH_DRVS; d++) {
+        for (d = 0; d < RPMH_VOTERS; d++) {
             if (rpmh_resources[i].kind == RPMH_BCM) {
                 if (r->votes[d][0] > 0x3fff || r->votes[d][1] > 0x3fff ||
                     r->votes[d][2] > 1 || r->votes[d][3] ||
@@ -830,14 +902,17 @@ static int rpmh_post_load(void *opaque, int version_id)
             }
         }
     }
-    for (d = 0; d < RPMH_DRVS; d++) {
+    for (d = 0; d < RPMH_VOTERS; d++) {
         QcomRpmhDrv *drv = &s->drv[d];
-        if ((drv->irq_enable | drv->irq_status) & ~0xffU ||
+        if ((drv->irq_enable | drv->irq_status) & ~rpmh_irq_mask(d) ||
             drv->wake_hi & ~0xffffffU) {
             return -EINVAL;
         }
         for (t = 0; t < RPMH_TCS_PER_DRV; t++) {
             QcomRpmhTcs *tcs = &drv->tcs[t];
+            if (t >= rpmh_layout(d)->tcs_count && !rpmh_tcs_is_reset(tcs)) {
+                return -EINVAL;
+            }
             if (((tcs->wait | tcs->enable) & ~0xffffU) ||
                 (tcs->control & ~(AMC_ENABLE | AMC_TRIGGER)) ||
                 ((tcs->control & AMC_TRIGGER) &&
@@ -922,25 +997,25 @@ static const VMStateDescription vmstate_rpmh_drv = {
 
 static const VMStateDescription vmstate_rpmh_resource = {
     .name = TYPE_QCOM_SM8250_RPMH "/resource",
-    .version_id = 1,
-    .minimum_version_id = 1,
+    .version_id = 2,
+    .minimum_version_id = 2,
     .fields = (const VMStateField[]) {
-        VMSTATE_UINT32_2DARRAY(votes, QcomRpmhResource, RPMH_DRVS, 4),
-        VMSTATE_UINT32_ARRAY(staged, QcomRpmhResource, RPMH_DRVS),
-        VMSTATE_BOOL_ARRAY(dirty, QcomRpmhResource, RPMH_DRVS),
+        VMSTATE_UINT32_2DARRAY(votes, QcomRpmhResource, RPMH_VOTERS, 4),
+        VMSTATE_UINT32_ARRAY(staged, QcomRpmhResource, RPMH_VOTERS),
+        VMSTATE_BOOL_ARRAY(dirty, QcomRpmhResource, RPMH_VOTERS),
         VMSTATE_END_OF_LIST()
     },
 };
 
 static const VMStateDescription vmstate_rpmh = {
     .name = TYPE_QCOM_SM8250_RPMH,
-    .version_id = 1,
-    .minimum_version_id = 1,
+    .version_id = 2,
+    .minimum_version_id = 2,
     .post_load = rpmh_post_load,
     .fields = (const VMStateField[]) {
         VMSTATE_BUFFER(digest, QcomSm8250RpmhState),
         VMSTATE_UINT64_EQUAL(command_latency_ns, QcomSm8250RpmhState),
-        VMSTATE_STRUCT_ARRAY(drv, QcomSm8250RpmhState, RPMH_DRVS, 1,
+        VMSTATE_STRUCT_ARRAY(drv, QcomSm8250RpmhState, RPMH_VOTERS, 1,
                              vmstate_rpmh_drv, QcomRpmhDrv),
         VMSTATE_STRUCT_ARRAY(resources, QcomSm8250RpmhState, RPMH_RESOURCES, 1,
                              vmstate_rpmh_resource, QcomRpmhResource),
@@ -1050,6 +1125,19 @@ static void rpmh_realize(DeviceState *dev, Error **errp)
     rpmh_reset(dev);
 }
 
+static void rpmh_init_drv(QcomSm8250RpmhState *s, unsigned voter)
+{
+    g_autofree char *name = g_strdup_printf(TYPE_QCOM_SM8250_RPMH ".voter%u",
+                                           voter);
+    QcomRpmhDrv *drv = &s->drv[voter];
+
+    drv->owner = s;
+    memory_region_init_io(&drv->iomem, OBJECT(s), &rpmh_ops, drv, name,
+                          RPMH_DRV_SIZE);
+    sysbus_init_mmio(SYS_BUS_DEVICE(s), &drv->iomem);
+    sysbus_init_irq(SYS_BUS_DEVICE(s), &drv->irq);
+}
+
 static void rpmh_init(Object *obj)
 {
     QcomSm8250RpmhState *s = QCOM_SM8250_RPMH(obj);
@@ -1061,21 +1149,17 @@ static void rpmh_init(Object *obj)
     unsigned i, f;
 
     QEMU_BUILD_BUG_ON(ARRAY_SIZE(rpmh_resources) != RPMH_RESOURCES);
+    /* Preserve existing MMIO0..2 and command-db MMIO3 indices. */
     for (i = 0; i < RPMH_DRVS; i++) {
-        g_autofree char *name = g_strdup_printf(
-            TYPE_QCOM_SM8250_RPMH ".drv%u", i);
-        s->drv[i].owner = s;
-        memory_region_init_io(&s->drv[i].iomem, obj, &rpmh_ops, &s->drv[i],
-                              name, RPMH_DRV_SIZE);
-        sysbus_init_mmio(SYS_BUS_DEVICE(s), &s->drv[i].iomem);
-        sysbus_init_irq(SYS_BUS_DEVICE(s), &s->drv[i].irq);
+        rpmh_init_drv(s, i);
     }
     memory_region_init_io(&s->command_db_region, obj, &rpmh_db_ops, s,
                           TYPE_QCOM_SM8250_RPMH ".command-db",
                           RPMH_CMD_DB_SIZE);
     sysbus_init_mmio(SYS_BUS_DEVICE(s), &s->command_db_region);
+    rpmh_init_drv(s, RPMH_DISPLAY_DRV);
     qdev_init_gpio_out_named(dev, s->power, "power", RPMH_RESOURCES);
-    qdev_init_gpio_in_named(dev, rpmh_sleep, "sleep", RPMH_DRVS);
+    qdev_init_gpio_in_named(dev, rpmh_sleep, "sleep", RPMH_VOTERS);
     s->xo_board = qdev_init_clock_in(dev, "xo-board", rpmh_clock_changed,
                                      s, ClockUpdate);
     for (i = 0; i < RPMH_RESOURCES; i++) {
