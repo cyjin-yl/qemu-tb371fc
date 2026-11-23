@@ -178,4 +178,3 @@ The existing [UFS model notes](ufs-sm8250.md) retain the fixed Linux driver
 references and hardware-equivalence limits. This checkpoint gate does not
 cover ICE, RPMB, analog PHY behavior, stock Android, a native-DT boot, an XNU
 boot or arbitrary active storage queues.
-
