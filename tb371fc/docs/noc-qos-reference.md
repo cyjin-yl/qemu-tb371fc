@@ -58,8 +58,8 @@ The bounded original-DT evidence is identified by:
 | --- | --- |
 | Original DTB SHA256 | `5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207` |
 | Original kernel SHA256 | `ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f` |
-| Raw 219-node NoC subtree, configuration and fault evidence | Git blob `c300271fab1acabb6d1b45ddcf626f5e2f091d25` |
-| Decoded resource/fabric/client layout | Git blob `77b1851faf6063d4c1a88d11c524de1b239005e6` |
+| [Raw 219-node NoC subtree, configuration and fault evidence](../evidence/wholeboard-20261123-a47/noc-dt-evidence-0508.json) | Git blob `c300271fab1acabb6d1b45ddcf626f5e2f091d25` |
+| [Decoded resource/fabric/client layout](../evidence/wholeboard-20261123-a47/noc-layout-0508.json) | Git blob `77b1851faf6063d4c1a88d11c524de1b239005e6` |
 
 These evidence objects are in `cyjin-yl/qemu-tb371fc`.
 Numeric DT fields are decoded as big-endian 32-bit cells; printable-string
@@ -127,8 +127,11 @@ ports, and all unlisted ports remain unmapped.
 
 Only aligned 32-bit little-endian accesses are supported. Each valid write
 replaces the complete word. A write containing any unsupported bit fails
-atomically and leaves the previous word intact. Narrow and unaligned
-accesses are rejected by the memory core. Readback returns actual stored
+atomically and leaves the previous word intact. This atomicity applies to
+one 4-byte device transaction. A wider QTest or address-space request may
+be split into several transactions; a later transaction into a hole does
+not roll back a previously accepted word. Narrow and unaligned accesses
+are rejected by the memory core. Readback returns actual stored
 configuration; time advancement does not rewrite it, and reads have no
 side effects.
 
