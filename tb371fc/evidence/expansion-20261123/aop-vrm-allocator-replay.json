@@ -1,0 +1,3605 @@
+{
+  "schema_version": 1,
+  "firmware_sha256": "3dbb0746d21100d124d76ee19b096d122d58c4aa534dec5828005835535b6671",
+  "firmware_bytes": 524288,
+  "firmware_is_pristine_stock": false,
+  "live_command_db_captured": false,
+  "complete": false,
+  "method": "Isolated execution of original Thumb allocator, address encoder, auxiliary builder and command-db insertion",
+  "engine": "Unicorn 2.1.4, ARM Thumb; optional analysis dependency, not part of QEMU",
+  "assumptions": [
+    "Normal PMIC enumeration branch; target PMIC indexes 0,2,3,5 are visited",
+    "Discovered peripheral counts include every enabled or parent-containing static target entry",
+    "Only the identified smpf2 platform mutation is varied; other runtime filtering is unmeasured"
+  ],
+  "excluded": [
+    "Complete AOP startup",
+    "SPMI/MMIO and physical PMIC execution",
+    "Miscellaneous target registration",
+    "Live RAM header/checksum and exact placement",
+    "Proof that the tablet took either particular assumed enumeration path"
+  ],
+  "replacement_functions": [
+    {
+      "vma": 9388,
+      "purpose": "Allocate zeroed private DB buffers, exactly 2400 or 2048 bytes"
+    },
+    {
+      "vma": 18922,
+      "purpose": "Allocate zeroed private 12-byte parent metadata"
+    }
+  ],
+  "original_function_file_offsets": {
+    "normal_enumeration": 188144,
+    "parent_registration": 188456,
+    "allocator": 25864,
+    "registration_wrapper": 94356,
+    "address_encoder": 96296,
+    "auxiliary_builder": 96380,
+    "command_db_init": 35820,
+    "command_db_insert": 35948,
+    "platform_smpf2_mutation": 186928
+  },
+  "property_dispatch_file_offset": 96500,
+  "target_count_file_offsets": {
+    "smps": 105584,
+    "ldo": 105560,
+    "bob": 105608
+  },
+  "target_rows": [
+    {
+      "pmic_index": 0,
+      "kind": 1,
+      "peripheral": 3,
+      "name": "smpa3",
+      "alias": "vrm.cx",
+      "parent": null,
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181224,
+      "name_pair_file_offset": 182952,
+      "dependency_file_offset": 182392
+    },
+    {
+      "pmic_index": 0,
+      "kind": 1,
+      "peripheral": 4,
+      "name": "smpa4",
+      "alias": null,
+      "parent": null,
+      "enabled": true,
+      "children": [
+        "ldoc1",
+        "ldoc8",
+        "ldof7"
+      ],
+      "parent_count": 3,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181256,
+      "name_pair_file_offset": 182960,
+      "dependency_file_offset": 182408
+    },
+    {
+      "pmic_index": 0,
+      "kind": 1,
+      "peripheral": 5,
+      "name": "smpa5",
+      "alias": null,
+      "parent": null,
+      "enabled": true,
+      "children": [
+        "ldoa7",
+        "ldoa12",
+        "ldoa14",
+        "ldoa15"
+      ],
+      "parent_count": 4,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181288,
+      "name_pair_file_offset": 182968,
+      "dependency_file_offset": 182424
+    },
+    {
+      "pmic_index": 0,
+      "kind": 1,
+      "peripheral": 6,
+      "name": "smpa6",
+      "alias": null,
+      "parent": null,
+      "enabled": true,
+      "children": [
+        "ldoa3",
+        "ldoa4",
+        "ldoa5",
+        "ldoa18"
+      ],
+      "parent_count": 4,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181320,
+      "name_pair_file_offset": 182976,
+      "dependency_file_offset": 182440
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 2,
+      "name": "ldoa2",
+      "alias": null,
+      "parent": "bobc1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180040,
+      "name_pair_file_offset": 184484,
+      "dependency_file_offset": 183048
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 3,
+      "name": "ldoa3",
+      "alias": null,
+      "parent": "smpa6",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180072,
+      "name_pair_file_offset": 184492,
+      "dependency_file_offset": 183064
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 4,
+      "name": "ldoa4",
+      "alias": "vrm.lmx",
+      "parent": "smpa6",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180104,
+      "name_pair_file_offset": 184500,
+      "dependency_file_offset": 183080
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 5,
+      "name": "ldoa5",
+      "alias": null,
+      "parent": "smpa6",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180136,
+      "name_pair_file_offset": 184508,
+      "dependency_file_offset": 183096
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 6,
+      "name": "ldoa6",
+      "alias": null,
+      "parent": "smpc8",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180168,
+      "name_pair_file_offset": 184516,
+      "dependency_file_offset": 183112
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 7,
+      "name": "ldoa7",
+      "alias": null,
+      "parent": "smpa5",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180200,
+      "name_pair_file_offset": 184524,
+      "dependency_file_offset": 183128
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 9,
+      "name": "ldoa9",
+      "alias": null,
+      "parent": "smpc8",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180264,
+      "name_pair_file_offset": 184540,
+      "dependency_file_offset": 183160
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 10,
+      "name": "ldoa10",
+      "alias": null,
+      "parent": "bobc1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180296,
+      "name_pair_file_offset": 184548,
+      "dependency_file_offset": 183176
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 11,
+      "name": "ldoa11",
+      "alias": "vrm.lcx",
+      "parent": null,
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180328,
+      "name_pair_file_offset": 184556,
+      "dependency_file_offset": 183192
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 12,
+      "name": "ldoa12",
+      "alias": null,
+      "parent": "smpa5",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180360,
+      "name_pair_file_offset": 184564,
+      "dependency_file_offset": 183208
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 13,
+      "name": "ldoa13",
+      "alias": null,
+      "parent": "bobc1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180392,
+      "name_pair_file_offset": 184572,
+      "dependency_file_offset": 183224
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 14,
+      "name": "ldoa14",
+      "alias": null,
+      "parent": "smpa5",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180424,
+      "name_pair_file_offset": 184580,
+      "dependency_file_offset": 183240
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 15,
+      "name": "ldoa15",
+      "alias": null,
+      "parent": "smpa5",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180456,
+      "name_pair_file_offset": 184588,
+      "dependency_file_offset": 183256
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 16,
+      "name": "ldoa16",
+      "alias": null,
+      "parent": "bobc1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180488,
+      "name_pair_file_offset": 184596,
+      "dependency_file_offset": 183272
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 17,
+      "name": "ldoa17",
+      "alias": null,
+      "parent": "bobc1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180520,
+      "name_pair_file_offset": 184604,
+      "dependency_file_offset": 183288
+    },
+    {
+      "pmic_index": 0,
+      "kind": 2,
+      "peripheral": 18,
+      "name": "ldoa18",
+      "alias": null,
+      "parent": "smpa6",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180552,
+      "name_pair_file_offset": 184612,
+      "dependency_file_offset": 183304
+    },
+    {
+      "pmic_index": 0,
+      "kind": 5,
+      "peripheral": 1,
+      "name": "lnbclka1",
+      "alias": "vrm.xob",
+      "parent": "rfclkd4",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181832,
+      "name_pair_file_offset": 184788,
+      "dependency_file_offset": 183792
+    },
+    {
+      "pmic_index": 0,
+      "kind": 5,
+      "peripheral": 2,
+      "name": "lnbclka2",
+      "alias": null,
+      "parent": "rfclkd4",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181844,
+      "name_pair_file_offset": 184796,
+      "dependency_file_offset": 183808
+    },
+    {
+      "pmic_index": 0,
+      "kind": 5,
+      "peripheral": 3,
+      "name": "lnbclka3",
+      "alias": null,
+      "parent": "rfclkd4",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181856,
+      "name_pair_file_offset": 184804,
+      "dependency_file_offset": 183824
+    },
+    {
+      "pmic_index": 0,
+      "kind": 5,
+      "peripheral": 4,
+      "name": "rfclka1",
+      "alias": null,
+      "parent": "rfclkd4",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181868,
+      "name_pair_file_offset": 184812,
+      "dependency_file_offset": 183840
+    },
+    {
+      "pmic_index": 0,
+      "kind": 5,
+      "peripheral": 6,
+      "name": "rfclka3",
+      "alias": null,
+      "parent": "rfclkd4",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181892,
+      "name_pair_file_offset": 184828,
+      "dependency_file_offset": 183872
+    },
+    {
+      "pmic_index": 2,
+      "kind": 1,
+      "peripheral": 1,
+      "name": "smpc1",
+      "alias": "vrm.gfx",
+      "parent": null,
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181480,
+      "name_pair_file_offset": 182848,
+      "dependency_file_offset": 182564
+    },
+    {
+      "pmic_index": 2,
+      "kind": 1,
+      "peripheral": 3,
+      "name": "smpc3",
+      "alias": "vrm.mx",
+      "parent": null,
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181544,
+      "name_pair_file_offset": 182864,
+      "dependency_file_offset": 182596
+    },
+    {
+      "pmic_index": 2,
+      "kind": 1,
+      "peripheral": 4,
+      "name": "smpc4",
+      "alias": "vrm.mmcx",
+      "parent": null,
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181576,
+      "name_pair_file_offset": 182872,
+      "dependency_file_offset": 182612
+    },
+    {
+      "pmic_index": 2,
+      "kind": 1,
+      "peripheral": 6,
+      "name": "smpc6",
+      "alias": "vrm.ebi",
+      "parent": null,
+      "enabled": true,
+      "children": [
+        "ldoa1",
+        "ldoa8"
+      ],
+      "parent_count": 2,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181640,
+      "name_pair_file_offset": 182888,
+      "dependency_file_offset": 182644
+    },
+    {
+      "pmic_index": 2,
+      "kind": 1,
+      "peripheral": 7,
+      "name": "smpc7",
+      "alias": null,
+      "parent": null,
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181672,
+      "name_pair_file_offset": 182896,
+      "dependency_file_offset": 182660
+    },
+    {
+      "pmic_index": 2,
+      "kind": 1,
+      "peripheral": 8,
+      "name": "smpc8",
+      "alias": null,
+      "parent": null,
+      "enabled": true,
+      "children": [
+        "ldoa6",
+        "ldoa9",
+        "ldoc2",
+        "ldoc3",
+        "ldof2"
+      ],
+      "parent_count": 5,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181704,
+      "name_pair_file_offset": 182904,
+      "dependency_file_offset": 182676
+    },
+    {
+      "pmic_index": 2,
+      "kind": 2,
+      "peripheral": 1,
+      "name": "ldoc1",
+      "alias": null,
+      "parent": "smpa4",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180584,
+      "name_pair_file_offset": 184628,
+      "dependency_file_offset": 183336
+    },
+    {
+      "pmic_index": 2,
+      "kind": 2,
+      "peripheral": 2,
+      "name": "ldoc2",
+      "alias": null,
+      "parent": "smpc8",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180616,
+      "name_pair_file_offset": 184636,
+      "dependency_file_offset": 183352
+    },
+    {
+      "pmic_index": 2,
+      "kind": 2,
+      "peripheral": 3,
+      "name": "ldoc3",
+      "alias": null,
+      "parent": "smpc8",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180648,
+      "name_pair_file_offset": 184644,
+      "dependency_file_offset": 183368
+    },
+    {
+      "pmic_index": 2,
+      "kind": 2,
+      "peripheral": 4,
+      "name": "ldoc4",
+      "alias": null,
+      "parent": "bobc1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180680,
+      "name_pair_file_offset": 184652,
+      "dependency_file_offset": 183384
+    },
+    {
+      "pmic_index": 2,
+      "kind": 2,
+      "peripheral": 5,
+      "name": "ldoc5",
+      "alias": null,
+      "parent": "bobc1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180712,
+      "name_pair_file_offset": 184660,
+      "dependency_file_offset": 183400
+    },
+    {
+      "pmic_index": 2,
+      "kind": 2,
+      "peripheral": 6,
+      "name": "ldoc6",
+      "alias": null,
+      "parent": "bobc1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180744,
+      "name_pair_file_offset": 184668,
+      "dependency_file_offset": 183416
+    },
+    {
+      "pmic_index": 2,
+      "kind": 2,
+      "peripheral": 7,
+      "name": "ldoc7",
+      "alias": null,
+      "parent": "bobc1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180776,
+      "name_pair_file_offset": 184676,
+      "dependency_file_offset": 183432
+    },
+    {
+      "pmic_index": 2,
+      "kind": 2,
+      "peripheral": 8,
+      "name": "ldoc8",
+      "alias": null,
+      "parent": "smpa4",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180808,
+      "name_pair_file_offset": 184684,
+      "dependency_file_offset": 183448
+    },
+    {
+      "pmic_index": 2,
+      "kind": 2,
+      "peripheral": 9,
+      "name": "ldoc9",
+      "alias": null,
+      "parent": "bobc1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180840,
+      "name_pair_file_offset": 184692,
+      "dependency_file_offset": 183464
+    },
+    {
+      "pmic_index": 2,
+      "kind": 2,
+      "peripheral": 10,
+      "name": "ldoc10",
+      "alias": null,
+      "parent": "bobc1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180872,
+      "name_pair_file_offset": 184700,
+      "dependency_file_offset": 183480
+    },
+    {
+      "pmic_index": 2,
+      "kind": 2,
+      "peripheral": 11,
+      "name": "ldoc11",
+      "alias": null,
+      "parent": "bobc1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180904,
+      "name_pair_file_offset": 184708,
+      "dependency_file_offset": 183496
+    },
+    {
+      "pmic_index": 2,
+      "kind": 3,
+      "peripheral": 1,
+      "name": "bobc1",
+      "alias": null,
+      "parent": null,
+      "enabled": true,
+      "children": [
+        "ldoa2",
+        "ldoa10",
+        "ldoa13",
+        "ldoa16",
+        "ldoa17",
+        "ldoc4",
+        "ldoc5",
+        "ldoc6",
+        "ldoc7",
+        "ldoc9",
+        "ldoc10",
+        "ldoc11",
+        "ldof5",
+        "ldof6"
+      ],
+      "parent_count": 14,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181800,
+      "name_pair_file_offset": 182920,
+      "dependency_file_offset": 182824
+    },
+    {
+      "pmic_index": 3,
+      "kind": 5,
+      "peripheral": 6,
+      "name": "rfclkd3",
+      "alias": null,
+      "parent": null,
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 202944,
+      "name_pair_file_offset": 183712,
+      "dependency_file_offset": 184116
+    },
+    {
+      "pmic_index": 3,
+      "kind": 5,
+      "peripheral": 7,
+      "name": "rfclkd4",
+      "alias": null,
+      "parent": null,
+      "enabled": true,
+      "children": [
+        "lnbclka1",
+        "lnbclka2",
+        "lnbclka3",
+        "rfclka1",
+        "rfclka3"
+      ],
+      "parent_count": 5,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 202956,
+      "name_pair_file_offset": 183720,
+      "dependency_file_offset": 184132
+    },
+    {
+      "pmic_index": 5,
+      "kind": 1,
+      "peripheral": 1,
+      "name": "smpf1",
+      "alias": null,
+      "parent": null,
+      "enabled": true,
+      "children": [
+        "ldof1",
+        "ldof3",
+        "ldof4"
+      ],
+      "parent_count": 3,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181736,
+      "name_pair_file_offset": 183520,
+      "dependency_file_offset": 182720
+    },
+    {
+      "pmic_index": 5,
+      "kind": 1,
+      "peripheral": 2,
+      "name": "smpf2",
+      "alias": null,
+      "parent": null,
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181768,
+      "name_pair_file_offset": 183528,
+      "dependency_file_offset": 182736
+    },
+    {
+      "pmic_index": 5,
+      "kind": 2,
+      "peripheral": 1,
+      "name": "ldof1",
+      "alias": null,
+      "parent": "smpf1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180936,
+      "name_pair_file_offset": 184724,
+      "dependency_file_offset": 183552
+    },
+    {
+      "pmic_index": 5,
+      "kind": 2,
+      "peripheral": 2,
+      "name": "ldof2",
+      "alias": null,
+      "parent": "smpc8",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 180968,
+      "name_pair_file_offset": 184732,
+      "dependency_file_offset": 183568
+    },
+    {
+      "pmic_index": 5,
+      "kind": 2,
+      "peripheral": 3,
+      "name": "ldof3",
+      "alias": null,
+      "parent": "smpf1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181000,
+      "name_pair_file_offset": 184740,
+      "dependency_file_offset": 183584
+    },
+    {
+      "pmic_index": 5,
+      "kind": 2,
+      "peripheral": 5,
+      "name": "ldof5",
+      "alias": null,
+      "parent": "bobc1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181064,
+      "name_pair_file_offset": 184756,
+      "dependency_file_offset": 183616
+    },
+    {
+      "pmic_index": 5,
+      "kind": 2,
+      "peripheral": 6,
+      "name": "ldof6",
+      "alias": null,
+      "parent": "bobc1",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181096,
+      "name_pair_file_offset": 184764,
+      "dependency_file_offset": 183632
+    },
+    {
+      "pmic_index": 5,
+      "kind": 2,
+      "peripheral": 7,
+      "name": "ldof7",
+      "alias": null,
+      "parent": "smpa4",
+      "enabled": true,
+      "children": [],
+      "parent_count": 0,
+      "parent_flags": 0,
+      "resource_kind": 0,
+      "config_file_offset": 181128,
+      "name_pair_file_offset": 184772,
+      "dependency_file_offset": 183648
+    }
+  ],
+  "variants": [
+    {
+      "disable_smpf2": false,
+      "instruction_count": 73295,
+      "pc_trace_sha256": "523fa651cebfa718f0e27cd24d31f74602cf9223c4e651fc538efa0964e31325",
+      "next_resource_id": 54,
+      "emitted_records": 70,
+      "unique_names": 61,
+      "identical_duplicate_names": [
+        "smpa4",
+        "smpa5",
+        "smpa6",
+        "smpc6",
+        "vrm.ebi",
+        "smpc8",
+        "bobc1",
+        "rfclkd4",
+        "smpf1"
+      ],
+      "allocations": [
+        {
+          "address": 537395200,
+          "size": 2400
+        },
+        {
+          "address": 537397632,
+          "size": 2048
+        },
+        {
+          "address": 537399680,
+          "size": 12
+        },
+        {
+          "address": 537399744,
+          "size": 12
+        },
+        {
+          "address": 537399808,
+          "size": 12
+        },
+        {
+          "address": 537399872,
+          "size": 12
+        },
+        {
+          "address": 537399936,
+          "size": 12
+        },
+        {
+          "address": 537400000,
+          "size": 12
+        },
+        {
+          "address": 537400064,
+          "size": 12
+        },
+        {
+          "address": 537400128,
+          "size": 12
+        }
+      ],
+      "events": [
+        {
+          "stage": "parent",
+          "name": "smpa4",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 3,
+          "resource_id": 0,
+          "next_id": 1,
+          "instructions": 668
+        },
+        {
+          "stage": "parent",
+          "name": "smpa5",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 4,
+          "resource_id": 1,
+          "next_id": 2,
+          "instructions": 748
+        },
+        {
+          "stage": "parent",
+          "name": "smpa6",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 4,
+          "resource_id": 2,
+          "next_id": 3,
+          "instructions": 829
+        },
+        {
+          "stage": "parent",
+          "name": "smpc6",
+          "alias": "vrm.ebi",
+          "parent": null,
+          "reserved_children": 2,
+          "resource_id": 3,
+          "next_id": 4,
+          "instructions": 1384
+        },
+        {
+          "stage": "parent",
+          "name": "smpc8",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 5,
+          "resource_id": 4,
+          "next_id": 5,
+          "instructions": 955
+        },
+        {
+          "stage": "parent",
+          "name": "bobc1",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 14,
+          "resource_id": 5,
+          "next_id": 6,
+          "instructions": 857
+        },
+        {
+          "stage": "parent",
+          "name": "rfclkd4",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 5,
+          "resource_id": 6,
+          "next_id": 7,
+          "instructions": 962
+        },
+        {
+          "stage": "parent",
+          "name": "smpf1",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 3,
+          "resource_id": 7,
+          "next_id": 8,
+          "instructions": 1079
+        },
+        {
+          "stage": "resource",
+          "name": "smpa3",
+          "alias": "vrm.cx",
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 8,
+          "next_id": 9,
+          "instructions": 1543
+        },
+        {
+          "stage": "resource",
+          "name": "smpa4",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 0,
+          "next_id": 9,
+          "instructions": 1055
+        },
+        {
+          "stage": "resource",
+          "name": "smpa5",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 1,
+          "next_id": 9,
+          "instructions": 1055
+        },
+        {
+          "stage": "resource",
+          "name": "smpa6",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 2,
+          "next_id": 9,
+          "instructions": 1055
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa2",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 9,
+          "next_id": 23,
+          "instructions": 1105
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa3",
+          "alias": null,
+          "parent": "smpa6",
+          "reserved_children": 0,
+          "resource_id": 23,
+          "next_id": 27,
+          "instructions": 1308
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa4",
+          "alias": "vrm.lmx",
+          "parent": "smpa6",
+          "reserved_children": 0,
+          "resource_id": 24,
+          "next_id": 27,
+          "instructions": 1814
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa5",
+          "alias": null,
+          "parent": "smpa6",
+          "reserved_children": 0,
+          "resource_id": 25,
+          "next_id": 27,
+          "instructions": 1303
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa6",
+          "alias": null,
+          "parent": "smpc8",
+          "reserved_children": 0,
+          "resource_id": 27,
+          "next_id": 32,
+          "instructions": 1297
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa7",
+          "alias": null,
+          "parent": "smpa5",
+          "reserved_children": 0,
+          "resource_id": 32,
+          "next_id": 36,
+          "instructions": 1311
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa9",
+          "alias": null,
+          "parent": "smpc8",
+          "reserved_children": 0,
+          "resource_id": 28,
+          "next_id": 36,
+          "instructions": 1291
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa10",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 10,
+          "next_id": 36,
+          "instructions": 1139
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa11",
+          "alias": "vrm.lcx",
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 36,
+          "next_id": 37,
+          "instructions": 1367
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa12",
+          "alias": null,
+          "parent": "smpa5",
+          "reserved_children": 0,
+          "resource_id": 33,
+          "next_id": 37,
+          "instructions": 1345
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa13",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 11,
+          "next_id": 37,
+          "instructions": 1139
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa14",
+          "alias": null,
+          "parent": "smpa5",
+          "reserved_children": 0,
+          "resource_id": 34,
+          "next_id": 37,
+          "instructions": 1345
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa15",
+          "alias": null,
+          "parent": "smpa5",
+          "reserved_children": 0,
+          "resource_id": 35,
+          "next_id": 37,
+          "instructions": 1345
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa16",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 12,
+          "next_id": 37,
+          "instructions": 1139
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa17",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 13,
+          "next_id": 37,
+          "instructions": 1139
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa18",
+          "alias": null,
+          "parent": "smpa6",
+          "reserved_children": 0,
+          "resource_id": 26,
+          "next_id": 37,
+          "instructions": 1342
+        },
+        {
+          "stage": "resource",
+          "name": "lnbclka1",
+          "alias": "vrm.xob",
+          "parent": "rfclkd4",
+          "reserved_children": 0,
+          "resource_id": 37,
+          "next_id": 42,
+          "instructions": 1731
+        },
+        {
+          "stage": "resource",
+          "name": "lnbclka2",
+          "alias": null,
+          "parent": "rfclkd4",
+          "reserved_children": 0,
+          "resource_id": 38,
+          "next_id": 42,
+          "instructions": 1214
+        },
+        {
+          "stage": "resource",
+          "name": "lnbclka3",
+          "alias": null,
+          "parent": "rfclkd4",
+          "reserved_children": 0,
+          "resource_id": 39,
+          "next_id": 42,
+          "instructions": 1214
+        },
+        {
+          "stage": "resource",
+          "name": "rfclka1",
+          "alias": null,
+          "parent": "rfclkd4",
+          "reserved_children": 0,
+          "resource_id": 40,
+          "next_id": 42,
+          "instructions": 1341
+        },
+        {
+          "stage": "resource",
+          "name": "rfclka3",
+          "alias": null,
+          "parent": "rfclkd4",
+          "reserved_children": 0,
+          "resource_id": 41,
+          "next_id": 42,
+          "instructions": 1341
+        },
+        {
+          "stage": "resource",
+          "name": "smpc1",
+          "alias": "vrm.gfx",
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 42,
+          "next_id": 43,
+          "instructions": 1566
+        },
+        {
+          "stage": "resource",
+          "name": "smpc3",
+          "alias": "vrm.mx",
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 43,
+          "next_id": 44,
+          "instructions": 1532
+        },
+        {
+          "stage": "resource",
+          "name": "smpc4",
+          "alias": "vrm.mmcx",
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 44,
+          "next_id": 45,
+          "instructions": 1566
+        },
+        {
+          "stage": "resource",
+          "name": "smpc6",
+          "alias": "vrm.ebi",
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 3,
+          "next_id": 45,
+          "instructions": 1553
+        },
+        {
+          "stage": "resource",
+          "name": "smpc7",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 45,
+          "next_id": 46,
+          "instructions": 1057
+        },
+        {
+          "stage": "resource",
+          "name": "smpc8",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 4,
+          "next_id": 46,
+          "instructions": 1042
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc1",
+          "alias": null,
+          "parent": "smpa4",
+          "reserved_children": 0,
+          "resource_id": 46,
+          "next_id": 49,
+          "instructions": 1312
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc2",
+          "alias": null,
+          "parent": "smpc8",
+          "reserved_children": 0,
+          "resource_id": 29,
+          "next_id": 49,
+          "instructions": 1291
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc3",
+          "alias": null,
+          "parent": "smpc8",
+          "reserved_children": 0,
+          "resource_id": 30,
+          "next_id": 49,
+          "instructions": 1291
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc4",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 14,
+          "next_id": 49,
+          "instructions": 1099
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc5",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 15,
+          "next_id": 49,
+          "instructions": 1099
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc6",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 16,
+          "next_id": 49,
+          "instructions": 1099
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc7",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 17,
+          "next_id": 49,
+          "instructions": 1099
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc8",
+          "alias": null,
+          "parent": "smpa4",
+          "reserved_children": 0,
+          "resource_id": 47,
+          "next_id": 49,
+          "instructions": 1304
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc9",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 18,
+          "next_id": 49,
+          "instructions": 1100
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc10",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 19,
+          "next_id": 49,
+          "instructions": 1139
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc11",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 20,
+          "next_id": 49,
+          "instructions": 1139
+        },
+        {
+          "stage": "resource",
+          "name": "bobc1",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 5,
+          "next_id": 49,
+          "instructions": 851
+        },
+        {
+          "stage": "resource",
+          "name": "rfclkd3",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 49,
+          "next_id": 50,
+          "instructions": 969
+        },
+        {
+          "stage": "resource",
+          "name": "rfclkd4",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 6,
+          "next_id": 50,
+          "instructions": 955
+        },
+        {
+          "stage": "resource",
+          "name": "smpf1",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 7,
+          "next_id": 50,
+          "instructions": 1031
+        },
+        {
+          "stage": "resource",
+          "name": "smpf2",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 50,
+          "next_id": 51,
+          "instructions": 1044
+        },
+        {
+          "stage": "resource",
+          "name": "ldof1",
+          "alias": null,
+          "parent": "smpf1",
+          "reserved_children": 0,
+          "resource_id": 51,
+          "next_id": 54,
+          "instructions": 1288
+        },
+        {
+          "stage": "resource",
+          "name": "ldof2",
+          "alias": null,
+          "parent": "smpc8",
+          "reserved_children": 0,
+          "resource_id": 31,
+          "next_id": 54,
+          "instructions": 1291
+        },
+        {
+          "stage": "resource",
+          "name": "ldof3",
+          "alias": null,
+          "parent": "smpf1",
+          "reserved_children": 0,
+          "resource_id": 52,
+          "next_id": 54,
+          "instructions": 1281
+        },
+        {
+          "stage": "resource",
+          "name": "ldof5",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 21,
+          "next_id": 54,
+          "instructions": 1099
+        },
+        {
+          "stage": "resource",
+          "name": "ldof6",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 22,
+          "next_id": 54,
+          "instructions": 1099
+        },
+        {
+          "stage": "resource",
+          "name": "ldof7",
+          "alias": null,
+          "parent": "smpa4",
+          "reserved_children": 0,
+          "resource_id": 48,
+          "next_id": 54,
+          "instructions": 1305
+        }
+      ],
+      "entries": [
+        {
+          "name": "smpa4",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262144,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpa5",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262400,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpa6",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262656,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc6",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262912,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.ebi",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262912,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc8",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263168,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "bobc1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263424,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "rfclkd4",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263680,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpf1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263936,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpa3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 264192,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.cx",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 264192,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpa4",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262144,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpa5",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262400,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpa6",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262656,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa2",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 264448,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 268032,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa4",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 268288,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.lmx",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 268288,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa5",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 268544,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa6",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 269056,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa7",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 270336,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa9",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 269312,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa10",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 264704,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa11",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 271360,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.lcx",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 271360,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa12",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 270592,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa13",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 264960,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa14",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 270848,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa15",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 271104,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa16",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 265216,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa17",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 265472,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa18",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 268800,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "lnbclka1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 271616,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.xob",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 271616,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "lnbclka2",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 271872,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "lnbclka3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 272128,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "rfclka1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 272384,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "rfclka3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 272640,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 272896,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.gfx",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 272896,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 273152,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.mx",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 273152,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc4",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 273408,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.mmcx",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 273408,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc6",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262912,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.ebi",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262912,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc7",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 273664,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc8",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263168,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 273920,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc2",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 269568,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 269824,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc4",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 265728,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc5",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 265984,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc6",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 266240,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc7",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 266496,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc8",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 274176,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc9",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 266752,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc10",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 267008,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc11",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 267264,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "bobc1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263424,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "rfclkd3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 274688,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "rfclkd4",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263680,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpf1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263936,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpf2",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 274944,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldof1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 275200,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldof2",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 270080,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldof3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 275456,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldof5",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 267520,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldof6",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 267776,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldof7",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 274432,
+          "aux_hex": "01000000"
+        }
+      ]
+    },
+    {
+      "disable_smpf2": true,
+      "instruction_count": 72250,
+      "pc_trace_sha256": "a80b4e63c96722210e8e8a94550f7c176ef64b3c214e7018ba55834945475bf8",
+      "next_resource_id": 53,
+      "emitted_records": 69,
+      "unique_names": 60,
+      "identical_duplicate_names": [
+        "smpa4",
+        "smpa5",
+        "smpa6",
+        "smpc6",
+        "vrm.ebi",
+        "smpc8",
+        "bobc1",
+        "rfclkd4",
+        "smpf1"
+      ],
+      "allocations": [
+        {
+          "address": 537395200,
+          "size": 2400
+        },
+        {
+          "address": 537397632,
+          "size": 2048
+        },
+        {
+          "address": 537399680,
+          "size": 12
+        },
+        {
+          "address": 537399744,
+          "size": 12
+        },
+        {
+          "address": 537399808,
+          "size": 12
+        },
+        {
+          "address": 537399872,
+          "size": 12
+        },
+        {
+          "address": 537399936,
+          "size": 12
+        },
+        {
+          "address": 537400000,
+          "size": 12
+        },
+        {
+          "address": 537400064,
+          "size": 12
+        },
+        {
+          "address": 537400128,
+          "size": 12
+        }
+      ],
+      "events": [
+        {
+          "stage": "parent",
+          "name": "smpa4",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 3,
+          "resource_id": 0,
+          "next_id": 1,
+          "instructions": 668
+        },
+        {
+          "stage": "parent",
+          "name": "smpa5",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 4,
+          "resource_id": 1,
+          "next_id": 2,
+          "instructions": 748
+        },
+        {
+          "stage": "parent",
+          "name": "smpa6",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 4,
+          "resource_id": 2,
+          "next_id": 3,
+          "instructions": 829
+        },
+        {
+          "stage": "parent",
+          "name": "smpc6",
+          "alias": "vrm.ebi",
+          "parent": null,
+          "reserved_children": 2,
+          "resource_id": 3,
+          "next_id": 4,
+          "instructions": 1384
+        },
+        {
+          "stage": "parent",
+          "name": "smpc8",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 5,
+          "resource_id": 4,
+          "next_id": 5,
+          "instructions": 955
+        },
+        {
+          "stage": "parent",
+          "name": "bobc1",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 14,
+          "resource_id": 5,
+          "next_id": 6,
+          "instructions": 857
+        },
+        {
+          "stage": "parent",
+          "name": "rfclkd4",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 5,
+          "resource_id": 6,
+          "next_id": 7,
+          "instructions": 962
+        },
+        {
+          "stage": "parent",
+          "name": "smpf1",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 3,
+          "resource_id": 7,
+          "next_id": 8,
+          "instructions": 1079
+        },
+        {
+          "stage": "resource",
+          "name": "smpa3",
+          "alias": "vrm.cx",
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 8,
+          "next_id": 9,
+          "instructions": 1543
+        },
+        {
+          "stage": "resource",
+          "name": "smpa4",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 0,
+          "next_id": 9,
+          "instructions": 1055
+        },
+        {
+          "stage": "resource",
+          "name": "smpa5",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 1,
+          "next_id": 9,
+          "instructions": 1055
+        },
+        {
+          "stage": "resource",
+          "name": "smpa6",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 2,
+          "next_id": 9,
+          "instructions": 1055
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa2",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 9,
+          "next_id": 23,
+          "instructions": 1105
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa3",
+          "alias": null,
+          "parent": "smpa6",
+          "reserved_children": 0,
+          "resource_id": 23,
+          "next_id": 27,
+          "instructions": 1308
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa4",
+          "alias": "vrm.lmx",
+          "parent": "smpa6",
+          "reserved_children": 0,
+          "resource_id": 24,
+          "next_id": 27,
+          "instructions": 1814
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa5",
+          "alias": null,
+          "parent": "smpa6",
+          "reserved_children": 0,
+          "resource_id": 25,
+          "next_id": 27,
+          "instructions": 1303
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa6",
+          "alias": null,
+          "parent": "smpc8",
+          "reserved_children": 0,
+          "resource_id": 27,
+          "next_id": 32,
+          "instructions": 1297
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa7",
+          "alias": null,
+          "parent": "smpa5",
+          "reserved_children": 0,
+          "resource_id": 32,
+          "next_id": 36,
+          "instructions": 1311
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa9",
+          "alias": null,
+          "parent": "smpc8",
+          "reserved_children": 0,
+          "resource_id": 28,
+          "next_id": 36,
+          "instructions": 1291
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa10",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 10,
+          "next_id": 36,
+          "instructions": 1139
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa11",
+          "alias": "vrm.lcx",
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 36,
+          "next_id": 37,
+          "instructions": 1367
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa12",
+          "alias": null,
+          "parent": "smpa5",
+          "reserved_children": 0,
+          "resource_id": 33,
+          "next_id": 37,
+          "instructions": 1345
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa13",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 11,
+          "next_id": 37,
+          "instructions": 1139
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa14",
+          "alias": null,
+          "parent": "smpa5",
+          "reserved_children": 0,
+          "resource_id": 34,
+          "next_id": 37,
+          "instructions": 1345
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa15",
+          "alias": null,
+          "parent": "smpa5",
+          "reserved_children": 0,
+          "resource_id": 35,
+          "next_id": 37,
+          "instructions": 1345
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa16",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 12,
+          "next_id": 37,
+          "instructions": 1139
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa17",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 13,
+          "next_id": 37,
+          "instructions": 1139
+        },
+        {
+          "stage": "resource",
+          "name": "ldoa18",
+          "alias": null,
+          "parent": "smpa6",
+          "reserved_children": 0,
+          "resource_id": 26,
+          "next_id": 37,
+          "instructions": 1342
+        },
+        {
+          "stage": "resource",
+          "name": "lnbclka1",
+          "alias": "vrm.xob",
+          "parent": "rfclkd4",
+          "reserved_children": 0,
+          "resource_id": 37,
+          "next_id": 42,
+          "instructions": 1731
+        },
+        {
+          "stage": "resource",
+          "name": "lnbclka2",
+          "alias": null,
+          "parent": "rfclkd4",
+          "reserved_children": 0,
+          "resource_id": 38,
+          "next_id": 42,
+          "instructions": 1214
+        },
+        {
+          "stage": "resource",
+          "name": "lnbclka3",
+          "alias": null,
+          "parent": "rfclkd4",
+          "reserved_children": 0,
+          "resource_id": 39,
+          "next_id": 42,
+          "instructions": 1214
+        },
+        {
+          "stage": "resource",
+          "name": "rfclka1",
+          "alias": null,
+          "parent": "rfclkd4",
+          "reserved_children": 0,
+          "resource_id": 40,
+          "next_id": 42,
+          "instructions": 1341
+        },
+        {
+          "stage": "resource",
+          "name": "rfclka3",
+          "alias": null,
+          "parent": "rfclkd4",
+          "reserved_children": 0,
+          "resource_id": 41,
+          "next_id": 42,
+          "instructions": 1341
+        },
+        {
+          "stage": "resource",
+          "name": "smpc1",
+          "alias": "vrm.gfx",
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 42,
+          "next_id": 43,
+          "instructions": 1566
+        },
+        {
+          "stage": "resource",
+          "name": "smpc3",
+          "alias": "vrm.mx",
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 43,
+          "next_id": 44,
+          "instructions": 1532
+        },
+        {
+          "stage": "resource",
+          "name": "smpc4",
+          "alias": "vrm.mmcx",
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 44,
+          "next_id": 45,
+          "instructions": 1566
+        },
+        {
+          "stage": "resource",
+          "name": "smpc6",
+          "alias": "vrm.ebi",
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 3,
+          "next_id": 45,
+          "instructions": 1553
+        },
+        {
+          "stage": "resource",
+          "name": "smpc7",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 45,
+          "next_id": 46,
+          "instructions": 1057
+        },
+        {
+          "stage": "resource",
+          "name": "smpc8",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 4,
+          "next_id": 46,
+          "instructions": 1042
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc1",
+          "alias": null,
+          "parent": "smpa4",
+          "reserved_children": 0,
+          "resource_id": 46,
+          "next_id": 49,
+          "instructions": 1312
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc2",
+          "alias": null,
+          "parent": "smpc8",
+          "reserved_children": 0,
+          "resource_id": 29,
+          "next_id": 49,
+          "instructions": 1291
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc3",
+          "alias": null,
+          "parent": "smpc8",
+          "reserved_children": 0,
+          "resource_id": 30,
+          "next_id": 49,
+          "instructions": 1291
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc4",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 14,
+          "next_id": 49,
+          "instructions": 1099
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc5",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 15,
+          "next_id": 49,
+          "instructions": 1099
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc6",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 16,
+          "next_id": 49,
+          "instructions": 1099
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc7",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 17,
+          "next_id": 49,
+          "instructions": 1099
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc8",
+          "alias": null,
+          "parent": "smpa4",
+          "reserved_children": 0,
+          "resource_id": 47,
+          "next_id": 49,
+          "instructions": 1304
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc9",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 18,
+          "next_id": 49,
+          "instructions": 1100
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc10",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 19,
+          "next_id": 49,
+          "instructions": 1139
+        },
+        {
+          "stage": "resource",
+          "name": "ldoc11",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 20,
+          "next_id": 49,
+          "instructions": 1139
+        },
+        {
+          "stage": "resource",
+          "name": "bobc1",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 5,
+          "next_id": 49,
+          "instructions": 851
+        },
+        {
+          "stage": "resource",
+          "name": "rfclkd3",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 49,
+          "next_id": 50,
+          "instructions": 969
+        },
+        {
+          "stage": "resource",
+          "name": "rfclkd4",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 6,
+          "next_id": 50,
+          "instructions": 955
+        },
+        {
+          "stage": "resource",
+          "name": "smpf1",
+          "alias": null,
+          "parent": null,
+          "reserved_children": 0,
+          "resource_id": 7,
+          "next_id": 50,
+          "instructions": 1031
+        },
+        {
+          "stage": "resource",
+          "name": "ldof1",
+          "alias": null,
+          "parent": "smpf1",
+          "reserved_children": 0,
+          "resource_id": 50,
+          "next_id": 53,
+          "instructions": 1286
+        },
+        {
+          "stage": "resource",
+          "name": "ldof2",
+          "alias": null,
+          "parent": "smpc8",
+          "reserved_children": 0,
+          "resource_id": 31,
+          "next_id": 53,
+          "instructions": 1292
+        },
+        {
+          "stage": "resource",
+          "name": "ldof3",
+          "alias": null,
+          "parent": "smpf1",
+          "reserved_children": 0,
+          "resource_id": 51,
+          "next_id": 53,
+          "instructions": 1281
+        },
+        {
+          "stage": "resource",
+          "name": "ldof5",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 21,
+          "next_id": 53,
+          "instructions": 1099
+        },
+        {
+          "stage": "resource",
+          "name": "ldof6",
+          "alias": null,
+          "parent": "bobc1",
+          "reserved_children": 0,
+          "resource_id": 22,
+          "next_id": 53,
+          "instructions": 1099
+        },
+        {
+          "stage": "resource",
+          "name": "ldof7",
+          "alias": null,
+          "parent": "smpa4",
+          "reserved_children": 0,
+          "resource_id": 48,
+          "next_id": 53,
+          "instructions": 1305
+        }
+      ],
+      "entries": [
+        {
+          "name": "smpa4",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262144,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpa5",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262400,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpa6",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262656,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc6",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262912,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.ebi",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262912,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc8",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263168,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "bobc1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263424,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "rfclkd4",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263680,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpf1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263936,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpa3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 264192,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.cx",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 264192,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpa4",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262144,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpa5",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262400,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpa6",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262656,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa2",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 264448,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 268032,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa4",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 268288,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.lmx",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 268288,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa5",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 268544,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa6",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 269056,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa7",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 270336,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa9",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 269312,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa10",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 264704,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa11",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 271360,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.lcx",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 271360,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa12",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 270592,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa13",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 264960,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa14",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 270848,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa15",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 271104,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa16",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 265216,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa17",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 265472,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoa18",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 268800,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "lnbclka1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 271616,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.xob",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 271616,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "lnbclka2",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 271872,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "lnbclka3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 272128,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "rfclka1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 272384,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "rfclka3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 272640,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 272896,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.gfx",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 272896,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 273152,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.mx",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 273152,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc4",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 273408,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.mmcx",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 273408,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc6",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262912,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "vrm.ebi",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 262912,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc7",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 273664,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpc8",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263168,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 273920,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc2",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 269568,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 269824,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc4",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 265728,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc5",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 265984,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc6",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 266240,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc7",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 266496,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc8",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 274176,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc9",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 266752,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc10",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 267008,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldoc11",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 267264,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "bobc1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263424,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "rfclkd3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 274688,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "rfclkd4",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263680,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "smpf1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 263936,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldof1",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 274944,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldof2",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 270080,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldof3",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 275200,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldof5",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 267520,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldof6",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 267776,
+          "aux_hex": "01000000"
+        },
+        {
+          "name": "ldof7",
+          "priority": [
+            0,
+            0
+          ],
+          "address": 274432,
+          "aux_hex": "01000000"
+        }
+      ]
+    }
+  ],
+  "clocks_equal_in_both_variants": [
+    {
+      "name": "lnbclka1",
+      "priority": [
+        0,
+        0
+      ],
+      "address": 271616,
+      "aux_hex": "01000000"
+    },
+    {
+      "name": "vrm.xob",
+      "priority": [
+        0,
+        0
+      ],
+      "address": 271616,
+      "aux_hex": "01000000"
+    },
+    {
+      "name": "lnbclka2",
+      "priority": [
+        0,
+        0
+      ],
+      "address": 271872,
+      "aux_hex": "01000000"
+    },
+    {
+      "name": "lnbclka3",
+      "priority": [
+        0,
+        0
+      ],
+      "address": 272128,
+      "aux_hex": "01000000"
+    },
+    {
+      "name": "rfclka1",
+      "priority": [
+        0,
+        0
+      ],
+      "address": 272384,
+      "aux_hex": "01000000"
+    },
+    {
+      "name": "rfclka3",
+      "priority": [
+        0,
+        0
+      ],
+      "address": 272640,
+      "aux_hex": "01000000"
+    }
+  ],
+  "private_clock_partial": {
+    "sha256": "a971809c06fa1a3ff44c9d28463bc6ff53203d9375ffd0f76dc73d4c8a3ea6f9",
+    "records": 75,
+    "bytes": 131072,
+    "complete": false,
+    "live_ram_dump": false,
+    "scope": "69 static ARC/BCM/MOL records plus five clock names and vrm.xob alias"
+  },
+  "analysis_script_sha256": "70438d67d241f1849a7b08ad36219d853c490ffbef1e8b2899cfb502232f82e0"
+}

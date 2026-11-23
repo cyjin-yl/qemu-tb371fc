@@ -38,7 +38,7 @@ The following values or behaviors are **not measured TB371FC register values**:
 | TX timing | Bytes drain as fast as the chardev accepts them; no bit-rate delay |
 | Unconnected chardev | TX bytes are consumed as a sink, as with other emulated serial ports |
 | CTS/RX line status | RX idle high, CTS asserted; no electrical line simulation |
-| Control/config registers | Known initialization registers retain values, but do not implement parity, packing permutations, modem flow control, loopback, or clock/power gating |
+| Control/config registers | Known initialization registers retain values, but do not implement parity, packing permutations, modem flow control, loopback, or power collapse |
 | Firmware identity | UART protocol identity only; no claim about a ROM/firmware revision |
 
 Only 8-bit characters packed four per 32-bit FIFO word are implemented. Changing
@@ -50,8 +50,9 @@ performance are not implemented. Unsupported accesses are logged with QEMU's
 must not be interpreted as valid silicon observations.
 
 The `GENI_FORCE_DEFAULT_REG` is retained as an IO-policy register. It is **not**
-used as a fictitious device-wide FIFO reset. Reset is QEMU device reset; the
-sequencer cancel/abort semantics are independently modeled.
+used as a fictitious device-wide FIFO reset. Reset comes from QEMU device reset
+or the explicit external reset input; sequencer cancel/abort semantics are
+independently modeled.
 
 ## Linux contract used
 
@@ -151,3 +152,94 @@ The two QTest suites do not establish Linux driver probe or boot. The separate
 Linux smoke result above provides the recorded probe, console handoff and boot
 evidence. None of these results establishes stock Android boot, hardware timing
 accuracy, or full tablet emulation.
+
+## Clock and reset inputs
+
+The expanded machine connects three optional QEMU Clock inputs named `se-clk`,
+`m-ahb`, and `s-ahb`, plus an active-high named GPIO `reset`, index 0. They are
+fed by the [GCC model](gcc-sm8250.md); wrapper 2 BCR is GCC reset binding 26.
+Unconnected inputs retain the original standalone device behavior. The
+TB371FC board connects all three, so its UART operation is governed by actual
+GCC state rather than merely advertising clock rates in DT.
+
+The digital gating policy is explicit:
+
+- Stopping `se-clk` pauses TX draining, applies RX backend backpressure and
+  quiesces the output IRQ while retaining FIFO, command and latched status.
+  AHB register access remains possible. A zero-length TX command also waits
+  for the engine clock before reporting completion.
+- Stopping either AHB input rejects MMIO with `MEMTX_ERROR` and diagnostics;
+  rejected writes do not change register or FIFO state. The engine remains
+  paused until the needed clocks return.
+- Restoring clocks drains queued TX bytes, accepts queued host input and
+  recomputes IRQ from the retained state. This host backpressure is not a
+  physical claim that a UART wire preserves characters during clock loss.
+- Asserting `reset` clears commands, FIFOs, counters and interrupt state.
+  MMIO is rejected while reset is held. Deassertion permits fresh commands
+  when the required clocks are available; reset does not replay prior bytes.
+
+These are documented functional policies for the digital model. They do not
+establish the exact silicon AHB gating topology, asynchronous signal behavior,
+reset pulse timing, baud rate or physical RX data loss. GENI's internal clock
+selection/divider registers and electrical serial waveform remain unimplemented.
+
+Connected clock periods, held reset and deferred zero-length completion state
+are serialized in an optional migration subsection. A linked integration test
+transfers queued TX and unread RX while the SE clock is stopped, checks the
+destination stays paused, then restores GCC's clock vote and checks exact
+continuation without duplicate bytes.
+
+```sh
+python3 tb371fc/tests/test_geni_clock_reset.py --qemu /work/build-next/qemu-system-aarch64 --work-dir /work/geni-clock-qtest
+python3 tb371fc/tests/test_geni_clock_reset.py --qemu /work/build-next/qemu-system-aarch64 --migration-only --work-dir /work/geni-clock-migration
+```
+
+The earlier 13/13, 6/6 and Linux receipts above predate this GCC integration and
+remain unchanged. The new binary SHA-256
+`56717a3c95ba31da84ed46da8c305bc6de910370a359eee475b3587b93d5cabf`
+actually passed [6/6 clock/reset checks](../evidence/expansion-20261123/geni-clock-qtest.json),
+[4/4 stopped-clock migration checks](../evidence/expansion-20261123/geni-clock-migration.json),
+and the original [13/13](../evidence/expansion-20261123/geni-regression.json) and
+[6/6](../evidence/expansion-20261123/geni-migration-regression.json) regression
+suites, all with exit 0. The paused migration retained four queued TX bytes and
+three unread RX bytes while the destination clock stayed off; reenabling its
+GCC vote transmitted only the unsent `EFGH` and restored the pending IRQ.
+
+Those receipts precede default UFS integration. Current scripts isolate these
+components with `-machine tb371fc,ufs-enabled=off` because UFS core in-flight
+migration is not implemented. They do not establish migration of the full new
+board. For the historical recorded binary, which lacks that property, explicitly
+use `--machine tb371fc`. The separate Linux boot receipt remains evidence for
+the Linux version and machine configuration it records.
+
+## Idle FIFO watermark and repeated TTY writes
+
+Linux `qcom_geni_serial_start_tx_fifo()` enables the TX watermark interrupt
+before issuing a fresh TX command when the hardware FIFO is empty. The model
+originally conditioned that watermark on an already active command. This
+allowed polled console output and a first interrupt transfer but could strand
+later unbuffered TTY writes. The watermark condition now depends on the FIFO
+level and programmed threshold even when no command is active; clock/reset
+availability continues to gate the external IRQ.
+
+`idle_watermark_restarts_tty_transfers` repeats the Linux sequence three times,
+checking the idle interrupt before START_TX, W1C reassertion, exact chardev
+bytes, completion, and the stop/restart boundary. It reproduced the missing
+idle watermark on frozen binary
+`a70862bfa8aa957ea26e362b5defd9ae60b4cc4bb53f2ac2c70c0b4fe3b67e2a`.
+The existing historical console receipts do not establish this repeated TTY
+write behavior. New-binary validation is recorded separately.
+
+The corrected binary
+`781d6ae66e9918bf1e3eed08c4bfaa3cdb6381cb1d63495d6ef5cc1a97dabb39`
+passed GENI 14/14, GENI process migration 6/6, clock/reset 6/6, and paused-clock
+migration 4/4. GCC 19/19 and GCC migration 5/5 also passed on that exact binary.
+The receipts and the two corrected historical test assumptions are preserved
+in [`revalidation-4`](../evidence/expansion-20261123/revalidation-4/summary.json).
+The clock-off IRQ-negative checks remained intact and passed.
+
+A real Linux 6.12 UFS/SMMU acceptance guest then emitted all 19 checks through
+the normal TTY path, with unbuffered stdout, and its disk payload was independently
+verified on the host. See [`geni-linux-repeated-tty-tx.json`](../evidence/expansion-20261123/geni-linux-repeated-tty-tx.json).
+This establishes repeated Linux TTY TX progress across the previously failing
+idle boundary; it does not establish Linux TTY RX or baud/electrical fidelity.

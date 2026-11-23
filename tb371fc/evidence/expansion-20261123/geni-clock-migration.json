@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "suite": "GCC-wired GENI actual process-to-process migration",
+  "qemu": "/work/build-next/qemu-system-aarch64",
+  "qemu_sha256": "56717a3c95ba31da84ed46da8c305bc6de910370a359eee475b3587b93d5cabf",
+  "work_dir": "/work/gcc-tests/geni-clock-migration",
+  "ram_per_process": "128 MiB",
+  "scope": "Actual device clock/reset wiring and FIFO continuity; no silicon electrical or baud timing equivalence",
+  "success": true,
+  "checks": [
+    {
+      "check": "source_queued_tx_rx_and_clock_gated_irq",
+      "status": "pass"
+    },
+    {
+      "check": "actual_qmp_migration_completed",
+      "status": "pass"
+    },
+    {
+      "check": "clock_gate_fifo_and_latched_status_preserved",
+      "status": "pass"
+    },
+    {
+      "check": "destination_clock_restore_continues_without_duplicate_bytes",
+      "status": "pass"
+    }
+  ],
+  "migration": {
+    "source": {
+      "status": "completed",
+      "setup-time": 0,
+      "downtime": 9,
+      "total-time": 18,
+      "ram": {
+        "total": 134217728,
+        "postcopy-requests": 0,
+        "dirty-sync-count": 2,
+        "multifd-bytes": 0,
+        "pages-per-second": 0,
+        "downtime-bytes": 299027,
+        "page-size": 4096,
+        "remaining": 0,
+        "postcopy-bytes": 0,
+        "mbps": 488.08222222222224,
+        "transferred": 1098185,
+        "dirty-sync-missed-zero-copy": 0,
+        "precopy-bytes": 0,
+        "duplicate": 32767,
+        "dirty-pages-rate": 0,
+        "normal-bytes": 4096,
+        "normal": 1
+      }
+    },
+    "target": {
+      "status": "completed"
+    }
+  },
+  "expected_checks": 4,
+  "recorded_exit_code": 0,
+  "verified_binary_sha256": "56717a3c95ba31da84ed46da8c305bc6de910370a359eee475b3587b93d5cabf",
+  "execution_completed_at_utc": "2026-11-23T05:47:19.783402+00:00",
+  "migration_scope": "Pre-UFS configured components only; this receipt does not establish full expanded-board migration",
+  "tested_machine_options": "tb371fc",
+  "source_report_sha256": "5ba2716972b9b9e2e9d4c82a3bf792a31bce6086c47dd57407d64d5a8c0a1398"
+}

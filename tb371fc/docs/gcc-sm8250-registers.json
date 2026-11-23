@@ -1,0 +1,7811 @@
+{
+  "schema": 1,
+  "source_revision": "linux-6.12.114",
+  "source_url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/clk/qcom/gcc-sm8250.c?h=v6.12.114",
+  "sha256": {
+    "drivers/clk/qcom/gcc-sm8250.c": "b3b3865de3a297f906d5562a720d8d304538cef3c8d3703dee026cfd6dba06c8",
+    "include/dt-bindings/clock/qcom,gcc-sm8250.h": "34682c01e5b21bb13db125afa3504c73606c294c23cfb3a96f6ea52cdffd2ff7"
+  },
+  "clocks": [
+    {
+      "id": 0,
+      "name": "gpll0",
+      "kind": "PLL",
+      "line": 35,
+      "reg": 0,
+      "enable_reg": 335896,
+      "enable_mask": 1,
+      "parent": -1,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1
+    },
+    {
+      "id": 1,
+      "name": "gpll0_out_even",
+      "kind": "POSTDIV",
+      "line": 57,
+      "reg": 12,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": 0,
+      "mnd_width": 8,
+      "hid_width": 4,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1
+    },
+    {
+      "id": 2,
+      "name": "gpll4",
+      "kind": "PLL",
+      "line": 74,
+      "reg": 483328,
+      "enable_reg": 335896,
+      "enable_mask": 16,
+      "parent": -1,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1
+    },
+    {
+      "id": 3,
+      "name": "gpll9",
+      "kind": "PLL",
+      "line": 91,
+      "reg": 114688,
+      "enable_reg": 335896,
+      "enable_mask": 512,
+      "parent": -1,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1
+    },
+    {
+      "id": 4,
+      "name": "gcc_aggre_noc_pcie_tbu_clk",
+      "kind": "BRANCH",
+      "line": 1058,
+      "reg": 589836,
+      "enable_reg": 589836,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 0,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 5,
+      "name": "gcc_aggre_ufs_card_axi_clk",
+      "kind": "BRANCH",
+      "line": 1071,
+      "reg": 479436,
+      "enable_reg": 479436,
+      "enable_mask": 1,
+      "parent": 151,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 479436,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 6,
+      "name": "gcc_aggre_ufs_phy_axi_clk",
+      "kind": "BRANCH",
+      "line": 1091,
+      "reg": 487628,
+      "enable_reg": 487628,
+      "enable_mask": 1,
+      "parent": 163,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 487628,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 7,
+      "name": "gcc_aggre_usb3_prim_axi_clk",
+      "kind": "BRANCH",
+      "line": 1111,
+      "reg": 61568,
+      "enable_reg": 61568,
+      "enable_mask": 1,
+      "parent": 174,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 8,
+      "name": "gcc_aggre_usb3_sec_axi_clk",
+      "kind": "BRANCH",
+      "line": 1129,
+      "reg": 65664,
+      "enable_reg": 65664,
+      "enable_mask": 1,
+      "parent": 180,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 9,
+      "name": "gcc_boot_rom_ahb_clk",
+      "kind": "BRANCH",
+      "line": 1147,
+      "reg": 229380,
+      "enable_reg": 335872,
+      "enable_mask": 1024,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 229380,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 10,
+      "name": "gcc_camera_ahb_clk",
+      "kind": "BRANCH",
+      "line": 3648,
+      "reg": 4294967295,
+      "enable_reg": 45064,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 2,
+      "halt_check": "probe-only CBCR"
+    },
+    {
+      "id": 11,
+      "name": "gcc_camera_hf_axi_clk",
+      "kind": "BRANCH",
+      "line": 1162,
+      "reg": 45100,
+      "enable_reg": 45100,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 3,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 12,
+      "name": "gcc_camera_sf_axi_clk",
+      "kind": "BRANCH",
+      "line": 1175,
+      "reg": 45104,
+      "enable_reg": 45104,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 4,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 13,
+      "name": "gcc_camera_xo_clk",
+      "kind": "BRANCH",
+      "line": 1188,
+      "reg": 45120,
+      "enable_reg": 45120,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 5,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 14,
+      "name": "gcc_cfg_noc_usb3_prim_axi_clk",
+      "kind": "BRANCH",
+      "line": 1201,
+      "reg": 61564,
+      "enable_reg": 61564,
+      "enable_mask": 1,
+      "parent": 174,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 15,
+      "name": "gcc_cfg_noc_usb3_sec_axi_clk",
+      "kind": "BRANCH",
+      "line": 1219,
+      "reg": 65660,
+      "enable_reg": 65660,
+      "enable_mask": 1,
+      "parent": 180,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 16,
+      "name": "gcc_cpuss_ahb_clk",
+      "kind": "BRANCH",
+      "line": 1237,
+      "reg": 294912,
+      "enable_reg": 335872,
+      "enable_mask": 2097152,
+      "parent": 18,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 17,
+      "name": "gcc_cpuss_ahb_clk_src",
+      "kind": "RCG",
+      "line": 193,
+      "reg": 294928,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_cpuss_ahb_clk_src"
+    },
+    {
+      "id": 18,
+      "name": "gcc_cpuss_ahb_postdiv_clk_src",
+      "kind": "DIV",
+      "line": 1013,
+      "reg": 294952,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": 17,
+      "mnd_width": 0,
+      "hid_width": 4,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1
+    },
+    {
+      "id": 19,
+      "name": "gcc_cpuss_dvm_bus_clk",
+      "kind": "BRANCH",
+      "line": 3650,
+      "reg": 4294967295,
+      "enable_reg": 295308,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 6,
+      "halt_check": "probe-only CBCR"
+    },
+    {
+      "id": 20,
+      "name": "gcc_cpuss_rbcpr_clk",
+      "kind": "BRANCH",
+      "line": 1255,
+      "reg": 294916,
+      "enable_reg": 294916,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 7,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 21,
+      "name": "gcc_ddrss_gpu_axi_clk",
+      "kind": "BRANCH",
+      "line": 1268,
+      "reg": 463188,
+      "enable_reg": 463188,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 8,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 22,
+      "name": "gcc_ddrss_pcie_sf_tbu_clk",
+      "kind": "BRANCH",
+      "line": 1281,
+      "reg": 577624,
+      "enable_reg": 577624,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 9,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 23,
+      "name": "gcc_disp_ahb_clk",
+      "kind": "BRANCH",
+      "line": 3649,
+      "reg": 4294967295,
+      "enable_reg": 45068,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 10,
+      "halt_check": "probe-only CBCR"
+    },
+    {
+      "id": 24,
+      "name": "gcc_disp_hf_axi_clk",
+      "kind": "BRANCH",
+      "line": 1294,
+      "reg": 45108,
+      "enable_reg": 45108,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 11,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 25,
+      "name": "gcc_disp_sf_axi_clk",
+      "kind": "BRANCH",
+      "line": 1307,
+      "reg": 45112,
+      "enable_reg": 45112,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 12,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 26,
+      "name": "gcc_disp_xo_clk",
+      "kind": "BRANCH",
+      "line": 1320,
+      "reg": 45124,
+      "enable_reg": 45124,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 13,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 27,
+      "name": "gcc_gp1_clk",
+      "kind": "BRANCH",
+      "line": 1333,
+      "reg": 409600,
+      "enable_reg": 409600,
+      "enable_mask": 1,
+      "parent": 28,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 28,
+      "name": "gcc_gp1_clk_src",
+      "kind": "RCG",
+      "line": 217,
+      "reg": 409604,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 8,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -2,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_gp1_clk_src"
+    },
+    {
+      "id": 29,
+      "name": "gcc_gp2_clk",
+      "kind": "BRANCH",
+      "line": 1351,
+      "reg": 413696,
+      "enable_reg": 413696,
+      "enable_mask": 1,
+      "parent": 30,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 30,
+      "name": "gcc_gp2_clk_src",
+      "kind": "RCG",
+      "line": 231,
+      "reg": 413700,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 8,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -2,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_gp1_clk_src"
+    },
+    {
+      "id": 31,
+      "name": "gcc_gp3_clk",
+      "kind": "BRANCH",
+      "line": 1369,
+      "reg": 417792,
+      "enable_reg": 417792,
+      "enable_mask": 1,
+      "parent": 32,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 32,
+      "name": "gcc_gp3_clk_src",
+      "kind": "RCG",
+      "line": 245,
+      "reg": 417796,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 8,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -2,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_gp1_clk_src"
+    },
+    {
+      "id": 33,
+      "name": "gcc_gpu_cfg_ahb_clk",
+      "kind": "BRANCH",
+      "line": 3651,
+      "reg": 4294967295,
+      "enable_reg": 462852,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 14,
+      "halt_check": "probe-only CBCR"
+    },
+    {
+      "id": 34,
+      "name": "gcc_gpu_gpll0_clk_src",
+      "kind": "BRANCH",
+      "line": 1387,
+      "reg": 4294967295,
+      "enable_reg": 335872,
+      "enable_mask": 32768,
+      "parent": 0,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_DELAY"
+    },
+    {
+      "id": 35,
+      "name": "gcc_gpu_gpll0_div_clk_src",
+      "kind": "BRANCH",
+      "line": 1404,
+      "reg": 4294967295,
+      "enable_reg": 335872,
+      "enable_mask": 65536,
+      "parent": 1,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_DELAY"
+    },
+    {
+      "id": 36,
+      "name": "gcc_gpu_iref_en",
+      "kind": "BRANCH",
+      "line": 1421,
+      "reg": 573460,
+      "enable_reg": 573460,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 15,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 37,
+      "name": "gcc_gpu_memnoc_gfx_clk",
+      "kind": "BRANCH",
+      "line": 1434,
+      "reg": 462860,
+      "enable_reg": 462860,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 16,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 38,
+      "name": "gcc_gpu_snoc_dvm_gfx_clk",
+      "kind": "BRANCH",
+      "line": 1447,
+      "reg": 462872,
+      "enable_reg": 462872,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 17,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 39,
+      "name": "gcc_npu_axi_clk",
+      "kind": "BRANCH",
+      "line": 1460,
+      "reg": 315400,
+      "enable_reg": 315400,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 18,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 40,
+      "name": "gcc_npu_bwmon_axi_clk",
+      "kind": "BRANCH",
+      "line": 1473,
+      "reg": 471048,
+      "enable_reg": 471048,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 19,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 41,
+      "name": "gcc_npu_bwmon_cfg_ahb_clk",
+      "kind": "BRANCH",
+      "line": 1486,
+      "reg": 471044,
+      "enable_reg": 471044,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 20,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 42,
+      "name": "gcc_npu_cfg_ahb_clk",
+      "kind": "BRANCH",
+      "line": 1499,
+      "reg": 315396,
+      "enable_reg": 315396,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 315396,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 21,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 43,
+      "name": "gcc_npu_dma_clk",
+      "kind": "BRANCH",
+      "line": 1514,
+      "reg": 315404,
+      "enable_reg": 315404,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 22,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 44,
+      "name": "gcc_npu_gpll0_clk_src",
+      "kind": "BRANCH",
+      "line": 1527,
+      "reg": 4294967295,
+      "enable_reg": 335872,
+      "enable_mask": 262144,
+      "parent": 0,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_DELAY"
+    },
+    {
+      "id": 45,
+      "name": "gcc_npu_gpll0_div_clk_src",
+      "kind": "BRANCH",
+      "line": 1544,
+      "reg": 4294967295,
+      "enable_reg": 335872,
+      "enable_mask": 524288,
+      "parent": 1,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_DELAY"
+    },
+    {
+      "id": 46,
+      "name": "gcc_pcie0_phy_refgen_clk",
+      "kind": "BRANCH",
+      "line": 1561,
+      "reg": 454700,
+      "enable_reg": 454700,
+      "enable_mask": 1,
+      "parent": 72,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 47,
+      "name": "gcc_pcie1_phy_refgen_clk",
+      "kind": "BRANCH",
+      "line": 1579,
+      "reg": 454704,
+      "enable_reg": 454704,
+      "enable_mask": 1,
+      "parent": 72,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 48,
+      "name": "gcc_pcie2_phy_refgen_clk",
+      "kind": "BRANCH",
+      "line": 1597,
+      "reg": 454708,
+      "enable_reg": 454708,
+      "enable_mask": 1,
+      "parent": 72,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 49,
+      "name": "gcc_pcie_0_aux_clk",
+      "kind": "BRANCH",
+      "line": 1615,
+      "reg": 438312,
+      "enable_reg": 335880,
+      "enable_mask": 8,
+      "parent": 50,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 50,
+      "name": "gcc_pcie_0_aux_clk_src",
+      "kind": "RCG",
+      "line": 265,
+      "reg": 438328,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -2,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_pcie_0_aux_clk_src"
+    },
+    {
+      "id": 51,
+      "name": "gcc_pcie_0_cfg_ahb_clk",
+      "kind": "BRANCH",
+      "line": 1633,
+      "reg": 438308,
+      "enable_reg": 335880,
+      "enable_mask": 4,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 438308,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 23,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 52,
+      "name": "gcc_pcie_0_mstr_axi_clk",
+      "kind": "BRANCH",
+      "line": 1648,
+      "reg": 438300,
+      "enable_reg": 335880,
+      "enable_mask": 2,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 24,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 53,
+      "name": "gcc_pcie_0_pipe_clk",
+      "kind": "BRANCH",
+      "line": 1661,
+      "reg": 438316,
+      "enable_reg": 335880,
+      "enable_mask": 16,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 25,
+      "halt_check": "BRANCH_HALT_SKIP"
+    },
+    {
+      "id": 54,
+      "name": "gcc_pcie_0_slv_axi_clk",
+      "kind": "BRANCH",
+      "line": 1674,
+      "reg": 438292,
+      "enable_reg": 335880,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 438292,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 26,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 55,
+      "name": "gcc_pcie_0_slv_q2a_axi_clk",
+      "kind": "BRANCH",
+      "line": 1689,
+      "reg": 438288,
+      "enable_reg": 335880,
+      "enable_mask": 32,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 27,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 56,
+      "name": "gcc_pcie_1_aux_clk",
+      "kind": "BRANCH",
+      "line": 1702,
+      "reg": 577576,
+      "enable_reg": 335872,
+      "enable_mask": 536870912,
+      "parent": 57,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 57,
+      "name": "gcc_pcie_1_aux_clk_src",
+      "kind": "RCG",
+      "line": 279,
+      "reg": 577592,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -2,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_pcie_0_aux_clk_src"
+    },
+    {
+      "id": 58,
+      "name": "gcc_pcie_1_cfg_ahb_clk",
+      "kind": "BRANCH",
+      "line": 1720,
+      "reg": 577572,
+      "enable_reg": 335872,
+      "enable_mask": 268435456,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 577572,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 28,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 59,
+      "name": "gcc_pcie_1_mstr_axi_clk",
+      "kind": "BRANCH",
+      "line": 1735,
+      "reg": 577564,
+      "enable_reg": 335872,
+      "enable_mask": 134217728,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 29,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 60,
+      "name": "gcc_pcie_1_pipe_clk",
+      "kind": "BRANCH",
+      "line": 1748,
+      "reg": 577580,
+      "enable_reg": 335872,
+      "enable_mask": 1073741824,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 30,
+      "halt_check": "BRANCH_HALT_SKIP"
+    },
+    {
+      "id": 61,
+      "name": "gcc_pcie_1_slv_axi_clk",
+      "kind": "BRANCH",
+      "line": 1761,
+      "reg": 577556,
+      "enable_reg": 335872,
+      "enable_mask": 67108864,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 577556,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 31,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 62,
+      "name": "gcc_pcie_1_slv_q2a_axi_clk",
+      "kind": "BRANCH",
+      "line": 1776,
+      "reg": 577552,
+      "enable_reg": 335872,
+      "enable_mask": 33554432,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 32,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 63,
+      "name": "gcc_pcie_2_aux_clk",
+      "kind": "BRANCH",
+      "line": 1789,
+      "reg": 24616,
+      "enable_reg": 335888,
+      "enable_mask": 16384,
+      "parent": 64,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 64,
+      "name": "gcc_pcie_2_aux_clk_src",
+      "kind": "RCG",
+      "line": 293,
+      "reg": 24632,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -2,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_pcie_0_aux_clk_src"
+    },
+    {
+      "id": 65,
+      "name": "gcc_pcie_2_cfg_ahb_clk",
+      "kind": "BRANCH",
+      "line": 1807,
+      "reg": 24612,
+      "enable_reg": 335888,
+      "enable_mask": 8192,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 24612,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 33,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 66,
+      "name": "gcc_pcie_2_mstr_axi_clk",
+      "kind": "BRANCH",
+      "line": 1822,
+      "reg": 24604,
+      "enable_reg": 335888,
+      "enable_mask": 4096,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 34,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 67,
+      "name": "gcc_pcie_2_pipe_clk",
+      "kind": "BRANCH",
+      "line": 1835,
+      "reg": 24620,
+      "enable_reg": 335888,
+      "enable_mask": 32768,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 35,
+      "halt_check": "BRANCH_HALT_SKIP"
+    },
+    {
+      "id": 68,
+      "name": "gcc_pcie_2_slv_axi_clk",
+      "kind": "BRANCH",
+      "line": 1848,
+      "reg": 24596,
+      "enable_reg": 335888,
+      "enable_mask": 2048,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 24596,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 36,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 69,
+      "name": "gcc_pcie_2_slv_q2a_axi_clk",
+      "kind": "BRANCH",
+      "line": 1863,
+      "reg": 24592,
+      "enable_reg": 335888,
+      "enable_mask": 1024,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 37,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 70,
+      "name": "gcc_pcie_mdm_clkref_en",
+      "kind": "BRANCH",
+      "line": 1876,
+      "reg": 573452,
+      "enable_reg": 573452,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 38,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 71,
+      "name": "gcc_pcie_phy_aux_clk",
+      "kind": "BRANCH",
+      "line": 1889,
+      "reg": 454660,
+      "enable_reg": 454660,
+      "enable_mask": 1,
+      "parent": 50,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 72,
+      "name": "gcc_pcie_phy_refgen_clk_src",
+      "kind": "RCG",
+      "line": 313,
+      "reg": 454676,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_pcie_phy_refgen_clk_src"
+    },
+    {
+      "id": 73,
+      "name": "gcc_pcie_wifi_clkref_en",
+      "kind": "BRANCH",
+      "line": 1907,
+      "reg": 573444,
+      "enable_reg": 573444,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 39,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 74,
+      "name": "gcc_pcie_wigig_clkref_en",
+      "kind": "BRANCH",
+      "line": 1920,
+      "reg": 573448,
+      "enable_reg": 573448,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 40,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 75,
+      "name": "gcc_pdm2_clk",
+      "kind": "BRANCH",
+      "line": 1933,
+      "reg": 208908,
+      "enable_reg": 208908,
+      "enable_mask": 1,
+      "parent": 76,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 76,
+      "name": "gcc_pdm2_clk_src",
+      "kind": "RCG",
+      "line": 334,
+      "reg": 208912,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_pdm2_clk_src"
+    },
+    {
+      "id": 77,
+      "name": "gcc_pdm_ahb_clk",
+      "kind": "BRANCH",
+      "line": 1951,
+      "reg": 208900,
+      "enable_reg": 208900,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 208900,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 41,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 78,
+      "name": "gcc_pdm_xo4_clk",
+      "kind": "BRANCH",
+      "line": 1966,
+      "reg": 208904,
+      "enable_reg": 208904,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 42,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 79,
+      "name": "gcc_prng_ahb_clk",
+      "kind": "BRANCH",
+      "line": 1979,
+      "reg": 212996,
+      "enable_reg": 335872,
+      "enable_mask": 8192,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 43,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 80,
+      "name": "gcc_qmip_camera_nrt_ahb_clk",
+      "kind": "BRANCH",
+      "line": 1992,
+      "reg": 45080,
+      "enable_reg": 45080,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 45080,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 44,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 81,
+      "name": "gcc_qmip_camera_rt_ahb_clk",
+      "kind": "BRANCH",
+      "line": 2007,
+      "reg": 45084,
+      "enable_reg": 45084,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 45084,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 45,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 82,
+      "name": "gcc_qmip_disp_ahb_clk",
+      "kind": "BRANCH",
+      "line": 2022,
+      "reg": 45088,
+      "enable_reg": 45088,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 45088,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 46,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 83,
+      "name": "gcc_qmip_video_cvp_ahb_clk",
+      "kind": "BRANCH",
+      "line": 2037,
+      "reg": 45072,
+      "enable_reg": 45072,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 45072,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 47,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 84,
+      "name": "gcc_qmip_video_vcodec_ahb_clk",
+      "kind": "BRANCH",
+      "line": 2052,
+      "reg": 45076,
+      "enable_reg": 45076,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 45076,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 48,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 85,
+      "name": "gcc_qupv3_wrap0_core_2x_clk",
+      "kind": "BRANCH",
+      "line": 2067,
+      "reg": 143368,
+      "enable_reg": 335880,
+      "enable_mask": 512,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 49,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 86,
+      "name": "gcc_qupv3_wrap0_core_clk",
+      "kind": "BRANCH",
+      "line": 2080,
+      "reg": 143360,
+      "enable_reg": 335880,
+      "enable_mask": 256,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 50,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 87,
+      "name": "gcc_qupv3_wrap0_s0_clk",
+      "kind": "BRANCH",
+      "line": 2093,
+      "reg": 94220,
+      "enable_reg": 335880,
+      "enable_mask": 1024,
+      "parent": 88,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 88,
+      "name": "gcc_qupv3_wrap0_s0_clk_src",
+      "kind": "RCG",
+      "line": 375,
+      "reg": 94224,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s0_clk_src"
+    },
+    {
+      "id": 89,
+      "name": "gcc_qupv3_wrap0_s1_clk",
+      "kind": "BRANCH",
+      "line": 2111,
+      "reg": 94524,
+      "enable_reg": 335880,
+      "enable_mask": 2048,
+      "parent": 90,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 90,
+      "name": "gcc_qupv3_wrap0_s1_clk_src",
+      "kind": "RCG",
+      "line": 391,
+      "reg": 94528,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s0_clk_src"
+    },
+    {
+      "id": 91,
+      "name": "gcc_qupv3_wrap0_s2_clk",
+      "kind": "BRANCH",
+      "line": 2129,
+      "reg": 94828,
+      "enable_reg": 335880,
+      "enable_mask": 4096,
+      "parent": 92,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 92,
+      "name": "gcc_qupv3_wrap0_s2_clk_src",
+      "kind": "RCG",
+      "line": 423,
+      "reg": 94832,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 93,
+      "name": "gcc_qupv3_wrap0_s3_clk",
+      "kind": "BRANCH",
+      "line": 2147,
+      "reg": 95132,
+      "enable_reg": 335880,
+      "enable_mask": 8192,
+      "parent": 94,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 94,
+      "name": "gcc_qupv3_wrap0_s3_clk_src",
+      "kind": "RCG",
+      "line": 439,
+      "reg": 95136,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 95,
+      "name": "gcc_qupv3_wrap0_s4_clk",
+      "kind": "BRANCH",
+      "line": 2165,
+      "reg": 95436,
+      "enable_reg": 335880,
+      "enable_mask": 16384,
+      "parent": 96,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 96,
+      "name": "gcc_qupv3_wrap0_s4_clk_src",
+      "kind": "RCG",
+      "line": 455,
+      "reg": 95440,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 97,
+      "name": "gcc_qupv3_wrap0_s5_clk",
+      "kind": "BRANCH",
+      "line": 2183,
+      "reg": 95740,
+      "enable_reg": 335880,
+      "enable_mask": 32768,
+      "parent": 98,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 98,
+      "name": "gcc_qupv3_wrap0_s5_clk_src",
+      "kind": "RCG",
+      "line": 471,
+      "reg": 95744,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 99,
+      "name": "gcc_qupv3_wrap0_s6_clk",
+      "kind": "BRANCH",
+      "line": 2201,
+      "reg": 96044,
+      "enable_reg": 335880,
+      "enable_mask": 65536,
+      "parent": 100,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 100,
+      "name": "gcc_qupv3_wrap0_s6_clk_src",
+      "kind": "RCG",
+      "line": 487,
+      "reg": 96048,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 101,
+      "name": "gcc_qupv3_wrap0_s7_clk",
+      "kind": "BRANCH",
+      "line": 2219,
+      "reg": 96348,
+      "enable_reg": 335880,
+      "enable_mask": 131072,
+      "parent": 102,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 102,
+      "name": "gcc_qupv3_wrap0_s7_clk_src",
+      "kind": "RCG",
+      "line": 503,
+      "reg": 96352,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 103,
+      "name": "gcc_qupv3_wrap1_core_2x_clk",
+      "kind": "BRANCH",
+      "line": 2237,
+      "reg": 143680,
+      "enable_reg": 335880,
+      "enable_mask": 262144,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 51,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 104,
+      "name": "gcc_qupv3_wrap1_core_clk",
+      "kind": "BRANCH",
+      "line": 2250,
+      "reg": 143672,
+      "enable_reg": 335880,
+      "enable_mask": 524288,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 52,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 105,
+      "name": "gcc_qupv3_wrap1_s0_clk",
+      "kind": "BRANCH",
+      "line": 2263,
+      "reg": 98316,
+      "enable_reg": 335880,
+      "enable_mask": 4194304,
+      "parent": 106,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 106,
+      "name": "gcc_qupv3_wrap1_s0_clk_src",
+      "kind": "RCG",
+      "line": 519,
+      "reg": 98320,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s0_clk_src"
+    },
+    {
+      "id": 107,
+      "name": "gcc_qupv3_wrap1_s1_clk",
+      "kind": "BRANCH",
+      "line": 2281,
+      "reg": 98620,
+      "enable_reg": 335880,
+      "enable_mask": 8388608,
+      "parent": 108,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 108,
+      "name": "gcc_qupv3_wrap1_s1_clk_src",
+      "kind": "RCG",
+      "line": 535,
+      "reg": 98624,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 109,
+      "name": "gcc_qupv3_wrap1_s2_clk",
+      "kind": "BRANCH",
+      "line": 2299,
+      "reg": 98924,
+      "enable_reg": 335880,
+      "enable_mask": 16777216,
+      "parent": 110,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 110,
+      "name": "gcc_qupv3_wrap1_s2_clk_src",
+      "kind": "RCG",
+      "line": 551,
+      "reg": 98928,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 111,
+      "name": "gcc_qupv3_wrap1_s3_clk",
+      "kind": "BRANCH",
+      "line": 2317,
+      "reg": 99228,
+      "enable_reg": 335880,
+      "enable_mask": 33554432,
+      "parent": 112,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 112,
+      "name": "gcc_qupv3_wrap1_s3_clk_src",
+      "kind": "RCG",
+      "line": 567,
+      "reg": 99232,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 113,
+      "name": "gcc_qupv3_wrap1_s4_clk",
+      "kind": "BRANCH",
+      "line": 2335,
+      "reg": 99532,
+      "enable_reg": 335880,
+      "enable_mask": 67108864,
+      "parent": 114,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 114,
+      "name": "gcc_qupv3_wrap1_s4_clk_src",
+      "kind": "RCG",
+      "line": 583,
+      "reg": 99536,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 115,
+      "name": "gcc_qupv3_wrap1_s5_clk",
+      "kind": "BRANCH",
+      "line": 2353,
+      "reg": 99836,
+      "enable_reg": 335880,
+      "enable_mask": 134217728,
+      "parent": 116,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 116,
+      "name": "gcc_qupv3_wrap1_s5_clk_src",
+      "kind": "RCG",
+      "line": 599,
+      "reg": 99840,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 117,
+      "name": "gcc_qupv3_wrap2_core_2x_clk",
+      "kind": "BRANCH",
+      "line": 2371,
+      "reg": 143992,
+      "enable_reg": 335888,
+      "enable_mask": 8,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 53,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 118,
+      "name": "gcc_qupv3_wrap2_core_clk",
+      "kind": "BRANCH",
+      "line": 2384,
+      "reg": 143984,
+      "enable_reg": 335888,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 54,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 119,
+      "name": "gcc_qupv3_wrap2_s0_clk",
+      "kind": "BRANCH",
+      "line": 2397,
+      "reg": 122892,
+      "enable_reg": 335888,
+      "enable_mask": 16,
+      "parent": 120,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 120,
+      "name": "gcc_qupv3_wrap2_s0_clk_src",
+      "kind": "RCG",
+      "line": 615,
+      "reg": 122896,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s0_clk_src"
+    },
+    {
+      "id": 121,
+      "name": "gcc_qupv3_wrap2_s1_clk",
+      "kind": "BRANCH",
+      "line": 2415,
+      "reg": 123196,
+      "enable_reg": 335888,
+      "enable_mask": 32,
+      "parent": 122,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 122,
+      "name": "gcc_qupv3_wrap2_s1_clk_src",
+      "kind": "RCG",
+      "line": 631,
+      "reg": 123200,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 123,
+      "name": "gcc_qupv3_wrap2_s2_clk",
+      "kind": "BRANCH",
+      "line": 2433,
+      "reg": 123500,
+      "enable_reg": 335888,
+      "enable_mask": 64,
+      "parent": 124,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 124,
+      "name": "gcc_qupv3_wrap2_s2_clk_src",
+      "kind": "RCG",
+      "line": 647,
+      "reg": 123504,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 125,
+      "name": "gcc_qupv3_wrap2_s3_clk",
+      "kind": "BRANCH",
+      "line": 2451,
+      "reg": 123804,
+      "enable_reg": 335888,
+      "enable_mask": 128,
+      "parent": 126,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 126,
+      "name": "gcc_qupv3_wrap2_s3_clk_src",
+      "kind": "RCG",
+      "line": 663,
+      "reg": 123808,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 127,
+      "name": "gcc_qupv3_wrap2_s4_clk",
+      "kind": "BRANCH",
+      "line": 2469,
+      "reg": 124108,
+      "enable_reg": 335888,
+      "enable_mask": 256,
+      "parent": 128,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 128,
+      "name": "gcc_qupv3_wrap2_s4_clk_src",
+      "kind": "RCG",
+      "line": 679,
+      "reg": 124112,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 129,
+      "name": "gcc_qupv3_wrap2_s5_clk",
+      "kind": "BRANCH",
+      "line": 2487,
+      "reg": 124412,
+      "enable_reg": 335888,
+      "enable_mask": 512,
+      "parent": 130,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 130,
+      "name": "gcc_qupv3_wrap2_s5_clk_src",
+      "kind": "RCG",
+      "line": 695,
+      "reg": 124416,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 16,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_qupv3_wrap0_s2_clk_src"
+    },
+    {
+      "id": 131,
+      "name": "gcc_qupv3_wrap_0_m_ahb_clk",
+      "kind": "BRANCH",
+      "line": 2505,
+      "reg": 94212,
+      "enable_reg": 335880,
+      "enable_mask": 64,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 55,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 132,
+      "name": "gcc_qupv3_wrap_0_s_ahb_clk",
+      "kind": "BRANCH",
+      "line": 2518,
+      "reg": 94216,
+      "enable_reg": 335880,
+      "enable_mask": 128,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 94216,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 56,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 133,
+      "name": "gcc_qupv3_wrap_1_m_ahb_clk",
+      "kind": "BRANCH",
+      "line": 2533,
+      "reg": 98308,
+      "enable_reg": 335880,
+      "enable_mask": 1048576,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 57,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 134,
+      "name": "gcc_qupv3_wrap_1_s_ahb_clk",
+      "kind": "BRANCH",
+      "line": 2546,
+      "reg": 98312,
+      "enable_reg": 335880,
+      "enable_mask": 2097152,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 98312,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 58,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 135,
+      "name": "gcc_qupv3_wrap_2_m_ahb_clk",
+      "kind": "BRANCH",
+      "line": 2561,
+      "reg": 122884,
+      "enable_reg": 335888,
+      "enable_mask": 4,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 59,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 136,
+      "name": "gcc_qupv3_wrap_2_s_ahb_clk",
+      "kind": "BRANCH",
+      "line": 2574,
+      "reg": 122888,
+      "enable_reg": 335888,
+      "enable_mask": 2,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 122888,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 60,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 137,
+      "name": "gcc_sdcc2_ahb_clk",
+      "kind": "BRANCH",
+      "line": 2589,
+      "reg": 81928,
+      "enable_reg": 81928,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 61,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 138,
+      "name": "gcc_sdcc2_apps_clk",
+      "kind": "BRANCH",
+      "line": 2602,
+      "reg": 81924,
+      "enable_reg": 81924,
+      "enable_mask": 1,
+      "parent": 139,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 139,
+      "name": "gcc_sdcc2_apps_clk_src",
+      "kind": "RCG",
+      "line": 714,
+      "reg": 81932,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 8,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        3,
+        -127,
+        -127,
+        2,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_sdcc2_apps_clk_src"
+    },
+    {
+      "id": 140,
+      "name": "gcc_sdcc4_ahb_clk",
+      "kind": "BRANCH",
+      "line": 2620,
+      "reg": 90120,
+      "enable_reg": 90120,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 62,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 141,
+      "name": "gcc_sdcc4_apps_clk",
+      "kind": "BRANCH",
+      "line": 2633,
+      "reg": 90116,
+      "enable_reg": 90116,
+      "enable_mask": 1,
+      "parent": 142,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 142,
+      "name": "gcc_sdcc4_apps_clk_src",
+      "kind": "RCG",
+      "line": 738,
+      "reg": 90124,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 8,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_sdcc4_apps_clk_src"
+    },
+    {
+      "id": 143,
+      "name": "gcc_sys_noc_cpuss_ahb_clk",
+      "kind": "BRANCH",
+      "line": 3652,
+      "reg": 4294967295,
+      "enable_reg": 335872,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 63,
+      "halt_check": "probe-only CBCR"
+    },
+    {
+      "id": 144,
+      "name": "gcc_tsif_ahb_clk",
+      "kind": "BRANCH",
+      "line": 2651,
+      "reg": 221188,
+      "enable_reg": 221188,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 64,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 145,
+      "name": "gcc_tsif_inactivity_timers_clk",
+      "kind": "BRANCH",
+      "line": 2664,
+      "reg": 221196,
+      "enable_reg": 221196,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 65,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 146,
+      "name": "gcc_tsif_ref_clk",
+      "kind": "BRANCH",
+      "line": 2677,
+      "reg": 221192,
+      "enable_reg": 221192,
+      "enable_mask": 1,
+      "parent": 147,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 147,
+      "name": "gcc_tsif_ref_clk_src",
+      "kind": "RCG",
+      "line": 757,
+      "reg": 221200,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 8,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -3,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_tsif_ref_clk_src"
+    },
+    {
+      "id": 148,
+      "name": "gcc_ufs_1x_clkref_en",
+      "kind": "BRANCH",
+      "line": 2695,
+      "reg": 573440,
+      "enable_reg": 573440,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 66,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 149,
+      "name": "gcc_ufs_card_ahb_clk",
+      "kind": "BRANCH",
+      "line": 2708,
+      "reg": 479256,
+      "enable_reg": 479256,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 479256,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 67,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 150,
+      "name": "gcc_ufs_card_axi_clk",
+      "kind": "BRANCH",
+      "line": 2723,
+      "reg": 479248,
+      "enable_reg": 479248,
+      "enable_mask": 1,
+      "parent": 151,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 479248,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 151,
+      "name": "gcc_ufs_card_axi_clk_src",
+      "kind": "RCG",
+      "line": 779,
+      "reg": 479268,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 8,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_ufs_card_axi_clk_src"
+    },
+    {
+      "id": 152,
+      "name": "gcc_ufs_card_ice_core_clk",
+      "kind": "BRANCH",
+      "line": 2743,
+      "reg": 479332,
+      "enable_reg": 479332,
+      "enable_mask": 1,
+      "parent": 153,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 479332,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 153,
+      "name": "gcc_ufs_card_ice_core_clk_src",
+      "kind": "RCG",
+      "line": 801,
+      "reg": 479340,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_ufs_card_ice_core_clk_src"
+    },
+    {
+      "id": 154,
+      "name": "gcc_ufs_card_phy_aux_clk",
+      "kind": "BRANCH",
+      "line": 2763,
+      "reg": 479388,
+      "enable_reg": 479388,
+      "enable_mask": 1,
+      "parent": 155,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 479388,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 155,
+      "name": "gcc_ufs_card_phy_aux_clk_src",
+      "kind": "RCG",
+      "line": 820,
+      "reg": 479392,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_ufs_card_phy_aux_clk_src"
+    },
+    {
+      "id": 156,
+      "name": "gcc_ufs_card_rx_symbol_0_clk",
+      "kind": "BRANCH",
+      "line": 2783,
+      "reg": 479264,
+      "enable_reg": 479264,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 68,
+      "halt_check": "BRANCH_HALT_DELAY"
+    },
+    {
+      "id": 157,
+      "name": "gcc_ufs_card_rx_symbol_1_clk",
+      "kind": "BRANCH",
+      "line": 2796,
+      "reg": 479416,
+      "enable_reg": 479416,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 69,
+      "halt_check": "BRANCH_HALT_DELAY"
+    },
+    {
+      "id": 158,
+      "name": "gcc_ufs_card_tx_symbol_0_clk",
+      "kind": "BRANCH",
+      "line": 2809,
+      "reg": 479260,
+      "enable_reg": 479260,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 70,
+      "halt_check": "BRANCH_HALT_DELAY"
+    },
+    {
+      "id": 159,
+      "name": "gcc_ufs_card_unipro_core_clk",
+      "kind": "BRANCH",
+      "line": 2822,
+      "reg": 479324,
+      "enable_reg": 479324,
+      "enable_mask": 1,
+      "parent": 160,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 479324,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 160,
+      "name": "gcc_ufs_card_unipro_core_clk_src",
+      "kind": "RCG",
+      "line": 841,
+      "reg": 479364,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_ufs_card_unipro_core_clk_src"
+    },
+    {
+      "id": 161,
+      "name": "gcc_ufs_phy_ahb_clk",
+      "kind": "BRANCH",
+      "line": 2842,
+      "reg": 487448,
+      "enable_reg": 487448,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 487448,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 71,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 162,
+      "name": "gcc_ufs_phy_axi_clk",
+      "kind": "BRANCH",
+      "line": 2857,
+      "reg": 487440,
+      "enable_reg": 487440,
+      "enable_mask": 1,
+      "parent": 163,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 487440,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 163,
+      "name": "gcc_ufs_phy_axi_clk_src",
+      "kind": "RCG",
+      "line": 864,
+      "reg": 487460,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 8,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_ufs_phy_axi_clk_src"
+    },
+    {
+      "id": 164,
+      "name": "gcc_ufs_phy_ice_core_clk",
+      "kind": "BRANCH",
+      "line": 2877,
+      "reg": 487524,
+      "enable_reg": 487524,
+      "enable_mask": 1,
+      "parent": 165,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 487524,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 165,
+      "name": "gcc_ufs_phy_ice_core_clk_src",
+      "kind": "RCG",
+      "line": 878,
+      "reg": 487532,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_ufs_card_ice_core_clk_src"
+    },
+    {
+      "id": 166,
+      "name": "gcc_ufs_phy_phy_aux_clk",
+      "kind": "BRANCH",
+      "line": 2897,
+      "reg": 487580,
+      "enable_reg": 487580,
+      "enable_mask": 1,
+      "parent": 167,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 487580,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 167,
+      "name": "gcc_ufs_phy_phy_aux_clk_src",
+      "kind": "RCG",
+      "line": 892,
+      "reg": 487584,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_pcie_0_aux_clk_src"
+    },
+    {
+      "id": 168,
+      "name": "gcc_ufs_phy_rx_symbol_0_clk",
+      "kind": "BRANCH",
+      "line": 2917,
+      "reg": 487456,
+      "enable_reg": 487456,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 72,
+      "halt_check": "BRANCH_HALT_DELAY"
+    },
+    {
+      "id": 169,
+      "name": "gcc_ufs_phy_rx_symbol_1_clk",
+      "kind": "BRANCH",
+      "line": 2930,
+      "reg": 487608,
+      "enable_reg": 487608,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 73,
+      "halt_check": "BRANCH_HALT_DELAY"
+    },
+    {
+      "id": 170,
+      "name": "gcc_ufs_phy_tx_symbol_0_clk",
+      "kind": "BRANCH",
+      "line": 2943,
+      "reg": 487452,
+      "enable_reg": 487452,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 74,
+      "halt_check": "BRANCH_HALT_DELAY"
+    },
+    {
+      "id": 171,
+      "name": "gcc_ufs_phy_unipro_core_clk",
+      "kind": "BRANCH",
+      "line": 2956,
+      "reg": 487516,
+      "enable_reg": 487516,
+      "enable_mask": 1,
+      "parent": 172,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 487516,
+      "hwcg_mask": 2,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 172,
+      "name": "gcc_ufs_phy_unipro_core_clk_src",
+      "kind": "RCG",
+      "line": 906,
+      "reg": 487556,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_ufs_card_ice_core_clk_src"
+    },
+    {
+      "id": 173,
+      "name": "gcc_usb30_prim_master_clk",
+      "kind": "BRANCH",
+      "line": 2976,
+      "reg": 61456,
+      "enable_reg": 61456,
+      "enable_mask": 1,
+      "parent": 174,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 174,
+      "name": "gcc_usb30_prim_master_clk_src",
+      "kind": "RCG",
+      "line": 929,
+      "reg": 61472,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 8,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_usb30_prim_master_clk_src"
+    },
+    {
+      "id": 175,
+      "name": "gcc_usb30_prim_mock_utmi_clk",
+      "kind": "BRANCH",
+      "line": 2994,
+      "reg": 61468,
+      "enable_reg": 61468,
+      "enable_mask": 1,
+      "parent": 177,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 176,
+      "name": "gcc_usb30_prim_mock_utmi_clk_src",
+      "kind": "RCG",
+      "line": 943,
+      "reg": 61496,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_ufs_card_phy_aux_clk_src"
+    },
+    {
+      "id": 177,
+      "name": "gcc_usb30_prim_mock_utmi_postdiv_clk_src",
+      "kind": "DIV",
+      "line": 1028,
+      "reg": 61520,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": 176,
+      "mnd_width": 0,
+      "hid_width": 2,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1
+    },
+    {
+      "id": 178,
+      "name": "gcc_usb30_prim_sleep_clk",
+      "kind": "BRANCH",
+      "line": 3012,
+      "reg": 61464,
+      "enable_reg": 61464,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 75,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 179,
+      "name": "gcc_usb30_sec_master_clk",
+      "kind": "BRANCH",
+      "line": 3025,
+      "reg": 65552,
+      "enable_reg": 65552,
+      "enable_mask": 1,
+      "parent": 180,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 180,
+      "name": "gcc_usb30_sec_master_clk_src",
+      "kind": "RCG",
+      "line": 957,
+      "reg": 65568,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 8,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_usb30_prim_master_clk_src"
+    },
+    {
+      "id": 181,
+      "name": "gcc_usb30_sec_mock_utmi_clk",
+      "kind": "BRANCH",
+      "line": 3043,
+      "reg": 65564,
+      "enable_reg": 65564,
+      "enable_mask": 1,
+      "parent": 183,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 182,
+      "name": "gcc_usb30_sec_mock_utmi_clk_src",
+      "kind": "RCG",
+      "line": 971,
+      "reg": 65592,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        0,
+        -127,
+        -127,
+        -127,
+        -127,
+        1,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_ufs_card_phy_aux_clk_src"
+    },
+    {
+      "id": 183,
+      "name": "gcc_usb30_sec_mock_utmi_postdiv_clk_src",
+      "kind": "DIV",
+      "line": 1043,
+      "reg": 65616,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": 182,
+      "mnd_width": 0,
+      "hid_width": 2,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1
+    },
+    {
+      "id": 184,
+      "name": "gcc_usb30_sec_sleep_clk",
+      "kind": "BRANCH",
+      "line": 3061,
+      "reg": 65560,
+      "enable_reg": 65560,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 76,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 185,
+      "name": "gcc_usb3_prim_phy_aux_clk",
+      "kind": "BRANCH",
+      "line": 3074,
+      "reg": 61524,
+      "enable_reg": 61524,
+      "enable_mask": 1,
+      "parent": 186,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 186,
+      "name": "gcc_usb3_prim_phy_aux_clk_src",
+      "kind": "RCG",
+      "line": 985,
+      "reg": 61540,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -2,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_ufs_card_phy_aux_clk_src"
+    },
+    {
+      "id": 187,
+      "name": "gcc_usb3_prim_phy_com_aux_clk",
+      "kind": "BRANCH",
+      "line": 3092,
+      "reg": 61528,
+      "enable_reg": 61528,
+      "enable_mask": 1,
+      "parent": 186,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 188,
+      "name": "gcc_usb3_prim_phy_pipe_clk",
+      "kind": "BRANCH",
+      "line": 3110,
+      "reg": 61532,
+      "enable_reg": 61532,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 77,
+      "halt_check": "BRANCH_HALT_DELAY"
+    },
+    {
+      "id": 190,
+      "name": "gcc_usb3_sec_clkref_en",
+      "kind": "BRANCH",
+      "line": 3123,
+      "reg": 573456,
+      "enable_reg": 573456,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 78,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 191,
+      "name": "gcc_usb3_sec_phy_aux_clk",
+      "kind": "BRANCH",
+      "line": 3136,
+      "reg": 65620,
+      "enable_reg": 65620,
+      "enable_mask": 1,
+      "parent": 192,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 192,
+      "name": "gcc_usb3_sec_phy_aux_clk_src",
+      "kind": "RCG",
+      "line": 999,
+      "reg": 65636,
+      "enable_reg": 0,
+      "enable_mask": 0,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 5,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -2,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "frequency_table": "ftbl_gcc_ufs_card_phy_aux_clk_src"
+    },
+    {
+      "id": 193,
+      "name": "gcc_usb3_sec_phy_com_aux_clk",
+      "kind": "BRANCH",
+      "line": 3154,
+      "reg": 65624,
+      "enable_reg": 65624,
+      "enable_mask": 1,
+      "parent": 192,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": -1,
+      "halt_check": "BRANCH_HALT"
+    },
+    {
+      "id": 194,
+      "name": "gcc_usb3_sec_phy_pipe_clk",
+      "kind": "BRANCH",
+      "line": 3172,
+      "reg": 65628,
+      "enable_reg": 65628,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 79,
+      "halt_check": "BRANCH_HALT_DELAY"
+    },
+    {
+      "id": 196,
+      "name": "gcc_video_ahb_clk",
+      "kind": "BRANCH",
+      "line": 3647,
+      "reg": 4294967295,
+      "enable_reg": 45060,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 80,
+      "halt_check": "probe-only CBCR"
+    },
+    {
+      "id": 197,
+      "name": "gcc_video_axi0_clk",
+      "kind": "BRANCH",
+      "line": 3185,
+      "reg": 45092,
+      "enable_reg": 45092,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 81,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 198,
+      "name": "gcc_video_axi1_clk",
+      "kind": "BRANCH",
+      "line": 3198,
+      "reg": 45096,
+      "enable_reg": 45096,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 82,
+      "halt_check": "BRANCH_HALT_VOTED"
+    },
+    {
+      "id": 199,
+      "name": "gcc_video_xo_clk",
+      "kind": "BRANCH",
+      "line": 3211,
+      "reg": 45116,
+      "enable_reg": 45116,
+      "enable_mask": 1,
+      "parent": -4,
+      "mnd_width": 0,
+      "hid_width": 0,
+      "hwcg_reg": 0,
+      "hwcg_mask": 0,
+      "parent_map": [
+        -1,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127,
+        -127
+      ],
+      "external": 83,
+      "halt_check": "BRANCH_HALT"
+    }
+  ],
+  "resets": [
+    {
+      "id": 0,
+      "name": "GCC_GPU_BCR",
+      "reg": 462848,
+      "mask": 1
+    },
+    {
+      "id": 1,
+      "name": "GCC_MMSS_BCR",
+      "reg": 45056,
+      "mask": 1
+    },
+    {
+      "id": 2,
+      "name": "GCC_NPU_BWMON_BCR",
+      "reg": 471040,
+      "mask": 1
+    },
+    {
+      "id": 3,
+      "name": "GCC_NPU_BCR",
+      "reg": 315392,
+      "mask": 1
+    },
+    {
+      "id": 4,
+      "name": "GCC_PCIE_0_BCR",
+      "reg": 438272,
+      "mask": 1
+    },
+    {
+      "id": 5,
+      "name": "GCC_PCIE_0_LINK_DOWN_BCR",
+      "reg": 442388,
+      "mask": 1
+    },
+    {
+      "id": 6,
+      "name": "GCC_PCIE_0_NOCSR_COM_PHY_BCR",
+      "reg": 442400,
+      "mask": 1
+    },
+    {
+      "id": 7,
+      "name": "GCC_PCIE_0_PHY_BCR",
+      "reg": 442396,
+      "mask": 1
+    },
+    {
+      "id": 8,
+      "name": "GCC_PCIE_0_PHY_NOCSR_COM_PHY_BCR",
+      "reg": 442408,
+      "mask": 1
+    },
+    {
+      "id": 9,
+      "name": "GCC_PCIE_1_BCR",
+      "reg": 577536,
+      "mask": 1
+    },
+    {
+      "id": 10,
+      "name": "GCC_PCIE_1_LINK_DOWN_BCR",
+      "reg": 581652,
+      "mask": 1
+    },
+    {
+      "id": 11,
+      "name": "GCC_PCIE_1_NOCSR_COM_PHY_BCR",
+      "reg": 581664,
+      "mask": 1
+    },
+    {
+      "id": 12,
+      "name": "GCC_PCIE_1_PHY_BCR",
+      "reg": 581660,
+      "mask": 1
+    },
+    {
+      "id": 13,
+      "name": "GCC_PCIE_1_PHY_NOCSR_COM_PHY_BCR",
+      "reg": 581632,
+      "mask": 1
+    },
+    {
+      "id": 14,
+      "name": "GCC_PCIE_2_BCR",
+      "reg": 24576,
+      "mask": 1
+    },
+    {
+      "id": 15,
+      "name": "GCC_PCIE_2_LINK_DOWN_BCR",
+      "reg": 126996,
+      "mask": 1
+    },
+    {
+      "id": 16,
+      "name": "GCC_PCIE_2_NOCSR_COM_PHY_BCR",
+      "reg": 127008,
+      "mask": 1
+    },
+    {
+      "id": 17,
+      "name": "GCC_PCIE_2_PHY_BCR",
+      "reg": 127004,
+      "mask": 1
+    },
+    {
+      "id": 18,
+      "name": "GCC_PCIE_2_PHY_NOCSR_COM_PHY_BCR",
+      "reg": 127016,
+      "mask": 1
+    },
+    {
+      "id": 19,
+      "name": "GCC_PCIE_PHY_BCR",
+      "reg": 454656,
+      "mask": 1
+    },
+    {
+      "id": 20,
+      "name": "GCC_PCIE_PHY_CFG_AHB_BCR",
+      "reg": 454668,
+      "mask": 1
+    },
+    {
+      "id": 21,
+      "name": "GCC_PCIE_PHY_COM_BCR",
+      "reg": 454672,
+      "mask": 1
+    },
+    {
+      "id": 22,
+      "name": "GCC_PDM_BCR",
+      "reg": 208896,
+      "mask": 1
+    },
+    {
+      "id": 23,
+      "name": "GCC_PRNG_BCR",
+      "reg": 212992,
+      "mask": 1
+    },
+    {
+      "id": 24,
+      "name": "GCC_QUPV3_WRAPPER_0_BCR",
+      "reg": 94208,
+      "mask": 1
+    },
+    {
+      "id": 25,
+      "name": "GCC_QUPV3_WRAPPER_1_BCR",
+      "reg": 98304,
+      "mask": 1
+    },
+    {
+      "id": 26,
+      "name": "GCC_QUPV3_WRAPPER_2_BCR",
+      "reg": 122880,
+      "mask": 1
+    },
+    {
+      "id": 27,
+      "name": "GCC_QUSB2PHY_PRIM_BCR",
+      "reg": 73728,
+      "mask": 1
+    },
+    {
+      "id": 28,
+      "name": "GCC_QUSB2PHY_SEC_BCR",
+      "reg": 73732,
+      "mask": 1
+    },
+    {
+      "id": 29,
+      "name": "GCC_SDCC2_BCR",
+      "reg": 81920,
+      "mask": 1
+    },
+    {
+      "id": 30,
+      "name": "GCC_SDCC4_BCR",
+      "reg": 90112,
+      "mask": 1
+    },
+    {
+      "id": 31,
+      "name": "GCC_TSIF_BCR",
+      "reg": 221184,
+      "mask": 1
+    },
+    {
+      "id": 32,
+      "name": "GCC_UFS_CARD_BCR",
+      "reg": 479232,
+      "mask": 1
+    },
+    {
+      "id": 33,
+      "name": "GCC_UFS_PHY_BCR",
+      "reg": 487424,
+      "mask": 1
+    },
+    {
+      "id": 34,
+      "name": "GCC_USB30_PRIM_BCR",
+      "reg": 61440,
+      "mask": 1
+    },
+    {
+      "id": 35,
+      "name": "GCC_USB30_SEC_BCR",
+      "reg": 65536,
+      "mask": 1
+    },
+    {
+      "id": 36,
+      "name": "GCC_USB3_DP_PHY_PRIM_BCR",
+      "reg": 327688,
+      "mask": 1
+    },
+    {
+      "id": 37,
+      "name": "GCC_USB3_DP_PHY_SEC_BCR",
+      "reg": 327700,
+      "mask": 1
+    },
+    {
+      "id": 38,
+      "name": "GCC_USB3_PHY_PRIM_BCR",
+      "reg": 327680,
+      "mask": 1
+    },
+    {
+      "id": 39,
+      "name": "GCC_USB3_PHY_SEC_BCR",
+      "reg": 327692,
+      "mask": 1
+    },
+    {
+      "id": 40,
+      "name": "GCC_USB3PHY_PHY_PRIM_BCR",
+      "reg": 327684,
+      "mask": 1
+    },
+    {
+      "id": 41,
+      "name": "GCC_USB3PHY_PHY_SEC_BCR",
+      "reg": 327696,
+      "mask": 1
+    },
+    {
+      "id": 42,
+      "name": "GCC_USB_PHY_CFG_AHB2PHY_BCR",
+      "reg": 434176,
+      "mask": 1
+    },
+    {
+      "id": 43,
+      "name": "GCC_VIDEO_AXI0_CLK_ARES",
+      "reg": 45092,
+      "mask": 4
+    },
+    {
+      "id": 44,
+      "name": "GCC_VIDEO_AXI1_CLK_ARES",
+      "reg": 45096,
+      "mask": 4
+    }
+  ],
+  "power_domains": [
+    {
+      "id": 0,
+      "name": "pcie_0_gdsc",
+      "reg": 438276,
+      "line": 3224,
+      "votable": false,
+      "retention": true
+    },
+    {
+      "id": 1,
+      "name": "pcie_1_gdsc",
+      "reg": 577540,
+      "line": 3232,
+      "votable": false,
+      "retention": true
+    },
+    {
+      "id": 2,
+      "name": "pcie_2_gdsc",
+      "reg": 24580,
+      "line": 3240,
+      "votable": false,
+      "retention": true
+    },
+    {
+      "id": 3,
+      "name": "ufs_card_gdsc",
+      "reg": 479236,
+      "line": 3248,
+      "votable": false,
+      "retention": false
+    },
+    {
+      "id": 4,
+      "name": "ufs_phy_gdsc",
+      "reg": 487428,
+      "line": 3256,
+      "votable": false,
+      "retention": false
+    },
+    {
+      "id": 5,
+      "name": "usb30_prim_gdsc",
+      "reg": 61444,
+      "line": 3264,
+      "votable": false,
+      "retention": true
+    },
+    {
+      "id": 6,
+      "name": "usb30_sec_gdsc",
+      "reg": 65540,
+      "line": 3272,
+      "votable": false,
+      "retention": true
+    },
+    {
+      "id": 7,
+      "name": "hlos1_vote_mmnoc_mmu_tbu_hf0_gdsc",
+      "reg": 512080,
+      "line": 3280,
+      "votable": true,
+      "retention": false
+    },
+    {
+      "id": 8,
+      "name": "hlos1_vote_mmnoc_mmu_tbu_hf1_gdsc",
+      "reg": 512088,
+      "line": 3289,
+      "votable": true,
+      "retention": false
+    },
+    {
+      "id": 9,
+      "name": "hlos1_vote_mmnoc_mmu_tbu_sf0_gdsc",
+      "reg": 512084,
+      "line": 3298,
+      "votable": true,
+      "retention": false
+    },
+    {
+      "id": 10,
+      "name": "hlos1_vote_mmnoc_mmu_tbu_sf1_gdsc",
+      "reg": 512108,
+      "line": 3307,
+      "votable": true,
+      "retention": false
+    }
+  ],
+  "registers": [
+    {
+      "offset": 0,
+      "write_mask": 33554311,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 4,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 8,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 12,
+      "write_mask": 3847,
+      "status_mask": 0
+    },
+    {
+      "offset": 16,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 20,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 24,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 28,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 32,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 36,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 40,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 44,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 48,
+      "write_mask": 0,
+      "status_mask": 134217728
+    },
+    {
+      "offset": 56,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 64,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 24576,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 24580,
+      "write_mask": 16773127,
+      "status_mask": 2147483648
+    },
+    {
+      "offset": 24592,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 24596,
+      "write_mask": 2,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 24604,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 24612,
+      "write_mask": 2,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 24616,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 24620,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 24632,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 24636,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 24640,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 24644,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 24648,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 45056,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 45060,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 45064,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 45068,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 45072,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 45076,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 45080,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 45084,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 45088,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 45092,
+      "write_mask": 5,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 45096,
+      "write_mask": 5,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 45100,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 45104,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 45108,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 45112,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 45116,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 45120,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 45124,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 61440,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 61444,
+      "write_mask": 16773127,
+      "status_mask": 2147483648
+    },
+    {
+      "offset": 61456,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 61464,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 61468,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 61472,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 61476,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 61480,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 61484,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 61488,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 61496,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 61500,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 61520,
+      "write_mask": 0,
+      "status_mask": 3
+    },
+    {
+      "offset": 61524,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 61528,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 61532,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 61540,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 61544,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 61564,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 61568,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 65536,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 65540,
+      "write_mask": 16773127,
+      "status_mask": 2147483648
+    },
+    {
+      "offset": 65552,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 65560,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 65564,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 65568,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 65572,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 65576,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 65580,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 65584,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 65592,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 65596,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 65616,
+      "write_mask": 0,
+      "status_mask": 3
+    },
+    {
+      "offset": 65620,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 65624,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 65628,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 65636,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 65640,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 65660,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 65664,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 73728,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 73732,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 81920,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 81924,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 81928,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 81932,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 81936,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 81940,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 81944,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 81948,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 90112,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 90116,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 90120,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 90124,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 90128,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 90132,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 90136,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 90140,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 94208,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 94212,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 94216,
+      "write_mask": 2,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 94220,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 94224,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 94228,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 94232,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 94236,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 94240,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 94244,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 94524,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 94528,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 94532,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 94536,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 94540,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 94544,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 94548,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 94828,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 94832,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 94836,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 94840,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 94844,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 94848,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 94852,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 95132,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 95136,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 95140,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 95144,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 95148,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 95152,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 95156,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 95436,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 95440,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 95444,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 95448,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 95452,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 95456,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 95460,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 95740,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 95744,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 95748,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 95752,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 95756,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 95760,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 95764,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 96044,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 96048,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 96052,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 96056,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 96060,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 96064,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 96068,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 96348,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 96352,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 96356,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 96360,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 96364,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 96368,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 96372,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 98304,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 98308,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 98312,
+      "write_mask": 2,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 98316,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 98320,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 98324,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 98328,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 98332,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 98336,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 98340,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 98620,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 98624,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 98628,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 98632,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 98636,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 98640,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 98644,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 98924,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 98928,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 98932,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 98936,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 98940,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 98944,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 98948,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 99228,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 99232,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 99236,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 99240,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 99244,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 99248,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 99252,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 99532,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 99536,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 99540,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 99544,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 99548,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 99552,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 99556,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 99836,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 99840,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 99844,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 99848,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 99852,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 99856,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 99860,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 114688,
+      "write_mask": 33554311,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 114692,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 114696,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 114700,
+      "write_mask": 3847,
+      "status_mask": 0
+    },
+    {
+      "offset": 114704,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 114708,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 114712,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 114716,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 114720,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 114724,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 114728,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 114732,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 114736,
+      "write_mask": 0,
+      "status_mask": 134217728
+    },
+    {
+      "offset": 114744,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 114752,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 122880,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 122884,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 122888,
+      "write_mask": 2,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 122892,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 122896,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 122900,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 122904,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 122908,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 122912,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 122916,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 123196,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 123200,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 123204,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 123208,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 123212,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 123216,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 123220,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 123500,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 123504,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 123508,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 123512,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 123516,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 123520,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 123524,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 123804,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 123808,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 123812,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 123816,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 123820,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 123824,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 123828,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 124108,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 124112,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 124116,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 124120,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 124124,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 124128,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 124132,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 124412,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 124416,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 124420,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 124424,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 124428,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 124432,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 124436,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 126996,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 127004,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 127008,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 127016,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 143360,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 143368,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 143672,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 143680,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 143984,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 143992,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 208896,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 208900,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 208904,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 208908,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 208912,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 208916,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 212992,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 212996,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 221184,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 221188,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 221192,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 221196,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 221200,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 221204,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 221208,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 221212,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 221216,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 229380,
+      "write_mask": 2,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 294912,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 294916,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 294928,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 294932,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 294952,
+      "write_mask": 0,
+      "status_mask": 15
+    },
+    {
+      "offset": 295308,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 315392,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 315396,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 315400,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 315404,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 315664,
+      "write_mask": 3,
+      "status_mask": 0
+    },
+    {
+      "offset": 327680,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 327684,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 327688,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 327692,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 327696,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 327700,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 335872,
+      "write_mask": 2116920321,
+      "status_mask": 0
+    },
+    {
+      "offset": 335880,
+      "write_mask": 268435455,
+      "status_mask": 0
+    },
+    {
+      "offset": 335888,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 335896,
+      "write_mask": 529,
+      "status_mask": 0
+    },
+    {
+      "offset": 409600,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 409604,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 409608,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 409612,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 409616,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 409620,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 413696,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 413700,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 413704,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 413708,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 413712,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 413716,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 417792,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 417796,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 417800,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 417804,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 417808,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 417812,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 434176,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 438272,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 438276,
+      "write_mask": 16773127,
+      "status_mask": 2147483648
+    },
+    {
+      "offset": 438288,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 438292,
+      "write_mask": 2,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 438300,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 438308,
+      "write_mask": 2,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 438312,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 438316,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 438328,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 438332,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 438336,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 438340,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 438344,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 442388,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 442396,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 442400,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 442408,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 454656,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 454660,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 454668,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 454672,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 454676,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 454680,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 454700,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 454704,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 454708,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 462848,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 462852,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 462860,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 462872,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 462888,
+      "write_mask": 3,
+      "status_mask": 0
+    },
+    {
+      "offset": 463188,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 471040,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 471044,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 471048,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 479232,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 479236,
+      "write_mask": 16773127,
+      "status_mask": 2147483648
+    },
+    {
+      "offset": 479248,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 479256,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 479260,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 479264,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 479268,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 479272,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 479276,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 479280,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 479284,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 479324,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 479332,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 479340,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 479344,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 479364,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 479368,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 479388,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 479392,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 479396,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 479416,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 479436,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 483328,
+      "write_mask": 33554311,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 483332,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 483336,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 483340,
+      "write_mask": 3847,
+      "status_mask": 0
+    },
+    {
+      "offset": 483344,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 483348,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 483352,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 483356,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 483360,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 483364,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 483368,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 483372,
+      "write_mask": 0,
+      "status_mask": 0
+    },
+    {
+      "offset": 483376,
+      "write_mask": 0,
+      "status_mask": 134217728
+    },
+    {
+      "offset": 483384,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 483392,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 487424,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 487428,
+      "write_mask": 16773127,
+      "status_mask": 2147483648
+    },
+    {
+      "offset": 487440,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 487448,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 487452,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 487456,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 487460,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 487464,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 487468,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 487472,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 487476,
+      "write_mask": 255,
+      "status_mask": 0
+    },
+    {
+      "offset": 487516,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 487524,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 487532,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 487536,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 487556,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 487560,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 487580,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 487584,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 487588,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 487608,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 487628,
+      "write_mask": 3,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 512080,
+      "write_mask": 16773127,
+      "status_mask": 2147483648
+    },
+    {
+      "offset": 512084,
+      "write_mask": 16773127,
+      "status_mask": 2147483648
+    },
+    {
+      "offset": 512088,
+      "write_mask": 16773127,
+      "status_mask": 2147483648
+    },
+    {
+      "offset": 512108,
+      "write_mask": 16773127,
+      "status_mask": 2147483648
+    },
+    {
+      "offset": 573440,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 573444,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 573448,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 573452,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 573456,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 573460,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 577536,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 577540,
+      "write_mask": 16773127,
+      "status_mask": 2147483648
+    },
+    {
+      "offset": 577552,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 577556,
+      "write_mask": 2,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 577564,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 577572,
+      "write_mask": 2,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 577576,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 577580,
+      "write_mask": 0,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 577592,
+      "write_mask": 3,
+      "status_mask": 2147483888
+    },
+    {
+      "offset": 577596,
+      "write_mask": 1062687,
+      "status_mask": 0
+    },
+    {
+      "offset": 577600,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 577604,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 577608,
+      "write_mask": 65535,
+      "status_mask": 0
+    },
+    {
+      "offset": 577624,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    },
+    {
+      "offset": 581632,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 581652,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 581660,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 581664,
+      "write_mask": 1,
+      "status_mask": 0
+    },
+    {
+      "offset": 589836,
+      "write_mask": 1,
+      "status_mask": 4026531840
+    }
+  ]
+}

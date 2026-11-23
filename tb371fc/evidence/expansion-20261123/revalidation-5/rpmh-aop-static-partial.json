@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "suite": "AOP static partial-table actual QTest",
+  "qemu": "/work/integration-20261123-5/qemu-system-aarch64",
+  "qemu_sha256": "99dfb4fc3ff472624f0a079c67ba26b99e60935a4afc859d1e66afc8942e8c4c",
+  "machine": "tb371fc,rpmh-profile=file,rpmh-boot-configured=off,ufs-enabled=off,rpmh-cmd-db=/work/device-assets/aop-command-db-analysis/aop-static-partial-cmd-db.bin",
+  "firmware_sha256": "3dbb0746d21100d124d76ee19b096d122d58c4aa534dec5828005835535b6671",
+  "reconstructed_command_db_sha256": "7ddf6f1f7f1a711c3e34d96a8f349eb995d08220b440ef2965c4d4e8b1de480d",
+  "live_command_db_captured": false,
+  "reconstructed_table_complete": false,
+  "dynamic_vrm_available": false,
+  "aop_firmware_executed": false,
+  "linux_driver_probe_tested": false,
+  "expected_checks": 6,
+  "checks": [
+    {
+      "check": "exact_loaded_partial_database_and_source_address",
+      "status": "pass"
+    },
+    {
+      "check": "firmware_static_xo_address_controls_clock",
+      "status": "pass"
+    },
+    {
+      "check": "firmware_arc_aux_bounds_enforced",
+      "status": "pass"
+    },
+    {
+      "check": "firmware_bcm_address_unit_and_vcd_isolation_applied",
+      "status": "pass"
+    },
+    {
+      "check": "zero_width_firmware_bcm_serviced_as_digital_vote",
+      "status": "pass"
+    },
+    {
+      "check": "unresolved_vrm_has_no_reference_fallback_or_ack",
+      "status": "pass"
+    }
+  ],
+  "success": true,
+  "process_exit_status": 0,
+  "report_raw_sha256": "a70a4446f7a07ca1b3fc3e3b0bc152fb08ebaa901119ca2a9829c817b6fc0ce1",
+  "recorded_at_utc": "2026-11-23T07:20:14.729484+00:00",
+  "raw_report_private_path": "/work/rpmh-tests-5/aop-static-partial.json"
+}

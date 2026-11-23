@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "suite": "SM8250 GCC actual process-to-process migration",
+  "qemu": "/work/build-next/qemu-system-aarch64",
+  "qemu_sha256": "56717a3c95ba31da84ed46da8c305bc6de910370a359eee475b3587b93d5cabf",
+  "work_dir": "/work/gcc-tests-round2/gcc-migration",
+  "checks": [
+    {
+      "check": "active_clock_pending_update_power_and_reset",
+      "status": "pass"
+    },
+    {
+      "check": "actual_qmp_migration_completed",
+      "status": "pass"
+    },
+    {
+      "check": "registers_clock_remote_vote_gpio_and_ram_preserved",
+      "status": "pass"
+    },
+    {
+      "check": "pending_timers_resume_at_test_controlled_deadlines",
+      "status": "pass"
+    },
+    {
+      "check": "destination_clocks_votes_and_reset_continue",
+      "status": "pass"
+    }
+  ],
+  "ram_per_process": "128 MiB",
+  "scope": "Clock register/gate state, software reset/power and controlled virtual-time transitions; no analog, silicon timing, voltage or full-SoC equivalence",
+  "success": true,
+  "migration": {
+    "source": {
+      "status": "completed",
+      "setup-time": 0,
+      "downtime": 9,
+      "total-time": 18,
+      "ram": {
+        "total": 134217728,
+        "postcopy-requests": 0,
+        "dirty-sync-count": 2,
+        "multifd-bytes": 0,
+        "pages-per-second": 0,
+        "downtime-bytes": 303122,
+        "page-size": 4096,
+        "remaining": 0,
+        "postcopy-bytes": 0,
+        "mbps": 489.90222222222224,
+        "transferred": 1102280,
+        "dirty-sync-missed-zero-copy": 0,
+        "precopy-bytes": 0,
+        "duplicate": 32766,
+        "dirty-pages-rate": 0,
+        "normal-bytes": 8192,
+        "normal": 2
+      }
+    },
+    "target": {
+      "status": "completed"
+    }
+  },
+  "qtest_virtual_ns_at_transfer": 6000,
+  "expected_checks": 5,
+  "recorded_exit_code": 0,
+  "verified_binary_sha256": "56717a3c95ba31da84ed46da8c305bc6de910370a359eee475b3587b93d5cabf",
+  "execution_completed_at_utc": "2026-11-23T05:50:27.584947+00:00",
+  "migration_scope": "Pre-UFS configured components only; this receipt does not establish full expanded-board migration",
+  "tested_machine_options": "tb371fc,gcc-boot-configured=off",
+  "source_report_sha256": "d251ada674aeec5adec7524a7793797d93e46ecc9acdefb5db387e63b757557e"
+}

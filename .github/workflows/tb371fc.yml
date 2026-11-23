@@ -1,4 +1,4 @@
-name: TB371FC functional model
+name: TB371FC public functional gates
 
 on:
   push:
@@ -19,13 +19,14 @@ defaults:
     shell: bash
 
 jobs:
-  build-and-device-tests:
+  board-components-and-linux:
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - name: Install build dependencies
+      - name: Install build and public test dependencies
         run: |
+          set -euo pipefail
           mkdir -p "$RUNNER_TEMP/tb371fc-results"
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends build-essential git ca-certificates \
@@ -33,65 +34,138 @@ jobs:
             libglib2.0-dev libpixman-1-dev zlib1g-dev libfdt-dev device-tree-compiler \
             gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu libc6-dev-arm64-cross \
             curl xz-utils bc bison flex libssl-dev libelf-dev util-linux
-      - name: Build the dedicated machine
+      - name: Build the dedicated machine and C QTests
         run: |
+          set -euo pipefail
           BUILD_DIR="$RUNNER_TEMP/qemu-build" JOBS=2 sh tb371fc/scripts/build.sh \
             2>&1 | tee "$RUNNER_TEMP/tb371fc-results/qemu-build.log"
+          ninja -C "$RUNNER_TEMP/qemu-build" -j2 \
+            tests/qtest/tb371fc-smmuv2-test tests/qtest/tb371fc-tlmm-test \
+            tests/qtest/tb371fc-pdc-test \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/c-qtest-build.log"
           "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" --version \
             > "$RUNNER_TEMP/tb371fc-results/qemu-version.txt"
           sha256sum "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
             > "$RUNNER_TEMP/tb371fc-results/qemu.sha256"
           git rev-parse HEAD > "$RUNNER_TEMP/tb371fc-results/source-commit.txt"
-      - name: Validate capture parsers and negative cases
+      - name: Run every public component gate sequentially
         run: |
-          python3 tb371fc/scripts/test_board_profile.py \
-            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/board-profile-tests.log"
-          python3 tb371fc/scripts/test_validate_machine.py \
-            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/machine-validator-tests.log"
-      - name: Compare running QEMU with the real tablet capture
-        run: |
-          python3 tb371fc/scripts/validate_machine.py \
+          set -euo pipefail
+          python3 tb371fc/scripts/ci_device_tests.py \
             --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
-            --output "$RUNNER_TEMP/tb371fc-results/machine-profile-validation.json" \
-            --dtb-output "$RUNNER_TEMP/tb371fc-results/tb371fc-generated.dtb"
-      - name: Exercise UART registers, interrupts and reset
+            --build-dir "$RUNNER_TEMP/qemu-build" --suite components \
+            --out "$RUNNER_TEMP/tb371fc-results/components" \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/components.log"
+      - name: Build the pinned unpatched Linux input
         run: |
-          python3 tb371fc/tests/test_geni_uart.py \
-            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
-            | tee "$RUNNER_TEMP/tb371fc-results/geni-qtest.json"
-      - name: Exercise real two-process QMP migration
-        run: |
-          python3 tb371fc/tests/test_geni_migration.py \
-            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
-            | tee "$RUNNER_TEMP/tb371fc-results/geni-migration.json"
-      - name: Build the pinned unpatched Linux smoke kernel
-        run: |
+          set -euo pipefail
           SMOKE_JOBS=2 bash tb371fc/scripts/build_smoke_kernel.sh "$RUNNER_TEMP/clean-linux" \
             2>&1 | tee "$RUNNER_TEMP/tb371fc-results/linux-build.log"
-      - name: Boot eight CPUs through normal GENI console into user space
+      - name: Run eight-CPU user-space and UFS, SMMU and RPMh driver gates
         run: |
-          python3 tb371fc/scripts/boot_smoke.py \
+          set -euo pipefail
+          python3 tb371fc/scripts/ci_device_tests.py \
             --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            --build-dir "$RUNNER_TEMP/qemu-build" --suite linux \
             --kernel "$RUNNER_TEMP/clean-linux/artifacts/Image" \
-            --out "$RUNNER_TEMP/linux-smoke" --timeout 120
-      - name: Upload receipts and runnable smoke inputs
+            --out "$RUNNER_TEMP/tb371fc-results/linux" \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/linux.log"
+      - name: Upload receipts, logs and public runnable inputs
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: tb371fc-smoke-${{ github.sha }}
+          name: tb371fc-public-gates-${{ github.sha }}
           retention-days: 14
           if-no-files-found: warn
           path: |
             ${{ runner.temp }}/tb371fc-results/
             ${{ runner.temp }}/clean-linux/artifacts/
-            ${{ runner.temp }}/linux-smoke/
             ${{ runner.temp }}/qemu-build/qemu-system-aarch64
-      - name: State the validation boundary
+            ${{ runner.temp }}/qemu-build/tests/qtest/tb371fc-smmuv2-test
+            ${{ runner.temp }}/qemu-build/tests/qtest/tb371fc-tlmm-test
+            ${{ runner.temp }}/qemu-build/tests/qtest/tb371fc-pdc-test
+      - name: State the measured boundary
         if: always()
         run: |
-          printf '%s\n' 'This job tests the implemented board configuration and GENI FIFO model.' \
-            'It also boots a pinned unpatched Linux kernel with eight CPUs and an instrumented PID 1.' \
-            'Artifacts include input hashes, the generated DT, serial logs and actual verdicts.' \
-            'The CPU large-core model is an A76 substitute. Timing, stock Android and Adreno are unimplemented.' \
-            'A passing job does not attest complete-device or hardware equivalence.' \
+          printf '%s\n' \
+            'This workflow requires public component gates and four clean-Linux boots; read each result.json for its actual verdict.' \
+            'Missing binaries, skipped C QTests, failed checks, timeouts or changed QEMU binaries fail the job.' \
+            'The board uses an architectural Cortex-A77 model and A55 small-core substitutes; exact counter rate is measured in QEMU virtual time.' \
+            'GENI, GCC, timers, SMMUv2, reference RPMh, UFS, watchdog, TLMM, PDC, IMEM, PS_HOLD, DCC, IPCC and reference SPMI gates test their implemented digital contracts.' \
+            'Linux checks use eight CPUs, 8 GiB RAM, a generated device tree and a synthetic disk. The UFS I/O gates end with host QMP quit after 19 ordinary or 23 RPMh-enabled guest checks.' \
+            'No private production Image or AOP input is used. Stock Android, full native-DT boot, analog behavior, Adreno and complete-device equivalence are not attested.' \
+            >> "$GITHUB_STEP_SUMMARY"
+
+  cortex-a77-architecture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install CPU probe build dependencies
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/a77-results"
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential git ca-certificates \
+            python3 python3-venv python3-distlib ninja-build meson pkg-config \
+            libglib2.0-dev libpixman-1-dev zlib1g-dev libfdt-dev \
+            gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
+      - name: Build the CPU test configuration with the generic loader
+        run: |
+          set -euo pipefail
+          repo="$PWD"
+          mkdir -p "$RUNNER_TEMP/a77-build"
+          cd "$RUNNER_TEMP/a77-build"
+          "$repo/configure" --target-list=aarch64-softmmu \
+            --with-devices-aarch64=a77-test --without-default-devices \
+            --without-default-features --enable-system --enable-tcg --enable-fdt \
+            --disable-docs --disable-tools --disable-guest-agent \
+            2>&1 | tee "$RUNNER_TEMP/a77-results/configure.log"
+          ninja -j2 qemu-system-aarch64 tests/qtest/qos-test \
+            2>&1 | tee "$RUNNER_TEMP/a77-results/build.log"
+      - name: Run every shared UFS PCI regression without skips
+        run: |
+          set -euo pipefail
+          python3 tb371fc/scripts/run_ufs_pci_compat.py \
+            --qemu "$RUNNER_TEMP/a77-build/qemu-system-aarch64" \
+            --qos-test "$RUNNER_TEMP/a77-build/tests/qtest/qos-test" \
+            --out "$RUNNER_TEMP/ufs-pci-results" \
+            2>&1 | tee "$RUNNER_TEMP/a77-results/ufs-pci.log"
+      - name: Execute A77 feature, instruction, cache-ID and PMU probes
+        run: |
+          set -euo pipefail
+          python3 tb371fc/tests/test_a77_cpu.py \
+            --qemu "$RUNNER_TEMP/a77-build/qemu-system-aarch64" \
+            --output "$RUNNER_TEMP/a77-probe" \
+            2>&1 | tee "$RUNNER_TEMP/a77-results/probe.log"
+          python3 - "$RUNNER_TEMP/a77-probe/result.json" <<'PY'
+          import json, sys
+          result = json.load(open(sys.argv[1]))
+          assert result["passed"] is True
+          assert len(result["variants"]) == 9
+          assert sum(v["passed_checks"] for v in result["variants"]) == 852
+          assert len(result["invalid_configurations"]) == 2
+          assert all(v["passed"] for v in result["invalid_configurations"])
+          print("Verified 852 real guest checks and 2 rejected CPU configurations")
+          PY
+      - name: Upload CPU evidence and the tested binary
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: tb371fc-a77-gates-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/a77-results/
+            ${{ runner.temp }}/a77-probe/
+            ${{ runner.temp }}/ufs-pci-results/
+            ${{ runner.temp }}/a77-build/qemu-system-aarch64
+            ${{ runner.temp }}/a77-build/tests/qtest/qos-test
+      - name: State the CPU scope
+        if: always()
+        run: |
+          printf '%s\n' \
+            'The isolated A77 job requires 852 guest instruction/ID/PMU checks across nine configurations and two invalid-configuration rejections.' \
+            'A separate 15-case PCI UFS regression covers the shared controller core and legacy PCI transport without skips.' \
+            'These architectural checks do not validate silicon cache capacities, cache timing, DSU behavior or performance.' \
             >> "$GITHUB_STEP_SUMMARY"

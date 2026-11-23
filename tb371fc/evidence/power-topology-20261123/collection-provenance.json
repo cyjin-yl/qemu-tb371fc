@@ -1,0 +1,98 @@
+{
+  "binding_capture": {
+    "captured_utc": "2026-11-23T06:58:55.920460+00:00",
+    "execution_form": "Inline Python via su -c '/data/data/com.termux/files/usr/bin/python -'",
+    "output_interpretation": "Captured metadata reserialized as public JSON; not a claim of byte identity with sysfs.",
+    "source_path": "tb371fc/scripts/collect_spmi_gpio_bindings_20261123.py",
+    "source_text": "Exact inline script retained from the collection session; now stored without edits."
+  },
+  "collectors": [
+    {
+      "path": "tb371fc/scripts/collect_pmic_identity.py",
+      "sha256": "9e545535f6414635d99d6aedfbae13a7e3e5defcaf1752fb604251b3b92a7a55"
+    },
+    {
+      "path": "tb371fc/scripts/collect_pmic_boot_identity.py",
+      "sha256": "dcbdcc6e2feda78b12e9459bd2df42c813c116f9e8c678c8417d6d407974ba6a"
+    },
+    {
+      "path": "tb371fc/scripts/collect_spmi_gpio_bindings_20261123.py",
+      "sha256": "f5991cf8e1a9e61acd4c7f1a0c85987913f5d140a7f06c44795e027b9731d50f"
+    },
+    {
+      "path": "tb371fc/scripts/build_power_inventory.py",
+      "sha256": "258ae2e873dffafff3f3771b371ac4c79d03245b2cb2f57b2816bb972f307016"
+    },
+    {
+      "path": "tb371fc/scripts/capture_ufs_reset_dependencies.py",
+      "sha256": "cfb09d0d9c2b9ba48a664f49ec4eb633518f2f254c7051e0b831502f92aa82b2"
+    },
+    {
+      "path": "tb371fc/scripts/generate_tlmm_map.py",
+      "sha256": "c486ab180e852ccf36bee520da8649bca12c4384d32b7cef512c599b6c46c776"
+    }
+  ],
+  "generated_utc": "2026-11-23T07:30:34.783921+00:00",
+  "kind": "power-topology-collection-provenance",
+  "limits": [
+    "Native sysfs/DT observations do not prove behavior equivalence.",
+    "Only PM8150 model/revision is firmware-reported; other chip revisions and native SPMI/PDC versions remain unknown.",
+    "Tile addresses and register protocol are source-derived, not read from silicon.",
+    "No device MMIO, GPIO values, raw inputs, power writes or security changes were used."
+  ],
+  "primary_source_version": "Linux v6.12.114",
+  "primary_sources": [
+    {
+      "path": "drivers/spmi/spmi-pmic-arb.c",
+      "sha256": "00627b9e861efcd6e9e5d2e99066910add9ab0edc8cadffdfe7f501f461a6efb",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/spmi/spmi-pmic-arb.c?h=v6.12.114"
+    },
+    {
+      "path": "drivers/mfd/qcom-spmi-pmic.c",
+      "sha256": "cba250364921bfff3e8cfe10372906631cf2cba70365b2d75eabb8822084b9bd",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/mfd/qcom-spmi-pmic.c?h=v6.12.114"
+    },
+    {
+      "path": "include/soc/qcom/qcom-spmi-pmic.h",
+      "sha256": "8a40cce8a28b78d4541253b99979243eef7f60d13245ae42832af1902f46a91d",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/include/soc/qcom/qcom-spmi-pmic.h?h=v6.12.114"
+    },
+    {
+      "path": "drivers/soc/qcom/socinfo.c",
+      "sha256": "57b11146a502b513a7e9c5e6a2c491373764937284e4567cc1a052ce00be9b54",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/soc/qcom/socinfo.c?h=v6.12.114"
+    },
+    {
+      "path": "drivers/pinctrl/qcom/pinctrl-spmi-gpio.c",
+      "sha256": "1740c07e5232519813f5277cd762da2e9bf021baa48630b62985fd30c4328e9a",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c?h=v6.12.114"
+    },
+    {
+      "path": "drivers/irqchip/qcom-pdc.c",
+      "sha256": "5e99a638043a99294c46b8cf936255536e0a8f5aa10c65bfedbc789f9ed3489e",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/irqchip/qcom-pdc.c?h=v6.12.114"
+    },
+    {
+      "path": "drivers/pinctrl/qcom/pinctrl-sm8250.c",
+      "sha256": "a9f70c0a1e59a076b071492a7fc8c285c9c2c7f1b5a5f1f48099dbb1469cc5a5",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/pinctrl/qcom/pinctrl-sm8250.c?h=v6.12.114"
+    },
+    {
+      "path": "drivers/pinctrl/qcom/pinctrl-msm.c",
+      "sha256": "ccb54099126b9c9213b8a67d237bc3d9c5c3a06fda7d846ca8cdebd80bd14c21",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/pinctrl/qcom/pinctrl-msm.c?h=v6.12.114"
+    },
+    {
+      "path": "arch/arm64/boot/dts/qcom/sm8250.dtsi",
+      "sha256": "e3d1dedd45c0c84b84ae11e5b46038f148199d2ec218808c676688a95158d3af",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/arch/arm64/boot/dts/qcom/sm8250.dtsi?h=v6.12.114"
+    },
+    {
+      "path": "Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.yaml",
+      "sha256": "fe6b1e2e197656485840da61b8f6db14d14d1d9e66a2867c00e0fabe0d308ed1",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.yaml?h=v6.12.114"
+    }
+  ],
+  "private_live_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "schema_version": 1
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-11-23T07:20:38.105701+00:00",
+  "scope": "Untouched production kernel and full private live DT; diagnostic initramfs; not Android userspace or a successful full-DT boot",
+  "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+  "live_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "observations": [
+    {
+      "qemu_build_number": 3,
+      "full_device_tree_boot_passed": false,
+      "last_fatal_probe": "msm_watchdog_probe+0x400",
+      "watchdog_initialized": false,
+      "private_log_sha256": "8374c736e2a5241e8ce038472de09f912bf2ccfb15bdda69abf13c4cf2af2349",
+      "private_ring_sha256": "e8bb5c69578e6dc7c001abd53cdf81ccb463aa3d02bd76cb4127e3fe86055287",
+      "diagnostic_sha256": "d0314a5bbd754c978cc2f070202f3509f9ef9c5c04cd50068bb78e48148bf640"
+    },
+    {
+      "qemu_build_number": 5,
+      "full_device_tree_boot_passed": false,
+      "last_fatal_probe": "msm_restart_probe+0xec",
+      "watchdog_initialized": true,
+      "private_log_sha256": "a6d0b0617dcd2eaf15566dcd8dee591bc985f92715091a1aada83c453e203ef0",
+      "private_ring_sha256": "9b80eff3cc4695500ebbd85317ea2d079d0ddb84115ad86a54a87844e988287c",
+      "diagnostic_sha256": "781e46711747ce6ccaaf200a2d989afec02c341fe1494e6f017ece0ddf0ed543"
+    },
+    {
+      "qemu_build_number": 7,
+      "qemu_sha256": "f3fa0d2db54d9f59ba9b0ea25239553900b805c3c05e53e0dd8577e94607e41b",
+      "full_device_tree_boot_passed": false,
+      "last_fatal_probe": "dcc_probe+0x114",
+      "watchdog_initialized": true,
+      "restart_probe_previous_imem_abort_resolved": true,
+      "dcc_fault_instruction": "b9400108",
+      "private_log_sha256": "725b32856a8b0150c84f477b7628629c252e72b7cc4c3234b2cbc40ce32f7340",
+      "private_ring_sha256": "f47e42fda0b139fb9e240cb9535534955b9e01d7bd78b45085546eca8cc2dbdb",
+      "diagnostic_sha256": "de8d1381051b660ebdc25da4d5ae04321673f1311dccd231f1c08af5cd52983a",
+      "diagnostic_profile": "default RPMh off; command DB absent",
+      "elapsed_seconds": 12.571
+    },
+    {
+      "qemu_build": "resume-frozen10",
+      "qemu_sha256": "fe71b5c9a65761910294e6cf690f615ca3c8c0da132207860dc4550b5f28668d",
+      "full_device_tree_boot_passed": false,
+      "last_fatal_probe": "qcom_ipcc_probe+0x120",
+      "concurrent_fatal_probe": "spmi_pmic_arb_probe+0xb0",
+      "watchdog_initialized": true,
+      "restart_probe_previous_imem_abort_resolved": true,
+      "dcc_lists_programmed": [
+        3,
+        6,
+        7
+      ],
+      "dcc_capture_execution_proven": false,
+      "command_db_invalid_magic_observed": false,
+      "command_db_profile": "private conditional static-plus-clock partial; 69 static AOP entries plus 6 allocator-derived clock records",
+      "command_db_sha256": "a971809c06fa1a3ff44c9d28463bc6ff53203d9375ffd0f76dc73d4c8a3ea6f9",
+      "private_log_sha256": "6d387fbc622ce053f6e36cf21bd72002ef6af7e8b45cc74559fcb573cda5836e",
+      "private_ring_sha256": "496449cda2bd13af4b8b27f8f29aed3302fcb8d6b35db7036edebea4304cd366",
+      "diagnostic_sha256": "18e9b508d45992093553dbebf0cb0ece914fef5520e0b44987fdae5913fc8911",
+      "elapsed_seconds": 15.441
+    }
+  ],
+  "publication_review": "Only hashes, boot scope and allowlisted device-probe outcomes; no raw firmware, private DT, command line or complete kernel log",
+  "updated_utc": "2026-11-23T08:00:13.730979+00:00"
+}

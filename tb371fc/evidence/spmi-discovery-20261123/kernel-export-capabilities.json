@@ -1,0 +1,139 @@
+{
+  "capability_paths": {
+    "/sys/kernel/btf/vmlinux": {
+      "directory": false,
+      "exists": false
+    },
+    "/sys/kernel/debug/spmi": {
+      "directory": false,
+      "exists": false
+    },
+    "/sys/kernel/debug/tracing/kprobe_events": {
+      "directory": false,
+      "exists": false
+    },
+    "/sys/kernel/tracing/kprobe_events": {
+      "directory": false,
+      "exists": false
+    }
+  },
+  "captured_utc": "2026-11-23T08:15:17.975886+00:00",
+  "collector_sha256": "3b6753e17c240015c38018a079a19529400b4c068613e88d998df0bfe3e4151d",
+  "command_argv": [
+    "su",
+    "-c",
+    "/data/data/com.termux/files/usr/bin/python /data/data/com.termux/files/home/qemu-tb371fc-probe/collect_spmi_exports_20261123.py"
+  ],
+  "config": {
+    "BPF": "y",
+    "BPF_EVENTS": "y",
+    "BPF_JIT": "y",
+    "BPF_SYSCALL": "y",
+    "DEBUG_FS": "n",
+    "DEBUG_INFO_BTF": "not_present",
+    "DEVMEM": "n",
+    "FTRACE": "y",
+    "IKCONFIG": "y",
+    "KALLSYMS": "y",
+    "KALLSYMS_ALL": "y",
+    "KPROBES": "n",
+    "KPROBE_EVENTS": "not_present",
+    "MODULES": "y",
+    "MODULE_SIG_FORCE": "y",
+    "PERF_EVENTS": "y",
+    "TRACING": "y"
+  },
+  "export_roots": [
+    {
+      "attributes": {},
+      "bound_driver": "spmi_pmic_arb",
+      "directory_entries": [
+        "driver",
+        "driver_override",
+        "modalias",
+        "of_node",
+        "power",
+        "spmi-0",
+        "subsystem",
+        "uevent"
+      ],
+      "exists": true,
+      "path": "/sys/bus/platform/devices/c440000.qcom,spmi"
+    },
+    {
+      "attributes": {},
+      "directory_entries": [
+        "of_node",
+        "power",
+        "spmi0-00",
+        "spmi0-01",
+        "spmi0-02",
+        "spmi0-03",
+        "spmi0-04",
+        "spmi0-05",
+        "spmi0-08",
+        "spmi0-09",
+        "spmi0-0a",
+        "spmi0-0b",
+        "subsystem",
+        "uevent"
+      ],
+      "exists": true,
+      "path": "/sys/bus/platform/devices/c440000.qcom,spmi/spmi-0"
+    },
+    {
+      "attributes": {},
+      "directory_entries": [
+        "of_node",
+        "power",
+        "spmi0-00",
+        "spmi0-01",
+        "spmi0-02",
+        "spmi0-03",
+        "spmi0-04",
+        "spmi0-05",
+        "spmi0-08",
+        "spmi0-09",
+        "spmi0-0a",
+        "spmi0-0b",
+        "subsystem",
+        "uevent"
+      ],
+      "exists": true,
+      "path": "/sys/bus/spmi/devices/spmi-0"
+    }
+  ],
+  "interpretation": [
+    "Absent exports are an access/evidence limitation, not evidence of absent hardware.",
+    "Kernel config and file presence only evaluate tracing feasibility; no trace program was installed or attached.",
+    "Platform fields are firmware-reported sysfs metadata; their relationship to AOP internal structures requires separate source proof."
+  ],
+  "kind": "tb371fc-spmi-export-discovery",
+  "not_read": [
+    "bootargs",
+    "serial numbers",
+    "unique device identifiers",
+    "userdata",
+    "input events",
+    "credentials",
+    "raw register windows",
+    "trace payloads",
+    "kernel pointers",
+    "MMIO",
+    "arbitrary kernel memory"
+  ],
+  "platform": {
+    "hw_platform": "QRD",
+    "platform_subtype": "SKUF",
+    "platform_subtype_id": "2",
+    "platform_version": "65536"
+  },
+  "schema_version": 1,
+  "scope": "Read-only named hardware sysfs exports and allowlisted kernel config. No MMIO, arbitrary kernel memory, trace attachment, module loading, log dump, or settings changes.",
+  "tools": {
+    "bpftool": null,
+    "bpftrace": null,
+    "clang": null,
+    "perf": null
+  }
+}

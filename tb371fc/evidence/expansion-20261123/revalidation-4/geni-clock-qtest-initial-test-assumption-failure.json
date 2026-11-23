@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "suite": "GCC-wired GENI actual QTest",
+  "qemu": "/work/integration-20261123-4/qemu-system-aarch64",
+  "machine": "tb371fc,ufs-enabled=off",
+  "qemu_sha256": "781d6ae66e9918bf1e3eed08c4bfaa3cdb6381cb1d63495d6ef5cc1a97dabb39",
+  "work_dir": "/work/component-tests-4/geni-clock-qtest",
+  "ram_per_process": "128 MiB",
+  "scope": "Actual device clock/reset wiring and FIFO continuity; no silicon electrical or baud timing equivalence",
+  "checks": [
+    {
+      "test": "handoff_clocks_deliver_console",
+      "status": "pass"
+    },
+    {
+      "test": "serial_engine_pause_preserves_fifo_and_pending_irq",
+      "status": "fail",
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_geni_clock_reset.py\", line 274, in main\n    test(r)\n    ~~~~^^^\n  File \"/src/tb371fc/tests/test_geni_clock_reset.py\", line 88, in serial_engine_pause_preserves_fifo_and_pending_irq\n    r.assert_irq(False)\n    ~~~~~~~~~~~~^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 137, in assert_irq\n    assert self.irq[0] == level, (self.irq, level)\n           ^^^^^^^^^^^^^^^^^^^^\nAssertionError: ({0: True}, False)\n"
+    }
+  ],
+  "expected_checks": 6,
+  "success": false,
+  "diagnosis": "Old expectation incorrectly assumed clearing DONE/RX removed the still-enabled idle FIFO watermark. Tests now explicitly verify reassertion, then disable the threshold and W1C before expecting IRQ low; gate/reset and byte continuity checks retained."
+}

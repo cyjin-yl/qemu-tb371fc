@@ -457,7 +457,9 @@ void HELPER(wfit)(CPUARMState *env, uint32_t rd)
     if (uadd64_overflow(cntval, timeout - cntvct, &nexttick)) {
         nexttick = UINT64_MAX;
     }
-    if (nexttick > INT64_MAX / gt_cntfrq_period_ns(cpu)) {
+    if (cpu->gt_cntfrq_exact) {
+        timer_mod_ns(cpu->wfxt_timer, gt_counter_tick_to_ns(cpu, nexttick));
+    } else if (nexttick > INT64_MAX / gt_cntfrq_period_ns(cpu)) {
         /*
          * If the timeout is too long for the signed 64-bit range
          * of a QEMUTimer, let it expire early.
@@ -491,10 +493,41 @@ void HELPER(sev)(CPUARMState *env)
  * cores. These helpers calculate the next event stream event time so
  * the WFE helper can decide when its next wake up tick will be.
  */
+/*
+ * Exact mode returns nanoseconds for the nanosecond WFE/WFxT timer.
+ * Calculate the next selected counter-bit edge from the current physical
+ * count, not from the offset alone. Keep legacy-mode timing unchanged.
+ */
+static int64_t gt_recalc_one_evt_exact(CPUARMState *env, uint32_t control,
+                                       uint64_t offset)
+{
+    ARMCPU *cpu = env_archcpu(env);
+    unsigned int bit = FIELD_EX32(control, CNTxCTL, EVNTI) +
+                       (FIELD_EX32(control, CNTxCTL, EVNTIS) ? 8 : 0);
+    bool falling = FIELD_EX32(control, CNTxCTL, EVNTDIR);
+    uint64_t physical = gt_get_countervalue(env);
+    uint64_t count = physical - offset;
+    uint64_t period = BIT_ULL(bit);
+    uint64_t remaining = period - (count & (period - 1));
+    uint64_t tick;
+
+    if (((count & period) != 0) != falling) {
+        remaining += period;
+    }
+    if (uadd64_overflow(physical, remaining, &tick)) {
+        tick = UINT64_MAX;
+    }
+    return gt_counter_tick_to_ns(cpu, tick);
+}
+
 static int64_t gt_recalc_one_evt(CPUARMState *env, uint32_t control, uint64_t offset)
 {
     ARMCPU *cpu = env_archcpu(env);
     bool evnten = FIELD_EX32(control, CNTxCTL, EVNTEN);
+
+    if (evnten && cpu->gt_cntfrq_exact) {
+        return gt_recalc_one_evt_exact(env, control, offset);
+    }
 
     if (evnten) {
         int evnti = FIELD_EX32(control, CNTxCTL, EVNTI);
@@ -715,18 +748,24 @@ void HELPER(wfet)(CPUARMState *env, uint32_t rd)
     if (uadd64_overflow(cntval, timeout - cntvct, &nexttick)) {
         nexttick = UINT64_MAX;
     }
-    if (nexttick > INT64_MAX / gt_cntfrq_period_ns(cpu)) {
-        nexttick = INT64_MAX;
-    }
-
     next_event = gt_calc_next_event_stream(env);
-    if (next_event > 0 && next_event < nexttick) {
-        timer_mod(cpu->wfxt_timer, next_event);
+    if (cpu->gt_cntfrq_exact) {
+        int64_t timeout_ns = gt_counter_tick_to_ns(cpu, nexttick);
+
+        timer_mod_ns(cpu->wfxt_timer,
+                     next_event > 0 ? MIN(next_event, timeout_ns) : timeout_ns);
     } else {
-        if (nexttick == INT64_MAX) {
-            timer_mod_ns(cpu->wfxt_timer, INT64_MAX);
+        if (nexttick > INT64_MAX / gt_cntfrq_period_ns(cpu)) {
+            nexttick = INT64_MAX;
+        }
+        if (next_event > 0 && next_event < nexttick) {
+            timer_mod(cpu->wfxt_timer, next_event);
         } else {
-            timer_mod(cpu->wfxt_timer, nexttick);
+            if (nexttick == INT64_MAX) {
+                timer_mod_ns(cpu->wfxt_timer, INT64_MAX);
+            } else {
+                timer_mod(cpu->wfxt_timer, nexttick);
+            }
         }
     }
 

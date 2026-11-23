@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "suite": "GCC-wired GENI actual QTest",
+  "qemu": "/work/build-next/qemu-system-aarch64",
+  "qemu_sha256": "56717a3c95ba31da84ed46da8c305bc6de910370a359eee475b3587b93d5cabf",
+  "work_dir": "/work/gcc-tests/geni-clock-qtest",
+  "ram_per_process": "128 MiB",
+  "scope": "Actual device clock/reset wiring and FIFO continuity; no silicon electrical or baud timing equivalence",
+  "checks": [
+    {
+      "test": "handoff_clocks_deliver_console",
+      "status": "pass"
+    },
+    {
+      "test": "serial_engine_pause_preserves_fifo_and_pending_irq",
+      "status": "pass"
+    },
+    {
+      "test": "rx_backpressure_while_clock_stopped",
+      "status": "pass"
+    },
+    {
+      "test": "ahb_gates_reject_mmio_without_mutation",
+      "status": "pass"
+    },
+    {
+      "test": "wrapper_bcr_flushes_fifo_and_holds_reset",
+      "status": "pass"
+    },
+    {
+      "test": "zero_length_completion_waits_for_engine_clock",
+      "status": "pass"
+    }
+  ],
+  "expected_checks": 6,
+  "success": true,
+  "recorded_exit_code": 0,
+  "verified_binary_sha256": "56717a3c95ba31da84ed46da8c305bc6de910370a359eee475b3587b93d5cabf",
+  "execution_completed_at_utc": "2026-11-23T05:47:19.448383+00:00",
+  "migration_scope": "Pre-UFS configured components only; this receipt does not establish full expanded-board migration",
+  "tested_machine_options": "tb371fc",
+  "source_report_sha256": "4a029d933776188134a95d5e79b3c36d8be53f7617b40ef6e0919288015587b7"
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "kind": "source-backed diagnosis of observed Linux UFS clock errors",
+  "observed_run": "/work/ufs-driver-1",
+  "qemu_sha256": "d42c81298295440923eb2eec83e670f962ab994623fca1d4b779ccee42944552",
+  "kernel_sha256": "bbd232434be58adb383b432ed161923179527f2e2fbeb4cb4ac6c708e50af592",
+  "serial_log_sha256": "d7991395727c395ba6c31206a6c9a8b220d464ca386f5ed710efa51d1771e5e0",
+  "data_checks_passed": 16,
+  "errors": [
+    "cfg core clk ctrl failed",
+    "devfreq dvfs failed with (-34) error"
+  ],
+  "observed_dt_clock_names": [
+    "core_clk",
+    "bus_aggr_clk",
+    "iface_clk",
+    "core_clk_unipro",
+    "core_clk_ice",
+    "ref_clk",
+    "tx_lane0_sync_clk",
+    "rx_lane0_sync_clk",
+    "rx_lane1_sync_clk"
+  ],
+  "observed_dt_freq_table_hz": [
+    37500000,
+    300000000,
+    0,
+    0,
+    0,
+    0,
+    37500000,
+    300000000,
+    37500000,
+    300000000,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "dt_freq_table_property_sha256": "73bff8e4a1bd55ef26e3a5358cfcebf682bc79872bea06527497e9bc70f248d9",
+  "driver_constraint": {
+    "v3_clock_cycles_field_bits": [
+      7,
+      0
+    ],
+    "v4_clock_cycles_field_bits": [
+      27,
+      16
+    ],
+    "cycles_for_300_mhz": 300,
+    "v3_field_max": 255,
+    "errno": "ERANGE"
+  },
+  "cause": "The model advertised controller major 3 while the real/live and upstream clock tables requested 300 MHz UniPro. Linux rejects 300 in the v3 8-bit count field before changing GCC frequency.",
+  "gcc_c_change_required": false,
+  "proposed_reference_configuration": {
+    "controller_major": 4,
+    "minor": 0,
+    "step": 0,
+    "raw_hw_version": "0x40000000",
+    "observed_on_tablet": false,
+    "minor_step_observed": false
+  },
+  "not_changed": [
+    "300 MHz DT frequency maximum",
+    "GCC rate mathematics",
+    "Linux guest driver validation"
+  ],
+  "limits": [
+    "Controller HW_VERSION was not sampled. PHY v4 does not by itself prove controller revision.",
+    "Successful UFS data I/O in the original run did not imply error-free DVFS.",
+    "A fresh Linux run must verify the proposed reference configuration."
+  ],
+  "source_files": {
+    "/work/clean-linux/source/linux-6.12.114/drivers/ufs/host/ufs-qcom.c": {
+      "sha256": "a4ce91b2481897175c743a73c9eb307ad1f552cc9977d9a7cce58c83d6fd6c2e"
+    },
+    "/work/clean-linux/source/linux-6.12.114/drivers/ufs/host/ufs-qcom.h": {
+      "sha256": "f8efabc8179d50af6c62bae51676f848686dc1fccb3fd7477335ff5fb6022d8f"
+    },
+    "/work/clean-linux/source/linux-6.12.114/arch/arm64/boot/dts/qcom/sm8250.dtsi": {
+      "sha256": "e3d1dedd45c0c84b84ae11e5b46038f148199d2ec218808c676688a95158d3af"
+    },
+    "/work/gcc-reference/vendor/ufs-qcom.c": {
+      "sha256": "5914361ac55598d1e2ffb6105bbe161d93536aba7144310cc67cb94d400ac739"
+    },
+    "/work/gcc-reference/vendor/ufs-qcom.h": {
+      "sha256": "726cce9082e76088a0d723bfc51d304d65676ee6d9826834c79c7bff944b9d62"
+    }
+  }
+}

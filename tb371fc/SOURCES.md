@@ -39,3 +39,55 @@ but is neither an SM8250 SMMUv2 model nor A650 rendering support. No code
 from that branch is imported by this initial TB371FC model. Future reuse
 must preserve each file's license and attribution and port the actual
 Kona resource tables and device contracts.
+
+## Component contracts and evidence
+
+The independent device documents distinguish native observations, published
+architectural/driver contracts, synthetic bootstrap choices and actual tests.
+Use their per-run hashes rather than treating a source table as execution proof.
+
+| Component | Contract and provenance |
+| --- | --- |
+| Board and loader | [machine.md](docs/machine.md), [runtime layout evidence](evidence/boot-layout-20261123/runtime-layout-frozen4.json) |
+| A77 CPU and PMU | [cpu.md](docs/cpu.md), Arm Cortex-A77 TRM references and native MIDR/REVIDR observations |
+| Generic Timer | [mmio-timer.md](docs/mmio-timer.md), Arm ARM external-register contract, exact-count arithmetic and retained regression controls |
+| GENI | [geni-uart.md](docs/geni-uart.md), Linux FIFO/IRQ contract and actual clock/reset integration |
+| GCC | [gcc-sm8250.md](docs/gcc-sm8250.md), pinned Linux-derived register manifest and clock-parent assumptions |
+| SMMUv2 | [smmuv2.md](docs/smmuv2.md), architectural stage-1 model and explicit Qualcomm-extension limits |
+| UFS | [ufs-sm8250.md](docs/ufs-sm8250.md), [clock diagnosis](docs/ufs-clock-diagnosis.md), [pinned upstream backports](docs/ufs-upstream-backports.json) |
+| RPMh | [rpmh-sm8250.md](docs/rpmh-sm8250.md), synthetic reference database versus optional external-file and AOP-derived partial metadata |
+| TLMM | [tlmm.md](docs/tlmm.md), native enclosing aperture and pinned Linux per-pin layout |
+| Watchdog | [watchdog.md](docs/watchdog.md), software-derived rate, digital timer/action behavior and migration |
+| IMEM / PS_HOLD | [boot-resources.md](docs/boot-resources.md), scoped SRAM/pin contracts and boot dependency evidence |
+| Guest acceptance | [guest-acceptance.md](docs/guest-acceptance.md), console-independent read-only GDB record and real shutdown requirement |
+| Public CI | [ci.md](docs/ci.md), mandatory component and unpatched-Linux gates with retained failures |
+
+UFS transport/SCSI reuse is pinned to the original upstream QEMU authors and
+commit/patch hashes in its backport manifest. Linux-derived register tables
+retain GPL-2.0-only notices where required; newly written files retain their
+own SPDX identifiers. The Qualcomm research fork discussed above has not been
+silently substituted for an SM8250 or A650 implementation.
+
+Authorized production kernel/AOP assets remain private. Public derived
+metadata records source hashes, extraction assumptions and unresolved fields;
+it does not distribute firmware or imply that a static table is a live
+hardware capture. The public CI plan requires no such private inputs.
+
+
+## Retained timer regression ELF
+
+The public [cpu-timer-regression.elf](evidence/mmio-timer-live-status-20261123/cpu-timer-regression.elf)
+is an independently compiled GPL-2.0-or-later bare-metal test program, not a
+tablet boot image or extracted proprietary firmware. Its SHA256 is
+`37e1b51ffc5ab43a34f794aa264fbe5cf5cea015501ff61722538a95e682d35f`.
+It was built from [cpu-migration.c](tests/mmio-timer/cpu-migration.c),
+[start.S](tests/mmio-timer/start.S) and [link.ld](tests/mmio-timer/link.ld).
+The [original failing receipt](evidence/mmio-timer-live-status-20261123/cpu-migration-before.json)
+records the actual cross-compiler command. The preserved byte-identical ELF
+was used for the corrected migration run and uninstrumented control; their
+comparison and source hashes are in
+[comparison.json](evidence/mmio-timer-live-status-20261123/comparison.json).
+Recompilation is not claimed to reproduce incidental ELF metadata bytes.
+
+[DCC](docs/dcc.md), [PDC](docs/pdc.md) and [IPCC](docs/ipcc.md) describe their
+pinned driver sources, reference identity choices and unsupported modes.

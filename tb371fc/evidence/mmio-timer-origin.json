@@ -1,0 +1,63 @@
+{
+  "created_utc": "2026-11-23T05:47:10.712801+00:00",
+  "tool_repository": "https://github.com/marin-m/vmlinux-to-elf",
+  "tool_commit": "300aa607c34a44701604e99827b9bd4aa3a65144",
+  "tool_archive_sha256": "bc710e3b88a32c02c81489a3d12ca7cc63a094af8f51f09888f923e0aa83023c",
+  "input_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+  "input_unchanged_after_extraction": true,
+  "generated_vmlinux": false,
+  "symbol_count": 121415,
+  "text_base": "0xffffff8008080000",
+  "banner_anchor_verified_against_original_Image": true,
+  "mapped_trace_pcs": [
+    {
+      "pc": "0xffffff8009e56fa0",
+      "symbol": "arch_timer_mem_of_init",
+      "symbol_address": "0xffffff8009e56e08",
+      "offset": "0x198",
+      "image_file_offset": "0x1dd6fa0"
+    },
+    {
+      "pc": "0xffffff80082149e8",
+      "symbol": "perf_event_task_tick",
+      "symbol_address": "0xffffff8008214988",
+      "offset": "0x60",
+      "image_file_offset": "0x1949e8"
+    },
+    {
+      "pc": "0xffffff8008081a00",
+      "symbol": "vectors",
+      "symbol_address": "0xffffff8008081800",
+      "offset": "0x200",
+      "image_file_offset": "0x1a00"
+    },
+    {
+      "pc": "0xffffff80080c06c8",
+      "symbol": "panic",
+      "symbol_address": "0xffffff80080c0430",
+      "offset": "0x298",
+      "image_file_offset": "0x406c8"
+    }
+  ],
+  "reviewed_source_sha256": {
+    "vmlinux_to_elf/scripts/kallsyms_finder.py": "a1d6e5694cb70e8f78ca138e8bf232fa46c440504f3a40252650fa5b46742620",
+    "vmlinux_to_elf/core/kallsyms.py": "9ba2f7fcbaed93a7953d6c78f5724f10bd007aa60874653bb28505b677232bc6",
+    "vmlinux_to_elf/core/architecture_detecter.py": "3eb32a79485120c4eef6a59212bcddc286b43f7d31091ef9240c94579fb36563",
+    "vmlinux_to_elf/core/auto_unpack.py": "81ce7a07e8ca2e89bfb0e825e5b46dde8f3218cd24bbc2887be24bd99d42325a",
+    "vmlinux_to_elf/kernel_db/database.py": "8e14a47f13dba742f48e3ec388e499a2255c395249bb54cdc8b309012d7ea5a8",
+    "vmlinux_to_elf/utils/elf.py": "f974b1189155d2cea4773d378990e1b20be866f27719be0593fef3110c56891d"
+  },
+  "scope": "Limited first-fault diagnostic; full recovered symbol map and kernel Image remain private",
+  "first_fault": {
+    "elr": "0xffffff8009e56fa0",
+    "far": "0xffffff800800d008",
+    "esr": "0x96000010",
+    "instruction": "ldr w12, [x11]",
+    "previous_instruction": "add x11, x0, #8",
+    "dt_node": "/soc/timer@17c20000",
+    "mmio_address": "0x17c20008",
+    "architected_register": "CNTTIDR"
+  },
+  "primary_register_reference": "https://documentation-service.arm.com/static/5f8daeb7f86e16515cdb8c4e",
+  "reference_pdf_sha256": "294668ae6480133b32d85e9567cc77c5eb0e1232decdf42cac7ab480e884f6e0"
+}

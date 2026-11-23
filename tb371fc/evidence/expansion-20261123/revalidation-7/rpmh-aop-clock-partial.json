@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "suite": "AOP conditional clock partial-file actual QTest",
+  "qemu": "/work/integration-20261123-7/qemu-system-aarch64",
+  "qemu_sha256": "f3fa0d2db54d9f59ba9b0ea25239553900b805c3c05e53e0dd8577e94607e41b",
+  "machine": "tb371fc,rpmh-profile=file,rpmh-boot-configured=off,ufs-enabled=off,rpmh-cmd-db=/work/device-assets/aop-command-db-analysis/aop-static-plus-clock-partial.bin",
+  "firmware_sha256": "3dbb0746d21100d124d76ee19b096d122d58c4aa534dec5828005835535b6671",
+  "command_db_sha256": "a971809c06fa1a3ff44c9d28463bc6ff53203d9375ffd0f76dc73d4c8a3ea6f9",
+  "live_command_db_captured": false,
+  "reconstructed_table_complete": false,
+  "native_enumeration_proven": false,
+  "linux_driver_probe_tested": false,
+  "expected_checks": 6,
+  "checks": [
+    {
+      "check": "exact_partial_file_and_alias",
+      "status": "pass"
+    },
+    {
+      "check": "all_five_derived_clock_addresses_gate_correct_dividers",
+      "status": "pass"
+    },
+    {
+      "check": "derived_clock_votes_aggregate_across_drvs",
+      "status": "pass"
+    },
+    {
+      "check": "reference_address_has_no_fallback_or_ack",
+      "status": "pass"
+    },
+    {
+      "check": "invalid_clock_value_and_field_do_not_change_vote",
+      "status": "pass"
+    },
+    {
+      "check": "excluded_conditional_regulator_has_no_ack",
+      "status": "pass"
+    }
+  ],
+  "success": true,
+  "raw_receipt_sha256": "07036139d942f9a8a3b9d1b5b70992fa7422c975d0788f8e320aa75750923e8a",
+  "process_exit_status": 0,
+  "recorded_at_utc": "2026-11-23T07:54:14.814114+00:00"
+}

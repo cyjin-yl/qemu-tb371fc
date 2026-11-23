@@ -1,0 +1,144 @@
+{
+  "all_passed": true,
+  "checks": [
+    {
+      "name": "source-real-gic-level-edge-and-masked-input",
+      "passed": true
+    },
+    {
+      "name": "real-gic-actual-migration-completed",
+      "passed": true
+    },
+    {
+      "name": "registers-ram-and-real-gic-pending-restored",
+      "observed": {
+        "0x17c000f4": 2147483648,
+        "0x17c0012c": 2,
+        "0xb220010": 2,
+        "0xb220018": 0,
+        "0xb22001c": 536870912,
+        "0xb220114": 4,
+        "0xb220288": 6,
+        "0xb220304": 6,
+        "0xb221000": 131072
+      },
+      "passed": true
+    },
+    {
+      "name": "gic-ack-does-not-replay-migrated-edge",
+      "passed": true
+    },
+    {
+      "name": "destination-new-edges-and-masked-history",
+      "passed": true
+    },
+    {
+      "name": "migrated-level-mask-unmask-and-release-reaches-gic",
+      "passed": true
+    },
+    {
+      "name": "level-wires-actual-migration-completed",
+      "passed": true
+    },
+    {
+      "name": "active-high-and-inverted-low-output-wires-restored",
+      "passed": true
+    },
+    {
+      "name": "destination-output-wires-continue-independently",
+      "passed": true
+    }
+  ],
+  "completed_utc": "2026-11-23T08:02:52.958517+00:00",
+  "elapsed_seconds": 0.299981,
+  "explicit_reference_version": "0x20000 (not a native version read)",
+  "kind": "tb371fc-pdc-process-migration",
+  "limits": [
+    "No hardware electrical timing, power-domain wake or firmware execution equivalence.",
+    "Native PDC version remains unknown; this test explicitly selects a legacy reference profile.",
+    "GPIO interception disconnects GIC; the real-GIC migration never installs interception."
+  ],
+  "machine": "tb371fc,ufs-enabled=off",
+  "migrations": [
+    {
+      "destination": {
+        "status": "completed"
+      },
+      "mode": "real-gic",
+      "source": {
+        "downtime": 25,
+        "ram": {
+          "dirty-pages-rate": 0,
+          "dirty-sync-count": 2,
+          "dirty-sync-missed-zero-copy": 0,
+          "downtime-bytes": 307310,
+          "duplicate": 32772,
+          "mbps": 484.8595555555556,
+          "multifd-bytes": 0,
+          "normal": 3,
+          "normal-bytes": 12288,
+          "page-size": 4096,
+          "pages-per-second": 0,
+          "postcopy-bytes": 0,
+          "postcopy-requests": 0,
+          "precopy-bytes": 0,
+          "remaining": 0,
+          "total": 134246400,
+          "transferred": 2181868
+        },
+        "setup-time": 0,
+        "status": "completed",
+        "total-time": 36
+      }
+    },
+    {
+      "destination": {
+        "status": "completed"
+      },
+      "mode": "level-wires",
+      "source": {
+        "downtime": 41,
+        "ram": {
+          "dirty-pages-rate": 0,
+          "dirty-sync-count": 2,
+          "dirty-sync-missed-zero-copy": 0,
+          "downtime-bytes": 303215,
+          "duplicate": 32773,
+          "mbps": 316.7669818181818,
+          "multifd-bytes": 0,
+          "normal": 2,
+          "normal-bytes": 8192,
+          "page-size": 4096,
+          "pages-per-second": 0,
+          "postcopy-bytes": 0,
+          "postcopy-requests": 0,
+          "precopy-bytes": 0,
+          "remaining": 0,
+          "total": 134246400,
+          "transferred": 2177773
+        },
+        "setup-time": 0,
+        "status": "completed",
+        "total-time": 55
+      }
+    }
+  ],
+  "qemu_version": {
+    "package": "v11.1.3-3-gcc8cba4-dirty",
+    "qemu": {
+      "major": 11,
+      "micro": 3,
+      "minor": 1
+    }
+  },
+  "ram_per_process": "128 MiB",
+  "schema_version": 1,
+  "scope": "Two actual QMP transfers: real GIC connection, then separate level-wire interception.",
+  "sha256": {
+    "migration_helper": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8",
+    "qemu": "5a5c76062c5345d2be5960932a3a7ccefc73c6523e1531ea1b65088f5cdad555",
+    "test": "a946cbaabd791e517cc724d35400972c2ced469d2ea638488ce95be7f5dab619",
+    "transport": "4ab5857e40f3d320656677812abb86d2683c310764d35baa7a32b4aa53572fbd"
+  },
+  "started_utc": "2026-11-23T08:02:52.281064+00:00"
+}

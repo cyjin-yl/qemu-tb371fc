@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "suite": "Counter conversion arithmetic boundaries",
+  "cases": 1848,
+  "passed": true,
+  "errors": [],
+  "reference": "Python Fraction and arbitrary-precision integers",
+  "covers": [
+    "fractional-period ceil",
+    "floor",
+    "INT64_MAX saturation",
+    "UINT64_MAX tick input",
+    "legacy integer-period compatibility"
+  ],
+  "source_sha256": "c8cd52ce55421ff0ccacd44810bc3882d64952598c1f986a06dbf548036175c1",
+  "header_sha256": "3464d6690750c6f7727d59d7b6c7d656536f04b68c3a300a29260f00e2c3f013",
+  "elf_sha256": "2ce3159ad8b30e0f2a3eb846eba8e9f2b63016ea98089e37253f6366ac4e27e7",
+  "compile_command": [
+    "cc",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-I/src/include",
+    "-I/work/build-next",
+    "-I/usr/include/glib-2.0",
+    "-I/usr/lib/x86_64-linux-gnu/glib-2.0/include",
+    "-I/usr/include/sysprof-6",
+    "-pthread",
+    "/src/tb371fc/tests/counter-conversion.c",
+    "-o",
+    "/work/mmio-timer/arithmetic-1/counter-conversion"
+  ]
+}

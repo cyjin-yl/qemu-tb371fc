@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "started_utc": "2026-11-23T06:04:36.119929+00:00",
+  "scope": "Actual QTest GCC/UFS/PHY, UIC, DMA and SCSI behavior; not Android or full hardware equivalence",
+  "qemu_sha256": "d42c81298295440923eb2eec83e670f962ab994623fca1d4b779ccee42944552",
+  "test_sha256": "3cb7f907ce1bec4f916dc312f0dd733d5e3a8e5cdfcd76033f5fb8fd1777dc54",
+  "checks": [
+    {
+      "name": "gcc_ufs_power_on",
+      "passed": true
+    },
+    {
+      "name": "hci_reference_version",
+      "passed": true
+    },
+    {
+      "name": "phy_starts_reset",
+      "passed": true
+    },
+    {
+      "name": "link_startup_without_phy_fails",
+      "passed": true
+    },
+    {
+      "name": "unprogrammed_phy_not_ready",
+      "passed": true
+    },
+    {
+      "name": "programmed_phy_ready",
+      "passed": true
+    },
+    {
+      "name": "phy_symbols_propagate",
+      "passed": true
+    },
+    {
+      "name": "tx_fsm_hibern8",
+      "passed": true
+    },
+    {
+      "name": "link_startup",
+      "passed": true
+    },
+    {
+      "name": "two_connected_lanes",
+      "passed": true
+    },
+    {
+      "name": "unknown_dme_rejected",
+      "passed": true
+    },
+    {
+      "name": "readonly_dme_rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid_lane_count_rejected",
+      "passed": true
+    },
+    {
+      "name": "dme_write_read_retained",
+      "passed": true
+    },
+    {
+      "name": "power_mode_change",
+      "passed": true
+    },
+    {
+      "name": "nop_dma_and_response",
+      "passed": true,
+      "detail": {
+        "ocs": 0,
+        "response": "200000000000000000000000"
+      }
+    },
+    {
+      "name": "device_descriptor",
+      "passed": true,
+      "detail": {
+        "ocs": 0,
+        "header": "360000000001000000000059",
+        "descriptor": "59000000010001040000017f00000000031000000001020301ce161a02000000"
+      }
+    },
+    {
+      "name": "scsi_lun_ready",
+      "passed": true,
+      "detail": {
+        "ocs": 0,
+        "status": 0
+      }
+    },
+    {
+      "name": "read_capacity",
+      "passed": true,
+      "detail": {
+        "ocs": 0,
+        "data": "00003fff00001000"
+      }
+    },
+    {
+      "name": "write10",
+      "passed": true,
+      "detail": {
+        "ocs": 0,
+        "status": 0
+      }
+    },
+    {
+      "name": "read10_exact_payload",
+      "passed": true,
+      "detail": {
+        "sha256": "4e441a3533bb2c10cd5649981d395744213e09a336746b5a3458fee4057205ec"
+      }
+    },
+    {
+      "name": "host_backing_file_contains_write",
+      "passed": true
+    },
+    {
+      "name": "short_prdt_rejected",
+      "passed": true,
+      "detail": {
+        "ocs": 3
+      }
+    },
+    {
+      "name": "long_prdt_reports_underflow",
+      "passed": true,
+      "detail": {
+        "ocs": 0,
+        "response": "2120000000000000000000020000100000000000000000000000000000000000"
+      }
+    },
+    {
+      "name": "long_prdt_did_not_write_adjacent_lba",
+      "passed": true
+    },
+    {
+      "name": "short_prdt_did_not_write_any_lba",
+      "passed": true
+    },
+    {
+      "name": "unsupported_scsi_check_condition",
+      "passed": true
+    },
+    {
+      "name": "enter_hibern8",
+      "passed": true
+    },
+    {
+      "name": "transfer_in_hibern8_rejected",
+      "passed": true
+    },
+    {
+      "name": "exit_hibern8",
+      "passed": true
+    },
+    {
+      "name": "gcc_bcr_resets_hci_and_phy",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "command": [
+    "/work/build-next/qemu-system-aarch64",
+    "-M",
+    "tb371fc",
+    "-accel",
+    "qtest",
+    "-m",
+    "128M",
+    "-display",
+    "none",
+    "-serial",
+    "null",
+    "-monitor",
+    "none",
+    "-qtest",
+    "unix:/work/ufs-qtest-3/qtest,server=on,wait=off",
+    "-qtest-log",
+    "/dev/null",
+    "-qmp",
+    "unix:/work/ufs-qtest-3/qmp,server=on,wait=off",
+    "-blockdev",
+    "driver=file,node-name=file0,filename=/work/ufs-qtest-3/disk.raw",
+    "-blockdev",
+    "driver=raw,node-name=disk0,file=file0",
+    "-device",
+    "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+    "-d",
+    "unimp,guest_errors"
+  ],
+  "qemu_exit_code": 0,
+  "stderr_sha256": "7992c1428086606eb21bb4767a702c9769027a3c01320b39999e3e5e658f2560",
+  "elapsed_seconds": 0.382,
+  "passed_checks": 31,
+  "total_checks": 31
+}

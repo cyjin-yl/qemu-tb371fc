@@ -1,0 +1,184 @@
+{
+  "all_passed": false,
+  "checks": [
+    {
+      "name": "paused-normal-tcg",
+      "observed": {
+        "running": false,
+        "status": "prelaunch"
+      },
+      "passed": true
+    },
+    {
+      "name": "eight-cpus",
+      "observed": 8,
+      "passed": true
+    },
+    {
+      "name": "kernel-actual-entry",
+      "observed": {
+        "actual": 2686451712,
+        "expected": 2686451712
+      },
+      "passed": true
+    },
+    {
+      "name": "kernel-header-in-memory",
+      "observed": {
+        "memory_sha256": "005dfaa8267f093b70402c7a7111f97abd6bffdbb1d96dbe3d5606e8fc8e8da6",
+        "source_sha256": "005dfaa8267f093b70402c7a7111f97abd6bffdbb1d96dbe3d5606e8fc8e8da6"
+      },
+      "passed": true
+    },
+    {
+      "name": "initrd-actual-placement",
+      "observed": {
+        "actual": 2818572288,
+        "expected": 2818572288,
+        "size": 293066
+      },
+      "passed": true
+    },
+    {
+      "name": "initrd-bytes-in-memory",
+      "observed": {
+        "memory_sha256": "8c2f582b72f19ba6043af7e85f91a3936c3c8fcb3c2a306ae4f76efe6d72ae7e",
+        "source_sha256": "8c2f582b72f19ba6043af7e85f91a3936c3c8fcb3c2a306ae4f76efe6d72ae7e"
+      },
+      "passed": true
+    },
+    {
+      "name": "chosen-matches-loaded-initrd",
+      "observed": {
+        "linux,initrd-end": 2818865354,
+        "linux,initrd-start": 2818572288
+      },
+      "passed": true
+    },
+    {
+      "name": "dtb-actual-placement",
+      "observed": {
+        "actual": 2820669440,
+        "expected": 2820669440,
+        "size": 1048576
+      },
+      "passed": true
+    },
+    {
+      "name": "physical-8g-ram-map-with-native-gap",
+      "observed": [
+        {
+          "size": 1001390080,
+          "start": 2147483648
+        },
+        {
+          "size": 7516192768,
+          "start": 3221225472
+        },
+        {
+          "size": 8053063680,
+          "start": 2684354560
+        }
+      ],
+      "passed": false
+    },
+    {
+      "name": "loaded-inputs-do-not-overlap",
+      "observed": [],
+      "passed": true
+    },
+    {
+      "name": "native-static-reservation-clearance",
+      "observed": [],
+      "passed": true
+    },
+    {
+      "name": "generated-static-reservation-clearance",
+      "observed": [],
+      "passed": true
+    },
+    {
+      "name": "all-loaded-inputs-in-usable-ram",
+      "observed": [],
+      "passed": true
+    }
+  ],
+  "command": [
+    "/work/integration-20261123-3/qemu-system-aarch64",
+    "-M",
+    "tb371fc",
+    "-m",
+    "8G",
+    "-smp",
+    "8",
+    "-accel",
+    "tcg",
+    "-S",
+    "-display",
+    "none",
+    "-serial",
+    "null",
+    "-monitor",
+    "none",
+    "-qmp",
+    "unix:/work/boot-layout-gate-v3/monitor.sock,server=on,wait=off",
+    "-kernel",
+    "/work/linux-iommu/artifacts/Image",
+    "-initrd",
+    "/work/ufs-iommu-1/initramfs.cpio.gz"
+  ],
+  "completed_utc": "2026-11-23T06:51:43.434694+00:00",
+  "kind": "tb371fc-runtime-boot-layout",
+  "limits": [
+    "No Android or Linux execution result: CPUs remain paused.",
+    "Static reservations only; dynamic reserved-memory allocations are not simulated.",
+    "DTB payload and loaded-memory samples remain in the private work directory.",
+    "The native DT is a reference for reserved ranges, not proof of peripheral behavior."
+  ],
+  "observed_roms": [
+    {
+      "memory": "ram",
+      "name": "bootloader",
+      "size": 40,
+      "start": 2684354560
+    },
+    {
+      "memory": "ram",
+      "name": "Image",
+      "size": 4102152,
+      "start": 2686451712
+    },
+    {
+      "memory": "ram",
+      "name": "initramfs.cpio.gz",
+      "size": 293066,
+      "start": 2818572288
+    },
+    {
+      "memory": "ram",
+      "name": "dtb",
+      "size": 1048576,
+      "start": 2820669440
+    }
+  ],
+  "qemu_exit_code": 0,
+  "qemu_version": {
+    "package": "v11.1.3-3-gcc8cba4-dirty",
+    "qemu": {
+      "major": 11,
+      "micro": 3,
+      "minor": 1
+    }
+  },
+  "schema_version": 1,
+  "scope": "Paused normal TCG. Actual ROM map and memory-resident DTB; no guest boot verdict.",
+  "sha256": {
+    "initrd": "8c2f582b72f19ba6043af7e85f91a3936c3c8fcb3c2a306ae4f76efe6d72ae7e",
+    "kernel": "6deca8ecfcc5c8c2d12974666f9d90f12a9c74b356479bcae969701f797d8aea",
+    "memory_resident_dtb": "30b5bb370fe9700f64aacaaa52cb4433b58273b2b93b4b3edd876bd53fc048f1",
+    "private_reference_dtb": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "qemu": "a70862bfa8aa957ea26e362b5defd9ae60b4cc4bb53f2ac2c70c0b4fe3b67e2a",
+    "validator": "9b95d329e5daa24904d23b1ef1407a32d43be78822e692097c79b80f1d76809c"
+  },
+  "started_utc": "2026-11-23T06:51:43.003759+00:00"
+}

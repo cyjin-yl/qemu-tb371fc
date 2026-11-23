@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "native_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "watchdog_node": "/soc/qcom,wdt@17c10000",
+  "reg": [
+    398524416,
+    4096
+  ],
+  "gic_spis": [
+    0,
+    1
+  ],
+  "bark_ms": 11000,
+  "pet_ms": 9360,
+  "clock_property_in_native_dt": false,
+  "production_kernel": {
+    "image_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "symbol": "WDT_HZ",
+    "symbol_virtual_address": "0xffffff800a2aeec0",
+    "image_offset": "0x222eec0",
+    "initialized_u64_le": 32765,
+    "value_bytes_sha256": "cbf2f8becf982fedabe0b9452763fa1f622ebf93c1b3f7314963354e795c4f59",
+    "scope": "Initialized software constant; not a live variable or oscillator measurement"
+  },
+  "sources": [
+    {
+      "url": "https://android.googlesource.com/kernel/msm/+/7b459140379bdbbd665998db1fab170ebfb269e7/drivers/soc/qcom/watchdog_v2.c",
+      "sha256": "02dc7afd3ba4a75871671a93601103ea7c2c4a7b3975b32ad3f1fa10a4cd89e2",
+      "role": "Qualcomm primary published driver"
+    },
+    {
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/watchdog/qcom-wdt.c?h=v6.12.114",
+      "sha256": "5eca11e51e086afd8f49199cf0ad1b53cd1f4659caad38ba3ceec9a84013e8fb",
+      "role": "Pinned upstream driver"
+    },
+    {
+      "url": "https://github.com/tem423/android_kernel_lenovo_tb371fc/blob/9d8abebf4ac4d45cf4cc11b5b6bc5e4483d10fd1/drivers/soc/qcom/watchdog_v2.c",
+      "sha256": "8e0ed02aea2f0abfccb673d8d3754016b0e2f328c7946d9aa0778b388b3940fd",
+      "role": "Community candidate corroboration; not exact OEM source proof"
+    }
+  ]
+}

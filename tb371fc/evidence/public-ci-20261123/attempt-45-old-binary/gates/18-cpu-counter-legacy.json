@@ -1,0 +1,36 @@
+{
+  "name": "cpu-counter-legacy",
+  "command": [
+    "/usr/bin/python3",
+    "/src/tb371fc/tests/test_mmio_timer_cpu.py",
+    "--qemu",
+    "/work/root-pdc-0804/qemu-system-aarch64",
+    "--icount-rate",
+    "--machine",
+    "tb371fc,ufs-enabled=off,counter-exact=off",
+    "--counter-mode",
+    "legacy",
+    "--out",
+    "/tmp/tbci-piu4wefp/18/data"
+  ],
+  "started_utc": "2026-11-23T08:09:02.942473+00:00",
+  "timeout_seconds": 180,
+  "fixture": "/tmp/tbci-piu4wefp/18",
+  "environment": {
+    "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+    "TMPDIR": "/tmp/tbci-piu4wefp/18/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "passed": true,
+  "exit_code": 0,
+  "verified": {
+    "verdict_field": "passed",
+    "verdict": true
+  },
+  "elapsed_seconds": 0.618,
+  "completed_utc": "2026-11-23T08:09:03.560203+00:00",
+  "log_sha256": {
+    "stdout.log": "7104a36ddef5249a45cdd6d2a435ba7b3a2302422faaf67715930588279437f5",
+    "stderr.log": "44f84a2cabfbcab78d2ee8ab8e05567be83df63a6c06e52e91d1a74d61884aa1"
+  }
+}

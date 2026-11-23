@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "suite": "SM8250 RPMh actual component process migration",
+  "qemu": "/work/resume-20261123/frozen10/qemu-system-aarch64",
+  "qemu_sha256": "fe71b5c9a65761910294e6cf690f615ca3c8c0da132207860dc4550b5f28668d",
+  "machine": "tb371fc,rpmh-profile=reference,rpmh-boot-configured=off,ufs-enabled=off",
+  "work_dir": "/work/rpmh-validation-10/migration-data",
+  "native_command_db": false,
+  "reference_command_db_sha256": "416efcf69817cc7b0465a33724bace31e576040b3ec775e0a184a2d051f8c6f8",
+  "scope": "Typed digital TCS/ARC/VRM/BCM behavior; synthetic addresses and aux; no AOP firmware, analog PMIC or full-board equivalence",
+  "checks": [
+    {
+      "check": "actual_process_to_process_transfer",
+      "status": "pass"
+    },
+    {
+      "check": "votes_pending_irq_and_mask_preserved",
+      "status": "pass"
+    },
+    {
+      "check": "staged_bcm_and_stalled_request_not_falsely_completed",
+      "status": "pass"
+    },
+    {
+      "check": "remaining_command_resumes_at_controlled_deadline",
+      "status": "pass"
+    },
+    {
+      "check": "staged_vote_commit_and_stall_recovery_continue",
+      "status": "pass"
+    }
+  ],
+  "success": true,
+  "expected_checks": 5,
+  "migration": {
+    "status": "completed",
+    "setup-time": 0,
+    "downtime": 48,
+    "total-time": 61,
+    "ram": {
+      "total": 134246400,
+      "postcopy-requests": 0,
+      "dirty-sync-count": 2,
+      "multifd-bytes": 0,
+      "pages-per-second": 0,
+      "downtime-bytes": 303215,
+      "page-size": 4096,
+      "remaining": 0,
+      "postcopy-bytes": 0,
+      "mbps": 287.53481967213116,
+      "transferred": 2192453,
+      "dirty-sync-missed-zero-copy": 0,
+      "precopy-bytes": 0,
+      "duplicate": 32773,
+      "dirty-pages-rate": 0,
+      "normal-bytes": 8192,
+      "normal": 2
+    }
+  },
+  "qtest_virtual_ns_at_transfer": 4000,
+  "raw_receipt_sha256": "649fd7d5ec0f3a0fb9d299c82640636d452ed040242f7f01215ab6a0f5b7b906",
+  "process_exit_status": 0,
+  "recorded_at_utc": "2026-11-23T08:00:41.105405+00:00"
+}

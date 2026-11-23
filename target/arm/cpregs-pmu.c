@@ -352,7 +352,13 @@ static bool pmu_counter_enabled(CPUARMState *env, uint8_t counter)
         return false;
     }
 
-    mdcr_el2 = arm_mdcr_el2_eff(env);
+    /*
+     * HPMN and HPME partition and enable event counters even when EL2
+     * is disabled in the current Security state (for example, Secure
+     * EL3 on a CPU without FEAT_SEL2).  arm_mdcr_el2_eff() would zero
+     * both fields there and incorrectly disable every event counter.
+     */
+    mdcr_el2 = arm_feature(env, ARM_FEATURE_EL2) ? env->cp15.mdcr_el2 : 0;
     hpmn = mdcr_el2 & MDCR_HPMN;
 
     if (!arm_feature(env, ARM_FEATURE_EL2) ||

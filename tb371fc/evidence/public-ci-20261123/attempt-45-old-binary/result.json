@@ -1,0 +1,1504 @@
+{
+  "schema_version": 1,
+  "suite": "all",
+  "started_utc": "2026-11-23T08:08:51.627333+00:00",
+  "scope": "Public digital component and clean-Linux gates; no stock Android attestation",
+  "private_inputs_used": false,
+  "source_commit": "cc8cba4aa88353fe28e3a3c2365ae9c79f65cbf9",
+  "source_dirty": true,
+  "runner_sha256": "cd88a4a32f3c23cfd90b83db39a76914a104082ecd269e2603b9b1ec76b2e918",
+  "qemu_sha256": "5a5c76062c5345d2be5960932a3a7ccefc73c6523e1531ea1b65088f5cdad555",
+  "qemu_version": "QEMU emulator version 11.1.3 (v11.1.3-3-gcc8cba4-dirty)\nCopyright (c) 2003-2026 Fabrice Bellard and the QEMU Project developers",
+  "python": "3.13.5 (main, Aug 10 2026, 12:06:59) [GCC 14.2.0]",
+  "platform": "Linux-7.0.14-26-pve-x86_64-with-glibc2.41",
+  "runtime_fixtures_retained": "/tmp/tbci-piu4wefp",
+  "expected_gates": 45,
+  "gates": [
+    {
+      "name": "ci-verdict-unit",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/scripts/test_ci_device_tests.py"
+      ],
+      "started_utc": "2026-11-23T08:08:53.176361+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/00",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/00/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": false,
+      "exit_code": 1,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/scripts/ci_device_tests.py\", line 316, in run_case\n    raise RuntimeError(f\"Gate exited {proc.returncode}\")\nRuntimeError: Gate exited 1\n",
+      "elapsed_seconds": 1.221,
+      "completed_utc": "2026-11-23T08:08:54.397695+00:00",
+      "log_sha256": {
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.log": "5a26b0f0efccf5b17e15d9b1ff43293ff22633f799d2621d3a07047dfa2c9fd9"
+      }
+    },
+    {
+      "name": "board-profile-unit",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/scripts/test_board_profile.py"
+      ],
+      "started_utc": "2026-11-23T08:08:54.399488+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/01",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/01/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict": "successful test process"
+      },
+      "elapsed_seconds": 0.167,
+      "completed_utc": "2026-11-23T08:08:54.566238+00:00",
+      "log_sha256": {
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.log": "0214f4d26066ce36fa7abf3807eceb10db1dd3ddcb3cdb8ed36282ac6e62a627"
+      }
+    },
+    {
+      "name": "machine-validator-unit",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/scripts/test_validate_machine.py"
+      ],
+      "started_utc": "2026-11-23T08:08:54.567723+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/02",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/02/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict": "successful test process"
+      },
+      "elapsed_seconds": 0.72,
+      "completed_utc": "2026-11-23T08:08:55.287518+00:00",
+      "log_sha256": {
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.log": "3cb51d488570ff963ec9e09d1c57cfa2dd34c1ed71489e9ddc1b7469f63dee57"
+      }
+    },
+    {
+      "name": "dt-inventory-unit",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/scripts/test_inventory_dtb.py"
+      ],
+      "started_utc": "2026-11-23T08:08:55.288393+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/03",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/03/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict": "successful test process"
+      },
+      "elapsed_seconds": 0.115,
+      "completed_utc": "2026-11-23T08:08:55.403451+00:00",
+      "log_sha256": {
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.log": "ee092db8946b567b25c5d37ae8c6a0a366d0b7302e1ae4e336b3587aefa2a67e"
+      }
+    },
+    {
+      "name": "hardware-sysfs-unit",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/scripts/test_collect_hardware_sysfs.py"
+      ],
+      "started_utc": "2026-11-23T08:08:55.404400+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/04",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/04/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict": "successful test process"
+      },
+      "elapsed_seconds": 0.165,
+      "completed_utc": "2026-11-23T08:08:55.569508+00:00",
+      "log_sha256": {
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.log": "956a0c36ba55bb397484b342828153465a6efc7aa26b941cbfc3ed4f89e9cc8a"
+      }
+    },
+    {
+      "name": "guest-result-unit",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_guest_result.py"
+      ],
+      "started_utc": "2026-11-23T08:08:55.570542+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/05",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/05/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict": "successful test process"
+      },
+      "elapsed_seconds": 0.166,
+      "completed_utc": "2026-11-23T08:08:55.736175+00:00",
+      "log_sha256": {
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.log": "698d16d7b93c4bd9707d3cfacda6fb1e0fea99ed0cda6e69bedc42772940540a"
+      }
+    },
+    {
+      "name": "tlmm-map-unit",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_tlmm_map.py"
+      ],
+      "started_utc": "2026-11-23T08:08:55.737078+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/06",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/06/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict": "successful test process"
+      },
+      "elapsed_seconds": 0.115,
+      "completed_utc": "2026-11-23T08:08:55.852409+00:00",
+      "log_sha256": {
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.log": "55df81c03b1fc09a739803668e8b10b1a1cd87ac7e716666dddb1c968f87bb76"
+      }
+    },
+    {
+      "name": "live-machine-profile",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/scripts/validate_machine.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--output",
+        "/tmp/tbci-piu4wefp/07/data/result.json",
+        "--dtb-output",
+        "/tmp/tbci-piu4wefp/07/data/generated.dtb"
+      ],
+      "started_utc": "2026-11-23T08:08:55.853554+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/07",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/07/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true
+      },
+      "elapsed_seconds": 0.822,
+      "completed_utc": "2026-11-23T08:08:56.675415+00:00",
+      "log_sha256": {
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "geni-registers",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_geni_uart.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64"
+      ],
+      "started_utc": "2026-11-23T08:08:56.676686+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/08",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/08/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "success",
+        "verdict": true,
+        "check_count": 14
+      },
+      "elapsed_seconds": 0.216,
+      "completed_utc": "2026-11-23T08:08:56.892960+00:00",
+      "log_sha256": {
+        "stdout.log": "00963f22bcb68c2bba9eee30a5fbea9250c4c495496255a1e331e9a58b1a0850",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "geni-migration",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_geni_migration.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64"
+      ],
+      "started_utc": "2026-11-23T08:08:56.894252+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/09",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/09/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "success",
+        "verdict": true,
+        "check_count": 6
+      },
+      "elapsed_seconds": 0.318,
+      "completed_utc": "2026-11-23T08:08:57.211822+00:00",
+      "log_sha256": {
+        "stdout.log": "06c915b8d9178fbdec14594b6e5662a65421a737f97f6052c08c59ef470b269e",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "gcc-registers",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_gcc_sm8250.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--work-dir",
+        "/tmp/tbci-piu4wefp/10/data"
+      ],
+      "started_utc": "2026-11-23T08:08:57.213084+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/10",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/10/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "success",
+        "verdict": true,
+        "check_count": 19
+      },
+      "elapsed_seconds": 1.28,
+      "completed_utc": "2026-11-23T08:08:58.493452+00:00",
+      "log_sha256": {
+        "stdout.log": "46a7dc552e7039cf7fc4a571d060809a6f2205c4b1416796fa5c50de460ff9ec",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "gcc-migration",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_gcc_sm8250.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--migration-only",
+        "--work-dir",
+        "/tmp/tbci-piu4wefp/11/data"
+      ],
+      "started_utc": "2026-11-23T08:08:58.494502+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/11",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/11/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "success",
+        "verdict": true,
+        "check_count": 5
+      },
+      "elapsed_seconds": 0.569,
+      "completed_utc": "2026-11-23T08:08:59.063479+00:00",
+      "log_sha256": {
+        "stdout.log": "e2d15156c216fcd07d8c299bfcb04e128c942f30833ca780dc19304fec05b2db",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "geni-clock-reset",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_geni_clock_reset.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--work-dir",
+        "/tmp/tbci-piu4wefp/12/data"
+      ],
+      "started_utc": "2026-11-23T08:08:59.064565+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/12",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/12/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "success",
+        "verdict": true,
+        "check_count": 6
+      },
+      "elapsed_seconds": 0.824,
+      "completed_utc": "2026-11-23T08:08:59.888309+00:00",
+      "log_sha256": {
+        "stdout.log": "6591c03b43c84c3cc14be12adaf777be7bea19fbc505f4f1df6e7940944b687b",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "geni-clock-migration",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_geni_clock_reset.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--migration-only",
+        "--work-dir",
+        "/tmp/tbci-piu4wefp/13/data"
+      ],
+      "started_utc": "2026-11-23T08:08:59.889878+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/13",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/13/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "success",
+        "verdict": true,
+        "check_count": 4
+      },
+      "elapsed_seconds": 0.721,
+      "completed_utc": "2026-11-23T08:09:00.610610+00:00",
+      "log_sha256": {
+        "stdout.log": "dda48c397b0ae8a94e792eba2a9ea0663c00e491034749b154980b61fe8669e0",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "counter-arithmetic",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_counter_conversion.py",
+        "--build-config",
+        "/work/build-next",
+        "--out",
+        "/tmp/tbci-piu4wefp/14/data"
+      ],
+      "started_utc": "2026-11-23T08:09:00.611813+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/14",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/14/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true
+      },
+      "elapsed_seconds": 0.419,
+      "completed_utc": "2026-11-23T08:09:01.030661+00:00",
+      "log_sha256": {
+        "stdout.log": "617c02d4aa35a7f78362ec892b3d495b46e6c5f1a25f87942914a2c7de2fe55f",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "mmio-timer-exact",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_mmio_timer.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--out",
+        "/tmp/tbci-piu4wefp/15/data"
+      ],
+      "started_utc": "2026-11-23T08:09:01.031887+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/15",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/15/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 10
+      },
+      "elapsed_seconds": 0.77,
+      "completed_utc": "2026-11-23T08:09:01.801882+00:00",
+      "log_sha256": {
+        "stdout.log": "4b9e334e1b1d9ecb15b3c808fd579694a2561d60a77f0c801e00f2d38888c3e2",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "mmio-timer-legacy",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_mmio_timer.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--machine",
+        "tb371fc,ufs-enabled=off,counter-exact=off",
+        "--counter-mode",
+        "legacy",
+        "--out",
+        "/tmp/tbci-piu4wefp/16/data"
+      ],
+      "started_utc": "2026-11-23T08:09:01.803609+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/16",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/16/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 10
+      },
+      "elapsed_seconds": 0.669,
+      "completed_utc": "2026-11-23T08:09:02.472363+00:00",
+      "log_sha256": {
+        "stdout.log": "b967cbce16b1e8eb75cd67e4434ca5a80ae05fb1ee25be561ab26519e11b768b",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "cpu-counter-exact",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_mmio_timer_cpu.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--icount-rate",
+        "--out",
+        "/tmp/tbci-piu4wefp/17/data"
+      ],
+      "started_utc": "2026-11-23T08:09:02.473704+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/17",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/17/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true
+      },
+      "elapsed_seconds": 0.468,
+      "completed_utc": "2026-11-23T08:09:02.941327+00:00",
+      "log_sha256": {
+        "stdout.log": "da631ba8b4ce4df552b6c1a8e00e99578251ad7abafb1a17eb87d74c71de2a58",
+        "stderr.log": "031ee3a763a86321524f5ecc23c39fefb4ba1201cae806a160571b141e729f8f"
+      }
+    },
+    {
+      "name": "cpu-counter-legacy",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_mmio_timer_cpu.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--icount-rate",
+        "--machine",
+        "tb371fc,ufs-enabled=off,counter-exact=off",
+        "--counter-mode",
+        "legacy",
+        "--out",
+        "/tmp/tbci-piu4wefp/18/data"
+      ],
+      "started_utc": "2026-11-23T08:09:02.942473+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/18",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/18/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true
+      },
+      "elapsed_seconds": 0.618,
+      "completed_utc": "2026-11-23T08:09:03.560203+00:00",
+      "log_sha256": {
+        "stdout.log": "7104a36ddef5249a45cdd6d2a435ba7b3a2302422faaf67715930588279437f5",
+        "stderr.log": "44f84a2cabfbcab78d2ee8ab8e05567be83df63a6c06e52e91d1a74d61884aa1"
+      }
+    },
+    {
+      "name": "mmio-timer-migration",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_mmio_timer_migration.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--out",
+        "/tmp/tbci-piu4wefp/19/data"
+      ],
+      "started_utc": "2026-11-23T08:09:03.561299+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/19",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/19/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 4
+      },
+      "elapsed_seconds": 0.575,
+      "completed_utc": "2026-11-23T08:09:04.136574+00:00",
+      "log_sha256": {
+        "stdout.log": "d57336f9a4e67745c50651321d54e70f099d36fe6deb508d5b41701755c183fc",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "mmio-timer-legacy-migration",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_mmio_timer_migration.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--machine",
+        "tb371fc,ufs-enabled=off,counter-exact=off",
+        "--counter-mode",
+        "legacy",
+        "--out",
+        "/tmp/tbci-piu4wefp/20/data"
+      ],
+      "started_utc": "2026-11-23T08:09:04.138524+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/20",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/20/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 4
+      },
+      "elapsed_seconds": 0.62,
+      "completed_utc": "2026-11-23T08:09:04.758595+00:00",
+      "log_sha256": {
+        "stdout.log": "c63553eafae5080d667d9a5200a43465facd807ccf640a33c300e377b37541ea",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "reject-exact-to-legacy",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_mmio_timer_migration.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--target-machine",
+        "tb371fc,ufs-enabled=off,counter-exact=off",
+        "--expect-mode-rejection",
+        "--out",
+        "/tmp/tbci-piu4wefp/21/data"
+      ],
+      "started_utc": "2026-11-23T08:09:04.760103+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/21",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/21/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 2
+      },
+      "elapsed_seconds": 0.569,
+      "completed_utc": "2026-11-23T08:09:05.328854+00:00",
+      "log_sha256": {
+        "stdout.log": "f2acc01a66a7ba7bb5499bdcbab3612c826a8f44f9b99235daf952a7d73e0828",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "reject-legacy-to-exact",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_mmio_timer_migration.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--machine",
+        "tb371fc,ufs-enabled=off,counter-exact=off",
+        "--counter-mode",
+        "legacy",
+        "--target-machine",
+        "tb371fc,ufs-enabled=off",
+        "--expect-mode-rejection",
+        "--out",
+        "/tmp/tbci-piu4wefp/22/data"
+      ],
+      "started_utc": "2026-11-23T08:09:05.330300+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/22",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/22/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 2
+      },
+      "elapsed_seconds": 0.569,
+      "completed_utc": "2026-11-23T08:09:05.898836+00:00",
+      "log_sha256": {
+        "stdout.log": "8247b923f1ace74d35fba37d947d10af7c6b8c7b8d847545c87e98ce322de286",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "cpu-timer-migration",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_cpu_timer_migration.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--out",
+        "/tmp/tbci-piu4wefp/23/data"
+      ],
+      "started_utc": "2026-11-23T08:09:05.899793+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/23",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/23/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true
+      },
+      "elapsed_seconds": 0.619,
+      "completed_utc": "2026-11-23T08:09:06.519255+00:00",
+      "log_sha256": {
+        "stdout.log": "25261c34daaf9cf5b55a87d506eceedd807b351c11ce53095ea0664bdcb080d0",
+        "stderr.log": "c637ee594a73461d8d3778118bf831a3ae07bf53adca8c898e2dade581de6f6d"
+      }
+    },
+    {
+      "name": "cpu-timer-control",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_cpu_timer_migration.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--without-migration",
+        "--elf",
+        "/tmp/tbci-piu4wefp/23/data/probe.elf",
+        "--out",
+        "/tmp/tbci-piu4wefp/24/data"
+      ],
+      "started_utc": "2026-11-23T08:09:06.520578+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/24",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/24/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true
+      },
+      "elapsed_seconds": 0.618,
+      "completed_utc": "2026-11-23T08:09:07.138997+00:00",
+      "log_sha256": {
+        "stdout.log": "3544656105f1183b1d0da8e9d822f8fb9bc1102af73514046f38f33626db2d86",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "cpu-irq-realtime",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_cpu_timer_irq.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--out",
+        "/tmp/tbci-piu4wefp/25/data"
+      ],
+      "started_utc": "2026-11-23T08:09:07.140458+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/25",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/25/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true
+      },
+      "elapsed_seconds": 0.368,
+      "completed_utc": "2026-11-23T08:09:07.508164+00:00",
+      "log_sha256": {
+        "stdout.log": "edb6a3032f8aaf34e362b5e34a8ebda88371672b8525894b656ee9ec98d950fe",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "cpu-irq-exact-icount",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_cpu_timer_irq.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--icount",
+        "--out",
+        "/tmp/tbci-piu4wefp/26/data"
+      ],
+      "started_utc": "2026-11-23T08:09:07.509647+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/26",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/26/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true
+      },
+      "elapsed_seconds": 0.719,
+      "completed_utc": "2026-11-23T08:09:08.228633+00:00",
+      "log_sha256": {
+        "stdout.log": "acbd14856c1cef18cc0d3c4b648da2af4008135a442f34dd3ed92ff5a97f0ed6",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "cpu-irq-legacy-icount",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_cpu_timer_irq.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--icount",
+        "--machine",
+        "tb371fc,ufs-enabled=off,counter-exact=off",
+        "--out",
+        "/tmp/tbci-piu4wefp/27/data"
+      ],
+      "started_utc": "2026-11-23T08:09:08.230389+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/27",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/27/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true
+      },
+      "elapsed_seconds": 0.768,
+      "completed_utc": "2026-11-23T08:09:08.998466+00:00",
+      "log_sha256": {
+        "stdout.log": "b5b24f50ca38d2866705cafea4951d648253b47eb72119172bc08ed16e827996",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "smmuv2-c-qtest",
+      "command": [
+        "/work/build-next/tests/qtest/tb371fc-smmuv2-test",
+        "--tap"
+      ],
+      "started_utc": "2026-11-23T08:09:08.999868+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/28",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/28/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "tap_passed": 23,
+        "tap_skipped": false
+      },
+      "elapsed_seconds": 3.671,
+      "completed_utc": "2026-11-23T08:09:12.671043+00:00",
+      "log_sha256": {
+        "stdout.log": "c552effc02ec3922cb4f5b0fcdf4a8f22b0459f9f16a1db43fa3f62855ae49a8",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "tlmm-c-qtest",
+      "command": [
+        "/work/build-next/tests/qtest/tb371fc-tlmm-test",
+        "--tap"
+      ],
+      "started_utc": "2026-11-23T08:09:12.672307+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/29",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/29/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "tap_passed": 25,
+        "tap_skipped": false
+      },
+      "elapsed_seconds": 3.585,
+      "completed_utc": "2026-11-23T08:09:16.257026+00:00",
+      "log_sha256": {
+        "stdout.log": "2feabbe4e7d16582b47fa4069c45b9e46b69f21934b2948e1ac1a4475ae69e4e",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "pdc-c-qtest",
+      "command": [
+        "/work/build-next/tests/qtest/tb371fc-pdc-test",
+        "--tap"
+      ],
+      "started_utc": "2026-11-23T08:09:16.258466+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/30",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/30/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": false,
+      "exit_code": 0,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/scripts/ci_device_tests.py\", line 317, in run_case\n    report[\"verified\"] = judge(case, stdout)\n                         ~~~~~^^^^^^^^^^^^^^\n  File \"/src/tb371fc/scripts/ci_device_tests.py\", line 247, in judge\n    raise ValueError(\n    ...<2 lines>...\n        f\"skipped={skipped}, failed={bool(bad)}, valid_plan={valid_plan}\")\nValueError: TAP required plan 1..18 and unique ordered passes with no skips/TODO; got 17, skipped=False, failed=False, valid_plan=False\n",
+      "elapsed_seconds": 2.432,
+      "completed_utc": "2026-11-23T08:09:18.690198+00:00",
+      "log_sha256": {
+        "stdout.log": "60ccba83895210b4e050df4269f2dc3b57e2bcf98bb3c9b42d81bd3336c30dd3",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "rpmh-reference",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_rpmh_sm8250.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--work-dir",
+        "/tmp/tbci-piu4wefp/31/data"
+      ],
+      "started_utc": "2026-11-23T08:09:18.691613+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/31",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/31/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "success",
+        "verdict": true,
+        "check_count": 22
+      },
+      "elapsed_seconds": 2.793,
+      "completed_utc": "2026-11-23T08:09:21.484531+00:00",
+      "log_sha256": {
+        "stdout.log": "a6c909620b1340b06a7e76e6f1962ee3308294d711f365e6cf249dedc63ba07a",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "rpmh-reference-migration",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_rpmh_sm8250.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--migration-only",
+        "--work-dir",
+        "/tmp/tbci-piu4wefp/32/data"
+      ],
+      "started_utc": "2026-11-23T08:09:21.485579+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/32",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/32/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "success",
+        "verdict": true,
+        "check_count": 5
+      },
+      "elapsed_seconds": 0.677,
+      "completed_utc": "2026-11-23T08:09:22.162771+00:00",
+      "log_sha256": {
+        "stdout.log": "77acf737a9e97a6d9f89149955215c55a64f47b0302513ce90691fad7cd27ccc",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "ufs-register-dma",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_ufs_sm8250.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--out",
+        "/tmp/tbci-piu4wefp/33/data"
+      ],
+      "started_utc": "2026-11-23T08:09:22.164090+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/33",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/33/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 56
+      },
+      "elapsed_seconds": 1.867,
+      "completed_utc": "2026-11-23T08:09:24.031296+00:00",
+      "log_sha256": {
+        "stdout.log": "13298fb25ab1d209af7dfcf9b3714a216c3613b33a3a54d84d2201299361b92c",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "watchdog-registers",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_watchdog_kpss.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--out",
+        "/tmp/tbci-piu4wefp/34/data"
+      ],
+      "started_utc": "2026-11-23T08:09:24.032857+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/34",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/34/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 16
+      },
+      "elapsed_seconds": 1.13,
+      "completed_utc": "2026-11-23T08:09:25.162807+00:00",
+      "log_sha256": {
+        "stdout.log": "34d871c992337feee4d4aa40fc1497534778011a0091b567b9b3c7cb5a2a8a11",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "watchdog-migration",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_watchdog_kpss.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--migration-only",
+        "--out",
+        "/tmp/tbci-piu4wefp/35/data"
+      ],
+      "started_utc": "2026-11-23T08:09:25.164131+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/35",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/35/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 1
+      },
+      "elapsed_seconds": 0.689,
+      "completed_utc": "2026-11-23T08:09:25.852717+00:00",
+      "log_sha256": {
+        "stdout.log": "a67f2b0a0d326bd9dba66d34c7110751a5306ee77faf4ae5791e64441f05d874",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "boot-resources",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_boot_resources.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--out",
+        "/tmp/tbci-piu4wefp/36/data"
+      ],
+      "started_utc": "2026-11-23T08:09:25.854120+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/36",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/36/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 7
+      },
+      "elapsed_seconds": 0.678,
+      "completed_utc": "2026-11-23T08:09:26.531733+00:00",
+      "log_sha256": {
+        "stdout.log": "ea1799e2290cc6dd6622318a244aa85609fcbb221e6138366308b625be207988",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "ipcc-messages",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_ipcc.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--out",
+        "/tmp/tbci-piu4wefp/37/data"
+      ],
+      "started_utc": "2026-11-23T08:09:26.533027+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/37",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/37/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": false,
+      "exit_code": 1,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/scripts/ci_device_tests.py\", line 316, in run_case\n    raise RuntimeError(f\"Gate exited {proc.returncode}\")\nRuntimeError: Gate exited 1\n",
+      "elapsed_seconds": 0.832,
+      "completed_utc": "2026-11-23T08:09:27.365018+00:00",
+      "log_sha256": {
+        "stdout.log": "f7c9e640969e6abc4c8c5b0e65cbf6f01b3ddc02fbf79236da7c8bc9845243e8",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "dcc-capture",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_dcc.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--out",
+        "/tmp/tbci-piu4wefp/38/data"
+      ],
+      "started_utc": "2026-11-23T08:09:27.366246+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/38",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/38/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 17
+      },
+      "elapsed_seconds": 1.434,
+      "completed_utc": "2026-11-23T08:09:28.800347+00:00",
+      "log_sha256": {
+        "stdout.log": "2ef6a41cc11587946aba59b98e8cda443ea9ed0d5aeba9c5737d6c8c4d544c65",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "tlmm-migration",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_tlmm_migration.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--out",
+        "/tmp/tbci-piu4wefp/39/data"
+      ],
+      "started_utc": "2026-11-23T08:09:28.802351+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/39",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/39/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "all_passed",
+        "verdict": true,
+        "check_count": 15
+      },
+      "elapsed_seconds": 1.176,
+      "completed_utc": "2026-11-23T08:09:29.978128+00:00",
+      "log_sha256": {
+        "stdout.log": "649cf8b3ce3dad82613c4de1bd495424e93b6f82b5aa247a944bb99341ec69d8",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "pdc-migration",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/tests/test_pdc_migration.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--out",
+        "/tmp/tbci-piu4wefp/40/data"
+      ],
+      "started_utc": "2026-11-23T08:09:29.980023+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/40",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/40/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": false,
+      "exit_code": 0,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/scripts/ci_device_tests.py\", line 317, in run_case\n    report[\"verified\"] = judge(case, stdout)\n                         ~~~~~^^^^^^^^^^^^^^\n  File \"/src/tb371fc/scripts/ci_device_tests.py\", line 260, in judge\n    raise ValueError(\n        f\"{case.count_field} must contain {case.expected_count} entries\")\nValueError: checks must contain 9 entries\n",
+      "elapsed_seconds": 0.773,
+      "completed_utc": "2026-11-23T08:09:30.753361+00:00",
+      "log_sha256": {
+        "stdout.log": "7f275d561cde1b4e8e4b9a3e67b77cec0a853a11f164b455bce4b9e54f4392fc",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "linux-console-userspace",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/scripts/boot_smoke.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--kernel",
+        "/work/linux-rpmh/artifacts/Image",
+        "--timeout",
+        "120",
+        "--out",
+        "/tmp/tbci-piu4wefp/41/data"
+      ],
+      "started_utc": "2026-11-23T08:09:30.755902+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/41",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/41/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 8
+      },
+      "elapsed_seconds": 3.391,
+      "completed_utc": "2026-11-23T08:09:34.146641+00:00",
+      "log_sha256": {
+        "stdout.log": "ad8e4e4d2284463076a18ab496d7463a43b6c60ebd40e97c93be1bbb35dd494a",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "linux-console-empty-ufs",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/scripts/boot_smoke.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--kernel",
+        "/work/linux-rpmh/artifacts/Image",
+        "--timeout",
+        "120",
+        "--without-ufs-lu",
+        "--debug-mmio",
+        "--out",
+        "/tmp/tbci-piu4wefp/42/data"
+      ],
+      "started_utc": "2026-11-23T08:09:34.148401+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/42",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/42/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 8
+      },
+      "elapsed_seconds": 2.633,
+      "completed_utc": "2026-11-23T08:09:36.781849+00:00",
+      "log_sha256": {
+        "stdout.log": "16b373e159142ad75fd347acd4774d87dcf4ef236f9a5f25c62f1b09f0be5cb6",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "linux-ufs-smmu",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/scripts/boot_ufs.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--kernel",
+        "/work/linux-rpmh/artifacts/Image",
+        "--timeout",
+        "120",
+        "--out",
+        "/tmp/tbci-piu4wefp/43/data"
+      ],
+      "started_utc": "2026-11-23T08:09:36.783684+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/43",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/43/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 19
+      },
+      "elapsed_seconds": 3.181,
+      "completed_utc": "2026-11-23T08:09:39.964374+00:00",
+      "log_sha256": {
+        "stdout.log": "0e2fd6311fe22e1958b8055c98dfebc1590712485f2298d7a82553bce334ef76",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "linux-ufs-rpmh",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/scripts/boot_ufs.py",
+        "--qemu",
+        "/work/root-pdc-0804/qemu-system-aarch64",
+        "--kernel",
+        "/work/linux-rpmh/artifacts/Image",
+        "--timeout",
+        "120",
+        "--machine",
+        "tb371fc,rpmh-profile=reference",
+        "--require-rpmh",
+        "--out",
+        "/tmp/tbci-piu4wefp/44/data"
+      ],
+      "started_utc": "2026-11-23T08:09:39.966095+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-piu4wefp/44",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-piu4wefp/44/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": false,
+      "exit_code": 1,
+      "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/scripts/ci_device_tests.py\", line 316, in run_case\n    raise RuntimeError(f\"Gate exited {proc.returncode}\")\nRuntimeError: Gate exited 1\n",
+      "elapsed_seconds": 1.13,
+      "completed_utc": "2026-11-23T08:09:41.096579+00:00",
+      "log_sha256": {
+        "stdout.log": "7906f2896944bfb1e649a6d43d1d4a0f5d9f9f668a40a64ecf2f4c65ff48e51c",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "passed": false,
+  "kernel_sha256": "c513268fb0727d289fdfc0f02637c53cf5f976cc836ea9c586763f5f584bce40",
+  "kernel_build_receipt": {
+    "schema_version": 1,
+    "completed_utc": "2026-11-23T07:38:35.280856+00:00",
+    "scope": "Independent upstream Linux input for QEMU tb371fc smoke; no tablet flash or boot",
+    "source_version": "6.12.114",
+    "source_url": "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.114.tar.xz",
+    "source_tar_sha256": "7a8589912bd7a8adb07fed074283652cf482a35facef8954554654f0154b4af3",
+    "patches_applied_by_script": [],
+    "config_fragment_path": "/src/tb371fc/configs/linux-smoke.config",
+    "config_fragment_sha256": "9b4809aa256b425a7aac94bb4f1f2e98a9db3ac1db28080523a9f21774ff987b",
+    "effective_config_sha256": "96f9a9fd58f5db5f829b7c1106299cfe2208c7a1a70fc60b3adcb7938b80090c",
+    "image_path": "/work/linux-rpmh/artifacts/Image",
+    "image_bytes": 4450312,
+    "image_sha256": "c513268fb0727d289fdfc0f02637c53cf5f976cc836ea9c586763f5f584bce40",
+    "cross_compiler": {
+      "command": "aarch64-linux-gnu-gcc",
+      "path": "/usr/bin/aarch64-linux-gnu-gcc-14",
+      "sha256": "fb743ca27a77466c91da66047eec879a615993feaabd860aaf3750e7b222b131",
+      "version": "aarch64-linux-gnu-gcc (Debian 14.2.0-19) 14.2.0"
+    },
+    "cross_linker": {
+      "command": "aarch64-linux-gnu-ld",
+      "path": "/usr/bin/aarch64-linux-gnu-ld.bfd",
+      "sha256": "bdb57a3334f460af5921b65de134f128642325a2087ff716dafd0adbfcc0778a",
+      "version": "GNU ld (GNU Binutils for Debian) 2.44"
+    },
+    "host_compiler": {
+      "command": "gcc",
+      "path": "/usr/bin/x86_64-linux-gnu-gcc-14",
+      "sha256": "a23ecab8ff08f09ad8c80602c2c5df7f49e09c25905cb8975902e101bf72635f",
+      "version": "gcc (Debian 14.2.0-19) 14.2.0"
+    },
+    "config_command": [
+      "make",
+      "-C",
+      "/work/clean-linux/source/linux-6.12.114",
+      "O=/work/linux-rpmh/build",
+      "ARCH=arm64",
+      "CROSS_COMPILE=aarch64-linux-gnu-",
+      "allnoconfig"
+    ],
+    "config_environment": {
+      "KCONFIG_ALLCONFIG": "/src/tb371fc/configs/linux-smoke.config"
+    },
+    "build_command": [
+      "make",
+      "-C",
+      "/work/clean-linux/source/linux-6.12.114",
+      "O=/work/linux-rpmh/build",
+      "ARCH=arm64",
+      "CROSS_COMPILE=aarch64-linux-gnu-",
+      "-j2",
+      "Image"
+    ],
+    "build_environment": {
+      "KBUILD_BUILD_TIMESTAMP": "2026-11-22 00:00:00 +0000",
+      "KBUILD_BUILD_USER": "tb371fc-qemu",
+      "KBUILD_BUILD_HOST": "isolated-builder",
+      "KBUILD_BUILD_VERSION": "1",
+      "SOURCE_DATE_EPOCH": "1795305600"
+    },
+    "build_completed": true,
+    "guest_boot_tested_by_this_script": false
+  },
+  "c_test_binary_sha256": {
+    "tb371fc-smmuv2-test": "d6d29aebb26a48a85e69087727a6718ceba05f769f8c9a044b77c0a200209318",
+    "tb371fc-tlmm-test": "fe150bf83eb4755f745799af1fa2f4c3d811e08e37cfb7577819ace2553644d9",
+    "tb371fc-pdc-test": "773e3a4fa1f039795ae56746cccf86ce75e4249ab2f5d1fc5b890439996c95a0"
+  },
+  "passed_gates": 40,
+  "completed_utc": "2026-11-23T08:09:41.097539+00:00",
+  "elapsed_seconds": 47.922,
+  "qemu_unchanged": true
+}

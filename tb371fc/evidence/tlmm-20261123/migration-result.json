@@ -1,0 +1,242 @@
+{
+  "all_passed": true,
+  "checks": [
+    {
+      "name": "source-output-masked-edge-active-level-and-pending-irq",
+      "passed": true
+    },
+    {
+      "name": "sysbus-irq-actual-migration-completed",
+      "passed": true
+    },
+    {
+      "name": "all-registers-input-levels-ram-and-summary-restored",
+      "observed": {
+        "register_count": 19,
+        "registers": {
+          "0xf185000": 0,
+          "0xf185004": 1,
+          "0xf185008": 118,
+          "0xf18500c": 1,
+          "0xf1b3000": 0,
+          "0xf1b3004": 1,
+          "0xf1b3008": 114,
+          "0xf1b300c": 1,
+          "0xf500000": 579,
+          "0xf500004": 3,
+          "0xf500008": 0,
+          "0xf50000c": 0,
+          "0xf5b8000": 18,
+          "0xf5b8004": 1,
+          "0xf904000": 0,
+          "0xf904004": 1,
+          "0xf904008": 119,
+          "0xf90400c": 1,
+          "0xf9b7000": 392
+        }
+      },
+      "passed": true
+    },
+    {
+      "name": "masked-pending-edge-unmasks-and-write-zero-ack",
+      "passed": true
+    },
+    {
+      "name": "destination-detects-next-edge-without-replaying-old-edge",
+      "passed": true
+    },
+    {
+      "name": "migrated-active-level-relatches-until-raw-masked",
+      "passed": true
+    },
+    {
+      "name": "gpio-out-actual-migration-completed",
+      "passed": true
+    },
+    {
+      "name": "output-latch-wires-restored",
+      "passed": true
+    },
+    {
+      "name": "destination-output-wires-change-independently",
+      "passed": true
+    },
+    {
+      "name": "gpio-oe-actual-migration-completed",
+      "passed": true
+    },
+    {
+      "name": "gpio-mode-and-enable-wires-restored",
+      "passed": true
+    },
+    {
+      "name": "destination-alternate-mux-disables-gpio-drive",
+      "passed": true
+    },
+    {
+      "name": "ufs-reset-actual-migration-completed",
+      "passed": true
+    },
+    {
+      "name": "dedicated-reset-output-wire-restored",
+      "passed": true
+    },
+    {
+      "name": "destination-dedicated-reset-output-changes",
+      "passed": true
+    }
+  ],
+  "completed_utc": "2026-11-23T07:45:38.557352+00:00",
+  "elapsed_seconds": 0.439679,
+  "kind": "tb371fc-tlmm-process-migration",
+  "limits": [
+    "Virtual functional migration, not native electrical or timing equivalence.",
+    "Separate migrations observe summary IRQ, output latch, output enable, and dedicated UFS reset.",
+    "No tablet access, firmware, native register write, or guest execution."
+  ],
+  "machine": "tb371fc,ufs-enabled=off",
+  "migrations": [
+    {
+      "destination": {
+        "status": "completed"
+      },
+      "output_group": "sysbus-irq",
+      "source": {
+        "downtime": 31,
+        "ram": {
+          "dirty-pages-rate": 0,
+          "dirty-sync-count": 2,
+          "dirty-sync-missed-zero-copy": 0,
+          "downtime-bytes": 307239,
+          "duplicate": 32766,
+          "mbps": 414.9354285714286,
+          "multifd-bytes": 0,
+          "normal": 3,
+          "normal-bytes": 12288,
+          "page-size": 4096,
+          "pages-per-second": 0,
+          "postcopy-bytes": 0,
+          "postcopy-requests": 0,
+          "precopy-bytes": 0,
+          "remaining": 0,
+          "total": 134221824,
+          "transferred": 2178411
+        },
+        "setup-time": 0,
+        "status": "completed",
+        "total-time": 42
+      }
+    },
+    {
+      "destination": {
+        "status": "completed"
+      },
+      "output_group": "gpio-out",
+      "source": {
+        "downtime": 24,
+        "ram": {
+          "dirty-pages-rate": 0,
+          "dirty-sync-count": 2,
+          "dirty-sync-missed-zero-copy": 0,
+          "downtime-bytes": 303144,
+          "duplicate": 32767,
+          "mbps": 511.6037647058823,
+          "multifd-bytes": 0,
+          "normal": 2,
+          "normal-bytes": 8192,
+          "page-size": 4096,
+          "pages-per-second": 0,
+          "postcopy-bytes": 0,
+          "postcopy-requests": 0,
+          "precopy-bytes": 0,
+          "remaining": 0,
+          "total": 134221824,
+          "transferred": 2174316
+        },
+        "setup-time": 1,
+        "status": "completed",
+        "total-time": 35
+      }
+    },
+    {
+      "destination": {
+        "status": "completed"
+      },
+      "output_group": "gpio-oe",
+      "source": {
+        "downtime": 21,
+        "ram": {
+          "dirty-pages-rate": 0,
+          "dirty-sync-count": 2,
+          "dirty-sync-missed-zero-copy": 0,
+          "downtime-bytes": 303144,
+          "duplicate": 32767,
+          "mbps": 561.1138064516128,
+          "multifd-bytes": 0,
+          "normal": 2,
+          "normal-bytes": 8192,
+          "page-size": 4096,
+          "pages-per-second": 0,
+          "postcopy-bytes": 0,
+          "postcopy-requests": 0,
+          "precopy-bytes": 0,
+          "remaining": 0,
+          "total": 134221824,
+          "transferred": 2174316
+        },
+        "setup-time": 0,
+        "status": "completed",
+        "total-time": 31
+      }
+    },
+    {
+      "destination": {
+        "status": "completed"
+      },
+      "output_group": "ufs-reset",
+      "source": {
+        "downtime": 27,
+        "ram": {
+          "dirty-pages-rate": 0,
+          "dirty-sync-count": 2,
+          "dirty-sync-missed-zero-copy": 0,
+          "downtime-bytes": 303144,
+          "duplicate": 32767,
+          "mbps": 496.9865142857143,
+          "multifd-bytes": 0,
+          "normal": 2,
+          "normal-bytes": 8192,
+          "page-size": 4096,
+          "pages-per-second": 0,
+          "postcopy-bytes": 0,
+          "postcopy-requests": 0,
+          "precopy-bytes": 0,
+          "remaining": 0,
+          "total": 134221824,
+          "transferred": 2174316
+        },
+        "setup-time": 1,
+        "status": "completed",
+        "total-time": 36
+      }
+    }
+  ],
+  "qemu_version": {
+    "package": "v11.1.3-3-gcc8cba4-dirty",
+    "qemu": {
+      "major": 11,
+      "micro": 3,
+      "minor": 1
+    }
+  },
+  "ram_per_process": "128 MiB",
+  "schema_version": 1,
+  "scope": "Real QMP process-to-process migration and QTest GPIO/IRQ continuation.",
+  "sha256": {
+    "migration_helper": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8",
+    "qemu": "f3fa0d2db54d9f59ba9b0ea25239553900b805c3c05e53e0dd8577e94607e41b",
+    "test": "c3a1fe8a4f046ad9e95f8c7474eaa193475f0270b3880c5aa3a01341a7337e95",
+    "transport": "4ab5857e40f3d320656677812abb86d2683c310764d35baa7a32b4aa53572fbd"
+  },
+  "started_utc": "2026-11-23T07:45:37.946601+00:00"
+}

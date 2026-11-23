@@ -1,0 +1,462 @@
+{
+  "schema_version": 1,
+  "scope": "Supplied unmodified kernel, validation initramfs; not stock Android boot",
+  "device_tree_source": "machine-generated functional-subset DT",
+  "started_utc": "2026-11-23T05:50:58.765157+00:00",
+  "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+  "qemu_sha256": "56717a3c95ba31da84ed46da8c305bc6de910370a359eee475b3587b93d5cabf",
+  "guest_source_sha256": "4f1aac3a68e6c660abebdc04f239191a46ee1330ffb47a494ee37d6081d38a79",
+  "guest_header_sha256": "0087f4feaaddb78762685fc2810e010a0edee9cb23386bff62584e5f1af133c3",
+  "observer_source_sha256": "373ac343cebf34b2d4a2aa40d59b85d4318923575d7495f8b3ad025164155ec5",
+  "arch_probe_sha256": "0ed51cb6c6dd24685beb3f77056d17d47c5c2f697df96d87eef4a678d4c5cb1b",
+  "native_probe_reference_sha256": "69c592e097069a779cc54eb38b823192b7de3ef18465eb49a3da35f4d496edf8",
+  "identical_probe_binary_to_native_run": true,
+  "checkpoint_observed": true,
+  "guest_shutdown_observed": true,
+  "passed": true,
+  "compile_command": [
+    "aarch64-linux-gnu-gcc",
+    "-static",
+    "-fno-pie",
+    "-no-pie",
+    "-g",
+    "-Os",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wl,--section-start=.tb371fc_checkpoint=0x8000000",
+    "/src/tb371fc/tests/guest-init.c",
+    "-o",
+    "/work/gdb-smoke/gcc-production/init"
+  ],
+  "guest_symbols": {
+    "tb371fc_guest_checkpoint": {
+      "address": 134217728,
+      "size": 4
+    },
+    "tb371fc_guest_result": {
+      "address": 4849728,
+      "size": 3120
+    }
+  },
+  "init_elf_sha256": "5c62d22ab5c7115506733e5a2bed8e8c0aa49b3b22e9ef9b9f5b8d7ec3389293",
+  "initramfs_sha256": "88c075fc15487f3d6dc8e7cb1b61a35aa74a8f25ec6001a7d883c9623f86d7f6",
+  "command": [
+    "/work/gcc-integration/qemu-system-aarch64",
+    "-M",
+    "tb371fc",
+    "-accel",
+    "tcg,thread=multi",
+    "-m",
+    "8G",
+    "-smp",
+    "8",
+    "-display",
+    "none",
+    "-monitor",
+    "none",
+    "-serial",
+    "stdio",
+    "-no-reboot",
+    "-S",
+    "-qmp",
+    "unix:/work/gdb-smoke/gcc-production/qmp.sock,server=on,wait=off",
+    "-gdb",
+    "unix:/work/gdb-smoke/gcc-production/gdb.sock,server=on,wait=off",
+    "-kernel",
+    "/work/device-assets/current-boot_a-kernel.Image",
+    "-initrd",
+    "/work/gdb-smoke/gcc-production/initramfs.cpio.gz",
+    "-append",
+    "earlycon=qcom_geni,0xa90000 console=ttyMSM0,115200n8 rdinit=/init loglevel=7 panic=-1 nokaslr"
+  ],
+  "qemu_cpus": [
+    {
+      "thread-id": 53285,
+      "qom-type": "cortex-a55-arm-cpu",
+      "props": {
+        "core-id": 0,
+        "thread-id": 0,
+        "socket-id": 0
+      },
+      "qom-path": "/machine/cpu0",
+      "cpu-index": 0,
+      "target": "aarch64",
+      "midr": 1093652560
+    },
+    {
+      "thread-id": 53286,
+      "qom-type": "cortex-a55-arm-cpu",
+      "props": {
+        "core-id": 1,
+        "thread-id": 0,
+        "socket-id": 0
+      },
+      "qom-path": "/machine/cpu1",
+      "cpu-index": 1,
+      "target": "aarch64",
+      "midr": 1093652560
+    },
+    {
+      "thread-id": 53287,
+      "qom-type": "cortex-a55-arm-cpu",
+      "props": {
+        "core-id": 2,
+        "thread-id": 0,
+        "socket-id": 0
+      },
+      "qom-path": "/machine/cpu2",
+      "cpu-index": 2,
+      "target": "aarch64",
+      "midr": 1093652560
+    },
+    {
+      "thread-id": 53288,
+      "qom-type": "cortex-a55-arm-cpu",
+      "props": {
+        "core-id": 3,
+        "thread-id": 0,
+        "socket-id": 0
+      },
+      "qom-path": "/machine/cpu3",
+      "cpu-index": 3,
+      "target": "aarch64",
+      "midr": 1093652560
+    },
+    {
+      "thread-id": 53289,
+      "qom-type": "cortex-a77-arm-cpu",
+      "props": {
+        "core-id": 4,
+        "thread-id": 0,
+        "socket-id": 0
+      },
+      "qom-path": "/machine/cpu4",
+      "cpu-index": 4,
+      "target": "aarch64",
+      "midr": 1092604112
+    },
+    {
+      "thread-id": 53290,
+      "qom-type": "cortex-a77-arm-cpu",
+      "props": {
+        "core-id": 5,
+        "thread-id": 0,
+        "socket-id": 0
+      },
+      "qom-path": "/machine/cpu5",
+      "cpu-index": 5,
+      "target": "aarch64",
+      "midr": 1092604112
+    },
+    {
+      "thread-id": 53291,
+      "qom-type": "cortex-a77-arm-cpu",
+      "props": {
+        "core-id": 6,
+        "thread-id": 0,
+        "socket-id": 0
+      },
+      "qom-path": "/machine/cpu6",
+      "cpu-index": 6,
+      "target": "aarch64",
+      "midr": 1092604112
+    },
+    {
+      "thread-id": 53292,
+      "qom-type": "cortex-a77-arm-cpu",
+      "props": {
+        "core-id": 7,
+        "thread-id": 0,
+        "socket-id": 0
+      },
+      "qom-path": "/machine/cpu7",
+      "cpu-index": 7,
+      "target": "aarch64",
+      "midr": 1092604112
+    }
+  ],
+  "gdb_capabilities": "PacketSize=20020;qXfer:features:read+;vContSupported+;multiprocess+",
+  "gdb_target_xml": "l<?xml version=\"1.0\"?><!DOCTYPE target SYSTEM \"gdb-target.dtd\"><target><architecture>aarch64</architecture><xi:include href=\"aarch64-core.xml\"/><xi:include href=\"aarch64-fpu.xml\"/><xi:include href=\"tls-registers.xml\"/><xi:include href=\"system-registers.xml\"/></target>",
+  "gdb_stop_reply": "T05thread:p01.04;",
+  "checkpoint_pc": 134217728,
+  "checkpoint_pstate": 2147487744,
+  "guest_result_sha256": "aa15ed1c8d9d798319137d7fb57bc151788be15711e2bcce460131afc9dea8aa",
+  "guest_result": {
+    "magic": 3554260750543766100,
+    "version": 1,
+    "structure_size": 3120,
+    "completed": 1,
+    "checks_completed": 255,
+    "pass_mask": 255,
+    "fail_mask": 0,
+    "failures": 0,
+    "elapsed_ns": 22983646,
+    "counter_probe_bytes": 261,
+    "counter_probe_wait_status": 0,
+    "probe_truncated": 0,
+    "start_monotonic_ns": 1794686093,
+    "finish_monotonic_ns": 1905491665,
+    "uname_sysname": "Linux",
+    "uname_nodename": "(none)",
+    "uname_release": "4.19.157-perf+",
+    "uname_version": "#1 SMP PREEMPT Fri Nov 29 19:47:27 CST 2024",
+    "uname_machine": "aarch64",
+    "uname_domainname": "(none)",
+    "online": "0-7\n",
+    "model": "QEMU experimental Lenovo TB371FC functional subset",
+    "probe_stdout": "{\"schema_version\":1,\"kind\":\"tb371fc-el0-counter-probe\",\"counter_frequency_hz\":19200000,\"counter_start\":47065942,\"counter_end\":47070121,\"counter_delta\":4179,\"increased\":true,\"loop_iterations\":65536,\"scope\":\"EL0 counter access only; not a performance benchmark\"}\n"
+  },
+  "guest_validation_errors": [],
+  "arch_counter_probe": {
+    "schema_version": 1,
+    "kind": "tb371fc-el0-counter-probe",
+    "counter_frequency_hz": 19200000,
+    "counter_start": 47065942,
+    "counter_end": 47070121,
+    "counter_delta": 4179,
+    "increased": true,
+    "loop_iterations": 65536,
+    "scope": "EL0 counter access only; not a performance benchmark"
+  },
+  "guest_checks": [
+    {
+      "name": "procfs",
+      "passed": true,
+      "failed": false
+    },
+    {
+      "name": "sysfs",
+      "passed": true,
+      "failed": false
+    },
+    {
+      "name": "aarch64",
+      "passed": true,
+      "failed": false
+    },
+    {
+      "name": "eight_online_cpus_psci",
+      "passed": true,
+      "failed": false
+    },
+    {
+      "name": "timer_and_scheduler_progress",
+      "passed": true,
+      "failed": false
+    },
+    {
+      "name": "fork_and_wait",
+      "passed": true,
+      "failed": false
+    },
+    {
+      "name": "board_model",
+      "passed": true,
+      "failed": false
+    },
+    {
+      "name": "arch_counter_probe",
+      "passed": true,
+      "failed": false
+    }
+  ],
+  "exit_code": 0,
+  "qmp_messages": [
+    {
+      "QMP": {
+        "version": {
+          "qemu": {
+            "micro": 3,
+            "minor": 1,
+            "major": 11
+          },
+          "package": "v11.1.3-3-gcc8cba4-dirty"
+        },
+        "capabilities": [
+          "oob"
+        ]
+      }
+    },
+    {
+      "return": {},
+      "id": 1
+    },
+    {
+      "return": [
+        {
+          "thread-id": 53285,
+          "qom-type": "cortex-a55-arm-cpu",
+          "props": {
+            "core-id": 0,
+            "thread-id": 0,
+            "socket-id": 0
+          },
+          "qom-path": "/machine/cpu0",
+          "cpu-index": 0,
+          "target": "aarch64",
+          "midr": 1093652560
+        },
+        {
+          "thread-id": 53286,
+          "qom-type": "cortex-a55-arm-cpu",
+          "props": {
+            "core-id": 1,
+            "thread-id": 0,
+            "socket-id": 0
+          },
+          "qom-path": "/machine/cpu1",
+          "cpu-index": 1,
+          "target": "aarch64",
+          "midr": 1093652560
+        },
+        {
+          "thread-id": 53287,
+          "qom-type": "cortex-a55-arm-cpu",
+          "props": {
+            "core-id": 2,
+            "thread-id": 0,
+            "socket-id": 0
+          },
+          "qom-path": "/machine/cpu2",
+          "cpu-index": 2,
+          "target": "aarch64",
+          "midr": 1093652560
+        },
+        {
+          "thread-id": 53288,
+          "qom-type": "cortex-a55-arm-cpu",
+          "props": {
+            "core-id": 3,
+            "thread-id": 0,
+            "socket-id": 0
+          },
+          "qom-path": "/machine/cpu3",
+          "cpu-index": 3,
+          "target": "aarch64",
+          "midr": 1093652560
+        },
+        {
+          "thread-id": 53289,
+          "qom-type": "cortex-a77-arm-cpu",
+          "props": {
+            "core-id": 4,
+            "thread-id": 0,
+            "socket-id": 0
+          },
+          "qom-path": "/machine/cpu4",
+          "cpu-index": 4,
+          "target": "aarch64",
+          "midr": 1092604112
+        },
+        {
+          "thread-id": 53290,
+          "qom-type": "cortex-a77-arm-cpu",
+          "props": {
+            "core-id": 5,
+            "thread-id": 0,
+            "socket-id": 0
+          },
+          "qom-path": "/machine/cpu5",
+          "cpu-index": 5,
+          "target": "aarch64",
+          "midr": 1092604112
+        },
+        {
+          "thread-id": 53291,
+          "qom-type": "cortex-a77-arm-cpu",
+          "props": {
+            "core-id": 6,
+            "thread-id": 0,
+            "socket-id": 0
+          },
+          "qom-path": "/machine/cpu6",
+          "cpu-index": 6,
+          "target": "aarch64",
+          "midr": 1092604112
+        },
+        {
+          "thread-id": 53292,
+          "qom-type": "cortex-a77-arm-cpu",
+          "props": {
+            "core-id": 7,
+            "thread-id": 0,
+            "socket-id": 0
+          },
+          "qom-path": "/machine/cpu7",
+          "cpu-index": 7,
+          "target": "aarch64",
+          "midr": 1092604112
+        }
+      ],
+      "id": 2
+    },
+    {
+      "return": 1093652560,
+      "id": 3
+    },
+    {
+      "return": 1093652560,
+      "id": 4
+    },
+    {
+      "return": 1093652560,
+      "id": 5
+    },
+    {
+      "return": 1093652560,
+      "id": 6
+    },
+    {
+      "return": 1092604112,
+      "id": 7
+    },
+    {
+      "return": 1092604112,
+      "id": 8
+    },
+    {
+      "return": 1092604112,
+      "id": 9
+    },
+    {
+      "return": 1092604112,
+      "id": 10
+    },
+    {
+      "timestamp": {
+        "seconds": 1795413059,
+        "microseconds": 782674
+      },
+      "event": "RESUME"
+    },
+    {
+      "timestamp": {
+        "seconds": 1795413062,
+        "microseconds": 237709
+      },
+      "event": "STOP"
+    },
+    {
+      "timestamp": {
+        "seconds": 1795413062,
+        "microseconds": 239749
+      },
+      "event": "RESUME"
+    },
+    {
+      "timestamp": {
+        "seconds": 1795413062,
+        "microseconds": 251236
+      },
+      "event": "SHUTDOWN",
+      "data": {
+        "guest": true,
+        "reason": "guest-shutdown"
+      }
+    }
+  ],
+  "serial_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "elapsed_seconds": 3.065,
+  "finished_utc": "2026-11-23T05:51:02.267746+00:00"
+}

@@ -1,0 +1,31 @@
+{
+  "all_passed": false,
+  "checks": [],
+  "classification": "Same board startup abort; no migration or TLMM assertion executed.",
+  "completed_utc": "2026-11-23T07:38:28.236766+00:00",
+  "elapsed_seconds": 0.022992,
+  "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_tlmm_migration.py\", line 115, in main\n    source = TLMMRig(args, sd, group=group)\n  File \"/src/tb371fc/tests/test_tlmm_migration.py\", line 27, in __init__\n    super().__init__(args, str(directory), incoming=incoming)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 91, in __init__\n    self.monitor('qmp_capabilities')\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 118, in monitor\n    raw = self.qmpfile.readline()\n  File \"/usr/lib/python3.13/socket.py\", line 719, in readinto\n    return self._sock.recv_into(b)\n           ~~~~~~~~~~~~~~~~~~~~^^^\nConnectionResetError: [Errno 104] Connection reset by peer\n",
+  "kind": "tb371fc-tlmm-process-migration",
+  "limits": [
+    "Virtual functional migration, not native electrical or timing equivalence.",
+    "Separate migrations observe summary IRQ, output latch, output enable, and dedicated UFS reset.",
+    "No tablet access, firmware, native register write, or guest execution."
+  ],
+  "machine": "tb371fc,ufs-enabled=off",
+  "migrations": [],
+  "publication_sanitization": "Only host object pointer in stderr replaced.",
+  "ram_per_process": "128 MiB",
+  "schema_version": 1,
+  "scope": "Real QMP process-to-process migration and QTest GPIO/IRQ continuation.",
+  "sha256": {
+    "migration_helper": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8",
+    "qemu": "8a8b8ab64f41b89878271baac1ad421b1e7e9fe0b22e78f0125fc32d198e7687",
+    "test": "c3a1fe8a4f046ad9e95f8c7474eaa193475f0270b3880c5aa3a01341a7337e95",
+    "transport": "4ab5857e40f3d320656677812abb86d2683c310764d35baa7a32b4aa53572fbd"
+  },
+  "source_result_sha256": "4d61b653cc2d64e0593d34ba43ffcf079a398da532e2f328a20fdfdda9c6c882",
+  "started_utc": "2026-11-23T07:38:28.032587+00:00",
+  "stderr_tails": {
+    "sysbus-irq/source/qemu.stderr": "/src/include/hw/core/qdev.h:78:DEVICE: Object [host-pointer-redacted] is not an instance of type device\n"
+  }
+}

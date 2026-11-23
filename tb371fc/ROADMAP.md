@@ -1,95 +1,112 @@
 # TB371FC 整机模拟：实现与验收路线
 
-完整模拟的目标是让真实来宾驱动面对尽可能一致的软件可见设备接口。
-QEMU TCG 的执行速度不代表真实 CPU/GPU 性能；功耗、射频、电气行为和周期精确性
-需要另外的模型与实验，不能由功能模拟的通过结果推出。
+目标是让原生来宾驱动面对一致的软件可见硬件接口，并最终运行完整 Android 的显示、输入、存储、连接和设备生命周期。
+每个完成项需要来源、实现、实际运行回执及明确的实机对照范围。功能测试、驱动 probe 和真实芯片等价是不同门槛；TCG 执行速度不代表 Snapdragon 性能。
 
-所有条目都要求：可追溯的硬件/源码依据、可检查的实现、自动化来宾验证，以及明确的
-实机对照范围。实现、模拟测试通过、真机对照通过是不同状态。
+以下状态按已归档回执填写。最早的 Linux 八项/GENI 十三项结果保留为历史；当前组件验收索引见 [README](../README.md)，公共 CI 计划见 [ci.md](docs/ci.md)，最新已通过的 42 项集成重放见[回执](evidence/resume-20261123/result.json)，后续计划与失败记录见[持续验证账本](evidence/VALIDATION-continued-20261123.md)。CI 中已注册的门槛仍须在对应提交实际执行成功。
 
-## 1. 板级启动基础
+## 1. CPU、内存、中断与启动基础
 
-- [x] 新增独立 machine，固定上游基线，单独开发容器。
-- [x] 通过实机只读采集核对型号、MPIDR、RAM、GIC、timer 与启用的 UART。
-- [x] 实现 CPU/GIC/timer/PSCI/RAM 装配与生成的裁剪 DT。
-- [x] 实现有状态的 GENI FIFO 串口与针对寄存器行为的检查。
-- [x] 运行实际 QEMU，通过 20 项 QMP/生成 DT 与实机 profile 对照的必需检查；3 项已声明差异单独记录。
-- [x] 以独立官方 Linux 6.12.114 Image 在 8 GiB、八 CPU 配置下启动 initramfs，八项来宾检查通过并正常关机退出。
-- [x] 正式 GENI `ttyMSM0` 驱动探测成功；禁用 earlycon 后继续完成 PID 1 输出，未依赖 `keep_bootcon` 保留启动串口。
-- [x] 实际 GENI FIFO QTest 13 项及两个 QEMU 进程间的状态迁移 6 项检查通过。
-- [ ] CPU 精确功能特征模型：核对 Cortex-A77/Kryo 的架构寄存器、缓存描述与扩展。
-- [x] 用同一份 ELF 在模拟器与实机验证 EL0 架构计数器：频率 19.2 MHz、计数递增；对照范围仅为这两个性质。
-- [ ] 扩展 CPU 与具体设备行为的实机差分，逐项记录允许误差与尚未覆盖的语义。
+- [x] 独立 `-M tb371fc`，固定 QEMU 11.1.3 上游基线和独立构建环境。
+- [x] 实机只读 DT/sysfs 核对型号、CPU affinity、MIDR/REVIDR、RAM、GIC、timer、UART 和外设依赖。
+- [x] 新增 Cortex-A77 r1p0 架构模型，替换大核 A76 surrogate；9 种配置合计 852 项 guest 指令/ID/PMU 检查、2 项非法配置拒绝。
+- [ ] Qualcomm 小核 Kryo 的完整架构差分；当前 CPU0–3 仍用 A55 surrogate。
+- [ ] 实测 cache 容量、ways/sets、DSU 与实现寄存器；当前 cache 参数是模型选择，不能由 MIDR 或 DT 推断为已测。
+- [x] GICv3、八核 PSCI CPU_ON/SMC system-off 和 8 GiB RAM 的直接 Linux 启动。
+- [x] 修正 raw Image 大 RAM 加载基址为 `0xa0000000`，恢复两个 Android 可见 memory 段；13 项运行时布局检查通过。
+- [x] 同一 ELF 在平板与 guest 验证 EL0 `CNTFRQ`/计数递增。
+- [x] CPU 与 MMIO Generic Timer 精确有理计数：每虚拟秒 19,200,000 tick，deadline 向上取整；独立 icount 和 1,848 个算术边界参考。
+- [x] MMIO timer 权限、物理/虚拟 compare、signed TVAL、IRQ、offset、wrap、reset 与真实迁移。
+- [x] 用同一个修前失败 ELF 验证 CPU timer 迁移与无迁移控制；修复 exact 模式 live ISTATUS，保留失败回执及 legacy 兼容行为。
+- [x] CPU timer 输出进入 GIC PPI 的 16 次线状态检查，覆盖到期后 mask/unmask、disable 和重新编程。
+- [ ] 完整 CPU off/on、热插拔之外的真实电源生命周期、suspend/resume 和跨设备低功耗行为。
 
-最近一次正式 console 交接验收始于 **2026-11-22 22:47:01 UTC**，QEMU 退出码为 0，
-宿主记录用时 3.554 秒。八项来宾检查涵盖 procfs、sysfs、AArch64 身份、八核在线、
-至少 20 ms 睡眠及单调时钟推进、fork/wait、设备树型号、计数器探针 ELF 执行。
-证据为 [Linux 结果](evidence/linux-smoke.json) 与 [完整串口日志](evidence/linux-smoke.log)；
-实现契约、哈希与逐项解释见 [machine.md](docs/machine.md)。这不是平板性能测试，
-没有验证 Linux 串口 RX、完整内存逐页读写、原厂内核或 Android userspace。
+证据见 [cpu.md](docs/cpu.md)、[mmio-timer.md](docs/mmio-timer.md)及
+[boot-layout 回执](evidence/boot-layout-20261123/runtime-layout-frozen4.json)。
+精确计数指 QEMU 虚拟时间中的频率契约，不是 cycle-accurate CPU 或真实晶振测量。
 
-已通过的内核是未打补丁的独立 upstream 输入。此前 research kernel 的 256 页早期页表池
-耗尽结果仍保留为 [失败记录](evidence/linux-research-kernel-failure.json) 与
-[失败日志](evidence/linux-research-kernel-failure.log)。仓库中的
-[可选 research-kernel 修正建议](patches/linux-6.12-qemu-early-pgtable.patch) **尚未应用**，
-其有效性和真实平板 handoff 问题都没有因 clean kernel 的成功而得到验证。
+## 2. Qualcomm 时钟、资源与固件接口
 
-日志仍保留 `nokaslr` 未知参数、测试配置关闭 Spectre-BHB mitigation、Linux 自动修复
-GIC self-dependency 的非致命提示。CPU 的 MPIDR 与模型对应正确，但 Linux 根据 DT
-枚举顺序分配的逻辑 CPU 编号与 QEMU CPU index 不同；进行实机对应时须按 MPIDR 匹配。
-这些限制和细节均见 machine 文档，不能将通过结果表述为完整硬件等价或零诊断信息。
+- [x] GENI FIFO 命令、TX/RX、IRQ、W1C、取消/复位：当前 14 项 QTest、6 项真实进程迁移。
+- [x] 修复 idle TX watermark，实际 Linux 正式 TTY 多次输出继续工作。
+- [x] 有状态 GCC：上游来源的时钟/分频/门控、reset、GDSC；19 项 QTest、5 项迁移。
+- [x] GENI 的实际 GCC clock/reset 接线：6 项行为检查、4 项迁移。
+- [x] RPMh RSC/TCS 与 ARC/VRM/BCM 数字请求模型，显式 reference/file 配置；22 项 reference/文件 ABI 检查、5 项迁移。
+- [x] 可外部输入 cmd-db，检查边界、别名、aux 数据及内容哈希；未知或不支持资源不获得成功 ACK。
+- [x] **显式 reference profile 的 RSC/clk-rpmh provider、CCF 19.2 MHz 和实际 TCS IRQ；连同 UFS/SMMU 的 23 项 guest 检查及 3 项宿主 QOM/寄存器检查通过。**
+- [ ] 完整实机 live cmd-db 与动态 VRM 注册的对应关系；AOP 静态部分数据不等于 live RAM。
+- [ ] 原厂 AOP/SMEM/SCM/TrustZone 服务、secure-world 状态和完整 interconnect/电源依赖。
+- [ ] 数字电压请求到真实 PMIC/供电行为的完整模型；不把 reference profile 当作 native 资源地址或测量结果。
+- [x] KPSS watchdog 的 16 项数字行为检查及实际 pending-bite 迁移。
+- [ ] watchdog 与原生整机 suspend/reset/secure 路由的完整联合验收。
+- [x] TLMM GPIO/IRQ/专用 UFS_RESET：冻结构建 7 的 25 项 C QTest、15 项检查/四次实际进程迁移通过。
+- [x] IMEM SRAM 与 PS_HOLD 数字输出：7 项边界/字段/复位保留检查，包含真实进程迁移。
+- [x] **IMEM 映射消除冻结构建 5 的原生 `msm_restart_probe+0xec` external abort；冻结构建 7 推进到 `dcc_probe+0x114`。**
+- [ ] IMEM/PS_HOLD 与 PMIC/PON 的完整 reset/poweroff 联合验收；越过 restart probe 不证明整个关机链。
+- [x] DCC map2 read-capture 子集、17 项实际事务/负向/迁移检查；原生驱动已完成列表 3/6/7 编程。
+- [ ] DCC loop、write/RMW、CRC/ATB/CTI 和原生三列表完整执行；探测成功与 SRAM read 子集不替代这些模式。
+- [ ] IPCC/SPMI 及其余原生 DT 依赖的独立实现与完整引导验收。
+- [x] **IMEM/PS_HOLD 七项 gate 纳入公开 CI，并以计划回归验证 components/all 均强制执行。**
 
-## 2. Qualcomm 资源、时钟和固件契约
+RPMh 默认 `off`，`reference` / `file` 必须显式选择。
+GCC bootstrap 状态、部分 fabric 输入、QUP version 和设备排序延时仍是明确的模型假设。来源和限制见 [GCC](docs/gcc-sm8250.md)、[RPMh](docs/rpmh-sm8250.md)、[TLMM](docs/tlmm.md)、[watchdog](docs/watchdog.md)及 [boot resources](docs/boot-resources.md)。
 
-- [ ] SMEM、SoC identity、共享内存分区和版本结构。
-- [ ] 最小 SCM/SMCCC 服务；每个支持的调用有参数、返回值及错误路径测试。
-- [ ] Kona cmd-db、RPMh RSC/TCS、GCC/GDSC/reset；不移植其他 SoC 的资源表后冒充。
-- [ ] TLMM、pinctrl、GPIO 中断和 PDC/wakeup 路由。
-- [x] QEMU PSCI `CPU_ON` 使八核上线，`SYSTEM_OFF` 结束已记录的 Linux smoke。
-- [ ] 运行中的 CPU off/on 生命周期、`SYSTEM_RESET`、热管理及 watchdog 的驱动可见行为。
+## 3. DMA、存储、USB 与输入
 
-验收：使用同一主线设备树和真实驱动完成初始化，验证失败与取消路径，
-将合成固定时钟替换为有状态的资源模型。合成固件服务仍须在输出中明确标识。
+- [x] apps/GPU SMMUv2 的非安全 AArch64 stage-1、4 KiB 页表、stream/context、权限、fault、ATS、TLB invalidate：23 项 C QTest。
+- [x] UFS Sysbus HCI、Qualcomm wrapper/QMP PHY、GCC 依赖和实际 guest-memory DMA/SCSI 后端。
+- [x] UFS 56 项控制器/DMA/错误/Hibern8/WriteBooster/无 LUN 检查；原先 48 项及修复前失败继续保留。
+- [x] 主线 Qualcomm UFS/QMP/GCC/SMMU 驱动运行：19 项 guest 检查，strict translated DMA domain，宿主独立核对写入数据。
+- [ ] Qualcomm TCU/TBU、完整 QSMMU v500 扩展、stage 2/nesting、16/64 KiB/AArch32 等未实现翻译模式。
+- [ ] SMMU 独立迁移验收；已有 VMState 不是迁移成功回执。
+- [ ] UFS ICE、RPMB 认证、原生 LU 启动选择/保护、完整 task management/reset/error 模式及物理链路行为。
+- [ ] UFS core 迁移和有未完成存储 I/O 的整板迁移。现有组件迁移均显式关闭 UFS。
+- [ ] SDHCI/microSD、DWC3/USB PHY、GENI I²C/SPI 和各连接器生命周期。
+- [ ] NT36532 触摸/笔、键盘盖 I²C-HID、attach/detach/wakeup。
+- [ ] CTN730 笔充电、MM8013 电量计、charger 与其余 PMIC 器件。
 
-## 3. 存储、USB 与输入
-
-- [ ] SM8250 SMMU-500/SMMUv2，地址翻译、fault、TLB invalidation 和 context bank。
-- [ ] UFS HCI、Qualcomm wrapper/PHY、队列、复位和块设备错误；通用 PCI UFS 不能替代这些接口。
-- [ ] SDHCI/microSD 和 DWC3/USB PHY。
-- [ ] GENI I²C/SPI、真实设备寻址、IRQ 与读写顺序。
-- [ ] NT36532 触摸/笔协议、键盘盖 I²C-HID、attach/detach/wakeup。
-- [ ] CTN730 笔充电、MM8013 电量计、PMIC/charger 的行为模型。
-
-验收：存储校验和、故障注入、输入报告回放与设备生命周期均可复现。
-实机输入对照使用专门测试动作，不录制日常输入。
+存储测试使用新建合成磁盘。原生 UFS 几何/feature 的只读证据不意味着所有功能已实现。
+错误翻译不能回退为成功的 bypass，短 PRDT 不能损坏相邻扇区，未知寄存器不能被全零成功 stub 隐藏。见 [SMMUv2](docs/smmuv2.md)和 [UFS](docs/ufs-sm8250.md)。
 
 ## 4. 显示与 Adreno 650
 
-- [ ] 先建立显式声明为显示辅助的 framebuffer 输出，独立于 GPU 成功结论。
+- [ ] 需要时建立明确标为辅助输出的 framebuffer，独立于 GPU 验收。
 - [ ] SM8250 DPU、双 DSI、DSC、面板初始化和模式切换。
-- [ ] A650 GMU/HFI、寄存器、ringbuffer、命令包、interrupt/fence 与错误恢复。
-- [ ] A650 内存访问通过真实 SMMUv2 契约，并核对同步/缓存行为。
-- [ ] 实际命令执行和渲染；比较固定测试图像与允许误差。
+- [ ] A650 GMU/HFI、ringbuffer、命令包、interrupt/fence、错误恢复。
+- [ ] GPU 内存访问与 SMMU、同步、cache 可见性的一致契约。
+- [ ] 实际命令执行和渲染，并与固定测试图像及允许误差比较。
 
-验收：先 driver probe，再提交/完成/fault，再图像结果。
-固定成功 ACK、virtio-gpu、主机 GPU 转发或其他 Adreno 世代的设备身份均不能作为
-“A650 硬件模拟已完成”的证据。
+验收顺序为 driver probe、提交/完成/fault、实际图像。固定成功 ACK、virtio-gpu、主机 GPU 转发或其他 Adreno 世代的身份都不能作为 A650 完成证据。
 
-## 5. 连接、音频与其余协处理器
+## 5. 连接、音频与协处理器
 
-- [ ] QCA6390 PCIe/MHI、Wi-Fi/BT 驱动和固件服务；射频环境另行抽象。
-- [ ] ADSP/CDSP、remoteproc/GLINK/RPMsg/QRTR 所需契约。
-- [ ] 音频 ASoC/SoundWire/TFA9894/WCD938x、路由与时钟。
-- [ ] 相机、传感器、剩余 PMIC 与板级器件。
-- [ ] 挂起/恢复、热状态和跨设备低功耗依赖。
+- [ ] QCA6390 PCIe/MHI、Wi-Fi/BT 驱动及固件服务，射频环境单独抽象。
+- [ ] ADSP/CDSP、remoteproc、GLINK/RPMsg/QRTR 的所需契约。
+- [ ] ASoC/SoundWire/TFA9894/WCD938x 音频、路由与时钟。
+- [ ] 相机、传感器及剩余板级器件。
+- [ ] 挂起恢复、热状态、唤醒和跨设备电源依赖。
 
 ## 6. 原厂软件与完整性验收
 
-- [ ] 在许可证允许的本地输入下，解析原厂 boot image、DTB/DTBO 和内核参数。
-- [ ] 原厂内核实际引导，不用替换内核或删去必要设备隐藏兼容性问题。
-- [ ] Android userspace、显示、输入、存储和网络的端到端任务。
-- [ ] reset、snapshot/migration、错误注入和重复启动。
-- [ ] 逐设备覆盖清单、仍合成的服务、差分结果及可复现实验归档。
+- [x] 在本地授权范围读取并识别活动槽 boot/kernel/DT/AOP 资产；原始镜像不发布。
+- [x] 未修改的生产 Linux 4.19.157 Image，在生成 DT 和测试 initramfs 下完成八项 PID 1 检查及实际 guest shutdown。
+- [x] 无串口生产配置采用只读 GDB 完成记录，核对掩码、uname、online、计时和原样 native probe 输出后恢复执行；不是仅凭 exit 0。
+- [ ] 生产内核使用完整原生 DT 达到 PID 1。冻结构建 7 越过 watchdog/restart，后续冻结构建 10 越过 DCC probe 并编程列表 3/6/7；接下来是 IPCC/SPMI fault，仍未通过完整启动。
+- [ ] 完整 Android userspace、原生存储布局、显示、输入和网络端到端任务。
+- [ ] reset、snapshot/migration、错误注入和多次启动的一致性。
+- [ ] 完整逐设备覆盖清单、合成服务表、实机差分及未覆盖行为。
 
-只有上述依赖与验收逐项具备证据后，才适合讨论整机兼容性。
-单次成功启动、地址一致、驱动探测通过分别是有用进展，不等同于这个最终门槛。
+[生产内核 GDB 回执](evidence/production-gdb-exact-20261123/result.json)证明其明示配置下的八项检查；
+[原生 DT 推进索引](evidence/native-dt-progression-20261123/progress.json)保留实际故障边界。
+不能通过替换生产内核、删除需要的设备或放宽断言把未通过的门槛改写成成功。
+
+## 历史结果保留
+
+最早的独立 upstream Linux 6.12.114 在 8 GiB/八核配置下完成正式 GENI console handoff、八项用户态检查和 PSCI system-off；回执为
+[linux-smoke.json](evidence/linux-smoke.json)及[串口日志](evidence/linux-smoke.log)。
+其当时的 A76、固定时钟和设备子集说明仅属于那个构建。
+
+此前 research kernel 的 256 页早期页表池耗尽仍保留
+[失败回执](evidence/linux-research-kernel-failure.json)与[日志](evidence/linux-research-kernel-failure.log)。
+[可选 research-kernel patch](patches/linux-6.12-qemu-early-pgtable.patch)没有应用；
+clean kernel 成功不验证该 patch，也不解决真实平板的原始 handoff 问题。

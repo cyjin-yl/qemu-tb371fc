@@ -1,0 +1,28 @@
+{
+  "name": "pdc-migration",
+  "command": [
+    "/usr/bin/python3",
+    "/src/tb371fc/tests/test_pdc_migration.py",
+    "--qemu",
+    "/work/root-pdc-0804/qemu-system-aarch64",
+    "--out",
+    "/tmp/tbci-piu4wefp/40/data"
+  ],
+  "started_utc": "2026-11-23T08:09:29.980023+00:00",
+  "timeout_seconds": 180,
+  "fixture": "/tmp/tbci-piu4wefp/40",
+  "environment": {
+    "QTEST_QEMU_BINARY": "/work/root-pdc-0804/qemu-system-aarch64",
+    "TMPDIR": "/tmp/tbci-piu4wefp/40/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "passed": false,
+  "exit_code": 0,
+  "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/scripts/ci_device_tests.py\", line 317, in run_case\n    report[\"verified\"] = judge(case, stdout)\n                         ~~~~~^^^^^^^^^^^^^^\n  File \"/src/tb371fc/scripts/ci_device_tests.py\", line 260, in judge\n    raise ValueError(\n        f\"{case.count_field} must contain {case.expected_count} entries\")\nValueError: checks must contain 9 entries\n",
+  "elapsed_seconds": 0.773,
+  "completed_utc": "2026-11-23T08:09:30.753361+00:00",
+  "log_sha256": {
+    "stdout.log": "7f275d561cde1b4e8e4b9a3e67b77cec0a853a11f164b455bce4b9e54f4392fc",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

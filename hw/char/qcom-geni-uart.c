@@ -8,7 +8,7 @@
  *   drivers/soc/qcom/qcom-geni-se.c
  *
  * This does not execute GENI firmware or model baud timing, DMA/GSI, flow
- * control, parity, clock/power gating or the electrical UART. RX host chunks
+ * control, parity, power collapse or the electrical UART. RX host chunks
  * become immediately stale; TX drains as the chardev accepts bytes. FIFO
  * geometry is a model choice (16 words x 32 bits), not a silicon measurement.
  */
@@ -16,6 +16,7 @@
 #include "qemu/osdep.h"
 #include "hw/char/qcom-geni-uart.h"
 #include "hw/core/irq.h"
+#include "hw/core/qdev-clock.h"
 #include "hw/core/qdev-properties.h"
 #include "hw/core/qdev-properties-system.h"
 #include "migration/vmstate.h"
@@ -78,6 +79,23 @@ enum {
 #define CTRL_ABORT GENI_BIT(1)
 #define CTRL_DISABLE GENI_BIT(0)
 
+/* Unconnected inputs preserve the standalone device-test configuration. */
+static bool geni_clock_running(Clock *clk)
+{
+    return !clock_has_source(clk) || clock_get(clk) != 0;
+}
+
+static bool geni_bus_available(QcomGeniUartState *s)
+{
+    return !s->reset_held && geni_clock_running(s->m_ahb) &&
+           geni_clock_running(s->s_ahb);
+}
+
+static bool geni_engine_available(QcomGeniUartState *s)
+{
+    return geni_bus_available(s) && geni_clock_running(s->se_clk);
+}
+
 static uint32_t geni_s_status(QcomGeniUartState *s)
 {
     uint32_t status = R(s, GENI_S_STATUS);
@@ -94,7 +112,8 @@ static uint32_t geni_m_status(QcomGeniUartState *s)
     uint32_t status = R(s, GENI_M_STATUS);
     uint32_t secondary = geni_s_status(s);
 
-    if (s->tx_active && R(s, GENI_TX_WM) &&
+    /* Linux start_tx_fifo relies on an empty FIFO IRQ before START_TX. */
+    if (R(s, GENI_TX_WM) &&
         DIV_ROUND_UP(s->tx_count, 4) < R(s, GENI_TX_WM)) {
         status |= IRQ_TX_WM;
     }
@@ -112,7 +131,8 @@ static void geni_update_irq(QcomGeniUartState *s)
     bool secondary_irq = (R(s, GENI_IRQ_EN) & GENI_BIT(3)) &&
                          (geni_s_status(s) & R(s, GENI_S_EN));
 
-    qemu_set_irq(s->irq, main_irq || secondary_irq);
+    qemu_set_irq(s->irq, geni_engine_available(s) &&
+                 (main_irq || secondary_irq));
 }
 
 static void geni_remove_tx_watch(QcomGeniUartState *s)
@@ -130,6 +150,14 @@ static void geni_drain_tx(QcomGeniUartState *s)
     int written;
 
     geni_remove_tx_watch(s);
+    if (!geni_engine_available(s)) {
+        geni_update_irq(s);
+        return;
+    }
+    if (s->tx_zero_pending) {
+        s->tx_zero_pending = false;
+        R(s, GENI_M_STATUS) |= IRQ_DONE;
+    }
     if (!s->tx_active || !s->tx_count) {
         geni_update_irq(s);
         return;
@@ -172,7 +200,8 @@ static int geni_can_receive(void *opaque)
 {
     QcomGeniUartState *s = opaque;
 
-    if (!s->rx_active || R(s, GENI_DMA_MODE)) {
+    if (!geni_engine_available(s) || !s->rx_active ||
+        R(s, GENI_DMA_MODE)) {
         return 0;
     }
     return QCOM_GENI_UART_FIFO_SIZE - s->rx_count;
@@ -254,7 +283,7 @@ static uint64_t geni_read(void *opaque, hwaddr offset, unsigned int size)
 
     switch (offset) {
     case GENI_STATUS:
-        return (s->tx_active ? GENI_BIT(0) : 0) |
+        return ((s->tx_active || s->tx_zero_pending) ? GENI_BIT(0) : 0) |
                (s->rx_active ? GENI_BIT(12) : 0);
     case GENI_FW_REV:
     case GENI_FW_S_REV:
@@ -352,7 +381,8 @@ static void geni_write_tx(QcomGeniUartState *s, uint32_t value)
 static void geni_write_cmd(QcomGeniUartState *s, bool secondary, uint32_t value)
 {
     uint32_t status_reg = secondary ? GENI_S_STATUS : GENI_M_STATUS;
-    bool active = secondary ? s->rx_active : s->tx_active;
+    bool active = secondary ? s->rx_active :
+                  (s->tx_active || s->tx_zero_pending);
 
     if (active) {
         R(s, status_reg) |= IRQ_OVERRUN;
@@ -378,7 +408,11 @@ static void geni_write_cmd(QcomGeniUartState *s, bool secondary, uint32_t value)
         s->tx_sent = 0;
         s->tx_active = s->tx_remaining != 0;
         if (!s->tx_active) {
-            R(s, GENI_M_STATUS) |= IRQ_DONE;
+            if (geni_engine_available(s)) {
+                R(s, GENI_M_STATUS) |= IRQ_DONE;
+            } else {
+                s->tx_zero_pending = true;
+            }
         }
     }
 }
@@ -401,6 +435,7 @@ static void geni_write_ctrl(QcomGeniUartState *s, bool secondary,
     } else {
         geni_remove_tx_watch(s);
         s->tx_active = false;
+        s->tx_zero_pending = false;
         s->tx_count = 0;
         s->tx_remaining = 0;
     }
@@ -486,9 +521,38 @@ static void geni_write(void *opaque, hwaddr offset, uint64_t value,
     geni_update_irq(s);
 }
 
+static MemTxResult geni_read_with_attrs(void *opaque, hwaddr offset,
+                                        uint64_t *value, unsigned size,
+                                        MemTxAttrs attrs)
+{
+    QcomGeniUartState *s = opaque;
+    if (!geni_bus_available(s)) {
+        qemu_log_mask(LOG_GUEST_ERROR, TYPE_QCOM_GENI_UART
+                      ": MMIO read while AHB is gated or reset is asserted\n");
+        *value = 0;
+        return MEMTX_ERROR;
+    }
+    *value = geni_read(opaque, offset, size);
+    return MEMTX_OK;
+}
+
+static MemTxResult geni_write_with_attrs(void *opaque, hwaddr offset,
+                                         uint64_t value, unsigned size,
+                                         MemTxAttrs attrs)
+{
+    QcomGeniUartState *s = opaque;
+    if (!geni_bus_available(s)) {
+        qemu_log_mask(LOG_GUEST_ERROR, TYPE_QCOM_GENI_UART
+                      ": MMIO write while AHB is gated or reset is asserted\n");
+        return MEMTX_ERROR;
+    }
+    geni_write(opaque, offset, value, size);
+    return MEMTX_OK;
+}
+
 static const MemoryRegionOps geni_ops = {
-    .read = geni_read,
-    .write = geni_write,
+    .read_with_attrs = geni_read_with_attrs,
+    .write_with_attrs = geni_write_with_attrs,
     .endianness = DEVICE_LITTLE_ENDIAN,
     .valid = { .min_access_size = 4, .max_access_size = 4, .unaligned = false },
     .impl = { .min_access_size = 4, .max_access_size = 4 },
@@ -509,9 +573,34 @@ static void geni_reset(DeviceState *dev)
     s->rx_received = 0;
     s->tx_active = false;
     s->rx_active = false;
+    s->tx_zero_pending = false;
     R(s, 0x268) = 8;
     R(s, 0x28c) = 8;
     geni_update_irq(s);
+}
+
+static void geni_clock_changed(void *opaque, ClockEvent event)
+{
+    QcomGeniUartState *s = opaque;
+    if (!s->ready) {
+        return;
+    }
+    geni_drain_tx(s);
+    qemu_chr_fe_accept_input(&s->chr);
+    geni_update_irq(s);
+}
+
+static void geni_reset_input(void *opaque, int n, int level)
+{
+    QcomGeniUartState *s = opaque;
+    bool previously_held = s->reset_held;
+
+    s->reset_held = level;
+    if (level && !previously_held) {
+        geni_reset(DEVICE(s));
+    } else if (!level && previously_held) {
+        geni_clock_changed(s, ClockUpdate);
+    }
 }
 
 static int geni_pre_load(void *opaque)
@@ -528,7 +617,10 @@ static int geni_post_load(void *opaque, int version_id)
         s->rx_count > QCOM_GENI_UART_FIFO_SIZE ||
         s->tx_count > s->tx_remaining ||
         (s->tx_active && !s->tx_remaining) ||
-        (!s->tx_active && (s->tx_count || s->tx_remaining))) {
+        (!s->tx_active && (s->tx_count || s->tx_remaining)) ||
+        (s->tx_zero_pending && s->tx_active) ||
+        (s->reset_held && (s->tx_active || s->rx_active ||
+                           s->tx_count || s->rx_count || s->tx_zero_pending))) {
         return -EINVAL;
     }
     geni_drain_tx(s);
@@ -536,6 +628,28 @@ static int geni_post_load(void *opaque, int version_id)
     geni_update_irq(s);
     return 0;
 }
+
+static bool geni_clock_state_needed(void *opaque)
+{
+    QcomGeniUartState *s = opaque;
+    return clock_has_source(s->se_clk) || clock_has_source(s->m_ahb) ||
+           clock_has_source(s->s_ahb) || s->reset_held || s->tx_zero_pending;
+}
+
+static const VMStateDescription vmstate_geni_clocks = {
+    .name = TYPE_QCOM_GENI_UART "/clocks",
+    .version_id = 1,
+    .minimum_version_id = 1,
+    .needed = geni_clock_state_needed,
+    .fields = (const VMStateField[]) {
+        VMSTATE_CLOCK(se_clk, QcomGeniUartState),
+        VMSTATE_CLOCK(m_ahb, QcomGeniUartState),
+        VMSTATE_CLOCK(s_ahb, QcomGeniUartState),
+        VMSTATE_BOOL(reset_held, QcomGeniUartState),
+        VMSTATE_BOOL(tx_zero_pending, QcomGeniUartState),
+        VMSTATE_END_OF_LIST()
+    },
+};
 
 static const VMStateDescription vmstate_geni = {
     .name = TYPE_QCOM_GENI_UART,
@@ -558,6 +672,10 @@ static const VMStateDescription vmstate_geni = {
         VMSTATE_BOOL(rx_active, QcomGeniUartState),
         VMSTATE_END_OF_LIST()
     },
+    .subsections = (const VMStateDescription * const []) {
+        &vmstate_geni_clocks,
+        NULL,
+    },
 };
 
 static const Property geni_properties[] = {
@@ -568,6 +686,7 @@ static void geni_realize(DeviceState *dev, Error **errp)
 {
     QcomGeniUartState *s = QCOM_GENI_UART(dev);
 
+    s->ready = true;
     qemu_chr_fe_set_handlers(&s->chr, geni_can_receive, geni_receive,
                              geni_event, NULL, s, NULL, true);
 }
@@ -580,6 +699,13 @@ static void geni_init(Object *obj)
                           QCOM_GENI_UART_MMIO_SIZE);
     sysbus_init_mmio(SYS_BUS_DEVICE(obj), &s->mmio);
     sysbus_init_irq(SYS_BUS_DEVICE(obj), &s->irq);
+    s->se_clk = qdev_init_clock_in(DEVICE(obj), "se-clk", geni_clock_changed,
+                                  s, ClockUpdate);
+    s->m_ahb = qdev_init_clock_in(DEVICE(obj), "m-ahb", geni_clock_changed,
+                                 s, ClockUpdate);
+    s->s_ahb = qdev_init_clock_in(DEVICE(obj), "s-ahb", geni_clock_changed,
+                                 s, ClockUpdate);
+    qdev_init_gpio_in_named(DEVICE(obj), geni_reset_input, "reset", 1);
 }
 
 static void geni_finalize(Object *obj)

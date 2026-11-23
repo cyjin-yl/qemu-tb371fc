@@ -1,0 +1,194 @@
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x412fd050]
+[    0.000000] Linux version 6.12.114-tb371fc-qemu-smoke (tb371fc-qemu@isolated-builder) (aarch64-linux-gnu-gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44) #1 SMP 2026-11-22 00:00:00 +0000
+[    0.000000] Machine model: QEMU experimental Lenovo TB371FC functional subset
+[    0.000000] earlycon: qcom_geni0 at MMIO 0x0000000000a90000 (options '')
+[    0.000000] printk: legacy bootconsole [qcom_geni0] enabled
+[    0.000000] OF: reserved mem: 0x00000000bbb00000..0x00000000bfffffff (70656 KiB) nomap non-reusable firmware-hole@bbb00000
+[    0.000000] OF: reserved mem: 0x0000000080860000..0x000000008087ffff (128 KiB) nomap non-reusable command-db@80860000
+[    0.000000] Zone ranges:
+[    0.000000]   Normal   [mem 0x0000000080000000-0x000000027fffffff]
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000080000000-0x000000008085ffff]
+[    0.000000]   node   0: [mem 0x0000000080860000-0x000000008087ffff]
+[    0.000000]   node   0: [mem 0x0000000080880000-0x00000000bbafffff]
+[    0.000000]   node   0: [mem 0x00000000c0000000-0x000000027fffffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000080000000-0x000000027fffffff]
+[    0.000000] On node 0, zone Normal: 17664 pages in unavailable ranges
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.1 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: Trusted OS migration not required
+[    0.000000] psci: SMC Calling Convention v1.0
+[    0.000000] percpu: Embedded 17 pages/cpu s37344 r0 d32288 u69632
+[    0.000000] Detected VIPT I-cache on CPU0
+[    0.000000] CPU features: detected: GIC system register CPU interface
+[    0.000000] CPU features: detected: Virtualization Host Extensions
+[    0.000000] alternatives: applying boot alternatives
+[    0.000000] Kernel command line: earlycon=qcom_geni,0xa90000 console=ttyMSM0,115200n8 rdinit=/init loglevel=7 panic=-1 nokaslr
+[    0.000000] Unknown kernel command line parameters "nokaslr", will be passed to user space.
+[    0.000000] Dentry cache hash table entries: 1048576 (order: 11, 8388608 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 524288 (order: 10, 4194304 bytes, linear)
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 2079488
+[    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+[    0.000000] software IO TLB: SWIOTLB bounce buffer size adjusted to 7MB
+[    0.000000] software IO TLB: area num 8.
+[    0.000000] software IO TLB: mapped [mem 0x0000000275a00000-0x0000000276200000] (8MB)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=8, Nodes=1
+[    0.000000] rcu: Hierarchical RCU implementation.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[    0.000000] GICv3: GIC: Using split EOI/Deactivate mode
+[    0.000000] GICv3: 960 SPIs implemented
+[    0.000000] GICv3: 0 Extended SPIs implemented
+[    0.000000] Root IRQ handler: 0xffff800080010088
+[    0.000000] GICv3: GICv3 features: 16 PPIs
+[    0.000000] GICv3: GICD_CTRL.DS=1, SCR_EL3.FIQ=0
+[    0.000000] GICv3: CPU0: found redistributor 0 region 0:0x0000000017a60000
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.000000] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.000000] arch_timer: cp15 and mmio timer(s) running at 19.20MHz (phys/virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x46d987e47, max_idle_ns: 440795202767 ns
+[    0.000082] sched_clock: 56 bits at 19MHz, resolution 52ns, wraps every 4398046511078ns
+[    0.006973] Calibrating delay loop (skipped), value calculated using timer frequency.. 38.40 BogoMIPS (lpj=76800)
+[    0.007495] pid_max: default: 32768 minimum: 301
+[    0.009440] Mount-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.009872] Mountpoint-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.053097] rcu: Hierarchical SRCU implementation.
+[    0.053487] rcu: 	Max phase no-delay instances is 1000.
+[    0.059732] smp: Bringing up secondary CPUs ...
+[    0.063846] CPU features: detected: Spectre-v4
+[    0.064003] CPU features: detected: Spectre-BHB
+[    0.064073] Detected VIPT I-cache on CPU1
+[    0.065211] GICv3: CPU1: found redistributor 700 region 0:0x0000000017b40000
+[    0.065510] CPU1: Booted secondary processor 0x0000000700 [0x411fd0d0]
+[    0.070975] Detected VIPT I-cache on CPU2
+[    0.071235] GICv3: CPU2: found redistributor 600 region 0:0x0000000017b20000
+[    0.071438] CPU2: Booted secondary processor 0x0000000600 [0x411fd0d0]
+[    0.074001] Detected VIPT I-cache on CPU3
+[    0.074269] GICv3: CPU3: found redistributor 500 region 0:0x0000000017b00000
+[    0.074471] CPU3: Booted secondary processor 0x0000000500 [0x411fd0d0]
+[    0.076125] Detected VIPT I-cache on CPU4
+[    0.076349] GICv3: CPU4: found redistributor 400 region 0:0x0000000017ae0000
+[    0.076500] CPU4: Booted secondary processor 0x0000000400 [0x411fd0d0]
+[    0.078122] Detected VIPT I-cache on CPU5
+[    0.078336] GICv3: CPU5: found redistributor 300 region 0:0x0000000017ac0000
+[    0.078575] CPU5: Booted secondary processor 0x0000000300 [0x412fd050]
+[    0.080192] Detected VIPT I-cache on CPU6
+[    0.080410] GICv3: CPU6: found redistributor 200 region 0:0x0000000017aa0000
+[    0.080647] CPU6: Booted secondary processor 0x0000000200 [0x412fd050]
+[    0.082484] Detected VIPT I-cache on CPU7
+[    0.082661] GICv3: CPU7: found redistributor 100 region 0:0x0000000017a80000
+[    0.082775] CPU7: Booted secondary processor 0x0000000100 [0x412fd050]
+[    0.083284] smp: Brought up 1 node, 8 CPUs
+[    0.090970] SMP: Total of 8 processors activated.
+[    0.091273] CPU: All CPU(s) started at EL2
+[    0.091610] CPU features: detected: 32-bit EL0 Support
+[    0.092003] CPU features: detected: Data cache clean to the PoU not required for I/D coherence
+[    0.092540] CPU features: detected: CRC32 instructions
+[    0.092892] CPU features: detected: RCpc load-acquire (LDAPR)
+[    0.093395] CPU features: detected: Speculative Store Bypassing Safe (SSBS)
+[    0.118290] spectre-bhb mitigation disabled by compile time option
+[    0.118285] spectre-bhb mitigation disabled by compile time option
+[    0.146125] alternatives: applying system-wide alternatives
+[    0.199922] Memory: 8138528K/8317952K available (2240K kernel code, 1082K rwdata, 492K rodata, 384K init, 341K bss, 174804K reserved, 0K cma-reserved)
+[    0.222948] devtmpfs: initialized
+[    0.246914] futex hash table entries: 2048 (order: 5, 131072 bytes, linear)
+[    0.247890] pinctrl core: initialized pinctrl subsystem
+[    0.271015] DMA: preallocated 1024 KiB GFP_KERNEL pool for atomic allocations
+[    0.277574] ASID allocator initialised with 65536 entries
+[    0.308424] /soc/phy@1d87000: Fixed dependency cycle(s) with /soc/ufshc@1d84000
+[    0.309212] /soc/ufshc@1d84000: Fixed dependency cycle(s) with /soc/phy@1d87000
+[    0.309832] /soc/interrupt-controller@17a00000: Fixed dependency cycle(s) with /soc/interrupt-controller@17a00000
+[    0.311289] /soc/phy@1d87000: Fixed dependency cycle(s) with /soc/ufshc@1d84000
+[    0.312936] /soc/phy@1d87000: Fixed dependency cycle(s) with /soc/ufshc@1d84000
+[    0.314687] /soc/ufshc@1d84000: Fixed dependency cycle(s) with /soc/phy@1d87000
+[    0.386433] iommu: Default domain type: Translated
+[    0.386808] iommu: DMA domain TLB invalidation policy: strict mode
+[    0.392535] SCSI subsystem initialized
+[    0.408030] clocksource: Switched to clocksource arch_sys_counter
+[    0.431631] Unpacking initramfs...
+[    0.443674] workingset: timestamp_bits=62 max_order=21 bucket_order=0
+[    0.457828] qcom-qmp-ufs-phy 1d87000.phy: supply vdda-phy not found, using dummy regulator
+[    0.460363] qcom-qmp-ufs-phy 1d87000.phy: supply vdda-pll not found, using dummy regulator
+[    0.468025] Freeing initrd memory: 320K
+[    0.483463] a90000.serial: ttyMSM0 at MMIO 0xa90000 (irq = 18, base_baud = 0) is a MSM
+[    0.491469] printk: legacy console [ttyMSM0] enabled
+[    0.491469] printk: legacy console [ttyMSM0] enabled
+[    0.492302] printk: legacy bootconsole [qcom_geni0] disabled
+[    0.492302] printk: legacy bootconsole [qcom_geni0] disabled
+[    0.506744] arm-smmu 3da0000.iommu: probing hardware configuration...
+[    0.507127] arm-smmu 3da0000.iommu: SMMUv2 with:
+[    0.507466] arm-smmu 3da0000.iommu: 	stage 1 translation
+[    0.507740] arm-smmu 3da0000.iommu: 	address translation ops
+[    0.508017] arm-smmu 3da0000.iommu: 	coherent table walk
+[    0.508322] arm-smmu 3da0000.iommu: 	stream matching with 128 register groups
+[    0.508782] arm-smmu 3da0000.iommu: 	8 context banks (0 stage-2 only)
+[    0.509592] arm-smmu 3da0000.iommu: 	Supported page sizes: 0x40201000
+[    0.509872] arm-smmu 3da0000.iommu: 	Stage-1: 48-bit VA -> 48-bit IPA
+[    0.511681] arm-smmu 3da0000.iommu: 	preserved 0 boot mappings
+[    0.525627] arm-smmu 15000000.iommu: probing hardware configuration...
+[    0.526025] arm-smmu 15000000.iommu: SMMUv2 with:
+[    0.526514] arm-smmu 15000000.iommu: 	stage 1 translation
+[    0.526760] arm-smmu 15000000.iommu: 	address translation ops
+[    0.527022] arm-smmu 15000000.iommu: 	coherent table walk
+[    0.527284] arm-smmu 15000000.iommu: 	stream matching with 128 register groups
+[    0.527588] arm-smmu 15000000.iommu: 	96 context banks (0 stage-2 only)
+[    0.527882] arm-smmu 15000000.iommu: 	Supported page sizes: 0x40201000
+[    0.528145] arm-smmu 15000000.iommu: 	Stage-1: 48-bit VA -> 48-bit IPA
+[    0.528847] arm-smmu 15000000.iommu: 	preserved 0 boot mappings
+[    0.545606] ufshcd-qcom 1d84000.ufshc: Adding to iommu group 0
+[    0.554898] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vdd-hba-supply regulator, assuming enabled
+[    0.555501] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vcc-supply regulator, assuming enabled
+[    0.555924] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vccq-supply regulator, assuming enabled
+[    0.556353] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vccq2-supply regulator, assuming enabled
+[    0.580001] scsi host0: ufshcd
+[    0.611814] ufshcd-qcom 1d84000.ufshc: Undefined ref clk gating wait time, use default 255us
+[    0.645151] scsi 0:0:0:49488: Well-known LUN    QEMU     QEMU UFS              PQ: 0 ANSI: 6
+[    0.661228] clk: Disabling unused clocks
+[    0.663646] scsi 0:0:0:49476: Well-known LUN    QEMU     QEMU UFS              PQ: 0 ANSI: 6
+[    0.668714] PM: genpd: Disabling unused power domains
+[    0.680966] scsi 0:0:0:49456: Well-known LUN    QEMU     QEMU UFS              PQ: 0 ANSI: 6
+[    0.696598] scsi 0:0:0:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
+[    0.712921] sd 0:0:0:0: [sda] 16384 4096-byte logical blocks: (67.1 MB/64.0 MiB)
+[    0.714875] sd 0:0:0:0: [sda] Write Protect is off
+[    0.716852] sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, supports DPO and FUA
+[    0.791906] sd 0:0:0:0: [sda] Attached SCSI disk
+[    0.892444] Freeing unused kernel memory: 384K
+[    0.920027] Run /init as init process
+TB371FC_UFS_CHECK PASS procfs
+TB371FC_UFS_CHECK PASS sysfs
+TB371FC_UFS_CHECK PASS devtmpfs
+TB371FC_UFS_BINDING /sys/bus/platform/devices/1d84000.ufshc/driver ../../../../bus/platform/drivers/ufshcd-qcom
+TB371FC_UFS_CHECK PASS qcom_host_driver
+TB371FC_UFS_BINDING /sys/bus/platform/devices/1d87000.phy/driver ../../../../bus/platform/drivers/qcom-qmp-ufs-phy
+TB371FC_UFS_CHECK PASS qmp_phy_driver
+TB371FC_UFS_BINDING /sys/bus/platform/devices/100000.clock-controller/driver ../../../../bus/platform/drivers/gcc-sm8250
+TB371FC_UFS_CHECK PASS gcc_driver
+TB371FC_UFS_BINDING /sys/bus/platform/devices/15000000.iommu/driver ../../../../bus/platform/drivers/arm-smmu
+TB371FC_UFS_CHECK PASS apps_smmu_driver
+TB371FC_UFS_BINDING /sys/bus/platform/devices/3da0000.iommu/driver ../../../../bus/platform/drivers/arm-smmu
+TB371FC_UFS_CHECK PASS kgsl_smmu_driver
+TB371FC_UFS_IOMMU /sys/kernel/iommu_groups/0/type DMA
+TB371FC_UFS_CHECK PASS ufs_translated_dma_domain
+TB371FC_UFS_BINDING /sys/bus/platform/devices/18200000.rsc/driver ../../../../bus/platform/drivers/rpmh
+TB371FC_UFS_CHECK PASS rpmh_rsc_driver
+TB371FC_UFS_BINDING /sys/bus/platform/devices/18200000.rsc:clock-controller/driver ../../../../../bus/platform/drivers/clk-rpmh
+TB371FC_UFS_CHECK PASS rpmh_clock_driver
+TB371FC_RPMH_XO_RATE 19200000
+TB371FC_UFS_CHECK PASS rpmh_xo_rate_19200000
+TB371FC_RPMH_IRQ  17:          1          0          0          0          0          0          0          0     GICv3  37 Level     18200000.rsc
+TB371FC_UFS_CHECK PASS rpmh_completion_interrupt
+TB371FC_UFS_CHECK PASS ufs_block_discovered
+TB371FC_UFS_CHECK PASS logical_sector_4096
+TB371FC_UFS_CHECK PASS capacity_64_mib
+TB371FC_UFS_CHECK PASS direct_multiblock_write
+TB371FC_UFS_CHECK PASS cache_flush
+TB371FC_UFS_CHECK PASS direct_multiblock_read
+TB371FC_UFS_CHECK PASS close_reopen_persistence
+TB371FC_UFS_SCSI opcode=25 ioctl=0 status=0 host=0 driver=0 resid=0
+TB371FC_UFS_CHECK PASS scsi_read_capacity
+TB371FC_UFS_SCSI opcode=ff ioctl=0 status=2 host=0 driver=8 resid=0
+TB371FC_UFS_CHECK PASS unsupported_scsi_rejected
+TB371FC_UFS_CHECK PASS read_beyond_disk_is_eof
+TB371FC_UFS_RESULT PASS checks=23 failures=0

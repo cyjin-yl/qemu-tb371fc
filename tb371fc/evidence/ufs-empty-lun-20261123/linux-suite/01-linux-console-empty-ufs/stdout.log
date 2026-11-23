@@ -1,0 +1,89 @@
+b976d2cc83c8782d0832c27f42df3491459d01d4dd164c97e10b50d90147125f  /src/tb371fc/tests/arch-probe.S
+0ed51cb6c6dd24685beb3f77056d17d47c5c2f697df96d87eef4a678d4c5cb1b  /tmp/tbci-z3ilnk5v/01/data/arch-probe
+{
+  "schema_version": 1,
+  "started_utc": "2026-11-23T07:55:29.005335+00:00",
+  "scope": "Linux boot on experimental tb371fc machine; not stock Android or hardware equivalence",
+  "command": [
+    "/work/resume-20261123/frozen10/qemu-system-aarch64",
+    "-M",
+    "tb371fc",
+    "-accel",
+    "tcg,thread=multi",
+    "-m",
+    "8G",
+    "-smp",
+    "8",
+    "-display",
+    "none",
+    "-monitor",
+    "none",
+    "-serial",
+    "stdio",
+    "-no-reboot",
+    "-kernel",
+    "/work/linux-rpmh/artifacts/Image",
+    "-initrd",
+    "/tmp/tbci-z3ilnk5v/01/data/initramfs.cpio.gz",
+    "-append",
+    "earlycon=qcom_geni,0xa90000 console=ttyMSM0,115200n8 rdinit=/init loglevel=7 panic=-1 nokaslr",
+    "-d",
+    "unimp,guest_errors",
+    "-D",
+    "/tmp/tbci-z3ilnk5v/01/data/qemu-debug.log"
+  ],
+  "kernel_sha256": "c513268fb0727d289fdfc0f02637c53cf5f976cc836ea9c586763f5f584bce40",
+  "qemu_sha256": "fe71b5c9a65761910294e6cf690f615ca3c8c0da132207860dc4550b5f28668d",
+  "guest_source_sha256": "4f1aac3a68e6c660abebdc04f239191a46ee1330ffb47a494ee37d6081d38a79",
+  "initramfs_sha256": "32e37257cfd8e700c124eab255a762e5b6b6256882c831dbbd6ac19bde600ebb",
+  "arch_probe_sha256": "0ed51cb6c6dd24685beb3f77056d17d47c5c2f697df96d87eef4a678d4c5cb1b",
+  "native_probe_reference_sha256": "69c592e097069a779cc54eb38b823192b7de3ef18465eb49a3da35f4d496edf8",
+  "identical_probe_binary_to_native_run": true,
+  "timeout_seconds": 120,
+  "compile_command": [
+    "aarch64-linux-gnu-gcc",
+    "-static",
+    "-Os",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "/src/tb371fc/tests/guest-init.c",
+    "-o",
+    "/tmp/tbci-z3ilnk5v/01/data/init"
+  ],
+  "ufs_fixture": {
+    "populated": false,
+    "kind": "none",
+    "bytes": 0
+  },
+  "exit_code": 0,
+  "qemu_debug_sha256": "1068099ff15a38dd0e0e83f3f1c5e18c33b9d4c2d052243767db3a2a14e3ae90",
+  "elapsed_seconds": 2.092,
+  "timed_out": false,
+  "guest_checks": [
+    "TB371FC_CHECK PASS procfs",
+    "TB371FC_CHECK PASS sysfs",
+    "TB371FC_CHECK PASS aarch64",
+    "TB371FC_CHECK PASS eight_online_cpus_psci",
+    "TB371FC_CHECK PASS timer_and_scheduler_progress",
+    "TB371FC_CHECK PASS fork_and_wait",
+    "TB371FC_CHECK PASS board_model",
+    "TB371FC_CHECK PASS arch_counter_probe"
+  ],
+  "arch_counter_probe": [
+    {
+      "schema_version": 1,
+      "kind": "tb371fc-el0-counter-probe",
+      "counter_frequency_hz": 19200000,
+      "counter_start": 30788760,
+      "counter_end": 30792902,
+      "counter_delta": 4142,
+      "increased": true,
+      "loop_iterations": 65536,
+      "scope": "EL0 counter access only; not a performance benchmark"
+    }
+  ],
+  "arch_counter_matches_native_frequency_and_progress": true,
+  "serial_sha256": "4ed6d5152e68ea48fbfd09715d84fb96be386faebebc6c6814e5d96beb31eebf",
+  "passed": true
+}

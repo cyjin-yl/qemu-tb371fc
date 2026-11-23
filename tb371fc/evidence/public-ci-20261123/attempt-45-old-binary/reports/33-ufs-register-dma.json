@@ -1,0 +1,352 @@
+{
+  "schema_version": 1,
+  "started_utc": "2026-11-23T08:09:22.217153+00:00",
+  "scope": "Actual QTest GCC/UFS/PHY, UIC, DMA and SCSI behavior; not Android or full hardware equivalence",
+  "qemu_sha256": "5a5c76062c5345d2be5960932a3a7ccefc73c6523e1531ea1b65088f5cdad555",
+  "test_sha256": "3174ecad8674ebca053614138024140591cd509b2f284916afe6cceebf6c9715",
+  "checks": [
+    {
+      "name": "gcc_ufs_power_on",
+      "passed": true
+    },
+    {
+      "name": "hci_reference_version",
+      "passed": true
+    },
+    {
+      "name": "phy_starts_reset",
+      "passed": true
+    },
+    {
+      "name": "link_startup_without_phy_fails",
+      "passed": true
+    },
+    {
+      "name": "unprogrammed_phy_not_ready",
+      "passed": true
+    },
+    {
+      "name": "programmed_phy_ready",
+      "passed": true
+    },
+    {
+      "name": "phy_symbols_propagate",
+      "passed": true
+    },
+    {
+      "name": "tx_fsm_hibern8",
+      "passed": true
+    },
+    {
+      "name": "link_without_symbol_clocks_fails",
+      "passed": true
+    },
+    {
+      "name": "link_startup",
+      "passed": true
+    },
+    {
+      "name": "two_connected_lanes",
+      "passed": true
+    },
+    {
+      "name": "unknown_dme_rejected",
+      "passed": true
+    },
+    {
+      "name": "readonly_dme_rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid_lane_count_rejected",
+      "passed": true
+    },
+    {
+      "name": "dme_write_read_retained",
+      "passed": true
+    },
+    {
+      "name": "local_timeout_d041_programming",
+      "passed": true
+    },
+    {
+      "name": "local_timeout_d042_programming",
+      "passed": true
+    },
+    {
+      "name": "local_timeout_d043_programming",
+      "passed": true
+    },
+    {
+      "name": "power_mode_change",
+      "passed": true
+    },
+    {
+      "name": "nop_dma_and_response",
+      "passed": true,
+      "detail": {
+        "ocs": 0,
+        "response": "200000000000000000000000"
+      }
+    },
+    {
+      "name": "device_descriptor",
+      "passed": true,
+      "detail": {
+        "ocs": 0,
+        "header": "360000000001000000000059",
+        "descriptor": "59000000010001040000017f00000000031000000001020301ce161a02000000"
+      }
+    },
+    {
+      "name": "scsi_lun_ready",
+      "passed": true,
+      "detail": {
+        "ocs": 0,
+        "status": 0
+      }
+    },
+    {
+      "name": "absent_lun_standard_inquiry",
+      "passed": true,
+      "detail": {
+        "ocs": 0,
+        "status": 0,
+        "payload": "7f0000000000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "name": "absent_lun_request_sense",
+      "passed": true,
+      "detail": {
+        "ocs": 0,
+        "status": 0,
+        "payload": "700005000000000a00000000250000000000"
+      }
+    },
+    {
+      "name": "absent_lun_scsi_error_not_transport_failure",
+      "passed": true,
+      "detail": {
+        "ocs": 0,
+        "response": "21200100000001020000001400000008000000000000000000000000000000000012700005000000000a00000000250000000000"
+      }
+    },
+    {
+      "name": "absent_high_and_unknown_wlun_rejected",
+      "passed": true,
+      "detail": [
+        {
+          "lun": 32,
+          "ocs": 0,
+          "status": 2,
+          "sense": "700005000000000a00000000250000000000"
+        },
+        {
+          "lun": 127,
+          "ocs": 0,
+          "status": 2,
+          "sense": "700005000000000a00000000250000000000"
+        },
+        {
+          "lun": 255,
+          "ocs": 0,
+          "status": 2,
+          "sense": "700005000000000a00000000250000000000"
+        }
+      ]
+    },
+    {
+      "name": "absent_lun_invalid_inquiry_field",
+      "passed": true,
+      "detail": [
+        {
+          "flags": 1,
+          "passed": true
+        },
+        {
+          "flags": 2,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "absent_lun_short_prdt_rejected",
+      "passed": true,
+      "detail": {
+        "ocs": 3,
+        "payload": "cccccccccccccccccccccccccccccccc"
+      }
+    },
+    {
+      "name": "absent_lun_inquiry_dma_bounds",
+      "passed": true
+    },
+    {
+      "name": "absent_lun_inquiry_allocation_bounds",
+      "passed": true
+    },
+    {
+      "name": "read_capacity",
+      "passed": true,
+      "detail": {
+        "ocs": 0,
+        "data": "00003fff00001000"
+      }
+    },
+    {
+      "name": "enable_write_booster",
+      "passed": true
+    },
+    {
+      "name": "wb_hibern8_flush_flag_set",
+      "passed": true
+    },
+    {
+      "name": "wb_hibern8_flush_flag_read",
+      "passed": true
+    },
+    {
+      "name": "wb_hibern8_flush_flag_clear",
+      "passed": true
+    },
+    {
+      "name": "wb_hibern8_flush_flag_toggle",
+      "passed": true
+    },
+    {
+      "name": "write10",
+      "passed": true,
+      "detail": {
+        "ocs": 0,
+        "status": 0
+      }
+    },
+    {
+      "name": "read10_exact_payload",
+      "passed": true,
+      "detail": {
+        "sha256": "4e441a3533bb2c10cd5649981d395744213e09a336746b5a3458fee4057205ec"
+      }
+    },
+    {
+      "name": "host_backing_file_contains_write",
+      "passed": true
+    },
+    {
+      "name": "short_prdt_rejected",
+      "passed": true,
+      "detail": {
+        "ocs": 3
+      }
+    },
+    {
+      "name": "long_prdt_reports_underflow",
+      "passed": true,
+      "detail": {
+        "ocs": 0,
+        "response": "2120000000000000000000020000100000000000000000000000000000000000"
+      }
+    },
+    {
+      "name": "long_prdt_did_not_write_adjacent_lba",
+      "passed": true
+    },
+    {
+      "name": "short_prdt_did_not_write_any_lba",
+      "passed": true
+    },
+    {
+      "name": "unsupported_scsi_check_condition",
+      "passed": true
+    },
+    {
+      "name": "hibern8_only_flush_stays_pending_while_active",
+      "passed": true
+    },
+    {
+      "name": "gated_tx_sync_clock_blocks_dma",
+      "passed": true
+    },
+    {
+      "name": "restored_tx_sync_clock_allows_dma",
+      "passed": true
+    },
+    {
+      "name": "enter_hibern8",
+      "passed": true
+    },
+    {
+      "name": "hibern8_retains_link_across_phy_power_down",
+      "passed": true
+    },
+    {
+      "name": "hibern8_phy_restored",
+      "passed": true
+    },
+    {
+      "name": "transfer_in_hibern8_rejected",
+      "passed": true
+    },
+    {
+      "name": "exit_hibern8",
+      "passed": true
+    },
+    {
+      "name": "hibern8_flushed_write_booster",
+      "passed": true,
+      "detail": [
+        0,
+        0,
+        10
+      ]
+    },
+    {
+      "name": "gated_qref_stops_phy_and_link",
+      "passed": true
+    },
+    {
+      "name": "restored_qref_restarts_phy",
+      "passed": true
+    },
+    {
+      "name": "gcc_bcr_resets_hci_and_phy",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "command": [
+    "/work/root-pdc-0804/qemu-system-aarch64",
+    "-M",
+    "tb371fc",
+    "-accel",
+    "qtest",
+    "-m",
+    "128M",
+    "-display",
+    "none",
+    "-serial",
+    "null",
+    "-monitor",
+    "none",
+    "-qtest",
+    "unix:/tmp/tbci-piu4wefp/33/data/qtest,server=on,wait=off",
+    "-qtest-log",
+    "/dev/null",
+    "-qmp",
+    "unix:/tmp/tbci-piu4wefp/33/data/qmp,server=on,wait=off",
+    "-blockdev",
+    "driver=file,node-name=file0,filename=/tmp/tbci-piu4wefp/33/data/disk.raw",
+    "-blockdev",
+    "driver=raw,node-name=disk0,file=file0",
+    "-device",
+    "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+    "-d",
+    "unimp,guest_errors"
+  ],
+  "qemu_exit_code": 0,
+  "stderr_sha256": "0e3271b722c91c5bb51554d7737f296941dc47f9707034f9ccb1519e79cfebae",
+  "elapsed_seconds": 1.252,
+  "passed_checks": 56,
+  "total_checks": 56
+}

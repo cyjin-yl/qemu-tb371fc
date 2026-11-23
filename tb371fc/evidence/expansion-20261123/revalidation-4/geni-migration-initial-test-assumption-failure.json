@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "suite": "GENI QMP process-to-process migration",
+  "qemu": "/work/integration-20261123-4/qemu-system-aarch64",
+  "machine": "tb371fc,ufs-enabled=off",
+  "test_ram_per_process": "128 MiB",
+  "checks": [
+    {
+      "check": "source_active_tx_rx_and_pending_irq",
+      "status": "pass"
+    },
+    {
+      "check": "qmp_migration_completed",
+      "status": "pass"
+    },
+    {
+      "check": "registers_ram_and_pending_irq_preserved",
+      "status": "pass"
+    },
+    {
+      "check": "unfinished_tx_continues_without_duplicate_prefix",
+      "status": "pass"
+    }
+  ],
+  "scope": "Actual paused machine migration and GENI FIFO/IRQ continuation; no hardware timing equivalence",
+  "source_migration": {
+    "status": "completed",
+    "setup-time": 0,
+    "downtime": 26,
+    "total-time": 37,
+    "ram": {
+      "total": 134217728,
+      "postcopy-requests": 0,
+      "dirty-sync-count": 2,
+      "multifd-bytes": 0,
+      "pages-per-second": 0,
+      "downtime-bytes": 307217,
+      "page-size": 4096,
+      "remaining": 0,
+      "postcopy-bytes": 0,
+      "mbps": 470.2540540540541,
+      "transferred": 2174925,
+      "dirty-sync-missed-zero-copy": 0,
+      "precopy-bytes": 0,
+      "duplicate": 32765,
+      "dirty-pages-rate": 0,
+      "normal-bytes": 12288,
+      "normal": 3
+    }
+  },
+  "target_migration": {
+    "status": "completed"
+  },
+  "success": false,
+  "error": "Traceback (most recent call last):\n  File \"/src/tb371fc/tests/test_geni_migration.py\", line 112, in main\n    target.assert_irq(False)\n    ~~~~~~~~~~~~~~~~~^^^^^^^\n  File \"/src/tb371fc/tests/test_geni_uart.py\", line 137, in assert_irq\n    assert self.irq[0] == level, (self.irq, level)\n           ^^^^^^^^^^^^^^^^^^^^\nAssertionError: ({0: True}, False)\n",
+  "qemu_stderr_tails": {
+    "source": "",
+    "target": ""
+  },
+  "diagnosis": "Old expectation incorrectly assumed clearing DONE/RX removed the still-enabled idle FIFO watermark. Tests now explicitly verify reassertion, then disable the threshold and W1C before expecting IRQ low; gate/reset and byte continuity checks retained."
+}

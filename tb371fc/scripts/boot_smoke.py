@@ -46,6 +46,12 @@ def main() -> int:
     parser.add_argument("--arch-probe", type=Path,
                         help="Use an existing probe ELF, e.g. the exact binary tested on Android")
     parser.add_argument("--timeout", type=int, default=120)
+    parser.add_argument("--dtb", type=Path, help="Optional explicit device tree input")
+    parser.add_argument("--append", help="Explicit kernel command line for compatibility diagnosis")
+    parser.add_argument("--without-ufs-lu", action="store_true",
+                        help="Diagnostic empty-UFS-bus configuration; no synthetic LUN")
+    parser.add_argument("--debug-mmio", action="store_true",
+                        help="Record QEMU unimplemented/guest-error diagnostics")
     args = parser.parse_args()
     qemu, kernel, out = args.qemu.resolve(), args.kernel.resolve(), args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -76,6 +82,26 @@ def main() -> int:
                "-initrd", str(initramfs), "-append",
                "earlycon=qcom_geni,0xa90000 console=ttyMSM0,115200n8 "
                "rdinit=/init loglevel=7 panic=-1 nokaslr"]
+    if args.append is not None:
+        command[-1] = args.append
+    if args.dtb:
+        command.extend(["-dtb", str(args.dtb.resolve())])
+    disk = None
+    if not args.without_ufs_lu:
+        # A tablet boot fixture needs a populated device, even when PID 1 lives
+        # wholly in initramfs. Keep the empty-bus case explicit for diagnosis.
+        disk = out / "smoke-disk.raw"
+        with disk.open("xb") as stream:
+            stream.truncate(64 * 1024 * 1024)
+        command.extend([
+            "-blockdev", json.dumps({"driver": "file", "node-name": "smoke-file",
+                                    "filename": str(disk)}),
+            "-blockdev", "driver=raw,node-name=smoke-disk,file=smoke-file",
+            "-device", "ufs-lu,bus=ufs0,drive=smoke-disk,lun=0",
+        ])
+    debug_log = out / "qemu-debug.log"
+    if args.debug_mmio:
+        command.extend(["-d", "unimp,guest_errors", "-D", str(debug_log)])
     start = time.monotonic()
     result = {
         "schema_version": 1,
@@ -92,18 +118,24 @@ def main() -> int:
         "timeout_seconds": args.timeout,
         "compile_command": compile_command,
     }
+    result["ufs_fixture"] = {"populated": disk is not None,
+                             "kind": "new synthetic empty 64 MiB disk" if disk else "none",
+                             "bytes": disk.stat().st_size if disk else 0}
+    if args.dtb:
+        result["dtb_sha256"] = sha256(args.dtb.resolve())
     timed_out = False
-    try:
-        proc = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                              timeout=args.timeout, check=False)
-        output = proc.stdout
-        result["exit_code"] = proc.returncode
-    except subprocess.TimeoutExpired as exc:
-        timed_out = True
-        output = exc.stdout or b""
-        result["exit_code"] = None
     log = out / "serial.log"
-    log.write_bytes(output)
+    with log.open("wb") as serial_output:
+        try:
+            proc = subprocess.run(command, stdout=serial_output, stderr=subprocess.STDOUT,
+                                  timeout=args.timeout, check=False)
+            result["exit_code"] = proc.returncode
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            result["exit_code"] = None
+    output = log.read_bytes()
+    if debug_log.exists():
+        result["qemu_debug_sha256"] = sha256(debug_log)
     text = output.decode("utf-8", errors="replace")
     probe_records = []
     for line in text.splitlines():
@@ -114,10 +146,10 @@ def main() -> int:
         if isinstance(record, dict) and record.get("kind") == "tb371fc-el0-counter-probe":
             probe_records.append(record)
     probe_ok = (len(probe_records) == 1 and
-                probe_records[0]["counter_frequency_hz"] ==
+                probe_records[0].get("counter_frequency_hz") ==
                 native["probe_result"]["counter_frequency_hz"] and
-                probe_records[0]["counter_delta"] > 0 and
-                probe_records[0]["increased"] is True)
+                probe_records[0].get("counter_delta", 0) > 0 and
+                probe_records[0].get("increased") is True)
     checks = [line.strip() for line in text.splitlines() if line.startswith("TB371FC_CHECK ")]
     expected = {"procfs", "sysfs", "aarch64", "eight_online_cpus_psci",
                 "timer_and_scheduler_progress", "fork_and_wait", "board_model",

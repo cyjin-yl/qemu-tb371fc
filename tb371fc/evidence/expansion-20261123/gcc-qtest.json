@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "suite": "SM8250 GCC actual QTest",
+  "qemu": "/work/build-next/qemu-system-aarch64",
+  "qemu_sha256": "56717a3c95ba31da84ed46da8c305bc6de910370a359eee475b3587b93d5cabf",
+  "work_dir": "/work/gcc-tests-round2/gcc-qtest",
+  "checks": [
+    {
+      "test": "cold_defaults",
+      "status": "pass",
+      "seconds": 0.0246
+    },
+    {
+      "test": "invalid_pll_does_not_lock",
+      "status": "pass",
+      "seconds": 0.03
+    },
+    {
+      "test": "pll_vote_lock_and_stop",
+      "status": "pass",
+      "seconds": 0.0244
+    },
+    {
+      "test": "pll_manual_output_gate",
+      "status": "pass",
+      "seconds": 0.0237
+    },
+    {
+      "test": "pll_shadow_and_latch",
+      "status": "pass",
+      "seconds": 0.0243
+    },
+    {
+      "test": "pll_disabled_latch",
+      "status": "pass",
+      "seconds": 0.022
+    },
+    {
+      "test": "independent_pll_vote_bits",
+      "status": "pass",
+      "seconds": 0.0261
+    },
+    {
+      "test": "rcg_exact_fraction_and_shadow",
+      "status": "pass",
+      "seconds": 0.0263
+    },
+    {
+      "test": "invalid_rcg_keeps_previous_active_config",
+      "status": "pass",
+      "seconds": 0.0253
+    },
+    {
+      "test": "invalid_fraction_does_not_ack",
+      "status": "pass",
+      "seconds": 0.0275
+    },
+    {
+      "test": "stopped_parent_keeps_requested_branch_off",
+      "status": "pass",
+      "seconds": 0.0259
+    },
+    {
+      "test": "shared_votes_and_remote_voter",
+      "status": "pass",
+      "seconds": 0.0261
+    },
+    {
+      "test": "hwcg_consumer_request",
+      "status": "pass",
+      "seconds": 0.0243
+    },
+    {
+      "test": "absent_external_parent_is_not_success",
+      "status": "pass",
+      "seconds": 0.0237
+    },
+    {
+      "test": "sleep_parent_and_integer_divider",
+      "status": "pass",
+      "seconds": 0.0235
+    },
+    {
+      "test": "reset_lines_and_shared_cbcr_bits",
+      "status": "pass",
+      "seconds": 0.024
+    },
+    {
+      "test": "software_power_transition",
+      "status": "pass",
+      "seconds": 0.0219
+    },
+    {
+      "test": "reset_cancels_pending_transitions",
+      "status": "pass",
+      "seconds": 0.0241
+    },
+    {
+      "test": "unsupported_registers_are_diagnosed",
+      "status": "pass",
+      "seconds": 0.0217
+    }
+  ],
+  "ram_per_process": "128 MiB",
+  "scope": "Clock register/gate state, software reset/power and controlled virtual-time transitions; no analog, silicon timing, voltage or full-SoC equivalence",
+  "expected_checks": 19,
+  "success": true,
+  "recorded_exit_code": 0,
+  "verified_binary_sha256": "56717a3c95ba31da84ed46da8c305bc6de910370a359eee475b3587b93d5cabf",
+  "execution_completed_at_utc": "2026-11-23T05:50:27.322932+00:00",
+  "migration_scope": "Pre-UFS configured components only; this receipt does not establish full expanded-board migration",
+  "tested_machine_options": "tb371fc,gcc-boot-configured=off",
+  "source_report_sha256": "0cfc0c7b4908cbec9eb889fa550df4cd7a14e5836ea3542352af0bacdf1c89b8"
+}

@@ -6,11 +6,12 @@
  * The RAM aperture, MPIDRs, GIC, timer frequency/interrupts and active console
  * addresses come from an Android device-tree capture of a rooted TB371FC.
  *
- * CPU0..3 use upstream Cortex-A55. CPU4..7 use Cortex-A76 as an explicitly
- * advertised architectural surrogate: QEMU 11.1.3 has no Cortex-A77 model.
- * Neither the Qualcomm MIDRs nor unimplemented peripherals are fabricated.
- * PSCI is QEMU's SMC service, not Qualcomm's secure firmware. The generated
- * DT advertises only the implemented devices and two synthetic fixed clocks.
+ * CPU0..3 still use upstream Cortex-A55 as a Kryo surrogate. CPU4..7 use
+ * the separately verified Cortex-A77 r1p0 model, with observed REVIDR 3.
+ * Cache geometry and CPU timing are not tablet measurements. PSCI is QEMU's
+ * SMC service, not Qualcomm secure firmware. GCC implements digital clock,
+ * reset and power controls; its AHB parent is an explicit bootstrap input
+ * until the RPMh/interconnect clock producers are implemented.
  *
  * The QUP wrapper's version register is a synthetic compatibility aid for the
  * upstream Linux GENI driver, not an emulation of the complete QUP wrapper.
@@ -19,7 +20,9 @@
  */
 
 #include "qemu/osdep.h"
+#include <libfdt.h>
 #include "qapi/error.h"
+#include "qapi/visitor.h"
 #include "qemu/error-report.h"
 #include "qemu/log.h"
 #include "qemu/module.h"
@@ -27,13 +30,28 @@
 #include "qobject/qlist.h"
 #include "qom/object.h"
 #include "hw/arm/boot.h"
+#include "hw/arm/arm-smmuv2.h"
 #include "hw/arm/machines-qom.h"
 #include "hw/char/qcom-geni-uart.h"
 #include "hw/core/boards.h"
+#include "hw/core/clock.h"
+#include "hw/core/irq.h"
+#include "hw/core/qdev-clock.h"
 #include "hw/core/qdev-properties.h"
 #include "hw/core/sysbus.h"
 #include "hw/intc/arm_gicv3.h"
 #include "hw/intc/arm_gicv3_common.h"
+#include "hw/intc/qcom-pdc.h"
+#include "hw/misc/qcom-sm8250-gcc.h"
+#include "hw/misc/qcom-pshold.h"
+#include "hw/misc/qcom-dcc.h"
+#include "hw/misc/qcom-ipcc.h"
+#include "hw/misc/qcom-spmi-pmic-arb.h"
+#include "hw/gpio/qcom-tb371fc-tlmm.h"
+#include "hw/misc/qcom-sm8250-rpmh.h"
+#include "hw/ufs/qcom-sm8250-ufs.h"
+#include "hw/timer/arm-arch-timer-mmio.h"
+#include "hw/watchdog/qcom-kpss.h"
 #include "system/address-spaces.h"
 #include "system/device_tree.h"
 #include "system/qtest.h"
@@ -60,6 +78,22 @@ OBJECT_DECLARE_SIMPLE_TYPE(TB371FCMachineState, TB371FC_MACHINE)
 #define TB371FC_QUP_BASE         UINT64_C(0x00ac0000)
 #define TB371FC_QUP_SIZE         UINT64_C(0x6000)
 #define TB371FC_TIMER_HZ         19200000
+#define TB371FC_GCC_BASE         UINT64_C(0x00100000)
+#define TB371FC_GCC_XO_HZ        19200000
+#define TB371FC_SLEEP_HZ         32000
+#define TB371FC_UFS_BASE         UINT64_C(0x01d84000)
+#define TB371FC_UFS_PHY_BASE     UINT64_C(0x01d87000)
+#define TB371FC_UFS_SPI          265
+#define TB371FC_WATCHDOG_BASE    UINT64_C(0x17c10000)
+#define TB371FC_MMIO_TIMER_BASE  UINT64_C(0x17c20000)
+#define TB371FC_APPS_SMMU_BASE   UINT64_C(0x15000000)
+#define TB371FC_KGSL_SMMU_BASE   UINT64_C(0x03da0000)
+
+/* Linux qcom,gcc-sm8250 binding IDs, not native rate measurements. */
+#define TB371FC_GCC_UART_CLK     127
+#define TB371FC_GCC_QUP_M_AHB    135
+#define TB371FC_GCC_QUP_S_AHB    136
+#define TB371FC_GCC_QUP_RESET    26
 
 /*
  * Model capacity, not a captured GICD_TYPER value. 960 SPIs cover the SM8250
@@ -72,20 +106,59 @@ OBJECT_DECLARE_SIMPLE_TYPE(TB371FCMachineState, TB371FC_MACHINE)
 #define TB371FC_PPI_HYP_TIMER    12
 #define TB371FC_PPI_MAINT        9
 
-/* A fixed serial clock chosen to represent 115200 baud exactly. */
-#define TB371FC_UART_CLOCK_HZ    7372800
 #define TB371FC_QUP_VERSION      0x20050000
 
 #define TB371FC_MEMORY_NODE "/memory@80000000"
+#define TB371FC_GCC_NODE "/soc/clock-controller@100000"
+#define TB371FC_UFS_NODE "/soc/ufshc@1d84000"
+#define TB371FC_UFS_PHY_NODE "/soc/phy@1d87000"
+#define TB371FC_WATCHDOG_NODE "/soc/watchdog@17c10000"
+#define TB371FC_MMIO_TIMER_NODE "/soc/timer@17c20000"
+#define TB371FC_APPS_SMMU_NODE "/soc/iommu@15000000"
+#define TB371FC_KGSL_SMMU_NODE "/soc/iommu@3da0000"
 #define TB371FC_GIC_NODE "/soc/interrupt-controller@17a00000"
 #define TB371FC_QUP_NODE "/soc/geniqup@ac0000"
 #define TB371FC_UART_NODE TB371FC_QUP_NODE "/serial@a90000"
+
+/* IRQ routing is captured in android-device-inventory.json, not sequential. */
+static const unsigned tb371fc_apps_smmu_spis[] = {
+    64, 65, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106,
+    107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118,
+    181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192,
+    315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326,
+    327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338,
+    339, 340, 341, 342, 343, 344, 345, 395, 396, 397, 398, 399,
+    400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 412, 418,
+    419, 421, 423, 424, 425, 690, 691, 692, 693, 694, 695, 696,
+    697, 707,
+};
+
+static const unsigned tb371fc_kgsl_smmu_spis[] = {
+    672, 673, 678, 679, 680, 681, 682, 683, 684, 685,
+};
 
 struct TB371FCMachineState {
     MachineState parent_obj;
     ARMCPU *cpu[TB371FC_CPUS];
     DeviceState *gic;
     QcomGeniUartState uart;
+    QcomSm8250GccState gcc;
+    DeviceState *ufs;
+    DeviceState *apps_smmu, *kgsl_smmu, *mmio_timer, *rpmh, *watchdog;
+    DeviceState *tlmm;
+    DeviceState *pdc;
+    MemoryRegion imem;
+    Clock *board_xo;
+    char *rpmh_profile, *rpmh_cmd_db;
+    char *spmi_profile;
+    bool rpmh_boot_configured;
+    MemoryRegion qtest_dma_alias;
+    bool enable_ufs;
+    bool counter_exact;
+    uint64_t kernel_load_base;
+    Clock *xo, *sleep, *fabric;
+    bool gcc_boot_configured;
+    uint64_t bootstrap_fabric_hz;
     MemoryRegion qup_version;
     struct arm_boot_info bootinfo;
     int fdt_size;
@@ -94,7 +167,7 @@ struct TB371FCMachineState {
 static const char *tb371fc_cpu_type(unsigned int index)
 {
     return index < 4 ? ARM_CPU_TYPE_NAME("cortex-a55") :
-                       ARM_CPU_TYPE_NAME("cortex-a76");
+                       ARM_CPU_TYPE_NAME("cortex-a77");
 }
 
 static MemTxResult tb371fc_qup_read(void *opaque, hwaddr offset,
@@ -141,9 +214,12 @@ static const MemoryRegionOps tb371fc_qup_ops = {
  */
 static void tb371fc_fixup_memory(const struct arm_boot_info *info, void *fdt)
 {
-    uint64_t end = TB371FC_RAM_BASE + info->ram_size;
+    TB371FCMachineState *s = container_of(info, TB371FCMachineState, bootinfo);
+    uint64_t end = TB371FC_RAM_BASE + MACHINE(s)->ram_size;
     uint64_t low_size = MIN(end, TB371FC_RAM_HOLE_BASE) - TB371FC_RAM_BASE;
     const char *hole = "/reserved-memory/firmware-hole@bbb00000";
+    int node;
+    g_autoptr(GPtrArray) other_memory = g_ptr_array_new_with_free_func(g_free);
 
     if (qemu_fdt_getprop_cell(fdt, "/", "#address-cells", NULL,
                               &error_fatal) != 2 ||
@@ -153,6 +229,21 @@ static void tb371fc_fixup_memory(const struct arm_boot_info *info, void *fdt)
         exit(1);
     }
 
+    /* boot.c synthesizes a bank at loader_start; retain one physical map. */
+    fdt_for_each_subnode(node, fdt, 0) {
+        int length;
+        const char *type = fdt_getprop(fdt, node, "device_type", &length);
+        const char *name = fdt_get_name(fdt, node, NULL);
+
+        if (type && length == sizeof("memory") &&
+            !memcmp(type, "memory", sizeof("memory")) &&
+            strcmp(name, TB371FC_MEMORY_NODE + 1)) {
+            g_ptr_array_add(other_memory, g_strdup_printf("/%s", name));
+        }
+    }
+    for (unsigned i = 0; i < other_memory->len; i++) {
+        qemu_fdt_nop_node(fdt, g_ptr_array_index(other_memory, i));
+    }
     qemu_fdt_add_path(fdt, TB371FC_MEMORY_NODE);
     qemu_fdt_setprop_string(fdt, TB371FC_MEMORY_NODE, "device_type", "memory");
     if (end > TB371FC_RAM_HOLE_END) {
@@ -192,12 +283,241 @@ static uint32_t tb371fc_add_fixed_clock(void *fdt, const char *path,
     return phandle;
 }
 
+
+static void tb371fc_add_watchdog_fdt(TB371FCMachineState *s, void *fdt)
+{
+    uint32_t frequency = object_property_get_uint(OBJECT(s->watchdog),
+                                                   "frequency", &error_fatal);
+    uint32_t clock = tb371fc_add_fixed_clock(fdt, "/watchdog-clock", frequency);
+
+    qemu_fdt_add_subnode(fdt, TB371FC_WATCHDOG_NODE);
+    qemu_fdt_setprop_string(fdt, TB371FC_WATCHDOG_NODE, "compatible",
+                            "qcom,kpss-wdt");
+    qemu_fdt_setprop_sized_cells(fdt, TB371FC_WATCHDOG_NODE, "reg",
+                                 2, TB371FC_WATCHDOG_BASE,
+                                 2, QCOM_KPSS_WATCHDOG_SIZE);
+    qemu_fdt_setprop_cells(fdt, TB371FC_WATCHDOG_NODE, "interrupts", 0, 0, 4);
+    qemu_fdt_setprop_cell(fdt, TB371FC_WATCHDOG_NODE, "clocks", clock);
+    qemu_fdt_setprop_string(fdt, TB371FC_WATCHDOG_NODE, "qemu,model-note",
+                            "Vendor-driver reference frequency; native clock "
+                            "rate unmeasured; bite uses QEMU watchdog action");
+}
+
+static void tb371fc_add_ufs_fdt(TB371FCMachineState *s, void *fdt,
+                                 uint32_t gcc, uint32_t xo, uint32_t smmu,
+                                 uint32_t rpmh, uint32_t tlmm)
+{
+    uint32_t phy = qemu_fdt_alloc_phandle(fdt);
+    uint32_t ufs = qemu_fdt_alloc_phandle(fdt);
+    const char compatible[] = "qcom,sm8250-ufshc\0qcom,ufshc\0jedec,ufs-2.0";
+    const char names[] = "core_clk\0bus_aggr_clk\0iface_clk\0"
+                         "core_clk_unipro\0ref_clk\0tx_lane0_sync_clk\0"
+                         "rx_lane0_sync_clk\0rx_lane1_sync_clk";
+    const char phy_names[] = "ref\0ref_aux\0qref";
+
+    qemu_fdt_add_subnode(fdt, TB371FC_UFS_NODE);
+    qemu_fdt_setprop(fdt, TB371FC_UFS_NODE, "compatible",
+                     compatible, sizeof(compatible));
+    qemu_fdt_setprop_sized_cells(fdt, TB371FC_UFS_NODE, "reg",
+                                 2, TB371FC_UFS_BASE,
+                                 2, QCOM_SM8250_UFS_HCI_SIZE);
+    qemu_fdt_setprop_cells(fdt, TB371FC_UFS_NODE, "interrupts",
+                           0, TB371FC_UFS_SPI, 4);
+    qemu_fdt_setprop_cell(fdt, TB371FC_UFS_NODE, "phandle", ufs);
+    qemu_fdt_setprop_cell(fdt, TB371FC_UFS_NODE, "#reset-cells", 1);
+    qemu_fdt_setprop_cell(fdt, TB371FC_UFS_NODE, "lanes-per-direction", 2);
+    qemu_fdt_setprop_cells(fdt, TB371FC_UFS_NODE, "iommus",
+                           smmu, 0xe0, smmu, 0x4e0);
+    qemu_fdt_setprop_cell(fdt, TB371FC_UFS_NODE, "phys", phy);
+    qemu_fdt_setprop_string(fdt, TB371FC_UFS_NODE, "phy-names", "ufsphy");
+    qemu_fdt_setprop_cells(fdt, TB371FC_UFS_NODE, "resets", gcc, 33);
+    qemu_fdt_setprop_string(fdt, TB371FC_UFS_NODE, "reset-names", "rst");
+    qemu_fdt_setprop_cells(fdt, TB371FC_UFS_NODE, "power-domains", gcc, 4);
+    qemu_fdt_setprop(fdt, TB371FC_UFS_NODE, "clock-names", names,
+                     sizeof(names));
+    if (rpmh) {
+        qemu_fdt_setprop_cells(fdt, TB371FC_UFS_NODE, "clocks",
+                               gcc, 162, gcc, 6, gcc, 161, gcc, 171, rpmh, 0,
+                               gcc, 170, gcc, 168, gcc, 169);
+    } else {
+        qemu_fdt_setprop_cells(fdt, TB371FC_UFS_NODE, "clocks",
+                               gcc, 162, gcc, 6, gcc, 161, gcc, 171, xo,
+                               gcc, 170, gcc, 168, gcc, 169);
+    }
+    /* Upstream group 180 is the dedicated output-only UFS_RESET pad. */
+    qemu_fdt_setprop_cells(fdt, TB371FC_UFS_NODE, "reset-gpios", tlmm, 180, 1);
+    qemu_fdt_setprop_cells(fdt, TB371FC_UFS_NODE, "freq-table-hz",
+                           37500000, 300000000, 0, 0, 0, 0,
+                           37500000, 300000000, 0, 0, 0, 0, 0, 0, 0, 0);
+    qemu_fdt_setprop_string(fdt, TB371FC_UFS_NODE, "qemu,model-note",
+                            "Digital UFS host/PHY profile; unknown native HCI "
+                            "revision uses configurable reference default; "
+                            "no ICE, RPMB or analog calibration");
+
+    qemu_fdt_add_subnode(fdt, TB371FC_UFS_PHY_NODE);
+    qemu_fdt_setprop_string(fdt, TB371FC_UFS_PHY_NODE, "compatible",
+                            "qcom,sm8250-qmp-ufs-phy");
+    qemu_fdt_setprop_sized_cells(fdt, TB371FC_UFS_PHY_NODE, "reg",
+                                 2, TB371FC_UFS_PHY_BASE,
+                                 2, QCOM_SM8250_UFS_PHY_SIZE);
+    qemu_fdt_setprop_cell(fdt, TB371FC_UFS_PHY_NODE, "phandle", phy);
+    qemu_fdt_setprop_cell(fdt, TB371FC_UFS_PHY_NODE, "#phy-cells", 0);
+    if (rpmh) {
+        qemu_fdt_setprop_cells(fdt, TB371FC_UFS_PHY_NODE, "clocks",
+                               rpmh, 0, gcc, 166, gcc, 148);
+    } else {
+        qemu_fdt_setprop_cells(fdt, TB371FC_UFS_PHY_NODE, "clocks",
+                               xo, gcc, 166, gcc, 148);
+    }
+    qemu_fdt_setprop(fdt, TB371FC_UFS_PHY_NODE, "clock-names", phy_names,
+                     sizeof(phy_names));
+    qemu_fdt_setprop_cells(fdt, TB371FC_UFS_PHY_NODE, "resets", ufs, 0);
+    qemu_fdt_setprop_string(fdt, TB371FC_UFS_PHY_NODE, "reset-names", "ufsphy");
+    qemu_fdt_setprop_cells(fdt, TB371FC_UFS_PHY_NODE, "power-domains", gcc, 4);
+}
+
+
+static uint32_t tb371fc_add_smmu_fdt(void *fdt, const char *path,
+                                    hwaddr base, hwaddr size,
+                                    const unsigned *spis, unsigned count)
+{
+    const char compatible[] = "arm,smmu-v2";
+    uint32_t phandle = qemu_fdt_alloc_phandle(fdt);
+    g_autofree uint32_t *interrupts = g_new(uint32_t, count * 3);
+
+    qemu_fdt_add_subnode(fdt, path);
+    qemu_fdt_setprop(fdt, path, "compatible", compatible, sizeof(compatible));
+    qemu_fdt_setprop_sized_cells(fdt, path, "reg", 2, base, 2, size);
+    qemu_fdt_setprop_cell(fdt, path, "phandle", phandle);
+    qemu_fdt_setprop_cell(fdt, path, "#iommu-cells", 1);
+    qemu_fdt_setprop_cell(fdt, path, "#global-interrupts", 2);
+    qemu_fdt_setprop(fdt, path, "dma-coherent", NULL, 0);
+    for (unsigned i = 0; i < count; i++) {
+        interrupts[i * 3] = cpu_to_be32(0);
+        interrupts[i * 3 + 1] = cpu_to_be32(spis[i]);
+        interrupts[i * 3 + 2] = cpu_to_be32(4);
+    }
+    qemu_fdt_setprop(fdt, path, "interrupts", interrupts,
+                     count * 3 * sizeof(uint32_t));
+    qemu_fdt_setprop_string(fdt, path, "qemu,model-note",
+                            "Architectural SMMUv2 stage-1 AArch64 4K walks; "
+                            "reference IDRs; Qualcomm TCU/TBU extensions absent");
+    return phandle;
+}
+
+static void tb371fc_add_mmio_timer_fdt(void *fdt)
+{
+    qemu_fdt_add_subnode(fdt, TB371FC_MMIO_TIMER_NODE);
+    qemu_fdt_setprop_string(fdt, TB371FC_MMIO_TIMER_NODE, "compatible",
+                            "arm,armv7-timer-mem");
+    qemu_fdt_setprop_sized_cells(fdt, TB371FC_MMIO_TIMER_NODE, "reg",
+                                 2, TB371FC_MMIO_TIMER_BASE, 2, 0x1000);
+    qemu_fdt_setprop_cell(fdt, TB371FC_MMIO_TIMER_NODE, "clock-frequency",
+                          TB371FC_TIMER_HZ);
+    qemu_fdt_setprop_cell(fdt, TB371FC_MMIO_TIMER_NODE, "#address-cells", 2);
+    qemu_fdt_setprop_cell(fdt, TB371FC_MMIO_TIMER_NODE, "#size-cells", 2);
+    qemu_fdt_setprop(fdt, TB371FC_MMIO_TIMER_NODE, "ranges", NULL, 0);
+    for (unsigned i = 0; i < 7; i++) {
+        hwaddr base = TB371FC_MMIO_TIMER_BASE + 0x1000 + i * 0x2000;
+        g_autofree char *path = g_strdup_printf(
+            TB371FC_MMIO_TIMER_NODE "/frame@%" HWADDR_PRIx, base);
+
+        qemu_fdt_add_subnode(fdt, path);
+        qemu_fdt_setprop_cell(fdt, path, "frame-number", i);
+        if (i == 0) {
+            qemu_fdt_setprop_sized_cells(fdt, path, "reg",
+                                         2, base, 2, 0x1000,
+                                         2, base + 0x1000, 2, 0x1000);
+            qemu_fdt_setprop_cells(fdt, path, "interrupts", 0, 8, 4, 0, 6, 4);
+        } else {
+            qemu_fdt_setprop_sized_cells(fdt, path, "reg", 2, base, 2, 0x1000);
+            qemu_fdt_setprop_cells(fdt, path, "interrupts", 0, 8 + i, 4);
+            qemu_fdt_setprop_string(fdt, path, "status", "disabled");
+        }
+    }
+}
+
+
+static uint32_t tb371fc_add_rpmh_fdt(TB371FCMachineState *s, void *fdt)
+{
+    const char *path = "/soc/rsc@18200000";
+    const char *db = "/reserved-memory/command-db@80860000";
+    const char *clocks = "/soc/rsc@18200000/clock-controller";
+    uint32_t clock_phandle = qemu_fdt_alloc_phandle(fdt);
+    uint32_t xo = tb371fc_add_fixed_clock(fdt, "/rpmh-xo", 38400000);
+    const char names[] = "drv-0\0drv-1\0drv-2";
+
+    qemu_fdt_add_path(fdt, "/reserved-memory");
+    qemu_fdt_setprop_cell(fdt, "/reserved-memory", "#address-cells", 2);
+    qemu_fdt_setprop_cell(fdt, "/reserved-memory", "#size-cells", 2);
+    qemu_fdt_setprop(fdt, "/reserved-memory", "ranges", NULL, 0);
+    qemu_fdt_add_subnode(fdt, db);
+    qemu_fdt_setprop_string(fdt, db, "compatible", "qcom,cmd-db");
+    qemu_fdt_setprop_sized_cells(fdt, db, "reg",
+                                 2, 0x80860000, 2, RPMH_CMD_DB_SIZE);
+    qemu_fdt_setprop(fdt, db, "no-map", NULL, 0);
+    qemu_fdt_setprop_string(fdt, db, "qemu,profile", s->rpmh_profile);
+
+    qemu_fdt_add_subnode(fdt, path);
+    qemu_fdt_setprop_string(fdt, path, "compatible", "qcom,rpmh-rsc");
+    qemu_fdt_setprop_sized_cells(fdt, path, "reg",
+                                 2, 0x18200000, 2, RPMH_DRV_SIZE,
+                                 2, 0x18210000, 2, RPMH_DRV_SIZE,
+                                 2, 0x18220000, 2, RPMH_DRV_SIZE);
+    qemu_fdt_setprop(fdt, path, "reg-names", names, sizeof(names));
+    qemu_fdt_setprop_cells(fdt, path, "interrupts",
+                           0, 3, 4, 0, 4, 4, 0, 5, 4);
+    qemu_fdt_setprop_cell(fdt, path, "qcom,drv-id", 2);
+    qemu_fdt_setprop_cell(fdt, path, "qcom,tcs-offset", 0xd00);
+    qemu_fdt_setprop_cells(fdt, path, "qcom,tcs-config",
+                           2, 2, 0, 3, 1, 3, 3, 1);
+    qemu_fdt_setprop_string(fdt, path, "qemu,model-note",
+                            "Typed digital RSC resources; command-db profile "
+                            "is explicit; AOP CPU/QMP and PDC are not modeled");
+    qemu_fdt_add_subnode(fdt, clocks);
+    qemu_fdt_setprop_string(fdt, clocks, "compatible", "qcom,sm8250-rpmh-clk");
+    qemu_fdt_setprop_cell(fdt, clocks, "#clock-cells", 1);
+    qemu_fdt_setprop_cell(fdt, clocks, "phandle", clock_phandle);
+    qemu_fdt_setprop_cell(fdt, clocks, "clocks", xo);
+    qemu_fdt_setprop_string(fdt, clocks, "clock-names", "xo");
+    return clock_phandle;
+}
+
+
+static uint32_t tb371fc_add_tlmm_fdt(void *fdt)
+{
+    const char *path = "/soc/pinctrl@f100000";
+    const char names[] = "west\0south\0north";
+    uint32_t phandle = qemu_fdt_alloc_phandle(fdt);
+
+    qemu_fdt_add_subnode(fdt, path);
+    qemu_fdt_setprop_string(fdt, path, "compatible", "qcom,sm8250-pinctrl");
+    qemu_fdt_setprop_sized_cells(fdt, path, "reg",
+                                 2, 0x0f100000, 2, 0x300000,
+                                 2, 0x0f500000, 2, 0x300000,
+                                 2, 0x0f900000, 2, 0x300000);
+    qemu_fdt_setprop(fdt, path, "reg-names", names, sizeof(names));
+    qemu_fdt_setprop_cells(fdt, path, "interrupts", 0, 208, 4);
+    qemu_fdt_setprop_cell(fdt, path, "phandle", phandle);
+    qemu_fdt_setprop(fdt, path, "gpio-controller", NULL, 0);
+    qemu_fdt_setprop_cell(fdt, path, "#gpio-cells", 2);
+    qemu_fdt_setprop(fdt, path, "interrupt-controller", NULL, 0);
+    qemu_fdt_setprop_cell(fdt, path, "#interrupt-cells", 2);
+    qemu_fdt_setprop_cells(fdt, path, "gpio-ranges", phandle, 0, 0, 181);
+    qemu_fdt_setprop_string(fdt, path, "qemu,model-note",
+                            "180 GPIO pads plus upstream dedicated UFS_RESET "
+                            "group 180; no PDC wakeup or alternate-function fabric");
+    return phandle;
+}
+
 static void tb371fc_create_fdt(TB371FCMachineState *s)
 {
     MachineState *ms = MACHINE(s);
     const char compatible[] = "qemu,tb371fc\0lenovo,tb371fc\0qcom,sm8250";
     const char qup_clock_names[] = "m-ahb\0s-ahb";
-    uint32_t gic_phandle, ahb_clock, se_clock;
+    const char gcc_clock_names[] = "bi_tcxo\0bi_tcxo_ao\0sleep_clk";
+    uint32_t gic_phandle, gcc_phandle, xo_clock, sleep_clock, apps_smmu;
+    uint32_t rpmh_clock = 0, tlmm;
     void *fdt = create_device_tree(&s->fdt_size);
 
     if (!fdt) {
@@ -211,11 +531,18 @@ static void tb371fc_create_fdt(TB371FCMachineState *s)
     qemu_fdt_setprop_string(fdt, "/", "model",
                             "QEMU experimental Lenovo TB371FC functional subset");
     qemu_fdt_setprop_string(fdt, "/", "qemu,cpu-model-note",
-                            "CPU0-3 Cortex-A55; CPU4-7 Cortex-A76 surrogate "
-                            "for Cortex-A77; no timing fidelity");
+                            "CPU0-3 Cortex-A55 Kryo surrogate; CPU4-7 "
+                            "Cortex-A77 r1p0 REVIDR 3; reference cache "
+                            "geometry; no timing fidelity");
     qemu_fdt_setprop_string(fdt, "/", "qemu,qup-model-note",
-                            "Synthetic fixed clocks and QUP 2.5 version; "
-                            "GENI UART FIFO only");
+                            "GCC gates and reset connected to GENI UART; "
+                            "synthetic QUP 2.5 version; FIFO only");
+    qemu_fdt_setprop_string(fdt, "/", "qemu,clock-model-note",
+                            "GCC XO 19.2 MHz from board XO divided by two; "
+                            "AHB rate is configurable bootstrap fabric input, "
+                            "not a measured tablet frequency");
+    qemu_fdt_setprop_u64(fdt, "/", "qemu,bootstrap-fabric-hz",
+                         s->bootstrap_fabric_hz);
 
     qemu_fdt_add_subnode(fdt, "/chosen");
     qemu_fdt_setprop_string(fdt, "/chosen", "stdout-path",
@@ -242,16 +569,41 @@ static void tb371fc_create_fdt(TB371FCMachineState *s)
     qemu_fdt_setprop_string(fdt, "/psci", "compatible", "arm,psci-1.0");
     qemu_fdt_setprop_string(fdt, "/psci", "method", "smc");
 
-    ahb_clock = tb371fc_add_fixed_clock(fdt, "/qemu-ahb-clock",
-                                      TB371FC_TIMER_HZ);
-    se_clock = tb371fc_add_fixed_clock(fdt, "/qemu-uart-clock",
-                                     TB371FC_UART_CLOCK_HZ);
+    xo_clock = tb371fc_add_fixed_clock(fdt, "/gcc-bi-tcxo",
+                                     TB371FC_GCC_XO_HZ);
+    sleep_clock = tb371fc_add_fixed_clock(fdt, "/sleep-clock",
+                                        TB371FC_SLEEP_HZ);
 
     qemu_fdt_add_subnode(fdt, "/soc");
     qemu_fdt_setprop_string(fdt, "/soc", "compatible", "simple-bus");
     qemu_fdt_setprop_cell(fdt, "/soc", "#address-cells", 2);
     qemu_fdt_setprop_cell(fdt, "/soc", "#size-cells", 2);
     qemu_fdt_setprop(fdt, "/soc", "ranges", NULL, 0);
+    if (s->rpmh) {
+        rpmh_clock = tb371fc_add_rpmh_fdt(s, fdt);
+    }
+    tlmm = tb371fc_add_tlmm_fdt(fdt);
+
+    gcc_phandle = qemu_fdt_alloc_phandle(fdt);
+    qemu_fdt_add_subnode(fdt, TB371FC_GCC_NODE);
+    qemu_fdt_setprop_string(fdt, TB371FC_GCC_NODE, "compatible",
+                            "qcom,gcc-sm8250");
+    qemu_fdt_setprop_sized_cells(fdt, TB371FC_GCC_NODE, "reg",
+                                 2, TB371FC_GCC_BASE,
+                                 2, SM8250_GCC_MMIO_SIZE);
+    qemu_fdt_setprop_cell(fdt, TB371FC_GCC_NODE, "#clock-cells", 1);
+    qemu_fdt_setprop_cell(fdt, TB371FC_GCC_NODE, "#reset-cells", 1);
+    qemu_fdt_setprop_cell(fdt, TB371FC_GCC_NODE, "#power-domain-cells", 1);
+    qemu_fdt_setprop_cell(fdt, TB371FC_GCC_NODE, "phandle", gcc_phandle);
+    qemu_fdt_setprop(fdt, TB371FC_GCC_NODE, "clock-names",
+                     gcc_clock_names, sizeof(gcc_clock_names));
+    if (rpmh_clock) {
+        qemu_fdt_setprop_cells(fdt, TB371FC_GCC_NODE, "clocks",
+                               rpmh_clock, 0, rpmh_clock, 1, sleep_clock);
+    } else {
+        qemu_fdt_setprop_cells(fdt, TB371FC_GCC_NODE, "clocks",
+                               xo_clock, xo_clock, sleep_clock);
+    }
 
     gic_phandle = qemu_fdt_alloc_phandle(fdt);
     qemu_fdt_setprop_cell(fdt, "/", "interrupt-parent", gic_phandle);
@@ -282,6 +634,15 @@ static void tb371fc_create_fdt(TB371FCMachineState *s)
                            1, TB371FC_PPI_HYP_TIMER, 8);
     qemu_fdt_setprop(fdt, "/timer", "always-on", NULL, 0);
 
+    tb371fc_add_mmio_timer_fdt(fdt);
+    tb371fc_add_watchdog_fdt(s, fdt);
+    apps_smmu = tb371fc_add_smmu_fdt(fdt, TB371FC_APPS_SMMU_NODE,
+        TB371FC_APPS_SMMU_BASE, 0x100000, tb371fc_apps_smmu_spis,
+        ARRAY_SIZE(tb371fc_apps_smmu_spis));
+    tb371fc_add_smmu_fdt(fdt, TB371FC_KGSL_SMMU_NODE,
+        TB371FC_KGSL_SMMU_BASE, 0x10000, tb371fc_kgsl_smmu_spis,
+        ARRAY_SIZE(tb371fc_kgsl_smmu_spis));
+
     qemu_fdt_add_subnode(fdt, TB371FC_QUP_NODE);
     qemu_fdt_setprop_string(fdt, TB371FC_QUP_NODE, "compatible",
                             "qcom,geni-se-qup");
@@ -293,7 +654,8 @@ static void tb371fc_create_fdt(TB371FCMachineState *s)
     qemu_fdt_setprop(fdt, TB371FC_QUP_NODE, "clock-names", qup_clock_names,
                      sizeof(qup_clock_names));
     qemu_fdt_setprop_cells(fdt, TB371FC_QUP_NODE, "clocks",
-                           ahb_clock, ahb_clock);
+                           gcc_phandle, TB371FC_GCC_QUP_M_AHB,
+                           gcc_phandle, TB371FC_GCC_QUP_S_AHB);
 
     qemu_fdt_add_subnode(fdt, TB371FC_UART_NODE);
     qemu_fdt_setprop_string(fdt, TB371FC_UART_NODE, "compatible",
@@ -303,9 +665,15 @@ static void tb371fc_create_fdt(TB371FCMachineState *s)
     qemu_fdt_setprop_cells(fdt, TB371FC_UART_NODE, "interrupts",
                            0, TB371FC_UART_SPI, 4);
     qemu_fdt_setprop_string(fdt, TB371FC_UART_NODE, "clock-names", "se");
-    qemu_fdt_setprop_cell(fdt, TB371FC_UART_NODE, "clocks", se_clock);
+    qemu_fdt_setprop_cells(fdt, TB371FC_UART_NODE, "clocks",
+                           gcc_phandle, TB371FC_GCC_UART_CLK);
     qemu_fdt_setprop_cell(fdt, TB371FC_UART_NODE, "current-speed", 115200);
     qemu_fdt_setprop_string(fdt, TB371FC_UART_NODE, "status", "okay");
+
+    if (s->ufs) {
+        tb371fc_add_ufs_fdt(s, fdt, gcc_phandle, xo_clock, apps_smmu,
+                            rpmh_clock, tlmm);
+    }
 
     tb371fc_fixup_memory(&s->bootinfo, fdt);
 }
@@ -363,6 +731,11 @@ static void tb371fc_create_cpus(TB371FCMachineState *s, MemoryRegion *sysmem)
         object_property_set_int(obj, "mp-affinity", cpus->cpus[i].arch_id,
                                 &error_abort);
         object_property_set_int(obj, "cntfrq", TB371FC_TIMER_HZ, &error_abort);
+        object_property_set_bool(obj, "cntfrq-exact", s->counter_exact,
+                                 &error_abort);
+        if (i >= 4) {
+            object_property_set_int(obj, "revidr", 3, &error_abort);
+        }
         object_property_set_bool(obj, "has_el3", false, &error_abort);
         object_property_set_bool(obj, "has_el2", true, &error_abort);
         object_property_set_bool(obj, "start-powered-off", i != 0,
@@ -427,11 +800,324 @@ static void tb371fc_create_gic(TB371FCMachineState *s)
     }
 }
 
+
+static void tb371fc_create_rpmh(TB371FCMachineState *s)
+{
+    DeviceState *dev;
+
+    if (!strcmp(s->rpmh_profile, "off")) {
+        if (s->rpmh_cmd_db && *s->rpmh_cmd_db) {
+            error_report("tb371fc: rpmh-cmd-db requires rpmh-profile=file");
+            exit(1);
+        }
+        return;
+    }
+    if ((!strcmp(s->rpmh_profile, "file") &&
+         (!s->rpmh_cmd_db || !*s->rpmh_cmd_db)) ||
+        (!strcmp(s->rpmh_profile, "reference") &&
+         s->rpmh_cmd_db && *s->rpmh_cmd_db)) {
+        error_report("tb371fc: select either an explicit reference RPMh profile "
+                     "or file profile with rpmh-cmd-db");
+        exit(1);
+    }
+    dev = qdev_new(TYPE_QCOM_SM8250_RPMH);
+    s->rpmh = dev;
+    object_property_add_child(OBJECT(s), "rpmh", OBJECT(dev));
+    qdev_prop_set_bit(dev, "reference-cmd-db",
+                      !strcmp(s->rpmh_profile, "reference"));
+    qdev_prop_set_bit(dev, "boot-configured", s->rpmh_boot_configured);
+    if (s->rpmh_cmd_db && *s->rpmh_cmd_db) {
+        qdev_prop_set_string(dev, "cmd-db-file", s->rpmh_cmd_db);
+    }
+    s->board_xo = clock_new(OBJECT(s), "xo-board");
+    clock_set_hz(s->board_xo, 38400000);
+    qdev_connect_clock_in(dev, "xo-board", s->board_xo);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    for (unsigned i = 0; i < RPMH_DRVS; i++) {
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), i, 0x18200000 + i * RPMH_DRV_SIZE);
+        sysbus_connect_irq(SYS_BUS_DEVICE(dev), i,
+                           qdev_get_gpio_in(s->gic, 3 + i));
+    }
+    /* A read-only firmware-owned region overlays the reserved physical RAM. */
+    sysbus_mmio_map_overlap(SYS_BUS_DEVICE(dev), 3, 0x80860000, 1);
+    clock_set_source(s->xo, qdev_get_clock_out(dev, "bi_tcxo"));
+}
+
+static void tb371fc_create_gcc(TB371FCMachineState *s)
+{
+    DeviceState *gcc;
+
+    /* Immutable board input clocks; no separate migration state is needed. */
+    s->xo = clock_new(OBJECT(s), "gcc-xo");
+    s->sleep = clock_new(OBJECT(s), "sleep-clock");
+    s->fabric = clock_new(OBJECT(s), "bootstrap-fabric");
+    clock_set_hz(s->xo, TB371FC_GCC_XO_HZ);
+    clock_set_hz(s->sleep, TB371FC_SLEEP_HZ);
+    clock_set_hz(s->fabric, s->bootstrap_fabric_hz);
+    tb371fc_create_rpmh(s);
+
+    object_initialize_child(OBJECT(s), "gcc", &s->gcc,
+                            TYPE_QCOM_SM8250_GCC);
+    gcc = DEVICE(&s->gcc);
+    qdev_prop_set_bit(gcc, "boot-configured", s->gcc_boot_configured);
+    qdev_connect_clock_in(gcc, "xo", s->xo);
+    qdev_connect_clock_in(gcc, "sleep", s->sleep);
+    qdev_connect_clock_in(gcc, "gcc_qupv3_wrap_2_m_ahb_clk_parent",
+                          s->fabric);
+    qdev_connect_clock_in(gcc, "gcc_qupv3_wrap_2_s_ahb_clk_parent",
+                          s->fabric);
+    if (s->ufs) {
+        qdev_connect_clock_in(gcc, "gcc_ufs_phy_ahb_clk_parent", s->fabric);
+        qdev_connect_clock_in(gcc, "gcc_ufs_1x_clkref_en_parent", s->xo);
+        qdev_connect_clock_in(gcc, "gcc_ufs_phy_tx_symbol_0_clk_parent",
+                              qdev_get_clock_out(s->ufs, "tx-lane0"));
+        qdev_connect_clock_in(gcc, "gcc_ufs_phy_rx_symbol_0_clk_parent",
+                              qdev_get_clock_out(s->ufs, "rx-lane0"));
+        qdev_connect_clock_in(gcc, "gcc_ufs_phy_rx_symbol_1_clk_parent",
+                              qdev_get_clock_out(s->ufs, "rx-lane1"));
+    }
+    sysbus_realize(SYS_BUS_DEVICE(gcc), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gcc), 0, TB371FC_GCC_BASE);
+
+    /* An attached UART requests its bus clock when HWCG is enabled. */
+    qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request",
+                                       TB371FC_GCC_UART_CLK), 1);
+    qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request",
+                                       TB371FC_GCC_QUP_M_AHB), 1);
+    qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request",
+                                       TB371FC_GCC_QUP_S_AHB), 1);
+}
+
+
+static DeviceState *tb371fc_create_smmu(TB371FCMachineState *s,
+                                       const char *name, hwaddr base,
+                                       uint32_t size, unsigned cb,
+                                       const unsigned *spis, unsigned count)
+{
+    DeviceState *dev = qdev_new(TYPE_ARM_SMMUV2);
+
+    object_property_add_child(OBJECT(s), name, OBJECT(dev));
+    qdev_prop_set_uint32(dev, "mmio-size", size);
+    qdev_prop_set_uint32(dev, "num-context-banks", cb);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, base);
+    assert(count == cb + 2);
+    for (unsigned i = 0; i < count; i++) {
+        sysbus_connect_irq(SYS_BUS_DEVICE(dev), i,
+                           qdev_get_gpio_in(s->gic, spis[i]));
+    }
+    return dev;
+}
+
+static void tb371fc_create_smmus(TB371FCMachineState *s)
+{
+    s->apps_smmu = tb371fc_create_smmu(s, "apps-smmu",
+        TB371FC_APPS_SMMU_BASE, 0x100000, 96,
+        tb371fc_apps_smmu_spis, ARRAY_SIZE(tb371fc_apps_smmu_spis));
+    s->kgsl_smmu = tb371fc_create_smmu(s, "kgsl-smmu",
+        TB371FC_KGSL_SMMU_BASE, 0x10000, 8,
+        tb371fc_kgsl_smmu_spis, ARRAY_SIZE(tb371fc_kgsl_smmu_spis));
+    if (qtest_enabled()) {
+        /* Exercise real translating DMA from QTest, absent from normal TCG. */
+        memory_region_init_alias(&s->qtest_dma_alias, OBJECT(s),
+            "qtest-smmu-dma", arm_smmuv2_get_dma_mr(s->apps_smmu, 0x42),
+            0, 16 * MiB);
+        memory_region_add_subregion(get_system_memory(), 0x50000000,
+                                     &s->qtest_dma_alias);
+    }
+}
+
+
+
+static void tb371fc_create_boot_resources(TB371FCMachineState *s)
+{
+    DeviceState *pshold = qdev_new(TYPE_QCOM_PSHOLD);
+    DeviceState *dcc = qdev_new(TYPE_QCOM_DCC);
+    DeviceState *ipcc = qdev_new(TYPE_QCOM_IPCC);
+
+    /* Captured IMEM SRAM aperture, initially empty without firmware input. */
+    /*
+     * Machine-owned RAM is registered globally for migration: MachineState
+     * is not a DeviceState and cannot be the auto-registration owner here.
+     */
+    memory_region_init_ram(&s->imem, NULL, "tb371fc.imem", 0x1000,
+                           &error_fatal);
+    memory_region_add_subregion(get_system_memory(), 0x146bf000, &s->imem);
+
+    object_property_add_child(OBJECT(s), "pshold", OBJECT(pshold));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(pshold), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(pshold), 0, 0x0c264000);
+    /* PMIC PON must consume ps-hold before this can implement power policy. */
+
+    /* Captured DCC windows; map2 identity remains a reference profile. */
+    object_property_add_child(OBJECT(s), "dcc", OBJECT(dcc));
+    object_property_set_link(OBJECT(dcc), "memory",
+                             OBJECT(get_system_memory()), &error_fatal);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dcc), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dcc), 0, 0x01023000);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dcc), 1, 0x0103a000);
+
+    object_property_add_child(OBJECT(s), "ipcc", OBJECT(ipcc));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(ipcc), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(ipcc), 0, 0x00408000);
+    sysbus_connect_irq(SYS_BUS_DEVICE(ipcc), 0,
+                      qdev_get_gpio_in(s->gic, 229));
+
+    s->tlmm = qdev_new(TYPE_QCOM_TB371FC_TLMM);
+    object_property_add_child(OBJECT(s), "tlmm", OBJECT(s->tlmm));
+    if (s->enable_ufs) {
+        qdev_prop_set_bit(s->tlmm, "boot-ufs-reset-high", true);
+    }
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(s->tlmm), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(s->tlmm), 0, 0x0f000000);
+    sysbus_connect_irq(SYS_BUS_DEVICE(s->tlmm), 0,
+                        qdev_get_gpio_in(s->gic, 208));
+}
+
+static void tb371fc_create_pdc(TB371FCMachineState *s)
+{
+    static const struct {
+        unsigned first, spi, count;
+    } ranges[] = {
+        { 0, 480, 94 },
+        { 94, 609, 31 },
+        { 125, 63, 1 },
+        { 126, 716, 12 },
+    };
+
+    s->pdc = qdev_new(TYPE_QCOM_PDC);
+    object_property_add_child(OBJECT(s), "pdc", OBJECT(s->pdc));
+    /*
+     * The captured vendor driver uses the legacy layout without reading
+     * VERSION. Leave silicon identity unobserved by default; mainline
+     * experiments may set the device's explicit reference-version property.
+     */
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(s->pdc), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(s->pdc), 0, 0x0b220000);
+    sysbus_mmio_map(SYS_BUS_DEVICE(s->pdc), 1, 0x17c000f0);
+    for (unsigned i = 0; i < ARRAY_SIZE(ranges); i++) {
+        for (unsigned j = 0; j < ranges[i].count; j++) {
+            sysbus_connect_irq(SYS_BUS_DEVICE(s->pdc), ranges[i].first + j,
+                               qdev_get_gpio_in(s->gic, ranges[i].spi + j));
+        }
+    }
+}
+
+static void tb371fc_create_spmi(TB371FCMachineState *s)
+{
+    static const hwaddr bases[QCOM_SPMI_PMIC_ARB_NUM_REGIONS] = {
+        [QCOM_SPMI_PMIC_ARB_CORE]   = 0x0c440000,
+        [QCOM_SPMI_PMIC_ARB_CHNLS]  = 0x0c600000,
+        [QCOM_SPMI_PMIC_ARB_OBSRVR] = 0x0e600000,
+        [QCOM_SPMI_PMIC_ARB_INTR]   = 0x0e700000,
+        [QCOM_SPMI_PMIC_ARB_CNFG]   = 0x0c40a000,
+    };
+    DeviceState *dev;
+
+    if (!strcmp(s->spmi_profile, "off")) {
+        return;
+    }
+
+    /*
+     * Only the apertures and PDC input are measured. APID assignment,
+     * ownership and arbiter version require the explicit reference profile.
+     */
+    dev = qdev_new(TYPE_QCOM_SPMI_PMIC_ARB);
+    object_property_add_child(OBJECT(s), "spmi", OBJECT(dev));
+    qdev_prop_set_bit(dev, "reference-map", true);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    for (unsigned i = 0; i < ARRAY_SIZE(bases); i++) {
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), i, bases[i]);
+    }
+    sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0,
+                       qdev_get_gpio_in_named(s->pdc, "irq-in", 1));
+}
+
+static void tb371fc_create_watchdog(TB371FCMachineState *s)
+{
+    DeviceState *dev = qdev_new(TYPE_QCOM_KPSS_WATCHDOG);
+
+    s->watchdog = dev;
+    object_property_add_child(OBJECT(s), "watchdog", OBJECT(dev));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, TB371FC_WATCHDOG_BASE);
+    sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0, qdev_get_gpio_in(s->gic, 0));
+    sysbus_connect_irq(SYS_BUS_DEVICE(dev), 1, qdev_get_gpio_in(s->gic, 1));
+}
+
+static void tb371fc_create_mmio_timer(TB371FCMachineState *s)
+{
+    DeviceState *dev = qdev_new(TYPE_ARM_ARCH_TIMER_MMIO);
+
+    s->mmio_timer = dev;
+    object_property_add_child(OBJECT(s), "mmio-timer", OBJECT(dev));
+    qdev_prop_set_uint32(dev, "num-frames", 7);
+    qdev_prop_set_uint64(dev, "frequency", TB371FC_TIMER_HZ);
+    qdev_prop_set_bit(dev, "exact-frequency", s->counter_exact);
+    qdev_prop_set_uint8(dev, "virtual-frame-mask", 1);
+    qdev_prop_set_uint8(dev, "el0-frame-mask", 1);
+    /* Direct-kernel boot assumes firmware granted NS access to frame 0. */
+    qdev_prop_set_uint8(dev, "reset-ns-access", 1);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, TB371FC_MMIO_TIMER_BASE);
+    for (unsigned i = 0; i < 7; i++) {
+        hwaddr base = TB371FC_MMIO_TIMER_BASE + 0x1000 + i * 0x2000;
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 1 + i * 2, base);
+        sysbus_connect_irq(SYS_BUS_DEVICE(dev), i * 2,
+                           qdev_get_gpio_in(s->gic, 8 + i));
+    }
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 2, TB371FC_MMIO_TIMER_BASE + 0x2000);
+    sysbus_connect_irq(SYS_BUS_DEVICE(dev), 1, qdev_get_gpio_in(s->gic, 6));
+}
+
+static void tb371fc_realize_ufs(TB371FCMachineState *s)
+{
+    DeviceState *gcc = DEVICE(&s->gcc);
+    static const struct {
+        const char *input, *output;
+    } clocks[] = {
+        { "core-clk", "gcc_ufs_phy_axi_clk" },
+        { "iface-clk", "gcc_ufs_phy_ahb_clk" },
+        { "unipro-clk", "gcc_ufs_phy_unipro_core_clk" },
+        { "phy-aux-clk", "gcc_ufs_phy_phy_aux_clk" },
+        { "aggre-clk", "gcc_aggre_ufs_phy_axi_clk" },
+        { "qref-clk", "gcc_ufs_1x_clkref_en" },
+        { "tx-sync-clk", "gcc_ufs_phy_tx_symbol_0_clk" },
+        { "rx0-sync-clk", "gcc_ufs_phy_rx_symbol_0_clk" },
+        { "rx1-sync-clk", "gcc_ufs_phy_rx_symbol_1_clk" },
+    };
+    const unsigned requests[] = { 6, 148, 161, 162, 166, 168, 169, 170, 171 };
+    unsigned i;
+
+    qdev_prop_set_string(s->ufs, "serial", "QEMU-TB371FC-TEST");
+    /* One modeled data port uses SID e0; the native second class is 4e0. */
+    object_property_set_link(OBJECT(s->ufs), "dma-memory",
+        OBJECT(arm_smmuv2_get_dma_mr(s->apps_smmu, 0xe0)), &error_fatal);
+    for (i = 0; i < ARRAY_SIZE(clocks); i++) {
+        qdev_connect_clock_in(s->ufs, clocks[i].input,
+                              qdev_get_clock_out(gcc, clocks[i].output));
+    }
+    qdev_connect_clock_in(s->ufs, "ref-clk", s->xo);
+    qdev_connect_gpio_out_named(gcc, "reset", 33,
+                                qdev_get_gpio_in_named(s->ufs, "reset", 0));
+    qdev_connect_gpio_out_named(gcc, "power", 4,
+                                qdev_get_gpio_in_named(s->ufs, "power", 0));
+    for (i = 0; i < ARRAY_SIZE(requests); i++) {
+        qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request", requests[i]), 1);
+    }
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(s->ufs), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(s->ufs), 0, TB371FC_UFS_BASE);
+    sysbus_mmio_map(SYS_BUS_DEVICE(s->ufs), 1, TB371FC_UFS_PHY_BASE);
+    sysbus_connect_irq(SYS_BUS_DEVICE(s->ufs), 0,
+                       qdev_get_gpio_in(s->gic, TB371FC_UFS_SPI));
+}
+
 static void tb371fc_init(MachineState *ms)
 {
     TB371FCMachineState *s = TB371FC_MACHINE(ms);
     MemoryRegion *sysmem = get_system_memory();
     SysBusDevice *uart;
+    uint64_t load_base;
 
     if (!tcg_enabled() && !qtest_enabled()) {
         error_report("tb371fc supports TCG execution or qtest device testing");
@@ -442,7 +1128,7 @@ static void tb371fc_init(MachineState *ms)
         exit(1);
     }
     if (strcmp(ms->cpu_type, ARM_CPU_TYPE_NAME("cortex-a55"))) {
-        error_report("tb371fc uses fixed A55/A76 CPU groups; omit -cpu");
+        error_report("tb371fc uses fixed A55/A77 CPU groups; omit -cpu");
         exit(1);
     }
     if (ms->ram_size < 128 * MiB || ms->ram_size > TB371FC_RAM_MAX) {
@@ -458,9 +1144,40 @@ static void tb371fc_init(MachineState *ms)
     memory_region_add_subregion(sysmem, TB371FC_RAM_BASE, ms->ram);
     tb371fc_create_cpus(s, sysmem);
     tb371fc_create_gic(s);
+    tb371fc_create_pdc(s);
+    tb371fc_create_spmi(s);
+    tb371fc_create_mmio_timer(s);
+    tb371fc_create_watchdog(s);
+    tb371fc_create_boot_resources(s);
+    tb371fc_create_smmus(s);
+    if (s->enable_ufs) {
+        s->ufs = qdev_new(TYPE_QCOM_SM8250_UFS);
+        object_property_add_child(OBJECT(s), "ufs", OBJECT(s->ufs));
+        s->ufs->id = g_strdup("ufs0");
+    }
+    tb371fc_create_gcc(s);
+    if (s->ufs) {
+        tb371fc_realize_ufs(s);
+        /* Native pinctrl states: output-low asserts the dedicated pad. */
+        qdev_connect_gpio_out_named(s->tlmm, "ufs-reset", 0,
+            qemu_irq_invert(qdev_get_gpio_in_named(s->ufs, "device-reset", 0)));
+    }
 
     object_initialize_child(OBJECT(s), "uart", &s->uart, TYPE_QCOM_GENI_UART);
     qdev_prop_set_chr(DEVICE(&s->uart), "chardev", serial_hd(0));
+    qdev_connect_clock_in(DEVICE(&s->uart), "se-clk",
+                          qdev_get_clock_out(DEVICE(&s->gcc),
+                                              "gcc_qupv3_wrap2_s4_clk"));
+    qdev_connect_clock_in(DEVICE(&s->uart), "m-ahb",
+                          qdev_get_clock_out(DEVICE(&s->gcc),
+                                              "gcc_qupv3_wrap_2_m_ahb_clk"));
+    qdev_connect_clock_in(DEVICE(&s->uart), "s-ahb",
+                          qdev_get_clock_out(DEVICE(&s->gcc),
+                                              "gcc_qupv3_wrap_2_s_ahb_clk"));
+    qdev_connect_gpio_out_named(DEVICE(&s->gcc), "reset",
+                                TB371FC_GCC_QUP_RESET,
+                                qdev_get_gpio_in_named(DEVICE(&s->uart),
+                                                       "reset", 0));
     uart = SYS_BUS_DEVICE(&s->uart);
     sysbus_realize(uart, &error_fatal);
     sysbus_mmio_map(uart, 0, TB371FC_UART_BASE);
@@ -472,7 +1189,19 @@ static void tb371fc_init(MachineState *ms)
 
     s->bootinfo.ram_size = ms->ram_size;
     s->bootinfo.board_id = -1;
-    s->bootinfo.loader_start = TB371FC_RAM_BASE;
+    /* Native /proc/iomem places Image text at a0080000, offset 80000. */
+    load_base = s->kernel_load_base ? s->kernel_load_base :
+                (ms->ram_size >= GiB ? UINT64_C(0xa0000000) : TB371FC_RAM_BASE);
+    if ((load_base & ((2 * MiB) - 1)) || load_base < TB371FC_RAM_BASE ||
+        load_base >= TB371FC_RAM_BASE + ms->ram_size ||
+        (load_base >= TB371FC_RAM_HOLE_BASE &&
+         load_base < TB371FC_RAM_HOLE_END)) {
+        error_report("tb371fc: kernel-load-base must be a 2 MiB-aligned "
+                     "address within usable board RAM");
+        exit(1);
+    }
+    s->bootinfo.loader_start = load_base;
+    s->bootinfo.ram_size = ms->ram_size - (load_base - TB371FC_RAM_BASE);
     s->bootinfo.psci_conduit = QEMU_PSCI_CONDUIT_SMC;
     s->bootinfo.get_dtb = tb371fc_get_dtb;
     s->bootinfo.modify_dtb = tb371fc_fixup_memory;
@@ -480,11 +1209,207 @@ static void tb371fc_init(MachineState *ms)
     arm_load_kernel(s->cpu[0], ms, &s->bootinfo);
 }
 
+static bool tb371fc_get_ufs(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->enable_ufs;
+}
+
+static void tb371fc_set_ufs(Object *obj, bool value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "ufs-enabled is fixed after machine creation");
+        return;
+    }
+    s->enable_ufs = value;
+}
+
+static bool tb371fc_get_gcc_boot(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->gcc_boot_configured;
+}
+
+static void tb371fc_set_gcc_boot(Object *obj, bool value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "gcc-boot-configured is fixed after machine creation");
+        return;
+    }
+    s->gcc_boot_configured = value;
+}
+
+static void tb371fc_get_fabric_hz(Object *obj, Visitor *v, const char *name,
+                                 void *opaque, Error **errp)
+{
+    uint64_t hz = TB371FC_MACHINE(obj)->bootstrap_fabric_hz;
+    visit_type_uint64(v, name, &hz, errp);
+}
+
+static void tb371fc_set_fabric_hz(Object *obj, Visitor *v, const char *name,
+                                 void *opaque, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+    uint64_t hz;
+
+    if (!visit_type_uint64(v, name, &hz, errp)) {
+        return;
+    }
+    if (s->fabric || hz > 1000000000) {
+        error_setg(errp, "bootstrap-fabric-hz requires 0..1000000000 "
+                   "before machine creation");
+        return;
+    }
+    s->bootstrap_fabric_hz = hz;
+}
+
+
+static bool tb371fc_get_counter_exact(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->counter_exact;
+}
+
+static void tb371fc_set_counter_exact(Object *obj, bool value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "counter-exact is fixed after machine creation");
+        return;
+    }
+    s->counter_exact = value;
+}
+
+static void tb371fc_get_kernel_load_base(Object *obj, Visitor *v,
+                                         const char *name, void *opaque,
+                                         Error **errp)
+{
+    uint64_t base = TB371FC_MACHINE(obj)->kernel_load_base;
+    visit_type_uint64(v, name, &base, errp);
+}
+
+static void tb371fc_set_kernel_load_base(Object *obj, Visitor *v,
+                                         const char *name, void *opaque,
+                                         Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+    uint64_t base;
+
+    if (s->xo) {
+        error_setg(errp, "kernel-load-base is fixed after machine creation");
+        return;
+    }
+    if (visit_type_uint64(v, name, &base, errp)) {
+        s->kernel_load_base = base;
+    }
+}
+
+
+static char *tb371fc_get_spmi_profile(Object *obj, Error **errp)
+{
+    return g_strdup(TB371FC_MACHINE(obj)->spmi_profile);
+}
+
+static void tb371fc_set_spmi_profile(Object *obj, const char *value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "spmi-profile is fixed after machine creation");
+        return;
+    }
+    if (!value || (strcmp(value, "off") && strcmp(value, "reference"))) {
+        error_setg(errp, "spmi-profile must be off or reference");
+        return;
+    }
+    g_free(s->spmi_profile);
+    s->spmi_profile = g_strdup(value);
+}
+
+static char *tb371fc_get_rpmh_profile(Object *obj, Error **errp)
+{
+    return g_strdup(TB371FC_MACHINE(obj)->rpmh_profile);
+}
+
+static void tb371fc_set_rpmh_profile(Object *obj, const char *value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "rpmh-profile is fixed after machine creation");
+        return;
+    }
+    if (!value || (strcmp(value, "off") && strcmp(value, "reference") &&
+                   strcmp(value, "file"))) {
+        error_setg(errp, "rpmh-profile must be off, reference, or file");
+        return;
+    }
+    g_free(s->rpmh_profile);
+    s->rpmh_profile = g_strdup(value);
+}
+
+static char *tb371fc_get_rpmh_cmd_db(Object *obj, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+    return g_strdup(s->rpmh_cmd_db ? s->rpmh_cmd_db : "");
+}
+
+static void tb371fc_set_rpmh_cmd_db(Object *obj, const char *value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "rpmh-cmd-db is fixed after machine creation");
+        return;
+    }
+    g_free(s->rpmh_cmd_db);
+    s->rpmh_cmd_db = g_strdup(value);
+}
+
+static bool tb371fc_get_rpmh_boot(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->rpmh_boot_configured;
+}
+
+static void tb371fc_set_rpmh_boot(Object *obj, bool value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "rpmh-boot-configured is fixed after machine creation");
+        return;
+    }
+    s->rpmh_boot_configured = value;
+}
+
+static void tb371fc_instance_init(Object *obj)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    s->rpmh_profile = g_strdup("off");
+    s->spmi_profile = g_strdup("off");
+    s->rpmh_boot_configured = true;
+    s->counter_exact = true;
+    s->gcc_boot_configured = true;
+    s->enable_ufs = true;
+    s->bootstrap_fabric_hz = 100000000;
+}
+
+static void tb371fc_instance_finalize(Object *obj)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+    g_free(s->rpmh_profile);
+    g_free(s->rpmh_cmd_db);
+    g_free(s->spmi_profile);
+}
+
 static void tb371fc_class_init(ObjectClass *oc, const void *data)
 {
     MachineClass *mc = MACHINE_CLASS(oc);
 
-    mc->desc = "Experimental Lenovo TB371FC (SM8250 subset; A76 surrogate)";
+    mc->desc = "Experimental Lenovo TB371FC (SM8250 subset; A55/A77)";
     mc->init = tb371fc_init;
     mc->default_cpu_type = ARM_CPU_TYPE_NAME("cortex-a55");
     mc->default_cpus = TB371FC_CPUS;
@@ -498,12 +1423,56 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
     mc->no_parallel = true;
     mc->possible_cpu_arch_ids = tb371fc_possible_cpu_arch_ids;
     mc->cpu_index_to_instance_props = tb371fc_cpu_index_to_props;
+
+    object_class_property_add_str(oc, "spmi-profile",
+        tb371fc_get_spmi_profile, tb371fc_set_spmi_profile);
+    object_class_property_set_description(oc, "spmi-profile",
+        "off (default) or explicit reference APID/ownership/PMIC subset");
+    object_class_property_add_str(oc, "rpmh-profile",
+        tb371fc_get_rpmh_profile, tb371fc_set_rpmh_profile);
+    object_class_property_set_description(oc, "rpmh-profile",
+        "off (default), explicit reference command-db, or file");
+    object_class_property_add_str(oc, "rpmh-cmd-db",
+        tb371fc_get_rpmh_cmd_db, tb371fc_set_rpmh_cmd_db);
+    object_class_property_add_bool(oc, "rpmh-boot-configured",
+        tb371fc_get_rpmh_boot, tb371fc_set_rpmh_boot);
+    object_class_property_set_description(oc, "rpmh-boot-configured",
+        "Firmware handoff DRV2 XO vote (default on); off for cold RSC tests");
+    object_class_property_add_bool(oc, "counter-exact",
+        tb371fc_get_counter_exact, tb371fc_set_counter_exact);
+    object_class_property_set_description(oc, "counter-exact",
+        "Exact 19.2 MHz rational counters (default on); off retains legacy "
+        "integer-nanosecond timing for component compatibility tests");
+    object_class_property_add(oc, "kernel-load-base", "uint64",
+        tb371fc_get_kernel_load_base, tb371fc_set_kernel_load_base, NULL, NULL);
+    object_class_property_set_description(oc, "kernel-load-base",
+        "Linux boot allocation base; 0 selects measured a0000000 for >=1 GiB "
+        "RAM, or 80000000 for small component fixtures");
+    object_class_property_add_bool(oc, "ufs-enabled",
+                                    tb371fc_get_ufs, tb371fc_set_ufs);
+    object_class_property_set_description(oc, "ufs-enabled",
+        "Create the SM8250 UFS controller/PHY (default on); off is an "
+        "isolated component test profile, not the complete board");
+    object_class_property_add_bool(oc, "gcc-boot-configured",
+                                    tb371fc_get_gcc_boot,
+                                    tb371fc_set_gcc_boot);
+    object_class_property_set_description(oc, "gcc-boot-configured",
+        "Initialize GCC for direct Linux entry (default on); off for cold "
+        "register tests, not a firmware boot implementation");
+    object_class_property_add(oc, "bootstrap-fabric-hz", "uint64",
+                               tb371fc_get_fabric_hz, tb371fc_set_fabric_hz,
+                               NULL, NULL);
+    object_class_property_set_description(oc, "bootstrap-fabric-hz",
+        "Explicit temporary AHB parent frequency (default 100 MHz), "
+        "not a measured SM8250 fabric rate");
 }
 
 static const TypeInfo tb371fc_machine_type = {
     .name = TYPE_TB371FC_MACHINE,
     .parent = TYPE_MACHINE,
     .instance_size = sizeof(TB371FCMachineState),
+    .instance_init = tb371fc_instance_init,
+    .instance_finalize = tb371fc_instance_finalize,
     .class_init = tb371fc_class_init,
     .interfaces = aarch64_machine_interfaces,
 };

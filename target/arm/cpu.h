@@ -1170,6 +1170,9 @@ struct ArchCPU {
 
     /* Generic timer counter frequency, in Hz */
     uint64_t gt_cntfrq_hz;
+    /* Opt-in exact counter/deadline conversion; legacy machines stay false. */
+    bool gt_cntfrq_exact;
+    bool gt_cntfrq_exact_received; /* Incoming migration subsection seen. */
 };
 
 typedef struct ARMCPUInfo {
@@ -1216,6 +1219,8 @@ void arm_gt_sel2timer_cb(void *opaque);
 void arm_gt_sel2vtimer_cb(void *opaque);
 
 unsigned int gt_cntfrq_period_ns(ARMCPU *cpu);
+uint64_t gt_countervalue_at_ns(ARMCPU *cpu, uint64_t ns);
+int64_t gt_counter_tick_to_ns(ARMCPU *cpu, uint64_t tick);
 void gt_rme_post_el_change(ARMCPU *cpu, void *opaque);
 
 #define ARM_AFF0_SHIFT 0

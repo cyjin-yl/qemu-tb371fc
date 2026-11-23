@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "suite": "linux",
+  "started_utc": "2026-11-23T07:55:25.402949+00:00",
+  "scope": "Public digital component and clean-Linux gates; no stock Android attestation",
+  "private_inputs_used": false,
+  "source_commit": "cc8cba4aa88353fe28e3a3c2365ae9c79f65cbf9",
+  "source_dirty": true,
+  "runner_sha256": "0b11a1bec15024317c3c8e0aa96b805d33b95cd3a2adacfc4ef98a3e8c134ac8",
+  "qemu_sha256": "fe71b5c9a65761910294e6cf690f615ca3c8c0da132207860dc4550b5f28668d",
+  "qemu_version": "QEMU emulator version 11.1.3 (v11.1.3-3-gcc8cba4-dirty)\nCopyright (c) 2003-2026 Fabrice Bellard and the QEMU Project developers",
+  "python": "3.13.5 (main, Aug 10 2026, 12:06:59) [GCC 14.2.0]",
+  "platform": "Linux-7.0.14-26-pve-x86_64-with-glibc2.41",
+  "runtime_fixtures_retained": "/tmp/tbci-z3ilnk5v",
+  "expected_gates": 4,
+  "gates": [
+    {
+      "name": "linux-console-userspace",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/scripts/boot_smoke.py",
+        "--qemu",
+        "/work/resume-20261123/frozen10/qemu-system-aarch64",
+        "--kernel",
+        "/work/linux-rpmh/artifacts/Image",
+        "--timeout",
+        "120",
+        "--out",
+        "/tmp/tbci-z3ilnk5v/00/data"
+      ],
+      "started_utc": "2026-11-23T07:55:25.788311+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-z3ilnk5v/00",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/resume-20261123/frozen10/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-z3ilnk5v/00/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 8
+      },
+      "elapsed_seconds": 2.768,
+      "completed_utc": "2026-11-23T07:55:28.556571+00:00",
+      "log_sha256": {
+        "stdout.log": "8439964cc0d20355991e66848824d77d79c28808db628aa4f6efde7f30319aef",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "linux-console-empty-ufs",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/scripts/boot_smoke.py",
+        "--qemu",
+        "/work/resume-20261123/frozen10/qemu-system-aarch64",
+        "--kernel",
+        "/work/linux-rpmh/artifacts/Image",
+        "--timeout",
+        "120",
+        "--without-ufs-lu",
+        "--debug-mmio",
+        "--out",
+        "/tmp/tbci-z3ilnk5v/01/data"
+      ],
+      "started_utc": "2026-11-23T07:55:28.557491+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-z3ilnk5v/01",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/resume-20261123/frozen10/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-z3ilnk5v/01/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 8
+      },
+      "elapsed_seconds": 2.577,
+      "completed_utc": "2026-11-23T07:55:31.134776+00:00",
+      "log_sha256": {
+        "stdout.log": "7fb712f6b0c1c3035a8ff4cf23f1485e78983e60d670e1757332545d3abdcc3e",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "linux-ufs-smmu",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/scripts/boot_ufs.py",
+        "--qemu",
+        "/work/resume-20261123/frozen10/qemu-system-aarch64",
+        "--kernel",
+        "/work/linux-rpmh/artifacts/Image",
+        "--timeout",
+        "120",
+        "--out",
+        "/tmp/tbci-z3ilnk5v/02/data"
+      ],
+      "started_utc": "2026-11-23T07:55:31.135867+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-z3ilnk5v/02",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/resume-20261123/frozen10/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-z3ilnk5v/02/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 19
+      },
+      "elapsed_seconds": 2.673,
+      "completed_utc": "2026-11-23T07:55:33.809040+00:00",
+      "log_sha256": {
+        "stdout.log": "eeb273d2ead8ecae10e20166747e53ba7bb97839adc1634759d7a8dc32891d06",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "linux-ufs-rpmh",
+      "command": [
+        "/usr/bin/python3",
+        "/src/tb371fc/scripts/boot_ufs.py",
+        "--qemu",
+        "/work/resume-20261123/frozen10/qemu-system-aarch64",
+        "--kernel",
+        "/work/linux-rpmh/artifacts/Image",
+        "--timeout",
+        "120",
+        "--machine",
+        "tb371fc,rpmh-profile=reference",
+        "--require-rpmh",
+        "--out",
+        "/tmp/tbci-z3ilnk5v/03/data"
+      ],
+      "started_utc": "2026-11-23T07:55:33.810055+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-z3ilnk5v/03",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/resume-20261123/frozen10/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-z3ilnk5v/03/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 23
+      },
+      "elapsed_seconds": 2.569,
+      "completed_utc": "2026-11-23T07:55:36.378978+00:00",
+      "log_sha256": {
+        "stdout.log": "9dca14946aced74bd632af6e459ef3a4d6069c8bb1a88bc28424f692c7c34cc0",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "passed": true,
+  "kernel_sha256": "c513268fb0727d289fdfc0f02637c53cf5f976cc836ea9c586763f5f584bce40",
+  "kernel_build_receipt": {
+    "schema_version": 1,
+    "completed_utc": "2026-11-23T07:38:35.280856+00:00",
+    "scope": "Independent upstream Linux input for QEMU tb371fc smoke; no tablet flash or boot",
+    "source_version": "6.12.114",
+    "source_url": "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.114.tar.xz",
+    "source_tar_sha256": "7a8589912bd7a8adb07fed074283652cf482a35facef8954554654f0154b4af3",
+    "patches_applied_by_script": [],
+    "config_fragment_path": "/src/tb371fc/configs/linux-smoke.config",
+    "config_fragment_sha256": "9b4809aa256b425a7aac94bb4f1f2e98a9db3ac1db28080523a9f21774ff987b",
+    "effective_config_sha256": "96f9a9fd58f5db5f829b7c1106299cfe2208c7a1a70fc60b3adcb7938b80090c",
+    "image_path": "/work/linux-rpmh/artifacts/Image",
+    "image_bytes": 4450312,
+    "image_sha256": "c513268fb0727d289fdfc0f02637c53cf5f976cc836ea9c586763f5f584bce40",
+    "cross_compiler": {
+      "command": "aarch64-linux-gnu-gcc",
+      "path": "/usr/bin/aarch64-linux-gnu-gcc-14",
+      "sha256": "fb743ca27a77466c91da66047eec879a615993feaabd860aaf3750e7b222b131",
+      "version": "aarch64-linux-gnu-gcc (Debian 14.2.0-19) 14.2.0"
+    },
+    "cross_linker": {
+      "command": "aarch64-linux-gnu-ld",
+      "path": "/usr/bin/aarch64-linux-gnu-ld.bfd",
+      "sha256": "bdb57a3334f460af5921b65de134f128642325a2087ff716dafd0adbfcc0778a",
+      "version": "GNU ld (GNU Binutils for Debian) 2.44"
+    },
+    "host_compiler": {
+      "command": "gcc",
+      "path": "/usr/bin/x86_64-linux-gnu-gcc-14",
+      "sha256": "a23ecab8ff08f09ad8c80602c2c5df7f49e09c25905cb8975902e101bf72635f",
+      "version": "gcc (Debian 14.2.0-19) 14.2.0"
+    },
+    "config_command": [
+      "make",
+      "-C",
+      "/work/clean-linux/source/linux-6.12.114",
+      "O=/work/linux-rpmh/build",
+      "ARCH=arm64",
+      "CROSS_COMPILE=aarch64-linux-gnu-",
+      "allnoconfig"
+    ],
+    "config_environment": {
+      "KCONFIG_ALLCONFIG": "/src/tb371fc/configs/linux-smoke.config"
+    },
+    "build_command": [
+      "make",
+      "-C",
+      "/work/clean-linux/source/linux-6.12.114",
+      "O=/work/linux-rpmh/build",
+      "ARCH=arm64",
+      "CROSS_COMPILE=aarch64-linux-gnu-",
+      "-j2",
+      "Image"
+    ],
+    "build_environment": {
+      "KBUILD_BUILD_TIMESTAMP": "2026-11-22 00:00:00 +0000",
+      "KBUILD_BUILD_USER": "tb371fc-qemu",
+      "KBUILD_BUILD_HOST": "isolated-builder",
+      "KBUILD_BUILD_VERSION": "1",
+      "SOURCE_DATE_EPOCH": "1795305600"
+    },
+    "build_completed": true,
+    "guest_boot_tested_by_this_script": false
+  },
+  "c_test_binary_sha256": {},
+  "passed_gates": 4,
+  "completed_utc": "2026-11-23T07:55:36.379519+00:00",
+  "elapsed_seconds": 10.592,
+  "qemu_unchanged": true
+}

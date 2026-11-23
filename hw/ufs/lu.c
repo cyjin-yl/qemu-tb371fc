@@ -173,6 +173,9 @@ static void ufs_scsi_command_complete(SCSIRequest *scsi_req, size_t resid)
     int16_t status = scsi_req->status;
     uint32_t transfered_len = scsi_req->cmd.xfer - resid;
 
+    assert(req != NULL);
+    req->sreq = NULL;
+
     /* WB / HID accounting should only happen for successful commands */
     if (status == GOOD) {
         ufs_wb_process_write_req(req, transfered_len);
@@ -184,6 +187,16 @@ static void ufs_scsi_command_complete(SCSIRequest *scsi_req, size_t resid)
 
     ufs_complete_req(req, UFS_REQUEST_SUCCESS);
 
+    scsi_req->hba_private = NULL;
+    scsi_req_unref(scsi_req);
+}
+
+static void ufs_scsi_command_cancelled(SCSIRequest *scsi_req)
+{
+    UfsRequest *req = scsi_req->hba_private;
+
+    assert(req != NULL);
+    req->sreq = NULL;
     scsi_req->hba_private = NULL;
     scsi_req_unref(scsi_req);
 }
@@ -202,7 +215,23 @@ static const struct SCSIBusInfo ufs_scsi_info = {
 
     .get_sg_list = ufs_get_sg_list,
     .complete = ufs_scsi_command_complete,
+    .cancel = ufs_scsi_command_cancelled,
 };
+
+static bool ufs_append_lun(uint8_t *outbuf, uint32_t outbuf_len, int *len,
+                           uint8_t lun, uint8_t lun_msb)
+{
+    if (*len + 8 > outbuf_len) {
+        return false;
+    }
+
+    memset(outbuf + *len, 0, 8);
+    outbuf[*len] = lun_msb;
+    outbuf[*len + 1] = lun;
+    *len += 8;
+
+    return true;
+}
 
 static int ufs_emulate_report_luns(UfsRequest *req, uint8_t *outbuf,
                                    uint32_t outbuf_len)
@@ -210,27 +239,36 @@ static int ufs_emulate_report_luns(UfsRequest *req, uint8_t *outbuf,
     UfsHc *u = req->hc;
     int len = 0;
 
-    /* TODO: Support for cases where SELECT REPORT is 1 and 2 */
-    if (req->req_upiu.sc.cdb[2] != 0) {
+    uint8_t report_lun_cmd = req->req_upiu.sc.cdb[2];
+
+    if (report_lun_cmd > 2) {
         return SCSI_COMMAND_FAIL;
     }
 
     if (outbuf_len < 8) {
         return SCSI_COMMAND_FAIL;
     }
+
     memset(outbuf, 0, 8);
     len += 8;
 
-    for (uint8_t lun = 0; lun < UFS_MAX_LUS; ++lun) {
-        if (u->lus[lun]) {
-            if (len + 8 > outbuf_len) {
+    if (report_lun_cmd == 2 || report_lun_cmd == 1) {
+        ufs_append_lun(outbuf, outbuf_len, &len, u->report_wlu.lun & 0x7F,
+                       UFS_WLUN_MSB);
+        ufs_append_lun(outbuf, outbuf_len, &len, u->dev_wlu.lun & 0x7F,
+                       UFS_WLUN_MSB);
+        ufs_append_lun(outbuf, outbuf_len, &len, u->boot_wlu.lun & 0x7F,
+                       UFS_WLUN_MSB);
+        ufs_append_lun(outbuf, outbuf_len, &len, u->rpmb_wlu.lun & 0x7F,
+                       UFS_WLUN_MSB);
+    }
+
+    if (report_lun_cmd == 0 || report_lun_cmd == 2) {
+        for (uint8_t lun = 0; lun < UFS_MAX_LUS; ++lun) {
+            if (u->lus[lun] &&
+                !ufs_append_lun(outbuf, outbuf_len, &len, lun, 0)) {
                 break;
             }
-
-            memset(outbuf + len, 0, 8);
-            outbuf[len] = 0;
-            outbuf[len + 1] = lun;
-            len += 8;
         }
     }
 
@@ -238,6 +276,72 @@ static int ufs_emulate_report_luns(UfsRequest *req, uint8_t *outbuf,
     stl_be_p(outbuf, len - 8);
 
     return len;
+}
+
+/*
+ * A well-formed command to an absent logical unit is a SCSI response, not a
+ * malformed UTP command table. Match the target discovery semantics used by
+ * hw/scsi/scsi-bus.c while keeping all data movement inside the supplied PRDT.
+ */
+UfsReqResult ufs_emulate_missing_lun(UfsRequest *req)
+{
+    const uint8_t *cdb = req->req_upiu.sc.cdb;
+    uint8_t outbuf[4096] = { 0 };
+    uint8_t sense[UFS_SENSE_SIZE] = { 0 };
+    uint8_t status = GOOD;
+    uint32_t len = 0, allocation = 0;
+    SCSISense error = SENSE_CODE(LUN_NOT_SUPPORTED);
+
+    switch (cdb[0]) {
+    case INQUIRY:
+        if ((cdb[1] & 3) || cdb[2]) {
+            error = SENSE_CODE(INVALID_FIELD);
+            status = CHECK_CONDITION;
+            break;
+        }
+        outbuf[0] = TYPE_NO_LUN;
+        len = SCSI_INQUIRY_LEN;
+        allocation = lduw_be_p(cdb + 3);
+        break;
+    case REQUEST_SENSE:
+        len = scsi_build_sense_buf(outbuf, sizeof(outbuf),
+                                  SENSE_CODE(LUN_NOT_SUPPORTED), !(cdb[1] & 1));
+        allocation = cdb[4];
+        break;
+    case REPORT_LUNS:
+        /* LUN zero remains a target-discovery address when unpopulated. */
+        if (req->req_upiu.header.lun == 0) {
+            int report_len = ufs_emulate_report_luns(req, outbuf, sizeof(outbuf));
+
+            if (report_len >= 0) {
+                len = report_len;
+                allocation = ldl_be_p(cdb + 6);
+                break;
+            }
+            error = SENSE_CODE(INVALID_FIELD);
+        }
+        /* fall through */
+    default:
+        status = CHECK_CONDITION;
+        break;
+    }
+
+    if (status == GOOD) {
+        len = MIN(len, allocation);
+        if (len && !ufs_fit_data_buffer(req, len)) {
+            return UFS_REQUEST_MISMATCH_DATA_BUF;
+        }
+        if (len && dma_buf_read(outbuf, len, NULL, req->sg,
+                                MEMTXATTRS_UNSPECIFIED) != MEMTX_OK) {
+            return UFS_REQUEST_FAIL;
+        }
+    } else {
+        scsi_build_sense(sense, error);
+    }
+
+    ufs_build_scsi_response_upiu(req, sense,
+                                status == GOOD ? 0 : sizeof(sense), len, status);
+    return UFS_REQUEST_SUCCESS;
 }
 
 static int ufs_scsi_emulate_vpd_page(UfsRequest *req, uint8_t *outbuf,
@@ -368,6 +472,10 @@ static UfsReqResult ufs_emulate_scsi_cmd(UfsLu *lu, UfsRequest *req)
 static UfsReqResult ufs_process_scsi_cmd(UfsLu *lu, UfsRequest *req)
 {
     uint8_t task_tag = req->req_upiu.header.task_tag;
+    uint8_t *cdb = req->req_upiu.sc.cdb;
+    uint8_t sync_cache_10[UFS_CDB_SIZE] = { SYNCHRONIZE_CACHE };
+    SCSIRequest *scsi_req;
+    uint32_t len;
 
     /*
      * Each ufs-lu has its own independent virtual SCSI bus. Therefore, we can't
@@ -379,11 +487,41 @@ static UfsReqResult ufs_process_scsi_cmd(UfsLu *lu, UfsRequest *req)
         return ufs_emulate_scsi_cmd(lu, req);
     }
 
-    SCSIRequest *scsi_req =
-        scsi_req_new(lu->scsi_dev, task_tag, lu->lun, req->req_upiu.sc.cdb,
-                     UFS_CDB_SIZE, req);
+    /*
+     * scsi-hd implements SYNCHRONIZE CACHE(10) only, while Linux sends the
+     * 16-byte variant to zoned disks. scsi-hd flushes the whole medium for
+     * SYNCHRONIZE CACHE(10) whatever its LBA range, so pass the 16-byte
+     * command on as the 10-byte one, keeping IMMED.
+     */
+    if (cdb[0] == SYNCHRONIZE_CACHE_16) {
+        sync_cache_10[1] = cdb[1] & 0x02;
+        cdb = sync_cache_10;
+    }
 
-    uint32_t len = scsi_req_enqueue(scsi_req);
+    scsi_req = scsi_req_new(lu->scsi_dev, task_tag, lu->lun, cdb, UFS_CDB_SIZE,
+                            req);
+
+    /*
+     * scsi-hd moves as many bytes as the SG list holds, and without an SG
+     * list it would call the transfer_data callback, which ufs-lu does not
+     * set. A UFS device moves what the CDB asks for, so fit the PRDT to the
+     * transfer length, and fail a request whose PRDT describes less, a
+     * missing PRDT included, with OCS MISMATCH DATA BUFFER SIZE, as
+     * virtio-scsi fails a buffer that does not match the command. The
+     * response reports the rest of the Expected Data Transfer Length as a
+     * residual. A request that reports a pending unit attention moves no
+     * data; its sense is already set, so let it through and the guest sees
+     * the UA.
+     */
+    if (!scsi_req->sense_len &&
+        !ufs_fit_data_buffer(req, scsi_req->cmd.xfer)) {
+        scsi_req_unref(scsi_req);
+        return UFS_REQUEST_MISMATCH_DATA_BUF;
+    }
+
+    req->sreq = scsi_req;
+
+    len = scsi_req_enqueue(scsi_req);
     if (len) {
         scsi_req_continue(scsi_req);
     }
@@ -497,7 +635,7 @@ static void ufs_lu_realize(DeviceState *dev, Error **errp)
 {
     UfsLu *lu = DO_UPCAST(UfsLu, qdev, dev);
     BusState *s = qdev_get_parent_bus(dev);
-    UfsHc *u = UFS(s->parent);
+    UfsHc *u = UFS_BUS(s)->hc;
     BlockBackend *blk = lu->conf.blk;
 
     if (!ufs_lu_check_constraints(lu, errp)) {

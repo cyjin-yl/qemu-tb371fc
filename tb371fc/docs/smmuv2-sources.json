@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "tb371fc-smmuv2-source-provenance",
+  "specification": {
+    "title": "Arm System Memory Management Unit Architecture Specification, SMMU architecture version 2.0",
+    "document": "IHI0062D.c",
+    "url": "https://documentation-service.arm.com/static/5f900d34f86e16515cdc08fb",
+    "sha256": "5f12c28c3a449381913112ac15cc914cfe2ea1a98ce3685f3ef079b247ca7e9d"
+  },
+  "linux": [
+    {
+      "version": "6.12.114",
+      "path": "drivers/iommu/arm/arm-smmu/arm-smmu.c",
+      "sha256": "74e4f3d329c55f96223e30e7bc923ea40f03f7eea9f4b7b037b23fef2d4f9659"
+    },
+    {
+      "version": "6.12.114",
+      "path": "drivers/iommu/arm/arm-smmu/arm-smmu.h",
+      "sha256": "0cfa9d1fbd677a0c256fb0cdc5edf4efe04557c52c17ebc706b068d78205eaed"
+    }
+  ],
+  "hardware": {
+    "file": "tb371fc/evidence/expansion-20261123/android-device-inventory.json",
+    "sha256": "3797824168bc12cd65d8079ffe428c45a4126f54b2170460981ee8903d504263",
+    "scope": "Allowed property bytes from live DT. No SMMU MMIO read, no measured native IDRs."
+  },
+  "native_nodes": [
+    "/soc/apps-smmu@15000000",
+    "/soc/kgsl-smmu@3da0000"
+  ],
+  "implementation_identity": "Generic architectural SMMUv2 stage-1 AArch64 4K subset; not Qualcomm QSMMUv500 or MMU-500 implementation identity"
+}
