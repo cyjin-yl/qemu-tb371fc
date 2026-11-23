@@ -379,3 +379,28 @@ The [raw Devfreq report](../evidence/wholeboard-20261123-a47/devfreq-qcom-fw-b95
 The [same-binary full-DT diagnostic](../evidence/wholeboard-20261123-a47/native-b95f97.json) explicitly registers all four L3 voters and initializes the parent. The stopped request is index 3, consistent with the synthetic nominal table; that is not a physical cache rate. The next external abort writes 0x01506080 in msm_bus_noc_sbm_config from a deferred-probe worker. No PID1 panic was observed in this run; userspace and Android remain unaccepted. The earlier 74-gate result and its prior failure remain preserved.
 
 The [plan-only preflight](../evidence/wholeboard-20261123-a47/development-validation-devfreq75.json) confirmed the 71+4 plan without executing public tests or QEMU. The [model/test review](../evidence/wholeboard-20261123-a47/devfreq-model-test-review.json) preserves the pre-execution isolated-machine fix; no check, count or rejection condition was relaxed.
+
+## Next 78-gate camera candidate
+
+The new `camera-gdsc-reference` gate follows `gpu-cx-gdsc` and leaves all
+previous gate contracts and their relative order intact. The candidate has
+74 component gates and the same four Linux gates. It requires 29 checks,
+two completed transfers, two opposite-profile rejections and two single-bit
+corruption rejections. Three actual unmodified sources plus two corrupted
+copies are five files, not five successful migrations.
+
+The exact-artifact guard for the candidate requires seventeen selected
+component receipts and forty-two actual migration files. Its new independent
+decoder must inspect the complete 194-byte camera payload, real QMP/QTest
+transcripts, first target observations before MMIO, GCC v3 retention state,
+and the complete RPMh v2 state carrying the pending parent command and original
+deadline. A GPIO group is intercepted in each scenario; no test claims that
+QTest intercepts both named camera output groups in one process.
+
+The existing GCC source-generation gate still compares exactly two generated
+files. It additionally downloads and hashes the fixed vendor branch driver,
+so four pinned public inputs now support those two outputs. The old GCC and
+GPU runtime test scripts are unchanged. The separate full-DT fixture remains
+a build-only step outside the four Linux gates until a same-binary primary
+run is fatal-free and the explicit userspace consumer is actually invoked.
+This section records planned acceptance, not completed CI or native results.

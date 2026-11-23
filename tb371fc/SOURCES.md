@@ -191,3 +191,20 @@ The complete kernel log contains an Oops but no PID1 panic; the full-DT
 eight-check consumer was not run. WAIT masking was enabled with zero usage,
 so this trace does not establish it caused the later progress. No Android,
 physical reserved-bit behavior or endpoint traffic success is inferred.
+
+## Camera GDSC candidate and bounded GCC field correction
+
+The [camera source contract](docs/camera-gdsc-source-contract.md) binds the next
+increment to two read-only slices of the original full DT and fixed official
+vendor files. It accounts for all 24 DT GDSC owners and selects only the six
+same-protocol camera words. The second capture proves the parent resource
+name `mmcx.lvl`; RPMh index 3 and its digital level behavior remain properties
+of the existing explicit reference, not measured PMIC behavior.
+
+The [camera protocol](docs/camera-gdsc-reference.md) specifies the independent
+type, sparse geometry, unknown-input rules and 194-byte v1 state. The separate
+[GCC correction](docs/gcc-sm8250.md#camera-ahb-retention-request-fields) follows
+the exact `clk_set_flags` dispatch to bits 13/14 of `0xb008`; its generator now
+checks four fixed inputs while still reproducing two output files. No parent
+clock rate, retained camera memory or hidden hardware voter is inferred.
+Formal execution evidence for this combined candidate is still required.

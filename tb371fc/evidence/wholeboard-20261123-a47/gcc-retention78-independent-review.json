@@ -1,0 +1,103 @@
+{
+  "schema": "tb371fc-gcc-camera-retention-independent-static-review-v1",
+  "result": "no-static-blocker",
+  "source_base": "09c638d6a6d4fa4a4e4e332a7b39aa7bf7f5418e",
+  "files": [
+    {
+      "path": "tb371fc/scripts/generate_gcc_sm8250.py",
+      "local_path": "/run/tb371fc-root78-a47/gcc/tb371fc/scripts/generate_gcc_sm8250.py",
+      "bytes": 23021,
+      "sha256": "e2a092ccf83abdecae6ab4cb82f3c4cd2ebae15c90053d0e8bc3bf82bcb8e52b",
+      "git_blob_sha1": "2766496837c054b3d25d597e31b9adb358f8a199"
+    },
+    {
+      "path": "tb371fc/scripts/verify_gcc_generation.py",
+      "local_path": "/run/tb371fc-root78-a47/gcc/tb371fc/scripts/verify_gcc_generation.py",
+      "bytes": 4179,
+      "sha256": "194ac1b4d68852a5614485a02ef3ee12a365b52bfcccc840f0d9efe8cb7be5ea",
+      "git_blob_sha1": "ac2730ddd11a0a7c38b722c34a36d4939e9c44ae"
+    },
+    {
+      "path": "hw/misc/qcom-sm8250-gcc-data.inc",
+      "local_path": "/run/tb371fc-root78-a47/gcc/hw/misc/qcom-sm8250-gcc-data.inc",
+      "bytes": 63128,
+      "sha256": "2f1851ffcd8fb6706d358ef5e422dae5318c7242ae9c6f5ebc6c9c9b637015f4",
+      "git_blob_sha1": "b7b743526bc14a750fc67b4c6ca35cd2c1f1d346"
+    },
+    {
+      "path": "tb371fc/docs/gcc-sm8250-registers.json",
+      "local_path": "/run/tb371fc-root78-a47/gcc/tb371fc/docs/gcc-sm8250-registers.json",
+      "bytes": 148848,
+      "sha256": "dee2a884b42412cf1b86f0edabc1dad9a5d1a5c05cec7c2b942f37c6d5306cae",
+      "git_blob_sha1": "e77166340d3f81fc761f2d9c6051eeea86e27798"
+    },
+    {
+      "path": "tb371fc/docs/gcc-sm8250.md",
+      "local_path": "/run/tb371fc-root78-a47/gcc/tb371fc/docs/gcc-sm8250.md",
+      "bytes": 27682,
+      "sha256": "6400fcd43f6469e913df60e790862a345d66e20ecfc0b315704ff0126ea53c73",
+      "git_blob_sha1": "5de97240429f3aea71be5f8d942b480df406f9fa"
+    }
+  ],
+  "checks": {
+    "five_files_identity_matches": true,
+    "python_ast_parse_only": true,
+    "all_clock_reset_power_domain_descriptors_unchanged": true,
+    "register_delta_exactly_one_word": [
+      [
+        {
+          "offset": 45064,
+          "write_mask": 1,
+          "status_mask": 0
+        },
+        {
+          "offset": 45064,
+          "write_mask": 24577,
+          "status_mask": 0
+        }
+      ]
+    ],
+    "source_supplement_append_only": true,
+    "owner_start_line": 1711,
+    "fixed_source_set_clear_regex_fields": {
+      "PERIPH": 13,
+      "MEM": 14
+    },
+    "gates_still_two_generated_output_checks": true,
+    "same_clock_objects_parent_and_gpio_numbering": true,
+    "unsupported_bit12_unchanged": true
+  },
+  "source_chain": [
+    {
+      "path": "drivers/clk/qcom/gcc-kona.c",
+      "git_blob": "f78629254926e67dc7646da3e5e69f9bc2472ef6",
+      "lines": "1711-1725",
+      "fact": "camera AHB halt/enable word b008 and clk_branch2_ops"
+    },
+    {
+      "path": "drivers/clk/qcom/clk-branch.c",
+      "git_blob": "46e2e1861c99dc38cb1c532c8b66af87ff52fc9f",
+      "lines": "132-168,178-182,373-386",
+      "fact": "set_flags dispatch updates retention bits13/14 on halt_reg"
+    },
+    {
+      "path": "drivers/clk/clk.c",
+      "git_blob": "be04521586bcfd59b746e906162578f467731edd",
+      "lines": "3132-3141",
+      "fact": "clk_set_flags directly calls registered operation"
+    }
+  ],
+  "limitations": {
+    "generator_executed": false,
+    "public_test_executed": false,
+    "qemu_executed": false,
+    "build_executed": false,
+    "native_retention_write_observed": false,
+    "data_retention_or_clock_availability_proved": false
+  },
+  "notes": [
+    "Manual synchronization of the two outputs was statically reviewed; the formal generation gate must establish byte-identical regeneration.",
+    "Vendor ID11 and generated upstream table ID10 are distinct namespaces; no parent/bootstrap/halt status is inferred.",
+    "A cold NORETAIN RMW may be elided when unchanged; source call chain is not proof of a native nonzero retention write."
+  ]
+}

@@ -172,7 +172,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 77)
+        self.assertEqual(len(cases), 78)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]

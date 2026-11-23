@@ -5,7 +5,8 @@
 The parser deliberately accepts one audited source revision only. It extracts
 register facts, not arbitrary C. Run in the development container:
   python3 tb371fc/scripts/generate_gcc_sm8250.py /path/to/linux-6.12.114 \\
-    --vendor-gcc /path/to/pinned/gcc-kona.c
+    --vendor-gcc /path/to/pinned/gcc-kona.c \\
+    --vendor-branch /path/to/pinned/clk-branch.c
 """
 import argparse
 import hashlib
@@ -19,6 +20,10 @@ VENDOR_PATH = 'drivers/clk/qcom/gcc-kona.c'
 VENDOR_SHA256 = 'ed208678508c983d0989f1f135fac898c5a9a91c14af1fa42cd7ea2f24cd14cd'
 VENDOR_URL = ('https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/'
               'blob/' + VENDOR_REVISION + '/' + VENDOR_PATH)
+VENDOR_BRANCH_PATH = 'drivers/clk/qcom/clk-branch.c'
+VENDOR_BRANCH_SHA256 = '375830dc9cd0ecbc12ea018eee1d260d8ba724dc52f1ac8b3589a07bc75d08aa'
+VENDOR_BRANCH_URL = ('https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/'
+                     'blob/' + VENDOR_REVISION + '/' + VENDOR_BRANCH_PATH)
 PRIMARY = 'https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/'
 SYMBOLS = {'P_BI_TCXO': -1, 'P_SLEEP_CLK': -2, 'P_AUD_REF_CLK': -3,
            'P_GPLL0_OUT_MAIN': 0, 'P_GPLL0_OUT_EVEN': 1,
@@ -56,6 +61,8 @@ def main():
     ap.add_argument('linux', type=Path)
     ap.add_argument('--vendor-gcc', type=Path, required=True,
                     help='Exact pinned official OnePlus gcc-kona.c input')
+    ap.add_argument('--vendor-branch', type=Path, required=True,
+                    help='Exact pinned official OnePlus clk-branch.c input')
     ap.add_argument('--output-root', type=Path, default=Path(__file__).resolve().parents[2])
     args = ap.parse_args()
     driver = args.linux / 'drivers/clk/qcom/gcc-sm8250.c'
@@ -65,6 +72,10 @@ def main():
     if hashlib.sha256(vendor_bytes).hexdigest() != VENDOR_SHA256:
         raise ValueError('gcc-kona.c differs from the pinned official OnePlus source')
     vendor_source = vendor_bytes.decode('utf-8')
+    branch_bytes = args.vendor_branch.read_bytes()
+    if hashlib.sha256(branch_bytes).hexdigest() != VENDOR_BRANCH_SHA256:
+        raise ValueError('clk-branch.c differs from the pinned official OnePlus source')
+    branch_source = branch_bytes.decode('utf-8')
     hashes = {str(p.relative_to(args.linux)): hashlib.sha256(p.read_bytes()).hexdigest()
               for p in (driver, binding)}
     # These checks prevent a changed driver from silently producing partial data.
@@ -132,6 +143,34 @@ def main():
     # the old 84-entry external array and its synthetic parent interpretation.
     vendor = {name: (body, line)
               for name, body, line in definitions(vendor_source, 'clk_branch')}
+    # The actual camera GDSCs call clk_set_flags on this branch. Keep
+    # retention request storage separate from its unknown external clock.
+    camera_body, camera_line = vendor['gcc_camera_ahb_clk']
+    camera_facts = (number(camera_body, 'halt_reg'),
+                    number(camera_body, 'enable_reg'),
+                    bit(camera_body, 'enable_mask'),
+                    required(r'\.ops\s*=\s*&(\w+)', camera_body).group(1))
+    if camera_facts != (0xb008, 0xb008, 1, 'clk_branch2_ops'):
+        raise ValueError('unexpected Kona camera AHB branch description')
+    branch_ops = required(r'const struct clk_ops clk_branch2_ops = \{([\s\S]*?)\n\};',
+                          branch_source).group(1)
+    required(r'\.set_flags\s*=\s*clk_branch_set_flags\b', branch_ops)
+    set_flags = required(r'static int clk_branch_set_flags\([^)]*\)\s*\{([\s\S]*?)\n\}',
+                          branch_source).group(1)
+    required(r'return clk_cbcr_set_flags\(br->clkr.regmap, br->halt_reg, flags\);',
+             set_flags)
+    retention_fields = {}
+    for name, expected_bit in [('PERIPH', 13), ('MEM', 14)]:
+        pattern = (r'case CLKFLAG_RETAIN_' + name +
+                   r':\s*cbcr_val = cbcr_mask = BIT\((\d+)\);\s*break;')
+        field = int(required(pattern, branch_source).group(1))
+        clear = int(required(r'case CLKFLAG_NORETAIN_' + name +
+                             r':\s*cbcr_mask = BIT\((\d+)\);\s*break;',
+                             branch_source).group(1))
+        if field != clear or field != expected_bit:
+            raise ValueError('unexpected Kona CBCR retention field')
+        retention_fields['retain_' + name.lower()] = field
+    retention_mask = sum(1 << value for value in retention_fields.values())
     name = 'gcc_sys_noc_cpuss_ahb_clk'
     body, vendor_line = vendor[name]
     parent_name = required(
@@ -270,6 +309,7 @@ def main():
             if r != 0xffffffff: add(r, ro=0xf0000000)
             add(d['enable_reg'], d['enable_mask'])
             if d['hwcg_reg']: add(d['hwcg_reg'], d['hwcg_mask'])
+    add(camera_facts[0], retention_mask)
     for d in resets: add(d['reg'], d['mask'])
     for d in gdscs: add(d['reg'], 0xfff007, 0x80000000)
     add(0x4d110, 3); add(0x71028, 3)
@@ -285,14 +325,26 @@ def main():
                                                  'GCC_USB3_PRIM_PHY_PIPE_CLK',
                                                  'GCC_USB3_PRIM_PHY_PIPE_CLK_SRC',
                                                  'GCC_USB3_SEC_PHY_PIPE_CLK',
-                                                 'GCC_USB3_SEC_PHY_PIPE_CLK_SRC')])],
+                                                 'GCC_USB3_SEC_PHY_PIPE_CLK_SRC')]),
+                                       dict(name='oneplus-kona-camera-ahb-retention',
+                                            revision=VENDOR_REVISION,
+                                            path=VENDOR_BRANCH_PATH, url=VENDOR_BRANCH_URL,
+                                            sha256=VENDOR_BRANCH_SHA256,
+                                            clock_ids=[ids['GCC_CAMERA_AHB_CLK']],
+                                            register_offset=camera_facts[0],
+                                            write_mask=retention_mask,
+                                            field_bits=retention_fields,
+                                            register_owner=dict(path=VENDOR_PATH,
+                                                                sha256=VENDOR_SHA256,
+                                                                line=camera_line),
+                                            scope='Digital request fields only; no retained payload or clock availability is inferred')],
                     clocks=clocks, resets=resets, power_domains=gdscs,
                     registers=[dict(offset=reg, write_mask=rw, status_mask=ro) for reg, (rw, ro) in sorted(regs.items())])
     (args.output_root / 'tb371fc/docs/gcc-sm8250-registers.json').write_text(json.dumps(manifest, indent=2) + '\n')
     out = ['/* SPDX-License-Identifier: GPL-2.0-only */',
            '/* Generated register facts from Linux v6.12.114 gcc-sm8250.c.',
            ' * Source copyright (c) 2018-2020, The Linux Foundation. All rights reserved.',
-           ' * CPUSS branch and USB pipe muxes use pinned official Kona facts.',
+           ' * CPUSS branch, USB pipe muxes and camera AHB retention use pinned Kona facts.',
            ' * Regenerate with tb371fc/scripts/generate_gcc_sm8250.py; see manifest.',
            ' */', 'static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {']
     for d in clocks:

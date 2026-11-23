@@ -1,0 +1,106 @@
+{
+  "schema": "tb371fc-camera-gdsc-test-contract-v1",
+  "status": "Static planned acceptance contract; tests have not been executed.",
+  "gate": "camera-gdsc-reference",
+  "script": "tb371fc/tests/test_camera_gdsc.py",
+  "result_schema": "tb371fc-camera-gdsc-v1",
+  "result_path": "fixtures/data/result.json",
+  "verdict_field": "passed",
+  "required_true_fields": [
+    "binary_unchanged"
+  ],
+  "scalar_expectations": {
+    "expected_checks": 29,
+    "expected_completed_migrations": 2,
+    "expected_rejected_migrations": 2,
+    "expected_corrupted_stream_rejections": 2,
+    "expected_unmodified_streams": 3,
+    "expected_stream_files": 5,
+    "vmstate_version": 1,
+    "vmstate_payload_bytes": 194,
+    "domain_count": 6,
+    "register_count": 6,
+    "sparse_window_count": 6,
+    "mapped_bytes": 24,
+    "gpio_output_count": 12,
+    "parent_resource_index": 3,
+    "reference_identity": 1128743985,
+    "hardware_mode_domain_mask": 3,
+    "modeled_timer_count": 0,
+    "modeled_clock_count": 0,
+    "gcc_vmstate_version": 3,
+    "gcc_camera_ahb_clock_id": 10,
+    "gcc_camera_ahb_write_mask": 24577,
+    "guest_cpu_executed": false,
+    "native_kernel_probe_observed": false,
+    "camera_execution_observed": false,
+    "analog_power_modeled": false,
+    "retention_effect_modeled": false,
+    "android_boot_passed": false
+  },
+  "array_lengths": {
+    "checks": 29,
+    "migrations": 2,
+    "rejected_migrations": 2,
+    "corrupted_stream_rejections": 2,
+    "migration_sources": 3
+  },
+  "hash_fields": [
+    "qemu_sha256_before",
+    "qemu_sha256_after",
+    "test_script_sha256"
+  ],
+  "check_count_breakdown": {
+    "ordinary": 18,
+    "special": 3,
+    "positive_migration_checks": 4,
+    "profile_rejections": 2,
+    "corrupted_stream_rejections": 2
+  },
+  "stream_files": [
+    {
+      "name": "camera-state.bin",
+      "source": "state-source",
+      "kind": "unmodified",
+      "positive_roundtrip": true
+    },
+    {
+      "name": "camera-parent-pending.bin",
+      "source": "parent-pending-source",
+      "kind": "unmodified",
+      "positive_roundtrip": true
+    },
+    {
+      "name": "camera-unknown.bin",
+      "source": "unknown-source",
+      "kind": "unmodified",
+      "positive_roundtrip": false,
+      "purpose": "unknown-to-reference rejection source"
+    },
+    {
+      "name": "camera-bad-domain-address.bin",
+      "source": "camera-state.bin",
+      "kind": "single_bit_modified",
+      "positive_roundtrip": false
+    },
+    {
+      "name": "camera-bad-control.bin",
+      "source": "camera-state.bin",
+      "kind": "single_bit_modified",
+      "positive_roundtrip": false
+    }
+  ],
+  "migration_notes": [
+    "Exactly three unmodified streams: two distinct positive sources plus one default-unknown source. The two corrupted copies make five actual files.",
+    "The unknown source is not a third completed roundtrip. Each of the two positive records has separate source and target completed statuses.",
+    "Both positive sources retain stopped source snapshots, full QMP/QTest transcripts and payload bytes. Incoming target pure QOM/GPIO/RAM precedes camera and GCC MMIO.",
+    "The state roundtrip observes the power group; the parent-pending roundtrip observes the state-known group. QTest cannot intercept both named groups in one process.",
+    "GCC v3 regs are first in its payload; source camera_AHB value0x6001 must be independently checked at payload+0xb008 and against source/target actual MMIO. No full GCC-device retest is claimed."
+  ],
+  "constraints": {
+    "qemu_executed": false,
+    "public_tests_executed": false,
+    "build_executed": false,
+    "old_gx_cx_modified": false
+  }
+}

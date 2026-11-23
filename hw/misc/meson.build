@@ -185,6 +185,7 @@ system_ss.add(when: 'CONFIG_QCOM_GPU_CX_GDSC', if_true: files('qcom-gpu-cx-gdsc.
 system_ss.add(when: 'CONFIG_QCOM_SPMI_PMIC_ARB', if_true: files('qcom-spmi-pmic-arb.c'))
 
 system_ss.add(when: 'CONFIG_QCOM_GDSC', if_true: files('qcom-gdsc.c'))
+system_ss.add(when: 'CONFIG_QCOM_CAMERA_GDSC', if_true: files('qcom-camera-gdsc.c'))
 system_ss.add(when: 'CONFIG_QCOM_NOC_QOS', if_true: files('qcom-noc-qos.c'))
 
 system_ss.add(when: 'CONFIG_QCOM_TSENS24XX', if_true: files('qcom-tsens24xx.c'))

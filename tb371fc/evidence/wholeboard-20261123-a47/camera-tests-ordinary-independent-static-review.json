@@ -1,0 +1,55 @@
+{
+  "schema": "tb371fc-camera-gdsc-tests-ordinary-independent-static-review-v1",
+  "test": {
+    "path": "/run/tb371fc-camera-gdsc-tests-a47/tb371fc/tests/test_camera_gdsc.py",
+    "bytes": 71297,
+    "sha256": "9a516c3f10acb88e839d1bbe00fbdaf9d372604946695e3e36e5a5081979747e",
+    "reviewed_prefix_bytes": 37464,
+    "reviewed_prefix_sha256": "6edef56548fed12f2771200a171969b86840ca69fcf9b7035d723e466db5f4e2",
+    "commit": "34acbd019ef7bc242ef03f615a9b00796cfae10e",
+    "git_blob": "d4b0d9a4bfe7316568562897672955662ad7f666"
+  },
+  "model": {
+    "commit": "c2118d645a1d54d66d6da8817a99443acf62acf9",
+    "runtime_sha256": "c683bb924fcd7adc254a4f8dcb694e37961c91c19f9657f683f2d223f4422009",
+    "type": "qcom-camera-gdsc",
+    "path": "/machine/camera-gdsc"
+  },
+  "scope": {
+    "ordinary_cases": 18,
+    "special_cases": 3,
+    "full_rig_and_independent_set_oracle_read": true,
+    "full_test_ast_parsed_and_compiled_to_code_object_only": true,
+    "migration_tail_not_repeated_by_this_reviewer": true,
+    "component_execution": false
+  },
+  "conclusion": "No static blocker found in the 18 ordinary cases, 3 special cases, CameraRig, and independent three-valued oracle. Formal compiled execution remains pending.",
+  "findings": [
+    "Direct CameraRig overrides establish all attributes used by inherited DisplayRig/RpmhRig/GccRig methods; real RPMh commands retain their source offsets and timer steps.",
+    "All 78 getter names match the delivered aggregate API. Set enumeration independently resolves an unknown AND input only when the other input is known zero.",
+    "Vendor probe and enable/disable use real complete-word MMIO; POWER is derived and carried status is accepted without allowing it to force a power result.",
+    "Parent input injection is prohibited when the real RPMh provider is connected. Wrong-resource votes do not assert mmcx, and a second real DRV vote keeps the shared supply active.",
+    "Mapped subword accesses use exact core invalid-size errors; unaligned bus requests account for the natural 1/2/1 or 2/2 chunks and adjacent holes. A valid low word in a wide request is deliberately not rolled back.",
+    "System reset uses an independent nonzero GCC witness, drains asynchronous RESET, checks preserved camera inputs and real output deassertion, and exercises the retained HW request after reset.",
+    "Power and state-known named groups use different QEMU processes because QTest supports one intercepted group. RAM reads drain notifications without repairing camera state through MMIO.",
+    "AHB 0xb008 is the current no-halt-reg descriptor (reg=0xffffffff), so exact request-word readback does not incorrectly omit a synthesized CBCR_OFF bit. The actual parent and output Clock periods remain zero.",
+    "Retention RMW distinguishes MEM bit14 and PERIPH bit13, preserves branch enable, rejects reserved bits and unchanged neighbors, and does not infer physical retention or clock frequency.",
+    "Default profile and legacy GPU globals do not enable the new independent TYPE. Read-only identity and realized profile mutations remain rejected.",
+    "Paused TCG special case never conts or performs camera MMIO and does not claim guest execution. No QTest-only camera property is assumed in normal TCG."
+  ],
+  "limits": [
+    "The separately assigned migration-tail and ZIP-verifier reviews belong to the root coordinator and board_gaps; this review does not duplicate or claim their execution.",
+    "The script's final report identity was statically pinned; no PASS result is inferred from AST or source review.",
+    "The unchanged old GPU test Git blob guards are part of the test's future execution, not a new runtime result obtained here."
+  ],
+  "actions": {
+    "read_only_source_review": true,
+    "ast_compile_object_only": true,
+    "test_module_imported": false,
+    "target_functions_called": false,
+    "qemu_started": false,
+    "public_tests_run": false,
+    "builds_run": false,
+    "remote_actions": false
+  }
+}

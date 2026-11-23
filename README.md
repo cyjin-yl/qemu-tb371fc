@@ -11,6 +11,17 @@
 生产内核加测试 initramfs 的成功不等于原厂 Android 系统启动。小核仍用 A55 代替 Qualcomm Kryo；显示、Adreno 650、触控、无线、音频、摄像头以及完整电源/固件契约仍有大量实现工作。缓存容量、功耗、射频、电气行为和真实芯片时序不由这些功能测试证明。
 
 
+## 正在验收：六个相机 GDSC 与 AHB retention 字段
+
+下一增量补齐原厂异常对应的 [六域相机 GDSC 数字协议](tb371fc/docs/camera-gdsc-reference.md)。
+[固定源码／实际 DT 合同](tb371fc/docs/camera-gdsc-source-contract.md)确认六个独立 4 B 控制字、共同 `mmcx.lvl` 父资源及 BPS/IPE 的硬件控制模式。新 `qcom-camera-gdsc` 类型与已有 GPU 类型分开；只有显式 `qcom-camera-gdsc.enabled-reference=on` 才开放协议。父状态和选中的硬件请求均区分已知与未知；没有额外相机请求时不自动报告上电。
+
+配套 [GCC 相机 AHB 字段](tb371fc/docs/gcc-sm8250.md#camera-ahb-retention-request-fields)只为既有 `0xb008` 增加原厂驱动会写的 retention 位 13/14，写掩码为 `0x6001`。相邻寄存器、旧时钟描述、未知父时钟、GPU 迁移格式保持原有定义；存储请求位不代表实际内存保留。
+
+公共候选计划为 **78 项：74 项组件 + 4 项既有 Linux**。新相机 gate 计划检查 **29 组、2 次完成迁移、2 次 profile 拒绝、2 次单 bit 损坏拒绝**，使用 194 B 的独立 v1 状态；同一 gate 检查 GCC retention 的真实流恢复和既有 RPMh 父资源的未完成命令。三份原始源流与两份损坏副本不是五次成功迁移。旧 77 项的验收要求和相对顺序保持不变。
+
+原厂诊断拟在原有十八项显式 global 后追加本次相机选项；新停机观察器只作两轮 QOM 读取，核对六域身份和逻辑父资源。后续八项完整 DT 用户态夹具的准备器只接受精确同源码、同产物和同配置，并继续要求完整 primary 内核日志无 fatal。这些源码和静态检查还不是本组合的 CI、原厂用户态、相机执行或 Android 成功；下方保留最近已经实际完成的 77 项证据。
+
 ## 最新验收：77 项通过，原厂推进到 BPS GDSC（2026-11-23）
 
 统一源码 `09c638d6a6d4fa4a4e4e332a7b39aa7bf7f5418e` 已实际通过 **77 个 gate：73/73 组件 + 4/4 Linux，以及独立 A77 852+2、PCI UFS 15 项**。见[正式 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45264653096)、[精确产物回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-09c638.json)和[完整日志独审](tb371fc/evidence/wholeboard-20261123-a47/official-ci-log-audit-09c638.json)。板级 QEMU SHA-256 为 `7211873740226d0509e354cfbf1c23bb4eb0459b6eca470187ea3dfd3a2e04ca`；产物保护实际核验 16 份组件报告和 **37 个迁移文件**。完整审计按原字节压缩保留，[可读索引](tb371fc/evidence/wholeboard-20261123-a47/ci-artifact-audit-index-09c638.json)明确标为派生摘要；37 个文件包含负例和损坏副本，不是 37 次成功迁移。

@@ -530,3 +530,31 @@ unmodified Image and complete DT. The exact model predicate remains
 `Qualcomm Technologies, Inc. kona QRD`; the new ELF supplies its result
 address rather than reusing the old fixture address. Full-DT EL0 acceptance,
 the eight results, guest shutdown and Android remain separate unpassed goals.
+
+## Camera power-domain candidate after the BPS fault
+
+The [camera reference](camera-gdsc-reference.md) owns only six independently
+mapped four-byte GDSCR words at `0x0ad07004`, `0x0ad08004`, `0x0ad09004`,
+`0x0ad0a004`, `0x0ad0b004`, and `0x0ad0c144`. The type directly derives from
+SysBusDevice, so the pre-existing GX global cannot enable it accidentally.
+The existing RPMh `power[3]` output connects once to the aggregate's shared
+parent input. Each domain retains separate control and hardware-request
+knowledge; unknown inputs remain visible as unknown rather than becoming a
+successful hardware acknowledgment. The camera AHB clock and camera execution
+engines are outside this power-register increment.
+
+The next reviewed native profile explicitly appends
+`qcom-camera-gdsc.enabled-reference=on` after the eighteen prior globals.
+Its new observer performs two stopped snapshots of 78 camera properties plus
+two RPMh parent properties, without device MMIO or writes. A complete snapshot
+means the declared digital invariants matched; it does not prove native MMIO
+use, a completed driver probe, camera retention or userspace execution. The
+older diagnostic wrapper's separate observations are unchanged.
+
+The [updated userspace consumer](../evidence/wholeboard-20261123-a47/native-userspace8-camera-draft.py)
+and its [host preparation step](../evidence/wholeboard-20261123-a47/prepare-userspace8-staging78.py)
+accept only the specifically reviewed ordered additions. They require the
+matching complete camera observation for that profile and preserve the full
+kernel fatal scan, exact artifact and ELF/CPIO checks, EL0 PC/PSTATE evidence,
+3120-byte result record and real guest shutdown requirements. Neither script
+has been executed for this candidate. Its CI and native results remain pending.

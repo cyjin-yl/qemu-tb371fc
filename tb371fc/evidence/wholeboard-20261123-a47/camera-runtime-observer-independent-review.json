@@ -1,0 +1,68 @@
+{
+  "schema": "tb371fc-camera-gdsc-runtime-observer-independent-static-review-v1",
+  "verdict": "no-static-blocker",
+  "files": [
+    {
+      "path": "/run/tb371fc-camera-gdsc-model-a47/hw/misc/qcom-camera-gdsc.c",
+      "bytes": 18374,
+      "sha256": "c683bb924fcd7adc254a4f8dcb694e37961c91c19f9657f683f2d223f4422009"
+    },
+    {
+      "path": "/run/tb371fc-camera-gdsc-model-a47/include/hw/misc/qcom-camera-gdsc.h",
+      "bytes": 1471,
+      "sha256": "443a57604158e762c9c39b9330375b519e234f38efe1fb3d631c37fbb5379231"
+    },
+    {
+      "path": "/run/tb371fc-camera-gdsc-model-a47/hw/arm/lenovo-tb371fc.c",
+      "bytes": 85383,
+      "sha256": "a6605b0f3402c121557258692a66d23782d2b2061778804b006d973c24a64712"
+    },
+    {
+      "path": "/run/tb371fc-camera-gdsc-model-a47/tb371fc/docs/camera-gdsc-reference.md",
+      "bytes": 10065,
+      "sha256": "47732e3bc1fe69ef512112a85fd7486840e0bcd7ab6873043e6291bfffe5b210"
+    },
+    {
+      "path": "/run/tb371fc-camera-gdsc-model-a47/camera-gdsc-api.json",
+      "bytes": 8395,
+      "sha256": "05c104c8f37cc8349af650cdbab18f0b7dd051b993553bd3c218fac297b803ff"
+    },
+    {
+      "path": "/run/tb371fc-root78-a47/capture-camera-gdsc.py",
+      "bytes": 8343,
+      "sha256": "db9710ab3b28b3dc69c8657e25b96f4c7e69a62d8f49340a4df66b9318ea469a"
+    }
+  ],
+  "runtime_findings": [
+    "Six domains have independent exact four-byte regions and source-bound identities; unsupported control bits/HW modes reject before committing.",
+    "The known-zero AND rules preserve unknown feedback; the POWER bit is derived, never a fabricated unconditional ACK.",
+    "Read-only QOM and MMIO reads do not modify control/provider states or schedule events.",
+    "Reset restores software collapse while preserving external inputs; incoming disables outputs, checks all immutable tuples and controls, then publishes.",
+    "One aggregate consumes RPMh power[3], initialized by real mmcx present/enabled. No invented GCC camera AHB carrier or camera analog timing.",
+    "194-byte version1 payload includes all runtime inputs and independent per-domain controls; default/reference mismatch is checked before runtime state load."
+  ],
+  "observer_findings": [
+    "Only qom-get/query-status calls are present; two complete78-property snapshots plus2parent resource properties each are guarded by stopped statuses.",
+    "Strict bool/integer/string types and domain identity/control/knowledge/derived-output relationships are validated before complete.",
+    "Provider present/enabled cross-checks are logical RPMh observations; stable snapshot does not claim MMIO use, driver probe, traffic, camera processing, retention or userspace."
+  ],
+  "observer_literal_commands": [
+    "query-status",
+    "query-status",
+    "qom-get",
+    "qom-get"
+  ],
+  "scope": {
+    "build_executed": false,
+    "qemu_executed": false,
+    "public_test_executed": false,
+    "observer_executed": false,
+    "pure_ast_analysis_only": true,
+    "migration_streams_observed": false,
+    "native_probe_claimed": false
+  },
+  "remaining_required_evidence": [
+    "Formal component transactions and actual migration streams from the fixed CI artifact",
+    "Separate exact-binary native logs/observations for driver progress"
+  ]
+}

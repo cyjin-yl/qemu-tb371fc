@@ -33,7 +33,8 @@ the development container:
 
 ```sh
 python3 tb371fc/scripts/generate_gcc_sm8250.py /work/clean-linux/source/linux-6.12.114 \
-  --vendor-gcc /work/source-evidence/gcc-kona.c
+  --vendor-gcc /work/source-evidence/gcc-kona.c \
+  --vendor-branch /work/source-evidence/clk-branch.c
 ```
 
 The GPL-2.0-only license and upstream table attribution are retained because the
@@ -123,7 +124,7 @@ python3 tb371fc/tests/test_gcc_cpuss.py \
   --qemu /work/build/qemu-system-aarch64 --out /work/new-gcc-cpuss
 ```
 
-The generation gate retrieves only the three pinned public source files,
+The generation gate retrieves only the four pinned public source files,
 checks their hashes, invokes the generator, and requires byte-identical C
 descriptors and JSON manifest. It retains all inputs, outputs and hashes.
 
@@ -144,7 +145,7 @@ counterpart at line 1544. The
 [matching mux driver](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/clk-regmap-mux.c)
 reads and updates the declared selector field. That behavior reference has
 SHA-256 `eb5b41803e1dbd375dfef371e0a0ed3273f05a927b570c7c3ea616f3aca06f24`;
-the generator continues to parse the three pinned register/binding inputs.
+the generation gate now also pins the branch driver for the camera retention fields described below.
 
 | Contract | Primary | Secondary |
 | --- | --- | --- |
@@ -197,6 +198,56 @@ checks input/selector/vote restoration and subsequent clock changes. A
 separate snapshot with only its GCC header advertised as version 2 must be
 rejected before fields are decoded. It does not execute an older QEMU binary
 or prove native USB functionality.
+
+## Camera AHB retention request fields
+
+The six camera GDSCs in the actual full DT share `GCC_CAMERA_AHB_CLK`.
+The downstream binding index is **11**; this generated upstream clock table
+uses index **10** for the same name. These are different binding namespaces,
+so the DT number must not be used as an array index into the upstream table.
+The existing descriptor, its external parent, GPIO indices and Clock objects
+are unchanged.
+
+The pinned [Kona GCC declaration](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/gcc-kona.c)
+at line 1711 gives both the enable and halt register as `0xb008`, with
+`clk_branch2_ops`. The same revision's
+[branch driver](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/clk-branch.c)
+routes `set_flags` to `clk_cbcr_set_flags` using that halt register. Its
+SHA-256 is `375830dc9cd0ecbc12ea018eee1d260d8ba724dc52f1ac8b3589a07bc75d08aa`.
+The [GDSC driver](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/gdsc-regulator.c)
+calls these flag operations during probe, enable and disable; the matching
+[`clk_set_flags` implementation](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/clk.c)
+dispatches them to the branch operations.
+
+| GCC-relative register | Bit | Retained digital field |
+| --- | ---: | --- |
+| `0xb008` (PA `0x0010b008`) | 0 | Existing local clock enable |
+| `0xb008` | 13 | `CLKFLAG_RETAIN_PERIPH`, cleared by `CLKFLAG_NORETAIN_PERIPH` |
+| `0xb008` | 14 | `CLKFLAG_RETAIN_MEM`, cleared by `CLKFLAG_NORETAIN_MEM` |
+
+The write mask for this one existing word becomes `0x6001`. Bit 12 and
+other unsupported bits still reject the whole write, and adjacent `0xb004`
+and `0xb00c` retain their previous masks. Reads, reset and the existing GCC
+v3 register array preserve these two request fields. No new register, timer,
+Clock input or migration field is added. This records the requested retention
+policy; no camera SRAM contents, peripheral retention, interconnect drain,
+actual power or electrical retention behavior is implemented by those bits.
+
+The camera AHB parent remains unknown and unconnected in this board model.
+Setting bit 0 or either retention bit cannot manufacture a nonzero clock.
+Its probe-only descriptor still has no invented halt/status field. Cold
+NORETAIN operations may be elided by `regmap_update_bits` when the old and new
+values are equal; the source call chain alone is therefore not proof of a
+native nonzero retention write.
+
+The generator now requires `--vendor-branch` and validates this fourth pinned
+source, the exact camera branch owner, the `set_flags` dispatch and both
+set/clear definitions. The public generation gate still compares exactly two
+outputs. The new camera GDSC component gate includes independent retention
+read/modify/write, unsupported-field and neighboring-register checks, and
+restores a nonzero retention word from a real GCC v3 migration stream.
+This source change awaits its own formal CI and exact-binary native result;
+the older GCC receipts below remain attached to their original binaries.
 
 ## Actual tablet observations and frequency assumptions
 
