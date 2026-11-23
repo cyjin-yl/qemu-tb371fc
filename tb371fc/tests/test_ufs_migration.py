@@ -251,7 +251,8 @@ def main():
         setup(r)
         assert r.query(6, 0x0e) == (0, 0, 1)
         assert r.query(6, 0x10) == (0, 0, 1)
-        assert r.query(4, 0x0f, 0xdecafbad) == (0, 0, 0xdecafbad)
+        # PSA_DATA_SIZE is readable/writable; SECONDS_PASSED is write-only.
+        assert r.query(4, 0x16, 0xdecafbad) == (0, 0, 0xdecafbad)
         assert r.uic(2, 0x9007, 12)[0] == 0
         io(r, 4, PATTERN_A)
         assert io(r, 4) == PATTERN_A
@@ -272,8 +273,12 @@ def main():
         assert r.r(HCI + 0x20) & 1 and not r.r(HCI + 0x20) & (1 << 10)
         r.wire(True)
         before = registers(r)
+        memory_before = {pa: r.read(pa, size) for pa, size in
+                         ((UTRL, 32), (CMD, 1536), (DATA, 4096))}
         r, original = checkpoint("active-uic", r)
         assert registers(r) == before
+        assert all(r.read(pa, len(data)) == data
+                   for pa, data in memory_before.items())
         r.wire(True)
         passed("hci-ram-and-pending-transfer-irq-preserved")
         r.w(HCI + 0x20, 1)
@@ -287,7 +292,7 @@ def main():
         r.wire(False)
         assert r.uic(1, 0x9007) == (0, 44)
         passed("pending-uic-finishes-on-original-deadline-and-irq-clears")
-        assert r.query(3, 0x0f) == (0, 0, 0xdecafbad)
+        assert r.query(3, 0x16) == (0, 0, 0xdecafbad)
         assert r.query(5, 0x0e) == (0, 0, 1)
         assert r.query(5, 0x10) == (0, 0, 1)
         assert r.query(3, 0x1d) == (0, 0, 9)
