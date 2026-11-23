@@ -206,8 +206,8 @@ CLR count zero cannot coexist with a reconnect pending, and count zero
 requires its corresponding last mask to be zero. Disabled runtime is entirely
 zero, including its external input and diagnostics.
 
-After validation, post-load samples the target's own virtual time once,
-reconstructs active deadlines as `target_now + remaining`, and schedules the
+Post-load samples the target's own virtual time once, validates the restored
+state, then reconstructs active deadlines as `target_now + remaining` and schedules the
 timer before the first device MMIO. Paused ports remain paused with deadline
 -1. The restored external mask replaces the target's old reference stimulus.
 A zero remainder stays pending until timer dispatch. Target and source clock
@@ -218,7 +218,7 @@ state.
 
 This model increment is subject to the separate formal component and unified
 board CI run. The implementation submission itself is not a build or runtime
-receipt. Acceptance covers nonzero disconnect/reconnect traffic, independent
+receipt. Acceptance covers nonzero disconnect/reconnect MMIO requests, independent
 port intervals, stalls, repeated/reversed commands, strict access errors,
 reset, actual file migration and rejected malformed states. Root records the
 actual same-binary native outcome separately. Neither a synthetic peer ACK nor
