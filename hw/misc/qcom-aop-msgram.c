@@ -11,6 +11,7 @@
 #include "qemu/osdep.h"
 #include "hw/misc/qcom-aop-msgram.h"
 #include "qemu/module.h"
+#include "migration/vmstate.h"
 
 static void qcom_aop_msgram_realize(DeviceState *dev, Error **errp)
 {
@@ -29,12 +30,24 @@ static void qcom_aop_msgram_realize(DeviceState *dev, Error **errp)
     sysbus_init_mmio(SYS_BUS_DEVICE(dev), &s->sram);
 }
 
+static const VMStateDescription vmstate_aop_msgram = {
+    .name = TYPE_QCOM_AOP_MSGRAM,
+    .version_id = 1,
+    .minimum_version_id = 1,
+    .fields = (const VMStateField[]) {
+        /* Reject both directions of a raw/reference peer profile mismatch. */
+        VMSTATE_UINT32_EQUAL(reference_peer, QcomAopMsgramState),
+        VMSTATE_END_OF_LIST()
+    },
+};
+
 static void qcom_aop_msgram_class_init(ObjectClass *klass, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
 
     dc->desc = "Qualcomm AOP message SRAM without a firmware peer";
     dc->realize = qcom_aop_msgram_realize;
+    dc->vmsd = &vmstate_aop_msgram;
     dc->user_creatable = false;
 }
 

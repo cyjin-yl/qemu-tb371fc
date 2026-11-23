@@ -90,6 +90,10 @@ A failed IPCC insertion (for example, a full sparse pending table) leaves an
 outstanding notification and retries after 100,000 virtual ns. A retry never
 reexecutes the command. Notification state, phase, votes, counters and virtual
 timer migrate; SRAM and IPCC retain their existing migration machinery.
+The always-present SRAM device carries a fixed migration configuration marker.
+Both directions of a none/reference profile mismatch must fail, including
+migration into a destination that has an extra peer device. The marker is
+set only by the board before realization and cannot be changed through QOM.
 All peer RAM writes mark the SRAM dirty. Post-load restores outputs and the
 timer only: it never rewrites a descriptor or reads SRAM before RAM migration
 has finished.
@@ -117,3 +121,25 @@ physical mailbox initialization, clock frequencies, analog behavior or timing.
 Native production-kernel tests must still distinguish removal of a transport
 timeout from full AOP functionality. Other AOP services, performance levels,
 remote-originated messages and real QDSS execution remain unsupported.
+
+## Acceptance gate
+
+Run `python3 tb371fc/tests/test_aop_reference.py --qemu /path/to/qemu-system-aarch64
+--out /tmp/aop-reference-test` with a fresh short output directory.
+The independent public gate requires exactly 30 unique passing groups:
+20 compiled-device protocol/service/IRQ checks, six completed two-process
+migrations, two profile-mismatch migration rejections and two profile checks.
+Subcases inside a group are reported as such and are not added to the group
+count. The existing ten-check raw-SRAM gate remains separate.
+
+The six completed migrations cover idle votes/GPIO output restoration, a
+message with one virtual ns left, a pending link negotiation, an unconsumed
+unknown command, a masked real IPCC reply and a notification retry while the
+IPCC pending table is full. The two expected failures require a nonzero
+destination exit and the SRAM profile-marker diagnostic. They are recorded
+separately as rejected attempts, never counted as completed migrations.
+
+The tests observe actual named vote GPIO outputs where needed. They never
+intercept the IPCC IRQ; those cases inspect the real GIC pending state.
+QTest drives registers and shared RAM directly and does not execute the
+vendor CPU driver. Native driver validation remains a separate requirement.

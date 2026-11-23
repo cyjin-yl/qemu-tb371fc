@@ -195,6 +195,16 @@ def plan(args, runtime):
                          "rejected_migration_attempts": 3,
                          "socket_directories_retained": True},
                expected_lengths={"migrations": 8, "migration_attempts": 9})
+        device("aop-reference-peer", "test_aop_reference.py",
+               output="--out", result="file", count=30,
+               expected={"all_passed": True, "expected_checks": 30,
+                         "expected_completed_migrations": 6,
+                         "expected_rejected_migrations": 2,
+                         "completed_migrations": 6,
+                         "rejected_migration_attempts": 2,
+                         "guest_cpu_executed": False,
+                         "ipcc_output_intercepted": False},
+               expected_lengths={"migrations": 6, "rejected_migrations": 2})
         device("aop-msgram", "test_aop_msgram.py",
                output="--out", result="file", count=10,
                expected={"all_passed": True, "expected_checks": 10,

@@ -1128,6 +1128,8 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
 
 
     /* Actual shared storage, without an invented AOP descriptor or peer. */
+    QCOM_AOP_MSGRAM(msgram)->reference_peer =
+        !strcmp(s->aop_profile, "reference-qdss-vote");
     object_property_add_child(OBJECT(s), "aop-msgram", OBJECT(msgram));
     sysbus_realize_and_unref(SYS_BUS_DEVICE(msgram), &error_fatal);
     sysbus_mmio_map(SYS_BUS_DEVICE(msgram), 0, 0x0c300000);
