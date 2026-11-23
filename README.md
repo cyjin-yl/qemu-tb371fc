@@ -12,7 +12,9 @@
 
 ## 本次整板推进与统一验收（2026-11-23）
 
-当前统一分支为 `tb371fc-verified-wholeboard-20261123-a47`。整合后的公开计划是 **65 个 gate：61 个组件/解析检查和 4 次 Linux 启动**，另有独立 A77 / 共享 UFS PCI job。新增内容包括 GPU CX/GX、SMEM 交接及生产驱动观察器、AOP 参考对端、Kona CPUSS 分支和两个 USB PIPE 时钟 mux。计划注册不代表当前提交已经通过；实际结果以该提交的 [CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml) 和冻结回执为准。
+当前统一分支为 `tb371fc-verified-wholeboard-20261123-a47`。整合后的公开计划是 **65 个 gate：61 个组件/解析检查和 4 次 Linux 启动**，另有独立 A77 / 共享 UFS PCI job。新增内容包括 GPU CX/GX、SMEM 交接及生产驱动观察器、AOP 参考对端、Kona CPUSS 分支和两个 USB PIPE 时钟 mux。统一提交 `a8136d1b1871d5a90aced67cc269dfb312be5c65` 已实际通过 **61/61 组件 + 4/4 Linux，以及独立 A77/UFS job**；见[本次 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45179839601)及[按源码和二进制冻结的回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-a813.json)。
+
+统一二进制 SHA-256 为 `fc6c7cba342297fd86b4fdd9800f8e6a944e435a244f26091ef7e6c632ce03a9`，已下载 CI artifact 并直接计算包内文件哈希。两个观察器单元测试分别实际运行 17 和 14 项；它们使用模拟 monitor，同一次原厂运行的只读观察证据另见下文。
 
 本次整合前已经实际完成的验证分别属于以下版本：
 
@@ -25,17 +27,19 @@
 
 [原厂两次 GCC 对照](tb371fc/evidence/wholeboard-20261123-a47/native-progression.json)、
 [原厂 AOP 只读观察](tb371fc/evidence/wholeboard-20261123-a47/native-aop-e812.json)
-记录各自源码、二进制、输入和日志哈希。AOP 还记录了一个被拒绝的未实现命令；其 payload 未由该观察器采集。观察器退出 0 不代表来宾启动成功。
+记录各自源码、二进制、输入和日志哈希。早期 AOP 观察器没有采集被拒绝请求的 payload；`a813` 的追加只读邮箱诊断已识别为 DDR 日志停止请求，详见[统一版本原厂运行](tb371fc/evidence/wholeboard-20261123-a47/native-a813.json)。观察器退出 0 不代表来宾启动成功。
 
 **完整原生 DT 到达用户态、原厂 Android 和整板可用仍未通过。**
-USB mux 新实现及整合后的完整回归需要本分支自己的实际回执。SMEM、AOP、SPMI 与电源交接的 reference 配置必须显式选择，不是原厂固件捕获或真实 PMIC/时钟频率测量。AOP 不执行固件，GX/CX 不执行 Adreno/GMU 命令。
+`a813` 使用同一个 CI 二进制运行未修改的生产内核和完整原生 DT，实际越过 `0x10f060`，内核输出 **Registered GCC clocks**；SMEM 仍为 **23/23**，AOP 通道 connected 并消费一个 QDSS 请求。下一处致命异常是 GPUCC `0x03d90100` 的 `clk_lucid_pll_configure` 读取，尚未到达 PID 1 用户态。DDR 日志请求与公开驱动的 panic notifier、实测 DT 属性相符；这是源码关联推断，没有将它列为启动前置依赖。
+
+SMEM、AOP、SPMI 与电源交接的 reference 配置必须显式选择，不是原厂固件捕获或真实 PMIC/时钟频率测量。AOP 不执行固件，GX/CX 不执行 Adreno/GMU 命令。后续 GPUCC 改动必须获得自己的构建、组件和原厂运行回执，不能借用 `a813` 的成功。
 
 [历史默认分支索引](tb371fc/evidence/DEFAULT-HISTORY-5fd52c1.md)保留原默认分支的五组冻结结果及原字节账本；没有用新源码覆盖旧回执。
 此前 [GPU CX 检查点](tb371fc/evidence/gpu-cx-ci-20261123/checkpoint.json) 的未完成状态和初次失败也继续保留，不能代替上述后续实际验证。
 
-## TCSR、AOP 消息内存与 REFGEN 增量验证（2026-11-23）
+## 先前 TCSR、AOP 消息内存与 REFGEN 增量验证（2026-11-23）
 
-本轮冻结二进制 SHA-256 为 `2173fa4da68f8f769c53942b056124c5621e4714652c7f572deacc9440ec09cf`。
+该轮冻结二进制 SHA-256 为 `2173fa4da68f8f769c53942b056124c5621e4714652c7f572deacc9440ec09cf`。
 [55/55 公共 gate](tb371fc/evidence/boot-resources-20261123-1005/public-55/result.json) 实际通过，包含 51 组组件/解析检查和四次 Linux 启动。
 [50 项专项检查](tb371fc/evidence/boot-resources-20261123-1005/workflow.json) 包括 TCSR 24 项、AOP SRAM 10 项和 REFGEN 16 项；十次迁移尝试包括七次成功传输及三次预期的配置不匹配拒绝。
 
@@ -44,7 +48,7 @@ TCSR 实现 32 个互斥槽的所有者和未知状态；AOP SRAM 实现 4 KiB �
 
 [两次原厂内核与完整 DT 诊断](tb371fc/evidence/boot-resources-20261123-1005/native-progression.json) 均失败：
 默认未知 REFGEN 状态仍在 `refgen_kona_is_enabled` 读取处中止；显式选择尚未实测的 disabled reference 后，推进到 `gdsc_probe -> regmap_mmio_read32le`。
-此前 AOP 64 字节描述符读取异常未在这两次日志中出现，但 AOP 固件、QMP 握手和电源服务尚未验证。
+此前 AOP 64 字节描述符读取异常未在该冻结版本的这两次日志中出现；该轮尚未验证 AOP 固件、QMP 握手和电源服务。后续显式 reference 对端的握手与受支持命令消费结果见上方“本次整板推进与统一验收”；这不代表 AOP 固件执行。
 **完整原生 DT 和 Android 启动仍未通过。** SMEM/SBL 交接、原生 PMIC 映射和未解析 regulator 等依赖继续保留为未完成项。
 
 ## 先前 QSEE 与 DCC 增量验证（2026-11-23）
