@@ -266,3 +266,222 @@ Frozen binary 51fe61d35213a6602a8eaa865faba04bc85f88df341947ca8a2e6300a8ab5be6 p
 ## 2026-11-23 TCSR, AOP SRAM and REFGEN integration
 
 Frozen binary 2173fa4da68f8f769c53942b056124c5621e4714652c7f572deacc9440ec09cf passed 55/55 public gates in 125.169 seconds and 50 targeted checks (TCSR 24, AOP SRAM 10, REFGEN 16). Ten migration attempts comprise seven positive transfers and three expected configuration mismatch rejections. Sources/binary were unchanged during tests. All 22 CI-plan unit tests passed. See [publication record](boot-resources-20261123-1005/publication.json). Both production-kernel/full-DT runs panicked: unknown REFGEN reset at refgen_kona_is_enabled; explicit disabled reference at gdsc_probe/regmap_mmio_read32le. The previous AOP mailbox abort was absent in these logs; firmware and QMP services remain unvalidated. Prior QSEE/DCC commit 5f8bca77 passed both GitHub Actions jobs, separately recorded.
+
+## 2026-11-23 GDSC and empty SMEM: public build 408d82a
+
+The [sanitized CI log review](gdsc-smem-20261123/ci-408d82a.json) records
+commit `408d82ae4acc0fce05d16d3f17ee3123eda82ab4`, workflow run
+[45164018326](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45164018326).
+Both jobs succeeded. The board job ran 53/53 component/parser gates in
+54.967 seconds and, separately, four of four unpatched-Linux gates in 5.156
+seconds. Their sum is 57 successful gate invocations; it is not a separate
+all-suite run. Both runner summaries reported an unchanged QEMU executable.
+
+The successful gate contracts require GDSC 29 checks and ten migration
+outcomes, and SMEM 22 checks and four migration outcomes. GDSC's six
+successful transfers and four expected configuration rejections are distinct
+from SMEM's two successful transfers and two expected rejections. The SMEM
+component fixture executes no guest CPU and captures no native SBL state.
+The log review identifies its count provenance and does not pretend to have
+read the nested artifact JSON files at that stage.
+
+The independent generic job passed 852 A77 guest checks across nine
+configurations, rejected two invalid CPU configurations, and executed all
+15 PCI UFS cases without skips. These generic executables are separate from
+the board QEMU and are not assigned its hash.
+
+The initial 2819462 attempt remains a failure in the same CI review:
+52/53 component gates, a failing GDSC gate, skipped later Linux steps, and
+a cancelled generic job. The correcting 408d82a commit changed the QMP
+`human-monitor-command` argument from `command_line` to `command-line` in
+the GDSC test. It did not turn the earlier failed run into a pass.
+
+## 2026-11-23 production SMEM probe and GCC halt-status boundary
+
+The subsequent [native diagnostic receipt](gdsc-smem-20261123/native-ci-408.json)
+records a downloaded-and-verified artifact, independently of the preceding
+log-only review. Board artifact 14813532760 has ZIP SHA256
+`7c7812bf16b93e92b04574c1b0900d14e771ff96702fec590ff9be0c05e8c2de`.
+The executable extracted from it has SHA256
+`0190794d7890fcc34caeff3c7f30d00218a6f0027bddc4500c34f79c45051a93`
+and matches the QEMU hash in both the 53-component and four-Linux suite
+receipts. It remained unchanged after the diagnostic. The archive digest
+is not substituted for the executable digest.
+
+The unmodified production Image SHA256 is
+`ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f`.
+The complete native DT input SHA256 is
+`5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207`.
+Runtime loader memory fixups are explicitly recorded.
+
+| Selected interface | Recorded configuration |
+| --- | --- |
+| RPMh | File profile with a partial command-db input |
+| SPMI | Explicit reference |
+| GPU GDSC | `reference-off` |
+| SMEM | `reference-empty` |
+| REFGEN | Explicit disabled-reference handoff |
+| TCSR mutex | Explicit unlocked-reference handoff |
+
+The production `qcom_smem_probe` successful-publication instructions and
+live driver pointer were verified. With the guest paused,
+virtual-memory reads through CPU 0 found nonzero `__smem` and consistent
+driver/lock pointers, item count, directory, global partition, region
+geometry, allocation frontiers and header words. All 23 consistency checks
+passed. The observer made no guest-memory writes; it did not manufacture
+the kernel's published pointer. The explicit loader profile still supplies
+its declared synthetic initial RAM image.
+
+This is successful production-driver probe acceptance. It is separate from
+the 22-group public QTest fixture and does not demonstrate subsequent guest
+allocator operations, native SBL contents, remote-processor services or GPU
+execution. The prior GDSC abort was absent and both CX/GX supply-registration
+messages were observed, without implying a working GPU.
+
+The same native run then took a synchronous external abort, ESR
+`0x96000210`, on a 32-bit read of physical `0x00148198`, GCC offset `0x48198`.
+The leaf was `regmap_mmio_read32le+0x8`, through `clk_branch2_check_halt`,
+`clk_branch_toggle`, `clk_branch2_enable`, `clk_register`,
+`qcom_cc_really_probe` and `gcc_kona_probe`. It was stopped by timeout after
+25.143 seconds. QEMU and diagnostic-tool exit 0 reflect cleanup, not a
+successful native-DT or Android boot. Both boot verdicts remain false.
+
+The subsequent GCC source at 0a617bab implements binding 143
+`gcc_sys_noc_cpuss_ahb_clk`, its separate halt status and binding 18
+`gcc_cpuss_ahb_postdiv_clk_src` parent. Its current gate requirements are
+24 behavior checks and eight migration checks, while the top-level plan
+still has 57 gates. The 408d82a receipts above predate that code and cannot
+attest the new branch/parent implementation; its matching-binary results
+must be recorded separately. Earlier GCC 19/5 and the independent
+46/47/49/52/55-gate histories retain their original counts and hashes.
+
+## 2026-11-23 GCC follow-up: verified build 0a617bab
+
+The [reviewed CI record](gdsc-smem-20261123/ci-0a617ba.json) covers
+`0a617bab7cb2277073aa24092ec9a12b63fceb50` and workflow run
+[45170677624](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45170677624).
+Both jobs succeeded. The board job passed 53/53 component/parser gates in
+106.054 seconds and a separate four of four clean Linux gates in 5.555
+seconds. The original [component](gdsc-smem-20261123/components-0a617ba.json)
+and [Linux](gdsc-smem-20261123/linux-0a617ba.json) JSON files are retained
+without modification. Again, 57 is the sum of those two invocations, not an
+additional all-suite run. Their QEMU executable remained unchanged.
+
+The later [artifact verification](gdsc-smem-20261123/artifact-0a617ba.json)
+records a downloaded 62,152,896-byte board QEMU with SHA256
+`a2e19b188f6253928ad47630896e0967fb99f55abbddaf98212f312e8194ee1b`.
+Its computed executable digest matches both raw suite records. The
+downloaded board ZIP is separately identified by SHA256
+`d102b406d3ef9278dfa358271ee7164bdb819d80fad9417305793a47d4af06f1`.
+The artifact manifest also records exact hashes and sizes for the copied
+component, Linux, GDSC and SMEM result members. These later member/executable
+checks supplement the earlier log-only CI review; they do not rewrite that
+review's truthful account of what it had read at the time.
+
+| Gate | Executed evidence and precise counting |
+| --- | --- |
+| GCC behavior | [24/24 checks](gdsc-smem-20261123/gcc-registers-0a617ba.json), including SYS_NOC_CPUSS status, shared votes, parent demand, remote vote and reset |
+| GCC migration | [8/8 checks around one actual QMP process transfer](gdsc-smem-20261123/gcc-migration-0a617ba.json); same binary on both sides, not eight transfers or cross-version compatibility |
+| GPU GDSC | [29 checks including ten migration outcomes](gdsc-smem-20261123/gdsc-0a617ba.json): six accepted transfers and four expected profile rejections |
+| Empty SMEM reference | [22 checks with four migration outcomes](gdsc-smem-20261123/smem-0a617ba.json): two accepted transfers and two expected profile rejections; guest CPU not executed |
+| A77 | [852 guest checks over nine configurations and two rejected invalid configurations](gdsc-smem-20261123/ci-0a617ba.json), independent generic job |
+| Shared UFS PCI | [15/15 actual cases without skips](gdsc-smem-20261123/ci-0a617ba.json), independent generic job |
+
+The preceding 4f271b5 run was cancelled before public gates executed.
+The CI review preserves the skipped gate steps and identifies the
+review-driven test-only reset-wait correction in 0a617bab. That cancelled
+attempt supplies neither a hardware-failure verdict nor a pass. The
+correction changed four test lines and did not change the device model.
+
+The [actual generator check](gdsc-smem-20261123/gcc-regeneration-0a617ba.json)
+ran Python 3.12.14 against the fixed Linux 6.12.114 source and binding inputs,
+with their manifest hashes checked. It reproduced both
+`hw/misc/qcom-sm8250-gcc-data.inc` and
+`tb371fc/docs/gcc-sm8250-registers.json` byte for byte against 0a617bab.
+The generated outputs describe 198 clocks, 84 external input slots, 460
+allowed register offsets, 45 resets and 11 power domains. This was an
+actual generation and byte-comparison run, not QEMU execution.
+
+## 2026-11-23 production-native follow-up on the 0a617bab CI binary
+
+The [separate production diagnostic](gdsc-smem-20261123/native-ci-0a.json)
+used the downloaded and verified 0a617bab board QEMU, SHA256
+`a2e19b188f6253928ad47630896e0967fb99f55abbddaf98212f312e8194ee1b`,
+matching the successful 53-component and four-Linux CI suite records.
+Its unmodified production Image and full DT input retain SHA256
+`ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f`
+and `5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207`,
+respectively. The explicit reference handoff and loader adjustments remain
+part of the configuration; this is not native SBL execution.
+
+The 21.166-second diagnostic again observed the production SMEM success
+path: `success_path_observed=true`, all 23 state checks passed and
+`guest_memory_written=false`. It passed the prior GCC halt-status abort
+at physical `0x00148198`. This is a new measured result on the corrected
+executable, while the older 408d82a receipt retains its original failure.
+
+The next fatal access was a GCC unsupported read at offset `0xf060`,
+physical `0x0010f060`. The stack passed through `mux_get_parent`,
+`clk_register`, `qcom_cc_really_probe` and `gcc_kona_probe`; the production
+kernel recorded ESR `0x96000210` and panicked. The [fixed official Kona
+driver](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/gcc-kona.c)
+identifies the offset as `gcc_usb3_prim_phy_pipe_clk_src`, the USB3 primary
+PIPE source mux with selector bits 1:0. Its getter/source and setter/config
+mapping are asymmetric in that snapshot; production getter disassembly
+still needs checking. The PHY/test parents' 1 kHz dummy declarations are
+not measured frequencies and do not provide a PHY model. The remaining
+[selector and external-parent contract](../docs/gcc-sm8250.md#next-observed-boundary-usb3-primary-pipe-source-mux)
+is not implemented in this follow-up.
+
+Complete native-DT userspace PID 1, Android userspace, GPU execution, native SBL
+contents and firmware services remain unpassed. SMEM probe success does
+not by itself demonstrate subsequent guest allocator operations.
+
+## 2026-11-23 independent doesvm all-suite acceptance of 0a617bab
+
+The [local summary](gdsc-smem-20261123/local-final-summary.json) and
+[original all-suite report](gdsc-smem-20261123/local-all-0a617ba.json)
+record a completed, independent local build and a single `--suite all`
+invocation. All 57 gates passed: 53 component/parser gates and four Linux
+gates, with zero failures and zero skips. This is one actual all-suite run;
+the earlier CI's separate 53-component and four-Linux invocations retain
+their own records.
+
+The source at `/work/continue-gdsc-20261123/source` was clean and remained
+unchanged at commit
+`0a617bab7cb2277073aa24092ec9a12b63fceb50`, tree
+`88407a0fbefb12318c64ab8cc11ce7b5fbbf3418`.
+The local branch is `tb371fc-local-gdsc-smem-20261123` at that same
+commit, with no source changes. The earlier local snapshot is retained
+under `refs/heads/tb371fc-pre-sync-aa80a656646e`. Git fetch, the
+incremental build and the completed acceptance invocation each returned
+exit 0.
+
+| Recorded field | Value |
+| --- | --- |
+| Start, UTC | `2026-11-23T12:59:48.192340+00:00` |
+| End, UTC | `2026-11-23T13:02:59.070133+00:00` |
+| Runner-reported suite elapsed time | 186.76 seconds |
+| Local QEMU size | 64,039,496 bytes |
+| Local QEMU SHA256 | `89fcb435a7ca7ca9b30106f8deb712828fdf66a26df88e9297e27e9b0f96e957` |
+| QEMU before/after acceptance | Same SHA256; unchanged |
+| Local Linux version | 6.12.114 |
+| Local Linux Image SHA256 | `c513268fb0727d289fdfc0f02637c53cf5f976cc836ea9c586763f5f584bce40` |
+| Original all-suite report SHA256 | `a228e94e014e05baa52fdb38a4e33890924e5620ebf8f4ea9656f44d4a7d80a3` |
+
+The retained executable is
+`/work/continue-gdsc-20261123/frozen-final/qemu-system-aarch64`.
+The timestamps and the runner's own elapsed-time measurement are reported
+separately. The local executable and locally compiled Linux Image differ
+from the corresponding CI artifacts; their distinct hashes identify the
+inputs to this run.
+
+Earlier watcher timeouts and the summary-field `KeyError` remain
+separately retained non-passing checkpoints.
+
+This local invocation did not rerun A77, PCI or the production-native-DT
+diagnostic. A77/PCI acceptance remains the independent CI job's result.
+The production SMEM success and the latest USB3 PIPE mux abort remain
+observations of the verified CI executable `a2e19b18…`, not this local
+`89fcb435…` executable. Full native-DT userspace PID 1, Android userspace,
+GPU execution and native firmware services remain incomplete.

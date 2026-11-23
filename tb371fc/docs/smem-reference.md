@@ -72,9 +72,13 @@ lock. It does not require an allocated socinfo or IPC item to accept the SMEM
 allocator itself. The sole `0xfffe:0xfffe` global entry is skipped by local-host
 private-partition enumeration. Empty allocation lists are represented by
 uncached offset 32 and cached offset equal to partition size; no item canary
-is read until an item exists. This establishes compatibility with that probe
-contract, not a successful run of the production kernel. Consumers can still
-fail when they request absent firmware-populated items.
+is read until an item exists. This source-based ABI argument is separate
+from runtime evidence. The separate [408d82a](../evidence/gdsc-smem-20261123/native-ci-408.json)
+and [0a617bab](../evidence/gdsc-smem-20261123/native-ci-0a.json) production-driver
+observations each record acceptance of this reference handoff and 23
+live-state consistency checks on the unmodified production kernel, using
+their respective verified CI binaries. Consumers can still fail when they
+request absent firmware-populated items.
 
 ## Image layout
 
@@ -169,10 +173,30 @@ to distinguish successful execution of `qcom_smem_probe` from the presence of
 the reference image alone. It requires validating the production kernel's
 symbols and instruction offsets before inspecting its live driver state.
 
-This implementation was prepared independently of that native boot gate.
-The presence of its source and test script is not a passing runtime receipt.
-Only archived results from the corresponding compiled binary establish which
-gates actually ran and passed.
+The [408d82a public CI receipt](../evidence/gdsc-smem-20261123/ci-408d82a.json)
+records the successful 22-group component gate. The separate
+[original-kernel observation](../evidence/gdsc-smem-20261123/native-ci-408.json)
+uses the same board executable as both public CI suite invocations and
+records `qcom_smem_probe`'s successful publication with 23 consistency checks.
+The observer made no guest-memory writes. These are different tests: the
+component gate uses QTest allocation fixtures, while the native observation
+does not claim later guest allocation operations.
+
+The native run selected the explicit reference profiles, passed the previous
+GDSC access fault and then aborted at the GCC halt-status read `0x00148198`.
+It did not complete full native-DT or Android boot. The subsequent GCC
+implementation has [separate passing 0a617bab CI evidence](../evidence/gdsc-smem-20261123/ci-0a617ba.json)
+and a [verified downloaded executable](../evidence/gdsc-smem-20261123/artifact-0a617ba.json).
+A [separate 0a617bab production diagnostic](../evidence/gdsc-smem-20261123/native-ci-0a.json)
+on that exact `a2e19b18…` executable again observed SMEM probe success and
+passed all 23 state checks without observer writes to guest memory. It
+passed the preceding GCC abort, then panicked on an unsupported read at
+GCC offset `0xf060`, physical `0x0010f060`, through `mux_get_parent` during
+`gcc_kona_probe` (ESR `0x96000210`). The fixed official driver identifies
+this register as the [USB3 primary PIPE source mux](gcc-sm8250.md#next-observed-boundary-usb3-primary-pipe-source-mux),
+whose production selector decoding and external parents remain unresolved.
+Full native-DT and Android boot remain unpassed. Neither probe acceptance nor the component suites capture native
+SBL state or supply missing firmware-owned items and services.
 
 ## Future original-byte import
 

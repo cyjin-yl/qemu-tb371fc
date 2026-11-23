@@ -20,10 +20,35 @@ four Linux boots**, plus the separate A77 and PCI UFS compatibility job.
 The [run for commit 408d82a](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45164018326) completed all 53 component/parser gates
 and four clean Linux gates successfully; the separate A77/shared-UFS-PCI job
 also succeeded. These results belong to that CI build and its inputs.
-The same-frozen-binary local replay on doesvm was started, but its final
-result remains uncollected after connection loss; it is not recorded as a
-local aggregate pass. Full native-DT boot and the production SMEM driver's
-successful-probe observation remain unconfirmed. The archived
+The [log review](../evidence/gdsc-smem-20261123/ci-408d82a.json) preserves
+53 and four as separate runner invocations, not a newly executed all-suite.
+A later [native diagnostic](../evidence/gdsc-smem-20261123/native-ci-408.json)
+verified the artifact and board executable against both suite receipts,
+then observed the original kernel's SMEM probe-success path with 23 live-state
+checks. That same binary failed later on GCC's `0x00148198` halt-status read;
+full native-DT and Android boot remain unpassed. The independent local source
+build's complete replay has no archived aggregate result here.
+
+The newer [0a617bab run](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45170677624)
+also passed 53/53 components and a separate four of four Linux gates, with
+both jobs successful. Its [raw component](../evidence/gdsc-smem-20261123/components-0a617ba.json)
+and [Linux](../evidence/gdsc-smem-20261123/linux-0a617ba.json) reports retain
+their original bytes. The [artifact record](../evidence/gdsc-smem-20261123/artifact-0a617ba.json)
+verifies QEMU SHA256
+`a2e19b188f6253928ad47630896e0967fb99f55abbddaf98212f312e8194ee1b`
+against both reports. The GCC gates passed 24 behavior checks and eight
+checks around one actual same-binary QMP transfer. The independent job
+passed A77 852/9 plus two rejected configurations and all 15 PCI cases;
+see [the reviewed job logs](../evidence/gdsc-smem-20261123/ci-0a617ba.json).
+The subsequent [production-native-DT diagnostic](../evidence/gdsc-smem-20261123/native-ci-0a.json)
+used that same executable and again observed the SMEM probe-success path
+with all 23 state checks passing and no observer writes to guest memory.
+It passed the earlier `0x00148198` abort, then panicked on an unsupported
+GCC read at `0x0010f060` through `mux_get_parent` during `gcc_kona_probe`.
+The fixed official driver identifies the offset as the [USB3 primary PIPE
+source mux](gcc-sm8250.md#next-observed-boundary-usb3-primary-pipe-source-mux),
+which remains unimplemented. That native diagnostic is separate from the public component/Linux gates;
+full native-DT and Android boot remain unpassed. The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
 The [same-boundary A77 and PCI results](../evidence/verified-20261123-0820/final-verification.json)
@@ -40,7 +65,7 @@ pass does not attest newly added devices.
 | Capture and result parsers | Board profile, machine validator, DT inventory, sysfs collector, guest-result ABI and TLMM map unit tests |
 | Live board configuration | QMP CPU information and generated DT compared with the public tablet capture |
 | GENI UART | 14 register/FIFO/IRQ/reset groups and 6 actual migration checks |
-| GCC and GENI wiring | 19 GCC groups, 5 GCC migration checks, 6 clock/reset groups and 4 wired migration checks |
+| GCC and GENI wiring | 24 GCC groups and 8 checks around one actual same-binary migration, plus 6 clock/reset groups and 4 wired migration checks; earlier 19/5 receipts retain their own versioned scope |
 | Counter arithmetic | 1,848 independent arbitrary-precision floor/ceiling/overflow reference cases |
 | MMIO Generic Timer | 10 exact and 10 legacy groups; exact and legacy four-check migrations; both incompatible-mode rejection directions |
 | CPU counters and timers | Independent icount rate measurement in both modes; physical/virtual CVAL, signed TVAL, mask and wrap behavior |
@@ -205,6 +230,8 @@ public Linux gates retain their own recorded configurations; their success
 does not automatically exercise the optional SMEM reference profile. The
 [SMEM driver observation](smem-driver-observer.md) is a separate native-kernel
 diagnostic requiring exact-image symbol and instruction verification, bounded
-live-state checks, explicit profiles and its own outcome. A successful probe
-would still leave firmware-populated items, remote services and full Android
-operation to be implemented and tested.
+live-state checks, explicit profiles and its own outcome. The
+[408d82a native result](../evidence/gdsc-smem-20261123/native-ci-408.json)
+now records that successful probe and 23 consistency checks, followed by a
+GCC external abort. Firmware-populated items, later guest allocations,
+remote services and full Android operation still require their own evidence.

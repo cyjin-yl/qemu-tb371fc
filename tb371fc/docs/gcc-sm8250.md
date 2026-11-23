@@ -110,6 +110,39 @@ register has no writable enable bit: the existing CBCR status mask
 `0xf0000000` is read-only, writes of those status bits have no effect, and
 other nonzero bits are rejected. This does not add a NoC state machine.
 
+The [408d82a native diagnostic](../evidence/gdsc-smem-20261123/native-ci-408.json)
+provides the concrete failure that motivated this addition. On the exact
+board executable used by its successful 53-component and four-Linux CI
+invocations, the unmodified production kernel accepted the explicit SMEM
+handoff, then aborted reading physical `0x00148198` through
+`clk_branch2_check_halt` during `gcc_kona_probe`. That binary predates this
+branch/parent implementation.
+
+The implementation tested at 0a617bab passed
+[24 behavior checks](../evidence/gdsc-smem-20261123/gcc-registers-0a617ba.json)
+and [eight checks around one actual process transfer](../evidence/gdsc-smem-20261123/gcc-migration-0a617ba.json).
+The source and destination use the same binary; this is not an eight-transfer
+or old-to-new-version compatibility claim. The [downloaded board executable](../evidence/gdsc-smem-20261123/artifact-0a617ba.json),
+SHA256 `a2e19b188f6253928ad47630896e0967fb99f55abbddaf98212f312e8194ee1b`,
+matches both successful 53-component and four-Linux CI suite reports.
+The [0a617bab native diagnostic](../evidence/gdsc-smem-20261123/native-ci-0a.json)
+subsequently used that exact executable and passed the prior `0x00148198`
+abort. The unmodified production kernel again accepted the SMEM handoff,
+with all 23 state checks passing and no observer writes to guest memory.
+Its next fatal access was an unsupported GCC read at offset `0xf060`,
+physical `0x0010f060`, through `mux_get_parent`, `clk_register`,
+`qcom_cc_really_probe` and `gcc_kona_probe`. The 21.166-second diagnostic
+records ESR `0x96000210` and a kernel panic; support for this next access
+and full native boot remain incomplete. The source-level identification
+and remaining decoding questions are documented below. Earlier 19/5
+receipts retain their original counts, executable hashes and coverage.
+
+A separate [actual Python regeneration](../evidence/gdsc-smem-20261123/gcc-regeneration-0a617ba.json)
+used the fixed Linux 6.12.114 inputs and reproduced both
+`hw/misc/qcom-sm8250-gcc-data.inc` and the JSON register manifest byte for
+byte against 0a617bab. It records generator/source/output hashes and exit 0;
+it is a generation-integrity check, separate from QEMU execution.
+
 Binding 16, `gcc_cpuss_ahb_clk`, already uses the same parent and its separate
 `0x52000` bit 21 / `0x48000` halt status. The two branch votes remain
 independent. Other critical clocks, including `gcc_cpuss_dvm_bus_clk`, still
@@ -122,6 +155,30 @@ applies only this audited supplement. Input slot 63 and its QOM Clock name
 layout, but no longer determine this branch's rate. All other external slots
 keep their indices. The manifest records the primary URL, hash, source line
 and supplemented fields alongside the original upstream description.
+
+### Next observed boundary: USB3 primary PIPE source mux
+
+The same [fixed official Kona driver](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/gcc-kona.c)
+declares `gcc_usb3_prim_phy_pipe_clk_src` at line 1512, with register
+`0xf060`, shift 0 and width 2. Its three named parents are
+`usb3_phy_wrapper_gcc_usb30_pipe_clk`, `core_bi_pll_test_se` and
+`bi_tcxo`. This declaration identifies the observed offset; it does not
+by itself prove the production kernel's parent decoding or a PHY clock rate.
+
+The fixed snapshot's [mux getter and setter](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/clk-regmap-mux.c)
+are asymmetric: the getter passes the selector to `qcom_find_src_index`,
+while the setter writes the selected parent's `.cfg` field. The
+[lookup helper](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/common.c)
+compares that value with `.src`. Production `mux_get_parent`
+disassembly must therefore be checked before choosing an emulated decoding
+contract. The official PHY and test-parent `clk_dummy` declarations use
+`rrate = 1000`; these are dummy placeholders, not measured 1 kHz PHY or
+test-clock outputs.
+
+No source mux model is included in this follow-up. Explicit external-parent
+state, selector semantics, unknown-encoding errors, reset and migration
+behavior remain work for the next implementation. The current unsupported
+read and production panic are retained in the diagnostic evidence.
 
 ## Actual tablet observations and frequency assumptions
 

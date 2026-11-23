@@ -22,6 +22,59 @@ byte-identical canonical-name success. The
 [The source index](../SOURCES.md) links each device's precise register contract,
 primary references, assumptions and executed receipts.
 
+## Production SMEM probe on the verified CI binaries
+
+The [public CI record](../evidence/gdsc-smem-20261123/ci-408d82a.json) reports
+53 successful component/parser gates and a separate four-gate clean Linux
+invocation for 408d82a. The later [native diagnostic](../evidence/gdsc-smem-20261123/native-ci-408.json)
+verified the downloaded archive and board executable against both suite
+receipts. The same QEMU SHA256 was used unchanged for that diagnostic:
+`0190794d7890fcc34caeff3c7f30d00218a6f0027bddc4500c34f79c45051a93`.
+
+The unmodified production Image and complete native DT input reached the
+SMEM driver's successful publication path. The observer verified the relevant
+production instructions and read a nonzero `__smem` while the guest was
+paused; all 23 checks of pointers, lock, directory, partition, allocation
+frontiers and header fields passed. The observer wrote no guest memory.
+This establishes probe acceptance of the explicit reference handoff, not
+guest allocation operations, native SBL contents or remote firmware services.
+
+The diagnostic selected `smem-profile=reference-empty`, explicit TCSR
+unlocked reference, `gdsc-profile=reference-off`, SPMI reference, REFGEN
+disabled reference and a partial RPMh file profile. Its recorded DT hash
+identifies the complete input; the normal explicit loader memory fixups
+still apply. The previous GDSC abort was absent and CX/GX supply
+registration messages appeared. No GPU execution was verified.
+
+The same run then faulted on a 32-bit read at physical `0x00148198`, GCC
+offset `0x48198`, in `regmap_mmio_read32le+0x8` through
+`clk_branch2_check_halt` and `gcc_kona_probe`. It did not reach full native-DT
+userspace PID 1 or Android userspace. Timeout cleanup and exit 0 do not change that
+failure verdict.
+
+Subsequent source at 0a617bab implements binding 143's separate halt status
+and binding 18's CPUSS AHB post-divider parent. The [GCC contract](gcc-sm8250.md#kona-sys_noc_cpuss-critical-branch)
+describes the actual clock/vote-derived status. Its
+[24 behavior checks](../evidence/gdsc-smem-20261123/gcc-registers-0a617ba.json)
+and [eight checks around one actual QMP transfer](../evidence/gdsc-smem-20261123/gcc-migration-0a617ba.json)
+passed on the subsequent CI binary. The [artifact verification](../evidence/gdsc-smem-20261123/artifact-0a617ba.json)
+records its SHA256 as
+`a2e19b188f6253928ad47630896e0967fb99f55abbddaf98212f312e8194ee1b`,
+matching the successful 53-component and four-Linux reports. The subsequent
+[0a617bab production diagnostic](../evidence/gdsc-smem-20261123/native-ci-0a.json)
+used that same executable and the same unmodified production Image and full
+DT input. It again observed SMEM probe success and passed all 23 state
+checks, with no observer writes to guest memory. The prior `0x00148198`
+GCC abort was passed. The 21.166-second diagnostic then encountered a new
+unsupported GCC read at offset `0xf060`, physical `0x0010f060`, through
+`mux_get_parent`, `clk_register`, `qcom_cc_really_probe` and
+`gcc_kona_probe`. The fixed official driver identifies this register as
+`gcc_usb3_prim_phy_pipe_clk_src`, the USB3 primary PIPE source mux;
+[production decoding and external-parent boundaries](gcc-sm8250.md#next-observed-boundary-usb3-primary-pipe-source-mux)
+still need implementation and verification. ESR `0x96000210` and the kernel
+panic remain recorded; full native-DT userspace PID 1 and Android userspace were not
+reached. The earlier 408d82a receipt retains its own pre-fix result.
+
 ## Independent frozen-build receipts
 
 The separate [frozen12 public-input run](../evidence/resume-final-20261123/result.json)
@@ -57,6 +110,7 @@ passing result automatically.
 | IMEM / PS_HOLD | [Seven groups including actual migration](../evidence/boot-resources-20261123/qtest-migration-7.json) |
 | Linux RPMh providers | [23 guest and 3 host checks](../evidence/rpmh-linux-20261123/result.json), including CCF rate, real TCS interrupt activity, completed XO transaction and cleared pending IRQ |
 | Production kernel with generated DT | [Original eight PID 1 checks and actual guest shutdown](../evidence/production-gdb-exact-20261123/result.json), plus [independent frozen12 rerun](../evidence/production-gdb-frozen12-20261123/result.json), both with the unmodified production Image |
+| Production SMEM with full native DT input | [408d82a](../evidence/gdsc-smem-20261123/native-ci-408.json) and [0a617bab](../evidence/gdsc-smem-20261123/native-ci-0a.json) each observed probe-success publication and passed 23 consistency checks on their own verified CI binaries under explicit reference profiles; 0a passed the earlier halt-status abort, then failed on GCC `0x0010f060`, so full boot remains unpassed |
 | DCC | [17 original checks](../evidence/qsee-dcc-20261123/dcc-existing/report.json) and [16 ordered-operation checks](../evidence/qsee-dcc-20261123/dcc-operations/report.json), including actual pending-operation migration |
 | QSEE notification | [12 state and real SPI348/349 checks](../evidence/qsee-dcc-20261123/qsee/report.json) and [6 actual migration checks](../evidence/qsee-dcc-20261123/qsee-migration/report.json); no secure-service execution |
 | PDC | [18 C QTests and ten migration checks](../evidence/verified-20261123-0820/public-47/result.json); four-range GIC routing and no replay of acknowledged edges |
@@ -365,7 +419,9 @@ QTest-written allocation fixtures from guest-driver execution; the separate
 [production-driver observation procedure](smem-driver-observer.md) requires
 verified kernel symbols/instructions and live probe-success state. A seeded
 image, a successful allocator probe and a complete Android boot are separate
-results.
+results. The [408d82a observation](../evidence/gdsc-smem-20261123/native-ci-408.json)
+now records the second result with 23 live-state consistency checks; it does
+not claim guest allocation operations or the third result.
 
 ## Boot and diagnostic interfaces
 

@@ -104,19 +104,54 @@
     "container": "CT102 / qemu-tb371fc-dev",
     "work_root": "/work/continue-gdsc-20261123",
     "source_worktree": "/work/continue-gdsc-20261123/source",
-    "source_worktree_contains_final_gcc_correction": false,
+    "source_worktree_contains_final_gcc_correction": true,
     "local_gdsc_only_binary": "/work/continue-gdsc-20261123/frozen-gdsc/qemu-system-aarch64",
     "local_gdsc_only_binary_sha256": "d913611ad240206867ee4a3c8fe06ab052064da7c5b48d920f75729d9ade29be",
     "local_gdsc_only_checks_passed": 29,
     "ci408_binary_verified_on_doesvm": "/work/continue-gdsc-20261123/ci-408d82a/qemu-system-aarch64",
-    "combined_local_build_and_acceptance_receipts_retrieved": false,
-    "local_final_source_synchronization_confirmed": false,
+    "combined_local_build_and_acceptance_receipts_retrieved": true,
+    "local_final_source_synchronization_confirmed": true,
     "prior_user_source_and_frozen12_preserved": true,
     "ci0a_binary_verified_on_doesvm": "/work/continue-gdsc-20261123/ci-0a617ba/qemu-system-aarch64",
     "combined_local_build_completed": true,
-    "combined_local_full_acceptance_completed": false,
-    "combined_full_acceptance_watcher_exit": 1,
-    "watch_failure_requires_separate_diagnosis": true
+    "combined_local_full_acceptance_completed": true,
+    "watch_failure_requires_separate_diagnosis": false,
+    "combined_local_targeted_acceptance": {
+      "gdsc_checks": 29,
+      "smem_checks": 22,
+      "qemu_sha256": "618b778e66c91298563d1d5834c3175d6c8f7742165e507bca27f876092dc77c",
+      "gcc_correction_included": false,
+      "receipt": "local-targeted.json"
+    },
+    "canonical_source_commit": "0a617bab7cb2277073aa24092ec9a12b63fceb50",
+    "canonical_source_tree": "88407a0fbefb12318c64ab8cc11ce7b5fbbf3418",
+    "source_branch": "tb371fc-local-gdsc-smem-20261123",
+    "local_final_source_clean": true,
+    "local_final_binary": "/work/continue-gdsc-20261123/frozen-final/qemu-system-aarch64",
+    "local_final_binary_sha256": "89fcb435a7ca7ca9b30106f8deb712828fdf66a26df88e9297e27e9b0f96e957",
+    "local_final_binary_bytes": 64039496,
+    "local_final_build_exit": 0,
+    "local_final_full_acceptance": {
+      "suite": "all",
+      "runner_invocations": 1,
+      "expected_gates": 57,
+      "passed_gates": 57,
+      "failed_gates": 0,
+      "skipped_gates": 0,
+      "components_passed": 53,
+      "linux_passed": 4,
+      "elapsed_seconds": 186.76,
+      "kernel_sha256": "c513268fb0727d289fdfc0f02637c53cf5f976cc836ea9c586763f5f584bce40",
+      "source_unchanged": true,
+      "qemu_unchanged": true,
+      "summary": "local-final-summary.json",
+      "original_result": "local-all-0a617ba.json",
+      "original_result_sha256": "a228e94e014e05baa52fdb38a4e33890924e5620ebf8f4ea9656f44d4a7d80a3"
+    },
+    "earlier_combined_full_acceptance_watcher_exit": 1,
+    "earlier_combined_full_acceptance_watcher_failure": "The orchestration watch deadline expired before the combined build and targeted tests completed; those build and targeted test exit codes later became 0. This is not a full local 57-gate pass.",
+    "local_final_a77_pci_rerun": false,
+    "local_final_production_native_recheck": false
   },
   "boundaries": {
     "native_sbl_state_captured": false,
@@ -140,7 +175,10 @@
     "gcc-migration-0a617ba.json",
     "native-ci-408.json",
     "gcc-regeneration-0a617ba.json",
-    "native-ci-0a.json"
+    "native-ci-0a.json",
+    "local-targeted.json",
+    "local-final-summary.json",
+    "local-all-0a617ba.json"
   ],
   "prior_native_kernel_observation": {
     "source_commit": "408d82ae4acc0fce05d16d3f17ee3123eda82ab4",
@@ -156,5 +194,18 @@
     "latest_confirmed_pre_correction_fatal": "GCC read32 at physical 0x00148198 via clk_branch2_check_halt and gcc_kona_probe",
     "native_dt_boot_passed": false,
     "android_boot_passed": false
+  },
+  "evidence_chronology": {
+    "artifact_archive_audit": {
+      "receipt": "artifact-0a617ba.json",
+      "native_recheck_observed_at_that_audit": false,
+      "original_receipt_preserved": true
+    },
+    "later_native_execution": {
+      "receipt": "native-ci-0a.json",
+      "native_recheck_observed": true,
+      "source_commit": "0a617bab7cb2277073aa24092ec9a12b63fceb50",
+      "binary_sha256": "a2e19b188f6253928ad47630896e0967fb99f55abbddaf98212f312e8194ee1b"
+    }
   }
 }

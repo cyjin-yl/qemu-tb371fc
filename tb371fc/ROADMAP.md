@@ -37,8 +37,14 @@
 - [ ] 完整实机 live cmd-db 与动态 VRM 注册的对应关系；AOP 静态部分数据不等于 live RAM。
 - [x] 实现显式 `smem-profile=reference-empty`：loader 初始化普通 RAM 的空 SMEM v12 交接格式，要求独立选择 TCSR unlocked-reference；默认 `off` 不初始化。包含普通 reset 恢复空堆、普通 RAM 迁移与双向 profile 不匹配拒绝的协议。
 - [x] 提交 `408d82a` 的 [GitHub Actions 运行 45164018326](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45164018326)通过 53 组组件 gate 与四组无补丁 Linux gate；独立 A77/PCI 任务成功，范围限于该次 CI 构建与配置。
-- [ ] 收取 doesvm 上同一冻结二进制的完整本地复验结果；连接失效后的 SMEM 联合流程尚无最终通过回执。
-- [ ] 原厂 `qcom_smem_probe` 成功路径观察和完整原生 DT 启动；QTest 分配 fixture 不能替代真实驱动执行。
+- [ ] 收取 doesvm 另一路源码构建的完整本地复验结果；其未归档结果不作为通过记录。
+- [x] [408d82a 已验收 CI 二进制的原厂 SMEM 观察](evidence/gdsc-smem-20261123/native-ci-408.json)：未修改生产内核与完整 DT 输入，`qcom_smem_probe` 成功路径、非零 `__smem` 和 23 项运行状态一致性检查；观察器未写 guest 内存，显式参考配置与输入哈希保留。
+- [ ] 原厂 SMEM 后续真实分配/消费者操作、完整原生 DT 到达用户态 PID 1 和 Android 启动；接受空参考交接不提供原生 SBL 内容或远端服务。
+- [x] 补齐 GCC binding 143 `gcc_sys_noc_cpuss_ahb_clk` 的 `0x48198` halt/status 与 binding 18 父时钟；状态来自实际 clock/vote 请求，源码见 `0a617bab`。
+- [x] [0a617bab CI](evidence/gdsc-smem-20261123/ci-0a617ba.json)：GCC 24 项行为与一次真实迁移中的 8 项检查通过；53 组件＋另次四组 Linux、GDSC 29、SMEM 22、独立 A77 852＋2 和 PCI 15 均通过。
+- [x] [下载板级产物与原始回执核对](evidence/gdsc-smem-20261123/artifact-0a617ba.json)：`a2e19b18…` 可执行文件与该轮 53/4 两份报告哈希一致；[真实 Python 再生](evidence/gdsc-smem-20261123/gcc-regeneration-0a617ba.json)的两份生成文件逐字节匹配受测提交。
+- [x] [0a617bab 原厂完整 DT 诊断](evidence/gdsc-smem-20261123/native-ci-0a.json)：与该轮 CI 一致的 `a2e19b18…` 二进制再次观察到 SMEM 成功路径和 23/23 状态检查，观察器未写 guest 内存；已越过先前 `0x00148198` 的 GCC abort。历史 19/5 与独立 46/47/49/52/55 回执保持原范围。
+- [ ] 补齐下一处已观察的 GCC 读取：`mux_get_parent` 在偏移 `0xf060` / 物理地址 `0x0010f060` 触发 unsupported read 和 `ESR 0x96000210`，生产内核 panic。[官方固定版本源码](docs/gcc-sm8250.md#next-observed-boundary-usb3-primary-pipe-source-mux)对应 USB3 primary PIPE source mux；先反汇编核对生产 getter 的 selector 解码，再实现外部父时钟与未知编码行为。源码中的 PHY/test 1 kHz dummy 不是实测时钟，也不提供 PHY 模型。
 - [ ] 原厂 SBL/SMEM 内容、AOP/SCM/TrustZone 服务、secure-world 状态和完整 interconnect/电源依赖。
 - [ ] 数字电压请求到真实 PMIC/供电行为的完整模型；不把 reference profile 当作 native 资源地址或测量结果。
 - [x] KPSS watchdog 的 16 项数字行为检查及实际 pending-bite 迁移。
@@ -107,13 +113,14 @@ GDSC 接口与来源见 [gdsc.md](docs/gdsc.md)；它只描述数字请求和状
 - [x] 在本地授权范围读取并识别活动槽 boot/kernel/DT/AOP 资产；原始镜像不发布。
 - [x] 未修改的生产 Linux 4.19.157 Image，在生成 DT 和测试 initramfs 下完成八项 PID 1 检查及实际 guest shutdown。
 - [x] 无串口生产配置采用只读 GDB 完成记录，核对掩码、uname、online、计时和原样 native probe 输出后恢复执行；不是仅凭 exit 0。
-- [ ] 生产内核使用完整原生 DT 达到 PID 1。冻结构建 7 越过 watchdog/restart，后续冻结构建 10 越过 DCC probe 并编程列表 3/6/7；后续故障逐次记录于原生 DT 诊断回执，仍未通过完整启动。
+- [ ] 生产内核使用完整原生 DT 达到用户态 PID 1。[408d82a](evidence/gdsc-smem-20261123/native-ci-408.json) 已观察 SMEM 成功路径并越过先前 GDSC abort，后续在 `0x00148198` 发生 GCC external abort。[0a617bab](evidence/gdsc-smem-20261123/native-ci-0a.json) 以同一受测 CI 二进制再次通过 23 项 SMEM 状态检查并越过该地址，随后在 GCC 的 `mux_get_parent` 读取 `0x0010f060` 时 panic；完整原生启动仍未通过。
 - [ ] 完整 Android userspace、原生存储布局、显示、输入和网络端到端任务。
 - [ ] reset、snapshot/migration、错误注入和多次启动的一致性。
 - [ ] 完整逐设备覆盖清单、合成服务表、实机差分及未覆盖行为。
 
 [生产内核 GDB 回执](evidence/production-gdb-exact-20261123/result.json)和[冻结构建 12 独立复验](evidence/production-gdb-frozen12-20261123/result.json)分别证明其明示配置下的八项检查及实际 guest shutdown。
 [冻结构建 12 原生 DT 诊断](evidence/native-dt-spmi-reference-20261123/result.json)保留 QSEE 写异常；[原生 DT 推进索引](evidence/native-dt-progression-20261123/progress.json)及各轮增量回执保留后续实际故障边界。
+[408d82a 原厂回执](evidence/gdsc-smem-20261123/native-ci-408.json)把 SMEM probe 成功与后续 GCC fault 分开记录，使用与公开 53＋4 gate 相同的 `0190794d…` 二进制；输入完整 DT 保留明确的 loader fixup，不是原厂 Android 完整启动。
 不能通过替换生产内核、删除需要的设备或放宽断言把未通过的门槛改写成成功。
 
 ## 历史结果保留

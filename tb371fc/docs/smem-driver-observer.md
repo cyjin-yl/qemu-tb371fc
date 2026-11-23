@@ -100,3 +100,76 @@ stop state, bounded raw observations and individual validation results. Keep
 the final verdict explicit: success path observed, not observed, or decoding
 inconclusive. A later kernel exception does not erase an earlier successful
 SMEM probe, but it must remain visible as the next boot blocker.
+
+## Recorded production observation: 408d82a
+
+The [allowlisted native diagnostic](../evidence/gdsc-smem-20261123/native-ci-408.json) now records
+execution of the production driver's successful publication path under the
+explicit empty reference handoff. It used QEMU SHA256
+`0190794d7890fcc34caeff3c7f30d00218a6f0027bddc4500c34f79c45051a93`
+from the public 408d82a board artifact. The downloaded ZIP and executable
+were checked separately; the executable matched the binary hashes recorded
+by both the successful 53-component and four-Linux CI suite invocations.
+It remained unchanged after the native diagnostic.
+
+The kernel Image was unmodified, SHA256
+`ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f`.
+The complete DT input SHA256 was
+`5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207`;
+the board's explicit loader memory fixups still apply at runtime.
+
+| Observation | Recorded outcome |
+| --- | --- |
+| Production publication instructions | Verified before interpreting the live pointer |
+| Published `__smem` | Nonzero, with valid live driver-object pointers |
+| Live-state consistency | All 23 checks passed: pointers/lock, item count, directory, partition, region geometry, allocation frontiers and header |
+| Snapshot context | Guest paused; virtual-memory reads through CPU 0 |
+| Observer writes to guest memory | None (`guest_memory_written=false`) |
+| Production allocator operations exercised by this observation | No |
+| Native SBL capture or remote firmware | No |
+| Complete native-DT or Android boot | Failed later; not established by the probe result |
+
+The selected configurations were SMEM reference-empty, explicit TCSR
+unlocked reference, GDSC reference-off, SPMI reference, REFGEN disabled
+reference and a partial RPMh command-db file. Loader initialization of
+ordinary SMEM RAM is part of that declared profile; the read-only observer
+did not create the published kernel pointer or alter driver state.
+
+The previous GDSC abort was absent, and CX/GX supply registration messages
+were present. The same run then took a synchronous external abort reading
+physical `0x00148198` in GCC's branch-halt polling path:
+`gcc_kona_probe` through `clk_branch2_check_halt` to
+`regmap_mmio_read32le+0x8`. The diagnostic was stopped by timeout after
+25.143 seconds. QEMU/tool exit 0 describes cleanup, not a successful
+native-DT or Android boot.
+
+The 23 checks above are a native probe observation. They are separate from
+the 22-group QTest handoff/allocator-fixture gate, which executes no guest
+CPU. Neither the probe observation nor its successful pointer checks prove
+real guest allocations, firmware-populated items, SBL execution, remote
+services or GPU operation.
+
+The subsequent GCC implementation tested at 0a617bab adds binding 143 halt
+status and binding 18 parent support. Its [public CI](../evidence/gdsc-smem-20261123/ci-0a617ba.json)
+and [downloaded-artifact verification](../evidence/gdsc-smem-20261123/artifact-0a617ba.json)
+passed, using the distinct QEMU SHA256
+`a2e19b188f6253928ad47630896e0967fb99f55abbddaf98212f312e8194ee1b`.
+The earlier SMEM success and `0x00148198` abort above remain specific to
+408d82a.
+
+## Recorded production observation: 0a617bab
+
+A [separate 0a617bab production receipt](../evidence/gdsc-smem-20261123/native-ci-0a.json)
+now records the newer executable with the same unmodified Image and full
+DT input. Its 21.166-second diagnostic again observed
+`success_path_observed=true`, passed all 23 state checks and recorded
+`guest_memory_written=false`. It passed the previous GCC abort, then
+panicked on an unsupported read at GCC offset `0xf060`, physical
+`0x0010f060`, through `mux_get_parent`, `clk_register`,
+`qcom_cc_really_probe` and `gcc_kona_probe`, with ESR `0x96000210`.
+The fixed official driver names this the USB3 primary PIPE source mux;
+its [production selector decoding and external parents](gcc-sm8250.md#next-observed-boundary-usb3-primary-pipe-source-mux)
+remain a separate implementation task.
+This independently confirms the SMEM success path on the corrected GCC
+build; it does not establish later guest allocation operations, full
+native-DT userspace PID 1, Android userspace or secure-firmware services.
