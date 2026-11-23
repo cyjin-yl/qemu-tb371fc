@@ -32,7 +32,8 @@ binding rather than silently extracting a partial table. To reproduce it inside
 the development container:
 
 ```sh
-python3 tb371fc/scripts/generate_gcc_sm8250.py /work/clean-linux/source/linux-6.12.114
+python3 tb371fc/scripts/generate_gcc_sm8250.py /work/clean-linux/source/linux-6.12.114 \
+  --vendor-gcc /work/source-evidence/gcc-kona.c
 ```
 
 The GPL-2.0-only license and upstream table attribution are retained because the
@@ -46,12 +47,13 @@ code retains its GPL-2.0-or-later license.
 | RCG2 roots | 46 | Parent mux, half-integer divider, M/N/D, shadow/active state, update acknowledgement |
 | Read-only post-dividers | 3 | Divider readback and derived rate; synthetic initial divide-by-one |
 | Declared branch clocks | 139 | Independent vote/enable bits, parent availability, CLK_OFF and HWCG request |
-| Additional probe-enabled gates | 6 | Explicit enable bits used by upstream probe; no invented CBCR status at vote registers |
+| Additional mainline probe-enabled gates | 5 | Explicit enable bits used by upstream probe; no invented CBCR status at vote registers |
+| Official Kona CPUSS branch supplement | 1 | Separate CBCR, HLOS/remote votes and the existing CPUSS post-divider/RCG parent chain |
 | Reset outputs | 45 | Active-high GPIOs with upstream reset binding indices |
 | Software GDSCs | 11 | Collapse/on state and power GPIO output with upstream domain indices |
 
-There are **198 described clock outputs**, **84 explicit external parent
-inputs**, and **459 allowed register addresses**. Clock binding slots 189 and
+There are **198 described clock outputs**, **83 explicit external parent
+inputs**, and **460 allowed register addresses**. Clock binding slots 189 and
 195 have no upstream clock description and are not fabricated. Counts describe
 coverage of the driver's register contract, not a percentage of the physical
 SoC that is emulated.
@@ -73,6 +75,64 @@ This community source is not established as the exact source of the tablet's
 running 4.19.157 kernel. In particular it does not provide the same complete
 GPLL4 description as the upstream driver. Agreement of selected offsets is
 useful cross-checking, not proof of downstream register or firmware equivalence.
+
+## Official Kona SYS_NOC/CPUSS branch supplement
+
+The mainline driver enables vote register `0x52000` bit 0 during probe,
+but does not declare the corresponding branch. The original generated model
+therefore exposed only that vote and an unknown external parent. The vendor
+driver reads a separate halt register, so that incomplete description caused
+the model to reject the read instead of supplying derived clock status.
+
+The pinned [official OnePlus Kona GCC source](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/gcc-kona.c)
+declares `gcc_sys_noc_cpuss_ahb_clk` at line 3265. Its complete-file
+SHA256 is `ed208678508c983d0989f1f135fac898c5a9a91c14af1fa42cd7ea2f24cd14cd`,
+identical to the independently pinned Lenovo community file cited above.
+The generator requires this exact official source as `--vendor-gcc`
+and records it separately from the mainline facts in the manifest.
+
+| Contract | Description |
+| --- | --- |
+| Binding clock index | 143 |
+| Halt/status register | GCC-relative `0x48198`, board physical `0x00148198` |
+| HLOS vote | `0x52000` bit 0 |
+| Halt protocol | `BRANCH_HALT_VOTED` |
+| Direct parent | `gcc_cpuss_ahb_postdiv_clk_src`, clock 18, divider at `0x48028` |
+| Parent root | `gcc_cpuss_ahb_clk_src`, clock 17, RCG at `0x48010` |
+
+The existing branch/demand/rate implementation now handles this description.
+A local or external vote requests its actual parent chain. `CLK_OFF`
+reflects whether that requested chain produces a nonzero clock; it is not
+cleared merely because software wrote an enable bit. A stopped PLL remains a
+stopped branch. RCG shadow updates and the read-only CPUSS divider retain their
+ordinary model behavior. Clock 16 shares the vote register and parent chain
+but has an independent HLOS vote at bit 21.
+
+The former `gcc_sys_noc_cpuss_ahb_clk_parent` input is removed; all
+remaining external input names are unchanged. No replacement fabric rate is
+invented. The fixed divide-by-one reset for the read-only post-divider remains
+an explicit model assumption, not a captured native handoff.
+
+### Regeneration and component gate
+
+```sh
+python3 tb371fc/scripts/verify_gcc_generation.py --out /work/new-gcc-generation
+python3 tb371fc/tests/test_gcc_cpuss.py \
+  --qemu /work/build/qemu-system-aarch64 --out /work/new-gcc-cpuss
+```
+
+The generation gate retrieves only the three pinned public source files,
+checks their hashes, invokes the generator, and requires byte-identical C
+descriptors and JSON manifest. It retains all inputs, outputs and hashes.
+
+The compiled-QEMU gate requires 11 groups covering cold status, the 83 input
+objects, local and remote votes, shared-register isolation, stopped parents
+and relocking, shadow updates, read-only status, reset, a real file migration
+and timer/vote continuation. It also relabels only the GCC version field of
+that actual snapshot and requires an explicit incoming-version-1 rejection.
+This verifies rejection before field decoding; it does not claim execution
+of an old QEMU binary. Neither gate executes the production kernel or attests
+that its full GCC probe or the entire board now boots.
 
 ## Actual tablet observations and frequency assumptions
 
@@ -193,6 +253,14 @@ those connections do. Other downstream device connections must be assessed
 individually.
 
 ## Migration and verification
+
+**The GCC stream now requires VMState version 2. Version 1 is rejected.**
+The CPUSS supplement removes one synthetic external input, changing the
+serialized external-clock array from 84 entries to 83 and correcting its
+parent semantics. Accepting an old stream would risk both array misalignment
+and silently applying the old clock interpretation. The new minimum version
+is checked before decoding any GCC fields. Historical v1 receipts below
+remain historical evidence; they do not establish v1-to-v2 compatibility.
 
 VMState retains programming, active divider/PLL state, votes, power state and
 pending transition deadlines. Incoming state is validated and output clocks and

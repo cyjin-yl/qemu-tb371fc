@@ -91,6 +91,9 @@ def plan(args, runtime):
             ("tlmm-map-unit", tests / "test_tlmm_map.py"),
         ):
             add(name, script, result="exit")
+        add("gcc-source-generation", scripts / "verify_gcc_generation.py",
+            output="--out", result="file", count=2,
+            expected={"source_pins_verified": True})
         add("live-machine-profile", scripts / "validate_machine.py",
             ("--qemu", qemu, "--output", "@DATA@/result.json",
              "--dtb-output", "@DATA@/generated.dtb"), result="file")
@@ -102,6 +105,13 @@ def plan(args, runtime):
                output="--work-dir", verdict="success", count=19)
         device("gcc-migration", "test_gcc_sm8250.py", "--migration-only",
                output="--work-dir", verdict="success", count=5)
+        device("gcc-cpuss-branch", "test_gcc_cpuss.py",
+               output="--out", result="file", count=11,
+               expected={"expected_checks": 11, "vmstate_version": 2,
+                         "external_parent_inputs": 83,
+                         "guest_cpu_executed": False,
+                         "native_kernel_probe_observed": False},
+               expected_lengths={"migrations": 2})
         device("geni-clock-reset", "test_geni_clock_reset.py",
                output="--work-dir", verdict="success", count=6)
         device("geni-clock-migration", "test_geni_clock_reset.py",

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0-only
-"""Generate explicit SM8250 GCC descriptors from the pinned upstream driver.
+"""Generate SM8250 GCC descriptors with one pinned Kona branch supplement.
 
 The parser deliberately accepts one audited source revision only. It extracts
 register facts, not arbitrary C. Run in the development container:
-  python3 tb371fc/scripts/generate_gcc_sm8250.py /path/to/linux-6.12.114
+  python3 tb371fc/scripts/generate_gcc_sm8250.py /path/to/linux-6.12.114 \\
+    --vendor-gcc /path/to/pinned/gcc-kona.c
 """
 import argparse
 import hashlib
@@ -13,6 +14,11 @@ import re
 from pathlib import Path
 
 PIN = 'linux-6.12.114'
+VENDOR_REVISION = '94304e12a3509eac7b3716bf574ce0b1fcaacbae'
+VENDOR_PATH = 'drivers/clk/qcom/gcc-kona.c'
+VENDOR_SHA256 = 'ed208678508c983d0989f1f135fac898c5a9a91c14af1fa42cd7ea2f24cd14cd'
+VENDOR_URL = ('https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/'
+              'blob/' + VENDOR_REVISION + '/' + VENDOR_PATH)
 PRIMARY = 'https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/'
 SYMBOLS = {'P_BI_TCXO': -1, 'P_SLEEP_CLK': -2, 'P_AUD_REF_CLK': -3,
            'P_GPLL0_OUT_MAIN': 0, 'P_GPLL0_OUT_EVEN': 1,
@@ -48,11 +54,17 @@ def definitions(source, typ):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('linux', type=Path)
+    ap.add_argument('--vendor-gcc', type=Path, required=True,
+                    help='Exact pinned official OnePlus gcc-kona.c input')
     ap.add_argument('--output-root', type=Path, default=Path(__file__).resolve().parents[2])
     args = ap.parse_args()
     driver = args.linux / 'drivers/clk/qcom/gcc-sm8250.c'
     binding = args.linux / 'include/dt-bindings/clock/qcom,gcc-sm8250.h'
     source, header = driver.read_text(), binding.read_text()
+    vendor_bytes = args.vendor_gcc.read_bytes()
+    if hashlib.sha256(vendor_bytes).hexdigest() != VENDOR_SHA256:
+        raise ValueError('gcc-kona.c differs from the pinned official OnePlus source')
+    vendor_source = vendor_bytes.decode('utf-8')
     hashes = {str(p.relative_to(args.linux)): hashlib.sha256(p.read_bytes()).hexdigest()
               for p in (driver, binding)}
     # These checks prevent a changed driver from silently producing partial data.
@@ -114,13 +126,40 @@ def main():
                            reg=0xffffffff, enable_reg=reg, enable_mask=1, parent=-4, mnd_width=0, hid_width=0,
                            hwcg_reg=0, hwcg_mask=0, parent_map=[-127]*8, external=-1,
                            halt_check='probe-only CBCR'))
+    # Mainline only sets this critical vote during probe. Its official Kona
+    # declaration supplies the separate CBCR and the existing CPUSS parent.
+    # Apply the supplement before external-parent numbering; VMState v2 rejects
+    # the old 84-entry external array and its synthetic parent interpretation.
+    vendor = {name: (body, line)
+              for name, body, line in definitions(vendor_source, 'clk_branch')}
+    name = 'gcc_sys_noc_cpuss_ahb_clk'
+    body, vendor_line = vendor[name]
+    parent_name = required(
+        r'\.parent_names\s*=\s*\(const char \*\[\]\)\{\s*"(\w+)"\s*,?\s*\}',
+        body).group(1)
+    halt_check = required(r'\.halt_check\s*=\s*(\w+)', body).group(1)
+    facts = (number(body, 'halt_reg'), number(body, 'enable_reg'),
+             bit(body, 'enable_mask'), parent_name, halt_check)
+    if facts != (0x48198, 0x52000, 1,
+                 'gcc_cpuss_ahb_postdiv_clk_src', 'BRANCH_HALT_VOTED'):
+        raise ValueError('unexpected Kona SYS_NOC/CPUSS branch description')
+    if required(r'\.ops\s*=\s*&(\w+)', body).group(1) != 'clk_branch2_ops':
+        raise ValueError('unsupported Kona SYS_NOC/CPUSS branch operation')
+    desc = next(d for d in clocks if d['name'] == name)
+    if (desc['reg'], desc['enable_reg'], desc['enable_mask']) != (
+            0xffffffff, facts[1], facts[2]):
+        raise ValueError('mainline probe vote and Kona branch disagree')
+    probe_line = desc['line']
+    desc.update(reg=facts[0], parent=clock_ids[parent_name],
+                halt_check=halt_check, line=vendor_line,
+                source='oneplus-kona', upstream_probe_line=probe_line)
     clocks.sort(key=lambda d: d['id'])
     ext = 0
     for d in clocks:
         if d['kind'] == 'BRANCH' and d['parent'] == -4:
             d['external'] = ext
             ext += 1
-    if ext != 84 or len({d['id'] for d in clocks}) != 198:
+    if ext != 83 or len({d['id'] for d in clocks}) != 198:
         raise ValueError('unexpected external clock or duplicate binding')
     resets = []
     body = required(r'static const struct qcom_reset_map gcc_sm8250_resets\[\] = \{([\s\S]*?)\n\};', source).group(1)
@@ -167,17 +206,26 @@ def main():
     for reg, (rw, ro) in regs.items():
         if rw & ro: raise ValueError('overlapping rw/ro bits at ' + hex(reg))
     manifest = dict(schema=1, source_revision=PIN, source_url=PRIMARY + 'drivers/clk/qcom/gcc-sm8250.c?h=v6.12.114',
-                    sha256=hashes, clocks=clocks, resets=resets, power_domains=gdscs,
+                    sha256=hashes,
+                    source_supplements=[dict(name='oneplus-kona', revision=VENDOR_REVISION,
+                                             path=VENDOR_PATH, url=VENDOR_URL,
+                                             sha256=VENDOR_SHA256,
+                                             clock_ids=[clock_ids['gcc_sys_noc_cpuss_ahb_clk']])],
+                    clocks=clocks, resets=resets, power_domains=gdscs,
                     registers=[dict(offset=reg, write_mask=rw, status_mask=ro) for reg, (rw, ro) in sorted(regs.items())])
     (args.output_root / 'tb371fc/docs/gcc-sm8250-registers.json').write_text(json.dumps(manifest, indent=2) + '\n')
     out = ['/* SPDX-License-Identifier: GPL-2.0-only */',
            '/* Generated register facts from Linux v6.12.114 gcc-sm8250.c.',
-           ' * Source copyright (c) 2020, The Linux Foundation. All rights reserved.',
+           ' * Source copyright (c) 2018-2020, The Linux Foundation. All rights reserved.',
+           ' * SYS_NOC/CPUSS branch supplemented from pinned official Kona source.',
            ' * Regenerate with tb371fc/scripts/generate_gcc_sm8250.py; see manifest.',
            ' */', 'static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {']
     for d in clocks:
         pm = ', '.join(str(v) for v in d['parent_map'])
-        out += [f'    /* upstream line {d["line"]} */',
+        origin = (f'oneplus-kona line {d["line"]}; upstream probe line '
+                  f'{d["upstream_probe_line"]}' if d.get('source') == 'oneplus-kona'
+                  else f'upstream line {d["line"]}')
+        out += [f'    /* {origin} */',
                 f'    [{d["id"]}] = {{ "{d["name"]}", GCC_{d["kind"]},',
                 f'        0x{d["reg"]:x}, 0x{d["enable_reg"]:x}, 0x{d["enable_mask"]:x}, {d["parent"]},',
                 f'        {d["mnd_width"]}, {d["hid_width"]}, 0x{d["hwcg_reg"]:x}, 0x{d["hwcg_mask"]:x},',
