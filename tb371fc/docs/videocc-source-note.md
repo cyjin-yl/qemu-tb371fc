@@ -5,8 +5,9 @@ of the next fault. The current native observation is a nonfatal
 `Unable to register for bw voting` defer. In the pinned driver,
 bus-client registration precedes both PLL configuration calls. Successful
 NoC configuration would not by itself prove that this dependency or
-VIDEOCC is usable. Actual original-DT VIDEO resource geometry, compatible
-revision and any later invalid-memory address must still be captured.
+VIDEOCC is usable. The original DT now establishes the resource and v2
+compatible below; no later VIDEOCC invalid-memory address has been observed
+in this evidence.
 
 ## Fixed evidence
 
@@ -17,6 +18,31 @@ at `94304e12a3509eac7b3716bf574ce0b1fcaacbae`, Git blob
 Its [clock/reset binding](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/include/dt-bindings/clock/qcom,videocc-kona.h)
 is blob `08b33ce32dc6075bc6073ba87e314f7b686e70ac`.
 Register offsets below are relative to the resource, not assumed physical addresses.
+
+## Actual original-DT binding
+
+A single read-only extraction from CT102's qemu-tb371fc-dev container
+verified the complete DTB SHA256
+`5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207`.
+The [bounded JSON](../evidence/wholeboard-20261123-a47/videocc-dt-evidence.json)
+preserves raw hex, big-endian cells and the direct provider identity;
+no full DTB or firmware was exported.
+
+| Property | Actual value |
+| --- | --- |
+| Node | `/soc/qcom,videocc@abf0000` |
+| compatible | `qcom,videocc-kona-v2`, `syscon` |
+| reg / reg-names | `0x0abf0000, 0x10000` / `cc_base`; parent cells 1 address + 1 size |
+| clocks / clock-names | `0x16, 0xcd` / `cfg_ahb_clk` |
+| Direct clock provider | `/soc/qcom,gcc@100000`, `qcom,gcc-kona`; phandle 0x16, #clock-cells 1 |
+| VIDEOCC provider | phandle 0x6a, #clock-cells 1 |
+| assigned-clocks / assigned-clock-parents / assigned-clock-rates | All absent |
+
+The pinned [GCC binding](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/include/dt-bindings/clock/qcom,gcc-kona.h)
+(blob `2e74c2800db35b88b585e2e74256bf4b1e08078e`) identifies
+205 (0xcd) as GCC_VIDEO_AHB_CLK. This is the only explicit VIDEOCC DT clock
+specifier; the other named inputs below come from driver declarations,
+not additional DT clock specifiers.
 
 ## Vendor layout and routing
 
@@ -88,7 +114,7 @@ does not register these GDSCs. Preserve their ownership as separate
 dependencies. Neither max_register=f4c nor an eventual DT resource size
 authorizes a RAM window or invented power/status success.
 
-A future implementation requires an observed fault and verified original-DT
-binding, an explicit policy for unknown divider values, and independent
-state/timing/migration tests. This note establishes no video codec,
+A future implementation still requires an observed fault, an explicit
+policy for unknown divider values, and independent state/timing/migration
+tests. This note establishes no video codec,
 DSP firmware, frame processing, throughput, suspend or Android functionality.
