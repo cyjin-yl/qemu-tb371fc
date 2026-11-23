@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /* Generated register facts from Linux v6.12.114 gcc-sm8250.c.
- * Source copyright (c) 2020, The Linux Foundation. All rights reserved.
+ * Source copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+ * SYS_NOC/CPUSS branch supplemented from pinned official Kona source.
  * Regenerate with tb371fc/scripts/generate_gcc_sm8250.py; see manifest.
  */
 static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {
@@ -719,21 +720,21 @@ static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {
         0x1600c, 0x0, 0x0, -4,
         8, 5, 0x0, 0x0,
         { -1, 0, -127, -127, -127, -127, 1, -127 }, -1 },
-    /* upstream line 3652 */
+    /* oneplus-kona line 3265; upstream probe line 3652 */
     [143] = { "gcc_sys_noc_cpuss_ahb_clk", GCC_BRANCH,
-        0xffffffff, 0x52000, 0x1, -4,
+        0x48198, 0x52000, 0x1, 18,
         0, 0, 0x0, 0x0,
-        { -127, -127, -127, -127, -127, -127, -127, -127 }, 63 },
+        { -127, -127, -127, -127, -127, -127, -127, -127 }, -1 },
     /* upstream line 2651 */
     [144] = { "gcc_tsif_ahb_clk", GCC_BRANCH,
         0x36004, 0x36004, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 64 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 63 },
     /* upstream line 2664 */
     [145] = { "gcc_tsif_inactivity_timers_clk", GCC_BRANCH,
         0x3600c, 0x3600c, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 65 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 64 },
     /* upstream line 2677 */
     [146] = { "gcc_tsif_ref_clk", GCC_BRANCH,
         0x36008, 0x36008, 0x1, 147,
@@ -748,12 +749,12 @@ static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {
     [148] = { "gcc_ufs_1x_clkref_en", GCC_BRANCH,
         0x8c000, 0x8c000, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 66 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 65 },
     /* upstream line 2708 */
     [149] = { "gcc_ufs_card_ahb_clk", GCC_BRANCH,
         0x75018, 0x75018, 0x1, -4,
         0, 0, 0x75018, 0x2,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 67 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 66 },
     /* upstream line 2723 */
     [150] = { "gcc_ufs_card_axi_clk", GCC_BRANCH,
         0x75010, 0x75010, 0x1, 151,
@@ -788,17 +789,17 @@ static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {
     [156] = { "gcc_ufs_card_rx_symbol_0_clk", GCC_BRANCH,
         0x75020, 0x75020, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 68 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 67 },
     /* upstream line 2796 */
     [157] = { "gcc_ufs_card_rx_symbol_1_clk", GCC_BRANCH,
         0x750b8, 0x750b8, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 69 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 68 },
     /* upstream line 2809 */
     [158] = { "gcc_ufs_card_tx_symbol_0_clk", GCC_BRANCH,
         0x7501c, 0x7501c, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 70 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 69 },
     /* upstream line 2822 */
     [159] = { "gcc_ufs_card_unipro_core_clk", GCC_BRANCH,
         0x7505c, 0x7505c, 0x1, 160,
@@ -813,7 +814,7 @@ static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {
     [161] = { "gcc_ufs_phy_ahb_clk", GCC_BRANCH,
         0x77018, 0x77018, 0x1, -4,
         0, 0, 0x77018, 0x2,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 71 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 70 },
     /* upstream line 2857 */
     [162] = { "gcc_ufs_phy_axi_clk", GCC_BRANCH,
         0x77010, 0x77010, 0x1, 163,
@@ -848,17 +849,17 @@ static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {
     [168] = { "gcc_ufs_phy_rx_symbol_0_clk", GCC_BRANCH,
         0x77020, 0x77020, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 72 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 71 },
     /* upstream line 2930 */
     [169] = { "gcc_ufs_phy_rx_symbol_1_clk", GCC_BRANCH,
         0x770b8, 0x770b8, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 73 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 72 },
     /* upstream line 2943 */
     [170] = { "gcc_ufs_phy_tx_symbol_0_clk", GCC_BRANCH,
         0x7701c, 0x7701c, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 74 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 73 },
     /* upstream line 2956 */
     [171] = { "gcc_ufs_phy_unipro_core_clk", GCC_BRANCH,
         0x7705c, 0x7705c, 0x1, 172,
@@ -898,7 +899,7 @@ static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {
     [178] = { "gcc_usb30_prim_sleep_clk", GCC_BRANCH,
         0xf018, 0xf018, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 75 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 74 },
     /* upstream line 3025 */
     [179] = { "gcc_usb30_sec_master_clk", GCC_BRANCH,
         0x10010, 0x10010, 0x1, 180,
@@ -928,7 +929,7 @@ static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {
     [184] = { "gcc_usb30_sec_sleep_clk", GCC_BRANCH,
         0x10018, 0x10018, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 76 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 75 },
     /* upstream line 3074 */
     [185] = { "gcc_usb3_prim_phy_aux_clk", GCC_BRANCH,
         0xf054, 0xf054, 0x1, 186,
@@ -948,12 +949,12 @@ static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {
     [188] = { "gcc_usb3_prim_phy_pipe_clk", GCC_BRANCH,
         0xf05c, 0xf05c, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 77 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 76 },
     /* upstream line 3123 */
     [190] = { "gcc_usb3_sec_clkref_en", GCC_BRANCH,
         0x8c010, 0x8c010, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 78 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 77 },
     /* upstream line 3136 */
     [191] = { "gcc_usb3_sec_phy_aux_clk", GCC_BRANCH,
         0x10054, 0x10054, 0x1, 192,
@@ -973,27 +974,27 @@ static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {
     [194] = { "gcc_usb3_sec_phy_pipe_clk", GCC_BRANCH,
         0x1005c, 0x1005c, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 79 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 78 },
     /* upstream line 3647 */
     [196] = { "gcc_video_ahb_clk", GCC_BRANCH,
         0xffffffff, 0xb004, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -127, -127, -127, -127, -127, -127, -127, -127 }, 80 },
+        { -127, -127, -127, -127, -127, -127, -127, -127 }, 79 },
     /* upstream line 3185 */
     [197] = { "gcc_video_axi0_clk", GCC_BRANCH,
         0xb024, 0xb024, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 81 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 80 },
     /* upstream line 3198 */
     [198] = { "gcc_video_axi1_clk", GCC_BRANCH,
         0xb028, 0xb028, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 82 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 81 },
     /* upstream line 3211 */
     [199] = { "gcc_video_xo_clk", GCC_BRANCH,
         0xb03c, 0xb03c, 0x1, -4,
         0, 0, 0x0, 0x0,
-        { -1, -127, -127, -127, -127, -127, -127, -127 }, 83 },
+        { -1, -127, -127, -127, -127, -127, -127, -127 }, 82 },
 };
 static const GccResetDesc gcc_resets[GCC_RESETS] = {
     [0] = { 0x71000, 0x1 }, /* GCC_GPU_BCR */
@@ -1358,6 +1359,7 @@ static const GccRegisterDesc gcc_registers[] = {
     { 0x48014, 0x0010371f, 0x00000000 },
     { 0x48028, 0x00000000, 0x0000000f },
     { 0x4818c, 0x00000001, 0x00000000 },
+    { 0x48198, 0x00000000, 0xf0000000 },
     { 0x4d000, 0x00000001, 0x00000000 },
     { 0x4d004, 0x00000003, 0xf0000000 },
     { 0x4d008, 0x00000001, 0xf0000000 },

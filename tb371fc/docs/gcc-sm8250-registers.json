@@ -6,6 +6,18 @@
     "drivers/clk/qcom/gcc-sm8250.c": "b3b3865de3a297f906d5562a720d8d304538cef3c8d3703dee026cfd6dba06c8",
     "include/dt-bindings/clock/qcom,gcc-sm8250.h": "34682c01e5b21bb13db125afa3504c73606c294c23cfb3a96f6ea52cdffd2ff7"
   },
+  "source_supplements": [
+    {
+      "name": "oneplus-kona",
+      "revision": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "path": "drivers/clk/qcom/gcc-kona.c",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/gcc-kona.c",
+      "sha256": "ed208678508c983d0989f1f135fac898c5a9a91c14af1fa42cd7ea2f24cd14cd",
+      "clock_ids": [
+        143
+      ]
+    }
+  ],
   "clocks": [
     {
       "id": 0,
@@ -3724,11 +3736,11 @@
       "id": 143,
       "name": "gcc_sys_noc_cpuss_ahb_clk",
       "kind": "BRANCH",
-      "line": 3652,
-      "reg": 4294967295,
+      "line": 3265,
+      "reg": 295320,
       "enable_reg": 335872,
       "enable_mask": 1,
-      "parent": -4,
+      "parent": 18,
       "mnd_width": 0,
       "hid_width": 0,
       "hwcg_reg": 0,
@@ -3743,8 +3755,10 @@
         -127,
         -127
       ],
-      "external": 63,
-      "halt_check": "probe-only CBCR"
+      "external": -1,
+      "halt_check": "BRANCH_HALT_VOTED",
+      "source": "oneplus-kona",
+      "upstream_probe_line": 3652
     },
     {
       "id": 144,
@@ -3769,7 +3783,7 @@
         -127,
         -127
       ],
-      "external": 64,
+      "external": 63,
       "halt_check": "BRANCH_HALT_VOTED"
     },
     {
@@ -3795,7 +3809,7 @@
         -127,
         -127
       ],
-      "external": 65,
+      "external": 64,
       "halt_check": "BRANCH_HALT"
     },
     {
@@ -3873,7 +3887,7 @@
         -127,
         -127
       ],
-      "external": 66,
+      "external": 65,
       "halt_check": "BRANCH_HALT"
     },
     {
@@ -3899,7 +3913,7 @@
         -127,
         -127
       ],
-      "external": 67,
+      "external": 66,
       "halt_check": "BRANCH_HALT_VOTED"
     },
     {
@@ -4081,7 +4095,7 @@
         -127,
         -127
       ],
-      "external": 68,
+      "external": 67,
       "halt_check": "BRANCH_HALT_DELAY"
     },
     {
@@ -4107,7 +4121,7 @@
         -127,
         -127
       ],
-      "external": 69,
+      "external": 68,
       "halt_check": "BRANCH_HALT_DELAY"
     },
     {
@@ -4133,7 +4147,7 @@
         -127,
         -127
       ],
-      "external": 70,
+      "external": 69,
       "halt_check": "BRANCH_HALT_DELAY"
     },
     {
@@ -4211,7 +4225,7 @@
         -127,
         -127
       ],
-      "external": 71,
+      "external": 70,
       "halt_check": "BRANCH_HALT_VOTED"
     },
     {
@@ -4393,7 +4407,7 @@
         -127,
         -127
       ],
-      "external": 72,
+      "external": 71,
       "halt_check": "BRANCH_HALT_DELAY"
     },
     {
@@ -4419,7 +4433,7 @@
         -127,
         -127
       ],
-      "external": 73,
+      "external": 72,
       "halt_check": "BRANCH_HALT_DELAY"
     },
     {
@@ -4445,7 +4459,7 @@
         -127,
         -127
       ],
-      "external": 74,
+      "external": 73,
       "halt_check": "BRANCH_HALT_DELAY"
     },
     {
@@ -4652,7 +4666,7 @@
         -127,
         -127
       ],
-      "external": 75,
+      "external": 74,
       "halt_check": "BRANCH_HALT"
     },
     {
@@ -4807,7 +4821,7 @@
         -127,
         -127
       ],
-      "external": 76,
+      "external": 75,
       "halt_check": "BRANCH_HALT"
     },
     {
@@ -4911,7 +4925,7 @@
         -127,
         -127
       ],
-      "external": 77,
+      "external": 76,
       "halt_check": "BRANCH_HALT_DELAY"
     },
     {
@@ -4937,7 +4951,7 @@
         -127,
         -127
       ],
-      "external": 78,
+      "external": 77,
       "halt_check": "BRANCH_HALT"
     },
     {
@@ -5041,7 +5055,7 @@
         -127,
         -127
       ],
-      "external": 79,
+      "external": 78,
       "halt_check": "BRANCH_HALT_DELAY"
     },
     {
@@ -5067,7 +5081,7 @@
         -127,
         -127
       ],
-      "external": 80,
+      "external": 79,
       "halt_check": "probe-only CBCR"
     },
     {
@@ -5093,7 +5107,7 @@
         -127,
         -127
       ],
-      "external": 81,
+      "external": 80,
       "halt_check": "BRANCH_HALT_VOTED"
     },
     {
@@ -5119,7 +5133,7 @@
         -127,
         -127
       ],
-      "external": 82,
+      "external": 81,
       "halt_check": "BRANCH_HALT_VOTED"
     },
     {
@@ -5145,7 +5159,7 @@
         -127,
         -127
       ],
-      "external": 83,
+      "external": 82,
       "halt_check": "BRANCH_HALT"
     }
   ],
@@ -7021,6 +7035,11 @@
       "offset": 295308,
       "write_mask": 1,
       "status_mask": 0
+    },
+    {
+      "offset": 295320,
+      "write_mask": 0,
+      "status_mask": 4026531840
     },
     {
       "offset": 315392,

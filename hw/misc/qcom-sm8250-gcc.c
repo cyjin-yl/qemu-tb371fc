@@ -2,7 +2,8 @@
 /*
  * SM8250 global clock controller: software-visible register state and gates.
  * Register evidence: Linux v6.12.114 drivers/clk/qcom/gcc-sm8250.c,
- * clk-alpha-pll.c, clk-rcg2.c, clk-branch.c, gdsc.c, reset.c.
+ * clk-alpha-pll.c, clk-rcg2.c, clk-branch.c, gdsc.c, reset.c; the pinned
+ * official Kona source supplies SYS_NOC/CPUSS CBCR and parent topology.
  * See tb371fc/docs/gcc-sm8250.md for evidence, assumptions and limitations.
  * This implements neither analog PLLs nor undocumented Qualcomm firmware.
  */
@@ -652,8 +653,12 @@ static int gcc_post_load(void *opaque, int version)
 
 static const VMStateDescription vmstate_gcc = {
     .name = TYPE_QCOM_SM8250_GCC,
-    .version_id = 1,
-    .minimum_version_id = 1,
+    /* v1 used 84 external parents, including a synthetic CPUSS input.
+     * v2 has the real CPUSS parent chain and 83 inputs; reject v1 before
+     * reading its incompatible clock array or accepting its semantics.
+     */
+    .version_id = 2,
+    .minimum_version_id = 2,
     .post_load = gcc_post_load,
     .fields = (const VMStateField[]) {
         VMSTATE_UINT32_ARRAY(regs, QcomSm8250GccState, GCC_REGISTER_WORDS),
