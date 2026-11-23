@@ -269,3 +269,41 @@ under explicit inputs. It would not establish calibrated die temperature,
 thermal physics, fan/cooling performance, PMIC thermal behavior or secure
 firmware initialization. The existing SCM TSENS reinitialization service is
 not acknowledged or implemented by this device.
+
+## Actual 52492a validation
+
+[Formal run 45226846782](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45226846782)
+passed 68 component gates and four Linux boots on source
+`52492a797d2acd9c918a8639564e8ff3e7beab3f`. Its independent A77/shared-UFS job
+also passed. The [frozen board receipt](../evidence/wholeboard-20261123-a47/public-ci-52492a.json)
+binds QEMU SHA-256 `debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3`.
+
+The [original TSENS result](../evidence/wholeboard-20261123-a47/tsens24xx-52492a.json)
+passes all 34 checks, two completed process roundtrips, two profile mismatches
+and two deliberately corrupted-stream rejections. All five actual migration
+files were separately read from the ZIP. An independent standard-library
+verifier decoded six complete 375-byte controller payloads, compared mutable
+reference state with actual stopped source QMP observations and independent
+scenario values, and checked real QMP completion/rejection logs. Immutable
+prefixes were checked against the fixed board/bootstrap contract, not labeled
+as runtime QOM reads. The unknown-profile file supplies the reverse rejection
+case and is not a third successful roundtrip.
+
+The first source `298f21c` [failed](../evidence/wholeboard-20261123-a47/public-ci-298f21-failure.json)
+on check 18's expected MemoryRegion error wording after 17 successful checks;
+Linux and native runs did not execute. Only the strict invalid-width diagnostic
+expectation changed. Device code and all check/migration thresholds remained
+unchanged. Exact original failure bytes are retained beside the later result.
+
+The [same-binary native diagnostic](../evidence/wholeboard-20261123-a47/native-52492a.json)
+uses the unchanged production Image and complete supplied DT. Its explicit
+reference inputs were 25000 m°C and boot mask `0xffff`. Both controllers
+completed 16670 sample/complete rounds; all 32 modeled channels had coherent
+VALID, signed code 250 and 25000 m°C observations, with TRDY 8. Their four
+IRQ outputs were inactive in the stopped snapshot. The actual DT references
+25 independent channels; modeled input coverage is not a measurement of the
+physical sensor population or firmware enable mask.
+
+The former `0x0c222004` TSENS abort is absent. Two virtual thermal zones still
+report EINVAL. The next fatal is the CPUFreq driver read at `0x18591100`;
+full native-DT userspace, Android and physical thermal behavior remain unpassed.

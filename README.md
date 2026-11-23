@@ -12,9 +12,15 @@
 
 ## 本次整板推进与统一验收（2026-11-23）
 
-本轮新增[两组 TSENS24xx 数字参考模型](tb371fc/docs/tsens24xx-reference.md)，公开验收计划扩展为 **72 个 gate：68 个组件检查 + 4 次 Linux 启动**。新增 34 项检查覆盖真实采样轮次、VALID/TRDY、阈值/四路 IRQ、复位及进程间迁移；**该新组合尚待实际 CI 与同二进制原厂验证**。下方已通过的 71 项只对应 `3ef98`，不替代新增组合的结果。
+统一提交 `52492a797d2acd9c918a8639564e8ff3e7beab3f` 已实际通过 **72 个 gate：68/68 组件检查 + 4/4 Linux 启动，以及独立 A77/UFS job**。见[实际 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45226846782)和[冻结回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-52492a.json)。板级 QEMU SHA-256 为 `debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3`；已直接读取 ZIP、包内二进制、两份 clean-source 汇总、11 份组件报告及 **17 个 MPM/NoC/SMMUv500/TSENS 迁移文件**。
 
-首次 TSENS 组合 `298f21c` 的[实际失败回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-298f21-failure.json)为 **67/68 组件通过，Linux 四项未执行**，独立 A77/UFS 成功。TSENS 前 17 项通过，第 18 项把合法的非法宽度诊断 `invalid size (min:4 max:4)` 误期望为 `rejected`；[原始报告](tb371fc/evidence/wholeboard-20261123-a47/tsens24xx-298f21-failed.json)和真实 QTest/错误日志均保留。当前只修正这一严格测试判断，设备 C、34 项门槛和迁移契约不变，仍须完整重跑。失败产物未用于原厂启动。
+新增[两组 TSENS24xx 数字参考模型](tb371fc/docs/tsens24xx-reference.md)的[原始回执](tb371fc/evidence/wholeboard-20261123-a47/tsens24xx-52492a.json)实际通过 **34 项检查、2 次完成迁移、2 次 profile 拒绝和 2 次损坏流拒绝**。独立解码器检查五个真实迁移文件及六个完整控制器 payload，并将可变字段与停止状态下的真实 QOM 观测比对。默认仍为未知；`0xffff` 初始使能、25°C 输入与 1 ms 采样均是显式参考假设。
+
+同一个通过 CI 的二进制运行[未修改的生产 Image 与完整原生 DT](tb371fc/evidence/wholeboard-20261123-a47/native-52492a.json)，已越过 `0x0c222004` 的 TSENS 异常：两个控制器各完成 **16,670 轮采样**，32 个建模通道的 VALID、代码与温度换算一致，TRDY 均为 8。实际 DT 引用其中 25 个独立通道；这不是实测芯片温度，也没有把两个仍报 EINVAL 的虚拟温度区算作通过。SMEM 23/23、AOP QDSS、NoC 非延迟配置及 SMMUv500 资源注册均保留。新的实际 fatal 为 **`qcom_cpufreq_hw_driver_probe+0x408` 读取物理地址 `0x18591100`**。完整原生 DT 用户态、原厂 Android、GPU/NPU 执行及整板等价仍未通过。
+
+首次 TSENS 组合 `298f21c` 的[失败回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-298f21-failure.json)保留为 **67/68 组件通过、Linux 四项未执行**；其失败产物没有用于原厂启动。TSENS 前 17 项通过，第 18 项误把非法宽度诊断期望为 `rejected`。只修正为精确的 `invalid size (min:4 max:4)` 后，设备 C、34 项门槛和迁移要求均不变，上述 52492a 完整重跑通过。[原始失败报告](tb371fc/evidence/wholeboard-20261123-a47/tsens24xx-298f21-failed.json)和真实 QTest/错误日志按原字节保留。
+
+以下是各自绑定源码和二进制的历史检查点。
 
 统一提交 `3ef98a8afb49a873d677288693d6491c50fd75e1` 已实际通过 **71 个 gate：67/67 组件检查 + 4/4 Linux 启动，以及独立 A77/UFS job**。见[实际 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45216035665)和[冻结回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-3ef98.json)。板级 QEMU SHA-256 为 `703af9a899455c1c32636a9e3535294031c93cd9624fdc193177c61cb8ff7600`；已实际读取 ZIP、包内二进制、两份 clean-source 汇总、十份组件报告及 12 个 MPM/NoC/SMMUv500 迁移文件。
 

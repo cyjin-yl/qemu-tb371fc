@@ -20,7 +20,8 @@
 - [x] MPM sleep counter：固定 32768 Hz、单个只读 word、精确分数及 VMState 1；17 项检查、2 次完成迁移、1 次损坏流拒绝通过，同一 `0508` 原厂完整 DT 实际输出 MPM timestamp/frequency 并继续启动。
 - [x] NoC QoS：47 物理端口 / 188 有效 word；20 项、2 次完成迁移、2 次 profile 拒绝、2 次损坏流拒绝通过。统一 `99ef` 完成 66/66 组件 + 4/4 Linux 和独立 A77/UFS；同一原厂运行只读核验 47 地址及 46 非延迟配置，越过 `0x016e9008`。
 - [x] apps QSMMUv500 TCU/10 TBU reference：36 项检查、2 次完成迁移、2 次 profile 拒绝和 2 次损坏流拒绝；统一 `3ef98` 的 67/67 组件 + 4/4 Linux 与独立 A77/UFS 全部通过。同一原厂运行越过 VERSION 异常、注册 TBU 资源客户端，继续到 SCSI/USB；未证明 native DMA、物理电源耦合或固件上下文交接。
-- [ ] TSENS：已加入[两控制器数字参考模型](docs/tsens24xx-reference.md)及 34 项检查，明确外部温度输入、捕获采样轮次、VALID/TRDY、阈值/四路 IRQ、复位和 375-byte VMState。72 项统一计划及同二进制原厂验证尚待执行；`3ef98` 的 `0x0c222004` fatal 仍是已观测的最近阻塞。
+- [x] TSENS 有限数字参考：两控制器/32 通道的 [34 项检查、2 次完成迁移、2 次 profile 拒绝及 2 次损坏流拒绝](evidence/wholeboard-20261123-a47/tsens24xx-52492a.json)实际通过；[72 项统一 CI](evidence/wholeboard-20261123-a47/public-ci-52492a.json)与[同二进制完整原生 DT 运行](evidence/wholeboard-20261123-a47/native-52492a.json)已确认各 16670 轮参考采样并越过旧 TSENS fatal。温度/使能/1 ms 为显式假设，两个虚拟温度区 EINVAL、校准和物理热行为仍未通过。
+- [ ] CPUFreq 硬件域：最新实际 fatal 为 `qcom_cpufreq_hw_driver_probe+0x408/0x980` 读取 `0x18591100`；须以原厂 DT 和固定驱动契约实现有限接口，并在新组合上重新验证。
 - [ ] 原厂完整 DT 用户态及 Android 启动；不能将 71 项公共成功、控制器注册或 NoC 配置匹配当作整板可用。
 
 本轮精确构建与原厂证据见 [README](../README.md) 和

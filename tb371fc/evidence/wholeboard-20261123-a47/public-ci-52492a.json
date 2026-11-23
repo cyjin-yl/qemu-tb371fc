@@ -1,0 +1,3855 @@
+{
+  "schema_version": 1,
+  "source_commit": "52492a797d2acd9c918a8639564e8ff3e7beab3f",
+  "source_tree": "6b86a34ece00b70adf616e50787c0d385d0c8439",
+  "scope": "Actual formal CI results for this exact source and board binary; no full native-DT userspace, stock Android or full-tablet-equivalence attestation",
+  "workflow": {
+    "id": 45226846782,
+    "url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45226846782",
+    "board_job": {
+      "id": 137875526309,
+      "conclusion": "success",
+      "completed_utc": "2026-11-23T17:33:49Z"
+    },
+    "cpu_job": {
+      "id": 137875527095,
+      "conclusion": "success"
+    }
+  },
+  "board_artifact": {
+    "source": "52492a797d2acd9c918a8639564e8ff3e7beab3f",
+    "workflow_run": 45226846782,
+    "artifact_id": 14846530969,
+    "artifact_sha256": "60d95787ade85cec478716f037559de2e969c5636de467165532e77c04737790",
+    "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+    "suites": [
+      {
+        "suite": "components",
+        "passed": true,
+        "passed_gates": 68,
+        "expected_gates": 68,
+        "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+        "qemu_unchanged": true,
+        "elapsed_seconds": 260.504,
+        "runner_sha256": "62aa8a22d9b257ee4d0d80379e28d54ca015baf0032b120593ff58ea43e1a32b",
+        "source_commit": "52492a797d2acd9c918a8639564e8ff3e7beab3f",
+        "source_dirty": false,
+        "gate_order": [
+          "ci-verdict-unit",
+          "smem-observer-unit",
+          "aop-observer-unit",
+          "board-profile-unit",
+          "machine-validator-unit",
+          "dt-inventory-unit",
+          "hardware-sysfs-unit",
+          "guest-result-unit",
+          "console-boot-verdict-unit",
+          "tlmm-map-unit",
+          "gcc-source-generation",
+          "live-machine-profile",
+          "geni-registers",
+          "geni-migration",
+          "gcc-registers",
+          "gcc-migration",
+          "gcc-cpuss-branch",
+          "gcc-usb-pipe-mux",
+          "geni-clock-reset",
+          "geni-clock-migration",
+          "mpm2-sleep-counter",
+          "counter-arithmetic",
+          "mmio-timer-exact",
+          "mmio-timer-legacy",
+          "cpu-counter-exact",
+          "cpu-counter-legacy",
+          "mmio-timer-migration",
+          "mmio-timer-legacy-migration",
+          "reject-exact-to-legacy",
+          "reject-legacy-to-exact",
+          "cpu-timer-migration",
+          "cpu-timer-control",
+          "cpu-irq-realtime",
+          "cpu-irq-exact-icount",
+          "cpu-irq-legacy-icount",
+          "smmuv2-c-qtest",
+          "tlmm-c-qtest",
+          "pdc-c-qtest",
+          "rpmh-reference",
+          "rpmh-reference-migration",
+          "rpmh-display",
+          "rpmh-display-migration",
+          "qsee-notification",
+          "qsee-notification-migration",
+          "tcsr-mutex",
+          "refgen-request",
+          "gpucc-sm8250",
+          "npucc-sm8250",
+          "noc-qos",
+          "smmuv500-reference",
+          "tsens24xx-reference",
+          "gpu-gx-gdsc",
+          "gpu-cx-gdsc",
+          "aop-reference-peer",
+          "aop-msgram",
+          "smem-reference-handoff",
+          "dcc-operations",
+          "ufs-register-dma",
+          "watchdog-registers",
+          "watchdog-migration",
+          "boot-resources",
+          "ipcc-messages",
+          "dcc-capture",
+          "spmi-pmic-arb",
+          "spmi-pdc-gic-route",
+          "tlmm-migration",
+          "pdc-migration",
+          "smmuv2-migration"
+        ],
+        "receipt_path": "tb371fc-results/components/result.json",
+        "receipt_sha256": "a39709b749ecb68aca5589e524e731970018f0d1af678e5a042a423af84353fe"
+      },
+      {
+        "suite": "linux",
+        "passed": true,
+        "passed_gates": 4,
+        "expected_gates": 4,
+        "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+        "qemu_unchanged": true,
+        "elapsed_seconds": 7.578,
+        "runner_sha256": "62aa8a22d9b257ee4d0d80379e28d54ca015baf0032b120593ff58ea43e1a32b",
+        "source_commit": "52492a797d2acd9c918a8639564e8ff3e7beab3f",
+        "source_dirty": false,
+        "gate_order": [
+          "linux-console-userspace",
+          "linux-console-empty-ufs",
+          "linux-ufs-smmu",
+          "linux-ufs-rpmh"
+        ],
+        "receipt_path": "tb371fc-results/linux/result.json",
+        "receipt_sha256": "f4342dd2fdd71998b9120fa01c61ff8a681436f617f8163db1d32c3c341326f1"
+      }
+    ]
+  },
+  "board_artifact_bytes": 36421516,
+  "source_clean_verified_from_both_suite_receipts": true,
+  "board_binary_hash_verified_by_reading_zip_member": true,
+  "total_board_gates": 72,
+  "plan_order": {
+    "actual_complete_log_read": true,
+    "log_characters": 344280,
+    "log_sha256": "debc523d51bfaa222e268e1167bfbfc6361c4711142b065c8b78daa7f8412f84",
+    "actual_start_count": 72,
+    "actual_pass_count": 72,
+    "fail_count": 0,
+    "all_names_indices_and_order_match_fixed_registry": true,
+    "independent_review": "smem_integration read the completed board job once and independently compared all starts and PASS records with the fixed 68+4 registry",
+    "previous_67_component_names_preserved_in_order": true,
+    "linux_four_names_preserved_in_order": true
+  },
+  "selected_component_receipts": {
+    "tb371fc-results/components/17-gcc-usb-pipe-mux/fixtures/data/result.json": {
+      "schema": "tb371fc-gcc-usb-mux-v1",
+      "passed": true,
+      "expected_checks": 15,
+      "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+      "script_sha256": "3101bbb9eae93606d1eaf50a09c01a82c7fe005450c24ed6ca60454b4809af10",
+      "vmstate_version": 3,
+      "external_parent_inputs": 83,
+      "expected_completed_migrations": 1,
+      "expected_rejected_migrations": 1,
+      "guest_cpu_executed": false,
+      "usb_phy_emulated": false,
+      "native_kernel_probe_observed": false,
+      "scope": "Actual mux/Clock/gate transactions and migration; fixture Hz are explicit QTest inputs, not physical measurements",
+      "binary_unchanged": true,
+      "completed_migrations": 1,
+      "rejected_migration_attempts": 1,
+      "elapsed_seconds": 2.843931289000011,
+      "receipt_sha256": "dd9bfb6e78eff9802777207b720f0eefa451d4d91204ad5dcd39df4f6f265020",
+      "list_details": {
+        "checks": {
+          "length": 15,
+          "entries": [
+            {
+              "name": "cold_unknown_inputs_are_stopped",
+              "passed": true
+            },
+            {
+              "name": "independent_phy_sources_feed_their_muxes",
+              "passed": true
+            },
+            {
+              "name": "shared_test_source_fans_out",
+              "passed": true
+            },
+            {
+              "name": "xo_selection_uses_the_board_clock",
+              "passed": true
+            },
+            {
+              "name": "undefined_selector_has_no_parent",
+              "passed": true
+            },
+            {
+              "name": "live_phy_source_changes_propagate",
+              "passed": true
+            },
+            {
+              "name": "live_test_source_changes_follow_selection",
+              "passed": true
+            },
+            {
+              "name": "local_and_remote_requests_are_independent",
+              "passed": true
+            },
+            {
+              "name": "invalid_masks_preserve_selectors_and_rates",
+              "passed": true
+            },
+            {
+              "name": "reset_preserves_external_inputs_and_remote_request",
+              "passed": true
+            },
+            {
+              "name": "fixture_hz_types_reject_invalid_values",
+              "passed": true
+            },
+            {
+              "name": "normal_tcg_exposes_no_fixture_inputs",
+              "passed": true
+            },
+            {
+              "name": "v3_restore_preserves_muxes_inputs_remote_vote_and_ram",
+              "passed": true
+            },
+            {
+              "name": "v3_destination_propagates_new_sources_and_independent_requests",
+              "passed": true
+            },
+            {
+              "name": "v2_header_is_rejected_before_new_clock_state_is_decoded",
+              "passed": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 1,
+          "entries": [
+            {
+              "name": "v3_mux_input_and_vote_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "source_status_from_qmp": "completed",
+              "destination_status_from_qmp": "completed"
+            }
+          ]
+        },
+        "rejected_migrations": {
+          "length": 1,
+          "entries": [
+            {
+              "name": "advertised_v2_rejected_before_field_decode",
+              "passed": true,
+              "destination_exit": 1
+            }
+          ]
+        }
+      }
+    },
+    "tb371fc-results/components/20-mpm2-sleep-counter/fixtures/data/result.json": {
+      "schema": "tb371fc-mpm2-sleep-counter-v1",
+      "passed": true,
+      "expected_checks": 17,
+      "expected_completed_migrations": 2,
+      "expected_corrupted_stream_rejections": 1,
+      "vmstate_version": 1,
+      "clock_frequency_hz": 32768,
+      "legacy_gcc_sleep_input_hz": 32000,
+      "counter_bits": 32,
+      "mmio_register_count": 1,
+      "mmio_window_bytes": 4,
+      "dt_aperture_bytes": 4096,
+      "read_only": true,
+      "clock_domain": "QEMU_CLOCK_VIRTUAL",
+      "reference_cold_origin": "zero-at-realization",
+      "reference_system_reset_policy": "preserve-count-and-fraction",
+      "reference_policy_is_measured_hardware_reset_behavior": false,
+      "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+      "script_sha256": "0bda0888ad43da8106a1f287d2c054cc8113edc09787b4f5eb64fbaf12690b9e",
+      "guest_cpu_executed": false,
+      "native_kernel_probe_observed": false,
+      "android_boot_passed": false,
+      "scope": "Actual compiled-device QTest/QMP transactions and real VMState migration of the explicit digital reference counter",
+      "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "source_url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/boot_stats.c",
+      "binary_unchanged": true,
+      "duration_seconds": 3.168,
+      "receipt_sha256": "4cd07f1a9667fb4a014321bfb2206fe30a5d335fc0e4641212b016218323b77a",
+      "list_details": {
+        "checks": {
+          "length": 17,
+          "entries": [
+            {
+              "name": "cold_zero_and_dt_frequency_are_distinct_from_the_gcc_sleep_carrier",
+              "passed": true
+            },
+            {
+              "name": "exact_fractional_tick_and_second_boundaries",
+              "passed": true
+            },
+            {
+              "name": "irregular_steps_and_repeated_reads_do_not_discard_fractional_phase",
+              "passed": true
+            },
+            {
+              "name": "counter_wraps_at_exactly_2_to_32_ticks",
+              "passed": true
+            },
+            {
+              "name": "wide_elapsed_time_uses_exact_math_before_low_word_wrap",
+              "passed": true
+            },
+            {
+              "name": "paused_virtual_time_ignores_host_wait_and_read_traffic",
+              "passed": true
+            },
+            {
+              "name": "system_reset_preserves_reference_count_and_fraction_with_a_real_reset_witness",
+              "passed": true
+            },
+            {
+              "name": "aligned_writes_are_rejected_without_changing_count_or_phase",
+              "passed": true
+            },
+            {
+              "name": "narrow_and_unaligned_accesses_have_exact_core_rejections",
+              "passed": true
+            },
+            {
+              "name": "configuration_is_immutable_and_qom_count_is_read_only",
+              "passed": true
+            },
+            {
+              "name": "only_the_four_byte_counter_is_mapped_within_the_dt_aperture",
+              "passed": true
+            },
+            {
+              "name": "non_dt_frequencies_are_rejected_during_realization",
+              "passed": true
+            },
+            {
+              "name": "v1_presave_freshness_and_fraction_restore_at_a_different_virtual_origin",
+              "passed": true
+            },
+            {
+              "name": "v1_fraction_crosses_first_and_second_ticks_without_reset_or_downtime_drift",
+              "passed": true
+            },
+            {
+              "name": "v1_wrap_count_is_sampled_at_save_and_restored_before_device_mmio",
+              "passed": true
+            },
+            {
+              "name": "v1_wrap_and_fraction_continue_from_saved_phase_at_destination",
+              "passed": true
+            },
+            {
+              "name": "one_real_stream_with_only_frequency_corrupted_is_rejected",
+              "passed": true,
+              "stream_modified": true,
+              "legitimate_alternate_frequency_profile": false
+            }
+          ]
+        },
+        "migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "v1_first_tick_fraction_actual_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "c00dd5a530581334dea83e48fbfd80d260a7d57cceb631f7bb2d1401f40f1550",
+              "snapshot_bytes": 2245794,
+              "source_virtual_ns": 30517,
+              "destination_virtual_ns": 987654321,
+              "different_virtual_origins": true,
+              "source_counter_read_before_save": false,
+              "target_device_mmio_before_first_observation": false,
+              "source_status_from_qmp": "completed",
+              "destination_status_from_qmp": "completed"
+            },
+            {
+              "name": "v1_wrap_boundary_count_and_fraction_actual_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "073200fa3a9b1d0699dfb99c109e36d4235a796ab4a7616fc1bd51806fb9f5e0",
+              "snapshot_bytes": 2245794,
+              "source_virtual_ns": 131071999999999,
+              "destination_virtual_ns": 73,
+              "different_virtual_origins": true,
+              "source_counter_read_before_save": false,
+              "target_device_mmio_before_first_observation": false,
+              "source_status_from_qmp": "completed",
+              "destination_status_from_qmp": "completed"
+            }
+          ]
+        },
+        "corrupted_stream_rejections": {
+          "length": 1,
+          "entries": [
+            {
+              "name": "frequency_field_corruption_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "stream_modified": true,
+              "actual_source_stream": true,
+              "legitimate_alternate_frequency_profile": false,
+              "frequency_mismatch": "8000 != 7d00",
+              "original_snapshot_sha256": "c00dd5a530581334dea83e48fbfd80d260a7d57cceb631f7bb2d1401f40f1550",
+              "corrupted_snapshot_sha256": "a4438f24e9be89f30c39bb2de89322094a3e617318a1bd73b06f95b146f6ca28",
+              "original_stream_unchanged": true,
+              "only_frequency_field_modified": true,
+              "modified_field_bytes": 4
+            }
+          ]
+        }
+      },
+      "counter_streams_from_zip": {
+        "mpm2-v1-first-tick-fraction.migration": {
+          "sha256": "c00dd5a530581334dea83e48fbfd80d260a7d57cceb631f7bb2d1401f40f1550",
+          "bytes": 2245794,
+          "read_from_zip": true
+        },
+        "mpm2-v1-wrap-fraction.migration": {
+          "sha256": "073200fa3a9b1d0699dfb99c109e36d4235a796ab4a7616fc1bd51806fb9f5e0",
+          "bytes": 2245794,
+          "read_from_zip": true
+        },
+        "mpm2-v1-corrupted-frequency-32000.migration": {
+          "sha256": "a4438f24e9be89f30c39bb2de89322094a3e617318a1bd73b06f95b146f6ca28",
+          "bytes": 2245794,
+          "read_from_zip": true
+        }
+      }
+    },
+    "tb371fc-results/components/46-gpucc-sm8250/fixtures/data/result.json": {
+      "schema": "tb371fc-gpucc-sm8250-v1",
+      "passed": true,
+      "expected_checks": 30,
+      "expected_completed_migrations": 2,
+      "expected_rejected_migrations": 2,
+      "vmstate_version": 1,
+      "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+      "script_sha256": "3fde64d74406729714b4d5c86d21f745a918baf12475858217971c6bcce23967",
+      "register_count": 36,
+      "sparse_window_count": 7,
+      "branch_count": 15,
+      "reset_count": 5,
+      "input_clock_count": 15,
+      "guest_cpu_executed": false,
+      "native_kernel_probe_observed": false,
+      "gpu_execution_observed": false,
+      "android_boot_passed": false,
+      "scope": "Actual compiled-device QTest/QMP transactions, Clock providers, and migration of explicit digital reference state",
+      "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "binary_unchanged": true,
+      "duration_seconds": 6.031,
+      "receipt_sha256": "a7302ef8f4daa1f250e1117874919e6b9d079eb089a4edb13d3758750d55a532",
+      "list_details": {
+        "checks": {
+          "length": 30,
+          "entries": [
+            {
+              "name": "cold_reference_has_no_running_or_invented_clock",
+              "passed": true
+            },
+            {
+              "name": "actual_vendor_configure_vector_remains_in_standby",
+              "passed": true
+            },
+            {
+              "name": "lucid_lock_is_delayed_and_outputs_have_two_gates",
+              "passed": true
+            },
+            {
+              "name": "invalid_l_and_unqualified_analog_programming_cannot_lock",
+              "passed": true
+            },
+            {
+              "name": "calibration_survives_standby_and_real_reset_clears_it",
+              "passed": true
+            },
+            {
+              "name": "pll_latch_captures_shadow_and_requires_software_ack_clear",
+              "passed": true
+            },
+            {
+              "name": "rcg_shadow_is_atomic_and_commits_at_the_reference_deadline",
+              "passed": true
+            },
+            {
+              "name": "rcg_hid_zero_one_and_fractional_divisor_follow_the_driver",
+              "passed": true
+            },
+            {
+              "name": "legal_unknown_rcg_source_latches_without_inventing_a_clock",
+              "passed": true
+            },
+            {
+              "name": "undefined_source_and_mnd_mode_do_not_commit",
+              "passed": true
+            },
+            {
+              "name": "live_pll_feeds_both_gmu_branches",
+              "passed": true
+            },
+            {
+              "name": "actual_gcc_provider_changes_propagate_through_board_clock_links",
+              "passed": true
+            },
+            {
+              "name": "every_branch_has_independent_local_and_remote_requests",
+              "passed": true
+            },
+            {
+              "name": "unknown_branch_parent_stays_stopped_and_live_qdss_input_fans_out",
+              "passed": true
+            },
+            {
+              "name": "reset_registers_drive_five_distinct_gpio_outputs",
+              "passed": true
+            },
+            {
+              "name": "reserved_status_and_invalid_accesses_are_atomic",
+              "passed": true
+            },
+            {
+              "name": "read_only_feedback_cannot_be_forged_by_guest_writes",
+              "passed": true
+            },
+            {
+              "name": "reset_cancels_pending_work_but_preserves_external_inputs_and_votes",
+              "passed": true
+            },
+            {
+              "name": "qtest_fixture_types_and_connected_providers_are_protected",
+              "passed": true
+            },
+            {
+              "name": "late_timer_dispatch_preserves_the_original_latch_and_relock_deadlines",
+              "passed": true
+            },
+            {
+              "name": "clearing_update_cancels_captured_pll_and_rcg_requests",
+              "passed": true
+            },
+            {
+              "name": "default_profile_rejects_all_defined_mmio_and_stays_uninitialized",
+              "passed": true
+            },
+            {
+              "name": "normal_tcg_exposes_no_fixture_setters",
+              "passed": true
+            },
+            {
+              "name": "sparse_gpucc_windows_preserve_existing_cx_and_gx_owners",
+              "passed": true
+            },
+            {
+              "name": "v1_lock_pending_state_inputs_gpio_and_ram_restore",
+              "passed": true
+            },
+            {
+              "name": "v1_lock_remaining_3000ns_and_destination_requests_resume",
+              "passed": true
+            },
+            {
+              "name": "v1_independent_captured_requests_survive_migration",
+              "passed": true
+            },
+            {
+              "name": "v1_latch_rcg_deadlines_and_new_clock_values_resume_after_restore",
+              "passed": true
+            },
+            {
+              "name": "reference_to_default_profile_is_rejected",
+              "passed": true
+            },
+            {
+              "name": "default_to_reference_profile_is_rejected",
+              "passed": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "v1_lock_pending_clock_input_vote_gpio_and_ram_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "e381265b68dc8cce3d8c0af9b70df55ff3f21013c3e8f7b2cac04c0f5eb07021",
+              "snapshot_bytes": 2245794,
+              "source_status_from_qmp": "completed",
+              "destination_status_from_qmp": "completed"
+            },
+            {
+              "name": "v1_captured_pll_latch_and_rcg_shadow_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "e7f1efcbb544468b5dd460a30741c8fec81928349b509a8a1bd02f8d343a1233",
+              "snapshot_bytes": 2245794,
+              "source_status_from_qmp": "completed",
+              "destination_status_from_qmp": "completed"
+            }
+          ]
+        },
+        "rejected_migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "reference_to_default_profile_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "actual_source_stream": true,
+              "source_reference": true,
+              "target_reference": false,
+              "profile_mismatch": "0 != 1"
+            },
+            {
+              "name": "default_to_reference_profile_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "actual_source_stream": true,
+              "source_reference": false,
+              "target_reference": true,
+              "profile_mismatch": "1 != 0"
+            }
+          ]
+        }
+      }
+    },
+    "tb371fc-results/components/47-npucc-sm8250/fixtures/data/result.json": {
+      "schema": "tb371fc-npucc-sm8250-v1",
+      "passed": true,
+      "expected_checks": 37,
+      "expected_completed_migrations": 2,
+      "expected_rejected_migrations": 2,
+      "vmstate_version": 1,
+      "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+      "script_sha256": "6e13fbe27f1b90e8a0c8936aa9c96a64797f485dc9c6e1489147eb8cd8cdb843",
+      "register_count": 95,
+      "sparse_window_count": 26,
+      "branch_count": 33,
+      "reset_count": 7,
+      "input_clock_count": 12,
+      "pll_count": 3,
+      "rcg_count": 6,
+      "output_clock_count": 45,
+      "guest_cpu_executed": false,
+      "native_kernel_probe_observed": false,
+      "npu_execution_observed": false,
+      "android_boot_passed": false,
+      "scope": "Actual compiled-device QTest/QMP transactions, real Clock periods, and migration of an explicit digital reference profile",
+      "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "binary_unchanged": true,
+      "duration_seconds": 15.361,
+      "receipt_sha256": "bf1bf7f8f51703309a97839ef1c45fc2b7c4f7ebae6652473b2356c5cae17303",
+      "list_details": {
+        "checks": {
+          "length": 37,
+          "entries": [
+            {
+              "name": "cold_reference_has_no_running_or_invented_clock",
+              "passed": true
+            },
+            {
+              "name": "actual_vendor_three_bank_configure_vector_remains_in_standby",
+              "passed": true
+            },
+            {
+              "name": "physically_separate_pll_banks_do_not_alias",
+              "passed": true
+            },
+            {
+              "name": "three_staggered_pll_lock_deadlines_are_independent",
+              "passed": true
+            },
+            {
+              "name": "every_pll_requires_both_output_gates_and_rejects_unknown_selection",
+              "passed": true
+            },
+            {
+              "name": "pll0_lock_and_even_output_do_not_depend_on_crc_programming",
+              "passed": true
+            },
+            {
+              "name": "crc_reference_vector_controls_only_the_divide_two_path",
+              "passed": true
+            },
+            {
+              "name": "postdivider_zero_means_divide_one_and_unknown_encodings_are_atomic",
+              "passed": true
+            },
+            {
+              "name": "v2_nominal_two_ghz_accepts_only_the_ceil_q16_endpoint",
+              "passed": true
+            },
+            {
+              "name": "unsupported_analog_recipe_stops_only_the_affected_pll",
+              "passed": true
+            },
+            {
+              "name": "three_captured_pll_latches_keep_old_outputs_until_ack_and_relock",
+              "passed": true
+            },
+            {
+              "name": "standby_reset_and_cancel_are_local_to_each_pll",
+              "passed": true
+            },
+            {
+              "name": "late_dispatch_uses_original_latch_deadlines_for_all_three_plls",
+              "passed": true
+            },
+            {
+              "name": "six_independent_rcgs_capture_shadow_and_latch_at_one_microsecond",
+              "passed": true
+            },
+            {
+              "name": "source_maps_route_pll_postdivider_crc_and_dsp_outputs",
+              "passed": true
+            },
+            {
+              "name": "hm_rcgs_are_separate_and_hm1_branches_follow_the_pinned_hm0_parent",
+              "passed": true
+            },
+            {
+              "name": "six_hid_fields_cover_bypass_integer_and_fractional_division",
+              "passed": true
+            },
+            {
+              "name": "undefined_source_codes_and_nonzero_mnd_modes_do_not_commit",
+              "passed": true
+            },
+            {
+              "name": "legal_unknown_input_can_latch_without_creating_a_frequency",
+              "passed": true
+            },
+            {
+              "name": "real_gcc_parent_clocks_propagate_through_board_links",
+              "passed": true
+            },
+            {
+              "name": "all_33_branches_have_independent_local_and_remote_requests",
+              "passed": true
+            },
+            {
+              "name": "unknown_external_branch_parents_remain_zero_and_shared_inputs_fan_out",
+              "passed": true
+            },
+            {
+              "name": "shared_ares_and_cbcr_bits_preserve_each_other_without_invented_gating",
+              "passed": true
+            },
+            {
+              "name": "seven_reset_outputs_follow_binding_order_and_shared_word_masks",
+              "passed": true
+            },
+            {
+              "name": "reserved_registers_masks_and_narrow_accesses_are_atomic",
+              "passed": true
+            },
+            {
+              "name": "read_only_feedback_cannot_be_forged_or_erased",
+              "passed": true
+            },
+            {
+              "name": "system_reset_cancels_all_pending_work_and_retains_external_requests",
+              "passed": true
+            },
+            {
+              "name": "qtest_fixture_types_and_connected_sources_are_protected",
+              "passed": true
+            },
+            {
+              "name": "default_profile_rejects_all_defined_mmio_and_stays_uninitialized",
+              "passed": true
+            },
+            {
+              "name": "normal_tcg_exposes_no_fixture_setters",
+              "passed": true
+            },
+            {
+              "name": "three_physical_banks_have_only_26_sparse_windows_and_leave_gdsc_unmapped",
+              "passed": true
+            },
+            {
+              "name": "v1_three_pending_plls_inputs_clock_gpio_and_ram_restore_before_mmio",
+              "passed": true
+            },
+            {
+              "name": "v1_three_distinct_lock_deadlines_fire_without_mmio_repair",
+              "passed": true
+            },
+            {
+              "name": "v1_nine_independent_captured_requests_restore_before_mmio",
+              "passed": true
+            },
+            {
+              "name": "v1_nine_captured_deadlines_and_new_input_changes_resume_without_mmio_repair",
+              "passed": true
+            },
+            {
+              "name": "reference_to_default_profile_is_rejected",
+              "passed": true
+            },
+            {
+              "name": "default_to_reference_profile_is_rejected",
+              "passed": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "v1_three_lock_deadlines_inputs_vote_gpio_and_ram_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "9293a295a000514c4a1e87453ed4e41245e1ab81f6a6e55bf42601d4a13b29b6",
+              "snapshot_bytes": 2245794,
+              "source_status_from_qmp": "completed",
+              "destination_status_from_qmp": "completed"
+            },
+            {
+              "name": "v1_three_pll_latches_six_rcg_requests_and_shadows_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "5ca6e8507da585468ffbab323eee5bf7d95b00c7e875ba0700e0c9cf3493f3d0",
+              "snapshot_bytes": 2245794,
+              "source_status_from_qmp": "completed",
+              "destination_status_from_qmp": "completed"
+            }
+          ]
+        },
+        "rejected_migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "reference_to_default_profile_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "actual_source_stream": true,
+              "source_reference": true,
+              "target_reference": false,
+              "profile_mismatch": "0 != 1"
+            },
+            {
+              "name": "default_to_reference_profile_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "actual_source_stream": true,
+              "source_reference": false,
+              "target_reference": true,
+              "profile_mismatch": "1 != 0"
+            }
+          ]
+        }
+      }
+    },
+    "tb371fc-results/components/48-noc-qos/fixtures/data/result.json": {
+      "schema": "tb371fc-noc-qos-v1",
+      "passed": true,
+      "expected_checks": 20,
+      "expected_completed_migrations": 2,
+      "expected_rejected_migrations": 2,
+      "expected_corrupted_stream_rejections": 2,
+      "vmstate_version": 1,
+      "port_count": 47,
+      "fabric_count": 6,
+      "register_count": 188,
+      "sparse_window_count": 188,
+      "mapped_bytes": 752,
+      "logical_port_references": 54,
+      "display_alias_references": 7,
+      "reference_profile_is_default": false,
+      "reference_system_reset_policy": "zero-all-four-stored-configuration-words",
+      "reference_policy_is_measured_hardware_reset_behavior": false,
+      "bandwidth_enforcement_observed": false,
+      "sbm_implemented": false,
+      "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+      "script_sha256": "b2d3ff9127b4a7967e8fe89a4fce9cbeee4ceb5d4e0d655eea042c24407ead00",
+      "guest_cpu_executed": false,
+      "native_kernel_probe_observed": false,
+      "android_boot_passed": false,
+      "scope": "Actual compiled-device QTest/QMP transactions and real migration of source-bounded NoC QoS raw configuration words",
+      "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "source_url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/msm_bus/msm_bus_noc_rpmh.c",
+      "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+      "layout_evidence_blob": "77b1851faf6063d4c1a88d11c524de1b239005e6",
+      "raw_dt_evidence_blob": "c300271fab1acabb6d1b45ddcf626f5e2f091d25",
+      "independent_dt_decode_blob": "86be9c194406e6853aca493eefed1049358fde92",
+      "binary_unchanged": true,
+      "duration_seconds": 11.715,
+      "receipt_sha256": "9643f7746dde72b46ae9b05360fb8be1aa003ea4dbcfdbb6816402c87b7e848e",
+      "list_details": {
+        "checks": {
+          "length": 20,
+          "entries": [
+            {
+              "name": "cold_reference_has_47_physical_identities_and_188_zero_words",
+              "passed": true
+            },
+            {
+              "name": "every_documented_bit_is_immediate_and_independent",
+              "passed": true
+            },
+            {
+              "name": "full_word_replacement_clears_fields_without_a_merge_or_ack",
+              "passed": true
+            },
+            {
+              "name": "all_188_words_high_port_ids_and_display_aliases_are_independent",
+              "passed": true
+            },
+            {
+              "name": "literal_vendor_13_write_sequence_keeps_its_actual_rmw_side_effects",
+              "passed": true
+            },
+            {
+              "name": "aligned_byte_buffers_have_little_endian_word_order",
+              "passed": true
+            },
+            {
+              "name": "reserved_bits_reject_the_whole_write_without_changing_any_word",
+              "passed": true
+            },
+            {
+              "name": "narrow_and_unaligned_accesses_have_exact_core_failures_and_no_partial_write",
+              "passed": true
+            },
+            {
+              "name": "raw_qom_state_identity_and_realized_profile_are_read_only",
+              "passed": true
+            },
+            {
+              "name": "virtual_time_and_repeated_reads_do_not_invent_commits_or_ack_bits",
+              "passed": true
+            },
+            {
+              "name": "system_reset_clears_all_reference_words_with_an_independent_reset_witness",
+              "passed": true
+            },
+            {
+              "name": "default_profile_never_exposes_reference_zero_or_accepts_mmio",
+              "passed": true
+            },
+            {
+              "name": "exactly_188_four_byte_windows_leave_legacy_sbm_and_unlisted_ports_unmapped",
+              "passed": true
+            },
+            {
+              "name": "v1_all_188_nonzero_words_and_identities_restore_before_device_mmio",
+              "passed": true,
+              "target_device_mmio_before_first_observation": false
+            },
+            {
+              "name": "v1_destination_writes_remain_isolated_and_restored_ports_reset",
+              "passed": true
+            },
+            {
+              "name": "v1_default_profile_remains_unknown_after_actual_transfer",
+              "passed": true
+            },
+            {
+              "name": "reference_to_default_profile_is_rejected",
+              "passed": true,
+              "stream_modified": false
+            },
+            {
+              "name": "default_to_reference_profile_is_rejected",
+              "passed": true,
+              "stream_modified": false
+            },
+            {
+              "name": "one_physical_port_identity_corruption_is_rejected",
+              "passed": true,
+              "stream_modified": true,
+              "only_one_field_modified": true
+            },
+            {
+              "name": "one_reserved_register_bit_corruption_is_rejected",
+              "passed": true,
+              "stream_modified": true,
+              "only_one_field_modified": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "v1_reference_all_47_physical_ports_and_ram_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "1aabcc59a670cf8c01aada7a635ba8f1865d7c321d24951c1bf604f32487ffd0",
+              "snapshot_bytes": 2245794,
+              "source_virtual_ns": 456789,
+              "destination_virtual_ns": 987654321,
+              "target_device_mmio_before_first_observation": false,
+              "stream_modified": false,
+              "actual_device_sections_verified": 47,
+              "actual_register_words_verified": 188,
+              "source_reference": true,
+              "target_reference": true,
+              "source_status_from_qmp": "completed",
+              "destination_status_from_qmp": "completed"
+            },
+            {
+              "name": "v1_default_profile_unknown_boundary_and_ram_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "db85788361b97f2399af22e80f2d1daf2f963eea99583769ad0b5f48df94f76f",
+              "snapshot_bytes": 2245794,
+              "source_virtual_ns": 345679,
+              "destination_virtual_ns": 17,
+              "target_device_mmio_before_first_observation": false,
+              "stream_modified": false,
+              "actual_device_sections_verified": 47,
+              "actual_register_words_verified": 188,
+              "source_reference": false,
+              "target_reference": false,
+              "source_status_from_qmp": "completed",
+              "destination_status_from_qmp": "completed"
+            }
+          ]
+        },
+        "rejected_migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "reference_to_default_profile_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "snapshot_sha256": "1aabcc59a670cf8c01aada7a635ba8f1865d7c321d24951c1bf604f32487ffd0",
+              "snapshot_bytes": 2245794,
+              "stream_modified": false,
+              "actual_source_stream": true,
+              "source_reference": true,
+              "target_reference": false,
+              "profile_mismatch": "0 != 1",
+              "specific_load_failure_observed": true,
+              "expected_diagnostic": "0 != 1"
+            },
+            {
+              "name": "default_to_reference_profile_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "snapshot_sha256": "db85788361b97f2399af22e80f2d1daf2f963eea99583769ad0b5f48df94f76f",
+              "snapshot_bytes": 2245794,
+              "stream_modified": false,
+              "actual_source_stream": true,
+              "source_reference": false,
+              "target_reference": true,
+              "profile_mismatch": "1 != 0",
+              "specific_load_failure_observed": true,
+              "expected_diagnostic": "1 != 0"
+            }
+          ]
+        },
+        "corrupted_stream_rejections": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "one_physical_port_identity_corruption_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "stream_modified": true,
+              "actual_source_stream": true,
+              "original_snapshot_sha256": "1aabcc59a670cf8c01aada7a635ba8f1865d7c321d24951c1bf604f32487ffd0",
+              "corrupted_snapshot_sha256": "7ea13c68754c35778515e44b7bf28641c928b46ef631a8d2309bcd9fece23ee7",
+              "original_stream_unchanged": true,
+              "only_one_field_modified": true,
+              "modified_field": "physical-port-address",
+              "field_offset": 2121585,
+              "modified_field_bytes": 8,
+              "old_field_value": 24023040,
+              "new_field_value": 24027136,
+              "changed_byte_count": 1,
+              "legitimate_alternate_configuration": false,
+              "specific_load_failure_observed": true,
+              "expected_diagnostic": "16e9000 != 16ea000"
+            },
+            {
+              "name": "one_reserved_register_bit_corruption_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "stream_modified": true,
+              "actual_source_stream": true,
+              "original_snapshot_sha256": "1aabcc59a670cf8c01aada7a635ba8f1865d7c321d24951c1bf604f32487ffd0",
+              "corrupted_snapshot_sha256": "3b878cd59c599745785476f7342fdfa16c5c2a3ad52841287f97cb70802a214a",
+              "original_stream_unchanged": true,
+              "only_one_field_modified": true,
+              "modified_field": "reserved-mainctl-bit",
+              "field_offset": 2121593,
+              "modified_field_bytes": 4,
+              "old_field_value": 9,
+              "new_field_value": 11,
+              "changed_byte_count": 1,
+              "legitimate_alternate_configuration": false,
+              "specific_load_failure_observed": true,
+              "expected_diagnostic": "qcom-noc-qos: invalid migrated bits at port 0x16e9000 +0x8"
+            }
+          ]
+        }
+      },
+      "noc_streams_from_zip": {
+        "noc-qos-v1-reference-all-47-ports.migration": {
+          "sha256": "1aabcc59a670cf8c01aada7a635ba8f1865d7c321d24951c1bf604f32487ffd0",
+          "bytes": 2245794,
+          "read_from_zip": true
+        },
+        "noc-qos-v1-default-profile.migration": {
+          "sha256": "db85788361b97f2399af22e80f2d1daf2f963eea99583769ad0b5f48df94f76f",
+          "bytes": 2245794,
+          "read_from_zip": true
+        },
+        "noc-qos-v1-corrupted-physical-port-address.migration": {
+          "sha256": "7ea13c68754c35778515e44b7bf28641c928b46ef631a8d2309bcd9fece23ee7",
+          "bytes": 2245794,
+          "read_from_zip": true
+        },
+        "noc-qos-v1-corrupted-reserved-mainctl-bit.migration": {
+          "sha256": "3b878cd59c599745785476f7342fdfa16c5c2a3ad52841287f97cb70802a214a",
+          "bytes": 2245794,
+          "read_from_zip": true
+        }
+      },
+      "reference_sections_from_zip": {
+        "sha256": "3a393d635830a421a2130a92f3561fe0f2560dc4a2ddb3609f985d604b816e03",
+        "bytes": 21561,
+        "device_sections": 47,
+        "read_from_zip": true
+      }
+    },
+    "tb371fc-results/components/49-smmuv500-reference/fixtures/data/result.json": {
+      "schema": "tb371fc-smmuv500-v1",
+      "passed": true,
+      "expected_checks": 36,
+      "expected_completed_migrations": 2,
+      "expected_rejected_migrations": 2,
+      "expected_corrupted_stream_rejections": 2,
+      "vmstate_version": 1,
+      "architectural_smmuv2_vmstate_version": 2,
+      "tcu_count": 1,
+      "tbu_count": 10,
+      "register_count": 71,
+      "sparse_window_count": 71,
+      "mapped_bytes": 484,
+      "register_slots_32_bit": 21,
+      "register_slots_64_bit": 50,
+      "reference_hw_version": 33554432,
+      "reference_delay_ns": 1000,
+      "reference_hw_version_is_measured": false,
+      "reference_profile_is_default": false,
+      "hardware_stall_queue_implemented": false,
+      "kgsl_vendor_extension_implemented": false,
+      "qtest_cache_fixture_used": true,
+      "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+      "script_sha256": "8e276985641ded77090a245412ea7bcf1f5ab161dc3582ee5882c33fedc00395",
+      "guest_cpu_executed": false,
+      "native_kernel_probe_observed": false,
+      "android_boot_passed": false,
+      "scope": "Actual compiled apps companion QTest/QMP transactions, shared SMMUv2 stream matching and S1 walking, real IOMMU notifier cache revocation, and real state/RAM migration",
+      "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "source_url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/iommu/arm-smmu.c",
+      "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+      "dt_evidence_blob": "8306d244d2f785ce0efb8c2071b8badc77b252e7",
+      "binary_unchanged": true,
+      "duration_seconds": 16.716,
+      "receipt_sha256": "95e27b0ed7b767046de3534244dd0cd0c5c28f5c0943b1b21f37c28453a13e0e",
+      "list_details": {
+        "checks": {
+          "length": 36,
+          "entries": [
+            {
+              "name": "cold_state_exposes_explicit_reference_identity_without_success",
+              "passed": true
+            },
+            {
+              "name": "halt_blocks_real_dma_at_request_and_ack_has_an_exact_deadline",
+              "passed": true
+            },
+            {
+              "name": "all_tbu_halt_ranges_are_independent_and_do_not_block_another_sid",
+              "passed": true
+            },
+            {
+              "name": "cancelling_halt_prevents_late_ack_and_releases_dma_immediately",
+              "passed": true
+            },
+            {
+              "name": "read_to_acquire_is_a_shared_mutex_and_qom_observation_does_not_acquire",
+              "passed": true
+            },
+            {
+              "name": "real_external_cache_hits_are_invalidated_by_the_halt_notifier",
+              "passed": true
+            },
+            {
+              "name": "literal_ecats_sequence_translates_real_tables_while_ordinary_dma_is_halted",
+              "passed": true
+            },
+            {
+              "name": "every_tbu_restores_the_full_sid_and_selects_its_own_context",
+              "passed": true
+            },
+            {
+              "name": "ecats_write_permissions_fault_in_the_real_context_and_assert_its_irq",
+              "passed": true
+            },
+            {
+              "name": "missing_leaf_faults_and_a_repaired_table_is_walked_again",
+              "passed": true
+            },
+            {
+              "name": "stream_selection_errors_do_not_become_identity_translations",
+              "passed": true
+            },
+            {
+              "name": "unsupported_stages_granules_and_aarch32_remain_real_configuration_faults",
+              "passed": true
+            },
+            {
+              "name": "pending_request_captures_sid_va_and_attributes_without_rewriting_staging",
+              "passed": true
+            },
+            {
+              "name": "semaphore_release_requires_the_owner_and_no_pending_request",
+              "passed": true
+            },
+            {
+              "name": "invalid_request_state_and_attributes_do_not_start_or_claim_success",
+              "passed": true
+            },
+            {
+              "name": "retrigger_and_resume_are_atomic_errors_while_a_request_is_pending",
+              "passed": true
+            },
+            {
+              "name": "clearing_trigger_cancels_work_and_a_later_deadline_cannot_publish_a_result",
+              "passed": true
+            },
+            {
+              "name": "read_only_feedback_and_qom_state_cannot_be_forged",
+              "passed": true
+            },
+            {
+              "name": "aligned_32_bit_halves_and_64_bit_transactions_preserve_little_endian_fields",
+              "passed": true
+            },
+            {
+              "name": "reserved_bits_narrow_and_unaligned_accesses_do_not_partially_change_state",
+              "passed": true
+            },
+            {
+              "name": "unrepresentable_physical_results_fault_without_truncating_into_a_mapping",
+              "passed": true
+            },
+            {
+              "name": "system_reset_cancels_requests_releases_mutex_and_restores_dma_permissions",
+              "passed": true
+            },
+            {
+              "name": "paused_virtual_time_and_pure_observation_do_not_complete_a_late_request",
+              "passed": true
+            },
+            {
+              "name": "architectural_ats_retains_standard_par_and_its_own_fault_contract",
+              "passed": true
+            },
+            {
+              "name": "default_profile_rejects_vendor_state_without_breaking_architectural_dma",
+              "passed": true
+            },
+            {
+              "name": "an_explicit_supported_non_v1_identity_is_required_at_realization",
+              "passed": true
+            },
+            {
+              "name": "normal_paused_tcg_has_no_external_cache_fixture_or_dma_test_alias",
+              "passed": true
+            },
+            {
+              "name": "exact_sparse_windows_preserve_kgsl_testbus_capture_and_reserved_holes",
+              "passed": true
+            },
+            {
+              "name": "v1_all_tbu_requests_and_actual_cache_revocation_restore_before_companion_mmio",
+              "passed": true
+            },
+            {
+              "name": "v1_all_ten_remaining_halt_deadlines_fire_before_mmio_and_ecats_continues",
+              "passed": true
+            },
+            {
+              "name": "v1_owner_captured_request_staging_and_pending_halt_restore_before_companion_mmio",
+              "passed": true
+            },
+            {
+              "name": "v1_deadlines_use_captured_real_walk_then_new_fault_irq_and_cached_dma_continue",
+              "passed": true
+            },
+            {
+              "name": "reference_to_unknown_profile_is_rejected",
+              "passed": true,
+              "stream_modified": false
+            },
+            {
+              "name": "unknown_to_reference_profile_is_rejected",
+              "passed": true,
+              "stream_modified": false
+            },
+            {
+              "name": "one_real_owner_out_of_range_field_corruption_is_rejected",
+              "passed": true,
+              "stream_modified": true,
+              "only_one_field_modified": true
+            },
+            {
+              "name": "one_real_captured_sid_wrong_tbu_field_corruption_is_rejected",
+              "passed": true,
+              "stream_modified": true,
+              "only_one_field_modified": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "v1_ten_halt_requests_live_dma_gate_cache_and_ram_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "7a5bd96270cf69f6c0bf914b45ce2b04c0fef4bc1ce201bc4fffbd27ea97c092",
+              "snapshot_bytes": 2413689,
+              "source_virtual_ns": 950,
+              "destination_virtual_ns": 950,
+              "stream_modified": false,
+              "source_status_from_qmp": "completed",
+              "destination_status_from_qmp": "completed"
+            },
+            {
+              "name": "v1_captured_ecats_owner_shadow_context_and_ram_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "b7b989b402c2b8464bbdce2a5b6707d2c0d56f6f3448ef3d7e2931d3ce7c4d2e",
+              "snapshot_bytes": 2282649,
+              "source_virtual_ns": 1400,
+              "destination_virtual_ns": 1400,
+              "stream_modified": false,
+              "source_status_from_qmp": "completed",
+              "destination_status_from_qmp": "completed"
+            }
+          ]
+        },
+        "rejected_migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "reference_to_unknown_profile_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "snapshot_sha256": "7a5bd96270cf69f6c0bf914b45ce2b04c0fef4bc1ce201bc4fffbd27ea97c092",
+              "snapshot_bytes": 2413689,
+              "stream_modified": false,
+              "actual_source_stream": true,
+              "source_reference": true,
+              "target_reference": false,
+              "profile_mismatch": "0 != 1",
+              "specific_load_failure_observed": true,
+              "expected_diagnostic": "0 != 1"
+            },
+            {
+              "name": "unknown_to_reference_profile_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "snapshot_sha256": "f472caa0936e8e43e5a8dfe0d58a6d977327ff0b8ba19d252efd44e5c1bec1e6",
+              "snapshot_bytes": 2245794,
+              "stream_modified": false,
+              "actual_source_stream": true,
+              "source_reference": false,
+              "target_reference": true,
+              "profile_mismatch": "1 != 0",
+              "specific_load_failure_observed": true,
+              "expected_diagnostic": "1 != 0"
+            }
+          ]
+        },
+        "corrupted_stream_rejections": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "owner-out-of-range",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "stream_modified": true,
+              "actual_source_stream": true,
+              "original_snapshot_sha256": "b7b989b402c2b8464bbdce2a5b6707d2c0d56f6f3448ef3d7e2931d3ce7c4d2e",
+              "corrupted_snapshot_sha256": "a0a6d02120d308ce4ebc87f88464ad1e3e6d5420d9737b58780c81e34a3594d8",
+              "original_stream_unchanged": true,
+              "only_one_field_modified": true,
+              "modified_field": "owner-out-of-range",
+              "field_offset": 1510827,
+              "modified_field_bytes": 4,
+              "changed_byte_count": 1,
+              "legitimate_alternate_configuration": false,
+              "specific_load_failure_observed": true,
+              "expected_diagnostic": "qcom-smmuv500: invalid migrated ECATS owner",
+              "old_value": 7,
+              "new_value": 10
+            },
+            {
+              "name": "captured-sid-wrong-tbu",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "stream_modified": true,
+              "actual_source_stream": true,
+              "original_snapshot_sha256": "b7b989b402c2b8464bbdce2a5b6707d2c0d56f6f3448ef3d7e2931d3ce7c4d2e",
+              "corrupted_snapshot_sha256": "fd8e1609579e56a3aa20408c6bb5887657ae4354d70e2712f2289f9f469af367",
+              "original_stream_unchanged": true,
+              "only_one_field_modified": true,
+              "modified_field": "captured-sid-wrong-tbu",
+              "field_offset": 1511402,
+              "modified_field_bytes": 4,
+              "changed_byte_count": 1,
+              "legitimate_alternate_configuration": false,
+              "specific_load_failure_observed": true,
+              "expected_diagnostic": "qcom-smmuv500: invalid migrated TBU 7 state",
+              "old_value": 7234,
+              "new_value": 66
+            }
+          ]
+        }
+      },
+      "smmuv500_streams_from_zip": {
+        "qsmmuv500-v1-ten-halt-pending.migration": {
+          "sha256": "7a5bd96270cf69f6c0bf914b45ce2b04c0fef4bc1ce201bc4fffbd27ea97c092",
+          "bytes": 2413689,
+          "read_from_zip": true
+        },
+        "qsmmuv500-v1-captured-ecats-pending.migration": {
+          "sha256": "b7b989b402c2b8464bbdce2a5b6707d2c0d56f6f3448ef3d7e2931d3ce7c4d2e",
+          "bytes": 2282649,
+          "read_from_zip": true
+        },
+        "qsmmuv500-v1-unknown-profile.migration": {
+          "sha256": "f472caa0936e8e43e5a8dfe0d58a6d977327ff0b8ba19d252efd44e5c1bec1e6",
+          "bytes": 2245794,
+          "read_from_zip": true,
+          "purpose": "source for reverse profile rejection, not a completed roundtrip"
+        },
+        "qsmmuv500-v1-corrupted-owner-out-of-range.migration": {
+          "sha256": "a0a6d02120d308ce4ebc87f88464ad1e3e6d5420d9737b58780c81e34a3594d8",
+          "bytes": 2282649,
+          "read_from_zip": true,
+          "only_reported_field_modified": true,
+          "changed_byte_count": 1
+        },
+        "qsmmuv500-v1-corrupted-captured-sid-wrong-tbu.migration": {
+          "sha256": "fd8e1609579e56a3aa20408c6bb5887657ae4354d70e2712f2289f9f469af367",
+          "bytes": 2282649,
+          "read_from_zip": true,
+          "only_reported_field_modified": true,
+          "changed_byte_count": 1
+        }
+      },
+      "smmuv500_decoded_sections": [
+        {
+          "basename": "qsmmuv500-v1-ten-halt-pending.migration",
+          "section_header_offset": 1641820,
+          "payload_offset": 1641847,
+          "owner": -1,
+          "all_ten_tbu_states_independently_decoded": true,
+          "payload_bytes": 744,
+          "source_virtual_ns": 950,
+          "state_matches_exercised_scenario": true
+        },
+        {
+          "basename": "qsmmuv500-v1-captured-ecats-pending.migration",
+          "section_header_offset": 1510780,
+          "payload_offset": 1510807,
+          "owner": 7,
+          "all_ten_tbu_states_independently_decoded": true,
+          "payload_bytes": 744,
+          "source_virtual_ns": 1400,
+          "state_matches_exercised_scenario": true
+        }
+      ]
+    },
+    "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/result.json": {
+      "schema": "tb371fc-tsens24xx-v1",
+      "passed": true,
+      "expected_checks": 34,
+      "expected_completed_migrations": 2,
+      "expected_rejected_migrations": 2,
+      "expected_corrupted_stream_rejections": 2,
+      "controller_count": 2,
+      "sensor_count": 32,
+      "sensors_per_controller": 16,
+      "register_count": 114,
+      "sparse_window_count": 6,
+      "mapped_bytes": 456,
+      "registers_per_controller": 57,
+      "mapped_bytes_per_controller": 228,
+      "irq_count": 4,
+      "sampling_period_ns": 1000000,
+      "vmstate_version": 1,
+      "vmstate_payload_bytes_per_controller": 375,
+      "reference_profile_is_default": false,
+      "reference_boot_state_is_measured": false,
+      "environment_input_is_host_controlled": true,
+      "analogue_calibration_implemented": false,
+      "watchdog_producer_implemented": false,
+      "cycle_monitor_producer_implemented": false,
+      "original_dt_srot_declared_bytes_per_controller": 4,
+      "source_observed_control_offset_beyond_declared_srot_size": 4,
+      "original_dt_tm_declared_bytes_per_controller": 511,
+      "dt_references_are_measured_firmware_enable_masks": false,
+      "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+      "script_sha256": "a921258c6e5372952a4e4a2ee497357241e5563cf28954818f68cea2a484ce22",
+      "guest_cpu_executed": false,
+      "native_kernel_probe_observed": false,
+      "android_boot_passed": false,
+      "scope": "Actual compiled two-controller TSENS transactions, captured external reference inputs, virtual sample deadlines, signed thresholds, real IRQ outputs/GIC routes and state/RAM migration",
+      "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "source_url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/thermal/tsens2xxx.c",
+      "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+      "dt_evidence_blob": "b6110a64c701db6727f35234cbbb27f932c6f098",
+      "binary_unchanged": true,
+      "duration_seconds": 23.25,
+      "receipt_sha256": "1b9f72bb4575c2b392130f671278f0e442de7a8d8f9f4eb70add367e4fb034bd",
+      "list_details": {
+        "checks": {
+          "length": 34,
+          "entries": [
+            {
+              "name": "cold_reference_has_no_fabricated_temperature_or_firmware_enable",
+              "passed": true
+            },
+            {
+              "name": "first_sample_and_validity_follow_the_exact_virtual_deadline",
+              "passed": true
+            },
+            {
+              "name": "a_partial_round_cannot_claim_all_enabled_inputs_were_sampled",
+              "passed": true
+            },
+            {
+              "name": "all_thirty_two_channels_preserve_signed_codes_and_controller_isolation",
+              "passed": true
+            },
+            {
+              "name": "changes_to_environment_inputs_do_not_rewrite_the_inflight_sample",
+              "passed": true
+            },
+            {
+              "name": "withdrawn_sources_lose_validity_without_becoming_an_invented_zero",
+              "passed": true
+            },
+            {
+              "name": "controllers_keep_independent_sampling_phases_and_enable_masks",
+              "passed": true
+            },
+            {
+              "name": "literal_driver_threshold_rmw_preserves_the_other_field_and_c_signed_division",
+              "passed": true
+            },
+            {
+              "name": "signed_upper_and_lower_comparators_include_equality_on_real_irq",
+              "passed": true
+            },
+            {
+              "name": "critical_comparator_and_second_irq_are_independent_of_upper_lower",
+              "passed": true
+            },
+            {
+              "name": "global_enables_filter_real_latched_irqs_without_erasing_status",
+              "passed": true
+            },
+            {
+              "name": "channel_masks_isolate_events_and_rearming_does_not_require_a_fake_sample",
+              "passed": true
+            },
+            {
+              "name": "clear_pulses_clear_latches_and_held_clear_suppresses_only_the_selected_event",
+              "passed": true
+            },
+            {
+              "name": "control_changes_cancel_pending_samples_but_preserve_programmed_thresholds",
+              "passed": true
+            },
+            {
+              "name": "software_reset_is_a_real_held_reset_and_preserves_external_environment",
+              "passed": true
+            },
+            {
+              "name": "system_reset_cancels_timers_and_irqs_and_retains_only_external_inputs",
+              "passed": true
+            },
+            {
+              "name": "read_only_feedback_and_reserved_bits_cannot_forge_a_sample_or_irq",
+              "passed": true
+            },
+            {
+              "name": "narrow_and_unaligned_accesses_fail_while_wide_bus_accesses_split_into_words",
+              "passed": true
+            },
+            {
+              "name": "host_environment_validation_is_atomic_and_never_directly_updates_guest_feedback",
+              "passed": true
+            },
+            {
+              "name": "paused_time_and_late_dispatch_commit_only_one_captured_round",
+              "passed": true
+            },
+            {
+              "name": "active_channel_gating_changes_wires_without_destroying_latched_history",
+              "passed": true
+            },
+            {
+              "name": "default_unknown_profile_rejects_raw_state_and_cannot_become_a_thermal_success",
+              "passed": true
+            },
+            {
+              "name": "explicit_handoff_requires_known_inputs_and_valid_configuration",
+              "passed": true
+            },
+            {
+              "name": "paused_tcg_environment_properties_are_inputs_and_do_not_execute_a_conversion",
+              "passed": true
+            },
+            {
+              "name": "source_bounded_windows_preserve_version_calibration_watchdog_and_0c_holes",
+              "passed": true
+            },
+            {
+              "name": "both_controllers_drive_all_four_real_gic_routes_without_interception",
+              "passed": true
+            },
+            {
+              "name": "v1_both_captured_rounds_restore_before_first_tsens_mmio",
+              "passed": true
+            },
+            {
+              "name": "v1_both_exact_deadlines_and_later_changed_or_withdrawn_sources_continue",
+              "passed": true
+            },
+            {
+              "name": "v1_both_asserted_irq_wires_and_clear_hold_restore_before_first_tsens_mmio",
+              "passed": true
+            },
+            {
+              "name": "v1_pending_sample_consumes_saved_capture_then_new_real_irq_events_continue",
+              "passed": true
+            },
+            {
+              "name": "reference_to_unknown_profile_is_rejected",
+              "passed": true,
+              "stream_modified": false
+            },
+            {
+              "name": "unknown_to_reference_profile_is_rejected",
+              "passed": true,
+              "stream_modified": false
+            },
+            {
+              "name": "one_real_valid_mask_outside_sensors_field_corruption_is_rejected",
+              "passed": true,
+              "stream_modified": true,
+              "only_one_field_modified": true
+            },
+            {
+              "name": "one_real_captured_code_reserved_bit_field_corruption_is_rejected",
+              "passed": true,
+              "stream_modified": true,
+              "only_one_field_modified": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "v1_two_controller_captured_inputs_configuration_and_ram_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "8a8e44d8007c93fbd22d6359aa0c9ba352d2fd8829c0f3d52433c5983ec0f032",
+              "snapshot_bytes": 2245794,
+              "source_virtual_ns": 400000,
+              "destination_virtual_ns": 400000,
+              "stream_modified": false,
+              "controller_sections_verified": 2,
+              "payload_bytes_per_controller": 375,
+              "target_tsens_mmio_before_first_observation": false,
+              "target_real_irq_observed_before_first_mmio": true,
+              "observed_irq_controller": 0,
+              "destination_inputs_were_different_before_load": true,
+              "source_status_from_qmp": "completed",
+              "destination_status_from_qmp": "completed"
+            },
+            {
+              "name": "v1_actual_latched_irqs_held_clear_current_inputs_and_ram_roundtrip",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed",
+              "snapshot_sha256": "8fff9a0769d93e9f9a1bd9e3386d31156fe79d4f355c07ae886eb16fd6c918a0",
+              "snapshot_bytes": 2245794,
+              "source_virtual_ns": 1400000,
+              "destination_virtual_ns": 1400000,
+              "stream_modified": false,
+              "controller_sections_verified": 2,
+              "payload_bytes_per_controller": 375,
+              "target_tsens_mmio_before_first_observation": false,
+              "target_real_irq_observed_before_first_mmio": true,
+              "observed_irq_controller": 1,
+              "destination_inputs_were_different_before_load": true,
+              "source_status_from_qmp": "completed",
+              "destination_status_from_qmp": "completed"
+            }
+          ]
+        },
+        "rejected_migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "reference_to_unknown_profile_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "snapshot_sha256": "8a8e44d8007c93fbd22d6359aa0c9ba352d2fd8829c0f3d52433c5983ec0f032",
+              "snapshot_bytes": 2245794,
+              "stream_modified": false,
+              "actual_source_stream": true,
+              "source_reference": true,
+              "target_reference": false,
+              "profile_mismatch": "0 != 1",
+              "specific_load_failure_observed": true,
+              "expected_diagnostic": "0 != 1"
+            },
+            {
+              "name": "unknown_to_reference_profile_is_rejected",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "snapshot_sha256": "a2bd2c104c4e49c6f738739bbdd213b88ce233ccb9caa0a67fa93371a6bf2ec4",
+              "snapshot_bytes": 2245794,
+              "stream_modified": false,
+              "actual_source_stream": true,
+              "source_reference": false,
+              "target_reference": true,
+              "profile_mismatch": "1 != 0",
+              "specific_load_failure_observed": true,
+              "expected_diagnostic": "1 != 0"
+            }
+          ]
+        },
+        "corrupted_stream_rejections": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "valid-mask-outside-sensors",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "stream_modified": true,
+              "actual_source_stream": true,
+              "original_snapshot_sha256": "8a8e44d8007c93fbd22d6359aa0c9ba352d2fd8829c0f3d52433c5983ec0f032",
+              "corrupted_snapshot_sha256": "b4d333cbcd320d1db66a002b44fc5a0f8b144244c359cd2e0e662c1046c66729",
+              "original_stream_unchanged": true,
+              "only_one_field_modified": true,
+              "modified_field": "valid-mask-outside-sensors",
+              "field_offset": 376785,
+              "modified_field_bytes": 4,
+              "changed_byte_count": 1,
+              "legitimate_alternate_configuration": false,
+              "specific_load_failure_observed": true,
+              "expected_diagnostic": "qcom-tsens24xx: invalid migrated TSENS state",
+              "old_value": 0,
+              "new_value": 65536
+            },
+            {
+              "name": "captured-code-reserved-bit",
+              "passed": true,
+              "destination_exit": 1,
+              "source_status": "completed",
+              "stream_modified": true,
+              "actual_source_stream": true,
+              "original_snapshot_sha256": "8a8e44d8007c93fbd22d6359aa0c9ba352d2fd8829c0f3d52433c5983ec0f032",
+              "corrupted_snapshot_sha256": "d719ed27743ccc7c22f5c92861024f2c276e292d5e03aedace2a4ceef0c65d07",
+              "original_stream_unchanged": true,
+              "only_one_field_modified": true,
+              "modified_field": "captured-code-reserved-bit",
+              "field_offset": 376818,
+              "modified_field_bytes": 2,
+              "changed_byte_count": 1,
+              "legitimate_alternate_configuration": false,
+              "specific_load_failure_observed": true,
+              "expected_diagnostic": "qcom-tsens24xx: invalid migrated sensor 5 state",
+              "old_value": 3976,
+              "new_value": 8072
+            }
+          ]
+        }
+      },
+      "tsens24xx_streams_from_zip": {
+        "tsens24xx-v1-two-captured-rounds.migration": {
+          "sha256": "8a8e44d8007c93fbd22d6359aa0c9ba352d2fd8829c0f3d52433c5983ec0f032",
+          "bytes": 2245794,
+          "read_from_zip": true,
+          "purpose": "completed-roundtrip-source",
+          "source_qmp": {
+            "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-captured-source/qmp.log",
+            "bytes": 30058,
+            "sha256": "46a52b1455d2f1954a53f8620268b38bb03db26c443c6b35709403bcaae411ba",
+            "read_from_zip": true
+          },
+          "destination_qmp": {
+            "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-captured-target/qmp.log",
+            "bytes": 30924,
+            "sha256": "a282221be37fe75f54a5d789b10c10ca161ac0c677736457e7064445ac23eb12",
+            "read_from_zip": true
+          },
+          "source_qtest_clock": {
+            "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-captured-source/qtest.log",
+            "bytes": 873,
+            "sha256": "399e36fd4d8f8892fb981324a166ef42bf202bb878d85698f78b6f0a70fbdd4c",
+            "clock_events": [
+              {
+                "command": "clock_step",
+                "argument_ns": 200000,
+                "returned_virtual_ns": 200000
+              },
+              {
+                "command": "clock_step",
+                "argument_ns": 200000,
+                "returned_virtual_ns": 400000
+              }
+            ],
+            "actual_virtual_ns": 400000,
+            "read_from_zip": true
+          },
+          "completed_statuses_observed_in_source_and_destination_logs": true,
+          "controller_sections_independently_decoded": 2,
+          "profile_rejection_proofs": [
+            {
+              "reported_destination_exit": 1,
+              "actual_incoming_request_read_from_zip": true,
+              "specific_device_load_failure_confirmed_in_stderr": true,
+              "expected_diagnostic": "0 != 1",
+              "qmp_log": {
+                "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-reference_to_unknown_profile_is_rejected/qmp.log",
+                "bytes": 401,
+                "sha256": "13fdcb8d0da4ba6b07b9980ebdbfc9bedb253d493831af1057ae84ce903becce",
+                "read_from_zip": true
+              },
+              "stderr": {
+                "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-reference_to_unknown_profile_is_rejected/qemu.stderr",
+                "bytes": 143,
+                "sha256": "4d696abfe7781a13933d6e1575e6dc493beb3a8dc657eb673aeafea116b98f22",
+                "read_from_zip": true
+              }
+            }
+          ]
+        },
+        "tsens24xx-v1-latched-irqs-and-clear-hold.migration": {
+          "sha256": "8fff9a0769d93e9f9a1bd9e3386d31156fe79d4f355c07ae886eb16fd6c918a0",
+          "bytes": 2245794,
+          "read_from_zip": true,
+          "purpose": "completed-roundtrip-source",
+          "source_qmp": {
+            "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-irqs-source/qmp.log",
+            "bytes": 30207,
+            "sha256": "3c1bbdfa68e093073975526089e05ec4de8039159c11a8cd7383747e99df95bc",
+            "read_from_zip": true
+          },
+          "destination_qmp": {
+            "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-irqs-target/qmp.log",
+            "bytes": 30490,
+            "sha256": "9feee188ae907609bcb48414f56863a39c00ba72a766271b92e8b4177b6df7d3",
+            "read_from_zip": true
+          },
+          "source_qtest_clock": {
+            "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-irqs-source/qtest.log",
+            "bytes": 1195,
+            "sha256": "59ebe7bfc356b5c6a29667ec6c4aa6b0abc49fd46d8481c402c3d9261568190c",
+            "clock_events": [
+              {
+                "command": "clock_step",
+                "argument_ns": 1000000,
+                "returned_virtual_ns": 1000000
+              },
+              {
+                "command": "clock_step",
+                "argument_ns": 400000,
+                "returned_virtual_ns": 1400000
+              }
+            ],
+            "actual_virtual_ns": 1400000,
+            "read_from_zip": true
+          },
+          "completed_statuses_observed_in_source_and_destination_logs": true,
+          "controller_sections_independently_decoded": 2
+        },
+        "tsens24xx-v1-unknown-profile.migration": {
+          "sha256": "a2bd2c104c4e49c6f738739bbdd213b88ce233ccb9caa0a67fa93371a6bf2ec4",
+          "bytes": 2245794,
+          "read_from_zip": true,
+          "purpose": "reverse-profile-rejection source; not a third completed roundtrip",
+          "source_qmp": {
+            "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-unknown-source/qmp.log",
+            "bytes": 1392,
+            "sha256": "044ec349db7e0da80e4af37da65358ee0fce042e75aff8a76a854bff878867d5",
+            "read_from_zip": true
+          },
+          "source_qtest_clock": {
+            "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-unknown-source/qtest.log",
+            "bytes": 90,
+            "sha256": "bc8c7aace7bff33e110a7745cd4864237d1e7bb7fe75191881a46bc814d91f48",
+            "clock_events": [],
+            "actual_virtual_ns": 0,
+            "read_from_zip": true
+          },
+          "controller_sections_independently_decoded": 2,
+          "cold_state_independently_reconstructed": true,
+          "profile_rejection_proofs": [
+            {
+              "reported_destination_exit": 1,
+              "actual_incoming_request_read_from_zip": true,
+              "specific_device_load_failure_confirmed_in_stderr": true,
+              "expected_diagnostic": "1 != 0",
+              "qmp_log": {
+                "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-unknown_to_reference_profile_is_rejected/qmp.log",
+                "bytes": 395,
+                "sha256": "281d1bceb2bf092eff502ff9b66ac08617410db5ed26e6483837ce32623e477e",
+                "read_from_zip": true
+              },
+              "stderr": {
+                "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-unknown_to_reference_profile_is_rejected/qemu.stderr",
+                "bytes": 143,
+                "sha256": "36b0e5d6ec256ce77822a78d928f4a3b410182640a4d64bbcbbcf58c6c7a1cac",
+                "read_from_zip": true
+              }
+            }
+          ]
+        },
+        "tsens24xx-v1-corrupted-valid-mask-outside-sensors.migration": {
+          "sha256": "b4d333cbcd320d1db66a002b44fc5a0f8b144244c359cd2e0e662c1046c66729",
+          "bytes": 2245794,
+          "read_from_zip": true,
+          "purpose": "precise-corrupted-copy-rejection",
+          "original_basename": "tsens24xx-v1-two-captured-rounds.migration",
+          "original_sha256": "8a8e44d8007c93fbd22d6359aa0c9ba352d2fd8829c0f3d52433c5983ec0f032",
+          "only_specified_controller_zero_field_modified": true,
+          "field_offset": 376785,
+          "field_width_bytes": 4,
+          "field": "valid-mask-outside-sensors",
+          "old_raw_value": 0,
+          "new_raw_value": 65536,
+          "changed_byte_count": 1,
+          "failure_proof": {
+            "reported_destination_exit": 1,
+            "actual_incoming_request_read_from_zip": true,
+            "specific_device_load_failure_confirmed_in_stderr": true,
+            "expected_diagnostic": "qcom-tsens24xx: invalid migrated TSENS state",
+            "qmp_log": {
+              "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-corrupt-valid-mask-outside-sensors/qmp.log",
+              "bytes": 250,
+              "sha256": "6574fd811dae336cb12b9d892f198ba19b43ac8f0912816fe2b448bc81c161e6",
+              "read_from_zip": true
+            },
+            "stderr": {
+              "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-corrupt-valid-mask-outside-sensors/qemu.stderr",
+              "bytes": 289,
+              "sha256": "c7d88361d77aa311f49e41a7271f77e395b808bd54d05c0c33da7a117730043b",
+              "read_from_zip": true
+            }
+          }
+        },
+        "tsens24xx-v1-corrupted-captured-code-reserved-bit.migration": {
+          "sha256": "d719ed27743ccc7c22f5c92861024f2c276e292d5e03aedace2a4ceef0c65d07",
+          "bytes": 2245794,
+          "read_from_zip": true,
+          "purpose": "precise-corrupted-copy-rejection",
+          "original_basename": "tsens24xx-v1-two-captured-rounds.migration",
+          "original_sha256": "8a8e44d8007c93fbd22d6359aa0c9ba352d2fd8829c0f3d52433c5983ec0f032",
+          "only_specified_controller_zero_field_modified": true,
+          "field_offset": 376818,
+          "field_width_bytes": 2,
+          "field": "captured-code-reserved-bit",
+          "old_raw_value": 3976,
+          "new_raw_value": 8072,
+          "changed_byte_count": 1,
+          "failure_proof": {
+            "reported_destination_exit": 1,
+            "actual_incoming_request_read_from_zip": true,
+            "specific_device_load_failure_confirmed_in_stderr": true,
+            "expected_diagnostic": "qcom-tsens24xx: invalid migrated sensor 5 state",
+            "qmp_log": {
+              "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-corrupt-captured-code-reserved-bit/qmp.log",
+              "bytes": 250,
+              "sha256": "d2ec062195c7cf2457e23e6f8ea78077e3aa823efe961767680e7285b75a89f0",
+              "read_from_zip": true
+            },
+            "stderr": {
+              "path": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/migration-corrupt-captured-code-reserved-bit/qemu.stderr",
+              "bytes": 292,
+              "sha256": "b09f0644714da072c980bbec9f48f42628c12de37fb7b0d24d92488d5cacbf6a",
+              "read_from_zip": true
+            }
+          }
+        }
+      },
+      "tsens24xx_decoded_sections": [
+        {
+          "controller": 0,
+          "instance_id": 0,
+          "version": 1,
+          "section_type": 4,
+          "section_id": 23,
+          "section_header_offset": 376461,
+          "payload_offset": 376489,
+          "payload_bytes": 375,
+          "payload_sha256": "1e3222701fcdfbdf7d91eb68bac1d5637cdd65daae967ac54a8f38cea84f84f9",
+          "decoded_state": {
+            "reference_profile": 1,
+            "controller_id": 0,
+            "srot_base": 203563008,
+            "tm_base": 203829248,
+            "sampling_period_ns": 1000000,
+            "reference_boot_enable_mask": 0,
+            "reference_boot_temperature": 2147483648,
+            "input_valid": 33,
+            "input_mc": [
+              25000,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -12000,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648
+            ],
+            "control": 265,
+            "interrupt_enable": 7,
+            "ul_status": 0,
+            "ul_clear": 0,
+            "ul_mask": 4294967295,
+            "critical_status": 0,
+            "critical_clear": 0,
+            "critical_mask": 3221291007,
+            "threshold": [
+              4099696,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              4099696,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560
+            ],
+            "critical_threshold": [
+              1200,
+              2047,
+              2047,
+              2047,
+              2047,
+              1200,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047
+            ],
+            "last_code": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "valid_mask": 0,
+            "first_round_complete": false,
+            "sample_pending": true,
+            "deadline_exhausted": false,
+            "sample_deadline_ns": 1000000,
+            "captured_enable_mask": 33,
+            "captured_valid_mask": 33,
+            "captured_code": [
+              100,
+              0,
+              0,
+              0,
+              0,
+              3976,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sample_rounds": 0,
+            "complete_rounds": 0,
+            "last_sample_ns": -1
+          },
+          "basename": "tsens24xx-v1-two-captured-rounds.migration",
+          "purpose": "completed-roundtrip-source",
+          "source_virtual_ns": 400000,
+          "remaining_deadline_ns": 600000,
+          "all_fields_independently_decoded": true,
+          "all_runtime_fields_match_raw_source_qom": true,
+          "immutable_fields_match_fixed_board_and_boot_contract": true,
+          "source_qom_properties_compared": 164,
+          "all_fields_match_independently_specified_scenario": true,
+          "source_qmp_sha256": "46a52b1455d2f1954a53f8620268b38bb03db26c443c6b35709403bcaae411ba"
+        },
+        {
+          "controller": 1,
+          "instance_id": 1,
+          "version": 1,
+          "section_type": 4,
+          "section_id": 24,
+          "section_header_offset": 376869,
+          "payload_offset": 376897,
+          "payload_bytes": 375,
+          "payload_sha256": "dfb285e74e57ac050d2ebd562be1f39d9d3f256d3451c5b3dbb7df4941ec9208",
+          "decoded_state": {
+            "reference_profile": 1,
+            "controller_id": 1,
+            "srot_base": 203567104,
+            "tm_base": 203837440,
+            "sampling_period_ns": 1000000,
+            "reference_boot_enable_mask": 0,
+            "reference_boot_temperature": 2147483648,
+            "input_valid": 0,
+            "input_mc": [
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              30000,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648
+            ],
+            "control": 2049,
+            "interrupt_enable": 7,
+            "ul_status": 0,
+            "ul_clear": 0,
+            "ul_mask": 4294967295,
+            "critical_status": 0,
+            "critical_clear": 0,
+            "critical_mask": 3221291007,
+            "threshold": [
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              4099696,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560
+            ],
+            "critical_threshold": [
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              1200,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047
+            ],
+            "last_code": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "valid_mask": 0,
+            "first_round_complete": false,
+            "sample_pending": true,
+            "deadline_exhausted": false,
+            "sample_deadline_ns": 1200000,
+            "captured_enable_mask": 256,
+            "captured_valid_mask": 256,
+            "captured_code": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              300,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sample_rounds": 0,
+            "complete_rounds": 0,
+            "last_sample_ns": -1
+          },
+          "basename": "tsens24xx-v1-two-captured-rounds.migration",
+          "purpose": "completed-roundtrip-source",
+          "source_virtual_ns": 400000,
+          "remaining_deadline_ns": 800000,
+          "all_fields_independently_decoded": true,
+          "all_runtime_fields_match_raw_source_qom": true,
+          "immutable_fields_match_fixed_board_and_boot_contract": true,
+          "source_qom_properties_compared": 164,
+          "all_fields_match_independently_specified_scenario": true,
+          "source_qmp_sha256": "46a52b1455d2f1954a53f8620268b38bb03db26c443c6b35709403bcaae411ba"
+        },
+        {
+          "controller": 0,
+          "instance_id": 0,
+          "version": 1,
+          "section_type": 4,
+          "section_id": 23,
+          "section_header_offset": 376461,
+          "payload_offset": 376489,
+          "payload_bytes": 375,
+          "payload_sha256": "e713486aeea0b29f343e604c74743bfb34e51d833b1547b8c475b27756583429",
+          "decoded_state": {
+            "reference_profile": 1,
+            "controller_id": 0,
+            "srot_base": 203563008,
+            "tm_base": 203829248,
+            "sampling_period_ns": 1000000,
+            "reference_boot_enable_mask": 0,
+            "reference_boot_temperature": 2147483648,
+            "input_valid": 1,
+            "input_mc": [
+              24000,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648
+            ],
+            "control": 9,
+            "interrupt_enable": 7,
+            "ul_status": 0,
+            "ul_clear": 0,
+            "ul_mask": 4294967295,
+            "critical_status": 0,
+            "critical_clear": 0,
+            "critical_mask": 3221291007,
+            "threshold": [
+              4099696,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560
+            ],
+            "critical_threshold": [
+              1200,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047
+            ],
+            "last_code": [
+              240,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "valid_mask": 1,
+            "first_round_complete": true,
+            "sample_pending": true,
+            "deadline_exhausted": false,
+            "sample_deadline_ns": 2000000,
+            "captured_enable_mask": 1,
+            "captured_valid_mask": 1,
+            "captured_code": [
+              240,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sample_rounds": 1,
+            "complete_rounds": 1,
+            "last_sample_ns": 1000000
+          },
+          "basename": "tsens24xx-v1-latched-irqs-and-clear-hold.migration",
+          "purpose": "completed-roundtrip-source",
+          "source_virtual_ns": 1400000,
+          "remaining_deadline_ns": 600000,
+          "all_fields_independently_decoded": true,
+          "all_runtime_fields_match_raw_source_qom": true,
+          "immutable_fields_match_fixed_board_and_boot_contract": true,
+          "source_qom_properties_compared": 164,
+          "all_fields_match_independently_specified_scenario": true,
+          "source_qmp_sha256": "3c1bbdfa68e093073975526089e05ec4de8039159c11a8cd7383747e99df95bc"
+        },
+        {
+          "controller": 1,
+          "instance_id": 1,
+          "version": 1,
+          "section_type": 4,
+          "section_id": 24,
+          "section_header_offset": 376869,
+          "payload_offset": 376897,
+          "payload_bytes": 375,
+          "payload_sha256": "bf0ee31b60452c4d16f5c19ef9ba1bf76751479754b4c372883a20c5363d0085",
+          "decoded_state": {
+            "reference_profile": 1,
+            "controller_id": 1,
+            "srot_base": 203567104,
+            "tm_base": 203837440,
+            "sampling_period_ns": 1000000,
+            "reference_boot_enable_mask": 0,
+            "reference_boot_temperature": 2147483648,
+            "input_valid": 264,
+            "input_mc": [
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              20000,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              5000,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648
+            ],
+            "control": 2113,
+            "interrupt_enable": 7,
+            "ul_status": 256,
+            "ul_clear": 524288,
+            "ul_mask": 4294442751,
+            "critical_status": 8,
+            "critical_clear": 0,
+            "critical_mask": 3221290999,
+            "threshold": [
+              8386560,
+              8386560,
+              8386560,
+              2051696,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              4096000,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560
+            ],
+            "critical_threshold": [
+              2047,
+              2047,
+              2047,
+              700,
+              2047,
+              2047,
+              2047,
+              2047,
+              1200,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047
+            ],
+            "last_code": [
+              0,
+              0,
+              0,
+              900,
+              0,
+              0,
+              0,
+              0,
+              4086,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "valid_mask": 264,
+            "first_round_complete": true,
+            "sample_pending": true,
+            "deadline_exhausted": false,
+            "sample_deadline_ns": 2000000,
+            "captured_enable_mask": 264,
+            "captured_valid_mask": 264,
+            "captured_code": [
+              0,
+              0,
+              0,
+              900,
+              0,
+              0,
+              0,
+              0,
+              4086,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sample_rounds": 1,
+            "complete_rounds": 1,
+            "last_sample_ns": 1000000
+          },
+          "basename": "tsens24xx-v1-latched-irqs-and-clear-hold.migration",
+          "purpose": "completed-roundtrip-source",
+          "source_virtual_ns": 1400000,
+          "remaining_deadline_ns": 600000,
+          "all_fields_independently_decoded": true,
+          "all_runtime_fields_match_raw_source_qom": true,
+          "immutable_fields_match_fixed_board_and_boot_contract": true,
+          "source_qom_properties_compared": 164,
+          "all_fields_match_independently_specified_scenario": true,
+          "source_qmp_sha256": "3c1bbdfa68e093073975526089e05ec4de8039159c11a8cd7383747e99df95bc"
+        },
+        {
+          "controller": 0,
+          "instance_id": 0,
+          "version": 1,
+          "section_type": 4,
+          "section_id": 23,
+          "section_header_offset": 376461,
+          "payload_offset": 376489,
+          "payload_bytes": 375,
+          "payload_sha256": "15542a45d1df62d0fcf133e3a24c8d4a91a0ad38a3285aae51a32ff414f88633",
+          "decoded_state": {
+            "reference_profile": 0,
+            "controller_id": 0,
+            "srot_base": 203563008,
+            "tm_base": 203829248,
+            "sampling_period_ns": 1000000,
+            "reference_boot_enable_mask": 0,
+            "reference_boot_temperature": 2147483648,
+            "input_valid": 0,
+            "input_mc": [
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648
+            ],
+            "control": 0,
+            "interrupt_enable": 0,
+            "ul_status": 0,
+            "ul_clear": 0,
+            "ul_mask": 4294967295,
+            "critical_status": 0,
+            "critical_clear": 0,
+            "critical_mask": 3221291007,
+            "threshold": [
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560
+            ],
+            "critical_threshold": [
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047
+            ],
+            "last_code": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "valid_mask": 0,
+            "first_round_complete": false,
+            "sample_pending": false,
+            "deadline_exhausted": false,
+            "sample_deadline_ns": 0,
+            "captured_enable_mask": 0,
+            "captured_valid_mask": 0,
+            "captured_code": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sample_rounds": 0,
+            "complete_rounds": 0,
+            "last_sample_ns": -1
+          },
+          "basename": "tsens24xx-v1-unknown-profile.migration",
+          "purpose": "reverse-profile-rejection-source-only",
+          "source_virtual_ns": 0,
+          "all_fields_independently_decoded": true,
+          "all_runtime_fields_match_raw_source_qom": null,
+          "immutable_fields_match_fixed_board_and_boot_contract": true,
+          "all_fields_match_independently_rebuilt_unknown_cold_state": true
+        },
+        {
+          "controller": 1,
+          "instance_id": 1,
+          "version": 1,
+          "section_type": 4,
+          "section_id": 24,
+          "section_header_offset": 376869,
+          "payload_offset": 376897,
+          "payload_bytes": 375,
+          "payload_sha256": "f1f85d273161f7646f3c6e714deeae8512b86dea050be5dd92f8dc4dd0aca3b9",
+          "decoded_state": {
+            "reference_profile": 0,
+            "controller_id": 1,
+            "srot_base": 203567104,
+            "tm_base": 203837440,
+            "sampling_period_ns": 1000000,
+            "reference_boot_enable_mask": 0,
+            "reference_boot_temperature": 2147483648,
+            "input_valid": 0,
+            "input_mc": [
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648,
+              -2147483648
+            ],
+            "control": 0,
+            "interrupt_enable": 0,
+            "ul_status": 0,
+            "ul_clear": 0,
+            "ul_mask": 4294967295,
+            "critical_status": 0,
+            "critical_clear": 0,
+            "critical_mask": 3221291007,
+            "threshold": [
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560,
+              8386560
+            ],
+            "critical_threshold": [
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047,
+              2047
+            ],
+            "last_code": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "valid_mask": 0,
+            "first_round_complete": false,
+            "sample_pending": false,
+            "deadline_exhausted": false,
+            "sample_deadline_ns": 0,
+            "captured_enable_mask": 0,
+            "captured_valid_mask": 0,
+            "captured_code": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sample_rounds": 0,
+            "complete_rounds": 0,
+            "last_sample_ns": -1
+          },
+          "basename": "tsens24xx-v1-unknown-profile.migration",
+          "purpose": "reverse-profile-rejection-source-only",
+          "source_virtual_ns": 0,
+          "all_fields_independently_decoded": true,
+          "all_runtime_fields_match_raw_source_qom": null,
+          "immutable_fields_match_fixed_board_and_boot_contract": true,
+          "all_fields_match_independently_rebuilt_unknown_cold_state": true
+        }
+      ]
+    },
+    "tb371fc-results/components/51-gpu-gx-gdsc/fixtures/data/result.json": {
+      "schema_version": 1,
+      "suite": "GPU GX digital requests, isolation, reset and migration",
+      "expected_checks": 37,
+      "passed": true,
+      "all_passed": true,
+      "success": true,
+      "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+      "test_sha256": "7a127367a2eeddf67aff63e110e5d4aeb5acd432fa0253e00109a2707f1fdbc4",
+      "machine": "tb371fc,ufs-enabled=off,rpmh-profile=off",
+      "qom_path": "/machine/gpu-gx-gdsc",
+      "migration_expected_checks": 12,
+      "expected_migration_attempts": 12,
+      "socket_directories_retained": true,
+      "scope": "GPU GX GDSCR/clamp/reset software contract with explicit reference reset and injected hardware/external votes; no analog, GPU, TrustZone execution, or whole-board migration claim",
+      "completed_checks": 37,
+      "passed_checks": 37,
+      "completed_migration_attempts": 8,
+      "rejected_migration_attempts": 4,
+      "receipt_sha256": "ef7b00abd1167417d5bc2943e1f03cdcb353c0fd421ea7db1e6e2f540d93078d",
+      "list_details": {
+        "checks": {
+          "length": 37,
+          "entries": [
+            {
+              "test": "default_reference_starts_collapsed",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "explicit_on_reference_starts_powered",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "downstream_software_enable_disable_read_modify_write",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "read_only_power_bit_cannot_override_votes",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "retain_ff_and_clock_wait_survive_power_changes",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "hardware_control_follows_external_input",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "hardware_input_is_ignored_in_software_mode",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "independent_vote_can_keep_software_collapsed_domain_powered",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "independent_vote_and_hardware_vote_release_independently",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "unknown_and_override_bits_are_rejected_without_partial_updates",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "subword_accesses_are_rejected_without_changing_registers",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "reset_restores_off_reference_but_preserves_external_inputs",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "reset_restores_on_reference_and_clears_retention_fields",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "elapsed_time_does_not_invent_a_hardware_vote",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "gx_does_not_replace_or_mutate_cx_controller",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "gx_clamp_and_two_reset_sources_have_digital_readback",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "gx_reserved_writes_are_atomic_and_reset_restores_reference",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "unknown_parent_does_not_become_power_good",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "known_off_parent_blocks_every_request_source",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "parent_changes_preserve_requests_and_isolation",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "default_unknown_rejects_all_three_windows",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "observed_clamp-io",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "observed_reset-asserted",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "observed_state-known",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "actual_rpmh_gfx_parent_is_independent_of_cx",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_software_on_with_retention_and_wait",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_hardware_mode_and_active_hardware_vote",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_independent_vote_while_hardware_vote_is_low",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_hidden_hardware_input_in_collapsed_software_mode",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_on_reference_preserves_later_reset_policy",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_unknown_parent_keeps_feedback_unknown",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_off_parent_keeps_live_request_off",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_none_to_reference_off_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_reference_off_to_none_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_gx_isolation_reset_and_control",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_off_reference_to_on_reference_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_on_reference_to_off_reference_rejected",
+              "status": "pass",
+              "passed": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 12,
+          "entries": [
+            {
+              "test": "migration_software_on_with_retention_and_wait",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_hardware_mode_and_active_hardware_vote",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_independent_vote_while_hardware_vote_is_low",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_hidden_hardware_input_in_collapsed_software_mode",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_on_reference_preserves_later_reset_policy",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_unknown_parent_keeps_feedback_unknown",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_off_parent_keeps_live_request_off",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_none_to_reference_off_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_reference_off_to_none_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_gx_isolation_reset_and_control",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_off_reference_to_on_reference_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_on_reference_to_off_reference_rejected",
+              "status": "pass",
+              "passed": true
+            }
+          ]
+        },
+        "migration_attempts": {
+          "length": 12,
+          "entries": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              "destination_exit": 1
+            },
+            {
+              "destination_exit": 1
+            },
+            {},
+            {
+              "destination_exit": 1
+            },
+            {
+              "destination_exit": 1
+            }
+          ]
+        }
+      }
+    },
+    "tb371fc-results/components/52-gpu-cx-gdsc/fixtures/data/result.json": {
+      "schema_version": 1,
+      "suite": "GPU CX GDSC normal/votable actual QTest",
+      "expected_checks": 26,
+      "migration_expected_checks": 8,
+      "expected_migration_attempts": 9,
+      "passed": true,
+      "all_passed": true,
+      "success": true,
+      "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+      "test_sha256": "f56b85ff6557c3d4c3fcd6a4fda93fb181a4f20a16c122c7b47fa35907da8d11",
+      "transport_sha256": "08754321c8bd6e361ea33f722bd0a4c813419e053618f4d4a48a9dd1bffaa1bf",
+      "machine": "tb371fc,ufs-enabled=off",
+      "qom_path": "/machine/gpu-cx-gdsc",
+      "socket_directories_retained": true,
+      "scope": "Two four-byte register windows; digital reference feedback; three-valued parent/votes; UFS disabled for component migration; no analogue/GPU/full-board claim",
+      "completed_migration_attempts": 6,
+      "rejected_migration_attempts": 3,
+      "completed_checks": 26,
+      "passed_checks": 26,
+      "receipt_sha256": "e4560872cf5bb0b137a82319e3ddd799ee641e3b38ed7664fb7019cf7c2c4302",
+      "list_details": {
+        "migration_attempts": {
+          "length": 9,
+          "entries": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              "destination_exit": 1
+            },
+            {
+              "destination_exit": 1
+            },
+            {
+              "destination_exit": 1
+            }
+          ]
+        },
+        "checks": {
+          "length": 26,
+          "entries": [
+            {
+              "test": "default_unknown_is_not_initialized_by_time",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "explicit_reference_does_not_assume_parent_on",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "all_three_valued_and_or_combinations",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "two_windows_change_only_at_feedback_deadline",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "parent_off_preserves_request_and_mmio_access",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "unknown_parent_cancels_pending_on_without_late_success",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "known_parent_off_cancels_pending_enable",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "repeated_votes_and_config_do_not_postpone_deadline",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "reverse_and_reenable_cancel_old_transition",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "external_vote_keeps_power_without_hlos_vote",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "validity_tracks_unknown_votes_with_hlos_dominance",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "retain_and_clock_wait_config_are_latched_without_new_power_vote",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "status_window_is_read_only_and_power_bit_cannot_be_forged",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "unsupported_modes_and_bits_preserve_request_timer_and_feedback",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "invalid_subword_accesses_do_not_initialize_or_mutate",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "reset_cancels_old_timer_and_preserves_held_external_input",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "default_reset_restores_unknown_control_without_erasing_inputs",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "actual_shared_rpmh_cx_votes_drive_parent_and_feedback",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_unknown",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_pending_on",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_pending_off",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_external",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_actual_rpmh_and_gdsc_pending_in_two_stages",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_unknown_to_reference_profile_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_reference_to_unknown_profile_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_transition_delay_mismatch_rejected",
+              "status": "pass",
+              "passed": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 8,
+          "entries": [
+            {
+              "test": "migration_unknown",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_pending_on",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_pending_off",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_external",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_actual_rpmh_and_gdsc_pending_in_two_stages",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_unknown_to_reference_profile_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_reference_to_unknown_profile_rejected",
+              "status": "pass",
+              "passed": true
+            },
+            {
+              "test": "migration_transition_delay_mismatch_rejected",
+              "status": "pass",
+              "passed": true
+            }
+          ]
+        }
+      }
+    },
+    "tb371fc-results/components/53-aop-reference-peer/fixtures/data/result.json": {
+      "schema_version": 1,
+      "suite": "AOP reference QDSS vote peer",
+      "machine": "tb371fc,ufs-enabled=off,aop-profile=reference-qdss-vote",
+      "expected_checks": 30,
+      "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+      "test_sha256": "447cc07b5ae45d5b1e669757961d60a7f01928c48c8ad9a6bd60916030ecbc1d",
+      "expected_completed_migrations": 6,
+      "expected_rejected_migrations": 2,
+      "scope": "Real QTest/IPCC/GIC, logical GPIO votes and process migration; no physical frequency or AOP firmware claim",
+      "guest_cpu_executed": false,
+      "ipcc_output_intercepted": false,
+      "passed": true,
+      "all_passed": true,
+      "elapsed_seconds": 7.155,
+      "completed_migrations": 6,
+      "rejected_migration_attempts": 2,
+      "receipt_sha256": "50ae45dc56bfce0e437cab70664aaf4fd574d95bc042661eaac46ef2821822c7",
+      "list_details": {
+        "checks": {
+          "length": 30,
+          "entries": [
+            {
+              "name": "initialized_reference_descriptor",
+              "passed": true
+            },
+            {
+              "name": "link_requires_actual_ack_and_doorbell",
+              "passed": true
+            },
+            {
+              "name": "channel_requires_both_sides_ack",
+              "passed": true
+            },
+            {
+              "name": "premature_packet_is_not_handshake_completion",
+              "passed": true
+            },
+            {
+              "name": "wrong_ipcc_route_cannot_activate_peer",
+              "passed": true
+            },
+            {
+              "name": "payload_and_length_require_a_new_doorbell",
+              "passed": true
+            },
+            {
+              "name": "vendor_96_byte_qdss_vote_drives_output",
+              "passed": true
+            },
+            {
+              "name": "sixty_four_byte_frames_keep_votes_independent",
+              "passed": true
+            },
+            {
+              "name": "duplicate_doorbells_do_not_replay",
+              "passed": true
+            },
+            {
+              "name": "unsupported_services_are_not_consumed",
+              "passed": true
+            },
+            {
+              "name": "unsupported_levels_are_not_consumed",
+              "passed": true
+            },
+            {
+              "name": "malformed_and_extra_commands_are_not_consumed",
+              "passed": true
+            },
+            {
+              "name": "invalid_length_and_missing_nul_are_not_consumed",
+              "passed": true
+            },
+            {
+              "name": "modified_descriptor_and_bounds_are_not_trusted",
+              "passed": true
+            },
+            {
+              "name": "fabricated_ack_bytes_cannot_create_connected_phase",
+              "passed": true
+            },
+            {
+              "name": "close_preserves_votes_and_refuses_staged_message",
+              "passed": true
+            },
+            {
+              "name": "masked_completion_uses_real_ipcc_and_gic",
+              "passed": true
+            },
+            {
+              "name": "stale_irq_cannot_ack_an_unknown_packet",
+              "passed": true
+            },
+            {
+              "name": "reset_cancels_work_and_reinitializes_only_reference_ranges",
+              "passed": true
+            },
+            {
+              "name": "ipcc_full_retry_never_replays_service",
+              "passed": true
+            },
+            {
+              "name": "migrate_idle_votes_and_outputs",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_pending_message_exactly_once",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_pending_link_handshake",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_unknown_packet_remains_unconsumed",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_masked_reply_preserves_real_ipcc_pending",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_pending_full_ipcc_notification",
+              "passed": true,
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "reject_none_to_reference_migration",
+              "passed": true,
+              "destination_exit": 1
+            },
+            {
+              "name": "reject_reference_to_none_migration",
+              "passed": true,
+              "destination_exit": 1
+            },
+            {
+              "name": "default_and_explicit_none_keep_raw_sram",
+              "passed": true
+            },
+            {
+              "name": "invalid_profile_is_rejected",
+              "passed": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 6,
+          "entries": [
+            {
+              "name": "migrate_idle_votes_and_outputs",
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_pending_message_exactly_once",
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_pending_link_handshake",
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_unknown_packet_remains_unconsumed",
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_masked_reply_preserves_real_ipcc_pending",
+              "source_status": "completed",
+              "target_status": "completed"
+            },
+            {
+              "name": "migrate_pending_full_ipcc_notification",
+              "source_status": "completed",
+              "target_status": "completed"
+            }
+          ]
+        },
+        "rejected_migrations": {
+          "length": 2,
+          "entries": [
+            {
+              "name": "reject_none_to_reference_migration",
+              "destination_exit": 1
+            },
+            {
+              "name": "reject_reference_to_none_migration",
+              "destination_exit": 1
+            }
+          ]
+        }
+      }
+    },
+    "tb371fc-results/components/67-smmuv2-migration/fixtures/data/result.json": {
+      "all_passed": true,
+      "completed_utc": "2026-11-23T17:30:25.129421+00:00",
+      "elapsed_seconds": 1.377223,
+      "geometry_only": false,
+      "kind": "tb371fc-smmuv2-process-migration",
+      "machine": "tb371fc,ufs-enabled=off",
+      "ram_per_process": "128 MiB",
+      "schema_version": 1,
+      "scope": "Paused process transfers; apps SID 0x42 translated DMA, GPU ATS/register state, fault IRQ and reset continuation.",
+      "started_utc": "2026-11-23T17:30:23.705363+00:00",
+      "receipt_sha256": "026ece9b220930becf1c67ac38856ed554fa2e9449fd2bb328d523ac37839e73",
+      "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+      "nested_input_sha256": {
+        "migration_helper": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8",
+        "qemu": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+        "test": "3b11bab007060d80dfc24ac577d02d51b8320fac7e4e151a707c21bea245721c",
+        "transport": "4ab5857e40f3d320656677812abb86d2683c310764d35baa7a32b4aa53572fbd"
+      },
+      "list_details": {
+        "checks": {
+          "length": 18,
+          "entries": [
+            {
+              "name": "real-gic-source-translation-and-faults",
+              "passed": true
+            },
+            {
+              "name": "real-gic-actual-transfer-completed",
+              "passed": true
+            },
+            {
+              "name": "real-gic-registers-page-tables-and-ram-restored",
+              "passed": true
+            },
+            {
+              "name": "restored-global-fault-reaches-real-gic-until-w1c",
+              "passed": true
+            },
+            {
+              "name": "uncleared-context-blocks-dma-and-clearing-restores-writes",
+              "passed": true
+            },
+            {
+              "name": "highest-apps-bank-retains-independent-fault-and-stream-syndrome",
+              "passed": true
+            },
+            {
+              "name": "gpu-ats-permissions-and-masked-fault-continue-after-load",
+              "passed": true
+            },
+            {
+              "name": "destination-gpu-ats-failure-does-not-create-client-irq",
+              "passed": true
+            },
+            {
+              "name": "destination-table-replacement-and-tlbi-use-new-translation",
+              "passed": true
+            },
+            {
+              "name": "destination-reset-clears-translation-and-fault-state-keeps-ram",
+              "passed": true
+            },
+            {
+              "name": "destination-reconfiguration-after-reset-resumes-dma",
+              "passed": true
+            },
+            {
+              "name": "output-wires-source-translation-and-faults",
+              "passed": true
+            },
+            {
+              "name": "output-wires-actual-transfer-completed",
+              "passed": true
+            },
+            {
+              "name": "output-wires-registers-page-tables-and-ram-restored",
+              "passed": true
+            },
+            {
+              "name": "all-global-and-context-output-wires-restored",
+              "passed": true
+            },
+            {
+              "name": "restored-output-wires-clear-independently",
+              "passed": true
+            },
+            {
+              "name": "reject-smrs-128-to-64",
+              "passed": true
+            },
+            {
+              "name": "reject-smrs-64-to-128",
+              "passed": true
+            }
+          ]
+        },
+        "migrations": {
+          "length": 4,
+          "entries": [
+            {
+              "mode": "real-gic",
+              "source_status_from_qmp": "completed",
+              "destination_status_from_qmp": "completed"
+            },
+            {
+              "mode": "output-wires",
+              "source_status_from_qmp": "completed",
+              "destination_status_from_qmp": "completed"
+            },
+            {
+              "mode": "reject-smrs-128-to-64",
+              "destination_exit": 1,
+              "source_smrs": 128,
+              "destination_smrs": 64,
+              "source_status_from_qmp": "failed"
+            },
+            {
+              "mode": "reject-smrs-64-to-128",
+              "destination_exit": 1,
+              "source_smrs": 64,
+              "destination_smrs": 128,
+              "source_status_from_qmp": "failed"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "component_source_field_note": "The source_commit fields inside vendor device component reports identify the pinned primary kernel source. The aggregate receipts identify QEMU source 52492a; these fields are not interchangeable.",
+  "unit_stderr": {
+    "tb371fc-results/components/00-ci-verdict-unit/stderr.log": ".............................\n----------------------------------------------------------------------\nRan 29 tests in 1.103s\n\nOK\n",
+    "tb371fc-results/components/01-smem-observer-unit/stderr.log": ".................\n----------------------------------------------------------------------\nRan 17 tests in 0.437s\n\nOK\n",
+    "tb371fc-results/components/02-aop-observer-unit/stderr.log": "..............\n----------------------------------------------------------------------\nRan 14 tests in 0.050s\n\nOK\n"
+  },
+  "cpu_and_shared_ufs": {
+    "workflow_run": 45226846782,
+    "source_commit": "52492a797d2acd9c918a8639564e8ff3e7beab3f",
+    "job_id": 137875527095,
+    "status": "completed",
+    "conclusion": "success",
+    "actual_complete_job_log_read": true,
+    "log_chars": 250797,
+    "pci_ufs_pass_lines": [
+      "2026-11-23T17:26:13.3034520Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/reg-read",
+      "2026-11-23T17:26:13.6485150Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/init",
+      "2026-11-23T17:26:13.9939953Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-read-write",
+      "2026-11-23T17:26:14.3423257Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-read-write",
+      "2026-11-23T17:26:14.6889583Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/no-prdt",
+      "2026-11-23T17:26:15.0359928Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/sync-cache",
+      "2026-11-23T17:26:15.3836349Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/long-prdt",
+      "2026-11-23T17:26:15.7325053Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/short-prdt",
+      "2026-11-23T17:26:16.0822561Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-cq-wraparound",
+      "2026-11-23T17:26:16.4311796Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-flag",
+      "2026-11-23T17:26:16.7828157Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-attribute",
+      "2026-11-23T17:26:17.1324821Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-desciptor",
+      "2026-11-23T17:26:17.4782292Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-init",
+      "2026-11-23T17:26:18.0220278Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-read-write",
+      "2026-11-23T17:26:20.0643115Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/hid"
+    ],
+    "variant_pass_lines": [
+      "2026-11-23T17:26:20.3566448Z PASS default: 94 guest checks",
+      "2026-11-23T17:26:20.4932630Z PASS observed-revidr: 94 guest checks",
+      "2026-11-23T17:26:20.6208081Z PASS l2-128k: 94 guest checks",
+      "2026-11-23T17:26:20.7495317Z PASS l2-256k: 94 guest checks",
+      "2026-11-23T17:26:20.8762688Z PASS l3-512k: 95 guest checks",
+      "2026-11-23T17:26:21.0018321Z PASS l3-1m: 95 guest checks",
+      "2026-11-23T17:26:21.1283041Z PASS l3-2m: 95 guest checks",
+      "2026-11-23T17:26:21.2553555Z PASS l3-4m: 95 guest checks",
+      "2026-11-23T17:26:21.3768238Z PASS crypto-off: 96 guest checks"
+    ],
+    "rejected_configuration_pass_lines": [
+      "2026-11-23T17:26:21.3833688Z PASS rejected ,l2-cache-size=1M",
+      "2026-11-23T17:26:21.3897286Z PASS rejected ,l3-cache-size=128K"
+    ],
+    "actual_guest_checks": 852,
+    "variants": 9,
+    "rejected_configurations": 2,
+    "pci_ufs_cases": 15,
+    "artifact_digest_scope": "GitHub API metadata only; separate A77 binary ZIP not downloaded and not substituted for board QEMU",
+    "artifact": {
+      "id": 14846290164,
+      "name": "tb371fc-a77-gates-52492a797d2acd9c918a8639564e8ff3e7beab3f",
+      "size_in_bytes": 28321267,
+      "url": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/artifacts/14846290164",
+      "archive_download_url": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/artifacts/14846290164/zip",
+      "expired": false,
+      "created_at": "2026-11-23T17:26:24Z",
+      "expires_at": "2026-12-07T17:26:21Z",
+      "updated_at": "2026-11-23T17:26:24Z",
+      "digest": "sha256:163b61d6ada61012a4fcfe006914d5b197251feb0bf1923eedbb1fb50e0d0b62",
+      "workflow_run": {
+        "id": 45226846782,
+        "repository_id": 1468024382,
+        "head_repository_id": 1468024382,
+        "head_branch": "tb371fc-verified-wholeboard-20261123-a47",
+        "head_sha": "52492a797d2acd9c918a8639564e8ff3e7beab3f"
+      }
+    }
+  },
+  "migration_stream_readback": {
+    "actual_files": 17,
+    "groups": {
+      "counter_streams_from_zip": 3,
+      "noc_streams_from_zip": 4,
+      "smmuv500_streams_from_zip": 5,
+      "tsens24xx_streams_from_zip": 5
+    },
+    "all_read_from_same_zip": true,
+    "details": "Per-file hashes, sizes, decoded payloads, observed QMP/runtime comparisons and rejection diagnostics are contained in selected_component_receipts."
+  },
+  "tsens_independent_verifier": {
+    "source": "tsens24xx-artifact-verifier.py",
+    "git_blob": "57524c5e412617006d7038a52b7d06a648427410",
+    "sha256": "003ba11a1946ec092f8d80d147f4f6572d1aea2c952786ed9ac443e7dabc18ba",
+    "executed_on_actual_downloaded_zip": true,
+    "all_five_stream_files_read": true,
+    "fully_decoded_sections": 6,
+    "payload_bytes_per_controller": 375,
+    "completed_process_roundtrips": 2,
+    "profile_rejections": 2,
+    "single_field_corruption_rejections": 2,
+    "unknown_profile_stream_is_third_completed_roundtrip": false,
+    "immutable_prefix_basis": "Fixed board geometry/profile/bootstrap contract, not runtime QOM reads",
+    "mutable_state_basis": "Actual stopped source QMP runtime observations plus independently specified scenarios; test decoder was not imported"
+  },
+  "tsens_original_result": {
+    "file": "tsens24xx-52492a.json",
+    "zip_member": "tb371fc-results/components/50-tsens24xx-reference/fixtures/data/result.json",
+    "bytes": 15579,
+    "sha256": "1b9f72bb4575c2b392130f671278f0e442de7a8d8f9f4eb70add367e4fb034bd",
+    "git_blob": "7db0011b912d17454f9ed7370387526f114e2938",
+    "exact_raw_bytes_and_final_lf_preserved": true
+  },
+  "preserved_default_branch": {
+    "written_by_this_work": false,
+    "integrated_baseline_commit": "339b9cd277aeae84fba52b60ae34ede90b7ff101",
+    "latest_observed_commit": "69ca28dec6add998d252fa6436dfcc9b9cab6e36",
+    "latest_two_concurrent_granule_commits_in_this_binary": false,
+    "subsequent_merge_requires_own_combined_ci": true
+  },
+  "initial_failed_attempt": "public-ci-298f21-failure.json",
+  "test_oracle_fix": "7f32c71f82b8817c43ed07bf70cf986bd8b802ba",
+  "prior_checkpoint": "public-ci-3ef98.json",
+  "development_preflight": "development-validation-52492a.json",
+  "limitations": [
+    "The formal CI does not use the private production Image or complete native DT.",
+    "Synthetic TSENS temperature, all-channel bootstrap mask and 1 ms sampling are explicit references, not tablet measurements.",
+    "Per-device migration tests disable UFS and do not establish complete-board migration.",
+    "The separate CPU artifact and board artifact are different builds; no CPU ZIP hash is substituted for the board binary.",
+    "Full native-DT userspace, Android, GPU/NPU execution and native SMMU DMA remain unpassed; see native-52492a.json."
+  ]
+}
