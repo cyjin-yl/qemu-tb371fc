@@ -20,4 +20,26 @@ OBJECT_DECLARE_SIMPLE_TYPE(ArmSMMUv2State, ARM_SMMUV2)
 AddressSpace *arm_smmuv2_get_dma_as(DeviceState *dev, uint16_t sid);
 MemoryRegion *arm_smmuv2_get_dma_mr(DeviceState *dev, uint16_t sid);
 
+/*
+ * Optional board companion, not architectural state. The blocker is called
+ * under the SMMU lock and must not call back into the SMMU. Notify permission
+ * changes after updating its state to invalidate real external IOMMU caches.
+ * The companion owns and migrates its state; a missing companion cannot be
+ * substituted during migration. Attach/detach only with the machine stopped.
+ */
+typedef bool (*ArmSMMUv2StreamBlocked)(void *opaque, uint16_t sid);
+bool arm_smmuv2_set_stream_blocker(DeviceState *dev,
+                                  ArmSMMUv2StreamBlocked blocked,
+                                  void *opaque, Error **errp);
+void arm_smmuv2_stream_permissions_changed(DeviceState *dev);
+
+/*
+ * Nonsecure privileged debug request. Shares ordinary SID matching,
+ * translation, permissions and fault/IRQ side effects. Only the external
+ * halt filter is bypassed, so a halted TBU can perform an ECATS request.
+ * This does not replace architectural context-bank ATS operations.
+ */
+IOMMUTLBEntry arm_smmuv2_debug_translate(DeviceState *dev, uint16_t sid,
+                                        hwaddr addr, bool write);
+
 #endif

@@ -31,6 +31,7 @@
 #include "qom/object.h"
 #include "hw/arm/boot.h"
 #include "hw/arm/arm-smmuv2.h"
+#include "hw/arm/qcom-smmuv500.h"
 #include "hw/arm/machines-qom.h"
 #include "hw/char/qcom-geni-uart.h"
 #include "hw/core/boards.h"
@@ -440,7 +441,7 @@ static uint32_t tb371fc_add_smmu_fdt(void *fdt, const char *path,
                      count * 3 * sizeof(uint32_t));
     qemu_fdt_setprop_string(fdt, path, "qemu,model-note",
                             "Architectural SMMUv2 stage-1 AArch64 4K walks; "
-                            "reference IDRs; Qualcomm TCU/TBU extensions absent");
+                            "reference IDRs; apps TCU/TBU require explicit reference profile");
     return phandle;
 }
 
@@ -1146,6 +1147,22 @@ static DeviceState *tb371fc_create_smmu(TB371FCMachineState *s,
     return dev;
 }
 
+static void tb371fc_create_smmuv500(TB371FCMachineState *s)
+{
+    DeviceState *dev = qdev_new(TYPE_QCOM_SMMUV500);
+
+    object_property_add_child(OBJECT(s), "apps-smmu-v500", OBJECT(dev));
+    object_property_set_link(OBJECT(dev), "smmu", OBJECT(s->apps_smmu),
+                             &error_fatal);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, QCOM_SMMUV500_TCU_BASE);
+    if (qtest_enabled()) {
+        /* A real external IOMMU cache client, absent from normal TCG. */
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 1,
+                       QCOM_SMMUV500_QTEST_CACHE_BASE);
+    }
+}
+
 static void tb371fc_create_smmus(TB371FCMachineState *s)
 {
     s->apps_smmu = tb371fc_create_smmu(s, "apps-smmu",
@@ -1162,6 +1179,7 @@ static void tb371fc_create_smmus(TB371FCMachineState *s)
         memory_region_add_subregion(get_system_memory(), 0x50000000,
                                      &s->qtest_dma_alias);
     }
+    tb371fc_create_smmuv500(s);
 }
 
 
