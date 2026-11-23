@@ -250,7 +250,7 @@ def vendor_96_byte_qdss_vote_drives_output(r):
     return {"actual_gpio_output_observed": "qdss-vote", "padding_byte": 0xa5}
 
 
-def upstream_64_byte_qdss_ao_is_independent(r):
+def sixty_four_byte_frames_keep_votes_independent(r):
     r.intercept_vote("qdss-ao-vote")
     r.connect_peer()
     r.vote("qdss_ao", 1, size=64)
@@ -790,7 +790,7 @@ ORDINARY_TESTS = [
     wrong_ipcc_route_cannot_activate_peer,
     payload_and_length_require_a_new_doorbell,
     vendor_96_byte_qdss_vote_drives_output,
-    upstream_64_byte_qdss_ao_is_independent,
+    sixty_four_byte_frames_keep_votes_independent,
     duplicate_doorbells_do_not_replay,
     unsupported_services_are_not_consumed,
     unsupported_levels_are_not_consumed,

@@ -56,7 +56,9 @@ invented frequency map or arbitration between these two resource names.
 The vendor driver sends a 96-byte stack buffer; bytes after its first NUL
 may be nonzero. The upstream driver sends a 64-byte zero-filled buffer.
 The peer therefore parses only the command before the first NUL within the
-published length. Trailing bytes are padding, never a second command.
+published length. It copies a bounded local snapshot before validating and
+parsing, so concurrent guest SRAM writes cannot invalidate the NUL check.
+Trailing bytes are padding, never a second command.
 
 Unknown classes, resources, values (including unimplemented known levels
 2..7), additional keys, alternate syntax, missing NUL, invalid lengths,

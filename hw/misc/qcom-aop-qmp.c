@@ -140,7 +140,7 @@ static void aop_process(QcomAopQmpState *s)
     uint32_t link, channel, len, expected_channel;
     unsigned resource;
     bool vote;
-    const char *command;
+    char command[QMP_MBOX_SIZE - sizeof(uint32_t)];
     static const char *const commands[2][2] = {
         { "{class: clock, res: qdss, val: 0}",
           "{class: clock, res: qdss, val: 1}" },
@@ -221,8 +221,17 @@ static void aop_process(QcomAopQmpState *s)
     if (!len) {
         return;
     }
-    if ((len & 3) || len > QMP_MBOX_SIZE - sizeof(uint32_t) ||
-        !memchr(s->ram + QMP_TX + 4, 0, len)) {
+    if ((len & 3) || len > sizeof(command)) {
+        aop_reject(s, QMP_ERR_LENGTH);
+        return;
+    }
+    /*
+     * Another guest CPU can still write shared SRAM. Validate and parse one
+     * bounded local snapshot; never strcmp() mutable guest memory after a
+     * separate NUL check.
+     */
+    memcpy(command, s->ram + QMP_TX + 4, len);
+    if (!memchr(command, 0, len)) {
         aop_reject(s, QMP_ERR_LENGTH);
         return;
     }
@@ -230,7 +239,6 @@ static void aop_process(QcomAopQmpState *s)
      * Vendor clk-aop-qmp sends a 96-byte stack buffer. Bytes after its first
      * NUL are padding and need not be zero. Upstream qcom_aoss sends 64 bytes.
      */
-    command = (const char *)s->ram + QMP_TX + 4;
     for (resource = 0; resource < ARRAY_SIZE(commands); resource++) {
         for (vote = false; ; vote = true) {
             if (!strcmp(command, commands[resource][vote])) {
