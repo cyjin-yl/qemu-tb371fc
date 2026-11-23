@@ -8,6 +8,17 @@ but failed before sending a migration command, because QTest rejects
 and [source/artifact binding](../evidence/ufs-migration-20261123/first-attempt-c0ebdb7/source-binding.json)
 are retained. The fixture now caches the actual timestamp returned by each
 successful nonzero step and uses that value to align the receiver.
+The [second executed gate](../evidence/ufs-migration-20261123/second-attempt-b2a9131/result.json)
+completed all three process checkpoints and fifteen groups, then failed its
+LUN-capacity rejection assertion. The receiver correctly exited with status 1;
+the fixture incorrectly expected the internal field name `migration_config`
+in a VMState equality diagnostic that reports only the first unequal values
+(`79 != c2`). The original report, diagnostic and
+[artifact binding](../evidence/ufs-migration-20261123/second-attempt-b2a9131/source-binding.json)
+remain unchanged. The corrected fixture captures actual receiver profile
+streams and requires the exact first unequal field/value diagnostic. Full
+execution of this corrected fixture is still pending.
+
 The generic `ufs` PCI and `ufs-sysbus` devices remain unmigratable. Enabling this
 format does not establish a whole-board boot or migration claim.
 
@@ -78,7 +89,11 @@ rejection scenarios, with at most one 128 MiB QEMU process at a time:
   UPIU and data DMA on UFS SID `0xe0`. Writes are flushed and compared to the
   host file; resumed reads check exact payloads.
 - Controller version profile, transfer-slot count and LUN capacity mismatches reject
-  the receiver. Corrupt doorbell, WB bound and SCSI queue streams also reject.
+  the receiver. Three additional quiescent source captures provide each proposed
+  receiver's actual immutable prefix; they are not counted as successful
+  transfers. The gate identifies the first unequal field and requires its exact
+  VMState diagnostic, receiver exit 1, no RESUME event and unchanged medium.
+  Corrupt doorbell, WB bound and SCSI queue streams also reject.
 - A real unmapped UTRD produces an unfinished source DMA request and a failed
   checkpoint. The test then clears its SMMU fault, resets HCE and continues
   actual I/O on that same source.

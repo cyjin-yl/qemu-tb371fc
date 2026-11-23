@@ -1,0 +1,471 @@
+{
+  "schema_version": 1,
+  "kind": "sm8250-ufs-quiescent-migration",
+  "started_utc": "2026-11-23T20:26:47.603201+00:00",
+  "all_passed": false,
+  "checks": [
+    {
+      "name": "source-translated-write-read-flush-and-host-media-match",
+      "passed": true
+    },
+    {
+      "name": "active-uic-qmp-completed-and-receiver-paused",
+      "passed": true
+    },
+    {
+      "name": "hci-ram-and-pending-transfer-irq-preserved",
+      "passed": true
+    },
+    {
+      "name": "pending-uic-finishes-on-original-deadline-and-irq-clears",
+      "passed": true
+    },
+    {
+      "name": "query-wire-endian-attribute-and-wb-flags-accounting-preserved",
+      "passed": true
+    },
+    {
+      "name": "scsi-child-sense-state-preserved",
+      "passed": true
+    },
+    {
+      "name": "receiver-smmu-translation-dma-write-read-and-host-media-match",
+      "passed": true
+    },
+    {
+      "name": "hibern8-phy-off-qmp-completed-and-receiver-paused",
+      "passed": true
+    },
+    {
+      "name": "hibern8-phy-off-retains-link-and-rejects-data-doorbell",
+      "passed": true
+    },
+    {
+      "name": "phy-timer-qmp-completed-and-receiver-paused",
+      "passed": true
+    },
+    {
+      "name": "phy-ready-deadline-and-symbol-clock-propagation-preserved",
+      "passed": true
+    },
+    {
+      "name": "second-and-third-receivers-continue-real-media-io",
+      "passed": true
+    },
+    {
+      "name": "restored-virtual-rt-idle-timer-flushes-wb-in-hibern8",
+      "passed": true
+    },
+    {
+      "name": "reject-hw-version-rejected-without-resume-or-media-change",
+      "passed": true
+    },
+    {
+      "name": "reject-nutrs-rejected-without-resume-or-media-change",
+      "passed": true
+    }
+  ],
+  "migrations": [
+    {
+      "name": "active-uic",
+      "source": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 15,
+        "total-time": 21,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 331910,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 908.9544000000001,
+          "transferred": 2272386,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32767,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 36864,
+          "normal": 9
+        }
+      },
+      "target": {
+        "status": "completed"
+      },
+      "external_qtest_clock_ns": 380333,
+      "stream_sha256": "3ec43d03630571353fd622625e4fd9f5453f0f8151f9d370944022deab0c85b0",
+      "stream_bytes": 2272386
+    },
+    {
+      "name": "hibern8-phy-off",
+      "source": {
+        "status": "completed",
+        "setup-time": 0,
+        "downtime": 15,
+        "total-time": 20,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 331910,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 908.9544000000001,
+          "transferred": 2272386,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32767,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 36864,
+          "normal": 9
+        }
+      },
+      "target": {
+        "status": "completed"
+      },
+      "external_qtest_clock_ns": 621000,
+      "stream_sha256": "908870bf31fb3eb1f6cba2d543a3deda3edc8f387f7eeca2cd76d7581c4e6665",
+      "stream_bytes": 2272386
+    },
+    {
+      "name": "phy-timer",
+      "source": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 15,
+        "total-time": 20,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 331910,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 956.7941052631579,
+          "transferred": 2272386,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32767,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 36864,
+          "normal": 9
+        }
+      },
+      "target": {
+        "status": "completed"
+      },
+      "external_qtest_clock_ns": 624000,
+      "stream_sha256": "a846a1abc1f525e0203c6c1c21bd7ab642587de78d9a6eb41322c5a8a8960c7c",
+      "stream_bytes": 2272386
+    }
+  ],
+  "rejections": [
+    {
+      "name": "reject-hw-version",
+      "exit_code": 1,
+      "expected_diagnostic": "qcom-sm8250-ufs",
+      "qmp_error": null,
+      "stream_sha256": "3ec43d03630571353fd622625e4fd9f5453f0f8151f9d370944022deab0c85b0",
+      "media_sha256": "9ddf17da8f82cb5743a5a367566a5b2f6de3a9fe95b2e61a01d940109e741e63"
+    },
+    {
+      "name": "reject-nutrs",
+      "exit_code": 1,
+      "expected_diagnostic": "qcom-sm8250-ufs",
+      "qmp_error": null,
+      "stream_sha256": "3ec43d03630571353fd622625e4fd9f5453f0f8151f9d370944022deab0c85b0",
+      "media_sha256": "9ddf17da8f82cb5743a5a367566a5b2f6de3a9fe95b2e61a01d940109e741e63"
+    }
+  ],
+  "processes": [
+    {
+      "name": "source",
+      "command": [
+        "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "qtest",
+        "-m",
+        "128M",
+        "-display",
+        "none",
+        "-serial",
+        "null",
+        "-monitor",
+        "none",
+        "-qtest",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/source/qtest,server=on,wait=off",
+        "-qtest-log",
+        "/dev/null",
+        "-qmp",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/source/qmp,server=on,wait=off",
+        "-blockdev",
+        "driver=file,node-name=file0,filename=/home/runner/work/_temp/tb371fc-results/ufs-migration/disk.raw",
+        "-blockdev",
+        "driver=raw,node-name=disk0,file=file0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-S"
+      ],
+      "exit_code": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "active-uic-receiver",
+      "command": [
+        "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "qtest",
+        "-m",
+        "128M",
+        "-display",
+        "none",
+        "-serial",
+        "null",
+        "-monitor",
+        "none",
+        "-qtest",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/active-uic-receiver/qtest,server=on,wait=off",
+        "-qtest-log",
+        "/dev/null",
+        "-qmp",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/active-uic-receiver/qmp,server=on,wait=off",
+        "-blockdev",
+        "driver=file,node-name=file0,filename=/home/runner/work/_temp/tb371fc-results/ufs-migration/disk.raw",
+        "-blockdev",
+        "driver=raw,node-name=disk0,file=file0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-S",
+        "-incoming",
+        "defer"
+      ],
+      "exit_code": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "hibern8-phy-off-receiver",
+      "command": [
+        "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "qtest",
+        "-m",
+        "128M",
+        "-display",
+        "none",
+        "-serial",
+        "null",
+        "-monitor",
+        "none",
+        "-qtest",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/hibern8-phy-off-receiver/qtest,server=on,wait=off",
+        "-qtest-log",
+        "/dev/null",
+        "-qmp",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/hibern8-phy-off-receiver/qmp,server=on,wait=off",
+        "-blockdev",
+        "driver=file,node-name=file0,filename=/home/runner/work/_temp/tb371fc-results/ufs-migration/disk.raw",
+        "-blockdev",
+        "driver=raw,node-name=disk0,file=file0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-S",
+        "-incoming",
+        "defer"
+      ],
+      "exit_code": 0,
+      "stderr_sha256": "734d3d3f0a68b574af00a1ccb655512c9aaa53ea14b38d993e9606a17d866bd5"
+    },
+    {
+      "name": "phy-timer-receiver",
+      "command": [
+        "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "qtest",
+        "-m",
+        "128M",
+        "-display",
+        "none",
+        "-serial",
+        "null",
+        "-monitor",
+        "none",
+        "-qtest",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/phy-timer-receiver/qtest,server=on,wait=off",
+        "-qtest-log",
+        "/dev/null",
+        "-qmp",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/phy-timer-receiver/qmp,server=on,wait=off",
+        "-blockdev",
+        "driver=file,node-name=file0,filename=/home/runner/work/_temp/tb371fc-results/ufs-migration/disk.raw",
+        "-blockdev",
+        "driver=raw,node-name=disk0,file=file0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-S",
+        "-incoming",
+        "defer"
+      ],
+      "exit_code": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "reject-hw-version",
+      "command": [
+        "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "qtest",
+        "-m",
+        "128M",
+        "-display",
+        "none",
+        "-serial",
+        "null",
+        "-monitor",
+        "none",
+        "-qtest",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/reject-hw-version/qtest,server=on,wait=off",
+        "-qtest-log",
+        "/dev/null",
+        "-qmp",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/reject-hw-version/qmp,server=on,wait=off",
+        "-blockdev",
+        "driver=file,node-name=file0,filename=/home/runner/work/_temp/tb371fc-results/ufs-migration/disk.raw",
+        "-blockdev",
+        "driver=raw,node-name=disk0,file=file0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-global",
+        "qcom-sm8250-ufs.hw-version=0x30000000",
+        "-S",
+        "-incoming",
+        "defer"
+      ],
+      "exit_code": 1,
+      "stderr_sha256": "686e39b14492fcf078d71587e41e42924c488025ce2592cd426e2644567f3b70"
+    },
+    {
+      "name": "reject-nutrs",
+      "command": [
+        "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "qtest",
+        "-m",
+        "128M",
+        "-display",
+        "none",
+        "-serial",
+        "null",
+        "-monitor",
+        "none",
+        "-qtest",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/reject-nutrs/qtest,server=on,wait=off",
+        "-qtest-log",
+        "/dev/null",
+        "-qmp",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/reject-nutrs/qmp,server=on,wait=off",
+        "-blockdev",
+        "driver=file,node-name=file0,filename=/home/runner/work/_temp/tb371fc-results/ufs-migration/disk.raw",
+        "-blockdev",
+        "driver=raw,node-name=disk0,file=file0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-global",
+        "qcom-sm8250-ufs.nutrs=16",
+        "-S",
+        "-incoming",
+        "defer"
+      ],
+      "exit_code": 1,
+      "stderr_sha256": "329837454fe37442eed415b9852ede8aee0d39ea59457ce9c73e0016d3da12e5"
+    },
+    {
+      "name": "reject-lun-capacity",
+      "command": [
+        "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "qtest",
+        "-m",
+        "128M",
+        "-display",
+        "none",
+        "-serial",
+        "null",
+        "-monitor",
+        "none",
+        "-qtest",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/reject-lun-capacity/qtest,server=on,wait=off",
+        "-qtest-log",
+        "/dev/null",
+        "-qmp",
+        "unix:/home/runner/work/_temp/tb371fc-results/ufs-migration/reject-lun-capacity/qmp,server=on,wait=off",
+        "-blockdev",
+        "driver=file,node-name=file0,filename=/home/runner/work/_temp/tb371fc-results/ufs-migration/different-capacity.raw",
+        "-blockdev",
+        "driver=raw,node-name=disk0,file=file0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-S",
+        "-incoming",
+        "defer"
+      ],
+      "exit_code": 1,
+      "stderr_sha256": "ef28cabe4abbfe74f4bf7bd6468e6f3187badf8fa030e0edf99b0ad82bf2731c"
+    }
+  ],
+  "qemu_sha256": "b9d6ff3ac1297ed50961eb11e94ebc7db2cb1dbbb8b029fe0829ddc848e95689",
+  "test_sha256": "eec61cd2b89cee2c32210afeab482f00bf95dbab0f2af1f83c5f0ffa2ece6e72",
+  "helpers_sha256": {
+    "test_ufs_sm8250.py": "ff55615ebcb5c60271dec2187fe959c52cb48a601fe1bf201a4273f2a62687c2",
+    "test_geni_migration.py": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8"
+  },
+  "scope": "Paused file checkpoints with UFS enabled and SID e0 stage-1 nonidentity DMA.",
+  "limits": [
+    "Only quiescent legacy storage queues; no in-flight SCSI or MCQ migration.",
+    "One QEMU process at a time, each with 128 MiB RAM.",
+    "QTest's external clock is explicitly aligned after load; it is not migrated device state.",
+    "The same external disk file is reused with locking enabled; media bytes are not migrated.",
+    "No native-DT boot, Android, silicon or complete-board compatibility claim."
+  ],
+  "error": "AssertionError: ('reject-lun-capacity', 'migration_config', \"qemu-system-aarch64: load of migration failed: Invalid argument: error while loading state for instance 0x0 of device 'qcom-sm8250-ufs': 79 != c2\\n\")",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_ufs_migration.py\", line 361, in main\n    rejected(\"reject-lun-capacity\", original, \"migration_config\", image=small)\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_ufs_migration.py\", line 242, in rejected\n    assert expected in text, (name, expected, text)\n           ^^^^^^^^^^^^^^^^\nAssertionError: ('reject-lun-capacity', 'migration_config', \"qemu-system-aarch64: load of migration failed: Invalid argument: error while loading state for instance 0x0 of device 'qcom-sm8250-ufs': 79 != c2\\n\")\n",
+  "elapsed_seconds": 1.192,
+  "passed_checks": 15
+}
