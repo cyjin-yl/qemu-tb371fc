@@ -186,6 +186,13 @@ def plan(args, runtime):
                          "expected_checks": 29, "migration_expected_checks": 10,
                          "socket_directories_retained": True},
                expected_lengths={"migrations": 10})
+        device("smem-reference-handoff", "test_smem_reference.py",
+               output="--out", result="file", count=22,
+               expected={"all_passed": True, "expected_checks": 22,
+                         "guest_cpu_executed": False,
+                         "native_sbl_captured": False,
+                         "remote_firmware_emulated": False},
+               expected_lengths={"migrations": 4})
         device("dcc-operations", "test_dcc_ops.py",
                output="--out", result="file", count=16)
         device("ufs-register-dma", "test_ufs_sm8250.py",
