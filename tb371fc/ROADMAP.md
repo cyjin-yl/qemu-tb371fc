@@ -21,7 +21,7 @@
 - [x] NoC QoS：47 物理端口 / 188 有效 word；20 项、2 次完成迁移、2 次 profile 拒绝、2 次损坏流拒绝通过。统一 `99ef` 完成 66/66 组件 + 4/4 Linux 和独立 A77/UFS；同一原厂运行只读核验 47 地址及 46 非延迟配置，越过 `0x016e9008`。
 - [x] apps QSMMUv500 TCU/10 TBU reference：36 项检查、2 次完成迁移、2 次 profile 拒绝和 2 次损坏流拒绝；统一 `3ef98` 的 67/67 组件 + 4/4 Linux 与独立 A77/UFS 全部通过。同一原厂运行越过 VERSION 异常、注册 TBU 资源客户端，继续到 SCSI/USB；未证明 native DMA、物理电源耦合或固件上下文交接。
 - [x] TSENS 有限数字参考：两控制器/32 通道的 [34 项检查、2 次完成迁移、2 次 profile 拒绝及 2 次损坏流拒绝](evidence/wholeboard-20261123-a47/tsens24xx-52492a.json)实际通过；[72 项统一 CI](evidence/wholeboard-20261123-a47/public-ci-52492a.json)与[同二进制完整原生 DT 运行](evidence/wholeboard-20261123-a47/native-52492a.json)已确认各 16670 轮参考采样并越过旧 TSENS fatal。温度/使能/1 ms 为显式假设，两个虚拟温度区 EINVAL、校准和物理热行为仍未通过。
-- [ ] CPUFreq 硬件域：最新实际 fatal 为 `qcom_cpufreq_hw_driver_probe+0x408/0x980` 读取 `0x18591100`；须以原厂 DT 和固定驱动契约实现有限接口，并在新组合上重新验证。
+- [ ] CPUFreq EPSS：[三域参考模型](docs/cpufreq-hw-reference.md)和 30 项检查已完成，覆盖稀疏 LUT、真实 Clock、八个计数器、三路 IRQ 与 84-byte VMState；新 74 项统一 CI 及同二进制原厂复测待执行。最近已观测阻塞仍是 52492a 的 `0x18591100`，合成表不声称原厂频率或电压。
 - [ ] 原厂完整 DT 用户态及 Android 启动；不能将 71 项公共成功、控制器注册或 NoC 配置匹配当作整板可用。
 
 本轮精确构建与原厂证据见 [README](../README.md) 和
@@ -82,7 +82,9 @@ GCC bootstrap 状态、部分 fabric 输入、QUP version 和设备排序延时�
 - [x] UFS Sysbus HCI、Qualcomm wrapper/QMP PHY、GCC 依赖和实际 guest-memory DMA/SCSI 后端。
 - [x] UFS 56 项控制器/DMA/错误/Hibern8/WriteBooster/无 LUN 检查；原先 48 项及修复前失败继续保留。
 - [x] 主线 Qualcomm UFS/QMP/GCC/SMMU 驱动运行：19 项 guest 检查，strict translated DMA domain，宿主独立核对写入数据。
-- [ ] Qualcomm TCU/TBU、完整 QSMMU v500 扩展、stage 2/nesting、16/64 KiB/AArch32 等未实现翻译模式。
+- [ ] 完整 Qualcomm TCU/TBU 与 QSMMU v500 扩展、stage 2/nesting、AArch32 及 LPA/LPA2 等未实现翻译模式。
+- [x] 并行默认分支 b5f4415 的 16/64 KiB 显式架构 profile 已完成[26 项 CI](evidence/smmuv2-granules-20261123/ci-granules.json)及[28 项扩展验证](evidence/smmuv2-granules-20261123/ct102-with-glib.json)，包含真实 v2→v3 接受/拒绝；原始源码/二进制边界保留，默认仍为 4 KiB。
+- [ ] 将上述 granule core v3 与 apps companion v1、CPUFreq 增量合并后完成新 70 组件/4 Linux 统一验收及同二进制原厂复测；并行成功不替代新组合结果。
 - [ ] SMMU 独立迁移验收；已有 VMState 不是迁移成功回执。
 - [ ] UFS ICE、RPMB 认证、原生 LU 启动选择/保护、完整 task management/reset/error 模式及物理链路行为。
 - [ ] UFS core 迁移和有未完成存储 I/O 的整板迁移。现有组件迁移均显式关闭 UFS。

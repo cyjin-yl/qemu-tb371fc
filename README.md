@@ -12,6 +12,8 @@
 
 ## 本次整板推进与统一验收（2026-11-23）
 
+当前新组合加入[三域 CPUFreq EPSS 数字参考模型](tb371fc/docs/cpufreq-hw-reference.md)，并合入默认分支的 SMMUv2 大页能力；统一计划为 **74 个 gate：70 个组件检查 + 4 次 Linux 启动**。CPUFreq 的 30 项检查覆盖真实档位选择、时钟输出、分数计数、三路中断和迁移；新的完整组合尚待正式 CI 与同二进制原厂复测。下文已通过的 72 项回执仍绑定 `52492a`。
+
 统一提交 `52492a797d2acd9c918a8639564e8ff3e7beab3f` 已实际通过 **72 个 gate：68/68 组件检查 + 4/4 Linux 启动，以及独立 A77/UFS job**。见[实际 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45226846782)和[冻结回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-52492a.json)。板级 QEMU SHA-256 为 `debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3`；已直接读取 ZIP、包内二进制、两份 clean-source 汇总、11 份组件报告及 **17 个 MPM/NoC/SMMUv500/TSENS 迁移文件**。
 
 新增[两组 TSENS24xx 数字参考模型](tb371fc/docs/tsens24xx-reference.md)的[原始回执](tb371fc/evidence/wholeboard-20261123-a47/tsens24xx-52492a.json)实际通过 **34 项检查、2 次完成迁移、2 次 profile 拒绝和 2 次损坏流拒绝**。独立解码器检查五个真实迁移文件及六个完整控制器 payload，并将可变字段与停止状态下的真实 QOM 观测比对。默认仍为未知；`0xffff` 初始使能、25°C 输入与 1 ms 采样均是显式参考假设。
@@ -148,6 +150,7 @@ PCI 首次 discovery 因冻结文件名附加后缀而得到零项测试。
 | GCC 与串口接线 | [19 项 GCC、5 项 GCC 迁移、6 项 clock/reset、4 项接线迁移](tb371fc/evidence/expansion-20261123/revalidation-4/summary.json) | 状态、父时钟、分频、门控、复位、GDSC 及未完成 TX/RX 恢复。 |
 | CPU/MMIO timer | [精确计数及修前/修后回执](tb371fc/evidence/mmio-timer-live-status-20261123/) | 每虚拟秒准确 19,200,000 tick；独立 icount 参考、10 项 exact/10 项 legacy MMIO、真实 CPU 与 MMIO 迁移、模式不匹配拒绝，以及 16 次 CPU→GIC 线状态检查。 |
 | SMMUv2 | [23/23 C QTest](tb371fc/evidence/smmuv2-20261123/qtest-result.json) | RAM 页表遍历、权限、fault、stream/context bank、ATS、TTBR1、无效模式；保留修前反例。 |
+| SMMUv2 显式大页 profile | 默认分支 b5f4415 的 [CI 26/26](tb371fc/evidence/smmuv2-granules-20261123/ci-granules.json)与[扩展 28/28](tb371fc/evidence/smmuv2-granules-20261123/ct102-with-glib.json) | 16/64 KiB ATS/DMA、权限、故障及真实 v2→v3 接受/拒绝；默认仍为 4 KiB。原始回执随并行代码保留，新整板组合须另跑 CI。 |
 | UFS 与 DMA | [56 项控制器/PHY/DMA 检查](tb371fc/evidence/resume-20261123/reports/32-ufs-register-dma.json)、[19 项 Linux UFS/SMMU 检查](tb371fc/evidence/ufs-bringup-20261123/linux-strict-iommu-19.json) | 真实 SCSI 块 I/O、strict DMA domain、flush/reopen、错误路径、Hibern8，以及宿主独立核对写入的 32 KiB 数据。 |
 | RPMh reference/file | [22 项 reference/文件 ABI 检查、5 项迁移](tb371fc/evidence/expansion-20261123/revalidation-5/rpmh-summary.json) | TCS 执行、ARC/VRM/BCM 请求、IRQ、sleep/wake 输入、取消及非法请求不完成。reference 数据显式为合成数据。 |
 | Watchdog | [16 项数字行为检查](tb371fc/evidence/watchdog-20261123/qtest-16.json)、[真实 pending-bite 迁移](tb371fc/evidence/watchdog-20261123/migration.json) | bark/bite、pet、counter phase、复位动作、IRQ 和错误频率拒绝；频率是软件配置证据。 |
@@ -181,10 +184,10 @@ TLMM、IMEM/PS_HOLD、普通 Linux UFS19 和 reference RPMh 联合 Linux23 已�
 | GIC / PSCI | QEMU GICv3 按实机地址和 affinity 接线；SMC PSCI 支持已验证的 SMP 与 system-off 路径。没有 Qualcomm EL3/TrustZone 或完整 OEM 启动链。 |
 | Timer | CPU 和 MMIO 计数器默认用准确有理换算，`floor(ns×19200000/10^9)`；deadline 向上取整。`counter-exact=off` 只用于保留旧量化模式的兼容检查。 |
 | GENI / GCC | FIFO 串口接入有状态 GCC 时钟/复位。QUP 2.5 version 寄存器仍明确为合成兼容值；部分 fabric 输入和启动时钟状态仍为公开的 bootstrap 假设。DMA/GSI、流控和真实 baud timing 未实现。 |
-| SMMUv2 | apps/GPU 两个架构窗口，非安全 AArch64 stage-1、4 KiB 页表和真实 DMA 翻译；不冒充已实现 Qualcomm TCU/TBU、stage 2 或全部 QSMMU v500 扩展。GPU SMMU 的存在不等于 GPU 已实现。 |
+| SMMUv2 | apps/GPU 两个架构窗口、非安全 AArch64 stage-1、默认 4 KiB 与真实 DMA 翻译；16/64 KiB 需[显式架构 profile](tb371fc/docs/smmuv2-granules.md)，原生能力未测量。apps TCU/TBU 另由有限伴随模型实现；stage 2、完整 QSMMU v500 与 GPU 执行仍未完成。 |
 | UFS | Sysbus HCI、Qualcomm wrapper、QMP PHY、GCC 依赖、SMMU DMA 与 SCSI 后端。使用显式测试磁盘。ICE、RPMB 认证、完整原生 LU 启动属性、全部错误/复位模式和物理 PHY/闪存时序仍未完成。 |
 | RPMh | `rpmh-profile=off` 为默认值；`reference` 和 `file` 必须显式选择。file 解析外部 cmd-db 并核对内容；未知资源不会自动获得成功 ACK。它不执行 AOP 固件，也不模拟真实 PMIC 电压。 |
-| 迁移 | GENI、GCC、timer、RPMh、watchdog、TLMM 和 IMEM/PS_HOLD 有各自的实际迁移回执。**上游 UFS core 当前阻止整板迁移**；组件测试显式使用 `ufs-enabled=off`。SMMU 与其他未验收状态不能由这些回执推定。 |
+| 迁移 | 各数字组件的实际回执分别绑定原源码与二进制；组件测试关闭 UFS，**上游 UFS core 仍阻止整板迁移**。SMMUv2 原 [18 项进程迁移回执](tb371fc/evidence/smmuv2-migration-20261123/publication.json)使用 v2；当前 v3 增加 granule profile 相等检查，v2 仅能进入默认 profile，v1 仍拒绝。并行分支的真实跨版本验证见上表，不替代新组合的 CI。 |
 
 地址、属性、启动接口、生成 DT 与原生 DT 的差异见 [machine.md](tb371fc/docs/machine.md)。独立设备文档和来源索引见 [SOURCES.md](tb371fc/SOURCES.md)。
 

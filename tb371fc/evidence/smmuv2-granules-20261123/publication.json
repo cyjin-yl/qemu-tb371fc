@@ -1,0 +1,109 @@
+{
+  "accepted_capability_masks": [
+    1,
+    3,
+    5,
+    7
+  ],
+  "ci": {
+    "conclusion": "success",
+    "head_sha": "b5f441554b01900a33ada617054f6e7f2729e5b8",
+    "id": 45219017052,
+    "jobs": [
+      {
+        "conclusion": "success",
+        "id": 137848067238,
+        "name": "cortex-a77-architecture",
+        "status": "completed",
+        "url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45219017052/job/137848067238"
+      },
+      {
+        "conclusion": "success",
+        "id": 137848067589,
+        "name": "board-components-and-linux",
+        "status": "completed",
+        "url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45219017052/job/137848067589"
+      }
+    ],
+    "status": "completed",
+    "updated_at": "2026-11-23T16:55:41Z",
+    "url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45219017052"
+  },
+  "ci_observations": {
+    "a77_guest_checks": 852,
+    "a77_invalid_configurations": 2,
+    "components": 55,
+    "default_smmuv2_migration_checks": 18,
+    "granule_checks": 26,
+    "granule_migration_attempts": 3,
+    "linux_gates": 4,
+    "smmuv2_c_qtest_skips": 0,
+    "smmuv2_c_qtests": 23,
+    "ufs_pci_checks": 15
+  },
+  "ct102_observations": {
+    "extended_checks": 28,
+    "extended_script_sha256": "9a83189384fb9f1f07bfc7d2a744b579a08bc459c231c2639ac7cefa0759111a",
+    "first_attempt": "Failed before any check because the test container lacked libglib-2.0.so.0; original report retained; no device-semantic failure claimed.",
+    "global_dependency_installation": false,
+    "legacy_v2_transfer_tested": true,
+    "location": "CT102 Docker unixnu-route-a-dev, /work/qg1123-b5",
+    "maximum_concurrent_qemu_processes": 2,
+    "migration_attempts": 5,
+    "processes_paused": true,
+    "qemu_binaries_rebuilt_or_modified": false,
+    "ram_per_qemu": "128 MiB",
+    "residual_test_qemu_processes": 0,
+    "v2_to_default_profile_continued_ats_and_dma": true,
+    "v2_to_expanded_profile_rejected": true
+  },
+  "default_capability_mask": 1,
+  "evidence_sha256": {
+    "ci-components.json": "a44617c7cbb0250a1c986ca627e959435bf589b9022e00468d2619fc2621e871",
+    "ci-default-migration.json": "53897cb55cb19fdb73c16c9cea7edaca719230a15c0110909310847b2284f362",
+    "ci-granules.json": "940cba7e718835fd60bdcd34500610a8329c234a00055a6da61d8cf2b46154e2",
+    "ci-linux.json": "612559a8de4806bcec30a16f5aed96bf0444b07940d8c2f426ed976bcd25c6bd",
+    "ct102-deps.json": "d56b25ba7084dabf96eb2c3be3cba452877501b0f7d10592bc8cda1a2b845677",
+    "ct102-missing-glib.json": "0ef82edc9dfa33f6d04f975ed511470b224abbbd0127ab821fa939b1deed0970",
+    "ct102-missing-glib.stderr": "eaf3a146aa32a46324fa9c6748bc812eb3aeea1fb9c7dd1efee5a8d7f536955f",
+    "ct102-run.json": "84796e8d715bd3a5636da37d8453952dacc5087a6f8a5dda4d9bb2b9c6458cba",
+    "ct102-staging.json": "b481770d1c1599ecf1633cdc18d04ec1d41a9235174120cc4d808ee4d98950a2",
+    "ct102-with-glib.json": "fec20e9487b4e835a81e6d164f76c1a3cae1a08fed4cf9c6f2da1908a00139dd"
+  },
+  "implementation_commit": "b5f441554b01900a33ada617054f6e7f2729e5b8",
+  "implementation_tree": "b91748b6cf24d8f7bca5c3d1ed165adc1f092b0d",
+  "kind": "tb371fc-smmuv2-explicit-granule-publication",
+  "legacy_artifact": {
+    "archive_sha256": "0c825225fcb697397b3afd11f99f8e2f2549a44767e399a451858f9713090ce2",
+    "binary_bytes_verified": true,
+    "id": 14824147046,
+    "qemu_sha256": "7964b2a21fccede724639f6503f5e19ae91d71b0df4051b10a6f51fd8337b0f0",
+    "source_commit_verified": true
+  },
+  "legacy_source": {
+    "artifact_id": 14824147046,
+    "head_sha": "339b9cd277aeae84fba52b60ae34ede90b7ff101",
+    "id": 45185720801,
+    "url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45185720801"
+  },
+  "minimum_vmstate_version": 2,
+  "model_source_sha256": "51301b17f84013c848bb44335ff29bd47f2474b883954f7b5fb898ca7cfea056",
+  "public_artifact": {
+    "archive_sha256": "7bafdd333eeead2dfe02b8dd7115cb3d6e0fcb7247f9e9348a86bc2bcedd75d6",
+    "binary_bytes_verified": true,
+    "id": 14842111035,
+    "qemu_sha256": "3d3ece4d21e3806210920a2cb83531c02f825d1cdb428980590e4fc49bc82336",
+    "source_commit_verified": true
+  },
+  "recorded_utc": "2026-11-23T17:08:28.124412+00:00",
+  "schema_version": 1,
+  "scope_limits": [
+    "Explicit architectural model capabilities; no native TB371FC IDR or large-granule measurement.",
+    "No stage 2, nesting, AArch32, LPA/LPA2, hardware AF/DBM or internal IOTLB.",
+    "Reserved/unsupported TG rejection is a documented model deviation from architectural fallback.",
+    "UFS disabled for process migration tests; no whole-board migration, native-DT or Android boot attestation.",
+    "GPU ATS/register observations do not execute GPU commands or render.",
+    "CI and CT102 reports retain distinct test hashes and execution environments."
+  ],
+  "vmstate_version": 3
+}

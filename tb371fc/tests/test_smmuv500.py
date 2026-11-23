@@ -1123,6 +1123,35 @@ def cold_internal_migration_state():
     return {"owner": -1, "dma_blocked_mask": 0, "tbus": [dict(item) for _ in range(10)]}
 
 
+def actual_architectural_sections(data):
+    """Read both actual core headers; the companion keeps its own v1 format."""
+    name = b"arm-smmuv2"
+    results = []
+    for instance, geometry in ((0, (0x100000, 96, 128)),
+                               (1, (0x10000, 8, 128))):
+        needle = bytes([len(name)]) + name + struct.pack(">II", instance, 3)
+        prefix = struct.pack(">IIII", *geometry, 1)
+        found = []
+        start = 0
+        while True:
+            index = data.find(needle, start)
+            if index < 0:
+                break
+            header, payload = index - 5, index + len(needle)
+            if (header >= 8 and data[header] in (1, 4) and
+                    data[payload:payload + len(prefix)] == prefix):
+                found.append((header, payload))
+            start = index + 1
+        assert len(found) == 1, (instance, found)
+        header, payload = found[0]
+        results.append({"instance_id": instance, "section_version": 3,
+                        "section_header_offset": header,
+                        "payload_offset": payload,
+                        "mmio_size": geometry[0], "context_banks": geometry[1],
+                        "smrs": geometry[2], "aarch64_granules": 1})
+    return results
+
+
 def actual_section(snapshot_path, before, reference=True):
     data = snapshot_path.read_bytes()
     name = TYPE.encode("ascii")
@@ -1145,7 +1174,8 @@ def actual_section(snapshot_path, before, reference=True):
     return {"section_header_offset": header, "payload_offset": payload,
             "section_version": 1, "instance_id": 0, "payload_bytes": 744,
             "tbu_payload_bytes": 72, "tbu_count": 10,
-            "all_serialized_fields_match_source_qom": reference}
+            "all_serialized_fields_match_source_qom": reference,
+            "architectural_smmuv2_sections": actual_architectural_sections(data)}
 
 
 def take_snapshot(source, path, witness, before=None):
@@ -1438,7 +1468,7 @@ def main():
         "expected_completed_migrations": 2, "migrations": [],
         "expected_rejected_migrations": 2, "rejected_migrations": [],
         "expected_corrupted_stream_rejections": 2, "corrupted_stream_rejections": [],
-        "vmstate_version": 1, "architectural_smmuv2_vmstate_version": 2,
+        "vmstate_version": 1, "architectural_smmuv2_vmstate_version": 3,
         "tcu_count": 1, "tbu_count": 10, "register_count": 71,
         "sparse_window_count": 71, "mapped_bytes": 484,
         "register_slots_32_bit": 21, "register_slots_64_bit": 50,

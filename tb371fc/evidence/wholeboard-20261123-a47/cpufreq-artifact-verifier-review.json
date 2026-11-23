@@ -1,0 +1,204 @@
+{
+  "schema": "tb371fc-cpufreq-artifact-verifier-review-v1",
+  "reviewed_at_utc": "2026-11-23 18:21:05 UTC",
+  "status": "Author static review complete; independent review and first formal artifact execution pending",
+  "verifier": {
+    "path": "cpufreq-artifact-verifier.py",
+    "git_blob": "20ac24956caedd81ab2efbeebe23dcfc348ed46f",
+    "bytes": 51698,
+    "sha256": "135b69fb0f615b8112f5ac0ab343fb2d604a9a845cbf5bf30eef6c8f928d9612",
+    "signature": "verify_cpufreq_streams(z, info, data)",
+    "stdlib_imports": [
+      "hashlib",
+      "json",
+      "re",
+      "struct"
+    ],
+    "only_one_top_level_function": true,
+    "ast_and_compile_without_execution": true,
+    "github_readback_matches_local_source": true,
+    "actual_zip_execution": false
+  },
+  "acceptance_source": {
+    "commit": "239a6eec51c09e27b40b57d7d6ef7f0b3157635c",
+    "path": "tb371fc/tests/test_cpufreq_hw.py",
+    "git_blob": "105767c824bbc3101ec6386d5b6e1fe756ee7eeb",
+    "bytes": 76093,
+    "sha256": "0a11d0f3c8f70c09716083830b8f672a2c62b82d3ff42589373b480b3998dd03",
+    "schema": "tb371fc-cpufreq-hw-v1",
+    "report_identity_checked": true,
+    "test_module_imported": false,
+    "test_decoder_imported_or_called": false
+  },
+  "model_source": {
+    "commit": "e133c1c85b53ca5d3afe81bda2c1767d9e0d39d8",
+    "path": "hw/misc/qcom-cpufreq-hw.c",
+    "git_blob": "fdde2739c38b5dc500711161c2d857fd969fcf28",
+    "sha256": "34d46cfb9fc9b4735978c9c7927a8ea02a703e98af7a03732d992f3b779f4e84",
+    "vmstate_name": "qcom-cpufreq-hw-epss",
+    "vmstate_version": 1,
+    "domains": 3,
+    "payload_bytes_per_domain": 84
+  },
+  "independent_layout": {
+    "format": ">IIQ13I2Q",
+    "immutable_prefix_bytes": 48,
+    "runtime_bytes": 20,
+    "input_clock_bytes": 16,
+    "immutable_source": "fixed actual board geometry, explicit reference boot index zero and XO01 ROM identity; not claimed to be exclusively read from QOM",
+    "runtime_source": "independently specified numerical scenarios corroborated by actual stopped-source QMP and full raw stream decode",
+    "unknown_runtime_source": "validated disabled-profile zero invariant, with actual QOM runtime rejection retained; not fabricated runtime QOM values"
+  },
+  "required_counts": {
+    "successful_checks": 30,
+    "completed_roundtrips": 2,
+    "profile_rejections": 2,
+    "specific_corrupted_stream_rejections": 2,
+    "root_migration_files": 5,
+    "complete_84_byte_domain_sections_decoded": 15,
+    "legitimate_source_domain_sections": 9,
+    "corrupted_copy_domain_sections": 6
+  },
+  "scenarios": [
+    {
+      "file": "cpufreq-hw-v1-fractional-rates.migration",
+      "source_virtual_ns": 1,
+      "destination_virtual_ns": 987654321,
+      "source_anchor_ns_before_save": 0,
+      "source_counter_anchor": 0,
+      "source_fraction_anchor": 0,
+      "perf_indices": [
+        1,
+        2,
+        3
+      ],
+      "limit_lvals": [
+        0,
+        0,
+        0
+      ],
+      "irq_statuses": [
+        0,
+        0,
+        0
+      ],
+      "saved_counters": [
+        0,
+        1,
+        1
+      ],
+      "saved_fractions": [
+        614400000,
+        228800000,
+        843200000
+      ],
+      "alternate_hz": 0
+    },
+    {
+      "file": "cpufreq-hw-v1-latched-limits.migration",
+      "source_virtual_ns": 5013,
+      "destination_virtual_ns": 73,
+      "source_anchor_ns_before_save": 5000,
+      "source_counter_anchor": 1536,
+      "source_fraction_anchor": 0,
+      "perf_indices": [
+        3,
+        2,
+        1
+      ],
+      "limit_lvals": [
+        48,
+        17,
+        8
+      ],
+      "irq_statuses": [
+        0,
+        4,
+        4
+      ],
+      "saved_counters": [
+        1547,
+        1540,
+        1537
+      ],
+      "saved_fractions": [
+        980800000,
+        243200000,
+        996800000
+      ],
+      "alternate_hz": 600000000
+    },
+    {
+      "file": "cpufreq-hw-v1-unknown-profile.migration",
+      "source_virtual_ns": 12345,
+      "purpose": "source for reverse profile rejection only",
+      "completed_roundtrip": false,
+      "profile": 0,
+      "runtime_words": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "xo_hz": 19200000,
+      "alternate_hz": 0
+    }
+  ],
+  "source_evidence_checks": [
+    "Actual completed query-migrate results and stopped/postmigrate query-status in QMP logs; completion JSON agrees with the raw logs.",
+    "Exactly three equal pre-save reads of each counter anchor prove that source QOM observations do not settle the counter.",
+    "All pre-save geometry/runtime/ROM/core-counter/input/output-Clock observations match independent numerical vectors.",
+    "Serialized count/fraction match the fresh projected source value, rather than stale anchor state; all three domains must require freshness.",
+    "Actual post-save QOM anchors equal source virtual time and serialized count/fraction.",
+    "Raw source QTest logs contain the expected time steps and no per-core counter MMIO reads.",
+    "Unknown-profile runtime getters actually fail, while known geometry and input Clock observations corroborate the independently rebuilt cold stream."
+  ],
+  "destination_evidence_checks": [
+    "Actual destination QMP migration completes and is observed stopped before cont.",
+    "Complete first-restored QOM values and real Clock object periods match loaded stream data with destination epoch 987654321 ns or 73 ns.",
+    "Destination state was observably different before incoming.",
+    "The first restored observation window contains no cont, system_reset or qom-set.",
+    "The first post-cont counter/fraction/core-counter/epoch observations independently preserve the exact one-nanosecond continuation.",
+    "Actual QTest time exchanges corroborate both differing origins and all explicit continuation steps."
+  ],
+  "corruption_checks": [
+    {
+      "file": "cpufreq-hw-v1-corrupted-performance-index.migration",
+      "domain": 0,
+      "field_relative_offset": 48,
+      "field_width": 4,
+      "old_value": 1,
+      "new_value": 5,
+      "expected_diagnostic": "qcom-cpufreq-hw-epss: invalid migrated performance index"
+    },
+    {
+      "file": "cpufreq-hw-v1-corrupted-counter-fraction.migration",
+      "domain": 2,
+      "field_relative_offset": 64,
+      "field_width": 4,
+      "old_value": 843200000,
+      "new_value": 2990683648,
+      "expected_diagnostic": "qcom-cpufreq-hw-epss: invalid migrated reference state"
+    }
+  ],
+  "rejection_evidence": "Each rejected attempt must use the actual stream in an incoming QMP request, report exit 1, have the precise profile/field diagnostic and device-specific migration load failure in actual stderr, and have no completed QMP result. The OS exit code is explicitly labelled reported, not independently re-executed.",
+  "byte_identity": "Verify five stream sizes/hashes, exact unique section positions, complete payloads and saved payload files. Each bad copy differs from the original at exactly one bit in one four-byte field; all other bytes remain identical. Re-read original ZIP members and verify unchanged.",
+  "outputs": [
+    "cpufreq_hw_streams_from_zip",
+    "cpufreq_hw_decoded_sections",
+    "cpufreq_hw_log_evidence"
+  ],
+  "boundaries": [
+    "No QEMU, kernel, test process, network request, file extraction or subprocess is launched by this function.",
+    "The function has not yet been run against the formal CI ZIP; AST/compile and source readback are not execution evidence.",
+    "The common root worker is responsible for the artifact ZIP digest, board binary digest and clean source receipt; this function audits the CPUFreq component artifact.",
+    "Actual intercepted GPIO verdicts remain acceptance-test evidence. The verifier independently corroborates the serialized IRQ latch and raw QMP IRQ-level getter, and does not invent raw GPIO log events.",
+    "The synthetic LUT/voltage/reference cycles are not physical firmware measurements, CPU retirement evidence or Android boot proof.",
+    "Error messages for unequal binary buffers contain sizes and hashes rather than printing migration RAM."
+  ],
+  "independent_static_review": {
+    "status": "pending",
+    "agent": "/root/board_gaps"
+  }
+}

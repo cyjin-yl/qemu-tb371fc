@@ -33,7 +33,7 @@ The `noc-qos` gate exercises the [four-word configuration contract](noc-qos-refe
 
 ## Apps SMMUv500 increment
 
-The new `smmuv500-reference` gate requires 36 successful checks, two completed migrations, two profile mismatch rejections and two single-field corrupted-stream rejections. It checks VMState 1 with architectural SMMUv2 VMState 2, one TCU, ten TBUs, 71 sparse windows and 484 mapped bytes. It targets the [apps-only TCU/TBU companion](smmuv500-reference.md), using the existing SMMUv2 stage-1 walker and an actual external IOMMU cache client. HALT, semaphore arbitration, captured ECATS requests, translation permissions/faults, reset and process migration are exercised against a compiled binary. The explicit non-v1 version and virtual delays are reference policies, not tablet measurements. Ordinary synchronous DMA denial is not a hardware stall queue. Native SMMU DMA and Android remain outside this component verdict. Commit `3ef98a8afb49a873d677288693d6491c50fd75e1` has now actually passed this complete 71-gate plan; its separate receipt below binds this new combination. The older 70-gate result remains tied to 99ef.
+The new `smmuv500-reference` gate requires 36 successful checks, two completed migrations, two profile mismatch rejections and two single-field corrupted-stream rejections. It checks companion VMState 1 with architectural SMMUv2 VMState 3, one TCU, ten TBUs, 71 sparse windows and 484 mapped bytes. It targets the [apps-only TCU/TBU companion](smmuv500-reference.md), using the existing SMMUv2 stage-1 walker and an actual external IOMMU cache client. HALT, semaphore arbitration, captured ECATS requests, translation permissions/faults, reset and process migration are exercised against a compiled binary. The explicit non-v1 version and virtual delays are reference policies, not tablet measurements. Ordinary synchronous DMA denial is not a hardware stall queue. Native SMMU DMA and Android remain outside this component verdict. Commit `3ef98a8afb49a873d677288693d6491c50fd75e1` has now actually passed this complete 71-gate plan; its separate receipt below binds this new combination. The older 70-gate result remains tied to 99ef.
 
 ## TSENS24xx increment
 
@@ -43,9 +43,29 @@ The gate distinguishes live host temperature inputs from the captured in-flight 
 
 The first `298f21c` run [failed one of 68 component gates](../evidence/wholeboard-20261123-a47/public-ci-298f21-failure.json), after TSENS passed 17 checks. The narrow-access test expected the accepts-callback diagnostic `rejected`, but MemoryRegion correctly emitted `invalid size (min:4 max:4)`. The exact width diagnostic is now required without changing device code, the 34-check count or any migration requirements. The four Linux gates were skipped, and native execution was blocked by the failed aggregate receipt. The fixed source `52492a797d2acd9c918a8639564e8ff3e7beab3f` has now actually passed all 68 component and four Linux gates, plus the separate A77/UFS job. [Its receipt](../evidence/wholeboard-20261123-a47/public-ci-52492a.json) records the exact binary, eleven inspected component reports and seventeen actual migration files. [The original TSENS report](../evidence/wholeboard-20261123-a47/tsens24xx-52492a.json) passes 34 checks, two completed migrations, two profile rejections and two corruptions. Independent verification reads all five TSENS files, decodes six complete 375-byte controller sections, checks actual stopped source observations and verifies real receiver rejection diagnostics. The unknown-profile source stream is not counted as a third successful roundtrip. The same-binary [native run](../evidence/wholeboard-20261123-a47/native-52492a.json) completes TSENS reference sampling and next faults in CPUFreq at physical address `0x18591100`; native userspace and Android are still unpassed. The frozen 71-gate result below remains tied to `3ef98`.
 
+## CPUFreq hardware EPSS increment
+
+The `cpufreq-hw-reference` gate requires 30 unique successful checks, two
+completed process roundtrips, two profile mismatches and two single-bit
+corrupt-stream rejections. The [source-bounded reference](cpufreq-hw-reference.md)
+has three actual-DT domains, eight per-core counter addresses, 263 words in
+24 sparse windows, three IRQs and 84-byte per-domain VMState v1. Four explicit
+all-XO synthetic LUT states preserve the real driver's duplicate-row sentinel,
+voltage units and max_cores=4 in every domain.
+
+PERF and host limit changes update real Clock outputs and exact fractional
+virtual-cycle accounting. Tests cover actual GIC routes, strict access errors,
+reset and raw restored QOM/Clock/IRQ state before the first target EPSS MMIO.
+Source snapshots prove that pure QOM projection does not settle stored counter
+anchors; `pre_save` must perform that settlement. Targets use different virtual
+origins, then continue for one nanosecond before device MMIO. Physical LUTs,
+analog voltage, TCG speed, native policy registration and Android are outside
+the component verdict. This new combined 70+4 plan still requires actual CI;
+the older 52492a 68+4 pass remains a separate frozen result.
+
 ## Gates
 
-The current public plan has **72 gates: 68 component/parser gates and four
+The current public plan has **74 gates: 70 component/parser gates and four
 Linux boots**, plus the separate A77 and PCI UFS compatibility job. The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
@@ -66,9 +86,11 @@ pass does not attest newly added devices.
 | GCC and GENI wiring | 19 GCC groups, 5 GCC migration checks, 6 clock/reset groups and 4 wired migration checks |
 | Pinned Kona GCC supplements | Exact three-source regeneration of both generated files; CPUSS 11 checks and USB PIPE mux 15 checks, including real v3 transfers and explicit old-version rejection; no USB PHY execution claim |
 | MPM sleep counter | 17 checks; exact 32768 Hz, one read-only word, reset continuity, two actual migrations and one deliberately modified-stream rejection |
-| SMMUv2 migration | 18 checks; geometry-bound VMState 2, two completed process migrations and two incompatible SMR capacity rejections |
+| SMMUv2 migration | 18 checks; geometry-bound VMState 3 with default granule mask 1, two completed process migrations and two incompatible SMR capacity rejections |
 | Apps SMMUv500 | 36 checks; one TCU / ten TBUs, HALT/cache invalidation and captured ECATS through the core SMMUv2 walker, two completed transfers, two profile mismatches and two corrupted-field rejections |
 | TSENS24xx | 34 checks; two controllers / 32 channels, captured sampling, signed thresholds, four real GIC routes, two completed transfers, two profile mismatches and two corrupted-field rejections |
+| CPUFreq EPSS | 30 checks; three domains / eight per-core counters, four synthetic all-XO states, actual Clock and IRQ behavior, two completed transfers, two profile mismatches and two single-bit corruptions |
+| SMMUv2 explicit granules | 26 checks; opt-in 16/64 KiB ATS/DMA, permissions and faults, matching profile and two profile mismatches; no historical binary is fetched by this CI invocation |
 | NoC QoS | 20 checks; 47 independent ports / 188 words, two completed transfers, two profile mismatches and two deliberately corrupted-stream rejections; no traffic or SBM synthesis |
 | NPUCC | 37 checks across three physical banks, actual Clock outputs, source-bound CRC/dividers, two completed migrations and two profile rejections; full NPU/DSP execution remains outside scope |
 | GPUCC | 30 actual digital PLL/RCG/branch/reset checks, two completed migrations and two profile rejections; actual Clock providers and sparse ownership boundaries |
@@ -229,3 +251,7 @@ The [original NoC JSON](../evidence/wholeboard-20261123-a47/noc-qos-99ef.json) p
 The [byte-preserved SMMUv500 report](../evidence/wholeboard-20261123-a47/smmuv500-3ef98.json) passed 36 checks in 10.862 seconds: two completed migration targets, two profile rejections and two deliberately corrupted-field rejections. All five actual stream files were read and hashed from the ZIP; the two complete 744-byte device sections were independently decoded, including all ten pending TBU states. The third unmodified stream exists for reverse-profile rejection and is not counted as a third completed roundtrip. Seven MPM/NoC streams and ten selected component reports were also checked. The independent CPU job passed 852 guest checks, two invalid configurations and 15 PCI UFS regressions.
 
 [The same-binary native run](../evidence/wholeboard-20261123-a47/native-3ef98.json) passed the former VERSION abort, registered TBU resource clients and continued into SCSI/USB initialization. Its 10/10 stopped TBU geometry observations and cold request state are distinct from native DMA execution. The next directly logged abort is TSENS SROT +4 at `0x0c222004`; full native-DT userspace and Android remain unpassed.
+
+## Concurrent default-branch granule integration
+
+The merged `smmuv2-granules` gate retains the original 26-check invocation and three migration attempts. Its report must explicitly state `legacy_v2_transfer_tested=false`; the public gate does not fetch a historical binary. Default-branch b5f4415 and 69ca28 records are preserved byte for byte, including the failed missing-library attempt and later actual v2-to-v3 extended run. Their successes apply to their own source/binaries. This branch's default 4 KiB SMMUv500 companion gate keeps 36 checks and now verifies the actual core v3 headers/profile in its source streams, while companion VMState remains v1. A fresh unified run is required after CPUFreq and these changes are combined.

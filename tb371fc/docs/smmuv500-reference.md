@@ -4,7 +4,9 @@
 original DT's apps SMMU. It is a companion to the existing functional
 `arm-smmuv2` stage-1 model, not a second page-table walker. The
 architectural aperture, context banks, faults, IRQs, ATS operations and
-VMState version 2 remain owned by that core.
+VMState version 3 remain owned by that core. The current core adds an explicit
+granule profile while the board still defaults to 4 KiB. The frozen 3ef98 and
+52492a receipts used core version 2; new combined-source results are required.
 
 ## Evidence and current scope
 
@@ -214,3 +216,15 @@ from observed original-kernel behavior; neither proves Android boot.
 Commit `3ef98a8afb49a873d677288693d6491c50fd75e1` passed the complete 71-gate plan and the separate A77/UFS job. Its [original component report](../evidence/wholeboard-20261123-a47/smmuv500-3ef98.json) passed 36 checks, two complete migrations, two profile rejections and two deliberately corrupted-stream rejections. The [artifact audit](../evidence/wholeboard-20261123-a47/public-ci-3ef98.json) independently decoded all ten states in both actual 744-byte device sections and hashed all five source/corruption streams. The unknown-profile source supports a rejection test and is not an additional roundtrip.
 
 The [matching native run](../evidence/wholeboard-20261123-a47/native-3ef98.json) passed the TCU VERSION fault. It logged the four MNOC regulator consumer links and ten subsequent bus resource clients, then continued through SCSI/USB initialization before a new TSENS external abort. Stopped QOM observed all ten TBU geometries correctly with no active halt, owner or ECATS request; PAR remained the initial fault value. This is consistent with initialization without debug translation. It does not prove original-firmware context handoff, native DMA or full Android boot. The next actual read fault is `0x0c222004` in `__tsens2xxx_hw_init+0x10`.
+
+## Concurrent core v3 integration
+
+The [reviewed three-way merge](../evidence/wholeboard-20261123-a47/smmuv2-granule-merge-review.json)
+retains the core/companion API, HALT filter, shared stage-1 walker and real cache
+notifications while adding explicit architectural granules. Companion VMState
+remains v1/744 bytes. Its existing migration checks additionally require the
+two actual core sections to be v3, with their board geometry and default
+mask-1 profile. The new granule gate and the unchanged 36-check companion
+semantics require a fresh combined CI result; previous core-v2 receipts are
+not relabeled as core-v3 execution evidence. This does not add native DMA,
+optional-granule native capability or full-board migration claims.
