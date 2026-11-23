@@ -180,3 +180,5 @@ system_ss.add(when: 'CONFIG_QCOM_AOP_MSGRAM', if_true: files('qcom-aop-msgram.c'
 system_ss.add(when: 'CONFIG_QCOM_REFGEN', if_true: files('qcom-refgen.c'))
 system_ss.add(when: 'CONFIG_QCOM_GPU_CX_GDSC', if_true: files('qcom-gpu-cx-gdsc.c'))
 system_ss.add(when: 'CONFIG_QCOM_SPMI_PMIC_ARB', if_true: files('qcom-spmi-pmic-arb.c'))
+
+system_ss.add(when: 'CONFIG_QCOM_GDSC', if_true: files('qcom-gdsc.c'))
