@@ -1,0 +1,58 @@
+{
+  "schema": "tb371fc-android-boot-header-archive-v1",
+  "original_result_sha256": "e4d5679d236ec72bad4c269906d7e2c284cbe3f2c50e3185742ec7ad17f0752d",
+  "actual_tests_passed": 9,
+  "firmware_read": false,
+  "firmware_executed": false,
+  "android_boot_passed": false,
+  "environment": "doesvm CT102 / Docker qemu-tb371fc-dev",
+  "tested_source_files": [
+    {
+      "bytes": 8801,
+      "compiled": true,
+      "git_blob": "ac1a6ff6d8f0e5ca9042e943035a4496019a1d56",
+      "installed_mode": "0600",
+      "name": "inspect_android_boot_header.py",
+      "sha256": "7eb367183423fb6266b82e31e47d404285d9519aca6fc5ea9214e98c6961a584"
+    },
+    {
+      "bytes": 12404,
+      "compiled": true,
+      "git_blob": "241627a2f963c557833f9bcb666779ef7e84d2ea",
+      "installed_mode": "0600",
+      "name": "test_android_boot_header.py",
+      "sha256": "08f2c3ad4b07956f33f7068256a832e514044b5b9b527a8afa105d72f2abfeb0"
+    }
+  ],
+  "controller_sha256": "cc850b9ca0d544216dde4f47bf9dbed2ed9bfe74394182eaf71d02c138e0f0da",
+  "original_outputs": [
+    {
+      "path": "result.json",
+      "bytes": 2320,
+      "sha256": "e4d5679d236ec72bad4c269906d7e2c284cbe3f2c50e3185742ec7ad17f0752d"
+    },
+    {
+      "path": "installation.json",
+      "bytes": 743,
+      "sha256": "1fa3ffb71bb5ee40286eb21ec0bf86277c65b808c254472db1dccbbfd5c3fdf1"
+    },
+    {
+      "bytes": 0,
+      "name": "fixtures.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1544,
+      "name": "fixtures.stderr",
+      "sha256": "f7472ef0ce277070a4eefe238eb06551c9295e5a1e897cf0cb13fac8c7b631e7"
+    },
+    {
+      "path": "job.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  ],
+  "prepared_and_tested_in_ct": true,
+  "originals_unmodified": true,
+  "scope": "Only boot-header structure and exact read boundaries are validated. No native firmware was read by this gate."
+}
