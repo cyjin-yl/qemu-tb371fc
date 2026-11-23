@@ -1,0 +1,66 @@
+{
+  "schema": "aop-safe-stop-projection-method-v1",
+  "derived_projection_not_raw_private_result": true,
+  "original_result_contents_published": false,
+  "projection_sha256": "2cac5a3456517660b4da88565bd2de97cd4a05f91cba6d2cedd43f03cbccdb4c",
+  "projection_bytes": 5959,
+  "projection_reader_sha256": "5f1e9f561de9f5e5ef7b851b969cc057ce8a1c39731217f7b28879e1003761e9",
+  "execution_transport_job_sha256_at_launch": "d377fa953fd2cfd7950f03812d4c0c883d1fb98147dea536c57cc96428d45be8",
+  "execution": {
+    "environment": "CT102 Docker qemu-tb371fc-dev",
+    "host_tmux_window": "@506",
+    "observed_utc": "2026-11-23T15:18:15.829677+00:00",
+    "read_only": true
+  },
+  "source_commit": "fe89e5a553fe038babe07abb279a0975d4306715",
+  "supervisor_sha256": "80f23447221229ad2d28c271786918ca5c57a3a6b9cedb78d2a80b377c4c6120",
+  "qemu_sha256": "c6bed2c465e0b771d6e40d60225b9f89636f6d213bf78b3c174510c24f3f4493",
+  "runner_sha256": "18896b8b53720df6809441624b68342245bb7e09bfab8eee26b161dbb3ab613b",
+  "preflight_sha256": "8d7c4231f15a0d7a68a26ae969a06fe536f3026c313a0023b1565948a84bb5a1",
+  "private_supervisor_result_sha256": "034ea603bb0b807d1ee18adf89003130141233b339b31f3938f1cca47a51f7c4",
+  "private_profile_result_sha256": [
+    {
+      "profile": "elf-physical-entry",
+      "sha256": "30806d70c5e0ca7733815f1183e7d7acae3e1145c716fd0423f3b9f91efc3140",
+      "bytes": 3313
+    },
+    {
+      "profile": "local-alias-vector",
+      "sha256": "432550e8407222f636f1f4a99fbfb0d2c5273f646998e6db1fac32c47303d0bb",
+      "bytes": 4084
+    },
+    {
+      "profile": "local-alias-dtcm32k-reference",
+      "sha256": "b21b5d4749caa3a1ab003ab712d3b5c8b5c190a310c7d9748680ffc9efd7fc53",
+      "bytes": 4915
+    }
+  ],
+  "selected_fields": [
+    "contract verdicts and counts",
+    "profile and stop reason",
+    "stopped PC",
+    "actual watchpoint hit and separate RSP range base",
+    "C-decoded read/write/stop-before-access flags",
+    "PC correspondence to pinned ELF PT_LOAD metadata",
+    "source hashes, process cleanup and input invariants"
+  ],
+  "excluded_content": [
+    "firmware payload",
+    "instruction opcode bytes",
+    "disassembly",
+    "general-purpose register dumps",
+    "full private diagnostic JSON",
+    "exception text"
+  ],
+  "address_semantics": {
+    "actual_watchpoint_hit": "Unique QOM marked entry matched by RSP kind/base and actual hitaddr; range base retained separately.",
+    "fetch_guard": "Host checks executable bounds before issuing another CPU single-step; not labeled a hardware exception.",
+    "low_alias": "Explicit reference correspondence; mapping_enabled false for physical-entry profile.",
+    "internal_exception_before_access_proven": false,
+    "actual_aop_core": "unknown",
+    "actual_reset_mapping": "unknown",
+    "hardware_reset_verified": false,
+    "full_firmware_boot": false,
+    "full_tablet_equivalence": false
+  }
+}

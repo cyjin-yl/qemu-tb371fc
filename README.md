@@ -15,6 +15,8 @@ runner 唯一关联 RSP 区间和实际命中，保留原精确地址、PC、总
 **固定提交 `fe89e5a` 的 [CI 45183148964](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45183148964) 已实际通过 11/11 XML 回归和 14/14 CPU 预检。** [原始成功回执](tb371fc/evidence/aop-reference-ci-20261123/ci-attempt-04/manifest.json)保留实际地址、PC、总线与内存断言，QEMU 二进制 SHA256 为 `3bd0d1d124cc9c3f3cf010bddf2b634a6e7e8f9d5a464c29c895005e04e64bc0`。
 [独立 CT attempt 04](tb371fc/evidence/aop-reference-ci-20261123/ct-attempt-04/README.md) 在 Git 拉取源码时失败，原始失败完整保留。[CT attempt 05](tb371fc/evidence/aop-reference-ci-20261123/ct-attempt-05/README.md) 已在新目录重建同一精确提交，并实际通过全部 11 项 XML 回归和 14 项 CPU 预检；独立构建的 QEMU SHA256 为 `c6bed2c465e0b771d6e40d60225b9f89636f6d213bf78b3c174510c24f3f4493`。这些检查没有读取或执行私有固件。
 
+**随后已实际运行三个私有 AOP 入口诊断配置。** [停止证据](tb371fc/evidence/aop-private-diagnostic-20261123/ct05-first-entry/README.md)分别记录低地址取指边界、未覆盖的栈写入，以及在显式 32 KiB DTCM 参考配置中遇到的 `0xe000e004` 读取。三次诊断完成并清理进程，均未达到 AOP 启动成功；公开文件仅包含经过核对的停止元数据和哈希。
+
 [公开加载器来源分析](tb371fc/evidence/aop-loading-public-20261123/README.md)记录 AP/XBL 与 AOP 局部地址的区别、ELF 头改写规则及尚未证明的原生复位路径。
 
 Cortex-M3、1 MHz 时钟、可选的低地址别名及额外 DTCM 都是明确的诊断参考配置，平板实际 AOP CPU 和冷启动映射尚未确认。

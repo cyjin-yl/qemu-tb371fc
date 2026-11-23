@@ -264,3 +264,7 @@ local revision and must record its own actual resulting binary hash.
 ## Public loader evidence
 
 [Fixed public source analysis](../evidence/aop-loading-public-20261123/README.md) distinguishes the SDM670 AP/XBL address convention from AOP-local instruction and vector addresses. The ELF builder rewrites selected program headers and entry metadata, without rewriting the payload. These cross-platform source facts do not identify the native Kona core, RAM size, reset vector mapping or reset-release sequence.
+
+## Actual private entry stops after CT attempt 05
+
+The [first bounded private run](../evidence/aop-private-diagnostic-20261123/ct05-first-entry/README.md) actually completed all three profiles using the CT05 binary after its 11 XML and 14 CPU checks. It stopped at low executable address `0x00001cf8` without the alias, stack write `0x000e7fe0` without extra DTCM, and ICTR read `0xe000e004` with the explicit 32 KiB DTCM reference. The respective completed single-step counts were 2, 2 and 16. All owned process groups were gone, inputs were unchanged, and no peripheral response was synthesized. These stops are new evidence for the next hardware model work; AOP startup and actual reset equivalence remain unproved. The published projection separates hit addresses from RSP interval bases and keeps the raw private results in the CT.
