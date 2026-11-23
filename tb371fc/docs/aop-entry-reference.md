@@ -1,13 +1,21 @@
 # Bounded QEMU AOP entry reference
 
-This is a public synthetic CI checkpoint for an independent diagnostic
-reference. The first CI build compiled the model, but machine selection failed
-before any synthetic guest instruction ran. Its TypeInfo omitted the ARM target
-interface required by QEMU 11's machine filter. The preserved original result is
-[attempt-01](../evidence/aop-reference-ci-20261123/attempt-01/manifest.json).
-The interface registration is now supplied; a new build, machine-list check and
-the same fourteen preflight checks must still pass. The CI workflow does not
-read or execute the private firmware.
+This is an independent diagnostic reference. Its public workflow reads no
+private firmware. The current instrumentation fix still requires a new build
+and all fourteen actual synthetic preflight checks.
+
+| Preserved attempt | Actual result |
+| --- | --- |
+| [attempt-01](../evidence/aop-reference-ci-20261123/attempt-01/manifest.json) | Build completed; missing ARM target interface prevented machine selection. No synthetic guest instruction ran. |
+| [attempt-02](../evidence/aop-reference-ci-20261123/attempt-02/manifest.json) | CI run 45175027472 built and registered the machine. Unbound `xi:` in QEMU's `target.xml` then failed ElementTree parsing before guest execution. The separate CT1230 build reproduced that parser failure. |
+| [CT attempt-03](../evidence/aop-reference-ci-20261123/ct-attempt-03/manifest.json) | Same frozen CT binary; all 11 XML regressions passed. The first two CPU checks passed, the third failed, and the remaining eleven were not reached. The old runner confused the RSP range base with the actual overlap address. |
+
+The XML adapter only normalizes the exact source-derived QEMU target envelope.
+Malformed XML, unknown prefixes, other annexes, duplicate attributes and recursive
+includes remain rejected. The new read-only hit snapshot corrects address
+observation without relaxing the precise address, PC, RAM, padding or unsupported
+bus-callback requirements. Neither the earlier 11 XML passes nor two CPU passes
+constitutes fourteen-check acceptance.
 
 The selected CPU is upstream QEMU Cortex-M3. The captured AOP image establishes
 ELF32 little endian, EM_ARM=40 and Thumb entry candidates; it does not identify
@@ -97,8 +105,20 @@ This is not instruction-transaction rollback. STRD/STM or split unaligned
 stores may have earlier legal bus beats. Tests require forbidden target
 padding and all unrelated RAM to remain unchanged, require no unsupported
 bus callback to run, and preserve any earlier valid writes in the receipt.
-They also require the precise expected watchpoint address, so a different
+They also require the precise expected first forbidden overlap byte, so a different
 exception-stack access cannot accidentally satisfy the test.
+
+GDB's RSP stop packet reports the configured watch range base (`vaddr`),
+not the access hit. The read-only `watchpoint-hits` QOM property is available
+only with BQL held and the vCPU stopped. It preserves raw flags and
+macro-decoded state. The runner requires an empty initial snapshot, uniquely
+matches this packet's range/type and the installed length, checks
+before-access/read/write state, and compares `hitaddr` with
+`target + allowed_prefix`. The value is the first overlap byte,
+`MAX(access_address, watch_range_base)`, not an architectural FAR or an
+access-width report. Evidence is taken before continuing execution; the
+faulted instruction is never resumed. No CPU watchpoint flags, registers,
+memory or device state are changed by this observer.
 
 Before each single-step request the controller checks the PC against executable
 file ranges and checks the whole two- or four-byte Thumb instruction extent.
@@ -142,7 +162,8 @@ for review.
 Normal instance teardown requests QMP quit before closing RSP, waits up to one
 second, then kills and reaps that QEMU process if it has not exited. This avoids
 resuming a stopped guest merely by disconnecting the debugger. Public CI must
-also bound the entire synthetic preflight in its own process group; the private
+also bound the entire synthetic preflight to 180 seconds in its own process
+group. The separate XML regression step has a 30-second CI bound; the private
 command's separate ten-second profile bound does not apply to preflight.
 
 ## Public preflight first
@@ -211,7 +232,9 @@ are saved in the draft's `baseline/` and `source-read-receipt.json`.
 
 Relevant primary implementation paths:
 
-- `accel/tcg/watchpoint.c`: before-access CPU-loop exit and overlap semantics.
+- [`gdbstub/system.c`](https://github.com/cyjin-yl/qemu-tb371fc/blob/567e4f9834547f1445ecf24de96603132df8cfb8/gdbstub/system.c): RSP emits `vaddr`, then clears the hit pointer.
+- [`accel/tcg/cpu-exec.c`](https://github.com/cyjin-yl/qemu-tb371fc/blob/567e4f9834547f1445ecf24de96603132df8cfb8/accel/tcg/cpu-exec.c) and [`target/arm/tcg/debug.c`](https://github.com/cyjin-yl/qemu-tb371fc/blob/567e4f9834547f1445ecf24de96603132df8cfb8/target/arm/tcg/debug.c): debug-stop lifecycle and retained entry hit fields.
+- [`accel/tcg/watchpoint.c`](https://github.com/cyjin-yl/qemu-tb371fc/blob/567e4f9834547f1445ecf24de96603132df8cfb8/accel/tcg/watchpoint.c): before-access CPU-loop exit and overlap semantics.
 - `system/watchpoint.c`: arbitrary nonempty interval insertion and overflow
   checks.
 - `accel/tcg/tcg-accel-ops.c`: GDB watchpoint conversion.

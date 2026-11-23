@@ -87,6 +87,20 @@ class QMP:
         self.sock.close()
 
 
+def parse_gdb_feature_xml(name, raw):
+    """Adapt QEMU's exact target.xml envelope for ElementTree namespaces."""
+    # gdbstub/gdbstub.c emits this envelope followed by literal xi:include
+    # elements, without xmlns:xi. Bind that documented inclusion name only
+    # in this parser copy; malformed XML and other unbound prefixes still fail.
+    prefix = (b'<?xml version="1.0"?>'
+              b'<!DOCTYPE target SYSTEM "gdb-target.dtd"><target>')
+    if name == "target.xml" and raw.startswith(prefix):
+        raw = (prefix[:-len(b"<target>")] +
+               b'<target xmlns:xi="http://www.w3.org/2001/XInclude">' +
+               raw[len(prefix):])
+    return ET.fromstring(raw)
+
+
 class RSP:
     def __init__(self, path):
         self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -167,7 +181,7 @@ class RSP:
             chunks.append(reply[1:])
             offset += len(reply) - 1
             if reply[:1] == b"l":
-                return ET.fromstring(b"".join(chunks))
+                return parse_gdb_feature_xml(name, b"".join(chunks))
 
     def _read_feature(self, name, visited):
         assert name not in visited, "Recursive GDB target XML"
@@ -291,6 +305,55 @@ class Reference:
         return [self.qmp.get("unsupported-read-count"),
                 self.qmp.get("unsupported-write-count")]
 
+    def watchpoint_snapshot(self):
+        entries = json.loads(self.qmp.get("watchpoint-hits"))
+        assert isinstance(entries, list), entries
+        integers = {"vaddr", "len", "hitaddr", "flags"}
+        booleans = {"gdb", "cpu", "stop_before_access", "read_hit", "write_hit"}
+        for entry in entries:
+            assert isinstance(entry, dict), entry
+            assert set(entry) == integers | booleans | {"rsp_type"}, entry
+            assert all(type(entry[key]) is int for key in integers), entry
+            assert all(type(entry[key]) is bool for key in booleans), entry
+            assert entry["len"] > 0 and entry["flags"] >= 0, entry
+            assert entry["gdb"] is True, entry
+            assert entry["read_hit"] or entry["write_hit"], entry
+            assert entry["rsp_type"] in {"watch", "rwatch", "awatch"}, entry
+        return entries
+
+    def watchpoint_hit(self, stop, expected_access=None):
+        # RSP identifies a configured watch range. Only QEMU's hitaddr records
+        # the first byte of its intersection with the actual TCG access.
+        fields = [field.split(":", 1) for field in stop.split(";")
+                  if field.startswith(("watch:", "rwatch:", "awatch:"))]
+        assert len(fields) == 1, stop
+        kind, address = fields[0]
+        base = int(address, 16)
+        gdb_type = {"watch": 2, "rwatch": 3, "awatch": 4}[kind]
+        entries = self.watchpoint_snapshot()
+        matches = [entry for entry in entries
+                   if entry["vaddr"] == base and entry["rsp_type"] == kind]
+        assert len(matches) == 1, (stop, entries)
+        hit = matches[0]
+        configured = [entry for entry in self.watchpoints
+                      if entry["base"] == base and entry["type"] == gdb_type]
+        assert len(configured) == 1, (stop, self.watchpoints)
+        assert hit["len"] == configured[0]["length"], (hit, configured)
+        assert hit["stop_before_access"] is True, hit
+        assert hit["cpu"] is False, "Expected a debugger watchpoint"
+        assert base <= hit["hitaddr"] < base + hit["len"], hit
+        if kind == "watch":
+            assert hit["write_hit"] and not hit["read_hit"], hit
+        elif kind == "rwatch":
+            assert hit["read_hit"] and not hit["write_hit"], hit
+        if expected_access is not None:
+            assert expected_access in {"read", "write"}, expected_access
+            assert hit["read_hit"] is (expected_access == "read"), hit
+            assert hit["write_hit"] is (expected_access == "write"), hit
+        return {"raw_rsp": stop, "rsp_kind": kind, "range_base": base,
+                "range_length": hit["len"], "hitaddr": hit["hitaddr"],
+                "flags": hit["flags"], "all_marked_entries": entries}
+
     def prepare(self, instruction, address=CODE, registers=None):
         self.rsp.write(address, instruction)
         self.rsp.set_reg("xpsr", 0x01000000)
@@ -300,6 +363,7 @@ class Reference:
         for name, value in (registers or {}).items():
             self.rsp.set_reg(name, value)
         self.watchpoints = self.rsp.guards(layout(self.profile))
+        assert self.watchpoint_snapshot() == [], "Stale hit before first access"
 
     def snapshot(self):
         return {base: self.rsp.read(base, size)
@@ -330,6 +394,7 @@ class Reference:
 
 
 def watch_address(stop):
+    """Return the RSP watch range base, not the actual access hit address."""
     for key in ("watch", "rwatch", "awatch"):
         marker = key + ":"
         if marker in stop:
@@ -350,9 +415,12 @@ def negative(qemu, output, instruction, target, allowed_prefix=0,
         initial_registers = r.state()
         bus = r.counts()
         stop = r.rsp.step()
+        expected_access = ("read" if instruction == bytes.fromhex("0868")
+                           else "write")
+        evidence = r.watchpoint_hit(stop, expected_access)
         final_registers = r.state()
         after = r.snapshot()
-        assert watch_address(stop) == target + allowed_prefix, stop
+        assert evidence["hitaddr"] == target + allowed_prefix, evidence
         assert final_registers["pc"] == CODE, final_registers
         assert r.counts() == bus, "Unsupported bus callback ran before watchpoint"
         assert r.qmp.get("padding-pristine") is True
@@ -372,7 +440,8 @@ def negative(qemu, output, instruction, target, allowed_prefix=0,
         # A load must not receive a synthesized value from a forbidden target.
         if instruction == bytes.fromhex("0868"):
             assert final_registers["r0"] == values["r0"]
-        return {"stop": stop, "fault_address": watch_address(stop),
+        return {"stop": stop, "fault_address": evidence["hitaddr"],
+                "watchpoint_evidence": evidence,
                 "pc_before": CODE, "pc_after": final_registers["pc"],
                 "invalid_backing_padding_unchanged": True,
                 "unsupported_callbacks_unchanged": True,
@@ -609,6 +678,8 @@ def diagnostic_worker(args):
             record["candidate_stack_is_in_writable_range"] = contains(
                 layout(args.profile), stack - 4, 4, 2)
             record["watchpoints"] = r.rsp.guards(layout(args.profile))
+            r.watchpoints = record["watchpoints"]
+            assert r.watchpoint_snapshot() == [], "Stale hit before first access"
             before_bus = r.counts()
             save(out / "progress.json", record)
             recent = []
@@ -628,7 +699,9 @@ def diagnostic_worker(args):
                 address = watch_address(stop)
                 if address is not None:
                     record["stop_reason"] = "unsupported-access-before-bus"
-                    record["fault_address"] = address
+                    evidence = r.watchpoint_hit(stop)
+                    record["fault_address"] = evidence["hitaddr"]
+                    record["watchpoint_evidence"] = evidence
                     record["stopped_pc"] = r.rsp.reg("pc")
                     record["debug_stop"] = stop
                     break

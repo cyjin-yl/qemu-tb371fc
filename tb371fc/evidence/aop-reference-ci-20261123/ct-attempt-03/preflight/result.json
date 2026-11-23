@@ -1,0 +1,61 @@
+{
+  "all_passed": false,
+  "aop_startup_validated": false,
+  "checks": [
+    {
+      "detail": {
+        "cpu_type": "cortex-m3-arm-cpu",
+        "executed_public_probe": "MRS r0, MSP",
+        "hardware_cpu_identity_established": false,
+        "reference_initial_state": {
+          "basepri": 0,
+          "control": 0,
+          "faultmask": 0,
+          "lr": 4294967295,
+          "msp": 0,
+          "pc": 0,
+          "primask": 0,
+          "psp": 0,
+          "r0": 0,
+          "r1": 0,
+          "r10": 0,
+          "r11": 0,
+          "r12": 0,
+          "r2": 0,
+          "r3": 0,
+          "r4": 0,
+          "r5": 0,
+          "r6": 0,
+          "r7": 0,
+          "r8": 0,
+          "r9": 0,
+          "sp": 0,
+          "xpsr": 1073741824
+        }
+      },
+      "name": "cortex-m3-and-architectural-msp",
+      "passed": true
+    },
+    {
+      "detail": {
+        "store_and_load_executed": true
+      },
+      "name": "permitted-store-and-load",
+      "passed": true
+    },
+    {
+      "exception": "Traceback (most recent call last):\n  File \"/work/aop-reference-xml-root-1247-stage/test_aop_entry_reference.py\", line 426, in case\n    detail = function()\n  File \"/work/aop-reference-xml-root-1247-stage/test_aop_entry_reference.py\", line 466, in <lambda>\n    negative(args.qemu, path(2), bytes.fromhex(\"0868\"), 0x40000000))\n    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/aop-reference-xml-root-1247-stage/test_aop_entry_reference.py\", line 369, in negative\n    assert watch_address(stop) == target + allowed_prefix, stop\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: T05thread:p01.01;awatch:b0e604c;\n",
+      "name": "unmapped-read-stops-before-value",
+      "passed": false
+    }
+  ],
+  "expected_checks": 14,
+  "failure": "Traceback (most recent call last):\n  File \"/work/aop-reference-xml-root-1247-stage/test_aop_entry_reference.py\", line 465, in run_preflight\n    case(\"unmapped-read-stops-before-value\", lambda:\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n         negative(args.qemu, path(2), bytes.fromhex(\"0868\"), 0x40000000))\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/aop-reference-xml-root-1247-stage/test_aop_entry_reference.py\", line 426, in case\n    detail = function()\n  File \"/work/aop-reference-xml-root-1247-stage/test_aop_entry_reference.py\", line 466, in <lambda>\n    negative(args.qemu, path(2), bytes.fromhex(\"0868\"), 0x40000000))\n    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/aop-reference-xml-root-1247-stage/test_aop_entry_reference.py\", line 369, in negative\n    assert watch_address(stop) == target + allowed_prefix, stop\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: T05thread:p01.01;awatch:b0e604c;\n",
+  "firmware_executed": false,
+  "firmware_read": false,
+  "hardware_reset_verified": false,
+  "passed": false,
+  "qemu_sha256": "cf8ca6bca81246e4e696a62bc793d1386af39841b39d30333dd1630921c6edf5",
+  "runner_sha256": "c3ab44d784fe174c3ae4d3cd2e38b7c76f2253edac2648867a02b7a7ef250f9f",
+  "schema": "aop-qemu-reference-preflight-v1"
+}

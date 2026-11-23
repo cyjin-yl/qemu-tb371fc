@@ -5,13 +5,18 @@
 ## AOP 独立诊断参考：合成 CI 检查点
 
 本分支加入独立的 `-M aop-entry-reference` 和单独的 `aop-reference` 构建配置，用于先验证后续固件诊断所依赖的访存监测方法。
-首次 CI 已完成编译，但机型缺少 QEMU 11 的 ARM target interface，启动时报告 `unsupported machine type`，尚未执行合成来宾指令。
-[原始失败回执](tb371fc/evidence/aop-reference-ci-20261123/attempt-01/manifest.json) 已保留；本次补齐接口注册并增加 `-machine help` 门槛。
-**修复后的 14 项预检尚待实际通过；源码、测试脚本和二进制哈希继续作为门槛。**
+首次 CI 的机型注册失败保留于 [attempt-01](tb371fc/evidence/aop-reference-ci-20261123/attempt-01/manifest.json)。
+接口修复已在固定 `567e4f9` 的第二次 CI 及独立 CT 构建中确认；随后两次均因 QEMU `target.xml` 的未绑定 `xi:` 前缀解析失败，尚未执行合成来宾指令。
+[CT XML 修复验证](tb371fc/evidence/aop-reference-ci-20261123/ct-attempt-03/manifest.json)使用同一冻结二进制，11 项 XML 回归全部通过；CPU 预检实际为前两项通过、第三项未映射读取失败、后续十一项未运行。
+原停止包 `awatch:b0e604c` 表示监视区间起点；旧 runner 将其误作实际命中地址。[第二次 CI 原始回执](tb371fc/evidence/aop-reference-ci-20261123/attempt-02/manifest.json)和 CT 失败均保留。
+
+本次加入严格 XML envelope 适配、11 项独立回归，以及仅在 vCPU 停止且持有 BQL 时可读的 watchpoint 命中快照。
+runner 唯一关联 RSP 区间和实际命中，保留原精确地址、PC、总线、RAM 与 padding 检查。
+**新修复仍待独立 CT 构建与完整 14 项实际通过；11 项 XML 或前两项 CPU 成功不代表 14 项通过。**
 
 Cortex-M3、1 MHz 时钟、可选的低地址别名及额外 DTCM 都是明确的诊断参考配置，平板实际 AOP CPU 和冷启动映射尚未确认。
 CI 只执行自编测试指令，不读取或运行私有固件。普通访存的 watchpoint 测试也不证明异常内部 vector/stack 访问具有停前保证。
-脚本保留日志、失败结果和 socket 目录；测试阶段具有 180 秒独立进程组总时限。
+脚本保留日志、失败结果和 socket 目录；CPU 预检具有 180 秒独立进程组总时限，CI 的 XML 回归另有 30 秒时限。
 
 详见 [方法与边界](tb371fc/docs/aop-entry-reference.md) 和 [待验证检查点](tb371fc/evidence/aop-reference-ci-20261123/checkpoint.json)。
 以下 TB371FC 功能测试记录属于已有的独立验证范围；本分支不宣称完整 AOP 服务、原厂 Android 或整机等价已经通过。

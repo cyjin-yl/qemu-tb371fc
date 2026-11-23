@@ -11,6 +11,7 @@
 #include "qemu/osdep.h"
 #include "qapi/error.h"
 #include "qemu/error-report.h"
+#include "qemu/main-loop.h"
 #include "qemu/module.h"
 #include "hw/core/boards.h"
 #include "hw/core/clock.h"
@@ -20,6 +21,7 @@
 #include "hw/arm/boot.h"
 #include "hw/arm/machines-qom.h"
 #include "system/address-spaces.h"
+#include "system/runstate.h"
 #include "target/arm/cpu.h"
 
 #define TYPE_AOP_ENTRY_REFERENCE MACHINE_TYPE_NAME("aop-entry-reference")
@@ -176,6 +178,69 @@ static char *aop_ref_get_layout(Object *obj, Error **errp)
     return g_string_free(layout, false);
 }
 
+/*
+ * Host-only debugger evidence. GDB's stop packet reports wp->vaddr and clears
+ * CPUState::watchpoint_hit; the hit-marked entries retain the overlap address.
+ * Never read hitaddr from an unmarked entry: insertion does not initialize it.
+ * This observer neither consumes hits nor changes CPU or memory behaviour.
+ */
+static char *aop_ref_get_watchpoint_hits(Object *obj, Error **errp)
+{
+    AOPReferenceState *s = AOP_ENTRY_REFERENCE(obj);
+    CPUState *cpu;
+    CPUWatchpoint *wp;
+    GString *result;
+    bool first = true;
+
+    if (!s->initialized || !bql_locked()) {
+        error_setg(errp, "Watchpoint evidence requires initialized machine/BQL");
+        return NULL;
+    }
+    cpu = CPU(s->armv7m.cpu);
+    if (!cpu->stopped || runstate_is_running()) {
+        error_setg(errp, "Watchpoint evidence requires a stopped vCPU");
+        return NULL;
+    }
+    result = g_string_new("[");
+    QTAILQ_FOREACH(wp, &cpu->watchpoints, entry) {
+        const char *rsp_type;
+
+        if (!(wp->flags & BP_GDB) || !(wp->flags & BP_WATCHPOINT_HIT)) {
+            continue;
+        }
+        switch (wp->flags & BP_MEM_ACCESS) {
+        case BP_MEM_READ:
+            rsp_type = "rwatch";
+            break;
+        case BP_MEM_WRITE:
+            rsp_type = "watch";
+            break;
+        case BP_MEM_ACCESS:
+            rsp_type = "awatch";
+            break;
+        default:
+            rsp_type = "invalid";
+            break;
+        }
+        g_string_append_printf(
+            result,
+            "%s{\"vaddr\":%" G_GUINT64_FORMAT ",\"len\":%" G_GUINT64_FORMAT
+            ",\"hitaddr\":%" G_GUINT64_FORMAT ",\"flags\":%u"
+            ",\"rsp_type\":\"%s\",\"gdb\":%s,\"cpu\":%s"
+            ",\"stop_before_access\":%s,\"read_hit\":%s,\"write_hit\":%s}",
+            first ? "" : ",", (guint64)wp->vaddr, (guint64)wp->len,
+            (guint64)wp->hitaddr, (unsigned)wp->flags, rsp_type,
+            (wp->flags & BP_GDB) ? "true" : "false",
+            (wp->flags & BP_CPU) ? "true" : "false",
+            (wp->flags & BP_STOP_BEFORE_ACCESS) ? "true" : "false",
+            (wp->flags & BP_WATCHPOINT_HIT_READ) ? "true" : "false",
+            (wp->flags & BP_WATCHPOINT_HIT_WRITE) ? "true" : "false");
+        first = false;
+    }
+    g_string_append_c(result, ']');
+    return g_string_free(result, false);
+}
+
 static void aop_ref_init(MachineState *machine)
 {
     AOPReferenceState *s = AOP_ENTRY_REFERENCE(machine);
@@ -308,6 +373,8 @@ static void aop_ref_class_init(ObjectClass *oc, const void *data)
                                   NULL);
     object_class_property_add_bool(oc, "padding-pristine",
                                    aop_ref_padding_pristine, NULL);
+    object_class_property_add_str(oc, "watchpoint-hits",
+                                  aop_ref_get_watchpoint_hits, NULL);
 }
 
 static const TypeInfo aop_ref_info = {

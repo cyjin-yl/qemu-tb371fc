@@ -1,0 +1,20 @@
+{
+  "all_passed": false,
+  "aop_startup_validated": false,
+  "checks": [
+    {
+      "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_aop_entry_reference.py\", line 412, in case\n    detail = function()\n             ^^^^^^^^^^\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_aop_entry_reference.py\", line 425, in core\n    with Reference(args.qemu, path(0)) as r:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_aop_entry_reference.py\", line 270, in __init__\n    self.rsp = RSP(self.socket_dir / \"gdb\")\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_aop_entry_reference.py\", line 102, in __init__\n    self._read_feature(\"target.xml\", set())\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_aop_entry_reference.py\", line 175, in _read_feature\n    tree = self.xml(name)\n           ^^^^^^^^^^^^^^\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_aop_entry_reference.py\", line 170, in xml\n    return ET.fromstring(b\"\".join(chunks))\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/xml/etree/ElementTree.py\", line 1335, in XML\n    parser.feed(text)\nxml.etree.ElementTree.ParseError: unbound prefix: line 1, column 102\n",
+      "name": "cortex-m3-and-architectural-msp",
+      "passed": false
+    }
+  ],
+  "expected_checks": 14,
+  "failure": "Traceback (most recent call last):\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_aop_entry_reference.py\", line 437, in run_preflight\n    case(\"cortex-m3-and-architectural-msp\", core)\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_aop_entry_reference.py\", line 412, in case\n    detail = function()\n             ^^^^^^^^^^\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_aop_entry_reference.py\", line 425, in core\n    with Reference(args.qemu, path(0)) as r:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_aop_entry_reference.py\", line 270, in __init__\n    self.rsp = RSP(self.socket_dir / \"gdb\")\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_aop_entry_reference.py\", line 102, in __init__\n    self._read_feature(\"target.xml\", set())\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_aop_entry_reference.py\", line 175, in _read_feature\n    tree = self.xml(name)\n           ^^^^^^^^^^^^^^\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_aop_entry_reference.py\", line 170, in xml\n    return ET.fromstring(b\"\".join(chunks))\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/xml/etree/ElementTree.py\", line 1335, in XML\n    parser.feed(text)\nxml.etree.ElementTree.ParseError: unbound prefix: line 1, column 102\n",
+  "firmware_executed": false,
+  "firmware_read": false,
+  "hardware_reset_verified": false,
+  "passed": false,
+  "qemu_sha256": "9272a2a4759084aa57066421a4ac4330ea4a31c0d7bc3703ae7cf0da143193d7",
+  "runner_sha256": "476c2997df433d57105c851b2467f234f1ae2203d3dd09a15f369333f3d327a8",
+  "schema": "aop-qemu-reference-preflight-v1"
+}

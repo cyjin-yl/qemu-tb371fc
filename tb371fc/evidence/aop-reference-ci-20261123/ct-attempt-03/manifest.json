@@ -1,0 +1,65 @@
+{
+  "schema": "aop-reference-ct-attempt-03-archive-v1",
+  "date": "2026-11-23",
+  "scope": "Actual CT XML regression success followed by a failed synthetic CPU preflight, using the unchanged prior CT QEMU binary.",
+  "environment": "doesvm CT102 Docker qemu-tb371fc-dev",
+  "directory": "/work/aop-reference-xml-root-1247",
+  "source_base_commit": "567e4f9834547f1445ecf24de96603132df8cfb8",
+  "qemu_sha256": "cf8ca6bca81246e4e696a62bc793d1386af39841b39d30333dd1630921c6edf5",
+  "qemu_rebuilt": false,
+  "model_changed": false,
+  "runner_sha256": "c3ab44d784fe174c3ae4d3cd2e38b7c76f2253edac2648867a02b7a7ef250f9f",
+  "xml_test_sha256": "5dcf89bc1a47bc1e589f39a467c2445d8fe4c4e0027dbda9e3586bb1d324eeeb",
+  "result": {
+    "passed": false,
+    "xml_tests_passed": 11,
+    "cpu_expected_checks": 14,
+    "cpu_passed_checks": 2,
+    "cpu_failed_check_number": 3,
+    "cpu_not_reached": 11,
+    "raw_stop": "T05thread:p01.01;awatch:b0e604c;",
+    "expected_forbidden_overlap_byte": "0x40000000",
+    "actual_hitaddr_was_observed": false,
+    "error": "The old harness compared the RSP watch range base with the forbidden access target; this snapshot contains no readout of CPUWatchpoint.hitaddr."
+  },
+  "inputs_unchanged": true,
+  "old_failure_preserved": true,
+  "firmware_read": false,
+  "firmware_executed": false,
+  "aop_startup_validated": false,
+  "full_tablet_equivalence": false,
+  "followup": {
+    "status": "pending-new-build-and-all-fourteen-checks",
+    "model_sha256": "992a50c18904499d2ad2876a766a1cea69302376472b77c45d52b40afb9ba793",
+    "runner_sha256": "18896b8b53720df6809441624b68342245bb7e09bfab8eee26b161dbb3ab613b",
+    "checks_relaxed": false,
+    "internal_exception_before_access_proven": false
+  },
+  "selection_note": "The listed original receipts/logs and the exact historical XML-fixed runner/test source are retained. Local scratch XML-only results are not CT acceptance evidence and are not used here.",
+  "files": {
+    "result.json": {
+      "bytes": 6975,
+      "sha256": "10f2d606c5106591d0504404211f2562018756dc5e7d7411cd14f3d9e0ebf2ab"
+    },
+    "preflight/result.json": {
+      "bytes": 3214,
+      "sha256": "0fe99fb1593be95a24aa7474ae2b3eb9dca7cad90c070385c4b7e782dc02ef5c"
+    },
+    "xml-unit.log": {
+      "bytes": 1468,
+      "sha256": "ec3f40930ede708d2f14ba5642952534334543cf575334ef5427c9e8335722d5"
+    },
+    "preflight.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "source/test_aop_entry_reference.py": {
+      "bytes": 32905,
+      "sha256": "c3ab44d784fe174c3ae4d3cd2e38b7c76f2253edac2648867a02b7a7ef250f9f"
+    },
+    "source/test_aop_entry_xml.py": {
+      "bytes": 4788,
+      "sha256": "5dcf89bc1a47bc1e589f39a467c2445d8fe4c4e0027dbda9e3586bb1d324eeeb"
+    }
+  }
+}
