@@ -6,7 +6,7 @@ passed all eleven XML regressions and fourteen actual synthetic preflight checks
 in [CI run 45183148964](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45183148964).
 The tested binary SHA256 is
 `3bd0d1d124cc9c3f3cf010bddf2b634a6e7e8f9d5a464c29c895005e04e64bc0`.
-[Independent CT attempt 04](../evidence/aop-reference-ci-20261123/ct-attempt-04/README.md) failed during Git source fetch before compilation or tests. Its original failure is preserved. A separate attempt 05 uses the exact same commit through verified public Git objects; no successful CT result is claimed here.
+[Independent CT attempt 04](../evidence/aop-reference-ci-20261123/ct-attempt-04/README.md) failed during Git source fetch before compilation or tests; that failure is preserved. [CT attempt 05](../evidence/aop-reference-ci-20261123/ct-attempt-05/README.md) reconstructed the exact same commit through verified public Git objects and actually passed all 11 XML and 14 CPU checks. Its separately built QEMU SHA256 is `c6bed2c465e0b771d6e40d60225b9f89636f6d213bf78b3c174510c24f3f4493`.
 
 | Preserved attempt | Actual result |
 | --- | --- |

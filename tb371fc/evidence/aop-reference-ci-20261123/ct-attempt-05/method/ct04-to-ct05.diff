@@ -1,0 +1,249 @@
+--- a/build_and_preflight.py
++++ b/build_and_preflight.py
+@@ -1,6 +1,6 @@
+ #!/usr/bin/env python3
+ # SPDX-License-Identifier: GPL-2.0-or-later
++"""Independent CT102 watchpoint build using exact public Git objects."""
+-"""Independent CT102 watchpoint observation build; synthetic inputs only."""
+ import ast
+ import datetime
+ import hashlib
+@@ -18,8 +18,8 @@
+ if not __debug__ or sys.flags.optimize != 0:
+     raise RuntimeError("Controller requires assertions; optimized Python refused")
+ 
++ROOT = Path("/work/aop-reference-watchpoint-attempt-05")
++STAGE = Path("/work/aop-reference-watchpoint-attempt-05-stage")
+-ROOT = Path("/work/aop-reference-watchpoint-attempt-04")
+-STAGE = Path("/work/aop-reference-watchpoint-attempt-04-stage")
+ SOURCE = ROOT / "source"
+ BUILD = ROOT / "build"
+ RESULTS = ROOT / "results"
+@@ -27,6 +27,15 @@
+ COMMIT = "fe89e5a553fe038babe07abb279a0975d4306715"
+ BASE_COMMIT = "567e4f9834547f1445ecf24de96603132df8cfb8"
+ REMOTE = "https://github.com/cyjin-yl/qemu-tb371fc.git"
++GIT_PARENT_SOURCE = Path("/work/aop-reference-root-1230/source")
++GIT_OBJECT_PACKET = STAGE / "fe89-exact-objects.json"
++GIT_OBJECT_PACKET_SHA256 = (
++    "33df667fcc6e0fc072db21a6a303559779724978b51b3bd433de8849da1e72eb")
++GIT_OBJECT_PACKET_BYTES = 184744
++GIT_OBJECT_TREE = "302cff20495d2b63e49a5bbde8879c028fb583ea"
++RAW_COMMIT_SHA256 = (
++    "12380467210f7dd9a4dae8a4b68fabbc2c4bfd4c78fd6b9f954901a8c5a3f5f3")
++SOURCE_ACQUISITION = "local-parent-fetch-and-exact-public-git-object-import"
+ C_PATH = "hw/arm/qcom-aop-reference.c"
+ RUNNER_PATH = "tb371fc/tests/test_aop_entry_reference.py"
+ UNIT_PATH = "tb371fc/tests/test_aop_entry_xml.py"
+@@ -50,6 +59,7 @@
+ OLD_ROOTS = {
+     "ct1230": Path("/work/aop-reference-root-1230/results"),
+     "ct1247": Path("/work/aop-reference-xml-root-1247"),
++    "ct04": Path("/work/aop-reference-watchpoint-attempt-04/results"),
+ }
+ OLD_EXPECTED = {
+     "ct1230/preflight/result.json":
+@@ -61,6 +71,14 @@
+     "ct1247/result.json":
+         "10f2d606c5106591d0504404211f2562018756dc5e7d7411cd14f3d9e0ebf2ab",
+ }
++OLD_EXPECTED.update({
++    "ct04/result.json":
++        "a5a7c31a5968c1980c17f651752dabea934064b424ffede40632e429b8b8c87d",
++    "ct04/02-git-fetch.json":
++        "834040d0e01eb99fb6aecbfc5c313ded82be4e177aad38dc7923d7968d8050b7",
++    "ct04/02-git-fetch.log":
++        "1efababbd9d23f753872be4dcc13639d96900b98f49a1a6537959e88bee76272",
++})
+ COMMANDS = []
+ 
+ 
+@@ -183,6 +201,124 @@
+     return ast.get_source_segment(text, matches[0])
+ 
+ 
++def git_object_id(kind, raw):
++    header = ("%s %d\0" % (kind, len(raw))).encode("ascii")
++    return hashlib.sha1(header + raw).hexdigest()
++
++
++def acquire_exact_source():
++    """Populate only the new repository; never run a network fetch."""
++    not_symlink(GIT_PARENT_SOURCE)
++    not_symlink(GIT_OBJECT_PACKET)
++    raw_packet = GIT_OBJECT_PACKET.read_bytes()
++    require(len(raw_packet) == GIT_OBJECT_PACKET_BYTES and
++            hashlib.sha256(raw_packet).hexdigest() == GIT_OBJECT_PACKET_SHA256,
++            "Exact public Git transport packet differs")
++    packet = json.loads(raw_packet)
++    require(packet["schema"] == "tb371fc-exact-git-object-transport-v1" and
++            packet["base_commit"] == BASE_COMMIT and
++            packet["commit"] == COMMIT and packet["tree"] == GIT_OBJECT_TREE and
++            packet["firmware_payload_included"] is False,
++            "Git object packet scope or identity differs")
++    files = packet["files"]
++    require(isinstance(files, list) and len(files) == 22,
++            "Exact twenty-two-object delta required")
++    names = set()
++    validated = []
++    for entry in files:
++        name = entry["path"]
++        require(isinstance(name, str) and
++                re.fullmatch(r"[A-Za-z0-9_./-]+", name) is not None and
++                all(part not in ("", ".", "..", ".git")
++                    for part in name.split("/")) and name not in names,
++                "Unsafe or duplicate Git delta path")
++        require(entry["mode"] == "100644" and
++                entry["status"] in ("added", "modified"),
++                "Only exact regular-file additions and modifications allowed")
++        names.add(name)
++        content = entry["content"].encode("utf-8")
++        require(len(content) == entry["bytes"] and
++                hashlib.sha256(content).hexdigest() == entry["sha256"] and
++                git_object_id("blob", content) == entry["git_blob_sha"],
++                "Git blob content identity differs: " + name)
++        validated.append((entry, content))
++    raw_commit = packet["raw_commit"].encode("utf-8")
++    require(not raw_commit.endswith(b"\n") and
++            hashlib.sha256(raw_commit).hexdigest() ==
++            packet["raw_commit_sha256"] == RAW_COMMIT_SHA256 and
++            git_object_id("commit", raw_commit) == COMMIT,
++            "Raw commit bytes differ")
++    require(raw_commit.startswith(("tree " + GIT_OBJECT_TREE + "\nparent " +
++                                   BASE_COMMIT + "\n").encode("ascii")),
++            "Raw commit tree or parent differs")
++
++    # The old repository is read-only; SOURCE and the import index are new.
++    run("local-parent-exists", ["git", "-C", str(GIT_PARENT_SOURCE),
++                               "cat-file", "-e", BASE_COMMIT + "^{commit}"])
++    parent_head = run("local-parent-head", ["git", "-C", str(GIT_PARENT_SOURCE),
++                                          "rev-parse", "HEAD"])
++    require(parent_head.read_text().strip() == BASE_COMMIT,
++            "Preserved parent checkout identity differs")
++    run("git-fetch-local-parent",
++        ["git", "-c", "credential.helper=", "fetch", "--no-tags", "--depth=1",
++         str(GIT_PARENT_SOURCE), BASE_COMMIT], SOURCE, 900)
++    imported = RESULTS / "git-object-import"
++    imported.mkdir()
++    index_env = ["env", "GIT_INDEX_FILE=" + str(imported / "index")]
++    run("git-read-parent-tree", index_env + ["git", "read-tree", BASE_COMMIT],
++        SOURCE, 900)
++
++    blob_paths = []
++    for index, (entry, content) in enumerate(validated):
++        path = imported / ("%02d.blob" % index)
++        with path.open("xb") as stream:
++            stream.write(content)
++        blob_paths.append(path)
++    blob_log = run("git-write-exact-blobs",
++                   ["git", "hash-object", "-w", "--no-filters",
++                    *[str(path) for path in blob_paths]], SOURCE)
++    require(blob_log.read_text().splitlines() ==
++            [entry["git_blob_sha"] for entry, _ in validated],
++            "Git did not write the expected blob identities")
++    update = index_env + ["git", "update-index", "--add"]
++    for entry, _ in validated:
++        update.extend(["--cacheinfo", entry["mode"] + "," +
++                       entry["git_blob_sha"] + "," + entry["path"]])
++    run("git-update-exact-index", update, SOURCE, 900)
++    tree_log = run("git-write-exact-tree", index_env + ["git", "write-tree"],
++                   SOURCE, 900)
++    require(tree_log.read_text().strip() == GIT_OBJECT_TREE,
++            "Reconstructed full Git tree differs")
++
++    commit_path = imported / "fe89.commit"
++    with commit_path.open("xb") as stream:
++        stream.write(raw_commit)
++    commit_log = run("git-write-exact-commit",
++                     ["git", "hash-object", "-w", "-t", "commit",
++                      "--no-filters", str(commit_path)], SOURCE)
++    require(commit_log.read_text().strip() == COMMIT,
++            "Imported commit identity differs")
++    readback = run("git-readback-exact-commit",
++                   ["git", "cat-file", "commit", COMMIT], SOURCE)
++    require(readback.read_bytes() == raw_commit, "Git commit readback differs")
++    require(not (SOURCE / ".git/index").exists(),
++            "New checkout index unexpectedly exists before checkout")
++    save(RESULTS / "source-acquisition.json", {
++        "method": SOURCE_ACQUISITION, "network_fetch_used": False,
++        "packet_sha256": GIT_OBJECT_PACKET_SHA256,
++        "packet_bytes": len(raw_packet), "base_commit": BASE_COMMIT,
++        "base_repository": str(GIT_PARENT_SOURCE),
++        "old_repository_write_commands_used": False,
++        "tree": GIT_OBJECT_TREE, "commit": COMMIT,
++        "retained_import_index": str(imported / "index"),
++        "retained_import_index_sha256": sha(imported / "index"),
++        "raw_commit_sha256": RAW_COMMIT_SHA256,
++        "objects": [{key: entry[key] for key in
++                     ("path", "mode", "status", "git_blob_sha", "bytes", "sha256")}
++                    for entry, _ in validated],
++        "firmware_read": False, "firmware_executed": False})
++
++
+ def main():
+     require(len(sys.argv) == 1, "Controller accepts no arguments")
+     require(Path(__file__).absolute().parent == STAGE,
+@@ -192,9 +328,12 @@
+     ROOT.mkdir(exist_ok=False)
+     RESULTS.mkdir()
+     started = time.monotonic()
++    receipt = {"schema": "aop-reference-ct-watchpoint-attempt-05-v1",
+-    receipt = {"schema": "aop-reference-ct-watchpoint-attempt-04-v1",
+                "passed": False, "all_passed": False, "source_commit": COMMIT,
+                "base_commit": BASE_COMMIT, "remote": REMOTE, "jobs": 1,
++               "source_acquisition": SOURCE_ACQUISITION,
++               "git_object_packet_sha256": GIT_OBJECT_PACKET_SHA256,
++               "historical_ct04_preservation_required": True,
+                "firmware_read": False, "firmware_executed": False,
+                "hardware_reset_verified": False, "aop_startup_validated": False,
+                "full_tablet_equivalence": False,
+@@ -221,20 +360,27 @@
+             label, relative = name.split("/", 1)
+             require(history_before[label].get(relative) == expected,
+                     "Preserved history changed: " + name)
++        for label in ("ct1230", "ct1247"):
+-        for label in OLD_ROOTS:
+             proof = json.loads((OLD_ROOTS[label] / "preflight/result.json").read_text())
+             require(proof["passed"] is False and proof["all_passed"] is False,
+                     "Old failed preflight was relabeled")
+             require(proof["firmware_read"] is False and
+                     proof["firmware_executed"] is False,
+                     "Unexpected historical firmware scope")
++        old_fetch = json.loads((OLD_ROOTS["ct04"] / "result.json").read_text())
++        require(old_fetch["passed"] is False and
++                old_fetch["all_passed"] is False and
++                old_fetch["build_succeeded"] is False and
++                old_fetch["firmware_read"] is False and
++                old_fetch["firmware_executed"] is False and
++                old_fetch["source_commit"] == COMMIT,
++                "Historical CT04 acquisition failure was relabeled")
+         save(RESULTS / "history-before.json", history_before)
+ 
+         SOURCE.mkdir()
+         run("git-init", ["git", "init", str(SOURCE)])
+         run("git-remote", ["git", "remote", "add", "origin", REMOTE], SOURCE)
++        acquire_exact_source()
+-        run("git-fetch", ["git", "-c", "credential.helper=", "fetch",
+-                          "--depth=2", "origin", COMMIT], SOURCE, 900)
+         run("git-checkout", ["git", "checkout", "--detach", COMMIT], SOURCE, 900)
+         actual = run("source-commit", ["git", "rev-parse", "HEAD"], SOURCE)
+         require(actual.read_text().strip() == COMMIT, "Wrong source commit")
+@@ -388,6 +534,8 @@
+                 receipt["tests_unchanged"] = (
+                     receipt["runner_sha256_after"] == EXPECTED[RUNNER_PATH] and
+                     receipt["xml_test_sha256_after"] == EXPECTED[UNIT_PATH])
++            receipt["git_object_packet_unchanged"] = (
++                sha(GIT_OBJECT_PACKET) == GIT_OBJECT_PACKET_SHA256)
+             receipt["controller_unchanged"] = (
+                 sha(Path(__file__)) == receipt["controller_sha256"])
+             proof_path = RESULTS / "preflight/result.json"
+@@ -404,7 +552,8 @@
+             receipt["passed"] = all(receipt.get(key) is True for key in (
+                 "preflight_passed", "history_unchanged", "source_unchanged",
+                 "dependencies_unchanged", "binary_unchanged", "tests_unchanged",
++                "controller_unchanged", "git_object_packet_unchanged"
++            )) and "exception" not in receipt
+-                "controller_unchanged")) and "exception" not in receipt
+         except BaseException:
+             receipt["final_verification_exception"] = traceback.format_exc()
+             receipt["passed"] = False
