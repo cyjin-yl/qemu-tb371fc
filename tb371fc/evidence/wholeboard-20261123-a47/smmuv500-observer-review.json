@@ -1,0 +1,55 @@
+{
+  "schema": "tb371fc-apps-smmuv500-observer-review-v1",
+  "observer_blob": "97f716c7f7135d7fb747dc7953905a7f116f8b60",
+  "observer_bytes": 20364,
+  "observer_sha256": "b9788c1141c20fc84d78843dd37a699c9f886ee2282191c1b8c09d1e17e79850",
+  "review_scope": "Independent source and exact DT geometry review; observer not executed on the native guest by this reviewer",
+  "validation": {
+    "source_read": true,
+    "dt_geometry_recomputed": true,
+    "native_execution": false,
+    "qemu_run": false,
+    "new_tests_written": false
+  },
+  "dt_evidence_blob": "8306d244d2f785ce0efb8c2071b8badc77b252e7",
+  "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "expected_tbus": 10,
+  "independently_matching_expected_geometry_rows": 10,
+  "compared_geometry_fields": [
+    "dt_path",
+    "index",
+    "base",
+    "status_address",
+    "sid_start",
+    "sid_count"
+  ],
+  "qom_fields_per_tbu": 17,
+  "observed_raw_configuration": [
+    "enabled-reference",
+    "reference-hw-version",
+    "tcu-base",
+    "tbu-count"
+  ],
+  "observed_raw_global_state": [
+    "ecats-owner",
+    "dma-blocked-mask"
+  ],
+  "allowed_commands_in_added_function": [
+    "query-status",
+    "qom-get"
+  ],
+  "stopped_guard_before": true,
+  "stopped_guard_after": true,
+  "qom_getters_read_only": true,
+  "getters_do_not_acquire_semaphore_or_run_timer_or_translate": true,
+  "getter_source_sha256": "0c2c416d5c817284df2a3ac1c6444cf5cfb38274126c905a080f6126a355a205",
+  "original_noc_capture_retained": true,
+  "limitations": [
+    "The whole wrapper also retains one fixed read-only HMP dump of the private AOP mailbox; the added SMMUv500 function makes no HMP or device MMIO call.",
+    "A clean stopped raw snapshot does not establish TBU probe success, firmware state, native DMA exercise, or Android boot.",
+    "Geometry comparisons cover each observed base, status address and SID start. SID count is recorded from actual DT and fixed model geometry, not a separately observed QOM field.",
+    "Hardware version and delays remain explicit reference assumptions; the native hardware version and firmware stream/context handoff remain unknown.",
+    "Concurrent external resume-and-stop between the two status samples is not detected; the task's native runner is assumed to hold the stopped guest."
+  ],
+  "blocking_findings": []
+}

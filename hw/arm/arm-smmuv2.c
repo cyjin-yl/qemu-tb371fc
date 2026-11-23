@@ -7,7 +7,8 @@
  * Implemented: stream matching, per-context 4 KiB AArch64 walks (including
  * blocks), permissions/AF, ATS/PAR, faults, IRQs, invalidation and migration.
  * Not implemented: stage 2/nesting, AArch32 tables, stalls, hardware AF/DBM,
- * Qualcomm TCU/TBU extensions, secure-world contexts or timing fidelity.
+ * secure-world contexts or timing fidelity. Qualcomm TCU/TBU registers
+ * belong to an optional board companion, not this architectural aperture.
  * Capability registers describe this model, not measured Qualcomm IDRs.
  *
  * Walks are uncached and limited to RAM/ROM table storage. Faults fail closed
@@ -86,6 +87,8 @@ struct ArmSMMUv2State {
     MemoryRegion *memory;
     AddressSpace memory_as;
     QemuMutex lock;
+    ArmSMMUv2StreamBlocked stream_blocked;
+    void *stream_blocked_opaque;
     GPtrArray *streams;
     uint32_t mmio_size;
     uint32_t num_context_banks;
@@ -360,11 +363,14 @@ static void smmuv2_invalidate(ArmSMMUv2State *s)
     }
 }
 
-static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
-                                      IOMMUAccessFlags access, int index)
+/* Caller holds s->lock. Debug transactions bypass only the external halt
+ * filter; stream matching, bypass configuration, walks and faults are shared.
+ */
+static IOMMUTLBEntry smmuv2_translate_sid_locked(ArmSMMUv2State *s,
+                                                uint16_t sid, hwaddr addr,
+                                                IOMMUAccessFlags access,
+                                                int index, bool debug)
 {
-    SMMUv2Stream *stream = container_of(mr, SMMUv2Stream, iommu);
-    ArmSMMUv2State *s = stream->s;
     bool user = index & 1, write = access & IOMMU_WO;
     IOMMUTLBEntry entry = {
         .target_as = &s->memory_as, .iova = addr & ~UINT64_C(0xfff),
@@ -374,10 +380,17 @@ static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
     unsigned i, matches = 0, selected = 0, cb, type, priv;
     WalkResult result;
 
-    qemu_mutex_lock(&s->lock);
+    if (!debug && s->stream_blocked &&
+        s->stream_blocked(s->stream_blocked_opaque, sid)) {
+        /*
+         * The synchronous emulated DMA interface has no stall queue.
+         * A halted TBU denies access without creating a translation fault.
+         */
+        goto done;
+    }
     cr0 = s->gr0[CR0 / 4];
-    if ((index & 2) || stream->sid >= 0x8000) {
-        smmuv2_global_fault(s, GFSR_UUT, stream->sid, addr, write, user);
+    if ((index & 2) || sid >= 0x8000) {
+        smmuv2_global_fault(s, GFSR_UUT, sid, addr, write, user);
         goto done;
     }
     if (cr0 & CR0_CLIENTPD) {
@@ -388,7 +401,7 @@ static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
         uint16_t mask = (smr >> 16) & 0x7fff;
 
         if ((smr & BIT32(31)) &&
-            ((stream->sid & ~mask) == ((smr & 0x7fff) & ~mask))) {
+            ((sid & ~mask) == ((smr & 0x7fff) & ~mask))) {
             selected = i;
             matches++;
         }
@@ -397,14 +410,14 @@ static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
         if (!(cr0 & CR0_USFCFG)) {
             goto bypass;
         }
-        smmuv2_global_fault(s, GFSR_USF, stream->sid, addr, write, user);
+        smmuv2_global_fault(s, GFSR_USF, sid, addr, write, user);
         goto done;
     }
     if (matches > 1) {
         if (!(cr0 & CR0_SMCFCFG)) {
             goto bypass;
         }
-        smmuv2_global_fault(s, GFSR_SMCF, stream->sid, addr, write, user);
+        smmuv2_global_fault(s, GFSR_SMCF, sid, addr, write, user);
         goto done;
     }
     mapping = s->gr0[S2CR_BASE / 4 + selected];
@@ -413,17 +426,17 @@ static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
         goto bypass;
     }
     if (type != 0) {
-        smmuv2_global_fault(s, GFSR_ICF, stream->sid, addr, write, user);
+        smmuv2_global_fault(s, GFSR_ICF, sid, addr, write, user);
         goto done;
     }
     cb = mapping & 0xff;
     if (cb >= s->num_context_banks) {
-        smmuv2_global_fault(s, GFSR_UCBF, stream->sid, addr, write, user);
+        smmuv2_global_fault(s, GFSR_UCBF, sid, addr, write, user);
         goto done;
     }
     priv = (mapping >> 24) & 3;
     if (priv == 1) {
-        smmuv2_global_fault(s, GFSR_UUT, stream->sid, addr, write, user);
+        smmuv2_global_fault(s, GFSR_UUT, sid, addr, write, user);
         goto done;
     }
     if (priv == 2) {
@@ -433,9 +446,9 @@ static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
     }
     result = smmuv2_walk(s, cb, addr, access, user, false);
     if (result.global_fault) {
-        smmuv2_global_fault(s, result.global_fault, stream->sid, addr, write, user);
+        smmuv2_global_fault(s, result.global_fault, sid, addr, write, user);
     } else if (result.fsr && !result.blocked) {
-        smmuv2_context_fault(s, cb, stream->sid, addr, write, user, &result);
+        smmuv2_context_fault(s, cb, sid, addr, write, user, &result);
     } else if (result.perm) {
         entry.iova = addr & ~result.mask;
         entry.translated_addr = result.pa;
@@ -447,8 +460,58 @@ bypass:
     entry.translated_addr = entry.iova;
     entry.perm = IOMMU_RW;
 done:
+    return entry;
+}
+
+static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
+                                      IOMMUAccessFlags access, int index)
+{
+    SMMUv2Stream *stream = container_of(mr, SMMUv2Stream, iommu);
+    ArmSMMUv2State *s = stream->s;
+    IOMMUTLBEntry entry;
+
+    qemu_mutex_lock(&s->lock);
+    entry = smmuv2_translate_sid_locked(s, stream->sid, addr, access, index,
+                                       false);
     qemu_mutex_unlock(&s->lock);
     return entry;
+}
+
+IOMMUTLBEntry arm_smmuv2_debug_translate(DeviceState *dev, uint16_t sid,
+                                        hwaddr addr, bool write)
+{
+    ArmSMMUv2State *s = ARM_SMMUV2(dev);
+    IOMMUTLBEntry entry;
+
+    qemu_mutex_lock(&s->lock);
+    entry = smmuv2_translate_sid_locked(s, sid, addr,
+                                       write ? IOMMU_WO : IOMMU_RO, 0, true);
+    qemu_mutex_unlock(&s->lock);
+    return entry;
+}
+
+bool arm_smmuv2_set_stream_blocker(DeviceState *dev,
+                                  ArmSMMUv2StreamBlocked blocked,
+                                  void *opaque, Error **errp)
+{
+    ArmSMMUv2State *s = ARM_SMMUV2(dev);
+
+    qemu_mutex_lock(&s->lock);
+    if (s->stream_blocked && s->stream_blocked_opaque != opaque) {
+        error_setg(errp, "arm-smmuv2: stream blocker already attached");
+        qemu_mutex_unlock(&s->lock);
+        return false;
+    }
+    s->stream_blocked = blocked;
+    s->stream_blocked_opaque = blocked ? opaque : NULL;
+    qemu_mutex_unlock(&s->lock);
+    return true;
+}
+
+void arm_smmuv2_stream_permissions_changed(DeviceState *dev)
+{
+    /* A TBU halt must revoke entries already cached by emulated clients. */
+    smmuv2_invalidate(ARM_SMMUV2(dev));
 }
 
 static int smmuv2_attrs_to_index(IOMMUMemoryRegion *mr, MemTxAttrs attrs)

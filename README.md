@@ -12,7 +12,13 @@
 
 ## 本次整板推进与统一验收（2026-11-23）
 
-下一增量加入 [NoC QoS 配置 reference](tb371fc/docs/noc-qos-reference.md)：按实际 DT 的 47 个独立端口仅映射 188 个 32 位 word，默认拒绝访问，显式启用后保存合法配置并提供严格迁移。公共计划扩展为 **70 项（66 组件 + 4 Linux）**；新增组合仍须取得自己的实际构建和原厂运行回执。下列 69 项成功绑定已冻结的 `0508`。
+新一轮 [apps SMMUv500 companion](tb371fc/docs/smmuv500-reference.md) 已实现 TCU 与 10 个 TBU 的有限 reference 协议：显式 `0x02000000` 协议身份、有状态 HALT/ECATS、共享 SMMUv2 页表与故障路径、真实 DMA 缓存失效，以及复位/迁移。版本和 1 µs 延时属于模型假设；KGSL 扩展、未就绪的供电/时钟及固件 stream/context 交接没有因此完成。新增编译设备验收将使公共计划成为 **71 个 gate：67 个组件/解析检查 + 4 次 Linux 启动**；本提交的新增计划仍须实际运行，以下 99ef 的 70 项成功保持其原始源码和二进制身份。
+
+统一提交 `99ef6052e3e10e84c67f3482471f4bde12ab295a` 已实际通过 **70 个 gate：66/66 组件检查 + 4/4 Linux 启动，以及独立 A77/UFS job**。见[实际 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45206934707)和[冻结回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-99ef.json)。板级二进制 SHA-256 为 `226f826f02a97978f9f0afbcc1241dbcd6c25faca4840f8e1f72cee22f3d0000`；ZIP、包内 QEMU、两份 clean-source 汇总、九份组件报告及七个 MPM/NoC 迁移文件均已实际读取核验。
+
+[NoC QoS 配置 reference](tb371fc/docs/noc-qos-reference.md)按实际 DT 的 47 个独立端口仅映射 188 个 32 位 word，默认拒绝访问；显式启用后保存合法整字配置并绑定迁移身份。其[原始测试报告](tb371fc/evidence/wholeboard-20261123-a47/noc-qos-99ef.json)实际通过 **20 项检查、2 次完成迁移、2 次 profile 拒绝和 2 次损坏流拒绝**。原厂运行时没有预置 DT 优先级、伪造 SBM 确认或带宽结果。
+
+同一个 CI 二进制的[生产 Image / 完整原生 DT 运行](tb371fc/evidence/wholeboard-20261123-a47/native-99ef.json)已越过 NoC 首异常：停机只读观察 **47/47 物理地址正确，46/46 非延迟端口的四字配置与 DT/源码预期一致**；IPA 延迟端口保持零。GCC、GPUCC、NPUCC 注册，MPM 读取、SMEM **23/23** 及 AOP QDSS 交换仍保留。下一实际 fatal 是 **`qsmmuv500_arch_init+0x88` 读取物理地址 `0x15182018`**，QEMU 日志直接确认该地址。它对应[实际 DT](tb371fc/evidence/wholeboard-20261123-a47/smmuv500-dt-evidence-99ef.json)的 apps TCU `0x15182000 + 0x18` VERSION；[后续接口研究](tb371fc/docs/smmuv500-source-contract.md)记录 TCU/TBU、ECATS 和未测版本/时序边界。KGSL SMMU 更早因 `gcc_gpu_memnoc_gfx_clk` 未就绪而返回 -16；该警告没有被强行消除。**完整原生 DT 用户态、原厂 Android 和整板等价仍未通过。**
 
 统一提交 `0508fe9d5382b3e94ee0664012ff1e6f0457e5b7` 已实际通过 **69 个 gate：65/65 组件检查 + 4/4 Linux 启动，以及独立 A77/UFS job**。见[本次 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45198993920)及[冻结回执](tb371fc/evidence/wholeboard-20261123-a47/public-ci-0508.json)。板级二进制 SHA-256 为 `f3582740b3ccbe3689181f796412d8d28cdfc92ad0ea48e639334dd464c6548b`；已下载 ZIP、直接核对包内文件，并验证两套测试的源码干净状态和前后哈希一致。
 
@@ -22,7 +28,7 @@
 
 NPUCC 增量实现三个物理窗口中的 3 组 PLL、6 个 RCG、33 路 branch、7 路 reset，以及真实 XO/GCC Clock 接线；[契约与边界](tb371fc/docs/npucc-sm8250.md)。其 **37 项检查、2 次完成迁移和 2 次配置拒绝**已在上述统一构建实际通过。GPUCC 的 **30 项检查、2 次完成迁移和 2 次配置拒绝**也在同一二进制通过；[GPUCC 契约](tb371fc/docs/gpucc-sm8250.md)。
 
-同一个通过公开 CI 的二进制运行未修改的生产内核和完整原生 DT，已实际输出 **Registered GCC clocks、Registered GPU CC clocks、Registered NPU CC clocks**，并越过此前的 `boot_stats_init` 计数器异常，输出 **MPM timestamp = 112563 / frequency = 32768**。SMEM 为 **23/23**，AOP reference 通道已消费 QDSS 请求。[原厂运行回执](tb371fc/evidence/wholeboard-20261123-a47/native-0508.json)的下一实际 fatal 是 **`msm_bus_noc_qos_init+0x48` 对物理地址 `0x016e9008` 的读取**；QEMU 的 `invalid_mem` 与同一 CPU 的异常日志直接确认该地址。实际 Image 内嵌配置选择 RPMh NoC 驱动，完整 DT 对应 Aggre1 port 7 的 QoS MAINCTL。已从[限定 DT 子树](tb371fc/evidence/wholeboard-20261123-a47/noc-dt-evidence-0508.json)整理出 [47 个独立端口 / 188 个有效寄存器](tb371fc/evidence/wholeboard-20261123-a47/noc-layout-0508.json)，下一增量据此实现。VIDEOCC 仍因总线驱动未就绪而延后探测，没有到达其 PLL MMIO。
+同一个通过公开 CI 的二进制运行未修改的生产内核和完整原生 DT，已实际输出 **Registered GCC clocks、Registered GPU CC clocks、Registered NPU CC clocks**，并越过此前的 `boot_stats_init` 计数器异常，输出 **MPM timestamp = 112563 / frequency = 32768**。SMEM 为 **23/23**，AOP reference 通道已消费 QDSS 请求。[原厂运行回执](tb371fc/evidence/wholeboard-20261123-a47/native-0508.json)的下一实际 fatal 是 **`msm_bus_noc_qos_init+0x48` 对物理地址 `0x016e9008` 的读取**；QEMU 的 `invalid_mem` 与同一 CPU 的异常日志直接确认该地址。实际 Image 内嵌配置选择 RPMh NoC 驱动，完整 DT 对应 Aggre1 port 7 的 QoS MAINCTL。当时从[限定 DT 子树](tb371fc/evidence/wholeboard-20261123-a47/noc-dt-evidence-0508.json)整理出 [47 个独立端口 / 188 个有效寄存器](tb371fc/evidence/wholeboard-20261123-a47/noc-layout-0508.json)；该故障现由上面的 99ef 增量越过，0508 回执保留原始结论。VIDEOCC 仍因总线驱动未就绪而延后探测，没有到达其 PLL MMIO。
 
 SMEM 后续 minidump/PIL 警告与其 602 项编号超出 reference 的 512 项边界相符；SoC 信息的 137 项编号合法，但空参考分区没有对应固件记录，因此回退到 dummy 数据。已核对官方源码和实际警告位置；没有改写这些记录，也没有把它们解释为先前 SMEM 发布验证失败。
 
@@ -46,7 +52,7 @@ SMEM 后续 minidump/PIL 警告与其 602 项编号超出 reference 的 512 项�
 记录各自源码、二进制、输入和日志哈希。早期 AOP 观察器没有采集被拒绝请求的 payload；`a813` 的追加只读邮箱诊断已识别为 DDR 日志停止请求，详见[统一版本原厂运行](tb371fc/evidence/wholeboard-20261123-a47/native-a813.json)。观察器退出 0 不代表来宾启动成功。
 
 **完整原生 DT 到达用户态、原厂 Android 和整板可用仍未通过。**
-前一 `a813` 止于 GPUCC `0x03d90100`，`df667` 完成 GPUCC 注册后止于 NPUCC `0x09980000`，`d790` 完成 NPUCC 注册并到达 `boot_stats_init`，`0508` 越过 MPM 读取后止于 NoC QoS `0x016e9008`。各版本的原始回执均保留。DDR 日志请求与公开驱动的 panic notifier、实测 DT 属性相符；这是源码关联推断，没有将它列为启动前置依赖。
+前一 `a813` 止于 GPUCC `0x03d90100`，`df667` 完成 GPUCC 注册后止于 NPUCC `0x09980000`，`d790` 完成 NPUCC 注册并到达 `boot_stats_init`，`0508` 越过 MPM 读取后止于 NoC QoS `0x016e9008`，`99ef` 越过 NoC 配置后止于 QSMMUv500 TCU `0x15182018`。各版本的原始回执均保留。DDR 日志请求与公开驱动的 panic notifier、实测 DT 属性相符；这是源码关联推断，没有将它列为启动前置依赖。
 
 SMEM、AOP、SPMI 与电源交接的 reference 配置必须显式选择，不是原厂固件捕获或真实 PMIC/时钟频率测量。AOP 不执行固件，GX/CX 不执行 Adreno/GMU 命令。NPUCC 的数字时钟和 probe 成功也不等于 NPU/DSP 命令执行；后续改动必须获得自己的构建、组件和原厂运行回执。
 

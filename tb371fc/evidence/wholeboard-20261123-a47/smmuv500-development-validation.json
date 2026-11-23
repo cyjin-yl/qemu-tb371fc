@@ -1,0 +1,55 @@
+{
+  "schema": "tb371fc-smmuv500-development-validation-v1",
+  "scope": "Source and acceptance-plan preparation only; no new compiled QEMU execution",
+  "base_source": "99ef6052e3e10e84c67f3482471f4bde12ab295a",
+  "frozen_70_checkpoint": "4cda33fcff8c2812b8a6c1e90c344e8c5ce957c2",
+  "model_commit": "b5ccc926a5a95d70fa6e0045349d47e0e4ab3fb7",
+  "test_commit": "16b494433de29afbd067674bdc41e032ebf6ad8c",
+  "preflight": {
+    "ast_passed": true,
+    "all_plan_gates": 71,
+    "previous_70_names_and_order_preserved": true,
+    "new_gate": "smmuv500-reference",
+    "new_gate_index": 49,
+    "expected_checks": 36,
+    "expected_values": {
+      "expected_checks": 36,
+      "expected_completed_migrations": 2,
+      "expected_rejected_migrations": 2,
+      "expected_corrupted_stream_rejections": 2,
+      "vmstate_version": 1,
+      "architectural_smmuv2_vmstate_version": 2,
+      "tcu_count": 1,
+      "tbu_count": 10,
+      "register_count": 71,
+      "sparse_window_count": 71,
+      "mapped_bytes": 484,
+      "guest_cpu_executed": false,
+      "native_kernel_probe_observed": false,
+      "android_boot_passed": false,
+      "binary_unchanged": true
+    },
+    "expected_lengths": {
+      "migrations": 2,
+      "rejected_migrations": 2,
+      "corrupted_stream_rejections": 2
+    },
+    "runner_sha256": "effcf67f9ad39e6764d27d97811ca2b55ae6d11b4b3aa96f60da34955f260c22",
+    "unit_source_sha256": "29ffd0a7d231c07257ab749ae29255d7ddbf9b315a6deb683494bb78dd4acefb",
+    "smmuv500_test_sha256": "8e276985641ded77090a245412ea7bcf1f5ab161dc3582ee5882c33fedc00395",
+    "qemu_executed": false,
+    "socket_created": false
+  },
+  "independent_review": {
+    "model": "Full runtime/core/board source review completed; an unreachable migrated trigger state was rejected before the final model commit.",
+    "tests": "Full final test script independently reviewed: real shared walker, HALT/cache invalidation, 744-byte device migration state, pending deadlines and precise field rejections.",
+    "observer_review": "smmuv500-observer-review.json",
+    "runtime_proof": false
+  },
+  "execution": {
+    "new_qemu_compiled": false,
+    "new_component_tests_run": false,
+    "new_native_diagnostic_run": false
+  },
+  "environment_note": "Local AF_UNIX socket creation previously returned EPERM. This increment performed AST/compile and pure plan inspection only in that environment; formal QEMU tests are scheduled in GitHub CI."
+}

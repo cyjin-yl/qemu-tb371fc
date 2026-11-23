@@ -223,3 +223,9 @@ Compiled-device acceptance and native-kernel observations must be
 recorded separately from this source contract. Successful configuration
 readback or probe continuation does not establish NoC scheduling quality,
 camera/video/display execution, suspend behavior or Android boot.
+
+## Executed 99ef checkpoint
+
+Commit `99ef6052e3e10e84c67f3482471f4bde12ab295a` passed [66 component gates, four Linux boots and the independent A77/UFS job](../evidence/wholeboard-20261123-a47/public-ci-99ef.json). The actual board binary SHA256 is `226f826f02a97978f9f0afbcc1241dbcd6c25faca4840f8e1f72cee22f3d0000`. [The original NoC report](../evidence/wholeboard-20261123-a47/noc-qos-99ef.json) contains 20 successful checks, two completed process migrations, two profile mismatch rejections and two single-field corrupted-stream rejections. All four stream files and all 47 real device sections were checked from the artifact. These are executed configuration/migration tests; physical timing and bandwidth enforcement remain outside scope.
+
+[The same binary's production-Image/full-DT run](../evidence/wholeboard-20261123-a47/native-99ef.json) crossed the earlier QSPI QoS abort. Its stopped read-only QOM snapshot found 47 correct physical identities, 46 nonzero nondeferred MAINCTL words and all 46 complete four-word DT configurations matching. Deferred IPA stayed at zero and was not required to match its eventual policy. The observer made no NoC MMIO transactions or guest writes and required the guest to remain paused before and after observation. This demonstrates stored guest programming, not an inferred completion acknowledgement. The next actual fatal was the separate QSMMUv500 TCU read at `0x15182018`; full native-DT userspace and Android remain unpassed.
