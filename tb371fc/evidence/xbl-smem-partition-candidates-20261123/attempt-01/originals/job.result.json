@@ -1,0 +1,114 @@
+{
+  "all_created_files_retained": true,
+  "candidate_layout_count": 2,
+  "conditional_observation_completed": true,
+  "exit_code": 0,
+  "finished_utc": "2026-11-23T15:27:42.668341+00:00",
+  "firmware_executed": false,
+  "fixture_test_count": 14,
+  "fixtures_passed": true,
+  "input_after": {
+    "dal_receipt": {
+      "path": "/work/xbl-dal-candidates-20261123-03/results/scan.stdout",
+      "sha256": "839510ad39da6af7f14aacd682dedca7051f87edc86bc14756eb2c66da354053",
+      "size": 7358
+    },
+    "xbl": {
+      "path": "/work/device-assets/xbl-capture-20261123-01/xbl_a.bin",
+      "sha256": "eaf27cf49114d144282e86880c017fbadb3442df97bd30449e386f77e804da55",
+      "size": 3670016
+    }
+  },
+  "input_before": {
+    "dal_receipt": {
+      "path": "/work/xbl-dal-candidates-20261123-03/results/scan.stdout",
+      "sha256": "839510ad39da6af7f14aacd682dedca7051f87edc86bc14756eb2c66da354053",
+      "size": 7358
+    },
+    "xbl": {
+      "path": "/work/device-assets/xbl-capture-20261123-01/xbl_a.bin",
+      "sha256": "eaf27cf49114d144282e86880c017fbadb3442df97bd30449e386f77e804da55",
+      "size": 3670016
+    }
+  },
+  "observation_is_native_selection": false,
+  "overall_complete": true,
+  "phases": [
+    {
+      "cleanup_reaped": true,
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "-S",
+        "/work/smem-observed-slot-20261123-01/test_observed_slot_adapter.py"
+      ],
+      "elapsed_seconds": 2.451834,
+      "exit_code": 0,
+      "finished_utc": "2026-11-23T15:27:42.095269+00:00",
+      "group_present_after_wait": false,
+      "name": "fixtures",
+      "process_group": 248115,
+      "started_utc": "2026-11-23T15:27:39.643376+00:00",
+      "stderr_path": "/work/smem-observed-slot-20261123-01/results/fixtures.stderr",
+      "stderr_sha256": "35183794784a293116669bf0e27fedb2cb6efff4c5a4ac0ad88b97a0e1136ef0",
+      "stdout_path": "/work/smem-observed-slot-20261123-01/results/fixtures.stdout",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeout": false,
+      "timeout_seconds": 60
+    },
+    {
+      "cleanup_reaped": true,
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "-S",
+        "/work/smem-observed-slot-20261123-01/observe_smem_partition_candidate.py",
+        "--conditional-observed-slot"
+      ],
+      "elapsed_seconds": 0.148908,
+      "exit_code": 0,
+      "finished_utc": "2026-11-23T15:27:42.657318+00:00",
+      "group_present_after_wait": false,
+      "name": "scan",
+      "process_group": 248116,
+      "started_utc": "2026-11-23T15:27:42.508377+00:00",
+      "stderr_path": "/work/smem-observed-slot-20261123-01/results/scan.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/work/smem-observed-slot-20261123-01/results/scan.stdout",
+      "stdout_sha256": "f6a1da6231c07a2c4fac5eac82e6dd6bee968b12747ebc79d2c48f1c28938a5c",
+      "timeout": false,
+      "timeout_seconds": 60
+    }
+  ],
+  "platform_selected": false,
+  "reachable_from_entry_proven": false,
+  "record_cap": 16,
+  "schema": "tb371fc-smem-observed-slot-job-v1",
+  "scope": "Synthetic adapter fixtures and fixed conditional observed-slot metadata only.",
+  "selected_layout": null,
+  "smem_handoff_generated": false,
+  "source_sha256_after": {
+    "METHOD.md": "45553dbc21b576f8d0c7195bdfec3b38a471fea259dcc8556c0fac0dded45807",
+    "host-launch.py": "0de306b23030cd3802d8d29add312ea28fecd76f5c2bc27b54fd98cff05bcd16",
+    "install.py": "a0edf87af518a3a857a8086669513c79be11f362ed883197412b21def5e2e5ca",
+    "observe_smem_partition_candidate.py": "92354d2ce876a042d6636fde40ab16c09e6fdac75028ea89e2bd4d585ce826b7",
+    "run-job.py": "570b6da0850efee3f6f8cd54b2e873669332a63b0461fc1aca38ebff67939d83",
+    "smem_partition_candidates.py": "17ce02aae0f4c24d68824d69e3421408e1bf58ab03ad08b28c3059c4ca4caf18",
+    "test_observed_slot_adapter.py": "a32d3717c374965c4cb5d8bb1a466c103eeb69f9d00d232c165bca1e28403acf"
+  },
+  "source_sha256_before": {
+    "METHOD.md": "45553dbc21b576f8d0c7195bdfec3b38a471fea259dcc8556c0fac0dded45807",
+    "host-launch.py": "0de306b23030cd3802d8d29add312ea28fecd76f5c2bc27b54fd98cff05bcd16",
+    "install.py": "a0edf87af518a3a857a8086669513c79be11f362ed883197412b21def5e2e5ca",
+    "observe_smem_partition_candidate.py": "92354d2ce876a042d6636fde40ab16c09e6fdac75028ea89e2bd4d585ce826b7",
+    "run-job.py": "570b6da0850efee3f6f8cd54b2e873669332a63b0461fc1aca38ebff67939d83",
+    "smem_partition_candidates.py": "17ce02aae0f4c24d68824d69e3421408e1bf58ab03ad08b28c3059c4ca4caf18",
+    "test_observed_slot_adapter.py": "a32d3717c374965c4cb5d8bb1a466c103eeb69f9d00d232c165bca1e28403acf"
+  },
+  "started_utc": "2026-11-23T15:27:39.604849+00:00",
+  "static_metadata_path": "/work/smem-observed-slot-20261123-01/results/scan.stdout",
+  "static_metadata_sha256": "f6a1da6231c07a2c4fac5eac82e6dd6bee968b12747ebc79d2c48f1c28938a5c",
+  "terminated_candidate_count": 2
+}

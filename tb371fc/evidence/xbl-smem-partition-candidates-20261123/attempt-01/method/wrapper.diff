@@ -1,0 +1,248 @@
+--- dal03/install.py
++++ observed01/install.py
+@@ -9,13 +9,15 @@
+ import stat
+ import sys
+ 
+-ROOT = Path("/work/xbl-dal-candidates-20261123-03")
+-NAMES = {"install.py", "run-job.py", "host-launch.py", "dal_smem_candidates.py",
+-         "test_dal_smem_candidates.py", "METHOD.md"}
++ROOT = Path("/work/smem-observed-slot-20261123-01")
++NAMES = {"install.py", "run-job.py", "host-launch.py",
++         "smem_partition_candidates.py", "observe_smem_partition_candidate.py",
++         "test_observed_slot_adapter.py", "METHOD.md"}
+ APPROVED = {
+-    "dal_smem_candidates.py": "23fcc56faaaccce7d179b606d2414db79a8c1f2e9f160885129209d2d8f67b68",
+-    "test_dal_smem_candidates.py": "b3746b16843190088a49d6ad5a448efa68683ce02bce3185fea38849a1f8f027",
+-    "METHOD.md": "918508a9437c63c3ccee35f06a75e3bbd69a82ec6ae2816a0c41d5eb7a07c101",
++    "smem_partition_candidates.py": "17ce02aae0f4c24d68824d69e3421408e1bf58ab03ad08b28c3059c4ca4caf18",
++    "observe_smem_partition_candidate.py": "92354d2ce876a042d6636fde40ab16c09e6fdac75028ea89e2bd4d585ce826b7",
++    "test_observed_slot_adapter.py": "a32d3717c374965c4cb5d8bb1a466c103eeb69f9d00d232c165bca1e28403acf",
++    "METHOD.md": "45553dbc21b576f8d0c7195bdfec3b38a471fea259dcc8556c0fac0dded45807",
+ }
+ 
+ class InstallError(Exception):
+@@ -74,9 +76,9 @@
+         pack = json.loads(raw)
+         require(type(pack) is dict and set(pack) == {"schema", "root", "files"},
+                 "package_fields")
+-        require(pack["schema"] == "tb371fc-xbl-dal-install-package-v3"
++        require(pack["schema"] == "tb371fc-smem-observed-slot-install-package-v1"
+                 and pack["root"] == str(ROOT), "package_scope")
+-        require(type(pack["files"]) is list and len(pack["files"]) == 6,
++        require(type(pack["files"]) is list and len(pack["files"]) == 7,
+                 "package_file_count")
+         files = {}
+         for row in pack["files"]:
+@@ -112,7 +114,7 @@
+             identities.append({"name": name, "bytes": len(data), "sha256": hashed,
+                                "syntax_compiled": name.endswith(".py")})
+         receipt = {
+-            "schema": "tb371fc-xbl-dal-installation-v3",
++            "schema": "tb371fc-smem-observed-slot-installation-v1",
+             "root": str(ROOT), "started_utc": started, "finished_utc": utc(),
+             "installed": True, "package_sha256": sha(raw), "files": identities,
+             "compile_succeeded": True, "compile_only": True,
+--- dal03/run-job.py
++++ observed01/run-job.py
+@@ -12,15 +12,19 @@
+ import sys
+ import time
+ 
+-ROOT = Path("/work/xbl-dal-candidates-20261123-03")
++ROOT = Path("/work/smem-observed-slot-20261123-01")
+ RESULTS = ROOT / "results"
+ INPUT = Path("/work/device-assets/xbl-capture-20261123-01/xbl_a.bin")
+ INPUT_SIZE = 3670016
+ INPUT_SHA = "eaf27cf49114d144282e86880c017fbadb3442df97bd30449e386f77e804da55"
++DAL_RECEIPT = Path("/work/xbl-dal-candidates-20261123-03/results/scan.stdout")
++DAL_RECEIPT_SIZE = 7358
++DAL_RECEIPT_SHA = "839510ad39da6af7f14aacd682dedca7051f87edc86bc14756eb2c66da354053"
+ APPROVED = {
+-    "dal_smem_candidates.py": "23fcc56faaaccce7d179b606d2414db79a8c1f2e9f160885129209d2d8f67b68",
+-    "test_dal_smem_candidates.py": "b3746b16843190088a49d6ad5a448efa68683ce02bce3185fea38849a1f8f027",
+-    "METHOD.md": "918508a9437c63c3ccee35f06a75e3bbd69a82ec6ae2816a0c41d5eb7a07c101",
++    "smem_partition_candidates.py": "17ce02aae0f4c24d68824d69e3421408e1bf58ab03ad08b28c3059c4ca4caf18",
++    "observe_smem_partition_candidate.py": "92354d2ce876a042d6636fde40ab16c09e6fdac75028ea89e2bd4d585ce826b7",
++    "test_observed_slot_adapter.py": "a32d3717c374965c4cb5d8bb1a466c103eeb69f9d00d232c165bca1e28403acf",
++    "METHOD.md": "45553dbc21b576f8d0c7195bdfec3b38a471fea259dcc8556c0fac0dded45807",
+ }
+ 
+ class GateError(Exception):
+@@ -80,12 +84,13 @@
+     require(receipt.get("installed") is True and receipt.get("compile_succeeded") is True,
+             "installation_not_valid")
+     rows = receipt.get("files")
+-    require(isinstance(rows, list) and len(rows) == 6, "installation_source_count")
++    require(isinstance(rows, list) and len(rows) == 7, "installation_source_count")
+     seen = {}
+     for row in rows:
+         name = row.get("name")
+-        require(name in {"dal_smem_candidates.py", "test_dal_smem_candidates.py",
+-                         "METHOD.md", "run-job.py", "install.py", "host-launch.py"}
++        require(name in {"smem_partition_candidates.py", "observe_smem_partition_candidate.py",
++                         "test_observed_slot_adapter.py", "METHOD.md",
++                         "run-job.py", "install.py", "host-launch.py"}
+                 and name not in seen, "installation_source_name")
+         raw = read_regular(ROOT / name, 131072)
+         require(len(raw) == row.get("bytes") and sha(raw) == row.get("sha256"),
+@@ -96,9 +101,14 @@
+     return seen
+ 
+ def input_identity():
+-    raw = read_regular(INPUT, INPUT_SIZE)
+-    require(len(raw) == INPUT_SIZE and sha(raw) == INPUT_SHA, "pinned_input_identity")
+-    return {"path": str(INPUT), "size": len(raw), "sha256": sha(raw)}
++    identities = {}
++    for label, path, size, expected in (
++            ("xbl", INPUT, INPUT_SIZE, INPUT_SHA),
++            ("dal_receipt", DAL_RECEIPT, DAL_RECEIPT_SIZE, DAL_RECEIPT_SHA)):
++        raw = read_regular(path, size)
++        require(len(raw) == size and sha(raw) == expected, "pinned_input_identity")
++        identities[label] = {"path": str(path), "size": len(raw), "sha256": sha(raw)}
++    return identities
+ 
+ def group_present(pgid):
+     try:
+@@ -162,16 +172,16 @@
+ 
+ def main():
+     os.umask(0o077)
+-    if sys.argv[1:] != ["--run-approved-static-analysis"]:
++    if sys.argv[1:] != ["--run-approved-conditional-observation"]:
+         print(json.dumps({"started": False, "error": "explicit_run_flag_required"}))
+         return 64
+     report = {
+-        "schema": "tb371fc-xbl-dal-candidate-job-v3",
++        "schema": "tb371fc-smem-observed-slot-job-v1",
+         "started_utc": utc(), "overall_complete": False,
+-        "fixtures_passed": False, "static_scan_completed": False, "phases": [],
++        "fixtures_passed": False, "conditional_observation_completed": False, "phases": [],
+         "firmware_executed": False, "smem_handoff_generated": False,
+         "platform_selected": False, "reachable_from_entry_proven": False,
+-        "scope": "Synthetic format fixtures and fixed private XBL static metadata only.",
++        "scope": "Synthetic adapter fixtures and fixed conditional observed-slot metadata only.",
+         "all_created_files_retained": True,
+     }
+     try:
+@@ -185,43 +195,60 @@
+         before_sources = sources()
+         report["source_sha256_before"] = before_sources
+         print(json.dumps({"phase": "synthetic_fixtures", "started": True}), flush=True)
+-        rc, test_out, test_err = execute("fixtures", "test_dal_smem_candidates.py", 60, report["phases"])
++        rc, test_out, test_err = execute("fixtures", "test_observed_slot_adapter.py", 60, report["phases"])
+         rendered = (test_out + b"\n" + test_err).decode("utf-8", errors="strict")
+         counts = re.findall(r"(?m)^Ran (\d+) tests? in ", rendered)
+         endings = re.findall(r"(?m)^OK(?: \([^\n]*\))?$", rendered)
+-        require(rc == 0 and counts == ["62"] and endings == ["OK"],
++        require(rc == 0 and counts == ["14"] and endings == ["OK"],
+                 "synthetic_fixtures_failed_or_incomplete")
+-        report.update(fixtures_passed=True, fixture_test_count=62)
++        report.update(fixtures_passed=True, fixture_test_count=14)
+         report["input_before"] = input_identity()
+         require(sources() == before_sources, "source_changed_before_scan")
+         print(json.dumps({"phase": "pinned_static_scan", "fixtures_passed": True}), flush=True)
+-        rc, scan_out, scan_err = execute("scan", "dal_smem_candidates.py", 60, report["phases"],
+-                                         ("--compact-property-candidate",))
++        rc, scan_out, scan_err = execute("scan", "observe_smem_partition_candidate.py", 60, report["phases"],
++                                         ("--conditional-observed-slot",))
+         require(rc == 0 and len(scan_out) <= 12288 and not scan_err,
+                 "static_scan_exit_or_output_contract")
+         metadata = json.loads(scan_out)
+-        require(metadata.get("schema") == "tb371fc-xbl-dal-static-candidates-v3"
+-                and metadata.get("property_format") == "compact-memory-optimised-candidate"
++        require(metadata.get("schema") == "tb371fc.smem-observed-slot-candidates.v1"
+                 and metadata.get("analysis_completed") is True
++                and metadata.get("observation_mode") == "explicit_conditional_observed_slot"
++                and metadata.get("observation_is_native_selection") is False
+                 and metadata.get("firmware_executed") is False
+-                and metadata.get("platform_selected") is False
+-                and metadata.get("reachable_from_entry_proven") is False
+-                and metadata.get("smem_initialized_proven") is False,
+-                "static_scan_boundary")
+-        require(metadata.get("input") == {"basename": "xbl_a.bin", "size": INPUT_SIZE,
+-                                          "sha256": INPUT_SHA},
+-                "static_scan_input_receipt")
+-        require(metadata.get("scope", {}).get("load_indices") == [4, 5, 11, 14],
+-                "static_scan_region_scope")
++                and metadata.get("platform_static_selection_proven") is False
++                and metadata.get("entry_reachable") is False
++                and metadata.get("smem_initialized") is False
++                and metadata.get("handoff_generated") is False
++                and metadata.get("abi_confirmed") is False
++                and metadata.get("selected_layout") is None
++                and metadata.get("native_pointer_pin_available") is False
++                and metadata.get("core_native_pin_remains_none") is True,
++                "conditional_observation_boundary")
++        require(metadata.get("input_contract_kind") == "fixed_observed_backup"
++                and metadata.get("record_cap") == 16
++                and metadata.get("maximum_target_forward_span_bytes") == 576,
++                "conditional_observation_scope")
++        require(metadata.get("input_identities") == {
++                    "image_size": INPUT_SIZE, "image_sha256": INPUT_SHA,
++                    "dal_receipt_size": DAL_RECEIPT_SIZE, "dal_receipt_sha256": DAL_RECEIPT_SHA},
++                "conditional_observation_input_receipt")
++        decoded = metadata.get("conditional_partition_candidates", {})
++        candidates = decoded.get("candidates", [])
++        require(decoded.get("status") == "candidate_analysis"
++                and decoded.get("selected_layout") is None
++                and [row.get("layout") for row in candidates] ==
++                    ["enum32_stride36", "enum16_stride32"],
++                "conditional_candidate_layouts")
+         report["input_after"] = input_identity()
+         report["source_sha256_after"] = sources()
+         require(report["input_after"] == report["input_before"]
+                 and report["source_sha256_after"] == before_sources,
+                 "input_or_source_changed")
+-        report.update(static_scan_completed=True,
+-                      accepted_candidate_count=metadata.get("accepted_candidate_count"),
+-                      candidate_processing_truncated=metadata.get("candidate_processing_truncated"),
+-                      candidate_details_omitted=metadata.get("candidate_details_omitted"),
++        report.update(conditional_observation_completed=True,
++                      candidate_layout_count=len(candidates),
++                      terminated_candidate_count=decoded.get("terminated_candidate_count"),
++                      selected_layout=None, observation_is_native_selection=False,
++                      record_cap=metadata.get("record_cap"),
+                       static_metadata_path=str(RESULTS / "scan.stdout"),
+                       static_metadata_sha256=sha(scan_out),
+                       overall_complete=True)
+@@ -263,7 +290,7 @@
+         return 1
+     print(json.dumps({"overall_complete": report["overall_complete"], "exit_code": code,
+                       "fixtures_passed": report["fixtures_passed"],
+-                      "static_scan_completed": report["static_scan_completed"],
++                      "conditional_observation_completed": report["conditional_observation_completed"],
+                       "result_path": str(ROOT / "job.result.json"),
+                       "result_sha256": result_sha,
+                       "error_code": report.get("error_code")}, sort_keys=True), flush=True)
+--- dal03/host-launch.py
++++ observed01/host-launch.py
+@@ -7,8 +7,8 @@
+ import sys
+ 
+ SESSION = "qemu-tb371fc"
+-WINDOW = "xbl-dal-candidates-20261123-03"
+-STAGE = "/work/xbl-dal-candidates-20261123-03"
++WINDOW = "smem-observed-slot-20261123-01"
++STAGE = "/work/smem-observed-slot-20261123-01"
+ 
+ def call(argv, timeout=5):
+     return subprocess.run(argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+@@ -23,7 +23,7 @@
+             result.stdout.decode("utf-8", errors="strict").splitlines()]
+ 
+ def main():
+-    if sys.argv[1:] != ["--root-approved-dal-analysis-lease"]:
++    if sys.argv[1:] != ["--root-approved-observed-slot-lease"]:
+         print(json.dumps({"started": False, "error": "explicit_root_run_lease_flag_required"}))
+         return 64
+     created_window = None
+@@ -43,7 +43,7 @@
+         command = shlex.join([
+             "sudo", "-n", "/usr/sbin/pct", "exec", "102", "--", "docker", "exec",
+             "qemu-tb371fc-dev", "python3", "-I", "-B", "-S",
+-            STAGE + "/run-job.py", "--run-approved-static-analysis",
++            STAGE + "/run-job.py", "--run-approved-conditional-observation",
+         ])
+         phase = "create_exclusive_named_window"
+         made = call(["tmux", "new-window", "-d", "-P", "-F", "#{window_id}",
