@@ -70,9 +70,11 @@ still suspended, wakes the controller and returns the original payload.
 Both runs also write and flush a second payload, close/reopen the same device
 and independently compare every one of the 67,108,864 media bytes.
 
-Read-only QMP/qtree observations show active -> Hibern8 -> active and
-core/iface/UniPro clock rates of 300/100/300 MHz -> 0/0/0 Hz -> 300/100/300 MHz.
-The reference clock remains at 19.2 MHz. No post-suspend `control=on`,
+Read-only QMP/qtree observations show active -> Hibern8 -> active. The
+core/interface/UniPro clocks become 0/0/0 Hz during suspend and recover their
+pre-suspend rates after I/O. Those active rates are 300/100/300 MHz in the
+frozen run and 37.5/100/37.5 MHz in the portable run; the gate does not require
+a fixed active frequency. The reference clock remains at 19.2 MHz in both. No post-suspend `control=on`,
 QMP device-state mutation, QTest clock forcing, replacement kernel or native
 tablet access is involved. Each run covers one runtime-PM cycle, not system
 suspend, physical-media energy state or migration while Linux is suspended.
