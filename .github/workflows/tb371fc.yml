@@ -34,6 +34,11 @@ jobs:
             libglib2.0-dev libpixman-1-dev zlib1g-dev libfdt-dev device-tree-compiler \
             gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu libc6-dev-arm64-cross \
             curl xz-utils bc bison flex libssl-dev libelf-dev util-linux
+      - name: Validate original Android input preservation and bounded orchestration
+        run: |
+          set -euo pipefail
+          python3 tb371fc/tests/test_android_boot_inputs.py
+          python3 tb371fc/tests/test_boot_android.py
       - name: Build the dedicated machine and C QTests
         run: |
           set -euo pipefail

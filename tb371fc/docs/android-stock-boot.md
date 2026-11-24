@@ -1,0 +1,104 @@
+# Original Android input runs
+
+`android_boot_inputs.py` and `boot_android.py` provide a separate path for
+observing original Android boot inputs. They do not use the smoke-test initramfs.
+The current machine enters a Linux kernel directly; it does not execute the
+Qualcomm PBL, XBL, ABL, AOP or secure-world firmware.
+
+## Prepare private inputs
+
+Keep device images and private reports outside the source repository. Use a new
+output directory for every preparation and run:
+
+```sh
+python3 tb371fc/scripts/android_boot_inputs.py \
+  --boot-image /private/boot_a.img \
+  --dtb /private/full-live-device-tree.dtb \
+  --storage-manifest /private/storage.json \
+  --hash-luns \
+  --out /private/prepared-unique
+```
+
+The preparation tool validates Android boot image versions 0, 1 and 2 and
+extracts the kernel and ramdisk bytes without rebuilding them. The full DT is
+copied byte for byte. Its `/chosen/bootargs` is retained; an explicit
+`--bootargs-file` is required when that property is absent. Boot-header command
+lines are recorded separately and are not substituted for the actual bootloader
+arguments.
+
+Structurally bounded nonzero DT alignment padding is retained and recorded as
+`format_compliant=false`. This permits a faithful diagnostic run of the captured
+input without representing it as a conforming or authenticated factory image.
+
+The storage manifest must identify complete raw LUN files and their observed
+geometry. It does not infer partitions or manufacture missing media:
+
+```json
+{
+  "schema": "tb371fc-android-storage-v1",
+  "slot": "_a",
+  "luns": [{
+    "lun": 0,
+    "path": "/private/lun0.raw",
+    "format": "raw",
+    "logical_block_size": 4096,
+    "logical_block_count": 3072,
+    "descriptor": {
+      "logical_block_size_exponent": 12,
+      "logical_block_count": 3072
+    }
+  }]
+}
+```
+
+The small example geometry above is illustrative and is not the tablet's
+capacity. Use the measured descriptor and file length. Existing capture hashes
+and provenance must accompany the private inputs; hashing a file now does not
+authenticate its factory origin or make a live filesystem capture consistent.
+
+## Run and observe
+
+Pass the exact reviewed machine string and globals for the binary under test:
+
+```sh
+python3 tb371fc/scripts/boot_android.py \
+  --manifest /private/prepared-unique/manifest.json \
+  --qemu /private/verified/qemu-system-aarch64 \
+  --qemu-img /usr/bin/qemu-img \
+  --machine "$REVIEWED_MACHINE" \
+  --configuration-evidence /private/reviewed-machine.json \
+  --out /private/run-unique \
+  --seconds 120
+```
+
+Add each reviewed device property with `--global-property`. Profiles are
+explicit reference contracts; they do not establish the physical device's
+register values or secure services. In particular, the two TBU providers cannot
+be enabled together. Input-dependent machine resources such as the AOP-derived
+command database need their own before/after hash checks.
+
+Each LUN gets a fresh qcow2 overlay. Both the original file and its raw backing
+node are read-only. Before starting CPUs, the runner checks the live QMP block
+graph. It preserves the original kernel, ramdisk, full DT and command line and
+records source hashes again after the bounded observation. `--dry-run` writes a
+validated plan without creating overlays or starting QEMU.
+
+For Linux 4.x, `--legacy-printk-symbols` can read a stopped guest's printk ring.
+Bind it with `--symbols-kernel-sha256`, and supply symbols with the actual runtime
+virtual addresses. The runner does not add `nokaslr`; an address mismatch is a
+capture error, not proof that the kernel has no failures.
+
+## Read the result conservatively
+
+Exit 0 from a dry-run means that input planning succeeded. A real run requires
+Android second-stage and actual boot-completed action evidence, no observed
+kernel failure, stable inputs, verified backing-node protection, and a clean
+host-controlled stop. Unexpected QMP closure, process exit, guest panic or
+shutdown, host termination, log truncation, and a run without original LUNs all
+prevent a successful boot observation.
+
+Even a successful boot observation does not attest AVB, secure-world behavior,
+factory provenance, usable graphics, or complete-device equivalence. Preserve
+the detailed stage evidence and qualify those capabilities separately. The
+tools' host tests use synthetic inputs and fake process/QMP objects; CI passing
+those tests is not an Android boot result.

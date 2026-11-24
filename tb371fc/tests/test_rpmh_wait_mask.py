@@ -735,7 +735,7 @@ def migration_checks(args, out, report):
         source.step(400)
         assert source.last_clock == 400 and source.status(slot=15) == ISSUED
         source.expect_hz("bi_tcxo", 0)
-        first_path = out / "rpmh-wait-v2-subv1-masked-inflight.migration"
+        first_path = out / "rpmh-wait-v3-subv1-masked-inflight.migration"
         first_source = save_source(source, first_path, "inflight", 0x57544d31)
         report["source_streams"].append(first_source)
         assert first_source["source_qom"]["diagnostics"] == qom_expected(3, 3, 1, 0x20002)
@@ -758,7 +758,7 @@ def migration_checks(args, out, report):
             "rpmh_mmio_since_incoming": False, "qmp_cont_since_incoming": False})
         write_json(target.directory / "destination-query-migrate.json", got)
         migration = {
-            "name": "v2_with_wait_reference_v1_inflight",
+            "name": "v3_with_wait_reference_v1_inflight",
             "passed": True, "source_status": "completed", "target_status": got["status"],
             "source": first_source["source_query_migrate"], "destination": got,
             "snapshot_file": first_path.name, "snapshot_sha256": digest(first_path),
@@ -777,7 +777,7 @@ def migration_checks(args, out, report):
             "continued_after_restore": False,
         }
         report["migrations"].append(migration)
-        passed("real_v2_main_and_v1_subsection_restore_before_first_rpmh_mmio")
+        passed("real_v3_main_and_v1_subsection_restore_before_first_rpmh_mmio")
 
         target.monitor("cont")
         target.step(599)
@@ -817,7 +817,7 @@ def migration_checks(args, out, report):
 
         strict_source = new("strict-source", policy=None)
         strict_source.set_clock(23)
-        strict_path = out / "rpmh-wait-v2-strict-source.migration"
+        strict_path = out / "rpmh-wait-v3-strict-source.migration"
         strict = save_source(strict_source, strict_path, "cold", 0x53545230)
         report["source_streams"].append(strict)
         assert strict["source_qom"]["policy"] is False
@@ -837,7 +837,7 @@ def migration_checks(args, out, report):
 
         cold_source = new("cold-source")
         cold_source.set_clock(37)
-        cold_path = out / "rpmh-wait-v2-subv1-cold-masked.migration"
+        cold_path = out / "rpmh-wait-v3-subv1-cold-masked.migration"
         cold = save_source(cold_source, cold_path, "cold", 0x4d41534b)
         report["source_streams"].append(cold)
         assert cold["source_qom"]["diagnostics"] == qom_expected()
@@ -864,7 +864,7 @@ def migration_checks(args, out, report):
         for kind, suffix, expected in (
                 ("policy", "policy-bit", f"{TYPE}: invalid wait-reserved subsection policy 0"),
                 ("diag", "last-voter-bit", f"{TYPE}: invalid wait-reserved migration diagnostics")):
-            changed = out / f"rpmh-wait-v2-subv1-{suffix}.migration"
+            changed = out / f"rpmh-wait-v3-subv1-{suffix}.migration"
             mutation = single_bit_corruption(first_path, changed, first_source["sections"], kind)
             bad_target = new("reject-" + kind, incoming=True)
             bad_target.set_clock(400)
@@ -910,7 +910,7 @@ def main():
         "main_payload_bytes_with_default_clock": MAIN_BYTES,
         "commands_per_tcs": 16, "voter_count": 4, "apps_tcs_per_drv": 8,
         "display_tcs_count": 2, "wait_command_mask": MASK,
-        "default_strict_main_vmstate_unchanged": True,
+        "strict_and_wait_reference_main_v3_payload_identical": True,
         "old_rpmh_tests_changed": False, "old_rpmh_test_blobs_match": False,
         "silicon_reserved_bit_semantics_proved": False,
         "guest_cpu_executed": False, "native_kernel_probe_observed": False,
