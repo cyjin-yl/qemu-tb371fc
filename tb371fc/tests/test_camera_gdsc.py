@@ -601,11 +601,16 @@ def narrow_unaligned_and_wide_bus_transactions_are_exact(r):
 
 def camera_holes_and_unrelated_gdsc_addresses_stay_unmapped(r):
     before = r.pure_snapshot()
+    # Kona-v2 CAMCC now owns these source-qualified neighboring words. Its
+    # reference is independently disabled in this camera-only fixture.
+    camcc_owned = {0x0000, 0x7000, 0x7014, 0x8000, 0x8014, 0x9000,
+                   0x9014, 0xa000, 0xa014, 0xb000, 0xb014, 0xc154}
     holes = sorted({x + displacement for x in ADDRESSES for displacement in (-4, 4, 0x10)}
                    | {0x0ad00000, 0x0ad0fffc, 0x09981008, 0x0998100c,
                       0x0abf0bf4, 0x0abf0bfc, 0x0abf0c94, 0x0abf0c9c,
                       0x0abf0d14, 0x0abf0d1c, 0x0abf0d94, 0x0abf0d9c,
                       0x0af02ffc, 0x0af03004})
+    holes = [address for address in holes if address - 0x0ad00000 not in camcc_owned]
     assert not set(holes) & set(ADDRESSES)
     previous = core_diagnostics(r.log_path.read_text(errors="replace"))
     expected = []
@@ -616,6 +621,15 @@ def camera_holes_and_unrelated_gdsc_addresses_stay_unmapped(r):
                         for op in ("read", "write"))
     actual = core_diagnostics(r.log_path.read_text(errors="replace"))[len(previous):]
     assert actual == expected, (actual, expected)
+    for offset in sorted(camcc_owned):
+        for operation in ("read", "write"):
+            line = f"qcom-sm8250-camcc: unmodeled {operation} +0x{offset:x} size 4"
+            count = r.diagnostic_count(line)
+            if operation == "read":
+                r.read_absolute(0x0ad00000 + offset)
+            else:
+                r.write_absolute(0x0ad00000 + offset, 0xffffffff)
+            assert r.diagnostic_count(line) == count + 1, line
     # Independent MDSS/NPU/VIDEO owners stay disabled in this camera fixture.
     for owner, domain, address in (("qcom-mdss-gdsc", 0, 0x0af03000),
                                    ("qcom-npu-gdsc", 0, 0x09981004),

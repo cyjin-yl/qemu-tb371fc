@@ -14,7 +14,7 @@
 
 ## 当前整合：原厂 Android 启动开发基线
 
-本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。加入下面的独立 VIDEO GDSC gate 后，当前公开计划为 **86 项：81 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
+本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。加入 CAMCC 协议及固定源码再生两个 gate 后，当前公开计划为 **88 项：83 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
 
 两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
 
@@ -40,7 +40,15 @@ NPU_CFG_AHB `0x4d004` 仅增加源码支持的 retention 位 13/14，保留原 H
 
 [VIDEO 独立参考模型](tb371fc/docs/video-gdsc-reference.md)按实际 DT 只接管 mvs0c／mvs1c／mvs0／mvs1 四个 4 B 控制字，默认关闭，需显式 `qcom-video-gdsc.enabled-reference=on`。四域均为 mmcx 的同级 consumer，硬件模式仅在后两域声明。三路分流保留原 camera/MDSS 连接，NPU 继续无供电连接。VIDEO_AHB `0xb004` 只增加 retention 位 13/14，未知 external79 和其余 VIDEOCC 范围不变。
 
-新增 22 组／3 次完成／2 次 profile／2 次损坏流门禁仍需本组合真实执行，随后按同二进制的下一原厂异常继续推进；这四个请求接口不代表视频解码、DSP 固件或 Android 已启动。
+`4cc9dee` 的[正式 CI 45414535386](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45414535386)已实际通过 81+5 全计划及独立 A77/PCI UFS，VIDEO 的 22 组／3 次完成／2 次 profile／2 次损坏流已从实际 ZIP 独立核验。二进制 SHA-256 为 `33da659249dab043671e0de0d04326ba9a52c6a53dedffcf7b1e6f42130d6808`。同二进制原始输入 run004 已注册四个 VIDEO GDSC；下一首错位于 CAMCC。这四个请求接口仍不代表视频解码、DSP 固件或 Android 已启动。
+
+### CAMCC：Kona v2 的实际 PLL 配置异常
+
+原始 run004 recovery1 在 guest 2.090202 秒，由 CPU5、PID85 `kworker/5:1` 在 `cam_cc_kona_probe` → `clk_lucid_pll_configure` 中读取 `0x0ad00000` 发生同步外部异常。18.821 秒后按显式 early-stop 策略正常停止，四个原始输入、AOP 和 QEMU 摘要不变；没有挂载原始 LUN，也没有 Android 用户态。
+
+[CAMCC 新参考模型](tb371fc/docs/camcc-sm8250.md)核对了实际 `qcom,camcc-kona-v2`，实现四个 Lucid PLL 和一个 Zonda PLL、33 个 RCG、66 个 branch、六个后分频器、只读 SBI divider 与六条 reset。236 个确切字分为 74 个窗口，共 944 B，六个原 camera GDSC 继续独立。默认关闭，需显式 `qcom-sm8250-camcc.enabled-reference=on`；只有两个源码已证实的 XO 名称接线，其余三个输入保持未知。
+
+Lucid UPDATE/ACK 与 Zonda BYPASS/直接重调频分开；M/N/D、HID 和 SBI 舍入按固定源码计算。独立 2579 B v1 迁移保留已捕获配置与截止时间。41 组编译验收及 3/2/2 迁移、八份固定源码的两项再生比较已加入新计划，仍需本组合的新编译／CI及原厂运行回执。
 
 ## 默认分支既有验收：2026-11-24 存储与电源修复
 

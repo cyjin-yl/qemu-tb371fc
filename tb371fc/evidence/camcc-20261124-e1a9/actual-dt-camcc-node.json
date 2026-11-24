@@ -1,0 +1,138 @@
+{
+  "schema": "tb371fc-camcc-actual-dt-node-v1",
+  "source_inventory": "tb371fc/evidence/expansion-20261123/android-device-inventory.json",
+  "source_inventory_sha256": "3797824168bc12cd65d8079ffe428c45a4126f54b2170460981ee8903d504263",
+  "source_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "path": "/soc/qcom,camcc@ad00000",
+  "node": {
+    "availability": {
+      "dt_available": true,
+      "restrictions": [],
+      "scope": "status plus ancestor status; not a driver-binding observation"
+    },
+    "dependencies": [
+      {
+        "arguments": [],
+        "index": 0,
+        "property": "vdd_mx-supply",
+        "provider": "/soc/rsc@18200000/rpmh-regulator-mxlvl/regulator-pm8150a-s3-level",
+        "provider_phandle": 105
+      },
+      {
+        "arguments": [],
+        "index": 0,
+        "property": "vdd_mm-supply",
+        "provider": "/soc/rsc@18200000/rpmh-regulator-mmcxlvl/regulator-pm8150a-s4-level",
+        "provider_phandle": 104
+      },
+      {
+        "arguments": [
+          11
+        ],
+        "index": 0,
+        "property": "clocks",
+        "provider": "/soc/qcom,gcc@100000",
+        "provider_phandle": 22
+      }
+    ],
+    "groups": [
+      "clocks"
+    ],
+    "omitted_property_names": [],
+    "properties": {
+      "#clock-cells": {
+        "base64": "AAAAAQ==",
+        "be32": [
+          1
+        ],
+        "sha256": "b40711a88c7039756fb8a73827eabe2c0fe5a0346ca7e0a104adc0fc764f528d",
+        "size": 4
+      },
+      "#reset-cells": {
+        "base64": "AAAAAQ==",
+        "be32": [
+          1
+        ],
+        "sha256": "b40711a88c7039756fb8a73827eabe2c0fe5a0346ca7e0a104adc0fc764f528d",
+        "size": 4
+      },
+      "clock-names": {
+        "base64": "Y2ZnX2FoYl9jbGsA",
+        "sha256": "cd7f1c8ddede996d4dc2c9e4b71d7f25f56736642b1b2bcf93a9fae82509de07",
+        "size": 12,
+        "strings": [
+          "cfg_ahb_clk"
+        ]
+      },
+      "clocks": {
+        "base64": "AAAAFgAAAAs=",
+        "be32": [
+          22,
+          11
+        ],
+        "sha256": "6520eebd716e45f4ebf6043c2f54eba05f0f6e390ed11c548e484aa02e3fb5c8",
+        "size": 8
+      },
+      "compatible": {
+        "base64": "cWNvbSxjYW1jYy1rb25hLXYyAHN5c2NvbgA=",
+        "sha256": "a237b76a060389fcad71531fd3f8877b0e9654cb87c064a822ba8a59505b2870",
+        "size": 26,
+        "strings": [
+          "qcom,camcc-kona-v2",
+          "syscon"
+        ]
+      },
+      "phandle": {
+        "base64": "AAAAbA==",
+        "be32": [
+          108
+        ],
+        "sha256": "acb853ad1c32ada02d73a7e520e50c30c4b30993f6ad341faf504e541625f82c",
+        "size": 4
+      },
+      "reg": {
+        "base64": "CtAAAAABAAA=",
+        "be32": [
+          181403648,
+          65536
+        ],
+        "sha256": "9a4c44434596a11e9345f4e4f753463040f72fb3eb75151796840a6fc17f1777",
+        "size": 8
+      },
+      "reg-names": {
+        "base64": "Y2NfYmFzZQA=",
+        "sha256": "880f2383cdf41e603c2a276330ceae21090b8025c4e415bc22e4f58021d2e255",
+        "size": 8,
+        "strings": [
+          "cc_base"
+        ]
+      },
+      "vdd_mm-supply": {
+        "base64": "AAAAaA==",
+        "be32": [
+          104
+        ],
+        "sha256": "c69d416dd7317b59093879b721b596c86444eaf2badf91a25c5bebdb7e759b10",
+        "size": 4
+      },
+      "vdd_mx-supply": {
+        "base64": "AAAAaQ==",
+        "be32": [
+          105
+        ],
+        "sha256": "53c926c91de543d32b704940cf82d28a213c78fde58800f1dadccf37835c96e2",
+        "size": 4
+      }
+    },
+    "register_regions": [
+      {
+        "bus_address": 181403648,
+        "parent_bus": "/soc",
+        "size": 65536,
+        "system_address": 181403648
+      }
+    ],
+    "rejected_properties": {},
+    "unresolved_dependencies": []
+  }
+}

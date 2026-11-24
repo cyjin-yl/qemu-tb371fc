@@ -186,7 +186,7 @@ still apply to any future authorized consumer execution.
 
 ## Gates
 
-The current integration plan registers **86 gates: 81 component/parser gates
+The current integration plan registers **88 gates: 83 component/parser gates
 and five Linux integration gates**, plus separate active and runtime-suspended
 real-Linux UFS checkpoints and the A77/PCI UFS compatibility job. This union
 preserves the wholeboard reference peripherals and default-branch storage,
@@ -207,6 +207,14 @@ The [VIDEO GDSC gate](video-gdsc-reference.md) adds 22 checks and a separate
 migrations, two profile rejections and two single-bit corruption rejections;
 the real mmcx fanout must preserve camera/MDSS while serving VIDEO and still
 leave NPU unconnected. Only the two VIDEO_AHB retention requests are added.
+The [CAMCC protocol gate](camcc-sm8250.md) adds 41 required checks and an
+independent 2579-byte v1 section, with three completed transfers, two profile
+rejections and two single-bit corrupted streams. Its four Lucid PLLs and one
+Zonda PLL retain different protocols; 74 precise leaf windows exclude all
+camera GDSCs and unmodeled words. A separate two-check generation gate verifies
+eight fixed primary inputs and reproduces both register tables byte for byte.
+The preceding 4cc source passed 81+5, but this new combination still needs its
+own actual compiled receipt and native original-input run.
 The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
@@ -236,6 +244,7 @@ pass does not attest newly added devices.
 | NoC QoS | 20 checks; 47 independent ports / 188 words, two completed transfers, two profile mismatches and two deliberately corrupted-stream rejections; no traffic or SBM synthesis |
 | Config NoC SBM reference | 28 checks; eight independent logical deadlines, three words, pure stopped state, two completed transfers, two profile mismatches and two corrupted-field rejections; no real traffic drain |
 | NPUCC | 37 checks across three physical banks, actual Clock outputs, source-bound CRC/dividers, two completed migrations and two profile rejections; full NPU/DSP execution remains outside scope |
+| CAMCC | 41 checks; four Lucid/one Zonda PLL, 111 actual Clock outputs, 236 words/74 windows, full 2579-byte migration oracle, three completed transfers and 2/2 profile/corruption rejections; separate eight-source regeneration of both data files |
 | NPU GDSC | 21 checks; independent 4-byte word and 64-byte v1 state, unknown parent preserved, hardware mode rejected, NPU_CFG_AHB retention only, three completed transfers, two profile and two corruption rejections |
 | VIDEO GDSC | 22 checks; four sparse words and 142-byte v1 state, HW mode only on two DT-declared domains, real three-consumer mmcx fanout, VIDEO_AHB retention, three completed transfers and 2/2 profile/corruption rejections |
 | GPUCC | 30 actual digital PLL/RCG/branch/reset checks, two completed migrations and two profile rejections; actual Clock providers and sparse ownership boundaries |
