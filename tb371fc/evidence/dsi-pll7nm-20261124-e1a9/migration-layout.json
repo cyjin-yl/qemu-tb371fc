@@ -1,0 +1,134 @@
+{
+  "schema": "tb371fc-dsi-pll7nm-migration-layout-v1",
+  "type": "qcom-sm8250-dsi-pll7nm",
+  "version": 1,
+  "minimum_version": 1,
+  "reference_identity": 1146308929,
+  "payload_bytes": 1356,
+  "endianness": "big-endian VMState fields; bool one byte",
+  "fields": [
+    {
+      "name": "reference-profile",
+      "offset": 0,
+      "bytes": 4
+    },
+    {
+      "name": "reference-identity",
+      "offset": 4,
+      "bytes": 4
+    },
+    {
+      "name": "bank-count",
+      "offset": 8,
+      "bytes": 4
+    },
+    {
+      "name": "registers-per-bank",
+      "offset": 12,
+      "bytes": 4
+    },
+    {
+      "name": "register-count",
+      "offset": 16,
+      "bytes": 4
+    },
+    {
+      "name": "clock-count",
+      "offset": 20,
+      "bytes": 4
+    },
+    {
+      "name": "input-count",
+      "offset": 24,
+      "bytes": 4
+    },
+    {
+      "name": "window-count",
+      "offset": 28,
+      "bytes": 4
+    },
+    {
+      "name": "mapped-bytes",
+      "offset": 32,
+      "bytes": 4
+    },
+    {
+      "name": "physical_base[2]",
+      "offset": 36,
+      "bytes": 16
+    },
+    {
+      "name": "dynamic_base[2]",
+      "offset": 52,
+      "bytes": 16
+    },
+    {
+      "name": "regs[308]",
+      "offset": 68,
+      "bytes": 1232
+    },
+    {
+      "name": "active_factor[2]",
+      "offset": 1300,
+      "bytes": 8
+    },
+    {
+      "name": "pending_factor[2]",
+      "offset": 1308,
+      "bytes": 8
+    },
+    {
+      "name": "lock_deadline[2]",
+      "offset": 1316,
+      "bytes": 16
+    },
+    {
+      "name": "last_xo_hz",
+      "offset": 1332,
+      "bytes": 8
+    },
+    {
+      "name": "locked[2]",
+      "offset": 1340,
+      "bytes": 2
+    },
+    {
+      "name": "power_known",
+      "offset": 1342,
+      "bytes": 1
+    },
+    {
+      "name": "power_on",
+      "offset": 1343,
+      "bytes": 1
+    },
+    {
+      "name": "refgen_known[2]",
+      "offset": 1344,
+      "bytes": 2
+    },
+    {
+      "name": "refgen_ready[2]",
+      "offset": 1346,
+      "bytes": 2
+    },
+    {
+      "name": "input[0].period",
+      "offset": 1348,
+      "bytes": 8
+    }
+  ],
+  "clock_multiplier_divider": "Must remain 1:1; optional clock/muldiv subsection with other values is rejected",
+  "derived_state": "16 output periods recomputed without callbacks or deadline consumption",
+  "provider_order": [
+    "MDSS",
+    "DSI PLL/PHY",
+    "DISPCC"
+  ],
+  "provider_validation": [
+    "DSI power observations equal restored MDSS pure state",
+    "DSI XO input period equals connected provider",
+    "Four connected DISP DSI input periods equal restored DSI output periods"
+  ],
+  "incoming_phase": "Provider callbacks record levels but dsi_update cannot advance or propagate during INMIGRATE/RESTORE_VM"
+}

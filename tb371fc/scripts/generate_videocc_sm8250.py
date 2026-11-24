@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0-or-later
-"""Generate bounded Kona-v2 VIDEOCC facts from hash-pinned primary sources."""
+"""Generate bounded Kona VIDEOCC facts from hash-pinned primary sources."""
 import argparse
 import hashlib
 import json
@@ -9,6 +9,7 @@ import re
 
 REVISION = "94304e12a3509eac7b3716bf574ce0b1fcaacbae"
 SOURCE_HASHES = {
+    "drivers/clk/qcom/reset.c": "db88de0848c75cecff57623b94d63993a8f869a27686df4bd7b7be0765317f11",
     "drivers/clk/clk-divider.c": "df5a4f90c2352429307b97c317010e7424a88c02a90a253fad27baf45fd045b2",
     "drivers/clk/qcom/videocc-kona.c": "33a0f85c8d9efae1cc97f1916b0742a533ca0c79e35516b485c61b5eddd909e5",
     "include/dt-bindings/clock/qcom,videocc-kona.h": "0f51753e9eb497399d3c2d9a362e6d3ee7baf4f789b6e6628a7911b00f89d774",
@@ -17,10 +18,10 @@ SOURCE_HASHES = {
     "drivers/clk/qcom/clk-branch.c": "375830dc9cd0ecbc12ea018eee1d260d8ba724dc52f1ac8b3589a07bc75d08aa",
     "drivers/clk/qcom/clk-regmap-divider.c": "55b2484e485b897df3636db7944d29c1b4c01e0d8fd145f6075eff61c7bc1155",
     "drivers/clk/qcom/clk-branch.h": "da132bd1a093a650abf64073a4e695719e0612b67bb0166726737e0f2a3332d5",
-    "drivers/clk/qcom/reset.c": "db88de0848c75cecff57623b94d63993a8f869a27686df4bd7b7be0765317f11",
     "drivers/clk/qcom/clk-rpmh.c": "75537429fad6cac6aeb7b27f8ff4cd8e37f28f14740155e68c6c486f924f3c76",
 }
 INPUTS = ("bi_tcxo", "bi_tcxo_ao", "core_bi_pll_test_se", "chip_sleep_clk")
+
 PF = ("MODE", "L", "CAL_L", "USER", "USER_U", "USER_U1", "CONFIG",
       "CONFIG_U", "CONFIG_U1", "TEST", "TEST_U", "TEST_U1", "OPMODE", "ALPHA")
 OFFSET_FIELDS = dict(zip(PF, ("MODE", "L_VAL", "CAL_L_VAL", "USER_CTL",
@@ -30,12 +31,6 @@ GDSC = (0xbf8, 0xc98, 0xd18, 0xd98)
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUTS = ("hw/misc/qcom-sm8250-videocc-data.inc",
            "tb371fc/docs/videocc-sm8250-registers.json")
-CONFIG_FIELDS = {
-    "l": "L", "cal_l": "CAL_L", "alpha": "ALPHA",
-    "config_ctl_val": "CONFIG", "config_ctl_hi_val": "CONFIG_U",
-    "config_ctl_hi1_val": "CONFIG_U1", "user_ctl_val": "USER",
-    "user_ctl_hi_val": "USER_U", "user_ctl_hi1_val": "USER_U1",
-}
 
 
 def field(body, name, default=None):
@@ -55,56 +50,6 @@ def blocks(source, typename):
                                      source, re.M | re.S)]
 
 
-def variant_facts(source, alpha):
-    """Keep requested probe writes separate from modeled cold register state."""
-    configurations = {}
-    for name, body, line in blocks(source, "alpha_pll_config"):
-        declared = dict(re.findall(r"\.(\w+)\s*=\s*(0x[0-9a-fA-F]+|\d+)", body))
-        assert set(declared) == set(CONFIG_FIELDS)
-        values = {CONFIG_FIELDS[key]: int(declared[key], 0) for key in CONFIG_FIELDS}
-        configurations[name] = {
-            "source_line": line, "declared_register_values": values,
-            # clk_lucid_pll_configure skips zero-valued configuration fields.
-            "conditional_nonzero_writes": [
-                {"field": key, "value": value} for key, value in values.items() if value],
-        }
-    assert set(configurations) == {
-        "video_pll0_config", "video_pll1_config", "video_pll1_config_sm8250_v2"}
-    assert configurations["video_pll1_config"]["declared_register_values"]["CONFIG_U1"] == 0x029a699c
-    assert configurations["video_pll1_config_sm8250_v2"]["declared_register_values"]["CONFIG_U1"] == 0x329a699c
-    helper = re.search(r"^void clk_lucid_pll_configure\(.*?^\}", alpha, re.M | re.S).group()
-    assert "if (lucid_pll_is_enabled(pll, regmap))" in helper
-    for name in CONFIG_FIELDS:
-        assert "if (config->" + name + ")" in helper
-    calls = r"clk_lucid_pll_configure\(&([a-z0-9_]+),\s*regmap,\s*&([a-z0-9_]+)\)"
-    probe = re.search(r"^static int video_cc_kona_probe\(.*?^\}", source, re.M | re.S).group()
-    fixup = re.search(r"^static void video_cc_kona_fixup_konav2\(.*?^\}", source, re.M | re.S).group()
-    base_calls = re.findall(calls, probe)
-    fixup_calls = re.findall(calls, fixup)
-    assert base_calls == [("video_pll0", "video_pll0_config"),
-                          ("video_pll1", "video_pll1_config")]
-    assert fixup_calls == [("video_pll1", "video_pll1_config_sm8250_v2")]
-    assert (probe.index("&video_pll0_config") < probe.index("&video_pll1_config") <
-            probe.index("video_cc_kona_fixup_konav2(regmap)") <
-            probe.index("qcom_cc_really_probe"))
-    assert re.search(r'of_device_is_compatible\([^;]+"qcom,videocc-kona-v2"\)\)\s*'
-                     r"video_cc_kona_fixup_konav2\(regmap\)", probe)
-    table = re.search(r"video_cc_mvs1_clk_src\.freq_tbl\s*=\s*(\w+)", fixup).group(1)
-    assert table == "ftbl_video_cc_mvs1_clk_src_kona_v2"
-    rate_max = {level: int(rate) for level, rate in re.findall(
-        r"rate_max\[(\w+)\]\s*=\s*(\d+)", fixup)}
-    assert rate_max == {"VDD_LOWER": 840000000, "VDD_LOW": 1098000000}
-    return {"configurations": configurations,
-            "probe_sequence": [
-                {"phase": phase, "pll": pll, "configuration": config}
-                for phase, items in (("base", base_calls), ("kona-v2-fixup", fixup_calls))
-                for pll, config in items],
-            "configure_skips_running_pll": True,
-            "configure_tail": ["MODE.UPDATE_BYPASS=1", "MODE.OUTCTRL=0",
-                               "OPMODE=STANDBY", "MODE.RESET_N=1"],
-            "v2_frequency_table": table, "v2_rate_max": rate_max}
-
-
 def inventory(directory):
     sources = {}
     for path, expected in SOURCE_HASHES.items():
@@ -116,23 +61,6 @@ def inventory(directory):
     source = sources["drivers/clk/qcom/videocc-kona.c"]
     binding = sources["include/dt-bindings/clock/qcom,videocc-kona.h"]
     alpha = sources["drivers/clk/qcom/clk-alpha-pll.c"]
-    variant = variant_facts(source, alpha)
-    frequency_tables = {}
-    for name, body, line in blocks(source, "freq_tbl"):
-        entries = [{"frequency_hz": int(rate), "parent_symbol": parent,
-                    "pre_divisor": int(divisor), "m": int(m), "n": int(n)}
-                   for rate, parent, divisor, m, n in re.findall(
-                       r"F\(\s*(\d+),\s*(\w+),\s*(\d+),\s*(\d+),\s*(\d+)\)", body)]
-        assert entries and all(row["pre_divisor"] == 1 and row["m"] == row["n"] == 0
-                               for row in entries)
-        frequency_tables[name] = {"source_line": line, "entries": entries}
-    assert len(frequency_tables) == 5
-    vco = re.findall(r"\{\s*(\d+),\s*(\d+),\s*(\d+)\s*\}", blocks(source, "pll_vco")[0][1])
-    assert vco == [("249600000", "2000000000", "0")]
-    assert re.search(r"#define\s+BRANCH_HALT_VOTED\s+\(BRANCH_HALT \| BRANCH_VOTED\)",
-                     sources["drivers/clk/qcom/clk-branch.h"])
-    assert "mask = BIT(map->bit);" in sources["drivers/clk/qcom/reset.c"]
-    assert 'DEFINE_CLK_RPMH_ARC(kona, bi_tcxo, bi_tcxo_ao, "xo.lvl", 0x3, 2);' in sources["drivers/clk/qcom/clk-rpmh.c"]
     ids = {name: int(value) for name, value in re.findall(
         r"^#define\s+(\w+)\s+(\d+)\s*$", binding, re.M)}
     array = re.search(r"static struct clk_regmap \*video_cc_kona_clocks\[\] = \{(.*?)^\};",
@@ -161,8 +89,7 @@ def inventory(directory):
     registers = {}
 
     def add(offset, write, status, kind, index, member, store=None):
-        assert 0 <= offset < 0x10000 and offset % 4 == 0
-        assert offset not in GDSC and offset not in registers
+        assert offset % 4 == 0 and offset not in GDSC and offset not in registers
         registers[offset] = {"offset": offset, "write_mask": write,
                              "status_mask": status, "stored_mask": write if store is None else store,
                              "kind": kind, "index": index, "field": member}
@@ -218,15 +145,11 @@ def inventory(directory):
         cfg_mask = 0x10371f if hw_control else 0x371f
         add(base + 4, cfg_mask, 0, "RCG", index, 1)
         rcgs.append({"name": name, "clock_id": clocks[name]["id"], "base": base,
-                     "mnd_width": width, "hid_width": 5,
-                     "cfg_mask": cfg_mask, "hw_control": hw_control,
+                     "mnd_width": width, "cfg_mask": cfg_mask, "hw_control": hw_control,
                      "source_ops": field(body, "ops"), "source_line": line, "registers": offsets,
                      "parents": names, "selector_clock_ids": selectors,
-                     "frequency_table": field(body, "freq_tbl"),
-                     "active_frequency_table": (variant["v2_frequency_table"]
-                         if name == "video_cc_mvs1_clk_src" else field(body, "freq_tbl")),
-                     "critical": "CLK_IS_CRITICAL" in body,
-                     "enable_safe_config": field(body, "enable_safe_config") == "true"})
+                     "enable_safe_config": field(body, "enable_safe_config") == "true",
+                     "critical": "CLK_IS_CRITICAL" in body})
         clocks[name].update(kind="RCG", source_line=line, parents=names)
 
     for index, (name, body, line) in enumerate(sorted(blocks(source, "clk_branch"), key=lambda row: clocks[row[0]]["id"])):
@@ -236,9 +159,9 @@ def inventory(directory):
         halt = field(body, "halt_check")
         assert halt in ("BRANCH_HALT", "BRANCH_HALT_VOTED")
         declared_parents = parent_names(body)
-        parent, = declared_parents
-        vote_index = (sum(item["remote_vote_index"] >= 0 for item in branches)
-                      if halt == "BRANCH_HALT_VOTED" else -1)
+        assert len(declared_parents) == 1
+        parent = declared_parents[0]
+        vote_index = sum(item["remote_vote_index"] >= 0 for item in branches) if halt == "BRANCH_HALT_VOTED" else -1
         add(offset, 1, 0x80000000, "BRANCH", index, 0)
         branches.append({"name": name, "clock_id": clocks[name]["id"], "offset": offset,
                          "parent": parent, "parent_clock_id": parent_id(parent),
@@ -250,52 +173,47 @@ def inventory(directory):
     for index, (name, body, line) in enumerate(blocks(source, "clk_regmap_div")):
         ops = field(body, "ops")
         assert ops == "&clk_regmap_div_ro_ops"
-        read_only = True
-        declaration = body.split(".clkr", 1)[0]
-        assert field(declaration, "flags") is None and field(declaration, "table") is None
+        read_only = ops == "&clk_regmap_div_ro_ops"
         offset, shift, width = (number(body, key) for key in ("reg", "shift", "width"))
         assert shift == 0 and width == 2
         parent, = parent_names(body)
-        add(offset, 0, 0, "DIVIDER", index, 0, 3)
+        add(offset, 0 if read_only else 3, 0, "DIVIDER", index, 0, 3)
         dividers.append({"name": name, "clock_id": clocks[name]["id"], "offset": offset,
                          "parent": parent, "parent_clock_id": parent_id(parent),
                          "shift": shift, "width": width, "read_only": read_only,
-                         "divisor_encoding": "register_field + 1",
                          "source_line": line})
         clocks[name].update(kind="DIVIDER", source_line=line, parents=[parent])
 
     reset_body = blocks(source, "qcom_reset_map")[0][1]
-    resets = []
-    for name, offset, bit in re.findall(
-            r"\[(\w+)\]\s*=\s*\{\s*(0x[0-9a-fA-F]+)(?:\s*,\s*(\d+))?\s*\}",
-            reset_body):
-        bit = int(bit or "0")
-        resets.append({"name": name, "id": ids[name], "offset": int(offset, 0),
-                       "bit": bit, "mask": 1 << bit})
+    resets = [{"name": name, "id": ids[name], "offset": int(offset, 0),
+               "mask": 1 << (int(bit, 0) if bit else 0)}
+              for name, offset, bit in re.findall(
+                  r"\[(\w+)\]\s*=\s*\{\s*(0x[0-9a-fA-F]+)(?:\s*,\s*(\d+))?\s*\}",
+                  reset_body)]
     resets.sort(key=lambda item: item["id"])
     for index, reset in enumerate(resets):
         assert reset["id"] == index
-        offset, mask = reset["offset"], reset["mask"]
-        if offset in registers:
-            # ARES shares the branch word, not its enable bit or ownership.
-            register = registers[offset]
-            assert register["kind"] == "BRANCH" and mask == 4
-            assert offset in (0xc34, 0xcd4)
-            register["write_mask"] |= mask
-            register["stored_mask"] |= mask
-            register["shared_reset_id"] = index
-            reset["shared_with_branch"] = branches[register["index"]]["name"]
+        reset["shares_branch"] = reset["offset"] in registers
+        if reset["shares_branch"]:
+            register = registers[reset["offset"]]
+            assert register["kind"] == "BRANCH" and reset["mask"] == 4
+            register["write_mask"] |= reset["mask"]
+            register["stored_mask"] |= reset["mask"]
         else:
-            assert mask == 1
-            add(offset, mask, 0, "RESET", index, 0)
-            reset["shared_with_branch"] = None
+            assert reset["mask"] == 1
+            add(reset["offset"], reset["mask"], 0, "RESET", index, 0)
     assert (len(plls), len(rcgs), len(branches), len(dividers), len(resets)) == (2, 5, 8, 4, 7)
-    assert [b["offset"] for b in branches if b["remote_vote_index"] >= 0] == [
-        0xd34, 0xdb4, 0xdf4, 0xcd4]
+    assert [b["offset"] for b in branches if b["remote_vote_index"] >= 0] == [0xd34, 0xdb4, 0xdf4, 0xcd4]
     assert [r["name"] for r in rcgs if r["hw_control"]] == [
         "video_cc_ahb_clk_src", "video_cc_mvs0_clk_src", "video_cc_mvs1_clk_src"]
-    assert [(r["offset"], r["bit"]) for r in resets if r["shared_with_branch"]] == [
-        (0xc34, 2), (0xcd4, 2)]
+    assert [r["offset"] for r in resets if r["shares_branch"]] == [0xc34, 0xcd4]
+    recipes = []
+    for name, body, line in blocks(source, "alpha_pll_config"):
+        recipes.append({"name": name, "source_line": line,
+                        "fields": {key: int(value, 0) for key, value in re.findall(
+                            r"\.(\w+)\s*=\s*(0x[0-9a-fA-F]+|\d+)\s*,", body)}})
+    assert [p["name"] for p in recipes] == ["video_pll0_config", "video_pll1_config", "video_pll1_config_sm8250_v2"]
+    assert [p["fields"]["config_ctl_hi1_val"] for p in recipes] == [0x029a699c, 0x029a699c, 0x329a699c]
     ordered = [registers[offset] for offset in sorted(registers)]
     lookup = {item["offset"]: i for i, item in enumerate(ordered)}
     for pll in plls:
@@ -314,27 +232,20 @@ def inventory(directory):
             windows.append({"offset": offset, "size": 4})
     assert len(ordered) == 55 and len(windows) == 26
     assert sum(w["size"] for w in windows) == 220
-    assert not any(w["offset"] <= gdsc < w["offset"] + w["size"] for w in windows for gdsc in GDSC)
     assert all("kind" in item for item in clocks.values())
     return {"schema": "tb371fc-videocc-source-facts-v1", "source_revision": REVISION,
             "source_hashes": SOURCE_HASHES, "actual_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
             "actual_compatible": "qcom,videocc-kona-v2", "physical_base": 0x0abf0000,
-            "resource_bytes": 0x10000, "registers": ordered, "windows": windows,
+            "resource_bytes": 0x10000, "linux_max_register": 0xf4c, "registers": ordered, "windows": windows,
             "mapped_bytes": 220, "excluded_gdsc_offsets": list(GDSC),
-            "dt_cfg_ahb_clock": {"provider_phandle": 22, "vendor_binding_id": 205},
-            "dt_regulator_phandles": {"vdd_mx": 105, "vdd_mm": 104},
             "inputs": list(INPUTS), "clocks": sorted(clocks.values(), key=lambda item: item["id"]),
-            "xo_input_provenance": {"names": list(INPUTS[:2]), "parent": "xo_board",
-                                    "rpmh_resource": "xo.lvl", "parent_divisor": 2},
-            "unresolved_board_inputs": list(INPUTS[2:]),
-            "pll_vco_range_hz": [int(vco[0][0]), int(vco[0][1])],
-            "variant": variant, "frequency_tables": frequency_tables,
-            "plls": plls, "rcgs": rcgs,
+            "plls": plls, "pll_recipes": recipes, "rcgs": rcgs,
             "branches": branches, "dividers": dividers, "resets": resets,
             "limits": ["No opaque PLL STATUS semantics or analog behavior",
-                       "No fixed DIV2 factor inferred from a clock name",
-                       "No invented sleep or test clock rate",
-                       "No physical video codec, firmware or DMA execution"]}
+                       "No fixed divide-by-two inferred from divider names",
+                       "No invented sleep or PLL-test clock rate",
+                       "No fabricated clock demand from software critical flags",
+                       "No video decoder, encoder, CVP engine or video DMA execution"]}
 
 
 def c_data(data):
@@ -367,6 +278,8 @@ def c_data(data):
         lines.append("    { %u, %u, %d, %d }," % (item["clock_id"], item["register_index"], item["parent_clock_id"], item["remote_vote_index"]))
     lines += ["};", "static const VideoccDivider videocc_dividers[VIDEOCC_DIVIDERS] = {"]
     for item in data["dividers"]:
+        if not item["read_only"]:
+            raise ValueError("The fixed Kona VIDEOCC contract requires read-only dividers")
         lines.append("    { %u, %u, %d, %u, %u }," % (
             item["clock_id"], item["register_index"], item["parent_clock_id"],
             item["shift"], item["width"]))

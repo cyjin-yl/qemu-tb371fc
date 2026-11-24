@@ -2,6 +2,7 @@
   "schema": "tb371fc-videocc-source-facts-v1",
   "source_revision": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
   "source_hashes": {
+    "drivers/clk/qcom/reset.c": "db88de0848c75cecff57623b94d63993a8f869a27686df4bd7b7be0765317f11",
     "drivers/clk/clk-divider.c": "df5a4f90c2352429307b97c317010e7424a88c02a90a253fad27baf45fd045b2",
     "drivers/clk/qcom/videocc-kona.c": "33a0f85c8d9efae1cc97f1916b0742a533ca0c79e35516b485c61b5eddd909e5",
     "include/dt-bindings/clock/qcom,videocc-kona.h": "0f51753e9eb497399d3c2d9a362e6d3ee7baf4f789b6e6628a7911b00f89d774",
@@ -10,13 +11,13 @@
     "drivers/clk/qcom/clk-branch.c": "375830dc9cd0ecbc12ea018eee1d260d8ba724dc52f1ac8b3589a07bc75d08aa",
     "drivers/clk/qcom/clk-regmap-divider.c": "55b2484e485b897df3636db7944d29c1b4c01e0d8fd145f6075eff61c7bc1155",
     "drivers/clk/qcom/clk-branch.h": "da132bd1a093a650abf64073a4e695719e0612b67bb0166726737e0f2a3332d5",
-    "drivers/clk/qcom/reset.c": "db88de0848c75cecff57623b94d63993a8f869a27686df4bd7b7be0765317f11",
     "drivers/clk/qcom/clk-rpmh.c": "75537429fad6cac6aeb7b27f8ff4cd8e37f28f14740155e68c6c486f924f3c76"
   },
   "actual_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
   "actual_compatible": "qcom,videocc-kona-v2",
   "physical_base": 180289536,
   "resource_bytes": 65536,
+  "linux_max_register": 3916,
   "registers": [
     {
       "offset": 1068,
@@ -340,8 +341,7 @@
       "stored_mask": 5,
       "kind": "BRANCH",
       "index": 2,
-      "field": 0,
-      "shared_reset_id": 2
+      "field": 0
     },
     {
       "offset": 3156,
@@ -368,8 +368,7 @@
       "stored_mask": 5,
       "kind": "BRANCH",
       "index": 5,
-      "field": 0,
-      "shared_reset_id": 5
+      "field": 0
     },
     {
       "offset": 3316,
@@ -629,14 +628,6 @@
     3352,
     3480
   ],
-  "dt_cfg_ahb_clock": {
-    "provider_phandle": 22,
-    "vendor_binding_id": 205
-  },
-  "dt_regulator_phandles": {
-    "vdd_mx": 105,
-    "vdd_mm": 104
-  },
   "inputs": [
     "bi_tcxo",
     "bi_tcxo_ao",
@@ -842,306 +833,6 @@
       ]
     }
   ],
-  "xo_input_provenance": {
-    "names": [
-      "bi_tcxo",
-      "bi_tcxo_ao"
-    ],
-    "parent": "xo_board",
-    "rpmh_resource": "xo.lvl",
-    "parent_divisor": 2
-  },
-  "unresolved_board_inputs": [
-    "core_bi_pll_test_se",
-    "chip_sleep_clk"
-  ],
-  "pll_vco_range_hz": [
-    249600000,
-    2000000000
-  ],
-  "variant": {
-    "configurations": {
-      "video_pll0_config": {
-        "source_line": 123,
-        "declared_register_values": {
-          "L": 37,
-          "CAL_L": 68,
-          "ALPHA": 32768,
-          "CONFIG": 541611673,
-          "CONFIG_U": 8801,
-          "CONFIG_U1": 43674012,
-          "USER": 0,
-          "USER_U": 2053,
-          "USER_U1": 0
-        },
-        "conditional_nonzero_writes": [
-          {
-            "field": "L",
-            "value": 37
-          },
-          {
-            "field": "CAL_L",
-            "value": 68
-          },
-          {
-            "field": "ALPHA",
-            "value": 32768
-          },
-          {
-            "field": "CONFIG",
-            "value": 541611673
-          },
-          {
-            "field": "CONFIG_U",
-            "value": 8801
-          },
-          {
-            "field": "CONFIG_U1",
-            "value": 43674012
-          },
-          {
-            "field": "USER_U",
-            "value": 2053
-          }
-        ]
-      },
-      "video_pll1_config": {
-        "source_line": 157,
-        "declared_register_values": {
-          "L": 41,
-          "CAL_L": 68,
-          "ALPHA": 64170,
-          "CONFIG": 541611673,
-          "CONFIG_U": 8801,
-          "CONFIG_U1": 43674012,
-          "USER": 0,
-          "USER_U": 2053,
-          "USER_U1": 0
-        },
-        "conditional_nonzero_writes": [
-          {
-            "field": "L",
-            "value": 41
-          },
-          {
-            "field": "CAL_L",
-            "value": 68
-          },
-          {
-            "field": "ALPHA",
-            "value": 64170
-          },
-          {
-            "field": "CONFIG",
-            "value": 541611673
-          },
-          {
-            "field": "CONFIG_U",
-            "value": 8801
-          },
-          {
-            "field": "CONFIG_U1",
-            "value": 43674012
-          },
-          {
-            "field": "USER_U",
-            "value": 2053
-          }
-        ]
-      },
-      "video_pll1_config_sm8250_v2": {
-        "source_line": 169,
-        "declared_register_values": {
-          "L": 43,
-          "CAL_L": 68,
-          "ALPHA": 49152,
-          "CONFIG": 541611673,
-          "CONFIG_U": 8801,
-          "CONFIG_U1": 848980380,
-          "USER": 0,
-          "USER_U": 2053,
-          "USER_U1": 0
-        },
-        "conditional_nonzero_writes": [
-          {
-            "field": "L",
-            "value": 43
-          },
-          {
-            "field": "CAL_L",
-            "value": 68
-          },
-          {
-            "field": "ALPHA",
-            "value": 49152
-          },
-          {
-            "field": "CONFIG",
-            "value": 541611673
-          },
-          {
-            "field": "CONFIG_U",
-            "value": 8801
-          },
-          {
-            "field": "CONFIG_U1",
-            "value": 848980380
-          },
-          {
-            "field": "USER_U",
-            "value": 2053
-          }
-        ]
-      }
-    },
-    "probe_sequence": [
-      {
-        "phase": "base",
-        "pll": "video_pll0",
-        "configuration": "video_pll0_config"
-      },
-      {
-        "phase": "base",
-        "pll": "video_pll1",
-        "configuration": "video_pll1_config"
-      },
-      {
-        "phase": "kona-v2-fixup",
-        "pll": "video_pll1",
-        "configuration": "video_pll1_config_sm8250_v2"
-      }
-    ],
-    "configure_skips_running_pll": true,
-    "configure_tail": [
-      "MODE.UPDATE_BYPASS=1",
-      "MODE.OUTCTRL=0",
-      "OPMODE=STANDBY",
-      "MODE.RESET_N=1"
-    ],
-    "v2_frequency_table": "ftbl_video_cc_mvs1_clk_src_kona_v2",
-    "v2_rate_max": {
-      "VDD_LOWER": 840000000,
-      "VDD_LOW": 1098000000
-    }
-  },
-  "frequency_tables": {
-    "ftbl_video_cc_ahb_clk_src": {
-      "source_line": 255,
-      "entries": [
-        {
-          "frequency_hz": 19200000,
-          "parent_symbol": "P_BI_TCXO",
-          "pre_divisor": 1,
-          "m": 0,
-          "n": 0
-        }
-      ]
-    },
-    "ftbl_video_cc_mvs0_clk_src": {
-      "source_line": 277,
-      "entries": [
-        {
-          "frequency_hz": 720000000,
-          "parent_symbol": "P_VIDEO_PLL0_OUT_MAIN",
-          "pre_divisor": 1,
-          "m": 0,
-          "n": 0
-        },
-        {
-          "frequency_hz": 1014000000,
-          "parent_symbol": "P_VIDEO_PLL0_OUT_MAIN",
-          "pre_divisor": 1,
-          "m": 0,
-          "n": 0
-        },
-        {
-          "frequency_hz": 1098000000,
-          "parent_symbol": "P_VIDEO_PLL0_OUT_MAIN",
-          "pre_divisor": 1,
-          "m": 0,
-          "n": 0
-        },
-        {
-          "frequency_hz": 1332000000,
-          "parent_symbol": "P_VIDEO_PLL0_OUT_MAIN",
-          "pre_divisor": 1,
-          "m": 0,
-          "n": 0
-        }
-      ]
-    },
-    "ftbl_video_cc_mvs1_clk_src": {
-      "source_line": 309,
-      "entries": [
-        {
-          "frequency_hz": 806000000,
-          "parent_symbol": "P_VIDEO_PLL1_OUT_MAIN",
-          "pre_divisor": 1,
-          "m": 0,
-          "n": 0
-        },
-        {
-          "frequency_hz": 1040000000,
-          "parent_symbol": "P_VIDEO_PLL1_OUT_MAIN",
-          "pre_divisor": 1,
-          "m": 0,
-          "n": 0
-        },
-        {
-          "frequency_hz": 1098000000,
-          "parent_symbol": "P_VIDEO_PLL1_OUT_MAIN",
-          "pre_divisor": 1,
-          "m": 0,
-          "n": 0
-        },
-        {
-          "frequency_hz": 1332000000,
-          "parent_symbol": "P_VIDEO_PLL1_OUT_MAIN",
-          "pre_divisor": 1,
-          "m": 0,
-          "n": 0
-        }
-      ]
-    },
-    "ftbl_video_cc_mvs1_clk_src_kona_v2": {
-      "source_line": 317,
-      "entries": [
-        {
-          "frequency_hz": 840000000,
-          "parent_symbol": "P_VIDEO_PLL1_OUT_MAIN",
-          "pre_divisor": 1,
-          "m": 0,
-          "n": 0
-        },
-        {
-          "frequency_hz": 1098000000,
-          "parent_symbol": "P_VIDEO_PLL1_OUT_MAIN",
-          "pre_divisor": 1,
-          "m": 0,
-          "n": 0
-        },
-        {
-          "frequency_hz": 1332000000,
-          "parent_symbol": "P_VIDEO_PLL1_OUT_MAIN",
-          "pre_divisor": 1,
-          "m": 0,
-          "n": 0
-        }
-      ]
-    },
-    "ftbl_video_cc_sleep_clk_src": {
-      "source_line": 348,
-      "entries": [
-        {
-          "frequency_hz": 32000,
-          "parent_symbol": "P_CHIP_SLEEP_CLK",
-          "pre_divisor": 1,
-          "m": 0,
-          "n": 0
-        }
-      ]
-    }
-  },
   "plls": [
     {
       "name": "video_pll0",
@@ -1222,13 +913,59 @@
       ]
     }
   ],
+  "pll_recipes": [
+    {
+      "name": "video_pll0_config",
+      "source_line": 123,
+      "fields": {
+        "l": 37,
+        "cal_l": 68,
+        "alpha": 32768,
+        "config_ctl_val": 541611673,
+        "config_ctl_hi_val": 8801,
+        "config_ctl_hi1_val": 43674012,
+        "user_ctl_val": 0,
+        "user_ctl_hi_val": 2053,
+        "user_ctl_hi1_val": 0
+      }
+    },
+    {
+      "name": "video_pll1_config",
+      "source_line": 157,
+      "fields": {
+        "l": 41,
+        "cal_l": 68,
+        "alpha": 64170,
+        "config_ctl_val": 541611673,
+        "config_ctl_hi_val": 8801,
+        "config_ctl_hi1_val": 43674012,
+        "user_ctl_val": 0,
+        "user_ctl_hi_val": 2053,
+        "user_ctl_hi1_val": 0
+      }
+    },
+    {
+      "name": "video_pll1_config_sm8250_v2",
+      "source_line": 169,
+      "fields": {
+        "l": 43,
+        "cal_l": 68,
+        "alpha": 49152,
+        "config_ctl_val": 541611673,
+        "config_ctl_hi_val": 8801,
+        "config_ctl_hi1_val": 848980380,
+        "user_ctl_val": 0,
+        "user_ctl_hi_val": 2053,
+        "user_ctl_hi1_val": 0
+      }
+    }
+  ],
   "rcgs": [
     {
       "name": "video_cc_ahb_clk_src",
       "clock_id": 1,
       "base": 3028,
       "mnd_width": 0,
-      "hid_width": 5,
       "cfg_mask": 1062687,
       "hw_control": true,
       "source_ops": "&clk_rcg2_ops",
@@ -1251,10 +988,8 @@
         -127,
         -3
       ],
-      "frequency_table": "ftbl_video_cc_ahb_clk_src",
-      "active_frequency_table": "ftbl_video_cc_ahb_clk_src",
-      "critical": false,
       "enable_safe_config": true,
+      "critical": false,
       "register_indices": [
         32,
         33
@@ -1265,7 +1000,6 @@
       "clock_id": 3,
       "base": 2964,
       "mnd_width": 0,
-      "hid_width": 5,
       "cfg_mask": 1062687,
       "hw_control": true,
       "source_ops": "&clk_rcg2_ops",
@@ -1289,10 +1023,8 @@
         -127,
         -3
       ],
-      "frequency_table": "ftbl_video_cc_mvs0_clk_src",
-      "active_frequency_table": "ftbl_video_cc_mvs0_clk_src",
-      "critical": false,
       "enable_safe_config": true,
+      "critical": false,
       "register_indices": [
         28,
         29
@@ -1303,7 +1035,6 @@
       "clock_id": 8,
       "base": 2996,
       "mnd_width": 0,
-      "hid_width": 5,
       "cfg_mask": 1062687,
       "hw_control": true,
       "source_ops": "&clk_rcg2_ops",
@@ -1327,10 +1058,8 @@
         -127,
         -3
       ],
-      "frequency_table": "ftbl_video_cc_mvs1_clk_src",
-      "active_frequency_table": "ftbl_video_cc_mvs1_clk_src_kona_v2",
-      "critical": false,
       "enable_safe_config": true,
+      "critical": false,
       "register_indices": [
         30,
         31
@@ -1341,7 +1070,6 @@
       "clock_id": 14,
       "base": 3824,
       "mnd_width": 0,
-      "hid_width": 5,
       "cfg_mask": 14111,
       "hw_control": false,
       "source_ops": "&clk_rcg2_ops",
@@ -1364,10 +1092,8 @@
         -127,
         -3
       ],
-      "frequency_table": "ftbl_video_cc_sleep_clk_src",
-      "active_frequency_table": "ftbl_video_cc_sleep_clk_src",
-      "critical": false,
       "enable_safe_config": false,
+      "critical": false,
       "register_indices": [
         52,
         53
@@ -1378,7 +1104,6 @@
       "clock_id": 16,
       "base": 3788,
       "mnd_width": 0,
-      "hid_width": 5,
       "cfg_mask": 14111,
       "hw_control": false,
       "source_ops": "&clk_rcg2_ops",
@@ -1401,10 +1126,8 @@
         -127,
         -3
       ],
-      "frequency_table": "ftbl_video_cc_ahb_clk_src",
-      "active_frequency_table": "ftbl_video_cc_ahb_clk_src",
-      "critical": true,
       "enable_safe_config": false,
+      "critical": true,
       "register_indices": [
         49,
         50
@@ -1527,7 +1250,6 @@
       "shift": 0,
       "width": 2,
       "read_only": true,
-      "divisor_encoding": "register_field + 1",
       "source_line": 203,
       "register_index": 42
     },
@@ -1540,7 +1262,6 @@
       "shift": 0,
       "width": 2,
       "read_only": true,
-      "divisor_encoding": "register_field + 1",
       "source_line": 216,
       "register_index": 36
     },
@@ -1553,7 +1274,6 @@
       "shift": 0,
       "width": 2,
       "read_only": true,
-      "divisor_encoding": "register_field + 1",
       "source_line": 229,
       "register_index": 45
     },
@@ -1566,7 +1286,6 @@
       "shift": 0,
       "width": 2,
       "read_only": true,
-      "divisor_encoding": "register_field + 1",
       "source_line": 242,
       "register_index": 39
     }
@@ -1576,70 +1295,64 @@
       "name": "CVP_VIDEO_CC_INTERFACE_BCR",
       "id": 0,
       "offset": 3668,
-      "bit": 0,
       "mask": 1,
-      "shared_with_branch": null,
+      "shares_branch": false,
       "register_index": 47
     },
     {
       "name": "CVP_VIDEO_CC_MVS0_BCR",
       "id": 1,
       "offset": 3348,
-      "bit": 0,
       "mask": 1,
-      "shared_with_branch": null,
+      "shares_branch": false,
       "register_index": 40
     },
     {
       "name": "VIDEO_CC_MVS0C_CLK_ARES",
       "id": 2,
       "offset": 3124,
-      "bit": 2,
       "mask": 4,
-      "shared_with_branch": "video_cc_mvs0c_clk",
+      "shares_branch": true,
       "register_index": 35
     },
     {
       "name": "CVP_VIDEO_CC_MVS0C_BCR",
       "id": 3,
       "offset": 3060,
-      "bit": 0,
       "mask": 1,
-      "shared_with_branch": null,
+      "shares_branch": false,
       "register_index": 34
     },
     {
       "name": "CVP_VIDEO_CC_MVS1_BCR",
       "id": 4,
       "offset": 3476,
-      "bit": 0,
       "mask": 1,
-      "shared_with_branch": null,
+      "shares_branch": false,
       "register_index": 43
     },
     {
       "name": "VIDEO_CC_MVS1C_CLK_ARES",
       "id": 5,
       "offset": 3284,
-      "bit": 2,
       "mask": 4,
-      "shared_with_branch": "video_cc_mvs1c_clk",
+      "shares_branch": true,
       "register_index": 38
     },
     {
       "name": "CVP_VIDEO_CC_MVS1C_BCR",
       "id": 6,
       "offset": 3220,
-      "bit": 0,
       "mask": 1,
-      "shared_with_branch": null,
+      "shares_branch": false,
       "register_index": 37
     }
   ],
   "limits": [
     "No opaque PLL STATUS semantics or analog behavior",
-    "No fixed DIV2 factor inferred from a clock name",
-    "No invented sleep or test clock rate",
-    "No physical video codec, firmware or DMA execution"
+    "No fixed divide-by-two inferred from divider names",
+    "No invented sleep or PLL-test clock rate",
+    "No fabricated clock demand from software critical flags",
+    "No video decoder, encoder, CVP engine or video DMA execution"
   ]
 }

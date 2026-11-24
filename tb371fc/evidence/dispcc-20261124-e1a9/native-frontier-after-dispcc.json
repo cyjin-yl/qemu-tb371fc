@@ -1,0 +1,86 @@
+{
+  "schema": "tb371fc-original-input-frontier-v1",
+  "run": "original-android-006",
+  "attempt": "dispcc-f209f65-run006",
+  "started_utc": "2026-11-24T16:24:49.750186Z",
+  "finished_utc": "2026-11-24T16:25:08.288729Z",
+  "qemu_source_commit": "f209f658316ada5ddd5c245f0be6c2c0eca271bd",
+  "qemu_source_ci_run": 45434451557,
+  "qemu_sha256": "0738a1910ef86c8ccc403ba100ae2094de573d4f0c11fdff9877e1b9fa798d6c",
+  "scope": "Unchanged original direct-kernel inputs with explicit MDSS, NPU, VIDEO, CAMCC and DISPCC references; no original LUNs attached",
+  "runner_sha256": "2d3e4c5206eca92a5ffdf9dab1b69d3a0482305a1b1756f9df509b22a464baf6",
+  "original_inputs": {
+    "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "initrd_sha256": "563f4b334f8470155c6a451395342f7044b70e79b480a886c7641960f534f596",
+    "full_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "bootargs_sha256": "63c5738bb0c67419dd7efa0c585156499d163479d01b421203c0b51756fc6732",
+    "bootargs_preserved": true,
+    "core_input_digests_unchanged": {
+      "kernel": true,
+      "initrd": true,
+      "dtb": true,
+      "bootargs": true
+    },
+    "aop_unchanged": true,
+    "symbols_unchanged": true
+  },
+  "observation": {
+    "requested_seconds": 120,
+    "stop_on_kernel_failure": true,
+    "stop_reason": "kernel-failure",
+    "elapsed_seconds": 16.449,
+    "qemu_returncode": 0,
+    "runner_exit_code": 2,
+    "qemu_unchanged": true,
+    "camcc_registration": {
+      "guest_seconds": 3.462116,
+      "message": "cam_cc-kona ad00000.qcom,camcc: Registered CAM CC clocks"
+    },
+    "first_kernel_failure": {
+      "guest_seconds": 3.50868,
+      "kind": "synchronous external abort",
+      "esr": "0x96000010",
+      "far": "0xffffff8015cf042c",
+      "elr": "0xffffff800884e968",
+      "cpu": 4,
+      "pid": 78,
+      "process": "kworker/4:1",
+      "workqueue": "events deferred_probe_work_func",
+      "pc": "regmap_mmio_read32le+0x8/0x20",
+      "callers": [
+        "clk_lucid_pll_configure+0x40/0x320",
+        "video_cc_kona_probe+0x274/0x378"
+      ],
+      "physical_address": "0x0abf042c",
+      "access": "read",
+      "bytes": 4,
+      "controller": "VIDEOCC",
+      "qemu_invalid_read_and_data_abort_corroborate": true
+    },
+    "qmp_shutdown_normal": true,
+    "final_status": {
+      "status": "paused",
+      "running": false
+    },
+    "original_luns_attached": 0,
+    "android_userspace_observed": false,
+    "android_boot_completed_observed": false,
+    "interactive_display_verified": false,
+    "stock_android_boot_passed": false,
+    "dispcc_registration": {
+      "guest_seconds": 3.503753,
+      "message": "disp_cc-kona af00000.qcom,dispcc: Registered Display CC clocks"
+    },
+    "storage_complete": false,
+    "input_classification": "no-lun-diagnostic"
+  },
+  "private_logs": {
+    "first_printk_bytes": 61033,
+    "first_printk_sha256": "748f4a5c57d1c5c047f7ac79d0f9a4c5631cc33dac69f3e3a765ac8da692b318",
+    "final_printk_bytes": 61033,
+    "final_printk_sha256": "748f4a5c57d1c5c047f7ac79d0f9a4c5631cc33dac69f3e3a765ac8da692b318",
+    "qemu_log_bytes": 627204,
+    "qemu_log_sha256": "e6ec8e61564b22efab72088e983d98c000fffd561ce2e590dd755513aaf8d070"
+  },
+  "next_boundary": "The original DISPCC driver registered its clocks. The next first unmapped read is VIDEOCC PLL0 MODE at controller offset 0x042c during video_cc_kona_probe. The relative 0x42c diagnostic is the same rejected access, not another device. This qualifies the observed probe advance, not video decoding, display scanout or complete Android boot."
+}

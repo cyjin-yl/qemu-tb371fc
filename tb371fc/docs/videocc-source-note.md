@@ -1,13 +1,16 @@
-# VIDEOCC source note for subsequent native fault diagnosis
+# VIDEOCC source preparation and subsequent implementation
 
-This is read-only preparation, not a device implementation or a prediction
-of the next fault. The current native observation is a nonfatal
+This note preserves the earlier read-only preparation. The subsequent
+[VIDEOCC implementation contract](videocc-sm8250.md) follows the actually
+observed run006 read32 failure at physical0x0abf042c after Display CC registered.
+At the preparation checkpoint, the native observation was a nonfatal
 `Unable to register for bw voting` defer. In the pinned driver,
 bus-client registration precedes both PLL configuration calls. Successful
 NoC configuration would not by itself prove that this dependency or
 VIDEOCC is usable. The original DT now establishes the resource and v2
-compatible below; no later VIDEOCC invalid-memory address has been observed
-in this evidence.
+compatible below; that earlier evidence contained no later VIDEOCC invalid
+memory address. The new receipt and planned compiled acceptance retain their
+own exact-source identities, separate from this historical preparation.
 
 ## Fixed evidence
 
@@ -83,7 +86,7 @@ div2 does not establish its reset or firmware-programmed encoding.
 
 At an actual 19.2 MHz parent, floor-Q16 arithmetic gives:
 
-| PLL recipe | L / ALPHA | CONFIG_U1 | Integer output, before gating |
+| PLL recipe | L / ALPHA | CONFIG_U1 | Calculated integer factor rate |
 | --- | --- | --- | ---: |
 | PLL0, both revisions | `25 / 8000` | `029a699c` | 720000000 Hz |
 | PLL1 initial / v1 | `29 / faaa` | `029a699c` | 805999804 Hz |
@@ -94,6 +97,15 @@ includes CAL_L 44, CONFIG 20485699/2261, USER_U 805. The probe first
 configures both initial recipes, then the
 `qcom,videocc-kona-v2` match reconfigures PLL1 and replaces the MVS1
 rate/VDD table. PLL0 does not inherit the NPU or PLL1-v2 CONFIG_U1 value.
+
+The actual v2 probe's initial PLL1 writes establish configuration storage,
+not a working legacy PLL1 carrier. The pinned `clk_lucid_pll_configure`
+ends with OUTCTRL cleared, OPMODE_STANDBY and RESET_N set (lines1853–1868);
+it does not start RUN or wait for LOCK. The v2 fixup executes before
+`qcom_cc_really_probe` (videocc-kona.c lines645–652). Accordingly the v2
+reference permits new PLL1 LOCK/ACK only with CONFIG_U1 `0x329a699c`.
+Its initial `0x029a699c` remains accepted for standby storage; the
+805999804-Hz calculation above does not qualify a modeled v2 output.
 
 ## Inputs and exclusions to retain
 
@@ -114,7 +126,7 @@ does not register these GDSCs. Preserve their ownership as separate
 dependencies. Neither max_register=f4c nor an eventual DT resource size
 authorizes a RAM window or invented power/status success.
 
-A future implementation still requires an observed fault, an explicit
-policy for unknown divider values, and independent state/timing/migration
-tests. This note establishes no video codec,
+The subsequent contract records the observed fault, an explicit reference
+reset policy for unknown hardware divider values, and independent
+state/timing/migration tests. This note establishes no video codec,
 DSP firmware, frame processing, throughput, suspend or Android functionality.

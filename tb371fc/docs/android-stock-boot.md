@@ -259,7 +259,7 @@ After a successful scheduled stopped-guest printk capture (every 15 seconds by
 default, controlled by `--snapshot-interval`), the existing log classifier can
 end observation when it identifies an Internal error/Oops/panic or another
 recognized kernel failure. WARN messages, hardware diagnostics alone, and failed
-captures do not trigger this early stop. The guest stays paused while the runner
+captures do not trigger this early stop. The guest stays stopped while the runner
 takes its normal final capture, quits QEMU, drains QMP, collects logs, and checks
 the original inputs and backing files. A normally finalized early stop records
 `stop_reason` and `outcome` as `kernel-failure`; preservation and runner errors
@@ -276,10 +276,28 @@ host-controlled stop. Unexpected QMP closure, process exit, guest panic or
 shutdown, host termination, log truncation, and a run without original LUNs all
 prevent a successful boot observation.
 
+Normal cleanup separately permits an already stopped `shutdown` state when
+the actual last relevant pre-quit event is a guest SHUTDOWN for guest reset,
+shutdown or panic. With `-no-shutdown`, QEMU can acknowledge `stop` without
+changing this terminal state to `paused`. The runner must still issue `quit`
+and verify its unique matching reply, the `host-qmp-quit` event, the complete
+drained tail and acceptable socket closure, process return code zero, and no
+forced termination or command error. A missing guest event, a later conflicting
+transition, or a shutdown state with running CPUs is rejected.
+
+This cleanup path does not admit a successful Android verdict: success still
+requires a time-bound observation ending in `paused`, with no guest shutdown,
+panic or kernel failure. The original run007 cleanup failure remains unchanged;
+its host-signal exit is not reclassified by the fix. The
+[validation receipt](../evidence/videocc-20261124-e1a9/runner-shutdown-validation.json)
+records the old-runner failure reproduction, 39 runner tests, 28 consumer tests
+and real AF_UNIX transport fixtures. No VM or original Android run is claimed
+by those host tests.
+
 Even a successful boot observation does not attest AVB, secure-world behavior,
 factory provenance, usable graphics, or complete-device equivalence. Preserve
 the detailed stage evidence and qualify those capabilities separately. The
-tools' host tests use synthetic inputs and fake process/QMP objects; CI passing
-those tests is not an Android boot result.
+tools' host tests use synthetic inputs, controlled process/QMP peers and local
+transport fixtures; CI passing those tests is not an Android boot result.
 
 [native-units]: ../evidence/expansion-20261123/android-ufs-units.json
