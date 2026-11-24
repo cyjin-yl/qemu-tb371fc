@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-11-24T02:25:00.928298+00:00",
+  "kind": "static prerequisite audit; not a runtime failure or pass",
+  "previous_ci_run": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45261190276",
+  "previous_artifact_id": 14862035458,
+  "previous_artifact_sha256": "8ce6d6b9f26ca13f8b8b5f69377c681d3a144ae6870b5ae7aa2302914db6df76",
+  "previous_kernel_config_sha256": "7dad581dcc70b0aa01d1542ee204f6ad5fb3ed3068d68f1d187211113bc49482",
+  "previous_image_sha256": "bc46a7b6e7887aa4ad8a59ca34a4b1141903412e2bd94ce3536fe59eb36e32d7",
+  "observed_config": {
+    "CONFIG_PROC_FS": "y",
+    "CONFIG_PROC_SYSCTL": "n",
+    "CONFIG_SYSCTL": "not emitted",
+    "CONFIG_SYSFS": "y",
+    "CONFIG_DEVTMPFS": "y",
+    "CONFIG_DEVTMPFS_MOUNT": "y",
+    "CONFIG_TTY": "y",
+    "CONFIG_SERIAL_QCOM_GENI": "y",
+    "CONFIG_SERIAL_QCOM_GENI_CONSOLE": "y",
+    "CONFIG_SERIAL_CORE": "y",
+    "CONFIG_SERIAL_CORE_CONSOLE": "y",
+    "CONFIG_POSIX_TIMERS": "y",
+    "CONFIG_SMP": "y",
+    "CONFIG_NR_CPUS": "8",
+    "CONFIG_BLOCK": "y",
+    "CONFIG_BLK_DEV_SD": "y",
+    "CONFIG_SCSI": "y",
+    "CONFIG_SCSI_UFS_QCOM": "y",
+    "CONFIG_PHY_QCOM_QMP_UFS": "y",
+    "CONFIG_ARM_SMMU": "y",
+    "CONFIG_IOMMU_DEFAULT_DMA_STRICT": "y",
+    "CONFIG_SM_GCC_8250": "y",
+    "CONFIG_BINFMT_ELF": "y",
+    "CONFIG_BLK_DEV_INITRD": "y",
+    "CONFIG_RD_GZIP": "y"
+  },
+  "finding": "The prior minimal kernel has CONFIG_PROC_SYSCTL disabled and does not provide /proc/sys/kernel/random/boot_id required by the new continuation gate.",
+  "fix": "Enable CONFIG_PROC_SYSCTL=y, which selects SYSCTL; add PROC_SYSCTL to the existing required configuration check in build_smoke_kernel.sh. No upstream source patch.",
+  "other_dependencies": "Existing procfs/sysfs/devtmpfs, GENI TTY/core/console, 8-CPU SMP, POSIX clocks, ELF/initrd and strict-translated UFS block I/O dependencies are enabled. Physical GENI RX does not depend on PTY configuration.",
+  "primary_sources": [
+    {
+      "url": "https://github.com/gregkh/linux/blob/v6.12.114/fs/proc/Kconfig",
+      "git_blob_sha": "d80a1431ef7be0c848b55d9104b284806a2ef1f8",
+      "observation": "PROC_SYSCTL depends on PROC_FS and selects SYSCTL."
+    },
+    {
+      "url": "https://github.com/gregkh/linux/blob/v6.12.114/drivers/char/random.c",
+      "git_blob_sha": "a23c8b2feab6ca9c307cd720693c2775d58ffc09",
+      "observation": "The boot_id table and kernel/random sysctl registration are guarded by CONFIG_SYSCTL."
+    },
+    {
+      "url": "https://github.com/gregkh/linux/blob/v6.12.114/drivers/tty/serial/qcom_geni_serial.c",
+      "git_blob_sha": "e02d988da16aa96d5ff2305550cd31f6a94fb924",
+      "observation": "The existing GENI serial driver implements startup/start_rx, receive FIFO handling and set_termios."
+    }
+  ]
+}
