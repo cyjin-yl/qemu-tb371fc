@@ -80,10 +80,12 @@ GCC bootstrap 状态、部分 fabric 输入、QUP version 和设备排序延时�
 - [x] 主线 Qualcomm UFS/QMP/GCC/SMMU 驱动运行：19 项 guest 检查，strict translated DMA domain，宿主独立核对写入数据。
 - [ ] Qualcomm TCU/TBU、完整 QSMMU v500 扩展、stage 2/nesting、AArch32 与 LPA/LPA2 等未实现翻译模式。
 - [x] 16/64 KiB 架构页表模型通过显式 granule profile 实现，b5f4415 CI 的 [26 组真实 QEMU 验收](evidence/smmuv2-granules-20261123/ci-granules.json)及独立 55 组件/4 Linux 套件均通过；[实现与边界](docs/smmuv2-granules.md)。默认仍只广告 4 KiB，未测量原生 SMMU 大页能力。
-- [x] SMMUv2 独立迁移验收：18 项双进程恢复／拒绝检查通过，覆盖页表、DMA、fault IRQ 与 reset；[证据](evidence/smmuv2-migration-20261123/publication.json)。UFS 仍关闭，整板迁移未通过。
+- [x] SMMUv2 独立迁移验收：18 项双进程恢复／拒绝检查通过，覆盖页表、DMA、fault IRQ 与 reset；[证据](evidence/smmuv2-migration-20261123/publication.json)。该轮显式关闭 UFS，未验收整板迁移。
 - [x] VMState v3 绑定 granule profile；[CT102 扩展验收](evidence/smmuv2-granules-20261123/ct102-with-glib.json)28/28、5 次转移，包含实际旧 v2→新 v3 默认 profile 的 ATS/DMA 延续与旧 v2→扩展 profile 的拒绝。两个 CI 二进制摘要固定，未全局安装依赖。
 - [ ] UFS ICE、RPMB 认证、原生 LU 启动选择/保护、完整 task management/reset/error 模式及物理链路行为。
-- [ ] UFS core 迁移和有未完成存储 I/O 的整板迁移。现有组件迁移均显式关闭 UFS。
+- [x] `qcom-sm8250-ufs` wrapper 的空 legacy 队列检查点：[03cd8843 原始验收](evidence/ufs-migration-20261123/accepted-03cd8843/ufs-migration/result.json)通过 21 组检查、3 次真实进程迁移、7 个拒绝场景，含非恒等 SID `0xe0` DMA 与外部共享磁盘 I/O；[格式与边界](docs/ufs-migration.md)。
+- [x] [839ae467 后续验收](evidence/ufs-migration-20261123/verified-839ae467/ufs-migration-result.json)保留同样的 21/3/7 范围；另取 3 份真实 profile 流作不匹配依据，不计为迁移。6 个被拒 receiver 退出后均将 QMP 读至 EOF，再确认无 RESUME；该完整事件审计仅属于后续回执。
+- [ ] 通用 `ufs` PCI 与 `ufs-sysbus` 迁移、未完成 SCSI/MCQ 存储请求的序列化，以及完整原生整板迁移；此前关闭 UFS 的组件回执仍保留各自原范围。
 - [ ] SDHCI/microSD、DWC3/USB PHY、GENI I²C/SPI 和各连接器生命周期。
 - [ ] NT36532 触摸/笔、键盘盖 I²C-HID、attach/detach/wakeup。
 - [ ] CTN730 笔充电、MM8013 电量计、charger 与其余 PMIC 器件。

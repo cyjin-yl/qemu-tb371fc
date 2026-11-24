@@ -1,9 +1,15 @@
 # TB371FC：Linux、QEMU 与 XNU 共用的硬件契约
 
-记录日期：2026-11-24（Asia/Shanghai）。本次核对的已发布 QEMU 基线为
+记录日期：2026-11-24（Asia/Shanghai）。初始文档核对的已发布 QEMU 基线为
 `69ca28dec6add998d252fa6436dfcc9b9cab6e36`，Linux 研究基线为
 `ec42c484`，UniXNU 基线为 `573ea14a917648f38fd3f2f920020aaf7a28f6ff`。
-这些是本次文档的快照，不替代其他并行分支的新运行回执。
+这些是初始文档的快照，不替代其他并行分支的新运行回执。
+
+同日迁移进展补记：QEMU [PR #4](https://github.com/cyjin-yl/qemu-tb371fc/pull/4)
+和 [PR #5](https://github.com/cyjin-yl/qemu-tb371fc/pull/5) 已合并。
+下文 UFS 现状依据 [03cd8843 原始验收](ufs-migration.md#original-ufs-acceptance)
+和 [839ae467 后续验收](ufs-migration.md#profile-and-qmp-drain-follow-up)，
+各轮源码、二进制与输入范围保持独立；合并本身不构成新的运行回执。
 
 ## 决策与分工
 
@@ -75,15 +81,23 @@
 | --- | --- | --- |
 | CPU/IRQ/timer | [CPU](cpu.md)、[timer](mmio-timer.md)、GIC/PSCI 启动 | 保留 A77 与小核证据差异；核对新 kernel 的中断、计数器、启动保留区和多核路径 |
 | 时钟/电源/固件 | [GCC](gcc-sm8250.md)、[GDSC](gdsc.md)、[RPMh](rpmh-sm8250.md)、[SMEM](smem-reference.md) | 从实际失败路径补依赖和所有权；保持 native 事实与 reference 初始化独立 |
-| DMA/UFS | [SMMUv2](smmuv2.md)、[UFS](ufs-sm8250.md)、[页粒度](smmuv2-granules.md) | 让 Linux/XNU 使用同一读写、越界、fault、撤销映射和 reset 向量；补 UFS 与整板迁移缺口 |
+| DMA/UFS | [SMMUv2](smmuv2.md)、[UFS](ufs-sm8250.md)、[页粒度](smmuv2-granules.md)、[空队列检查点](ufs-migration.md) | 让 Linux/XNU 使用同一读写、越界、fault、撤销映射和 reset 向量；补未完成存储 I/O、MCQ 与整板迁移的剩余缺口 |
 | 触摸/笔/键盘 | [GENI](geni-uart.md)、[TLMM](tlmm.md)提供部分基础 | GENI UART 不等于完整 SPI/I2C；先实现实际控制器，再加入 Novatek 与 I2C-HID 的正反例、热插拔和唤醒 |
 | 显示/Adreno650 | [GDSC](gdsc.md)数字请求边界 | 分开补 DPU/双DSI/面板、背光、GMU/HFI、ring/fence、SMMU；用实际提交和图像验收 GPU |
 | Wi-Fi/BT/音频/协处理器 | IRQ/DMA 与 [IPCC](ipcc.md)等通信基础 | 各自建立 PCIe/MHI、GLINK/RPMsg/QRTR、DSP/codec 的协议与生命周期，缺少远端服务时保留真实错误 |
 | 电池/充电/温控/休眠 | [SPMI](spmi-pmic-arb.md)、[PDC](pdc.md)、[watchdog](watchdog.md) | MM8013/charger/PMIC/唤醒状态机；功能模拟单列，功率、温度和真实待机电流仍须物理设备测量 |
 
 QEMU 不以固定成功 ACK、未标注的全零寄存器、跳过错误、其他 Adreno 世代的身份或
-主机 GPU 转发替代 A650 完成证据。迁移必须绑定实际参与的设备；现有关闭 UFS 的
-组件迁移不能推广到带存储 I/O 的整机迁移。
+主机 GPU 转发替代 A650 完成证据。
+
+迁移必须绑定实际参与的设备与队列状态。此前关闭 UFS 的组件迁移保留原配置与范围；
+`qcom-sm8250-ufs` wrapper 的空 legacy 队列检查点已通过 21 组检查、3 次真实进程
+迁移和 7 个拒绝场景，覆盖非恒等 SID `0xe0` DMA 与外部共享磁盘 I/O。
+[839ae467 后续回执](../evidence/ufs-migration-20261123/verified-839ae467/ufs-migration-result.json)
+另取 3 份真实 profile 流作拒绝依据，不计为迁移；6 个被拒 receiver 退出后均将
+QMP 读至 EOF 再检查无 RESUME，该完整事件审计仅属于后续回执。
+通用 `ufs` PCI 与 `ufs-sysbus` 仍不可迁移；未完成 SCSI/MCQ 存储请求未被序列化，
+完整原生整板迁移仍待单独验收。
 
 ## 让启动与 systemd 验收各自准确
 
@@ -115,7 +129,7 @@ QEMU 可重放指定 ABI 和设备协议的测试；开启可配置 PAuth 或 16
 
 ## 本次文档验证范围
 
-本次只新增跨仓库契约和入口；核对引用、路径、JSON 来源和 diff。
+本文及同日同步只维护跨仓库契约、入口与已归档验收范围；核对引用、路径、JSON 来源和 diff。
 没有更改模型代码、运行新的整板启动或提升任何硬件通过状态。
 [厂商源码研究及请求状态](https://github.com/cyjin-yl/TB371FC-6.12/blob/docs/mainline-strategy-20261124/docs/SOURCE_PROVENANCE.md)
 与上述工程工作并行维护。
