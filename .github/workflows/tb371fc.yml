@@ -77,6 +77,14 @@ jobs:
             --kernel "$RUNNER_TEMP/clean-linux/artifacts/Image" \
             --out "$RUNNER_TEMP/tb371fc-results/linux" \
             2>&1 | tee "$RUNNER_TEMP/tb371fc-results/linux.log"
+      - name: Continue real Linux UFS I/O across a quiescent process checkpoint
+        run: |
+          set -euo pipefail
+          python3 tb371fc/scripts/boot_ufs_migration.py \
+            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            --kernel "$RUNNER_TEMP/clean-linux/artifacts/Image" \
+            --out "$RUNNER_TEMP/tb371fc-results/linux-ufs-migration" \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/linux-ufs-migration.log"
       - name: Upload receipts, logs and public runnable inputs
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -95,11 +103,12 @@ jobs:
         if: always()
         run: |
           printf '%s\n' \
-            'This workflow requires public component gates and four clean-Linux boots; read each result.json for its actual verdict.' \
+            'This workflow requires public component gates, four clean-Linux boots and one real Linux UFS checkpoint/continuation; read each result.json for its actual verdict.' \
             'Missing binaries, skipped C QTests, failed checks, timeouts or changed QEMU binaries fail the job.' \
             'The board uses an architectural Cortex-A77 model and A55 small-core substitutes; exact counter rate is measured in QEMU virtual time.' \
             'GENI, GCC, timers, SMMUv2, reference RPMh, UFS, watchdog, TLMM, PDC, IMEM, PS_HOLD, DCC, IPCC and reference SPMI gates test their implemented digital contracts.' \
             'Linux checks use eight CPUs, 8 GiB RAM, a generated device tree and a synthetic disk. The UFS I/O gates end with host QMP quit after 19 ordinary or 23 RPMh-enabled guest checks.' \
+            'The separate UFS checkpoint gate resumes the same PID 1, nonce and boot ID in a new process, then performs direct block I/O; only quiescent UFS queues are supported.' \
             'No private production Image or AOP input is used. Stock Android, full native-DT boot, analog behavior, Adreno and complete-device equivalence are not attested.' \
             >> "$GITHUB_STEP_SUMMARY"
 
