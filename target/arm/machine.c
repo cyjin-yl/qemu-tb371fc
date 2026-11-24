@@ -3,6 +3,7 @@
 #include "cpregs.h"
 #include "trace.h"
 #include "qemu/error-report.h"
+#include "qemu/timer.h"
 #include "system/hvf.h"
 #include "system/tcg.h"
 #include "kvm_arm.h"
@@ -385,6 +386,32 @@ static const VMStateDescription vmstate_gt_exact_frequency = {
     .post_load = gt_exact_frequency_loaded,
     .fields = (const VMStateField[]) {
         VMSTATE_UINT64_EQUAL(gt_cntfrq_hz, ARMCPU),
+        VMSTATE_END_OF_LIST()
+    }
+};
+
+static bool hyp_timer_needed(void *opaque)
+{
+    ARMCPU *cpu = opaque;
+
+    return cpu->gt_timer[GTIMER_HYP] &&
+           timer_pending(cpu->gt_timer[GTIMER_HYP]);
+}
+
+/*
+ * CNTHP's architectural registers are in the cpreg list, but their raw
+ * migration writes do not re-arm its QEMUTimer.  VHE hosts use this timer
+ * for their scheduler tick, so preserve its event just like CNTP/CNTV.
+ * Disabled timers need no subsection; old receivers reject an active
+ * timer they cannot restore instead of silently losing its interrupt.
+ */
+static const VMStateDescription vmstate_hyp_timer = {
+    .name = "cpu/gt-hyp-timer",
+    .version_id = 1,
+    .minimum_version_id = 1,
+    .needed = hyp_timer_needed,
+    .fields = (const VMStateField[]) {
+        VMSTATE_TIMER_PTR(gt_timer[GTIMER_HYP], ARMCPU),
         VMSTATE_END_OF_LIST()
     }
 };
@@ -1376,6 +1403,7 @@ const VMStateDescription vmstate_arm_cpu = {
         &vmstate_irq_line_state,
         &vmstate_wfxt_timer,
         &vmstate_gt_exact_frequency,
+        &vmstate_hyp_timer,
         &vmstate_syndrome64,
         &vmstate_pstate64,
         &vmstate_event,

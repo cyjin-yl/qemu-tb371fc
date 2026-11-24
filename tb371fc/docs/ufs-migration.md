@@ -209,6 +209,42 @@ The queues are still quiescent. These checks do not implement in-flight SCSI
 or MCQ serialization, system suspend, external-disk replication, ICE, physical
 power behavior or native tablet Linux acceptance. No physical tablet is used.
 
+### CNTHP event restoration
+
+The first suspended-mode run at `3ed38f3d7fa04e974e5fe904f8771e4b8c5252ec`
+([run 45370015290](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45370015290))
+passed all 34 source checks and the first 11 receiver checks, then timed out on
+the first ordinary direct read. The source Linux log reports VHE and CPUs
+started at EL2. Linux 6.12.114 selects the hypervisor physical timer in this
+configuration: its CNTP accesses are redirected to CNTHP.
+
+The CPU migration stream preserved CNTHP's compare/control registers through
+the cpreg list, but only serialized the CNTP and CNTV `QEMUTimer` objects.
+Raw cpreg restoration does not re-arm CNTHP. A receiver could therefore run
+until it needed a scheduler tick, then sleep with no CNTHP event to wake it.
+The new `cpu/gt-hyp-timer` version 1 subsection preserves that pending event
+using the same timer serializer as CNTP/CNTV. It does not write guest registers,
+inject an interrupt or change the UFS wake path.
+
+The subsection is emitted only when the CNTHP timer object exists and has a
+pending event. Disabled/unarmed timers add no data. Armed masked timers and
+already-expired timers retain the existing timer deadline and architectural
+control state; interrupt mask handling remains in the existing timer callback.
+An older receiver rejects an unknown active-timer subsection. Streams emitted
+by the earlier implementation with an active CNTHP timer lack that event and
+are outside this fix's acceptance boundary; the Linux gate requires identical
+source and receiver QEMU binaries.
+
+The existing CPU timer migration probe now also arms CNTHP and observes its
+actual GIC redistributor input, INTID 28 on this board. It requires the line to
+be clear before the checkpoint, asserted after the migrated compare deadline,
+then clear after the guest disables CNTHP. It does not read CNTHP CTL or write
+CNTHP between restore and expiry: an exact-mode CTL read recalculates a timer
+and could hide a missing event. The identical ELF also runs without migration
+as a control. The original physical/virtual checks, all original Linux checks
+and their host timeouts remain mandatory. A successful new CI result is still
+required before claiming that the suspended Linux continuation passes.
+
 ### Recorded Linux continuation acceptance
 
 [Run 45312366652](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45312366652)
