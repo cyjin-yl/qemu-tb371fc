@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "source_commit": "a8136d1b1871d5a90aced67cc269dfb312be5c65",
+  "qemu_sha256": "fc6c7cba342297fd86b4fdd9800f8e6a944e435a244f26091ef7e6c632ce03a9",
+  "scope": "Unmodified production 4.19.157-perf+ Image and full supplied native DT, validation initramfs and explicitly selected reference handoffs; this diagnostic still ends in kernel panic.",
+  "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+  "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "initramfs_sha256": "8c2f582b72f19ba6043af7e85f91a3936c3c8fcb3c2a306ae4f76efe6d72ae7e",
+  "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+  "cmd_db_sha256": "a971809c06fa1a3ff44c9d28463bc6ff53203d9375ffd0f76dc73d4c8a3ea6f9",
+  "auxiliary_input_hash_measurement": "Measured after the diagnostic; all three file mtimes precede the recorded guest RESUME. Kernel, DTB, symbols and QEMU hashes were additionally checked before launch.",
+  "append": "rdinit=/init nokaslr panic=0",
+  "reference_profiles": {
+    "rpmh": "file:partial-aop-derived-command-db",
+    "spmi": "reference",
+    "smem": "reference-empty",
+    "aop": "reference-qdss-vote"
+  },
+  "global_properties": [
+    "qcom-refgen.boot-disabled-reference=on",
+    "qcom-tcsr-mutex.boot-unlocked-reference=on",
+    "qcom-gpu-cx-gdsc.boot-collapsed-reference=on",
+    "qcom-gdsc.enabled-reference=on"
+  ],
+  "observer": {
+    "commit": "d0f890f5456a0ed8732776300a7d03170ff612f9",
+    "diagnostic_source_sha256": "4ecae8825d919ebd61971bace9571bb34570aa9d76a5a1d13dc137ecc703a18b",
+    "aop_observer_sha256": "bae8d0bab168978e87c101d1dad7de7e876ac068bc0ba099c69e7a70d8f53ebf",
+    "smem_observer_sha256": "6d0c11ccd866c965e05bf2f0dbf9dd6af38f515c1acde54f139d3d22c885e4b3",
+    "private_wrapper_sha256": "65a9594aba1152fb9675c38c05fd7ffe6ab825c583bce151d57c438711e390f8",
+    "extension": "After the standard stopped observer, exactly one read-only HMP xp /256bx at fixed APSS reference mailbox 0x0c300200; no guest-memory writes. Raw dump remains private."
+  },
+  "stopped_by_timeout": true,
+  "elapsed_seconds": 31.179,
+  "diagnostic_exit_code": 0,
+  "observer_error": null,
+  "legacy_printk_error": null,
+  "full_native_dt_boot_passed": false,
+  "android_boot_passed": false,
+  "smem_probe": {
+    "success_path_observed": true,
+    "publication_instructions_verified": true,
+    "guest_memory_written": false,
+    "native_sbl_captured": false,
+    "android_boot_passed": false,
+    "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+    "verdict": "production-driver-success-path-observed",
+    "checks": [
+      {
+        "name": "published_driver_pointer",
+        "passed": true
+      },
+      {
+        "name": "dev_kernel_pointer",
+        "passed": true
+      },
+      {
+        "name": "hwlock_kernel_pointer",
+        "passed": true
+      },
+      {
+        "name": "item_count",
+        "passed": true
+      },
+      {
+        "name": "ptable_base_kernel_pointer",
+        "passed": true
+      },
+      {
+        "name": "global_virtual_base_kernel_pointer",
+        "passed": true
+      },
+      {
+        "name": "global_physical_base",
+        "passed": true
+      },
+      {
+        "name": "global_cacheline",
+        "passed": true
+      },
+      {
+        "name": "global_size",
+        "passed": true
+      },
+      {
+        "name": "region_count",
+        "passed": true
+      },
+      {
+        "name": "region_physical_base",
+        "passed": true
+      },
+      {
+        "name": "region_virtual_base_kernel_pointer",
+        "passed": true
+      },
+      {
+        "name": "region_size",
+        "passed": true
+      },
+      {
+        "name": "ptable_magic",
+        "passed": true
+      },
+      {
+        "name": "ptable_version",
+        "passed": true
+      },
+      {
+        "name": "ptable_entries",
+        "passed": true
+      },
+      {
+        "name": "partition_magic",
+        "passed": true
+      },
+      {
+        "name": "partition_hosts",
+        "passed": true
+      },
+      {
+        "name": "partition_size",
+        "passed": true
+      },
+      {
+        "name": "allocation_frontiers",
+        "passed": true
+      },
+      {
+        "name": "header_version",
+        "passed": true
+      },
+      {
+        "name": "header_initialized",
+        "passed": true
+      },
+      {
+        "name": "header_reserved",
+        "passed": true
+      }
+    ]
+  },
+  "aop_peer": {
+    "schema_version": 1,
+    "scope": "Stopped reference AOP peer state and supported-command consumption",
+    "qom_path": "/machine/aop-peer",
+    "reference_exchange_observed": true,
+    "aop_firmware_executed": false,
+    "android_boot_passed": false,
+    "guest_memory_written": false,
+    "verdict": "reference-exchange-observed",
+    "reason": "Connected reference peer consumed a supported command; IPCC notifications exist and no completion notification is pending",
+    "observations": {
+      "state": "connected",
+      "accepted-messages": 1,
+      "rejected-requests": 1,
+      "last-error": "command",
+      "qdss-vote": true,
+      "qdss-ao-vote": false,
+      "notifications": 4,
+      "work-pending": false,
+      "notification-pending": false
+    },
+    "stopped_status": {
+      "status": "paused",
+      "running": false
+    },
+    "stopped_status_after": {
+      "status": "paused",
+      "running": false
+    },
+    "unmet_conditions": [],
+    "private_mailbox_capture_recorded": true
+  },
+  "panic_mailbox": {
+    "length_word": 96,
+    "command": "{class: ddr, res: ddr_log, val: 0}",
+    "reference_service_supported": false,
+    "dt_node": "/soc/qcom,aopclk",
+    "dt_property_present": "qcom,clk-stop-bimc-log",
+    "public_source": "https://github.com/aosp-mirror/kernel_msm/blob/c1f10561211fb6cfe2985027ca58d8e1541d821c/drivers/clk/qcom/clk-aop-qmp.c",
+    "public_source_function": "aop_qmp_clk_panic_callback",
+    "interpretation": "Source-correlated inference: the payload matches the nonblocking panic notifier for stopping BIMC logging. The DT enables that notifier and the guest has already panicked. This is not evidence of a normal-boot prerequisite or executed AOP DDR firmware.",
+    "public_source_sha256": "5d92e20c8fdbc5b902c71332a84fdb2acca0fa010c7dafe1132685885c28f428"
+  },
+  "observed_milestones": [
+    {
+      "guest_seconds": 1.918576,
+      "message": "qmp-aop-clk soc:qcom,aopclk: Registered clocks with AOP"
+    },
+    {
+      "guest_seconds": 2.085023,
+      "message": "gcc-kona 100000.qcom,gcc: Registered GCC clocks"
+    }
+  ],
+  "failure": {
+    "kind": "synchronous-external-abort",
+    "process": "kernel init PID1",
+    "controller": "GPUCC",
+    "controller_base": "0x03d90000",
+    "register_offset": "0x100",
+    "physical_address": "0x03d90100",
+    "physical_address_basis": "GPUCC device base in the actual printk plus regmap offset x1=0x100; consistent with fixed vendor PLL1 MODE register.",
+    "pc": "regmap_mmio_read32le+0x8/0x20",
+    "caller": "clk_lucid_pll_configure+0x40/0x320",
+    "probe": "gpu_cc_kona_probe+0xe8/0x168",
+    "guest_seconds": 2.087599
+  },
+  "npu_cfg_ahb_unavailable_warning_observed": true,
+  "raw_evidence": [
+    {
+      "name": "diagnostic.json",
+      "bytes": 24594,
+      "sha256": "d4c6b4d4c3e25c7f13c535d5b2b63db78d15c75fcb11a4d122d3b1c9200324c7"
+    },
+    {
+      "name": "qemu.log",
+      "bytes": 1602366,
+      "sha256": "3cc9c745ea2f77303b4b8169585ec6ca4e9b80deb6d57200a263be933bdf2181"
+    },
+    {
+      "name": "serial.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "kernel-banner.bin",
+      "bytes": 256,
+      "sha256": "f510bd2f9622842dbdb1d552dec1b1f83a4c8c8dafabe4b72f3c4810052687d9"
+    },
+    {
+      "name": "kernel-printk-ring.bin",
+      "bytes": 1048576,
+      "sha256": "2b05dfd5b9fa1e57ebed2d26080c2b57386fe1205ca9604fc0f043970bb515bc"
+    },
+    {
+      "name": "kernel-printk-metadata.json",
+      "bytes": 688,
+      "sha256": "85ac3b4e5a17f9c3459912d95ec7ad07226c14809684a319946827f2c9735a2d"
+    },
+    {
+      "name": "kernel-printk.log",
+      "bytes": 31424,
+      "sha256": "7521e1dd5cd0eb321b8403fb4b1803f2f4f3e9a346d9f026fa51e2c873522bdd"
+    }
+  ],
+  "public_ci": {
+    "run_id": 45179839601,
+    "board_job_id": 137710479639,
+    "artifact_id": 14821617077,
+    "components_passed": 61,
+    "linux_passed": 4,
+    "source_clean_verified": true,
+    "qemu_hash_matches_actual_zip_binary": true
+  }
+}

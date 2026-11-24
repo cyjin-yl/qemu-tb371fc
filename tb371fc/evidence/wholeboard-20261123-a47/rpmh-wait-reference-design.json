@@ -1,0 +1,233 @@
+{
+  "schema": "tb371fc-rpmh-wait-reserved-reference-design-v1",
+  "status": "approved-direction; design only; implementation and formal CI pending",
+  "base_source": "3b31e83dc412962826ada872e361a1d32ea4e463",
+  "unchanged_previous_source": "b95f973f9b20d53e3a0b8843c919156e3acb58d9",
+  "source_model": {
+    "path": "hw/misc/qcom-sm8250-rpmh.c",
+    "git_blob": "2d4293cdbdc1a2ad8f7758a13ee2aa0356c686ca",
+    "bytes": 41448,
+    "sha256": "124c46eecea991a747a9fee69667ac62f0bb86d6b3e99764a1b8a6a703e6e1ff"
+  },
+  "evidence": {
+    "native_extra": {
+      "path": "/run/tb371fc-root76-a47/native-3b31e8-extra.json",
+      "bytes": 156261,
+      "sha256": "7f24e0d4cdcb277aad3d0a37f722ec1a08923637937a803dc579ce8bd60b0f58"
+    },
+    "production_disassembly": {
+      "path": "/run/tb371fc-root76-a47/rpmh-production-3b31e8.json",
+      "bytes": 79836,
+      "sha256": "147606dd2ed022fbb5e85891bbffd050af1a3ddbffb1d585949bfef65d69e147"
+    },
+    "qemu_sha256": "e0e1a669fefee1b20e8421dc6943faabee7fccb91c35f72ae2cd2f45513d23f2",
+    "guest_image_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "observed_write": {
+      "voter": 2,
+      "tcs": 0,
+      "drv_offset": 3344,
+      "width_bytes": 4,
+      "raw": 2005653504,
+      "raw_hex": "0x778bd800",
+      "effective_hex": "0xd800",
+      "ignored_hex": "0x778b0000"
+    },
+    "silicon_reserved_bit_semantics_proved": false,
+    "production_uninitialized_wait_source_chain": "fixed official source and exact Image disassembly; stack value provenance not established"
+  },
+  "current_configuration": {
+    "board_profile": "rpmh-profile=off|reference|file",
+    "device_has_enabled_reference_property": false,
+    "device_properties": [
+      "reference-cmd-db",
+      "cmd-db-file",
+      "boot-configured",
+      "command-latency-ns"
+    ],
+    "qom_path": "/machine/rpmh",
+    "ncpt_source": "read DRV_PRNT_CHLD_CONFIG at DRV+0x0c; (value >> 27) & 0x1f",
+    "apps_child_config": "0x80008208",
+    "display_child_config": "0x80000002",
+    "commands_per_tcs": 16,
+    "effective_wait_mask": 65535,
+    "geometry_changed": false
+  },
+  "property": {
+    "name": "reference-wait-mask-reserved",
+    "type": "bool",
+    "default": false,
+    "mutable_after_realize": false,
+    "enabled_scope": "Every explicitly modeled WAIT_FOR_CMPL word in the shared APPS/display controller, including file command-db mode.",
+    "label": "Unmeasured reference compatibility policy; not a silicon WI/RAZ claim.",
+    "does_not_select_or_modify_command_db": true
+  },
+  "write_order": [
+    "Existing aligned 32-bit, frame, TCS and register decoding remains.",
+    "Existing running/stalled TCS guard rejects before any masking or statistics mutation.",
+    "CMD_ENABLE and all registers other than WAIT_FOR_CMPL retain existing validation.",
+    "WAIT with no high bits performs the existing whole-word assignment without changing compatibility statistics.",
+    "WAIT with high bits and policy off returns the existing MEMTX_ERROR and leaves all state unchanged.",
+    "WAIT with high bits and policy on assigns raw & 0xffff, records raw/voter/TCS and saturating accepted-masked-write count, emits explicit reference-policy diagnostic, returns MEMTX_OK.",
+    "Only normal trigger and successful typed command application cause issued/completed/IRQ/resource effects; writing WAIT does not trigger, complete, reschedule or clear anything."
+  ],
+  "diagnostics": {
+    "properties": [
+      {
+        "name": "wait-command-mask",
+        "type": "uint32",
+        "value": 65535
+      },
+      {
+        "name": "wait-reserved-masked-writes",
+        "type": "uint64",
+        "semantics": "saturating count of accepted idle high-bit WAIT writes only"
+      },
+      {
+        "name": "wait-reserved-last-voter",
+        "type": "uint32"
+      },
+      {
+        "name": "wait-reserved-last-tcs",
+        "type": "uint32"
+      },
+      {
+        "name": "wait-reserved-last-raw",
+        "type": "uint32"
+      },
+      {
+        "name": "wait-reserved-last-effective",
+        "type": "uint32",
+        "derived": "last_raw & 0xffff"
+      },
+      {
+        "name": "wait-reserved-last-ignored",
+        "type": "uint32",
+        "derived": "last_raw & 0xffff0000"
+      }
+    ],
+    "readonly": true,
+    "getters_mutate_state": false,
+    "normal_tcg_available": true,
+    "physical_hardware_registers": false,
+    "count_zero": "last voter/TCS/raw/effective/ignored all canonical zero",
+    "count_nonzero": "last_raw has nonzero high16; voter in 0..3 and TCS is in that voter's modeled layout",
+    "busy_or_other_rejected_write_changes_statistics": false
+  },
+  "reset": {
+    "policy_unchanged": true,
+    "compatibility_statistics": "clear to canonical zero",
+    "tcs_and_resources": "existing RPMh reset behavior unchanged",
+    "guest_image_or_kernel_memory_patched": false
+  },
+  "migration": {
+    "main_name": "qcom-sm8250-rpmh",
+    "main_version": 2,
+    "main_minimum_version": 2,
+    "main_fields_changed": false,
+    "main_payload_bytes_with_default_clock_encoding_expected": 19420,
+    "existing_post_load_low16_wait_validation_preserved": true,
+    "subsection_name": "qcom-sm8250-rpmh/wait-reserved-reference",
+    "subsection_version": 1,
+    "subsection_minimum_version": 1,
+    "subsection_payload_bytes": 24,
+    "subsection_struct": ">IQIII",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "incoming_policy",
+        "type": "u32",
+        "value": 1
+      },
+      {
+        "offset": 4,
+        "name": "masked_write_count",
+        "type": "u64"
+      },
+      {
+        "offset": 12,
+        "name": "last_voter",
+        "type": "u32"
+      },
+      {
+        "offset": 16,
+        "name": "last_tcs",
+        "type": "u32"
+      },
+      {
+        "offset": 20,
+        "name": "last_raw",
+        "type": "u32"
+      }
+    ],
+    "needed": "configured property is on, including when count=0",
+    "parent_pre_load": "Clear incoming_policy to 0, subsection_seen to false, and new diagnostic fields to zero; do not overwrite configured property.",
+    "subsection_pre_load": "Reject a repeated subsection; set nonserialized subsection_seen=true.",
+    "subsection_post_load": "Require policy exactly 1, and canonical diagnostic invariants.",
+    "parent_post_load": "Require incoming_policy == configured property and subsection_seen == configured property before existing outputs/timer restoration; retain all existing v2 validation.",
+    "same_strict": "No new subsection emitted, original v2 field bytes and interpretation unchanged.",
+    "strict_to_mask": "Reject missing explicit policy; stale target marker/statistics cannot substitute.",
+    "mask_to_strict": "Reject present policy 1 against configured strict.",
+    "mask_to_mask": "Restore effective low16 WAIT in original main payload, diagnostics in subsection, and existing absolute command deadlines.",
+    "old_binary": "Existing vmstate.c rejects an unrecognized matching-prefix subsection; this is code inspection, not an executed old-binary migration claim.",
+    "direct_v3_alternative": "Rejected as unnecessarily breaking unchanged default-strict v2 streams and old v2 test labels for an opt-in extension.",
+    "loader_evidence": {
+      "path": "migration/vmstate.c",
+      "git_blob": "9f49abda245eaf9053d7c1241f4a36e943cd54db",
+      "lines": "352, 414-419, 805-876, 880-918"
+    }
+  },
+  "native_configuration": {
+    "prior_additional_reference_global_count": 17,
+    "proposed_count": 18,
+    "appended_pair": [
+      "-global",
+      "qcom-sm8250-rpmh.reference-wait-mask-reserved=on"
+    ],
+    "prior_global_order_preserved": true,
+    "auto_enabled": false,
+    "observer": "Stopped pure QOM read of policy, fixed mask, count and last fields with running=false before and after. Report reference policy use separately from driver completion.",
+    "immutable_guest_assets_required": true,
+    "previous_76_native_result_reinterpreted": false
+  },
+  "proposed_test": {
+    "gate": "rpmh-wait-mask-reference",
+    "script": "tb371fc/tests/test_rpmh_wait_mask.py",
+    "expected_checks": 17,
+    "expected_completed_migrations": 1,
+    "expected_rejected_migrations": 2,
+    "expected_corrupted_stream_rejections": 2,
+    "breakdown": {
+      "ordinary": 10,
+      "paused_tcg": 1,
+      "one_roundtrip_checks": 2,
+      "profile_rejections": 2,
+      "corrupted_stream_rejections": 2
+    },
+    "existing_test_files_unchanged": [
+      "tb371fc/tests/test_rpmh_sm8250.py",
+      "tb371fc/tests/test_rpmh_display.py"
+    ],
+    "existing_check_counts": [
+      22,
+      5,
+      11,
+      6
+    ],
+    "independent_streams": "three original sources (nonzero masked roundtrip, strict, cold masked count0) plus two single-bit corrupted copies",
+    "corruption_fields": [
+      {
+        "field": "policy",
+        "subsection_offset": 0,
+        "from": 1,
+        "to": 0
+      },
+      {
+        "field": "last_voter",
+        "subsection_offset": 12,
+        "xor_mask": 4
+      }
+    ],
+    "no_local_qemu_build_or_public_test_execution": true,
+    "only_formal_ci_executes": true
+  }
+}

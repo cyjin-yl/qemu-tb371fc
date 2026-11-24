@@ -1,0 +1,447 @@
+{
+  "schema": "tb371fc-camera-gdsc-api-v1",
+  "qemu_type": "qcom-camera-gdsc",
+  "qom_path": "/machine/camera-gdsc",
+  "vmstate_name": "qcom-camera-gdsc",
+  "vmstate_version": 1,
+  "minimum_version": 1,
+  "payload_bytes": 194,
+  "profile_property": {
+    "name": "enabled-reference",
+    "type": "bool",
+    "default": false,
+    "writable_after_realize": false
+  },
+  "readonly_global_properties": [
+    {
+      "name": "enabled-profile",
+      "type": "uint64"
+    },
+    {
+      "name": "reference-identity",
+      "type": "uint64"
+    },
+    {
+      "name": "domain-count",
+      "type": "uint64"
+    },
+    {
+      "name": "register-bytes",
+      "type": "uint64"
+    },
+    {
+      "name": "mapped-bytes",
+      "type": "uint64"
+    },
+    {
+      "name": "parent-resource-index",
+      "type": "uint64"
+    },
+    {
+      "name": "cold-control",
+      "type": "uint64"
+    },
+    {
+      "name": "control-write-mask",
+      "type": "uint64"
+    },
+    {
+      "name": "power-status-mask",
+      "type": "uint64"
+    },
+    {
+      "name": "parent-known",
+      "type": "bool"
+    },
+    {
+      "name": "parent-on",
+      "type": "bool"
+    }
+  ],
+  "readonly_domain_properties": [
+    {
+      "suffix": "name",
+      "type": "str"
+    },
+    {
+      "suffix": "address",
+      "type": "uint64"
+    },
+    {
+      "suffix": "dt-flags",
+      "type": "uint64"
+    },
+    {
+      "suffix": "timeout-us",
+      "type": "uint64"
+    },
+    {
+      "suffix": "control",
+      "type": "uint64"
+    },
+    {
+      "suffix": "request-known",
+      "type": "bool"
+    },
+    {
+      "suffix": "requested",
+      "type": "bool"
+    },
+    {
+      "suffix": "state-known",
+      "type": "bool"
+    },
+    {
+      "suffix": "powered",
+      "type": "bool"
+    },
+    {
+      "suffix": "hw-request-known",
+      "type": "bool"
+    },
+    {
+      "suffix": "hw-request",
+      "type": "bool"
+    }
+  ],
+  "pure_qom_get_count": 78,
+  "domains": [
+    {
+      "index": 0,
+      "name": "bps",
+      "address": 181432324,
+      "dt_flags": 3,
+      "timeout_us": 100,
+      "region_name": "qcom-camera-gdsc.bps-control"
+    },
+    {
+      "index": 1,
+      "name": "ipe",
+      "address": 181436420,
+      "dt_flags": 3,
+      "timeout_us": 100,
+      "region_name": "qcom-camera-gdsc.ipe-control"
+    },
+    {
+      "index": 2,
+      "name": "sbi",
+      "address": 181440516,
+      "dt_flags": 1,
+      "timeout_us": 100,
+      "region_name": "qcom-camera-gdsc.sbi-control"
+    },
+    {
+      "index": 3,
+      "name": "ife0",
+      "address": 181444612,
+      "dt_flags": 1,
+      "timeout_us": 100,
+      "region_name": "qcom-camera-gdsc.ife0-control"
+    },
+    {
+      "index": 4,
+      "name": "ife1",
+      "address": 181448708,
+      "dt_flags": 1,
+      "timeout_us": 100,
+      "region_name": "qcom-camera-gdsc.ife1-control"
+    },
+    {
+      "index": 5,
+      "name": "titan-top",
+      "address": 181453124,
+      "dt_flags": 1,
+      "timeout_us": 500,
+      "region_name": "qcom-camera-gdsc.titan-top-control"
+    }
+  ],
+  "inputs": {
+    "parent-known": 1,
+    "parent-on": 1,
+    "hw-request-known": 6,
+    "hw-request": 6
+  },
+  "outputs": {
+    "power": 6,
+    "state-known": 6
+  },
+  "wire_fields": [
+    {
+      "field": "enabled_profile",
+      "offset": 0,
+      "bytes": 4
+    },
+    {
+      "field": "reference_identity",
+      "offset": 4,
+      "bytes": 4
+    },
+    {
+      "field": "domain_count",
+      "offset": 8,
+      "bytes": 4
+    },
+    {
+      "field": "register_bytes",
+      "offset": 12,
+      "bytes": 4
+    },
+    {
+      "field": "mapped_bytes",
+      "offset": 16,
+      "bytes": 4
+    },
+    {
+      "field": "parent_resource_index",
+      "offset": 20,
+      "bytes": 4
+    },
+    {
+      "field": "cold_control",
+      "offset": 24,
+      "bytes": 4
+    },
+    {
+      "field": "control_write_mask",
+      "offset": 28,
+      "bytes": 4
+    },
+    {
+      "field": "power_status_mask",
+      "offset": 32,
+      "bytes": 4
+    },
+    {
+      "field": "parent_known",
+      "offset": 36,
+      "bytes": 1
+    },
+    {
+      "field": "parent_on",
+      "offset": 37,
+      "bytes": 1
+    },
+    {
+      "field": "domain0.domain_id",
+      "offset": 38,
+      "bytes": 4
+    },
+    {
+      "field": "domain0.base",
+      "offset": 42,
+      "bytes": 8
+    },
+    {
+      "field": "domain0.dt_flags",
+      "offset": 50,
+      "bytes": 4
+    },
+    {
+      "field": "domain0.timeout_us",
+      "offset": 54,
+      "bytes": 4
+    },
+    {
+      "field": "domain0.control",
+      "offset": 58,
+      "bytes": 4
+    },
+    {
+      "field": "domain0.hw_request_known",
+      "offset": 62,
+      "bytes": 1
+    },
+    {
+      "field": "domain0.hw_request",
+      "offset": 63,
+      "bytes": 1
+    },
+    {
+      "field": "domain1.domain_id",
+      "offset": 64,
+      "bytes": 4
+    },
+    {
+      "field": "domain1.base",
+      "offset": 68,
+      "bytes": 8
+    },
+    {
+      "field": "domain1.dt_flags",
+      "offset": 76,
+      "bytes": 4
+    },
+    {
+      "field": "domain1.timeout_us",
+      "offset": 80,
+      "bytes": 4
+    },
+    {
+      "field": "domain1.control",
+      "offset": 84,
+      "bytes": 4
+    },
+    {
+      "field": "domain1.hw_request_known",
+      "offset": 88,
+      "bytes": 1
+    },
+    {
+      "field": "domain1.hw_request",
+      "offset": 89,
+      "bytes": 1
+    },
+    {
+      "field": "domain2.domain_id",
+      "offset": 90,
+      "bytes": 4
+    },
+    {
+      "field": "domain2.base",
+      "offset": 94,
+      "bytes": 8
+    },
+    {
+      "field": "domain2.dt_flags",
+      "offset": 102,
+      "bytes": 4
+    },
+    {
+      "field": "domain2.timeout_us",
+      "offset": 106,
+      "bytes": 4
+    },
+    {
+      "field": "domain2.control",
+      "offset": 110,
+      "bytes": 4
+    },
+    {
+      "field": "domain2.hw_request_known",
+      "offset": 114,
+      "bytes": 1
+    },
+    {
+      "field": "domain2.hw_request",
+      "offset": 115,
+      "bytes": 1
+    },
+    {
+      "field": "domain3.domain_id",
+      "offset": 116,
+      "bytes": 4
+    },
+    {
+      "field": "domain3.base",
+      "offset": 120,
+      "bytes": 8
+    },
+    {
+      "field": "domain3.dt_flags",
+      "offset": 128,
+      "bytes": 4
+    },
+    {
+      "field": "domain3.timeout_us",
+      "offset": 132,
+      "bytes": 4
+    },
+    {
+      "field": "domain3.control",
+      "offset": 136,
+      "bytes": 4
+    },
+    {
+      "field": "domain3.hw_request_known",
+      "offset": 140,
+      "bytes": 1
+    },
+    {
+      "field": "domain3.hw_request",
+      "offset": 141,
+      "bytes": 1
+    },
+    {
+      "field": "domain4.domain_id",
+      "offset": 142,
+      "bytes": 4
+    },
+    {
+      "field": "domain4.base",
+      "offset": 146,
+      "bytes": 8
+    },
+    {
+      "field": "domain4.dt_flags",
+      "offset": 154,
+      "bytes": 4
+    },
+    {
+      "field": "domain4.timeout_us",
+      "offset": 158,
+      "bytes": 4
+    },
+    {
+      "field": "domain4.control",
+      "offset": 162,
+      "bytes": 4
+    },
+    {
+      "field": "domain4.hw_request_known",
+      "offset": 166,
+      "bytes": 1
+    },
+    {
+      "field": "domain4.hw_request",
+      "offset": 167,
+      "bytes": 1
+    },
+    {
+      "field": "domain5.domain_id",
+      "offset": 168,
+      "bytes": 4
+    },
+    {
+      "field": "domain5.base",
+      "offset": 172,
+      "bytes": 8
+    },
+    {
+      "field": "domain5.dt_flags",
+      "offset": 180,
+      "bytes": 4
+    },
+    {
+      "field": "domain5.timeout_us",
+      "offset": 184,
+      "bytes": 4
+    },
+    {
+      "field": "domain5.control",
+      "offset": 188,
+      "bytes": 4
+    },
+    {
+      "field": "domain5.hw_request_known",
+      "offset": 192,
+      "bytes": 1
+    },
+    {
+      "field": "domain5.hw_request",
+      "offset": 193,
+      "bytes": 1
+    }
+  ],
+  "default_and_reset_control": 1,
+  "control_write_mask": 63491,
+  "readonly_power_bit": 2147483648,
+  "reference_identity": 1128743985,
+  "parent_resource_index": 3,
+  "parent_resource_name": "mmcx.lvl",
+  "sources_not_executed": [
+    "QEMU",
+    "QTest",
+    "C compilation"
+  ],
+  "input_policy": "GPIO values are preserved by device reset and migrated; all pure QOM getters perform no updates. An unknown HW request is reported with request-known=false and requested=false. Unknown power drives state-known=false and power=false; MMIO read is rejected. These zero placeholders do not prove an actual off state."
+}

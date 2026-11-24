@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "kind": "development-script-preflight",
+  "source_commit": "0508fe9d5382b3e94ee0664012ff1e6f0457e5b7",
+  "qemu_executed": false,
+  "ast": {
+    "passed": true,
+    "scripts": [
+      {
+        "path": "tb371fc/tests/test_mpm2_sleep_counter.py",
+        "sha256": "0bda0888ad43da8106a1f287d2c054cc8113edc09787b4f5eb64fbaf12690b9e"
+      },
+      {
+        "path": "tb371fc/scripts/ci_device_tests.py",
+        "sha256": "1fed7f08d140bf63728043b6b7c6451ddc1ab750e93c07f6119a00898f985cf8"
+      },
+      {
+        "path": "tb371fc/scripts/test_ci_device_tests.py",
+        "sha256": "11ed37ca7e4b3cdbcdc51cbb08afea1746a9814d2713feb27b1f87b32d3c7cd0"
+      }
+    ]
+  },
+  "local_ci_verdict_unit": {
+    "exit_code": 1,
+    "tests_run": 29,
+    "passed": 28,
+    "errors": 1,
+    "verdict": "failed-environment",
+    "failed_test": "test_fixture_copy_ignores_sockets_and_symlinks",
+    "exception": "PermissionError: [Errno 1] Operation not permitted",
+    "operation": "socket(AF_UNIX, ...)",
+    "execution_method": "Exact prepared source strings loaded as Python modules in memory; no compiled QEMU or guest was executed.",
+    "rerun_or_permission_bypass_attempted": false,
+    "formal_ci_is_separate": true,
+    "output": "...............E.............\n======================================================================\nERROR: test_fixture_copy_ignores_sockets_and_symlinks (test_ci_device_tests.VerdictTests.test_fixture_copy_ignores_sockets_and_symlinks)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"tb371fc/scripts/test_ci_device_tests.py\", line 159, in test_fixture_copy_ignores_sockets_and_symlinks\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py\", line 233, in __init__\n    _socket.socket.__init__(self, family, type, proto, fileno)\nPermissionError: [Errno 1] Operation not permitted\n\n----------------------------------------------------------------------\nRan 29 tests in 1.055s\n\nFAILED (errors=1)\n{\"tests_run\": 29, \"success\": false, \"scope\": \"CI verdict and plan unit tests only; no compiled device or guest execution\"}\n"
+  }
+}

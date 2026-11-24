@@ -1,0 +1,75 @@
+{
+  "schema": "tb371fc-rpmh-wait-mask-independent-static-review-v1",
+  "status": "no_static_blocker_found",
+  "reviewer": "/root/gpu_gx_integration",
+  "repository": "cyjin-yl/qemu-tb371fc",
+  "model_commit": "dbf0e411e3fedad43e9bdbe44e7e969ca2fc89b1",
+  "test": {
+    "commit": "4fb1a83a52d89d50066703c2e57b7aaa7d519c67",
+    "parent": "dbf0e411e3fedad43e9bdbe44e7e969ca2fc89b1",
+    "path": "tb371fc/tests/test_rpmh_wait_mask.py",
+    "blob": "4118a15144a7690a159f934da9094746fc2c417c",
+    "bytes": 44703,
+    "sha256": "b72b503c8c968310ea435dc058c6db1a072cad2a20281761696e2ffb3bd16032",
+    "local_bytes_rechecked": true
+  },
+  "helper_source_ref": "3b31e83dc412962826ada872e361a1d32ea4e463",
+  "helper_blobs": {
+    "tb371fc/tests/test_rpmh_display.py": "de7a6303cf009cf07115e87eb42db8016ccbc6f0",
+    "tb371fc/tests/test_rpmh_sm8250.py": "2eb42c9aa4187d585a903dcda659cc004a9aee7d",
+    "tb371fc/tests/test_gcc_sm8250.py": "b5aea820dfb432ac68c8afd2538c58d2ae2bbdc8",
+    "tb371fc/tests/test_geni_uart.py": "d3898f0bcc95acbe4b786b68e27c6c67e71acda7",
+    "tb371fc/tests/test_geni_migration.py": "ff0553e8f132365c01cbf02a47f96006cdef80e3",
+    "tb371fc/tests/test_gpucc_sm8250.py": "e577349cc10de41216a0d147ef9608f3b4dc1cea",
+    "hw/core/qdev.c": "e2aab3d1fc61246ba2f1e147c0ff71c7c7712c55",
+    "hw/core/sysbus.c": "3e1160ee921d744fb0db7556e0fb3725f5660b37",
+    "migration/savevm.c": "e1b707dda635594cac03f8ec13e890ba7979c277"
+  },
+  "findings": [
+    {
+      "topic": "real QTest/QMP and inherited interfaces",
+      "conclusion": "WaitRig initializes the state actually used by the Rig/GccRig/RpmhRig/DisplayRig helpers. Register routing, command/status offsets, clock_step replies, persistent QMP line framing and ID matching, asynchronous IRQ draining, and short socket paths are consistent with the pinned helpers."
+    },
+    {
+      "topic": "meaningful WAIT and BUSY checks",
+      "conclusion": "Non-response commands distinguish ISSUED from COMPLETE at WAIT bits 0 and 15. Resource/Clock state and real IRQ observations corroborate the register checks. Rejected BUSY writes at 400 ns retain the original deadline, tested with 599 ns then 1 ns; CMD_ENABLE high bits and unknown resources retain their strict behavior."
+    },
+    {
+      "topic": "reset and normal TCG",
+      "conclusion": "Reset uses a nonzero GCC L witness and query-status as an asynchronous RESET barrier, then checks state, diagnostics and absence of delayed completion. The isolated machine configuration has GCC boot configuration disabled. The paused normal-TCG case reads QOM only and does not execute cont or a QTest-only Clock getter."
+    },
+    {
+      "topic": "literal migration decoder",
+      "conclusion": "The independent main payload expression is 40 + 4*(17 + 8*346) + 98*84 + 8 = 19420 bytes; the new subsection is 24 bytes (>IQIII). The pending source has no completed resource vote, so the literal all-zero voter oracle is applicable. SysBus lacks get_dev_path, which supports the bare device migration section name used by this instance."
+    },
+    {
+      "topic": "completed migration and first-observation ordering",
+      "conclusion": "The source stops, performs two pure-QOM observations, saves and checks completion. The target prewarms different diagnostics and RAM, aligns its QTest clock for the unchanged parent absolute-deadline format, then checks QOM and RAM before RPMh MMIO. A subsequent 599 ns / 1 ns sequence observes actual Clock/resource/IRQ changes before the first RPMh MMIO, so that read cannot repair missing timer restoration."
+    },
+    {
+      "topic": "negative migrations",
+      "conclusion": "Both profile mismatches and both corruptions require actual destination exit 1 plus specific model and migration-load diagnostics. Each corruption changes exactly one bit in one byte of the subsection (policy 1 to 0, or last voter 3 to 7), preserves all other file bytes, and retains the original source hash. Process cleanup follows the failure assertions."
+    }
+  ],
+  "planned_accounting": {
+    "checks": 17,
+    "ordinary_checks": 10,
+    "normal_tcg_checks": 1,
+    "completed_roundtrip_checks": 2,
+    "completed_roundtrips": 1,
+    "profile_rejection_checks": 2,
+    "corruption_rejection_checks": 2,
+    "saved_sources": 3,
+    "actual_stream_files": 5
+  },
+  "limits": {
+    "review_kind": "read_only_static_review",
+    "test_module_imported": false,
+    "tests_executed": false,
+    "qemu_executed": false,
+    "builds_executed": false,
+    "migration_streams_from_a_run_available": false,
+    "actual_pass_claimed": false,
+    "next_evidence": "The single formal CI run and its actual ZIP, QMP/QTest logs and migration bytes remain required."
+  }
+}

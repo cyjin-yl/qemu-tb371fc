@@ -1,0 +1,485 @@
+{
+  "schema": "tb371fc-cpufreq-epss-dt-source-contract-review-v1",
+  "reviewed_at_utc": "2026-11-23 17:51:41 UTC",
+  "purpose": "Bounded actual DT evidence plus fixed official source contract for the first native CPUFreq external abort; no model implementation, QEMU launch or physical hardware read",
+  "native": {
+    "source_commit": "52492a797d2acd9c918a8639564e8ff3e7beab3f",
+    "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+    "first_invalid_access": {
+      "qemu_log_line": 10266,
+      "pa": "0x18591100",
+      "size": 4,
+      "operation": "read",
+      "cpu": 4,
+      "esr": "0x96000010",
+      "far": "0xffffff800ae2d100",
+      "pc": "0xffffff8008c3f9c8",
+      "kernel_symbol": "qcom_cpufreq_hw_driver_probe+0x408/0x980",
+      "fault_instruction": "0xb940014a",
+      "decoded_instruction": "ldr w10, [x10]",
+      "kernel_printk_pc_timestamp_seconds": 2.145544
+    },
+    "mapping": "PA 0x18591100 is domain 0 base 0x18591000 + EPSS FREQ_LUT offset 0x100 + row 0*4. DT geometry and fixed source agree. Production Image is not rebuilt from the reference source, so exact inlined C statement attribution is source-correlated inference.",
+    "userspace_reached": false,
+    "execution_cpu_is_distinct_from_frequency_domain_index": true
+  },
+  "raw_dt": {
+    "input_dtb": {
+      "path": "/work/device-assets/live-android-20261123.dtb",
+      "bytes": 973052,
+      "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207"
+    },
+    "capture": {
+      "blob": "541c58de5c6711215cd6ebc24e48a11ea4a69127",
+      "bytes": 40324,
+      "sha256": "815874739b5ccfd4f248fd953849f775387dab53b2859dff508bee74ae74136d",
+      "schema": "tb371fc-bounded-cpufreq-dt-capture-v2",
+      "selected_node_count": 36
+    },
+    "numeric_interpretation": "Use raw hex and big-endian 32-bit cells for numeric data; strings is only a printable-string heuristic, including false string candidates for all-zero cells.",
+    "previous_narrow_capture_blob": "b5d910b164d6532b0a745dd34de761575000235e",
+    "previous_narrow_capture_node_contents_unchanged": true,
+    "additions_since_narrow_capture": "Controller children and the source-declared xo_board parent are now included; schema, scope and capture timestamp changed as well."
+  },
+  "sources": [
+    {
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "path": "drivers/cpufreq/qcom-cpufreq-hw.c",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/cpufreq/qcom-cpufreq-hw.c",
+      "bytes": 16356,
+      "sha256": "559c942f52eedf76ab22f7770b7fa49a924c1941486b1e9afd419d38885ad174",
+      "line_ranges": [
+        [
+          22,
+          31
+        ],
+        [
+          74,
+          92
+        ],
+        [
+          107,
+          189
+        ],
+        [
+          192,
+          224
+        ],
+        [
+          226,
+          272
+        ],
+        [
+          307,
+          325
+        ],
+        [
+          379,
+          446
+        ],
+        [
+          448,
+          548
+        ],
+        [
+          550,
+          601
+        ],
+        [
+          604,
+          658
+        ]
+      ]
+    },
+    {
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "path": "include/dt-bindings/clock/qcom,gcc-kona.h",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/include/dt-bindings/clock/qcom,gcc-kona.h",
+      "bytes": 10232,
+      "sha256": "ec7b2a775a7f96a543c064c7fc733fb83ffa7e3dae3c4bb517200627ae5f7fed",
+      "line_ranges": [
+        [
+          221,
+          222
+        ]
+      ]
+    },
+    {
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "path": "include/dt-bindings/clock/qcom,rpmh.h",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/include/dt-bindings/clock/qcom,rpmh.h",
+      "bytes": 793,
+      "sha256": "04394dd2f1bfd89c06730c75e5bc3c01833b1f072968f17d4b5630e7247872cf",
+      "line_ranges": [
+        [
+          8,
+          9
+        ]
+      ]
+    },
+    {
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "path": "drivers/clk/qcom/clk-rpmh.c",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/clk-rpmh.c",
+      "bytes": 12724,
+      "sha256": "75537429fad6cac6aeb7b27f8ff4cd8e37f28f14740155e68c6c486f924f3c76",
+      "line_ranges": [
+        [
+          57,
+          91
+        ],
+        [
+          206,
+          215
+        ],
+        [
+          251,
+          262
+        ]
+      ]
+    }
+  ],
+  "actual_controller": {
+    "path": "/soc/qcom,cpufreq-hw",
+    "compatible": [
+      "qcom,cpufreq-hw-epss"
+    ],
+    "phandle": 4,
+    "freq_domain_cells": 2,
+    "lut_row_size": 4,
+    "lut_max_entries_property_present": false,
+    "driver_default_lut_max_entries": 40,
+    "skip_enable_check": true,
+    "no_accumulative_counter_property_present": false,
+    "driver_accumulative_counter": true,
+    "interrupts_present": true,
+    "domains": [
+      {
+        "domain": 0,
+        "reg_name": "freq-domain0",
+        "base": "0x18591000",
+        "size": "0x1000",
+        "cpus": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "mpidrs": [
+          "0x0",
+          "0x100",
+          "0x200",
+          "0x300"
+        ],
+        "driver_max_cores_argument": 4,
+        "spi": 30,
+        "gic_intid": 62,
+        "interrupt_flags": 4,
+        "counter_offsets": [
+          "0x3c8",
+          "0x3cc",
+          "0x3d0",
+          "0x3d4"
+        ],
+        "counter_addresses": [
+          "0x185913c8",
+          "0x185913cc",
+          "0x185913d0",
+          "0x185913d4"
+        ]
+      },
+      {
+        "domain": 1,
+        "reg_name": "freq-domain1",
+        "base": "0x18592000",
+        "size": "0x1000",
+        "cpus": [
+          4,
+          5,
+          6
+        ],
+        "mpidrs": [
+          "0x400",
+          "0x500",
+          "0x600"
+        ],
+        "driver_max_cores_argument": 4,
+        "spi": 31,
+        "gic_intid": 63,
+        "interrupt_flags": 4,
+        "counter_offsets": [
+          "0x3c8",
+          "0x3cc",
+          "0x3d0"
+        ],
+        "counter_addresses": [
+          "0x185923c8",
+          "0x185923cc",
+          "0x185923d0"
+        ]
+      },
+      {
+        "domain": 2,
+        "reg_name": "freq-domain2",
+        "base": "0x18593000",
+        "size": "0x1000",
+        "cpus": [
+          7
+        ],
+        "mpidrs": [
+          "0x700"
+        ],
+        "driver_max_cores_argument": 4,
+        "spi": 19,
+        "gic_intid": 51,
+        "interrupt_flags": 4,
+        "counter_offsets": [
+          "0x3c8"
+        ],
+        "counter_addresses": [
+          "0x185933c8"
+        ]
+      }
+    ],
+    "cpu_mapping": [
+      {
+        "logical_cpu_index_in_fdt_order": 0,
+        "path": "/cpus/cpu@0",
+        "mpidr": "0x0",
+        "cpu_phandle": 13,
+        "domain": 0,
+        "driver_max_cores_argument": 4,
+        "has_opp_table_reference": false,
+        "has_clock_frequency": false
+      },
+      {
+        "logical_cpu_index_in_fdt_order": 1,
+        "path": "/cpus/cpu@100",
+        "mpidr": "0x100",
+        "cpu_phandle": 14,
+        "domain": 0,
+        "driver_max_cores_argument": 4,
+        "has_opp_table_reference": false,
+        "has_clock_frequency": false
+      },
+      {
+        "logical_cpu_index_in_fdt_order": 2,
+        "path": "/cpus/cpu@200",
+        "mpidr": "0x200",
+        "cpu_phandle": 15,
+        "domain": 0,
+        "driver_max_cores_argument": 4,
+        "has_opp_table_reference": false,
+        "has_clock_frequency": false
+      },
+      {
+        "logical_cpu_index_in_fdt_order": 3,
+        "path": "/cpus/cpu@300",
+        "mpidr": "0x300",
+        "cpu_phandle": 16,
+        "domain": 0,
+        "driver_max_cores_argument": 4,
+        "has_opp_table_reference": false,
+        "has_clock_frequency": false
+      },
+      {
+        "logical_cpu_index_in_fdt_order": 4,
+        "path": "/cpus/cpu@400",
+        "mpidr": "0x400",
+        "cpu_phandle": 17,
+        "domain": 1,
+        "driver_max_cores_argument": 4,
+        "has_opp_table_reference": false,
+        "has_clock_frequency": false
+      },
+      {
+        "logical_cpu_index_in_fdt_order": 5,
+        "path": "/cpus/cpu@500",
+        "mpidr": "0x500",
+        "cpu_phandle": 18,
+        "domain": 1,
+        "driver_max_cores_argument": 4,
+        "has_opp_table_reference": false,
+        "has_clock_frequency": false
+      },
+      {
+        "logical_cpu_index_in_fdt_order": 6,
+        "path": "/cpus/cpu@600",
+        "mpidr": "0x600",
+        "cpu_phandle": 19,
+        "domain": 1,
+        "driver_max_cores_argument": 4,
+        "has_opp_table_reference": false,
+        "has_clock_frequency": false
+      },
+      {
+        "logical_cpu_index_in_fdt_order": 7,
+        "path": "/cpus/cpu@700",
+        "mpidr": "0x700",
+        "cpu_phandle": 20,
+        "domain": 2,
+        "driver_max_cores_argument": 4,
+        "has_opp_table_reference": false,
+        "has_clock_frequency": false
+      }
+    ],
+    "cpu_mapping_note": "CPU index names follow the actual DT order and MPIDR 0x000..0x700 mapping used by this board; the qcom,freq-domain second argument is 4 in ALL three domains, not the count of CPU consumers 4/3/1."
+  },
+  "clock_contract": {
+    "xo": {
+      "dt_phandle": 21,
+      "dt_clock_id": 0,
+      "provider": "/soc/rsc@18200000/qcom,rpmhclk",
+      "binding_name": "RPMH_CXO_CLK",
+      "source_name": "bi_tcxo",
+      "source_parent_name": "xo_board",
+      "parent_dt_node": "/soc/clocks/xo-board",
+      "parent_dt_frequency_hz": 38400000,
+      "source_divisor": 2,
+      "source_and_dt_nominal_rate_hz": 19200000,
+      "rate_is_not_a_measurement_of_physical_crystal": true
+    },
+    "alternate": {
+      "dt_phandle": 22,
+      "dt_clock_id": 209,
+      "provider": "/soc/qcom,gcc@100000",
+      "binding_name": "GPLL0",
+      "cpufreq_driver_divisor": 2,
+      "actual_hardware_pll_rate_not_measured": true,
+      "dt_does_not_encode_pll_rate": true
+    }
+  },
+  "register_contract": {
+    "access": "32-bit source readl/writel operations; widths, alignment, reserved-bit behavior and full native apertures are not completely documented by this driver",
+    "enable": {
+      "offset": "0x0",
+      "source_read_mask": "0x1",
+      "actual_dt_skips_read": true,
+      "boot_value_not_captured": true,
+      "no_driver_write": true
+    },
+    "freq_lut": {
+      "offset": "0x100",
+      "row_stride": 4,
+      "maximum_rows": 40,
+      "end_offset": "0x19c",
+      "fields": {
+        "source_bits": "31:30",
+        "lval_bits": "7:0",
+        "core_count_bits": "18:16"
+      },
+      "rate_khz": "src != 0: floor(xo_rate_hz*lval/1000); src == 0: floor((alternate_rate_hz/2)/1000). Source does not distinguish nonzero src encodings.",
+      "terminal": "First adjacent equal frequency and equal core_count terminates; repeated row itself is set CPUFREQ_TABLE_END. If previous row's core count mismatched max_cores, source marks previous row as BOOST. Do not 'repair' this vendor algorithm.",
+      "not_exposed_by_actual_dt": true
+    },
+    "voltage_lut": {
+      "offset": "0x200",
+      "row_stride": 4,
+      "maximum_rows": 40,
+      "end_offset": "0x29c",
+      "millivolts_bits": "11:0",
+      "driver_microvolts_multiplier": 1000,
+      "vc_bits": "21:16 read but unused in this routine",
+      "actual_voltages_unknown": true
+    },
+    "perf_state": {
+      "offset": "0x320",
+      "source_writes": "entire policy frequency-table index",
+      "source_reads": "entire value, clamped in driver to lut_max_entries-1",
+      "hardware_illegal_index_behavior_unknown": true,
+      "reference_should_reject_unsupported_indices_without_state_change": true
+    },
+    "cycle_counter": {
+      "base_offset": "0x3c4",
+      "actual_per_cpu_offsets_in_domains": [
+        {
+          "domain": 0,
+          "offsets": [
+            "0x3c8",
+            "0x3cc",
+            "0x3d0",
+            "0x3d4"
+          ]
+        },
+        {
+          "domain": 1,
+          "offsets": [
+            "0x3c8",
+            "0x3cc",
+            "0x3d0"
+          ]
+        },
+        {
+          "domain": 2,
+          "offsets": [
+            "0x3c8"
+          ]
+        }
+      ],
+      "source_formula": "accumulative ? (cpu-cpumask_first(related_cpus)+1)*4 : 0",
+      "width_bits": 32,
+      "software_total_bits": 64,
+      "source_wrap_quirk": "The vendor overflow branch adds UINT_MAX-prev+val rather than 2^32-prev+val. A model must retain exact raw 2^32 wrap, not emulate this software off-by-one.",
+      "cycle_rate_and_idle_power_gating_not_defined_by_source": true
+    },
+    "dcvsh": {
+      "domain_state_offset": "0x20",
+      "domain_state_low_bits": "7:0",
+      "domain_state_interpretation": "round_closest(low8 * xo_rate_hz/1000) kHz",
+      "status_offset": "0x30c",
+      "status_test_mask": "0x4",
+      "clear_offset": "0x308",
+      "clear_sequence": "read CLR, OR bit 2, write CLR",
+      "interrupt_enable_offset": "0x304",
+      "interrupt_enable_note": "Listed in offsets, never read or written by the pinned source. Its bit meaning/default/reset state is not established here.",
+      "source_irq_flow": "After resources, cpu_init requests the indexed IRQ high/oneshot/no-suspend. On STATUS bit2, masks the Linux IRQ, not a device EN register, reads DOMAIN_STATE and polls every 10 ms. Once hardware-domain frequency equals requested PERF-derived frequency, clears bit2 through CLR RMW and enables Linux IRQ.",
+      "no_thermal_event_was_observed_before_this_first_lut_abort": true
+    }
+  },
+  "actual_child_services": {
+    "paths": [
+      "/soc/qcom,cpufreq-hw/cpu7-notify",
+      "/soc/qcom,cpufreq-hw/qcom,cpu-isolation",
+      "/soc/qcom,cpufreq-hw/qcom,cpu-isolation/cpu0-isolate",
+      "/soc/qcom,cpufreq-hw/qcom,cpu-isolation/cpu1-isolate",
+      "/soc/qcom,cpufreq-hw/qcom,cpu-isolation/cpu2-isolate",
+      "/soc/qcom,cpufreq-hw/qcom,cpu-isolation/cpu3-isolate",
+      "/soc/qcom,cpufreq-hw/qcom,cpu-isolation/cpu4-isolate",
+      "/soc/qcom,cpufreq-hw/qcom,cpu-isolation/cpu5-isolate",
+      "/soc/qcom,cpufreq-hw/qcom,cpu-isolation/cpu6-isolate",
+      "/soc/qcom,cpufreq-hw/qcom,cpu-isolation/cpu7-isolate",
+      "/soc/qcom,cpufreq-hw/qcom,limits-dcvs"
+    ],
+    "notes": [
+      "qcom,cpu-isolate and per-CPU cooling child references are present; their software behavior is separate from EPSS register emulation.",
+      "qcom,msm-hw-limits child has isens VREF settings 0.88 V and 1.8 V. These are NOT CPU frequency-table voltages.",
+      "The source populates controller children only after CPUFreq registration and counter callback registration succeed. Current first LUT abort occurs before this."
+    ]
+  },
+  "reference_model_requirements": [
+    "Use an explicit opt-in reference profile; physical firmware LUTs, voltage entries, reset state and current PERF were not captured.",
+    "Expose bounded source-backed register locations, not arbitrary 4-KiB RAM.",
+    "The boot CPU need not equal the domain being initialized: CPU4 executes a probe that visits domain0 first.",
+    "Supply any synthetic LUT values as documented reference data, including core_count=4 for every domain and a genuine adjacent duplicate sentinel. Neither nominal CPU bins nor inferred OPP tables may be presented as factory values.",
+    "A successful PERF write must select a supported reference state and change derived rate/counter behavior. Reject illegal indices; do not model only a success register.",
+    "A reference 32-bit cycle integrator must document its virtual-time, rate, idle/power and reset assumptions. Preserve fractional progress and exact wrap across migration and rate changes; do not claim retired CPU cycles or TCG speed changes.",
+    "Actual IRQ resources exist. Any implemented limit/IRQ service must bind the actual lines, maintain condition/status/clear behavior and document reference event/enable policy. If no producer is implemented, explicitly report this narrower boundary, never fake mitigation completion.",
+    "Do not synthesize hardware-defined semantics for unused REG_INTR_EN from its name alone.",
+    "Validate immutable profile/domain/geometry and runtime invariants on migration, restore observable outputs before first MMIO, and test same-profile completion plus true mismatches."
+  ],
+  "scope": {
+    "hardware_mmio_read": false,
+    "guest_memory_written": false,
+    "qemu_started": false,
+    "kernel_rebuilt": false,
+    "model_edited": false,
+    "branch_ref_changed": false,
+    "full_dt_exported": false,
+    "reference_model_proposal_note": "Root later approved an all-XO four-state reference table and explicit host frequency-limit service; this source/DT contract records evidence and does not certify that implementation."
+  },
+  "verdict": "source-and-bounded-actual-dt-contract-established; physical LUT/voltage/firmware state unknown"
+}

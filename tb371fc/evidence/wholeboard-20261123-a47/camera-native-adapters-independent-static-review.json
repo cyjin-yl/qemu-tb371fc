@@ -1,0 +1,107 @@
+{
+  "schema": "tb371fc-camera-native-adapters-independent-static-review-v1",
+  "reviewer": "gpu_gx_integration",
+  "model_commit": "c2118d645a1d54d66d6da8817a99443acf62acf9",
+  "model_c_sha256": "c683bb924fcd7adc254a4f8dcb694e37961c91c19f9657f683f2d223f4422009",
+  "files": [
+    {
+      "file": "capture-camera-gdsc.py",
+      "bytes": 8343,
+      "sha256": "db9710ab3b28b3dc69c8657e25b96f4c7e69a62d8f49340a4df66b9318ea469a"
+    },
+    {
+      "file": "native-camera-gdsc-observer.py",
+      "bytes": 69999,
+      "sha256": "12566d0919dda9eac8239a9aca9890894eabcbc7c5856b9e7b248fa83f7b55ab"
+    },
+    {
+      "file": "camera-observer78-review.json",
+      "bytes": 4038,
+      "sha256": "3e7d995b9e956bfe651cb5fcbc8fc4e455032b22b82d01cf22ebb6017e62b100"
+    },
+    {
+      "file": "native-userspace8-camera-draft.py",
+      "bytes": 50855,
+      "sha256": "80961a7cf28321f662cbf90af048a09a5a587ce0ad2624c1f909542f678b1b69"
+    },
+    {
+      "file": "prepare-userspace8-staging78.py",
+      "bytes": 22470,
+      "sha256": "ca2dbce5cc791de0008d28192b0c0448b2b3728476114d53a865f465bd5a18a5"
+    },
+    {
+      "file": "prepare-camera-userspace78.py",
+      "bytes": 7678,
+      "sha256": "1cf707bf3f0289d7680f37c8f43faf7aed8f2886f9c6155b19dc09ced93a2ac4"
+    },
+    {
+      "file": "camera-userspace78-static-review.json",
+      "bytes": 1334,
+      "sha256": "7cf46d8be9ba9bf241c526026abd0104416f6ed3568403d1db928e67f5d97e1a"
+    }
+  ],
+  "conclusion": "No remaining static blocker after the source78 component-count guard correction. Runtime remains for the root coordinator and formal accepted artifacts.",
+  "issue_found_and_resolved": {
+    "file": "prepare-userspace8-staging78.py",
+    "initial_sha256": "f43789f34c899754e85baaba5045ec799fad455443064b4e6a7714b34fbacf5e",
+    "problem": "The unchanged source77 cardinality guard required 73 components and would reject the correct source78 plan with 74 components.",
+    "resolution": "Root changed the exact guard to 74, retained unique names and complete ordered-plan binding, updated the source78 error label, and regenerated the preparer receipt.",
+    "final_sha256": "ca2dbce5cc791de0008d28192b0c0448b2b3728476114d53a865f465bd5a18a5"
+  },
+  "observer_review": {
+    "new_function_fully_read": true,
+    "model_property_names_and_domain_identity_match": true,
+    "typed_bool_and_integer_range_checks": true,
+    "word_properties_are_qom_uint64_but_uint32_ranges_are_correct_for_these_values": true,
+    "two_complete_78_plus_2_snapshots": true,
+    "before_and_after_stopped_status_required": true,
+    "raw_snapshot_equality_required": true,
+    "independent_formula_matches_implemented_three_valued_AND": true,
+    "unknown_power_complete_observation_is_not_known_power_or_driver_success": true,
+    "only_new_function_query_status_and_qom_get": true,
+    "legacy_wrapper_inverse_exact_bytes": true,
+    "legacy_wrapper_sha256": "20f589dd4e0b21748d7ddccbacd44980f9ccef28cf13134394c9648ee9370da9",
+    "legacy_wrapper_not_claimed_mmio_free": true,
+    "root_mock_case_count_read_from_receipt": 13,
+    "mock_cases_rerun_by_this_reviewer": false
+  },
+  "consumer_review": {
+    "base_17_globals_unchanged": true,
+    "additional_globals_allowlist": [
+      [],
+      [
+        "qcom-sm8250-rpmh.reference-wait-mask-reserved=on"
+      ],
+      [
+        "qcom-sm8250-rpmh.reference-wait-mask-reserved=on",
+        "qcom-camera-gdsc.enabled-reference=on"
+      ]
+    ],
+    "automatic_option_enable": false,
+    "ordered_same_primary_command_globals_required": true,
+    "matching_complete_camera_observer_required_if_camera_option_selected": true,
+    "camera_observer_pins_both_actual_dt_captures_and_model_api": true,
+    "changed_existing_consumer_functions": [
+      "verify_acceptance",
+      "parse_baseline"
+    ],
+    "other_existing_consumer_function_asts_equal": true,
+    "full_kernel_hash_and_fatal_scan_preserved": true,
+    "observer_error_gates_preserved": true,
+    "ELF_CPIO_result_ABI_and_strict_actual_model_validator_preserved": true,
+    "GDB_EL0_PC_PSTATE_record_and_breakpoint_removal_preserved": true,
+    "guest_shutdown_and_process_exit_zero_preserved": true,
+    "no_guest_memory_register_or_PC_writes_added": true
+  },
+  "validation": {
+    "source_read_only_review": true,
+    "ast_and_compile_to_code_object_only": true,
+    "target_modules_imported": false,
+    "observer_called": false,
+    "preparer_called": false,
+    "consumer_called": false,
+    "QEMU_or_QTest_or_public_tests_run": false,
+    "remote_actions": false,
+    "guest_results_established": false
+  }
+}

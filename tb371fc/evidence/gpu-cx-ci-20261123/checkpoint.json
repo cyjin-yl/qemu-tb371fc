@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "kind": "pending-public-CI-checkpoint",
+  "created_utc": "2026-11-23 11:40:58 UTC",
+  "source_parent": "3b938b23f4ce3e9cde88f31ae39d6280524624e0",
+  "branch": "tb371fc-verified-gpu-cx-ci-20261123-1138",
+  "full_device_complete": false,
+  "stock_android_boot_passed": false,
+  "full_native_dt_recheck_executed": false,
+  "development_origin": "CT102 qemu-tb371fc-dev isolated worktree; source integration reconstructed from the recorded exact edits on the fixed parent while the doesvm execution/write channel was timing out.",
+  "integration_sources": {
+    "hw/arm/lenovo-tb371fc.c": {
+      "before": {
+        "git_blob": "2ccacacb549c1a7952543ec005ef877bf74d4b19",
+        "sha256": "bfa6e1ebe7bbcbfa938ec7134e165a0e11009a0e9ddd98c498c6d802bab48d41"
+      },
+      "after_sha256": "5752690f7adbf778f3eee1f6e2a8b22e2fb03d9ff6529bc7f585f32c994eda8e"
+    },
+    "hw/arm/Kconfig": {
+      "before": {
+        "git_blob": "6e4fb8f61d33d840f048b52bbf160a7dce570292",
+        "sha256": "3b49af59a159a5b1551117c75f22b2c21e37d4a3e4424aaa86b82f22680439d4"
+      },
+      "after_sha256": "67bcdbca0fa8bf58aad0cae8efb5bdbc7befa7aae9a7f90644c52804df9bf6d4"
+    },
+    "hw/misc/Kconfig": {
+      "before": {
+        "git_blob": "0eae6addd236615f61f872ae21a8245452e78866",
+        "sha256": "989cde217f529a265c772d9921eac840ff108c41c0054009674fd9c3796c48af"
+      },
+      "after_sha256": "fb77a4a9e0ded985a24a68b2a3f3beb0324a76a2896509e2979ae1147f3769eb"
+    },
+    "hw/misc/meson.build": {
+      "before": {
+        "git_blob": "83a5699ccd344f2166838d0c3e4bfea8513c62d8",
+        "sha256": "4449cebd3dbf0513e18ed8835d96bce72c8a9d88dbca9befadd0c29fc8110128"
+      },
+      "after_sha256": "a3ec01a0bc62aa0c82437899449446d5e4440e4e693a44ec669f02a3dcf61b48"
+    },
+    "tb371fc/scripts/ci_device_tests.py": {
+      "before": {
+        "git_blob": "9b9281a256d6524d14b2cd892eebbbf53c79ec31",
+        "sha256": "2275e0868fe3b6944cff555297f91b3200ce3af187ebb8ded2562b803306b16d"
+      },
+      "after_sha256": "2b9f2112908869bb1ac343bc1bfff9ce288c851fae24971988226fa312ee5b0c"
+    },
+    "tb371fc/scripts/test_ci_device_tests.py": {
+      "before": {
+        "git_blob": "fc307192f1f0a5321d24169325ae15edecc49555",
+        "sha256": "fbcb146d860383df2cd235045563a4c4d49d9d4a745246a69beb8c4bf1f5c995"
+      },
+      "after_sha256": "8de2cc20656cd0054935fa1d799674e90f15cea008ff5b895a75fac1dedd3372"
+    }
+  },
+  "new_sources": [
+    {
+      "path": "hw/misc/qcom-gpu-cx-gdsc.c",
+      "git_blob": "e4b8a600bc7a4019acb607f70472ea8ad6607f27",
+      "sha256": "eace625a3613c884aca9d7f9c3a25cd0bc6ece1fefb516f420bd60c831ad4d05",
+      "bytes": 17251
+    },
+    {
+      "path": "include/hw/misc/qcom-gpu-cx-gdsc.h",
+      "git_blob": "7ea9265a3b998049fa9f207efbf3728f00de75f2",
+      "sha256": "6d4502713f398d622828a3f24123679edbb5b56d6f4553272feaa13f8c374469",
+      "bytes": 1376
+    },
+    {
+      "path": "tb371fc/tests/test_gpu_cx_gdsc.py",
+      "git_blob": "25c517cb652c6f02e744776b128881639fa99e7f",
+      "sha256": "f56b85ff6557c3d4c3fcd6a4fda93fb181a4f20a16c122c7b47fa35907da8d11",
+      "bytes": 37588
+    },
+    {
+      "path": "tb371fc/docs/gpu-cx-gdsc.md",
+      "git_blob": "0d4444cacc5e6a0c3d24e2e9694721def45400a7",
+      "sha256": "ac73f898f5d8e6073f2f910276c9589a0393ae346e9fa780296ca31e68927913",
+      "bytes": 15556
+    },
+    {
+      "path": "tb371fc/evidence/expansion-20261123/gpu-cx-gdsc-ci-topology-summary.json",
+      "git_blob": "da0cbee1057e2fd8c41d1ba0fa7acbd0ec1bdb29",
+      "sha256": "f5c68e71f5aa7bce29f05b2fe080ed113164a4d38a72649b4927aee547473c45",
+      "bytes": 5292
+    }
+  ],
+  "original_targeted_attempt": {
+    "receipt_kind": "summary of the actual previously read private job; not a substitute for its original files",
+    "directory": "/work/gpu-cx-root-1110",
+    "finished_utc": "2026-11-23T11:18:57.061409+00:00",
+    "qemu_sha256": "1e0e0bb4e31214e6b88d918adf005090d1592c2b090abf411861f2064e283eab",
+    "test_sha256": "184fcaefb637f5e00e780d30b9346aad5ae92813afb405629d4cb3549b693de5",
+    "executed_checks": 7,
+    "passed_checks": 6,
+    "failed_check": "known_parent_off_cancels_pending_enable",
+    "error": "known-off parent kept enable timer",
+    "passed": false,
+    "actual_migration_attempts": 0,
+    "original_files_preserved": true
+  },
+  "correction": {
+    "scope": "parent() and external() input helpers only; no C change or assertion weakening",
+    "reason": "Known-to-known level changes must preserve input validity. The old helper introduced an unintended validity-false pulse; explicit None still drives validity false.",
+    "corrected_test_sha256": "f56b85ff6557c3d4c3fcd6a4fda93fb181a4f20a16c122c7b47fa35907da8d11",
+    "executed_before_checkpoint": false
+  },
+  "planned_gates": {
+    "total": 56,
+    "gdsc_checks": 26,
+    "gdsc_migration_scenarios": 8,
+    "gdsc_actual_migration_attempts": 9,
+    "expected_completed_migrations": 6,
+    "expected_profile_or_delay_rejections": 3
+  },
+  "pending": [
+    "Actual CI results for this commit",
+    "Same frozen doesvm binary recheck with corrected harness",
+    "Two private unmodified-kernel/full-native-DT diagnostics",
+    "Archive complete original allowlisted topology and actual doesvm failure receipts"
+  ],
+  "private_inputs_published": false
+}

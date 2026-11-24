@@ -1,0 +1,44 @@
+{
+  "schema": "tb371fc-cpufreq-acceptance-independent-static-review-v1",
+  "reviewed_at_utc": "2026-11-23 18:11:49 UTC",
+  "model_commit": "e133c1c85b53ca5d3afe81bda2c1767d9e0d39d8",
+  "test": {
+    "commit": "239a6eec51c09e27b40b57d7d6ef7f0b3157635c",
+    "git_blob": "105767c824bbc3101ec6386d5b6e1fe756ee7eeb",
+    "path": "tb371fc/tests/test_cpufreq_hw.py",
+    "bytes": 76093,
+    "sha256": "0a11d0f3c8f70c09716083830b8f672a2c62b82d3ff42589373b480b3998dd03"
+  },
+  "scope": "Read-only source review of the complete acceptance script and its interface to the reviewed model. No QEMU or test script execution performed for this review.",
+  "static_findings": [
+    "All seventeen ordinary and five special scenarios have concrete device or bus assertions; the final eight check records consist of four positive migration-continuation checks, two profile rejections and two corrupt-stream rejections.",
+    "Narrow aligned and unaligned split accesses require exact invalid-size diagnostics for the defined device region; chunks falling into holes require the absolute physical address and unassigned-region rejected diagnostic.",
+    "Eight-byte LUT reads are checked as two valid words. The wide PERF write explicitly requires the first legal word to take effect while the following hole fails, so it does not falsely claim all-or-nothing bus atomicity.",
+    "The real routing scenario uses no output interception and reads the GIC distributor pending bits for actual INTIDs 62,63,51. Each deassertion clears the device latch first and the GIC pending bit second.",
+    "The reset scenario has an independent GCC reset witness and drains the QMP RESET event before assertions. Retained external caps and reset-cleared IRQ status match the implemented edge policy.",
+    "The first migration saves source virtual time 1 ns with projected phases (0,614400000),(1,228800000),(1,843200000). The second saves 5013 ns after a 5000 ns base-frequency interval and 13 ns cap interval, with (1547,980800000),(1540,243200000),(1537,996800000).",
+    "Each source reads original anchor value/fraction/epoch before the full QOM snapshot and requires those anchors unchanged afterwards. At least one projected phase differs from its anchor, so a missing pre_save settlement cannot be masked by a pure projected counter getter.",
+    "After completed save, the script requires stored anchor count and fraction to equal the previously projected values and epoch to equal source virtual time. Mutable and immutable fields of all three actual 84-byte sections are compared, then independently decoded by fixed offsets.",
+    "Destinations are intentionally different before incoming and use different virtual origins 987654321 and 73 ns. The first post-load observations are full QOM, actual Clock properties and RAM-only IRQ drain, with no EPSS MMIO or host rate setter.",
+    "The two destinations require opposite actual IRQ corrections (true to false and false to true). A QOM status alone cannot conceal a missing GPIO restore.",
+    "After resume, one explicit nanosecond verifies the restored fractional progress through pure QOM before the first EPSS MMIO. Later PERF/cap changes and IRQ acknowledgment demonstrate continued state operation.",
+    "Profile mismatches use completed, unmodified source streams and initialized target processes, require actual migrate-incoming requests, exit 1 and device-specific load/equality text. The unknown source is explicitly not counted as a completed roundtrip.",
+    "Corruptions are exact single-bit changes in verified source sections: domain0 PERF 1 to 5, or domain2 fraction 843200000 with bit31 set. The complete-file byte difference, offsets, original hash and specific post_load diagnostics are retained.",
+    "The final pass predicate requires 30 unique true checks, two completed source/destination roundtrips with continued operation, two profile rejections, two corrupt-stream rejections and unchanged QEMU binary hash."
+  ],
+  "expected_counts": {
+    "ordinary": 17,
+    "special": 5,
+    "migration_checks": 8,
+    "total": 30,
+    "completed_migrations": 2,
+    "profile_rejections": 2,
+    "corrupt_stream_rejections": 2
+  },
+  "additional_cases_requested": 0,
+  "static_blockers": [],
+  "qemu_executed": false,
+  "script_executed": false,
+  "counts_are_actual_runtime_results": false,
+  "verdict": "no-static-blocker; formal-unified-CI-execution-required"
+}

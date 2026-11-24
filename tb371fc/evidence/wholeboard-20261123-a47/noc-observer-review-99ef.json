@@ -1,0 +1,115 @@
+{
+  "schema": "tb371fc-noc-native-table-independent-audit-v1",
+  "passed": true,
+  "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "raw_dt_blob": "c300271fab1acabb6d1b45ddcf626f5e2f091d25",
+  "wrapper_table_blob_reviewed": "a53a031704f50e8618e9c1dbc8357bef7d303f34",
+  "numeric_decode": "be32 from raw hex",
+  "ports": 47,
+  "nondeferred_ports": 46,
+  "deferred_ports": [
+    {
+      "path": "/machine/noc-qos-aggre2-2",
+      "fabric": "aggre2",
+      "port": 2,
+      "physical_port_address": 24137728,
+      "dt_client": "/soc/ad-hoc-bus/mas-qxm-ipa",
+      "defer_init_qos": true,
+      "source_correlated_dt_words": {
+        "mainctl": 40,
+        "limitbw": 0,
+        "regul0ctl": 0,
+        "regul0bw": 0
+      }
+    }
+  ],
+  "source_correlated_mainctl_histogram_excluding_deferred": {
+    "0x20": 16,
+    "0x28": 4,
+    "0x8": 23,
+    "0x10": 1,
+    "0x60": 1,
+    "0x58": 1
+  },
+  "display_alias_references_ignored": 7,
+  "ignored_nodes": [
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-mnoc-hf_display",
+      "ports": [
+        2,
+        66
+      ],
+      "ap_owned": false,
+      "fabric_bypass": true
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-mnoc-sf_display",
+      "ports": [
+        3,
+        67
+      ],
+      "ap_owned": false,
+      "fabric_bypass": true
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qxm-mdp0_display",
+      "ports": [
+        6
+      ],
+      "ap_owned": false,
+      "fabric_bypass": true
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qxm-mdp1_display",
+      "ports": [
+        8
+      ],
+      "ap_owned": false,
+      "fabric_bypass": true
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qxm-rot_display",
+      "ports": [
+        10
+      ],
+      "ap_owned": false,
+      "fabric_bypass": true
+    }
+  ],
+  "limiter_or_regulator_dt_properties": [],
+  "all_47_entries_match": true,
+  "no_native_execution_claimed": true,
+  "wrapper_blob_reviewed": "91ad058441194163ea358eccd67373eb1ba64a67",
+  "wrapper_sha256": "649dce687afa6a5255713976681b81b5bb46d2e303432b50aad5306574742ecf",
+  "wrapper_bytes": 16115,
+  "before_and_after_running_false_enforced": true,
+  "noc_observer_qmp_commands": [
+    "query-status",
+    "qom-get"
+  ],
+  "noc_observer_per_port_properties": [
+    "enabled-reference",
+    "physical-port-address",
+    "mainctl",
+    "limitbw",
+    "regul0ctl",
+    "regul0bw"
+  ],
+  "initial_revision_missing_after_status_guard_fixed": true,
+  "source_contract": [
+    {
+      "path": "drivers/soc/qcom/msm_bus/msm_bus_of_rpmh.c",
+      "commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "sha256": "4b55e3a31e4c762ee686dc235ba755381bc8001d13c4e2b67d6bac4bbce83af2",
+      "lines": "156-193, 303",
+      "finding": "zero-initialized node_info; prio u32, forwarding/defer bool presence; absent limiter/regulator properties stay zero"
+    },
+    {
+      "path": "drivers/soc/qcom/msm_bus/msm_bus_fabric_rpmh.c",
+      "commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "sha256": "14563f3f965b030d68917b48b6185c2ff2b87f4f9de2ab212f2d8cb77b510bb7",
+      "lines": "964-1006",
+      "finding": "defer skips initial QoS; only AP-owned nodes use QoS; fabric bypass skips writes; clock-enable failure can also defer"
+    }
+  ]
+}

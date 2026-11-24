@@ -1,0 +1,615 @@
+{
+  "schema": "tb371fc-existing-userspace-fixture-contract-v1",
+  "scope": "Read-only inspection of two existing synthetic initramfs fixtures and pinned repository collectors; preparation only, no new boot or build",
+  "actions": {
+    "new_qemu_started": false,
+    "guest_memory_written": false,
+    "guest_registers_written": false,
+    "hardware_mmio_accessed": false,
+    "new_real_device_capture": false,
+    "fixture_modified": false,
+    "disk_created_or_modified": false,
+    "compiler_invoked": false,
+    "refs_moved": false
+  },
+  "ufs_fixture": {
+    "scope": "Read-only fixed synthetic initramfs inspection; no QEMU, guest or hardware access",
+    "fixture": {
+      "path": "/work/ufs-iommu-4/initramfs.cpio.gz",
+      "bytes": 293066,
+      "sha256": "8c2f582b72f19ba6043af7e85f91a3936c3c8fcb3c2a306ae4f76efe6d72ae7e",
+      "uncompressed_bytes": 707696,
+      "uncompressed_sha256": "33fef927e166afe9b4c6d125f4b7a646a373b608c59a31063f909cc33aa78f00"
+    },
+    "entries": [
+      {
+        "path": "init",
+        "mode": "0o100755",
+        "bytes": 706984,
+        "sha256": "82569c04940ad4530b7b9b29f344d967d2f66eccaba1efe2d4fc9d628cd117e9"
+      },
+      {
+        "path": "dev",
+        "mode": "0o40755",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "proc",
+        "mode": "0o40755",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "sys",
+        "mode": "0o40755",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "dev/console",
+        "mode": "0o20600",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "init": {
+      "path": "init",
+      "mode": "0o100755",
+      "bytes": 706984,
+      "sha256": "82569c04940ad4530b7b9b29f344d967d2f66eccaba1efe2d4fc9d628cd117e9",
+      "is_elf": true,
+      "elf_header_hex": "7f454c460201010300000000000000000200b70001000000800b400000000000400000000000000068c30a000000000000000000400038000700400019001800"
+    },
+    "adjacent_entries": [
+      {
+        "name": "disk.raw",
+        "is_file": true,
+        "bytes": 67108864
+      },
+      {
+        "name": "init",
+        "is_file": true,
+        "bytes": 706984
+      },
+      {
+        "name": "initramfs.cpio.gz",
+        "is_file": true,
+        "bytes": 293066
+      },
+      {
+        "name": "qemu-debug.log",
+        "is_file": true,
+        "bytes": 170
+      },
+      {
+        "name": "result.json",
+        "is_file": true,
+        "bytes": 3269
+      },
+      {
+        "name": "serial.log",
+        "is_file": true,
+        "bytes": 12875
+      }
+    ],
+    "actual_elf_symbol_and_literal_inspection": {
+      "path": "/work/ufs-iommu-4/init",
+      "bytes": 706984,
+      "sha256": "82569c04940ad4530b7b9b29f344d967d2f66eccaba1efe2d4fc9d628cd117e9",
+      "elf_machine": 183,
+      "symbols": {
+        "ufs-guest.c": {
+          "value": 0,
+          "size": 0,
+          "type": 4,
+          "section_index": 65521
+        },
+        "scsi": {
+          "value": 4197600,
+          "size": 196,
+          "type": 2,
+          "section_index": 5
+        },
+        "check": {
+          "value": 4197796,
+          "size": 104,
+          "type": 2,
+          "section_index": 5
+        },
+        "bound": {
+          "value": 4197900,
+          "size": 120,
+          "type": 2,
+          "section_index": 5
+        },
+        "dma_domain": {
+          "value": 4198020,
+          "size": 236,
+          "type": 2,
+          "section_index": 5
+        },
+        "checks": {
+          "value": 4856200,
+          "size": 4,
+          "type": 1,
+          "section_index": 20
+        },
+        "failures": {
+          "value": 4856204,
+          "size": 4,
+          "type": 1,
+          "section_index": 20
+        },
+        "main": {
+          "value": 4195584,
+          "size": 1448,
+          "type": 2,
+          "section_index": 5
+        }
+      },
+      "literal_contract_strings": [
+        "TB371FC_UFS_SCSI opcode=%02x ioctl=%d status=%u host=%u driver=%u resid=%d",
+        "TB371FC_UFS_CHECK %s %s",
+        "TB371FC_UFS_BINDING %s %s",
+        "/sys/bus/platform/devices/1d84000.ufshc/iommu_group",
+        "/sys/kernel/iommu_groups/%s/type",
+        "TB371FC_UFS_IOMMU %s %s",
+        "/dev/sda",
+        "/sys/bus/platform/devices/1d84000.ufshc/driver",
+        "/sys/bus/platform/devices/1d87000.phy/driver",
+        "/sys/bus/platform/devices/100000.clock-controller/driver",
+        "/sys/bus/platform/devices/15000000.iommu/driver",
+        "/sys/bus/platform/devices/3da0000.iommu/driver",
+        "TB371FC_UFS_RESULT %s checks=%u failures=%u"
+      ],
+      "generic_ram_magic_present": false,
+      "generic_result_symbols_present": false
+    },
+    "adjacent_manifest": {
+      "path": "/work/ufs-iommu-4/result.json",
+      "bytes": 3269,
+      "sha256": "039d215586dd0d14a77fbdd49f3011ee5def5b1188f00ff38f271abddaf520dd",
+      "started_utc": "2026-11-23T07:07:29.022472+00:00",
+      "scope": "Real Linux qcom UFS/QMP/GCC I/O on a synthetic empty disk; host QMP ends the run after guest verdict",
+      "guest_source_sha256_declared_by_manifest": "b91f79d2c9c33313ca9325df85af3c47fdbba514451a547b8369774cc8c771df",
+      "source_hash_independently_matched_to_pinned_current_source": false,
+      "current_source_has_additional_RPMH_conditional_checks": true
+    },
+    "historical_serial": {
+      "path": "/work/ufs-iommu-4/serial.log",
+      "bytes": 12875,
+      "sha256": "3951f494fa9422ed48ba88a369b3dcb4b368f40516064dec85ee26989edc40b9",
+      "guest_checks": [
+        [
+          "PASS",
+          "procfs"
+        ],
+        [
+          "PASS",
+          "sysfs"
+        ],
+        [
+          "PASS",
+          "devtmpfs"
+        ],
+        [
+          "PASS",
+          "qcom_host_driver"
+        ],
+        [
+          "PASS",
+          "qmp_phy_driver"
+        ],
+        [
+          "PASS",
+          "gcc_driver"
+        ],
+        [
+          "PASS",
+          "apps_smmu_driver"
+        ],
+        [
+          "PASS",
+          "kgsl_smmu_driver"
+        ],
+        [
+          "PASS",
+          "ufs_translated_dma_domain"
+        ],
+        [
+          "PASS",
+          "ufs_block_discovered"
+        ],
+        [
+          "PASS",
+          "logical_sector_4096"
+        ],
+        [
+          "PASS",
+          "capacity_64_mib"
+        ],
+        [
+          "PASS",
+          "direct_multiblock_write"
+        ],
+        [
+          "PASS",
+          "cache_flush"
+        ],
+        [
+          "PASS",
+          "direct_multiblock_read"
+        ],
+        [
+          "PASS",
+          "close_reopen_persistence"
+        ],
+        [
+          "PASS",
+          "scsi_read_capacity"
+        ],
+        [
+          "PASS",
+          "unsupported_scsi_rejected"
+        ],
+        [
+          "PASS",
+          "read_beyond_disk_is_eof"
+        ]
+      ],
+      "guest_verdicts": [
+        [
+          "PASS",
+          "19",
+          "0"
+        ]
+      ],
+      "historical_kernel_sha256": "6deca8ecfcc5c8c2d12974666f9d90f12a9c74b356479bcae969701f797d8aea",
+      "historical_qemu_sha256": "781d6ae66e9918bf1e3eed08c4bfaa3cdb6381cb1d63495d6ef5cc1a97dabb39",
+      "current_production_kernel_execution_proven_by_this_old_log": false
+    },
+    "contract": {
+      "pid1": "Static AArch64 /init from ufs-guest.c, not Android init",
+      "stdout": "TB371FC_UFS_CHECK PASS|FAIL name, followed by TB371FC_UFS_RESULT PASS|FAIL checks=N failures=N",
+      "checks_on_success": 19,
+      "failure_can_still_prove_this_userspace_executed": true,
+      "base_mount_checks": [
+        "procfs",
+        "sysfs",
+        "devtmpfs"
+      ],
+      "storage_dependencies": [
+        "/dev/sda with O_RDWR|O_DIRECT|O_CLOEXEC",
+        "five fixed generated-DT sysfs platform driver paths",
+        "UFS iommu_group type file exactly DMA newline",
+        "4096-byte logical sectors",
+        "64 MiB disk"
+      ],
+      "fixed_driver_paths": [
+        "/sys/bus/platform/devices/1d84000.ufshc/driver",
+        "/sys/bus/platform/devices/1d87000.phy/driver",
+        "/sys/bus/platform/devices/100000.clock-controller/driver",
+        "/sys/bus/platform/devices/15000000.iommu/driver",
+        "/sys/bus/platform/devices/3da0000.iommu/driver"
+      ],
+      "direct_io": {
+        "offset_bytes": 4194304,
+        "length_bytes": 32768,
+        "pattern": "byte[i] = (i * 37 + 0x61) & 255",
+        "expected_sha256": "faf3511fec2180665df534811d7ed01fdf14127f1d0596c46b34fb9ba6ee466e",
+        "operations": [
+          "pwrite",
+          "fsync",
+          "pread+memcmp",
+          "close/reopen+pread+memcmp",
+          "SCSI READ CAPACITY",
+          "unsupported opcode 0xff check condition",
+          "read at end returns EOF"
+        ]
+      },
+      "source_correlated_missing_disk_path": "The non-RPMH source tries /dev/sda up to 1000 times with 20 ms sleeps, then records ufs_block_discovered failure and goes to the final report before waiting forever",
+      "generic_ram_result_abi_available": false,
+      "kmsg_output_provided_by_program": false,
+      "guest_poweroff_requested": false,
+      "completion": "stdout verdict then infinite pause; host harness sends QMP quit",
+      "guest_shutdown_tested": false,
+      "exact_original_C_bytes_limitation": "The old manifest declares b91f79d2..., while the pinned source now hashes cd1e7798... and includes RPMH conditional code. The exact original b91f source was not recovered. Binary hash, ELF symbols/literals and the adjacent historical execution log were independently read; current C is a source-correlated contract, not a claimed byte-identical original source."
+    }
+  },
+  "current_native_diagnostic": {
+    "diagnose_source_sha256": "4ecae8825d919ebd61971bace9571bb34570aa9d76a5a1d13dc137ecc703a18b",
+    "native_logging_only_variant_sha256": "c0f1a98f4c24158334e0a9cd5c8037d33754c49ee0c17d2d1d845b906980e7a9",
+    "append": "rdinit=/init nokaslr panic=0",
+    "no_explicit_console_or_earlycon_in_this_append": true,
+    "no_blockdev_drive_or_ufs_lu_in_diagnose_command_builder": true,
+    "native_inner_reads_and_forwards_only_machine_kernel_initrd_dtb_append_globals": true,
+    "no_UFS_LU_forwarded_by_native_inner": true,
+    "identity_note": "The native-inner command tail was read locally; its full file hash was not independently captured before the transient local copy became unavailable.",
+    "timeout_stop_then_read_kernel_ring_and_QOM_then_host_quit": true,
+    "exit_zero_meaning": "Diagnostic collection completed without observer_error; not guest boot or userspace success",
+    "kernel_ring_limit": "legacy_printk captures Linux 4.x printk messages using matching symbols after stop. It does not automatically capture userspace stdout.",
+    "positive_current_fixture_condition": "A fresh-run TB371FC_UFS_CHECK or TB371FC_UFS_RESULT output from the hash-verified /init proves that program executed in userspace, including a reported FAIL. Bind evidence to this run's kernel/DT/initrd/QEMU hashes.",
+    "insufficient_conditions": [
+      "Run /init as init process alone (pre-exec attempt)",
+      "driver registration/probe messages",
+      "absence of a fatal message",
+      "ordinary diagnostic/QEMU exit code 0",
+      "lack of userspace markers in printk when stdout is not captured",
+      "historical prior-run serial markers"
+    ],
+    "missing_LU_interpretation": "Do not require UFS 19/0 for the current no-LU diagnostic. Lack of a synthetic disk is a fixture condition, not proof that no userspace ran."
+  },
+  "synthetic_disk_option_not_executed": {
+    "source": "tb371fc/scripts/boot_ufs.py and boot_smoke.py",
+    "new_file_only": true,
+    "bytes": 67108864,
+    "original_device_partitions_used": false,
+    "qemu_arguments": [
+      "-blockdev",
+      "{\"driver\":\"file\",\"node-name\":\"native-test-file\",\"filename\":\"NEW_RUN_DIR/synthetic-64m.raw\"}",
+      "-blockdev",
+      "driver=raw,node-name=native-test-disk,file=native-test-file",
+      "-device",
+      "ufs-lu,bus=ufs0,drive=native-test-disk,lun=0"
+    ],
+    "host_readback": {
+      "offset_bytes": 4194304,
+      "length_bytes": 32768,
+      "pattern": "bytes((i*37+0x61)&255 for i in range(32768))",
+      "sha256": "faf3511fec2180665df534811d7ed01fdf14127f1d0596c46b34fb9ba6ee466e",
+      "when": "After the bounded guest run has ended/closed the backend; use a fresh per-run disk so stale payload cannot pass"
+    },
+    "full_original_DT_caveat": "The fixed generated-DT sysfs names, driver names and DMA-domain file must be assessed separately on the production kernel/full DT. Correct payload I/O does not turn mismatched driver-path checks into PASS.",
+    "diagnose_current_CLI_cannot_accept_blockdev_options": true
+  },
+  "existing_ram_checkpoint_fixture": {
+    "actual_files": [
+      {
+        "path": "/work/gdb-smoke/exact-production-1/init",
+        "exists": true,
+        "bytes": 784288,
+        "sha256": "5c62d22ab5c7115506733e5a2bed8e8c0aa49b3b22e9ef9b9f5b8d7ec3389293",
+        "matches_existing_receipt": true
+      },
+      {
+        "path": "/work/gdb-smoke/exact-production-1/initramfs.cpio.gz",
+        "exists": true,
+        "bytes": 309130,
+        "sha256": "88c075fc15487f3d6dc8e7cb1b61a35aa74a8f25ec6001a7d883c9623f86d7f6",
+        "matches_existing_receipt": true
+      }
+    ],
+    "actual_manifest": {
+      "path": "/work/gdb-smoke/exact-production-1/result.json",
+      "bytes": 11769,
+      "sha256": "ac0f5d804252c93f2dfce12009fe60508c8f77c5e0b7f1c642de63f38b476eb4",
+      "selected_manifest": {
+        "scope": "Supplied unmodified kernel, validation initramfs; not stock Android boot",
+        "device_tree_source": "machine-generated functional-subset DT",
+        "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+        "qemu_sha256": "a70862bfa8aa957ea26e362b5defd9ae60b4cc4bb53f2ac2c70c0b4fe3b67e2a",
+        "guest_source_sha256": "4f1aac3a68e6c660abebdc04f239191a46ee1330ffb47a494ee37d6081d38a79",
+        "guest_header_sha256": "0087f4feaaddb78762685fc2810e010a0edee9cb23386bff62584e5f1af133c3",
+        "observer_source_sha256": "373ac343cebf34b2d4a2aa40d59b85d4318923575d7495f8b3ad025164155ec5",
+        "init_elf_sha256": "5c62d22ab5c7115506733e5a2bed8e8c0aa49b3b22e9ef9b9f5b8d7ec3389293",
+        "initramfs_sha256": "88c075fc15487f3d6dc8e7cb1b61a35aa74a8f25ec6001a7d883c9623f86d7f6",
+        "guest_symbols": {
+          "tb371fc_guest_checkpoint": {
+            "address": 134217728,
+            "size": 4
+          },
+          "tb371fc_guest_result": {
+            "address": 4849728,
+            "size": 3120
+          }
+        },
+        "checkpoint_observed": true,
+        "checkpoint_pc": 134217728,
+        "checkpoint_pstate": 2147487744,
+        "guest_shutdown_observed": true,
+        "passed": true,
+        "exit_code": 0,
+        "serial_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "manifest_matches_public_repository_bytes": true,
+    "public_receipt": {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "tb371fc/evidence/production-gdb-exact-20261123/result.json",
+      "bytes": 11769,
+      "sha256": "ac0f5d804252c93f2dfce12009fe60508c8f77c5e0b7f1c642de63f38b476eb4"
+    },
+    "historical_success_scope": "Same production Image ef9e... with machine-generated functional-subset DT; eight guest checks and real guest-initiated shutdown. Not full original DT or Android success.",
+    "production_kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "historical_qemu_sha256": "a70862bfa8aa957ea26e362b5defd9ae60b4cc4bb53f2ac2c70c0b4fe3b67e2a",
+    "archive_path": "/work/gdb-smoke/exact-production-1/initramfs.cpio.gz",
+    "elf_path": "/work/gdb-smoke/exact-production-1/init",
+    "arch_probe_sha256": "0ed51cb6c6dd24685beb3f77056d17d47c5c2f697df96d87eef4a678d4c5cb1b",
+    "original_collector": {
+      "commit": "5fd52c120058fb2addedfa74fe5c855b138b590f",
+      "path": "tb371fc/scripts/boot_smoke_gdb.py",
+      "bytes": 21238,
+      "sha256": "373ac343cebf34b2d4a2aa40d59b85d4318923575d7495f8b3ad025164155ec5",
+      "matches_existing_manifest": true
+    },
+    "current_collector": {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "tb371fc/scripts/boot_smoke_gdb.py",
+      "bytes": 17906,
+      "sha256": "93e046b915b71cd74198e8dd518564c4c0e7ea85b75a29966f08c42a8897b737",
+      "identity_differs_from_original_receipt": true
+    },
+    "checkpoint_file_observation": {
+      "path": "/work/gdb-smoke/exact-production-1/init",
+      "sha256": "5c62d22ab5c7115506733e5a2bed8e8c0aa49b3b22e9ef9b9f5b8d7ec3389293",
+      "checkpoint": {
+        "guest_virtual_address": 134217728,
+        "file_offset": 655360,
+        "bytes_hex": "c0035fd6",
+        "instruction_u32": 3596551104
+      },
+      "guest_executed": false
+    },
+    "protocol": {
+      "checkpoint_virtual_address": "0x08000000",
+      "checkpoint_bytes_hex": "c0035fd6",
+      "checkpoint_instruction": "AArch64 RET, not BRK",
+      "result_virtual_address": "0x004a0040",
+      "result_bytes": 3120,
+      "result_magic": "0x3153455243464254 (little-endian TBFCRES1)",
+      "result_version": 1,
+      "debugger_operations": [
+        "Z0,8000000,4: register TCG breakpoint",
+        "c with no address: resume",
+        "T05/S05: observe stop",
+        "Hg: select stopped CPU for observation",
+        "p20 and p21: read PC and PSTATE",
+        "m: read exactly 3120 result bytes in chunks",
+        "z0,8000000,4: remove breakpoint",
+        "c with no address: resume guest into its own sync/reboot path"
+      ],
+      "required_execution_witness": "PC equals checkpoint and (PSTATE & 15)==0, identifying the EL0 checkpoint; then decode/validate the result.",
+      "required_result": {
+        "completed": 1,
+        "checks_completed": 255,
+        "pass_mask": 255,
+        "fail_mask": 0,
+        "failures": 0,
+        "probe_truncated": 0,
+        "counter_probe_wait_status": 0,
+        "uname_sysname": "Linux",
+        "uname_machine": "aarch64",
+        "online": "0-7\n",
+        "minimum_elapsed_ns": 20000000
+      },
+      "additional_checks": [
+        "all fixed strings NUL terminated",
+        "model contains TB371FC",
+        "start_monotonic_ns > 0 and finish_monotonic_ns > start",
+        "one complete arch-probe JSON record and exact captured byte count",
+        "probe kind/schema/65536 loop iterations/19200000 Hz and consistent positive counter delta"
+      ],
+      "eight_checks": [
+        "procfs",
+        "sysfs",
+        "aarch64",
+        "eight_online_cpus_psci",
+        "timer_and_scheduler_progress",
+        "fork_and_wait",
+        "board_model",
+        "arch_counter_probe"
+      ],
+      "guest_shutdown_condition": "QMP event SHUTDOWN with data.guest exactly true and data.reason exactly guest-shutdown, plus valid guest record and successful process exit",
+      "guest_memory_or_register_write_packets_sent": false,
+      "guest_PC_modified_by_collector": false,
+      "TCG_Z0_changes_guest_code_bytes": false,
+      "debug_control_changes_present": true,
+      "debug_control_disclosure": "The collector registers/removes emulator breakpoints and stops/resumes execution. It performs read-only guest data/register observation but is not a passive no-breakpoint observer.",
+      "TCG_mechanism": "gdbstub/system.c delegates to tcg_insert_gdbstub_breakpoint; both software/hardware GDB break types call cpu_breakpoint_insert with BP_GDB. cpu-common.c allocates a host CPUBreakpoint and updates CPUState's list; it writes no guest memory. handle_continue only sets guest PC if an address parameter was supplied, which the collector does not send."
+    },
+    "reuse_limit": "Do not run the existing main unchanged for fixed-fixture reuse: it compiles a new /init/initramfs and starts a default -M tb371fc without this iteration's reference profiles. Reuse the existing verified ELF/initrd and read-only collector helper contract while retaining the complete production-DT run configuration. No such run was started here."
+  },
+  "sources": [
+    {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "tb371fc/tests/ufs-guest.c",
+      "bytes": 8135,
+      "sha256": "cd1e7798723f4e5d897719733bee8df9d9156d152f90b112130d8cf711b9f87a",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/3ef98a8afb49a873d677288693d6491c50fd75e1/tb371fc/tests/ufs-guest.c"
+    },
+    {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "tb371fc/scripts/boot_ufs.py",
+      "bytes": 8343,
+      "sha256": "6e4593d028d6e34cb618944e1eea4a0b712bb63f2db3f63c50ca90373563adb5",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/3ef98a8afb49a873d677288693d6491c50fd75e1/tb371fc/scripts/boot_ufs.py"
+    },
+    {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "tb371fc/scripts/diagnose_kernel.py",
+      "bytes": 9558,
+      "sha256": "4ecae8825d919ebd61971bace9571bb34570aa9d76a5a1d13dc137ecc703a18b",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/3ef98a8afb49a873d677288693d6491c50fd75e1/tb371fc/scripts/diagnose_kernel.py"
+    },
+    {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "tb371fc/scripts/legacy_printk.py",
+      "bytes": 4275,
+      "sha256": "6b7d18188ef8987c32135fef179f271dcf7284766a233626d09269696cada27d",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/3ef98a8afb49a873d677288693d6491c50fd75e1/tb371fc/scripts/legacy_printk.py"
+    },
+    {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "tb371fc/tests/guest-init.c",
+      "bytes": 6980,
+      "sha256": "4f1aac3a68e6c660abebdc04f239191a46ee1330ffb47a494ee37d6081d38a79",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/3ef98a8afb49a873d677288693d6491c50fd75e1/tb371fc/tests/guest-init.c"
+    },
+    {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "tb371fc/tests/guest-result.h",
+      "bytes": 1450,
+      "sha256": "0087f4feaaddb78762685fc2810e010a0edee9cb23386bff62584e5f1af133c3",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/3ef98a8afb49a873d677288693d6491c50fd75e1/tb371fc/tests/guest-result.h"
+    },
+    {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "tb371fc/scripts/boot_smoke_gdb.py",
+      "bytes": 17906,
+      "sha256": "93e046b915b71cd74198e8dd518564c4c0e7ea85b75a29966f08c42a8897b737",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/3ef98a8afb49a873d677288693d6491c50fd75e1/tb371fc/scripts/boot_smoke_gdb.py"
+    },
+    {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "tb371fc/scripts/boot_qmp.py",
+      "bytes": 2822,
+      "sha256": "b0d95776470110fd682371d393ffda4e2996fb295b1d3c81b41c46980be7a54c",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/3ef98a8afb49a873d677288693d6491c50fd75e1/tb371fc/scripts/boot_qmp.py"
+    },
+    {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "tb371fc/scripts/boot_verdict.py",
+      "bytes": 3281,
+      "sha256": "e0505903c5f52986a8650ffa38933db183501bca416e9876fac4560b08537cdf",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/3ef98a8afb49a873d677288693d6491c50fd75e1/tb371fc/scripts/boot_verdict.py"
+    },
+    {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "tb371fc/scripts/boot_smoke.py",
+      "bytes": 9300,
+      "sha256": "4889f2cdd2e3fd3331cc57f3bf1a6b6ed8894f87503283c7f404766919540f7d",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/3ef98a8afb49a873d677288693d6491c50fd75e1/tb371fc/scripts/boot_smoke.py"
+    }
+  ],
+  "qemu_debug_control_primary_sources": [
+    {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "accel/tcg/tcg-accel-ops.c",
+      "bytes": 7101,
+      "sha256": "79a918acaf0e6c770b2095036c06c513a567beb478a3aed113edb738d00151a2",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/3ef98a8afb49a873d677288693d6491c50fd75e1/accel/tcg/tcg-accel-ops.c"
+    },
+    {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "cpu-common.c",
+      "bytes": 13301,
+      "sha256": "4c5677ed737f98cb2e1d2a4afd4ea0d5620a282d9b909d6cb1086b3d1641d595",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/3ef98a8afb49a873d677288693d6491c50fd75e1/cpu-common.c"
+    },
+    {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "gdbstub/gdbstub.c",
+      "bytes": 70913,
+      "sha256": "a03d5b7aa6a2188f4eebda464a6e6d7914dacfb0898136323c5c857c829cba6a",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/3ef98a8afb49a873d677288693d6491c50fd75e1/gdbstub/gdbstub.c"
+    },
+    {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "gdbstub/system.c",
+      "bytes": 16822,
+      "sha256": "196af474a5aacefab3394162b10537efcf9dbd55e2ec2fa291a0cbd71877352f",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/3ef98a8afb49a873d677288693d6491c50fd75e1/gdbstub/system.c"
+    }
+  ]
+}

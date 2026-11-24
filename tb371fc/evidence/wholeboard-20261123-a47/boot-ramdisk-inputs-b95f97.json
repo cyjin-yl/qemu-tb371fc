@@ -1,0 +1,155 @@
+{
+  "schema": "tb371fc-recorded-boot-ramdisk-metadata-v1",
+  "status": "complete_metadata_inspection",
+  "inputs": {
+    "boot": {
+      "path": "/work/device-assets/android-startup-inputs-20261123-01/boot_a.img",
+      "expected_bytes": 100663296,
+      "expected_sha256": "78ba0f4f75bec85a80155a9e9ea8fa19546bbd88598a7923a16b069404899a9a",
+      "opened_read_only": true,
+      "actual_bytes": 100663296,
+      "actual_sha256": "78ba0f4f75bec85a80155a9e9ea8fa19546bbd88598a7923a16b069404899a9a",
+      "stat_stable_during_read": true,
+      "sha256_matches_record": true
+    },
+    "geometry": {
+      "path": "/work/device-assets/android-startup-inputs-20261123-01/header-geometry.json",
+      "expected_bytes": 1824,
+      "expected_sha256": "b7083522c0de0b2bfc73745a69f736be80b3924ab2435623f74fa3d994815fca",
+      "opened_read_only": true,
+      "actual_bytes": 1824,
+      "actual_sha256": "b7083522c0de0b2bfc73745a69f736be80b3924ab2435623f74fa3d994815fca",
+      "stat_stable_during_read": true,
+      "sha256_matches_record": true
+    }
+  },
+  "limits": {
+    "total_decompressed_bytes": 33554432,
+    "gzip_members": 64,
+    "cpio_headers": 65536,
+    "cpio_name_bytes": 4096,
+    "published_allowlisted_entries": 2048
+  },
+  "scope": {
+    "input_files_opened_read_only": true,
+    "android_system_or_userdata_inputs_read": false,
+    "physical_device_access": false,
+    "input_modified": false,
+    "image_or_ramdisk_copy_written": false,
+    "cpio_extracted": false,
+    "file_payloads_published": false,
+    "dependencies_installed": false,
+    "only_allowlisted_system_path_strings_may_be_disclosed": true,
+    "guest_or_elf_executed": false,
+    "mount_or_network_or_subprocess_used": false,
+    "avb_or_signature_authenticated": false,
+    "android_boot_proven": false,
+    "effective_filesystem_init_selected": false,
+    "complete_means_metadata_only": true
+  },
+  "format_scope": "Raw newc/crc or gzip members containing newc/crc; mixed raw/compressed layouts and other algorithms are inconclusive.",
+  "path_disclosure_policy": "Only init, first_stage_ramdisk/init and startup fstab/prop/init*.rc metadata under the declared system-prefix allowlist; no contents.",
+  "primary_format_references": [
+    "https://github.com/torvalds/linux/blob/v6.12/Documentation/driver-api/early-userspace/buffer-format.rst",
+    "https://github.com/torvalds/linux/blob/v6.12/include/uapi/linux/elf.h",
+    "https://docs.python.org/3/library/zlib.html#zlib.Decompress.decompress"
+  ],
+  "stage": "complete",
+  "geometry_contract": {
+    "recorded_boot_header_version": 2,
+    "ramdisk_offset": 37453824,
+    "ramdisk_bytes": 1298323,
+    "source": "approved constants bound to exact geometry record hash",
+    "header_fields_independently_redecoded": false,
+    "geometry_contents_published": false
+  },
+  "ramdisk": {
+    "offset": 37453824,
+    "actual_bytes": 1298323,
+    "actual_sha256": "563f4b334f8470155c6a451395342f7044b70e79b480a886c7641960f534f596",
+    "stored_to_disk": false,
+    "contents_published": false
+  },
+  "decompression": {
+    "complete": true,
+    "total_output_limit_bytes": 33554432,
+    "member_limit": 64,
+    "members": [
+      {
+        "index": 0,
+        "compressed_bytes": 1298323,
+        "decompressed_bytes": 1835592,
+        "gzip_eof_and_checksum_verified": true
+      }
+    ],
+    "padding_bytes": 0,
+    "compression": "gzip",
+    "observed_output_bytes": 1835592,
+    "total_output_bytes": 1835592,
+    "concatenated_output_sha256": "db7f63f0ccefd8d2320142b806d42ade4c6a2edaa3dc9f1ca6295d78e0f8e542"
+  },
+  "cpio": {
+    "format": "newc-or-crc",
+    "complete": true,
+    "entry_count": 23,
+    "header_count_including_trailers": 24,
+    "trailer_count": 1,
+    "trailer_is_optional": true,
+    "type_counts": {
+      "directory": 11,
+      "regular": 12
+    },
+    "allowlisted_entries": [
+      {
+        "segment": 0,
+        "entry_number": 11,
+        "path": "fstab.qcom",
+        "type": "regular",
+        "bytes": 5171,
+        "link_count": 1
+      },
+      {
+        "segment": 0,
+        "entry_number": 12,
+        "path": "init",
+        "type": "regular",
+        "bytes": 254584,
+        "link_count": 1
+      }
+    ],
+    "init_members": [
+      {
+        "segment": 0,
+        "entry_number": 12,
+        "path": "init",
+        "type": "regular",
+        "bytes": 254584,
+        "link_count": 1,
+        "inspection": {
+          "type": "regular",
+          "bytes": 254584,
+          "raw_member_only": true,
+          "filesystem_hardlinks_or_overrides_resolved": false,
+          "executed": false,
+          "android_boot_proven": false,
+          "raw_member_sha256": "a3ce9397456cbe260e9d918eb0d62a7d3b4553dd14082538e7bfe19da0326652",
+          "format": "ELF",
+          "status": "elf_header_and_program_headers_inspected",
+          "class_code": 2,
+          "data_encoding_code": 1,
+          "class_bits": 64,
+          "endianness": "little",
+          "e_machine": 183,
+          "program_header_count": 8,
+          "pt_interp_present": false,
+          "pt_interp": [],
+          "interpreter_target_presence_checked": false,
+          "elf_executability_or_loader_success_proven": false
+        }
+      }
+    ],
+    "omitted_entry_paths": 21,
+    "filesystem_materialized": false,
+    "hardlinks_and_duplicate_paths_resolved": false
+  }
+}

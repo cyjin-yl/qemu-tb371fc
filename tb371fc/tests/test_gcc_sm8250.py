@@ -28,13 +28,6 @@ OFF, ROOT, BUSY = 1 << 31, 2, 1
 UART_CMD, UART_CBCR, VOTE = 0x1e4d0, 0x1e4cc, 0x52010
 UART_CFG = (6 << 8) | (2 << 12) | 1
 PERIOD_UNIT = 1_000_000_000 << 32
-CPUSS_CMD, CPUSS_DIV, CPUSS_CBCR = 0x48010, 0x48028, 0x48000
-SYS_NOC_CPUSS_CBCR, SHARED_VOTE = 0x48198, 0x52000
-SYS_NOC_CPUSS_VOTE, CPUSS_VOTE = 1, 1 << 21
-SYS_NOC_CPUSS_CLK = 'gcc_sys_noc_cpuss_ahb_clk'
-CPUSS_CLK = 'gcc_cpuss_ahb_clk'
-CPUSS_SRC = 'gcc_cpuss_ahb_clk_src'
-CPUSS_POSTDIV = 'gcc_cpuss_ahb_postdiv_clk_src'
 
 
 class GccRig(Rig):
@@ -319,163 +312,6 @@ def shared_votes_and_remote_voter(r):
     r.expect_hz('gcc_qupv3_wrap2_s4_clk', 0)
 
 
-def sys_noc_cpuss_status_contract(r):
-    # The enable vote is elsewhere: bit 0 here is not a branch-enable bit.
-    assert r.read(SHARED_VOTE) == 0
-    assert r.read(SYS_NOC_CPUSS_CBCR) == OFF
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 0)
-    # This legacy Clock input remains present for VMState slot compatibility.
-    # The branch now follows the internal CPUSS postdivider, not this input.
-    r.expect_hz(SYS_NOC_CPUSS_CLK + '_parent', 0)
-    for value in (0, OFF, 0xf0000000):
-        r.write(SYS_NOC_CPUSS_CBCR, value)
-        assert r.read(SYS_NOC_CPUSS_CBCR) == OFF
-        assert r.read(SHARED_VOTE) == 0
-    for value in (1, 1 << 27):
-        r.write(SYS_NOC_CPUSS_CBCR, value)
-        assert r.read(SYS_NOC_CPUSS_CBCR) == OFF
-        assert r.read(SHARED_VOTE) == 0
-    log = r.log_path.read_text(errors='replace')
-    assert 'unsupported write 0x00000001 at 0x48198' in log, log
-    assert 'unsupported write 0x08000000 at 0x48198' in log, log
-    r.write(SHARED_VOTE, SYS_NOC_CPUSS_VOTE)
-    assert r.read(SYS_NOC_CPUSS_CBCR) == 0
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 19_200_000)
-    r.write(SYS_NOC_CPUSS_CBCR, 0xf0000000)
-    assert r.read(SYS_NOC_CPUSS_CBCR) == 0
-    assert r.read(SHARED_VOTE) == SYS_NOC_CPUSS_VOTE
-    # The existing postdivider is read-only and starts at divide-by-one.
-    assert r.read(CPUSS_DIV) == 0
-    r.write(CPUSS_DIV, 0xf)
-    assert r.read(CPUSS_DIV) == 0
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 19_200_000)
-
-
-def sys_noc_cpuss_shared_votes(r):
-    # Both branches share a parent and vote word, but have independent votes
-    # and halt registers. Preserve another valid vote bit during each RMW.
-    sibling_vote = 1 << 10
-    r.write(SHARED_VOTE, CPUSS_VOTE | sibling_vote)
-    assert r.read(SHARED_VOTE) == CPUSS_VOTE | sibling_vote
-    assert r.read(CPUSS_CBCR) == 0
-    assert r.read(SYS_NOC_CPUSS_CBCR) == OFF
-    r.expect_hz(CPUSS_CLK, 19_200_000)
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 0)
-    r.write(SHARED_VOTE, r.read(SHARED_VOTE) | SYS_NOC_CPUSS_VOTE)
-    assert r.read(SHARED_VOTE) == CPUSS_VOTE | sibling_vote | SYS_NOC_CPUSS_VOTE
-    assert r.read(CPUSS_CBCR) == r.read(SYS_NOC_CPUSS_CBCR) == 0
-    r.expect_hz(CPUSS_CLK, 19_200_000)
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 19_200_000)
-    r.write(SHARED_VOTE, r.read(SHARED_VOTE) & ~CPUSS_VOTE)
-    assert r.read(SHARED_VOTE) == sibling_vote | SYS_NOC_CPUSS_VOTE
-    assert r.read(CPUSS_CBCR) == OFF
-    assert r.read(SYS_NOC_CPUSS_CBCR) == 0
-    r.expect_hz(CPUSS_CLK, 0)
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 19_200_000)
-    r.write(SHARED_VOTE, r.read(SHARED_VOTE) & ~SYS_NOC_CPUSS_VOTE)
-    assert r.read(SHARED_VOTE) == sibling_vote
-    assert r.read(CPUSS_CBCR) == r.read(SYS_NOC_CPUSS_CBCR) == OFF
-    r.expect_hz(CPUSS_CLK, 0)
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 0)
-
-
-def sys_noc_cpuss_parent_demand(r):
-    r.write(SHARED_VOTE, SYS_NOC_CPUSS_VOTE)
-    assert not r.read(CPUSS_CMD) & ROOT
-    r.expect_hz(CPUSS_SRC, 19_200_000)
-    r.expect_hz(CPUSS_POSTDIV, 19_200_000)
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 19_200_000)
-    r.expect_hz(SYS_NOC_CPUSS_CLK + '_parent', 0)
-    # Branch demand must propagate through divider 18 to RCG 17 without
-    # software ROOT_EN. Selecting a stopped PLL must not fake clock-on.
-    r.write(CPUSS_CMD + 4, (1 << 8) | 1)
-    r.write(CPUSS_CMD, BUSY)
-    r.step(1000)
-    assert not r.read(CPUSS_CMD) & (ROOT | BUSY)
-    assert r.read(CPUSS_CMD) & OFF
-    assert r.read(SYS_NOC_CPUSS_CBCR) == OFF
-    assert r.read(SHARED_VOTE) == SYS_NOC_CPUSS_VOTE
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 0)
-    pll(r)
-    assert r.read(SYS_NOC_CPUSS_CBCR) == 0
-    r.expect_hz(CPUSS_SRC, 600_000_000)
-    r.expect_hz(CPUSS_POSTDIV, 600_000_000)
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 600_000_000)
-    r.expect_hz(CPUSS_CLK, 0)
-    r.write(0x52018, 0)
-    assert r.read(SYS_NOC_CPUSS_CBCR) == OFF
-    assert r.read(SHARED_VOTE) == SYS_NOC_CPUSS_VOTE
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 0)
-    r.write(CPUSS_CMD + 4, 0)
-    r.write(CPUSS_CMD, BUSY)
-    r.step(1000)
-    assert r.read(SYS_NOC_CPUSS_CBCR) == 0
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 19_200_000)
-    r.write(SHARED_VOTE, 0)
-    assert r.read(CPUSS_CMD) == OFF
-    assert r.read(SYS_NOC_CPUSS_CBCR) == OFF
-    r.expect_hz(CPUSS_SRC, 0)
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 0)
-
-
-def sys_noc_cpuss_remote_vote(r):
-    r.gpio('remote-vote', 143, True)
-    assert r.read(SHARED_VOTE) == 0
-    assert r.read(SYS_NOC_CPUSS_CBCR) == 0
-    assert r.read(CPUSS_CBCR) == OFF
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 19_200_000)
-    r.expect_hz(CPUSS_CLK, 0)
-    r.write(SHARED_VOTE, SYS_NOC_CPUSS_VOTE)
-    r.gpio('remote-vote', 143, False)
-    assert r.read(SHARED_VOTE) == SYS_NOC_CPUSS_VOTE
-    assert r.read(SYS_NOC_CPUSS_CBCR) == 0
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 19_200_000)
-    r.gpio('remote-vote', 143, True)
-    r.write(SHARED_VOTE, 0)
-    assert r.read(SHARED_VOTE) == 0
-    assert r.read(SYS_NOC_CPUSS_CBCR) == 0
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 19_200_000)
-    r.gpio('remote-vote', 143, False)
-    assert r.read(SYS_NOC_CPUSS_CBCR) == OFF
-    assert r.read(CPUSS_CBCR) == OFF
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 0)
-
-
-def sys_noc_cpuss_reset(r):
-    pll(r)
-    r.write(SHARED_VOTE, SYS_NOC_CPUSS_VOTE | CPUSS_VOTE)
-    r.write(CPUSS_CMD + 4, (1 << 8) | 3)
-    r.write(CPUSS_CMD, BUSY)
-    r.step(1000)
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 300_000_000)
-    r.write(CPUSS_CMD + 4, (1 << 8) | 1)
-    r.write(CPUSS_CMD, BUSY)
-    assert r.read(CPUSS_CMD) & BUSY
-    r.reset()
-    r.step(20_000)
-    assert r.read(SHARED_VOTE) == 0
-    assert r.read(CPUSS_CMD) == OFF
-    assert r.read(CPUSS_CMD + 4) == r.read(CPUSS_DIV) == 0
-    assert r.read(CPUSS_CBCR) == r.read(SYS_NOC_CPUSS_CBCR) == OFF
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 0)
-    r.expect_hz(CPUSS_CLK, 0)
-    # Provider-owned GPIO inputs survive reset in the existing GCC contract.
-    r.gpio('remote-vote', 143, True)
-    r.write(SHARED_VOTE, SYS_NOC_CPUSS_VOTE)
-    r.reset()
-    # PLL markers were already zero before this reset, so wait for the
-    # previously asserted branch vote to clear before observing reset state.
-    r.wait_for(lambda: r.read(SHARED_VOTE) == 0,
-               'SYS_NOC_CPUSS software vote cleared by reset')
-    assert r.read(SHARED_VOTE) == 0
-    assert r.read(SYS_NOC_CPUSS_CBCR) == 0
-    assert r.read(CPUSS_CBCR) == OFF
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 19_200_000)
-    r.gpio('remote-vote', 143, False)
-    assert r.read(SYS_NOC_CPUSS_CBCR) == OFF
-    r.expect_hz(SYS_NOC_CPUSS_CLK, 0)
-
-
 def hwcg_consumer_request(r):
     r.write(0x77010, 1)
     r.expect_hz('gcc_ufs_phy_axi_clk', 19_200_000)
@@ -583,9 +419,6 @@ TESTS = [cold_defaults, invalid_pll_does_not_lock, pll_vote_lock_and_stop,
          independent_pll_vote_bits,
          rcg_exact_fraction_and_shadow, invalid_rcg_keeps_previous_active_config,
          invalid_fraction_does_not_ack, stopped_parent_keeps_requested_branch_off, shared_votes_and_remote_voter,
-         sys_noc_cpuss_status_contract, sys_noc_cpuss_shared_votes,
-         sys_noc_cpuss_parent_demand, sys_noc_cpuss_remote_vote,
-         sys_noc_cpuss_reset,
          hwcg_consumer_request, absent_external_parent_is_not_success,
          sleep_parent_and_integer_divider, reset_lines_and_shared_cbcr_bits,
          software_power_transition, reset_cancels_pending_transitions,
@@ -600,18 +433,6 @@ def migration(args, directory):
         target = GccRig(args, directory / 'target', incoming=True)
         pll(source)
         uart_config(source)
-        shared_votes = SYS_NOC_CPUSS_VOTE | CPUSS_VOTE | (1 << 10)
-        source.write(SHARED_VOTE, shared_votes)
-        source.gpio('remote-vote', 143, True)
-        source.write(CPUSS_CMD + 4, (1 << 8) | 3)
-        source.write(CPUSS_CMD, BUSY)
-        source.step(1000)
-        source.expect_hz(SYS_NOC_CPUSS_CLK, 300_000_000)
-        source.expect_hz(CPUSS_CLK, 300_000_000)
-        # Preserve a shadow config distinct from the 300 MHz active config.
-        source.write(CPUSS_CMD + 4, (1 << 8) | 5)
-        assert source.read(CPUSS_CMD) & (1 << 4)
-        assert not source.read(CPUSS_CMD) & (ROOT | BUSY)
         source.gpio('remote-vote', 127, True)
         source.write(0x77000, 1)
         uart_config(source, numerator=768, wait=False)
@@ -620,9 +441,7 @@ def migration(args, directory):
         source.expect_line(33, True)
         regs = (0, 4, 0x40, 0x52018, UART_CMD, UART_CMD + 4,
                 UART_CMD + 8, UART_CMD + 12, UART_CMD + 16,
-                UART_CBCR, VOTE, 0x77000, 0x77004,
-                SHARED_VOTE, SYS_NOC_CPUSS_CBCR, CPUSS_CBCR,
-                CPUSS_CMD, CPUSS_CMD + 4, CPUSS_DIV)
+                UART_CBCR, VOTE, 0x77000, 0x77004)
         source.monitor('stop')
         before = {hex(reg): source.read(reg) for reg in regs}
         source.command('writel 0x80010000 0x47434331')
@@ -644,15 +463,6 @@ def migration(args, directory):
         target.expect_hz('gcc_qupv3_wrap2_s4_clk', 7_372_800)
         target.expect_line(33, True)
         checks.append({'check': 'registers_clock_remote_vote_gpio_and_ram_preserved', 'status': 'pass'})
-        assert target.read(SHARED_VOTE) == shared_votes
-        assert target.read(SYS_NOC_CPUSS_CBCR) == target.read(CPUSS_CBCR) == 0
-        assert target.read(CPUSS_CMD) & (1 << 4)
-        assert not target.read(CPUSS_CMD) & (ROOT | BUSY)
-        target.expect_hz(SYS_NOC_CPUSS_CLK, 300_000_000)
-        target.expect_hz(CPUSS_CLK, 300_000_000)
-        target.expect_hz(SYS_NOC_CPUSS_CLK + '_parent', 0)
-        checks.append({'check': 'sys_noc_cpuss_active_clock_shadow_and_shared_votes_preserved',
-                       'status': 'pass'})
         target.monitor('cont')
         target.step(999)
         assert target.read(UART_CMD) & BUSY
@@ -669,34 +479,6 @@ def migration(args, directory):
         target.write(0x77000, 0)
         target.expect_line(33, False)
         checks.append({'check': 'destination_clocks_votes_and_reset_continue', 'status': 'pass'})
-        target.write(SHARED_VOTE, target.read(SHARED_VOTE) & ~SYS_NOC_CPUSS_VOTE)
-        assert target.read(SHARED_VOTE) == CPUSS_VOTE | (1 << 10)
-        assert target.read(SYS_NOC_CPUSS_CBCR) == 0
-        target.expect_hz(SYS_NOC_CPUSS_CLK, 300_000_000)
-        target.gpio('remote-vote', 143, False)
-        assert target.read(SYS_NOC_CPUSS_CBCR) == OFF
-        assert target.read(CPUSS_CBCR) == 0
-        target.expect_hz(SYS_NOC_CPUSS_CLK, 0)
-        target.expect_hz(CPUSS_CLK, 300_000_000)
-        checks.append({'check': 'sys_noc_cpuss_migrated_remote_vote_and_sibling_independence',
-                       'status': 'pass'})
-        target.write(SHARED_VOTE, target.read(SHARED_VOTE) | SYS_NOC_CPUSS_VOTE)
-        target.write(CPUSS_CMD, BUSY)
-        target.step(999)
-        assert target.read(CPUSS_CMD) & BUSY
-        target.expect_hz(SYS_NOC_CPUSS_CLK, 300_000_000)
-        target.step(1)
-        assert not target.read(CPUSS_CMD) & (ROOT | BUSY | (1 << 4))
-        target.expect_hz(SYS_NOC_CPUSS_CLK, 200_000_000)
-        target.expect_hz(CPUSS_CLK, 200_000_000)
-        target.write(SHARED_VOTE, target.read(SHARED_VOTE) &
-                     ~(SYS_NOC_CPUSS_VOTE | CPUSS_VOTE))
-        assert target.read(SHARED_VOTE) == 1 << 10
-        assert target.read(SYS_NOC_CPUSS_CBCR) == target.read(CPUSS_CBCR) == OFF
-        target.expect_hz(SYS_NOC_CPUSS_CLK, 0)
-        target.expect_hz(CPUSS_CLK, 0)
-        checks.append({'check': 'sys_noc_cpuss_destination_parent_update_and_vote_removal',
-                       'status': 'pass'})
         return {'success': True, 'checks': checks, 'migration': state,
                 'qtest_virtual_ns_at_transfer': now}
     except Exception:
@@ -730,7 +512,7 @@ def main():
     if args.migration_only:
         report.update(migration(args, directory))
         report['suite'] = 'SM8250 GCC actual process-to-process migration'
-        report['expected_checks'] = 8
+        report['expected_checks'] = 5
     else:
         for test in TESTS:
             started = time.monotonic()

@@ -21,7 +21,9 @@ class VerdictTests(unittest.TestCase):
         return ci.Case("fixture", [], self.root / "runtime", **kwargs)
 
     def test_true_json_and_expected_count(self):
-        self.log.write_text(json.dumps({"passed": True, "checks": [1, 2]}))
+        self.log.write_text(json.dumps({"passed": True, "checks": [
+            {"name": "one", "passed": True},
+            {"test": "two", "status": "pass"}]}))
         result = ci.judge(self.case(expected_count=2), self.log)
         self.assertEqual(result["check_count"], 2)
 
@@ -87,6 +89,44 @@ class VerdictTests(unittest.TestCase):
             with self.subTest(check=check), self.assertRaises(ValueError):
                 ci.judge(self.case(expected_count=1), self.log)
 
+    def test_contradictory_summary_verdicts_rejected(self):
+        for field in ("success", "all_passed"):
+            for value in (False, 1, "true"):
+                self.log.write_text(json.dumps({"passed": True, field: value}))
+                with self.subTest(field=field, value=value), self.assertRaises(ValueError):
+                    ci.judge(self.case(), self.log)
+
+    def test_placeholder_and_unattested_checks_rejected(self):
+        for value in (None, True, 1, [], {}, {"name": "one"},
+                      {"passed": True}, "PASS", "TB371FC_CHECK FAIL one"):
+            self.log.write_text(json.dumps({"passed": True, "checks": [value]}))
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                ci.judge(self.case(expected_count=1), self.log)
+
+    def test_duplicate_check_names_rejected(self):
+        self.log.write_text(json.dumps({"passed": True, "checks": [
+            {"name": "same", "passed": True},
+            {"test": "same", "status": "pass"}]}))
+        with self.assertRaises(ValueError):
+            ci.judge(self.case(expected_count=2), self.log)
+
+    def test_guest_check_receipt_formats(self):
+        for checks in (["TB371FC_CHECK PASS one", "TB371FC_CHECK PASS two"],
+                       [["PASS", "one"], ["PASS", "two"]]):
+            self.log.write_text(json.dumps({"passed": True, "guest_checks": checks}))
+            result = ci.judge(self.case(expected_count=2, count_field="guest_checks"),
+                              self.log)
+            self.assertEqual(result["check_count"], 2)
+
+    def test_failed_or_malformed_guest_checks_rejected(self):
+        for check in (["FAIL", "one"], ["PASS"], ["PASS", "one", "extra"],
+                      ["PASS", ""], "TB371FC_CHECK FAIL one",
+                      "TB371FC_CHECK PASS one trailing", "arbitrary text"):
+            self.log.write_text(json.dumps({"passed": True, "guest_checks": [check]}))
+            with self.subTest(check=check), self.assertRaises(ValueError):
+                ci.judge(self.case(expected_count=1, count_field="guest_checks"),
+                         self.log)
+
     def run_process(self, code, timeout=5):
         case = ci.Case("subprocess", [sys.executable, "-c", code],
                        self.root / "runtime", timeout=timeout)
@@ -128,11 +168,43 @@ class VerdictTests(unittest.TestCase):
 
 
 class PlanTests(unittest.TestCase):
+    def test_integrated_plan_keeps_both_tbu_contracts_and_rpmh_v3(self):
+        args = SimpleNamespace(suite="components", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        plan = ci.plan(args, Path("/test/runtime"))
+        cases = {case.name: case for case in plan}
+        self.assertEqual(len(plan), 80)
+        self.assertEqual(len(cases), len(plan))
+        self.assertEqual(cases["tbu-reference-ecats"].expected_count, 17)
+        self.assertEqual(cases["smmuv500-reference"].expected_count, 36)
+        self.assertIn("gpu-cx-gdsc", cases)
+        self.assertIn("gpu-gx-gdsc", cases)
+        self.assertNotIn("gpu-gdsc", cases)
+        for name in ("ufs-crypto-rejection", "ufs-auto-hibern8",
+                     "power-checkpoint", "camera-gdsc-reference",
+                     "mdss-gdsc-reference", "npu-gdsc-reference"):
+            self.assertIn(name, cases)
+        npu = cases["npu-gdsc-reference"]
+        self.assertEqual(npu.expected_count, 21)
+        self.assertEqual(npu.expected_values["parent_resource_index"], 0xffffffff)
+        self.assertIs(npu.expected_values["parent_supply_declared"], False)
+        self.assertIs(npu.expected_values["parent_power_connected"], False)
+        self.assertEqual(npu.expected_values["hardware_mode_domain_mask"], 0)
+        self.assertEqual(npu.expected_lengths,
+                         {"migrations": 3, "rejected_migrations": 2,
+                          "corrupted_stream_rejections": 2,
+                          "migration_sources": 4, "actual_stream_files": 6})
+        rpmh = cases["rpmh-wait-mask-reference"].expected_values
+        self.assertEqual(rpmh["vmstate_version"], 3)
+        self.assertEqual(rpmh["vmstate_minimum_version"], 2)
+        self.assertEqual(rpmh["main_payload_bytes_with_default_clock"], 19424)
+        self.assertEqual(rpmh["subsection_payload_bytes"], 24)
+
     def test_spmi_route_requires_real_unintercepted_transfer(self):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 64)
+        self.assertEqual(len(cases), 85)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]
@@ -143,6 +215,21 @@ class PlanTests(unittest.TestCase):
                           "output_interception_installed": False})
         self.assertIn(str(ci.ROOT / "tb371fc/tests/test_spmi_pdc_route.py"),
                       case.command)
+
+    def test_aop_reference_gate_requires_actual_migration_outcomes(self):
+        args = SimpleNamespace(suite="components", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        matches = [case for case in ci.plan(args, Path("/test/runtime"))
+                   if case.name == "aop-reference-peer"]
+        self.assertEqual(len(matches), 1)
+        case = matches[0]
+        self.assertEqual(case.expected_count, 30)
+        self.assertEqual(case.expected_lengths,
+                         {"migrations": 6, "rejected_migrations": 2})
+        self.assertEqual(case.expected_values["completed_migrations"], 6)
+        self.assertEqual(case.expected_values["rejected_migration_attempts"], 2)
+        self.assertIs(case.expected_values["ipcc_output_intercepted"], False)
+        self.assertIs(case.expected_values["guest_cpu_executed"], False)
 
     def test_ipcc_gate_requires_sixteen_real_checks(self):
         args = SimpleNamespace(suite="components", qemu=Path("/test/qemu"),
@@ -186,6 +273,15 @@ class PlanTests(unittest.TestCase):
         self.assertEqual(case.expected_values["ufs_fixture"],
                          {"populated": False, "kind": "none", "bytes": 0})
 
+    def test_console_gates_require_guest_initiated_shutdown(self):
+        args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        cases = {case.name: case for case in ci.plan(args, Path("/test/runtime"))}
+        self.assertIn("console-boot-verdict-unit", cases)
+        for name in ("linux-console-userspace", "linux-console-empty-ufs"):
+            self.assertIs(cases[name].expected_values["guest_shutdown_observed"], True)
+            self.assertEqual(cases[name].expected_values["validation_errors"], [])
+
     def test_linux_plans_require_rpmh_driver_and_host_evidence(self):
         for suite in ("linux", "all"):
             with self.subTest(suite=suite):
@@ -218,7 +314,7 @@ class PlanTests(unittest.TestCase):
             case.result = str(receipt)
             valid = {
                 "passed": True,
-                "guest_checks": [["PASS", "synthetic", "0"]] * 40,
+                "guest_checks": [["PASS", f"synthetic_{i}", "0"] for i in range(40)],
                 "inputs_unchanged": True, "qemu_exit_code": 0,
                 "kernel_failure_lines": [],
                 "guest_verdicts": [["PASS", "40", "0"]],
@@ -243,7 +339,10 @@ class PlanTests(unittest.TestCase):
                     ("host_sleep_checks",
                      dict(valid["host_sleep_checks"], core_clock_gated=False)),
                     ("host_observations", [{}, {}]),
-                    ("guest_checks", valid["guest_checks"][:-1])):
+                    ("guest_checks", valid["guest_checks"][:-1]),
+                    ("guest_checks", [["PASS", "duplicate", "0"]] * 40),
+                    ("guest_checks", [["PASS", f"synthetic_{i}", "bad"] for i in range(40)]),
+                    ("guest_checks", [["PASS", f"synthetic_{i}"] for i in range(40)])):
                 with self.subTest(field=key, invalid=invalid):
                     receipt.write_text(json.dumps(dict(valid, **{key: invalid})))
                     with self.assertRaises(ValueError):

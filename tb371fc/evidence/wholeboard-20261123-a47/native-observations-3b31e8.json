@@ -1,0 +1,4627 @@
+{
+  "schema": "tb371fc-native-diagnostic-extra-v1",
+  "source_commit": "3b31e83dc412962826ada872e361a1d32ea4e463",
+  "qemu_sha256": "e0e1a669fefee1b20e8421dc6943faabee7fccb91c35f72ae2cd2f45513d23f2",
+  "device_error_count": 5,
+  "device_error_observations": [
+    {
+      "line": 5563,
+      "text": "qcom-spmi-pmic-arb: observer APID 0 command 0x08000010 status 0x3 (unimplemented, invalid or denied transaction)"
+    },
+    {
+      "line": 5592,
+      "text": "qcom-spmi-pmic-arb: observer APID 1 command 0x08000010 status 0x3 (unimplemented, invalid or denied transaction)"
+    },
+    {
+      "line": 5621,
+      "text": "qcom-spmi-pmic-arb: observer APID 2 command 0x08000010 status 0x3 (unimplemented, invalid or denied transaction)"
+    },
+    {
+      "line": 5678,
+      "text": "qcom-spmi-pmic-arb: observer APID 3 command 0x08000010 status 0x3 (unimplemented, invalid or denied transaction)"
+    },
+    {
+      "line": 8082,
+      "text": "qcom-sm8250-rpmh: DRV2 unsupported write @0x0d10 value=0x778bd800"
+    }
+  ],
+  "invalid_mem_count": 0,
+  "invalid_mem_observations": [],
+  "raw_evidence": [
+    {
+      "name": "diagnostic.json",
+      "bytes": 239851,
+      "sha256": "1d1e99a902511701010311279ad58306d45eef3fc1d06ef4f4b4ac6471fe847f"
+    },
+    {
+      "name": "qemu.log",
+      "bytes": 1394476,
+      "sha256": "cc79143e896ee0533cd8eab0eb900ff61b81186ba7a2cf9898cef30f2a847f11"
+    },
+    {
+      "name": "serial.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "kernel-banner.bin",
+      "bytes": 256,
+      "sha256": "f510bd2f9622842dbdb1d552dec1b1f83a4c8c8dafabe4b72f3c4810052687d9"
+    },
+    {
+      "name": "kernel-printk-ring.bin",
+      "bytes": 1048576,
+      "sha256": "02b95bea1af215fca7fbc1f0b4dcc8e952812f4d6c4c86892af5b8bac07797a5"
+    },
+    {
+      "name": "kernel-printk-metadata.json",
+      "bytes": 688,
+      "sha256": "97facf848eafc8cd79695cd4f28c023a8100046baea3aa38a19de8aa272e8963"
+    },
+    {
+      "name": "kernel-printk.log",
+      "bytes": 36781,
+      "sha256": "bf07301b7062594506bd8f4f4de01329fd9b0616f8027cc42e1b1b7750a0752e"
+    }
+  ],
+  "smem_probe": {
+    "schema_version": 1,
+    "scope": "Stopped guest SMEM driver publication and reference layout",
+    "success_path_observed": true,
+    "native_sbl_captured": false,
+    "android_boot_passed": false,
+    "guest_memory_written": false,
+    "virtual_memory_cpu_index": 0,
+    "observations": [
+      {
+        "field": "__smem",
+        "virtual_address": "0xffffff800a4cab30",
+        "width": 8,
+        "value": "0xffffffc177c81e80"
+      },
+      {
+        "field": "dev",
+        "virtual_address": "0xffffffc177c81e80",
+        "width": 8,
+        "value": "0xffffffc1781ed410"
+      },
+      {
+        "field": "hwlock",
+        "virtual_address": "0xffffffc177c81e88",
+        "width": 8,
+        "value": "0xffffffc177ce60e0"
+      },
+      {
+        "field": "item_count",
+        "virtual_address": "0xffffffc177c81e90",
+        "width": 4,
+        "value": "0x200"
+      },
+      {
+        "field": "ptable_base",
+        "virtual_address": "0xffffffc177c81e98",
+        "width": 8,
+        "value": "0xffffff800ab3d000"
+      },
+      {
+        "field": "global_virtual_base",
+        "virtual_address": "0xffffffc177c81ea0",
+        "width": 8,
+        "value": "0xffffff800b400000"
+      },
+      {
+        "field": "global_physical_base",
+        "virtual_address": "0xffffffc177c81ea8",
+        "width": 4,
+        "value": "0x80903000"
+      },
+      {
+        "field": "global_cacheline",
+        "virtual_address": "0xffffffc177c81eac",
+        "width": 4,
+        "value": "0x40"
+      },
+      {
+        "field": "global_size",
+        "virtual_address": "0xffffffc177c81eb0",
+        "width": 4,
+        "value": "0x1fc000"
+      },
+      {
+        "field": "region_count",
+        "virtual_address": "0xffffffc177c81fc0",
+        "width": 4,
+        "value": "0x1"
+      },
+      {
+        "field": "region_physical_base",
+        "virtual_address": "0xffffffc177c81fc8",
+        "width": 4,
+        "value": "0x80900000"
+      },
+      {
+        "field": "region_virtual_base",
+        "virtual_address": "0xffffffc177c81fd0",
+        "width": 8,
+        "value": "0xffffff800ab3b000"
+      },
+      {
+        "field": "region_size",
+        "virtual_address": "0xffffffc177c81fd8",
+        "width": 8,
+        "value": "0x200000"
+      },
+      {
+        "field": "ptable_magic",
+        "virtual_address": "0xffffff800ab3d000",
+        "width": 4,
+        "value": "0x434f5424"
+      },
+      {
+        "field": "ptable_version",
+        "virtual_address": "0xffffff800ab3d004",
+        "width": 4,
+        "value": "0x1"
+      },
+      {
+        "field": "ptable_entries",
+        "virtual_address": "0xffffff800ab3d008",
+        "width": 4,
+        "value": "0x1"
+      },
+      {
+        "field": "partition_magic",
+        "virtual_address": "0xffffff800b400000",
+        "width": 4,
+        "value": "0x54525024"
+      },
+      {
+        "field": "partition_hosts",
+        "virtual_address": "0xffffff800b400004",
+        "width": 4,
+        "value": "0xfffefffe"
+      },
+      {
+        "field": "partition_size",
+        "virtual_address": "0xffffff800b400008",
+        "width": 4,
+        "value": "0x1fc000"
+      },
+      {
+        "field": "uncached_frontier",
+        "virtual_address": "0xffffff800b40000c",
+        "width": 4,
+        "value": "0x20"
+      },
+      {
+        "field": "cached_frontier",
+        "virtual_address": "0xffffff800b400010",
+        "width": 4,
+        "value": "0x1fc000"
+      },
+      {
+        "field": "header_version",
+        "virtual_address": "0xffffff800ab3b05c",
+        "width": 4,
+        "value": "0xc0000"
+      },
+      {
+        "field": "header_initialized",
+        "virtual_address": "0xffffff800ab3b0c0",
+        "width": 4,
+        "value": "0x1"
+      },
+      {
+        "field": "header_reserved",
+        "virtual_address": "0xffffff800ab3b0cc",
+        "width": 4,
+        "value": "0x0"
+      }
+    ],
+    "checks": [
+      {
+        "name": "published_driver_pointer",
+        "passed": true
+      },
+      {
+        "name": "dev_kernel_pointer",
+        "passed": true
+      },
+      {
+        "name": "hwlock_kernel_pointer",
+        "passed": true
+      },
+      {
+        "name": "item_count",
+        "passed": true
+      },
+      {
+        "name": "ptable_base_kernel_pointer",
+        "passed": true
+      },
+      {
+        "name": "global_virtual_base_kernel_pointer",
+        "passed": true
+      },
+      {
+        "name": "global_physical_base",
+        "passed": true
+      },
+      {
+        "name": "global_cacheline",
+        "passed": true
+      },
+      {
+        "name": "global_size",
+        "passed": true
+      },
+      {
+        "name": "region_count",
+        "passed": true
+      },
+      {
+        "name": "region_physical_base",
+        "passed": true
+      },
+      {
+        "name": "region_virtual_base_kernel_pointer",
+        "passed": true
+      },
+      {
+        "name": "region_size",
+        "passed": true
+      },
+      {
+        "name": "ptable_magic",
+        "passed": true
+      },
+      {
+        "name": "ptable_version",
+        "passed": true
+      },
+      {
+        "name": "ptable_entries",
+        "passed": true
+      },
+      {
+        "name": "partition_magic",
+        "passed": true
+      },
+      {
+        "name": "partition_hosts",
+        "passed": true
+      },
+      {
+        "name": "partition_size",
+        "passed": true
+      },
+      {
+        "name": "allocation_frontiers",
+        "passed": true
+      },
+      {
+        "name": "header_version",
+        "passed": true
+      },
+      {
+        "name": "header_initialized",
+        "passed": true
+      },
+      {
+        "name": "header_reserved",
+        "passed": true
+      }
+    ],
+    "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+    "publication_instructions_verified": true,
+    "stopped_status": {
+      "status": "paused",
+      "running": false
+    },
+    "verdict": "production-driver-success-path-observed"
+  },
+  "kernel_milestones": [
+    "[    0.000000] Successfully registered dummy reset controller for cpucc_clocks",
+    "[    0.000000] Successfully registered dummy clock controller for cpucc_clocks",
+    "[    1.325896] qmp-aop-clk soc:qcom,aopclk: Registered clocks with AOP",
+    "[    1.348971] pc : clk_branch_toggle+0x12c/0x178",
+    "[    1.354601] pc : clk_branch_toggle+0x12c/0x178",
+    "[    1.519595] gcc-kona 100000.qcom,gcc: Registered GCC clocks",
+    "[    1.558545] gpu_cc-kona 3d90000.qcom,gpucc: Registered GPU CC clocks",
+    "[    1.664099] npu_cc-kona 9980000.qcom,npucc: Registered NPU_CC clocks",
+    "[    1.667084] video_cc-kona abf0000.qcom,videocc: Linked as a consumer to regulator.1",
+    "[    1.667208] video_cc-kona abf0000.qcom,videocc: Linked as a consumer to regulator.10",
+    "[    1.667592] video_cc-kona abf0000.qcom,videocc: Unable to register for bw voting",
+    "[    1.667674] video_cc-kona abf0000.qcom,videocc: Dropping the link to regulator.10",
+    "[    1.667777] video_cc-kona abf0000.qcom,videocc: Dropping the link to regulator.1",
+    "[    1.679651] pc : qcom_smem_get+0x194/0x1b8",
+    "[    1.682449] pc : qcom_smem_get+0x194/0x1b8",
+    "[    1.684115] socinfo_init: Can't find SMEM_HW_SW_BUILD_ID; falling back on dummy values.",
+    "[    1.686294] KPI: Bootloader start count = 0",
+    "[    1.686339] KPI: Bootloader end count = 0",
+    "[    1.686368] KPI: Bootloader display count = 0",
+    "[    1.686397] KPI: Bootloader load kernel count = 0",
+    "[    1.686438] KPI: Kernel MPM timestamp = 102389",
+    "[    1.686469] KPI: Kernel MPM Clock frequency = 32768",
+    "[    1.686565] socinfo_print: v0.1, id=356, ver=0.1",
+    "[    1.686664] msm_bus_fabric_rpmh_init_driver",
+    "[    1.687170] msm_bus: Probe started",
+    "[    1.701851] msm_bus: DT Parsing complete",
+    "[    1.781910] Internal error: synchronous external abort: 96000250 [#1] PREEMPT SMP",
+    "[    1.782416] pc : __tcs_buffer_write+0x220/0x268",
+    "[    1.787283] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b",
+    "[    1.792784] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b"
+  ],
+  "kernel_tail": "r_probe: ldof6: could not find RPMh address for resource\n[    1.105845] rpmh_regulator_probe: ldof7: could not find RPMh address for resource\n[    1.225957] MSM Memory Dump base table set up\n[    1.226101] MSM Memory Dump apps data table set up\n[    1.290434] cryptd: max_cpu_qlen set to 1000\n[    1.297667] vServices Framework 1.0\n[    1.306272] gdsc ad07004.qcom,gdsc: Linked as a consumer to regulator.10\n[    1.306961] gdsc ad07004.qcom,gdsc: Dropping the link to regulator.10\n[    1.308381] gdsc ad0a004.qcom,gdsc: Linked as a consumer to regulator.10\n[    1.308451] gdsc ad0a004.qcom,gdsc: Dropping the link to regulator.10\n[    1.310527] gdsc ad0b004.qcom,gdsc: Linked as a consumer to regulator.10\n[    1.310620] gdsc ad0b004.qcom,gdsc: Dropping the link to regulator.10\n[    1.310959] gdsc ad08004.qcom,gdsc: Linked as a consumer to regulator.10\n[    1.311029] gdsc ad08004.qcom,gdsc: Dropping the link to regulator.10\n[    1.311325] gdsc ad09004.qcom,gdsc: Linked as a consumer to regulator.10\n[    1.311398] gdsc ad09004.qcom,gdsc: Dropping the link to regulator.10\n[    1.311708] gdsc ad0c144.qcom,gdsc: Linked as a consumer to regulator.10\n[    1.311771] gdsc ad0c144.qcom,gdsc: Dropping the link to regulator.10\n[    1.312031] gdsc af03000.qcom,gdsc: Linked as a consumer to regulator.10\n[    1.312093] gdsc af03000.qcom,gdsc: Dropping the link to regulator.10\n[    1.312490] gdsc 3d9106c.qcom,gdsc: Linked as a consumer to regulator.4\n[    1.313859] gpu_cx_gdsc: supplied by pm8150_s3_level\n[    1.314415] gdsc 3d9100c.qcom,gdsc: Linked as a consumer to regulator.9\n[    1.314724] gpu_gx_gdsc: supplied by pm8150a_s1_level\n[    1.315213] gdsc abf0d18.qcom,gdsc: Linked as a consumer to regulator.10\n[    1.315280] gdsc abf0d18.qcom,gdsc: Dropping the link to regulator.10\n[    1.315545] gdsc abf0bf8.qcom,gdsc: Linked as a consumer to regulator.10\n[    1.315625] gdsc abf0bf8.qcom,gdsc: Dropping the link to regulator.10\n[    1.315882] gdsc abf0d98.qcom,gdsc: Linked as a consumer to regulator.10\n[    1.315943] gdsc abf0d98.qcom,gdsc: Dropping the link to regulator.10\n[    1.316185] gdsc abf0c98.qcom,gdsc: Linked as a consumer to regulator.10\n[    1.316246] gdsc abf0c98.qcom,gdsc: Dropping the link to regulator.10\n[    1.325896] qmp-aop-clk soc:qcom,aopclk: Registered clocks with AOP\n[    1.329410] gcc-kona 100000.qcom,gcc: Linked as a consumer to regulator.10\n[    1.329549] gcc-kona 100000.qcom,gcc: Linked as a consumer to regulator.4\n[    1.329697] gcc-kona 100000.qcom,gcc: Linked as a consumer to regulator.5\n[    1.343524] ------------[ cut here ]------------\n[    1.343663] gcc_npu_cfg_ahb_clk: status stuck at 'off'\n[    1.345935] WARNING: CPU: 5 PID: 1 at drivers/clk/qcom/clk-branch.c:98 clk_branch_toggle+0x12c/0x178\n[    1.347973] Modules linked in:\n[    1.348524] CPU: 5 PID: 1 Comm: swapper/0 Tainted: G S                4.19.157-perf+ #1\n[    1.348619] Hardware name: Qualcomm Technologies, Inc. kona QRD (DT)\n[    1.348922] pstate: 60c00085 (nZCv daIf +PAN +UAO)\n[    1.348971] pc : clk_branch_toggle+0x12c/0x178\n[    1.349003] lr : clk_branch_toggle+0x128/0x178\n[    1.349030] sp : ffffff800805b920\n[    1.349062] x29: ffffff800805b930 x28: 0000000000000003 \n[    1.349164] x27: ffffff800a299b00 x26: 0000000000000000 \n[    1.349193] x25: 0000000000000000 x24: 00000000000010c7 \n[    1.349238] x23: ffffff800a29ae80 x22: ffffff8009b1462e \n[    1.349266] x21: ffffff800a29ae98 x20: ffffff800865a3d0 \n[    1.349294] x19: 0000000000000001 x18: 0000000000000034 \n[    1.349322] x17: ffffff800a460000 x16: 000000000000002a \n[    1.349349] x15: ffffff8009385408 x14: 0000000000000000 \n[    1.349377] x13: 0000000000000004 x12: 0000000000000000 \n[    1.349404] x11: 0000000000000000 x10: ffffffffffffffff \n[    1.349473] x9 : c15662d4bab2af00 x8 : c15662d4bab2af00 \n[    1.349502] x7 : 000000000000002a x6 : ffffff800a462b22 \n[    1.349529] x5 : ffffff800805b668 x4 : 0000000000000008 \n[    1.349556] x3 : 0000000000002766 x2 : 0000000000000022 \n[    1.349600] x1 : ffffff800a4601f2 x0 : 00000000fffffff0 \n[    1.349906] Call trace:\n[    1.350046]  clk_branch_toggle+0x12c/0x178\n[    1.350093]  clk_branch2_enable+0x18/0x20\n[    1.350138]  clk_core_enable+0x144/0x308\n[    1.350173]  clk_register+0x858/0xf18\n[    1.350203]  devm_clk_hw_register+0x48/0x98\n[    1.350252]  devm_clk_register_regmap+0x50/0x60\n[    1.350285]  qcom_cc_really_probe+0x184/0x1c8\n[    1.350317]  gcc_kona_probe+0x1a4/0x1d8\n[    1.350351]  platform_drv_probe+0x7c/0xb8\n[    1.350382]  really_probe+0x43c/0x4c8\n[    1.350408]  driver_probe_device+0x60/0xf8\n[    1.350431]  __driver_attach+0xe8/0x128\n[    1.350454]  bus_for_each_dev+0x78/0xc0\n[    1.350476]  driver_attach+0x20/0x28\n[    1.350499]  bus_add_driver+0x120/0x200\n[    1.350521]  driver_register+0x74/0x108\n[    1.350543]  __platform_driver_register+0x40/0x48\n[    1.350585]  gcc_kona_init+0x18/0x20\n[    1.350612]  do_one_initcall+0x11c/0x280\n[    1.350639]  kernel_init_freeable+0x2dc/0x390\n[    1.350667]  kernel_init+0x14/0x290\n[    1.350690]  ret_from_fork+0x10/0x18\n[    1.351471] ---[ end trace 6020a4b524185832 ]---\n[    1.354194] ------------[ cut here ]------------\n[    1.354245] gcc_npu_cfg_ahb_clk: status stuck at 'off'\n[    1.354404] WARNING: CPU: 5 PID: 1 at drivers/clk/qcom/clk-branch.c:98 clk_branch_toggle+0x12c/0x178\n[    1.354466] Modules linked in:\n[    1.354496] CPU: 5 PID: 1 Comm: swapper/0 Tainted: G S      W         4.19.157-perf+ #1\n[    1.354528] Hardware name: Qualcomm Technologies, Inc. kona QRD (DT)\n[    1.354556] pstate: 60c00085 (nZCv daIf +PAN +UAO)\n[    1.354601] pc : clk_branch_toggle+0x12c/0x178\n[    1.354637] lr : clk_branch_toggle+0x128/0x178\n[    1.354666] sp : ffffff800805b920\n[    1.354692] x29: ffffff800805b930 x28: ffffffc177e10f80 \n[    1.354726] x27: 0000000000000000 x26: 0000000000000000 \n[    1.354754] x25: 0000000000000000 x24: 00000000000010c7 \n[    1.354781] x23: ffffff800a29ae80 x22: ffffff8009b1462e \n[    1.354808] x21: ffffff800a29ae98 x20: ffffff800865a3d0 \n[    1.354836] x19: 0000000000000001 x18: 0000000000000034 \n[    1.354863] x17: ffffff800a460000 x16: 000000000000002a \n[    1.354890] x15: ffffff8009385408 x14: 0000000000000000 \n[    1.354918] x13: 0000000000000004 x12: 0000000000000000 \n[    1.354945] x11: 0000000000000000 x10: ffffffffffffffff \n[    1.354972] x9 : c15662d4bab2af00 x8 : c15662d4bab2af00 \n[    1.354999] x7 : 000000000000002a x6 : ffffff800a462b22 \n[    1.355026] x5 : ffffff800805b668 x4 : 0000000000000008 \n[    1.355054] x3 : 0000000000002766 x2 : 0000000000000022 \n[    1.355081] x1 : ffffff800a4601f2 x0 : 00000000fffffff0 \n[    1.355108] Call trace:\n[    1.355129]  clk_branch_toggle+0x12c/0x178\n[    1.355152]  clk_branch2_enable+0x18/0x20\n[    1.355176]  clk_core_enable+0x144/0x308\n[    1.355199]  clk_register+0xa84/0xf18\n[    1.355222]  devm_clk_hw_register+0x48/0x98\n[    1.355245]  devm_clk_register_regmap+0x50/0x60\n[    1.355269]  qcom_cc_really_probe+0x184/0x1c8\n[    1.355293]  gcc_kona_probe+0x1a4/0x1d8\n[    1.355317]  platform_drv_probe+0x7c/0xb8\n[    1.355339]  really_probe+0x43c/0x4c8\n[    1.355361]  driver_probe_device+0x60/0xf8\n[    1.355384]  __driver_attach+0xe8/0x128\n[    1.355407]  bus_for_each_dev+0x78/0xc0\n[    1.355429]  driver_attach+0x20/0x28\n[    1.355452]  bus_add_driver+0x120/0x200\n[    1.355474]  driver_register+0x74/0x108\n[    1.355496]  __platform_driver_register+0x40/0x48\n[    1.355523]  gcc_kona_init+0x18/0x20\n[    1.355545]  do_one_initcall+0x11c/0x280\n[    1.355581]  kernel_init_freeable+0x2dc/0x390\n[    1.355615]  kernel_init+0x14/0x290\n[    1.355642]  ret_from_fork+0x10/0x18\n[    1.355678] ---[ end trace 6020a4b524185833 ]---\n[    1.519595] gcc-kona 100000.qcom,gcc: Registered GCC clocks\n[    1.523926] gpu_cc-kona 3d90000.qcom,gpucc: Linked as a consumer to regulator.4\n[    1.524230] gpu_cc-kona 3d90000.qcom,gpucc: Linked as a consumer to regulator.1\n[    1.558545] gpu_cc-kona 3d90000.qcom,gpucc: Registered GPU CC clocks\n[    1.560634] npu_cc-kona 9980000.qcom,npucc: Linked as a consumer to regulator.4\n[    1.664099] npu_cc-kona 9980000.qcom,npucc: Registered NPU_CC clocks\n[    1.667084] video_cc-kona abf0000.qcom,videocc: Linked as a consumer to regulator.1\n[    1.667208] video_cc-kona abf0000.qcom,videocc: Linked as a consumer to regulator.10\n[    1.667513] AXI: msm_bus_scale_register_client(): msm_bus_scale_register_client: Bus driver not ready.\n[    1.667592] video_cc-kona abf0000.qcom,videocc: Unable to register for bw voting\n[    1.667674] video_cc-kona abf0000.qcom,videocc: Dropping the link to regulator.10\n[    1.667777] video_cc-kona abf0000.qcom,videocc: Dropping the link to regulator.1\n[    1.679175] ------------[ cut here ]------------\n[    1.679415] WARNING: CPU: 5 PID: 1 at drivers/soc/qcom/smem.c:652 qcom_smem_get+0x194/0x1b8\n[    1.679508] Modules linked in:\n[    1.679552] CPU: 5 PID: 1 Comm: swapper/0 Tainted: G S      W         4.19.157-perf+ #1\n[    1.679594] Hardware name: Qualcomm Technologies, Inc. kona QRD (DT)\n[    1.679625] pstate: 60c00005 (nZCv daif +PAN +UAO)\n[    1.679651] pc : qcom_smem_get+0x194/0x1b8\n[    1.679674] lr : qcom_smem_get+0x190/0x1b8\n[    1.679694] sp : ffffff800805bc30\n[    1.679713] x29: ffffff800805bc40 x28: ffffff8009f08098 \n[    1.679740] x27: ffffff800a43a000 x26: ffffff8009f080a0 \n[    1.679766] x25: ffffff8009f08058 x24: ffffff8009f17028 \n[    1.679793] x23: ffffff800a20db40 x22: ffffff800a4ca000 \n[    1.679819] x21: ffffffc0008d8000 x20: 000000000000025a \n[    1.679845] x19: ffffffffffffffea x18: 0000000000000034 \n[    1.679872] x17: ffffff800a460000 x16: 000000000000003a \n[    1.679898] x15: ffffff8009385448 x14: 0720072007200720 \n[    1.679924] x13: 0720072007200720 x12: 0000000000000000 \n[    1.679950] x11: 0000000000000000 x10: ffffffffffffffff \n[    1.679977] x9 : c15662d4bab2af00 x8 : c15662d4bab2af00 \n[    1.680003] x7 : 0720072d072d072d x6 : ffffffc0008bef00 \n[    1.680029] x5 : 0000000000000000 x4 : 0000000000000000 \n[    1.680055] x3 : 0000000000000000 x2 : 0000000000000001 \n[    1.680081] x1 : 0000000000000000 x0 : 0000000000000024 \n[    1.680111] Call trace:\n[    1.680132]  qcom_smem_get+0x194/0x1b8\n[    1.680158]  msm_minidump_init+0x3c/0x494\n[    1.680184]  do_one_initcall+0x11c/0x280\n[    1.680210]  kernel_init_freeable+0x2dc/0x390\n[    1.680237]  kernel_init+0x14/0x290\n[    1.680259]  ret_from_fork+0x10/0x18\n[    1.680296] ---[ end trace 6020a4b524185834 ]---\n[    1.680393] Minidump: SMEM is not initialized.\n[    1.682109] ------------[ cut here ]------------\n[    1.682294] WARNING: CPU: 5 PID: 1 at drivers/soc/qcom/smem.c:652 qcom_smem_get+0x194/0x1b8\n[    1.682336] Modules linked in:\n[    1.682366] CPU: 5 PID: 1 Comm: swapper/0 Tainted: G S      W         4.19.157-perf+ #1\n[    1.682397] Hardware name: Qualcomm Technologies, Inc. kona QRD (DT)\n[    1.682424] pstate: 60c00005 (nZCv daif +PAN +UAO)\n[    1.682449] pc : qcom_smem_get+0x194/0x1b8\n[    1.682472] lr : qcom_smem_get+0x190/0x1b8\n[    1.682491] sp : ffffff800805bc10\n[    1.682526] x29: ffffff800805bc20 x28: ffffff8009f08098 \n[    1.682554] x27: ffffff800a43a000 x26: ffffff8009f080a0 \n[    1.682592] x25: ffffff8009f08058 x24: ffffff8009f17028 \n[    1.682618] x23: ffffff800a20db40 x22: ffffff800a4ca000 \n[    1.682646] x21: ffffffc0008d8000 x20: 000000000000025a \n[    1.682672] x19: ffffffffffffffea x18: 0000000000000034 \n[    1.682698] x17: ffffff800a460000 x16: 000000000000003a \n[    1.682724] x15: ffffff8009385448 x14: 0720072007200720 \n[    1.682750] x13: 0720072007200720 x12: 0000000000000000 \n[    1.682776] x11: 0000000000000000 x10: ffffffffffffffff \n[    1.682802] x9 : c15662d4bab2af00 x8 : c15662d4bab2af00 \n[    1.682828] x7 : 0720072d072d072d x6 : ffffffc0008bef00 \n[    1.682854] x5 : 0000000000000000 x4 : 0000000000000000 \n[    1.682880] x3 : 0000000000000000 x2 : 0000000000000001 \n[    1.682905] x1 : 0000000000000000 x0 : 0000000000000024 \n[    1.682931] Call trace:\n[    1.682953]  qcom_smem_get+0x194/0x1b8\n[    1.682978]  msm_pil_init+0xd4/0x1d0\n[    1.683001]  do_one_initcall+0x11c/0x280\n[    1.683025]  kernel_init_freeable+0x2dc/0x390\n[    1.683049]  kernel_init+0x14/0x290\n[    1.683071]  ret_from_fork+0x10/0x18\n[    1.683091] ---[ end trace 6020a4b524185835 ]---\n[    1.684115] socinfo_init: Can't find SMEM_HW_SW_BUILD_ID; falling back on dummy values.\n[    1.686294] KPI: Bootloader start count = 0\n[    1.686339] KPI: Bootloader end count = 0\n[    1.686368] KPI: Bootloader display count = 0\n[    1.686397] KPI: Bootloader load kernel count = 0\n[    1.686438] KPI: Kernel MPM timestamp = 102389\n[    1.686469] KPI: Kernel MPM Clock frequency = 32768\n[    1.686565] socinfo_print: v0.1, id=356, ver=0.1\n[    1.686664] msm_bus_fabric_rpmh_init_driver\n[    1.687170] msm_bus: Probe started\n[    1.691298] msm_bus_device 16e0000.ad-hoc-bus: Bus type is missing\n[    1.691441] msm_bus_device 16e0000.ad-hoc-bus: Bus type is missing\n[    1.691686] msm_bus_device 16e0000.ad-hoc-bus: Bus type is missing\n[    1.701851] msm_bus: DT Parsing complete\n[    1.712117] msm_bus_fab_init_noc_ops: Invalid Bus type\n[    1.712306] msm_bus_fab_init_noc_ops: Invalid Bus type\n[    1.713316] msm_bus_fab_init_noc_ops: Invalid Bus type\n[    1.781910] Internal error: synchronous external abort: 96000250 [#1] PREEMPT SMP\n[    1.782153] Modules linked in:\n[    1.782265] Process swapper/0 (pid: 1, stack limit = 0x(____ptrval____))\n[    1.782310] CPU: 7 PID: 1 Comm: swapper/0 Tainted: G S      W         4.19.157-perf+ #1\n[    1.782342] Hardware name: Qualcomm Technologies, Inc. kona QRD (DT)\n[    1.782374] pstate: 60800005 (nZCv daif -PAN +UAO)\n[    1.782416] pc : __tcs_buffer_write+0x220/0x268\n[    1.782448] lr : __tcs_buffer_write+0x9c/0x268\n[    1.782469] sp : ffffff800805b6b0\n[    1.782488] x29: ffffff800805b6e0 x28: ffffff800805b884 \n[    1.782516] x27: ffffff800805b888 x26: 0000000000000001 \n[    1.782542] x25: 0000000000010108 x24: ffffff800805b880 \n[    1.782568] x23: 0000000000000001 x22: 0000000000000001 \n[    1.782605] x21: 0000000000000000 x20: 00000000778bd800 \n[    1.782632] x19: ffffffc1783f7080 x18: 0000000005f5e100 \n[    1.782658] x17: 0000000001312d00 x16: 0000000000000000 \n[    1.782684] x15: ffffff8009385360 x14: 3678303d61746164 \n[    1.782710] x13: 2030613030357830 x12: 3d72646461203830 \n[    1.782736] x11: 31303178303d6469 x10: 0000000000000000 \n[    1.782763] x9 : c15662d4bab2af00 x8 : ffffff800af70d10 \n[    1.782789] x7 : 2038653330303030 x6 : ffffffc17826461f \n[    1.782814] x5 : 00000000000500a0 x4 : 000000000000000e \n[    1.782840] x3 : ffffff800805b868 x2 : 0000000000000001 \n[    1.782866] x1 : ffffff800a4699c8 x0 : 0000000000000000 \n[    1.782895] Call trace:\n[    1.782917]  __tcs_buffer_write+0x220/0x268\n[    1.782941]  rpmh_rsc_send_data+0x36c/0x3e0\n[    1.782964]  __rpmh_write+0x374/0x3e8\n[    1.782985]  rpmh_write+0x134/0x198\n[    1.783008]  msm_bus_dev_init_qos+0x128/0x620\n[    1.783035]  bus_for_each_dev+0x78/0xc0\n[    1.783057]  msm_bus_device_probe+0xd24/0xf28\n[    1.783081]  platform_drv_probe+0x7c/0xb8\n[    1.783104]  really_probe+0x43c/0x4c8\n[    1.783125]  driver_probe_device+0x60/0xf8\n[    1.783147]  __driver_attach+0xe8/0x128\n[    1.783170]  bus_for_each_dev+0x78/0xc0\n[    1.783191]  driver_attach+0x20/0x28\n[    1.783213]  bus_add_driver+0x120/0x200\n[    1.783238]  driver_register+0x74/0x108\n[    1.783261]  __platform_driver_register+0x40/0x48\n[    1.783290]  msm_bus_device_init_driver+0x28/0x64\n[    1.783317]  do_one_initcall+0x11c/0x280\n[    1.783343]  kernel_init_freeable+0x2dc/0x390\n[    1.783371]  kernel_init+0x14/0x290\n[    1.783393]  ret_from_fork+0x10/0x18\n[    1.783642] Code: f9400a68 f85f83aa 8b0a0108 91004108 (b9000114) \n[    1.784153] ---[ end trace 6020a4b524185836 ]---\n[    1.784349] note: swapper/0[1] exited with preempt_count 1\n[    1.787283] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b\n\n[    1.787646] SMP: stopping secondary CPUs\n[    1.792784] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b\n ]---\n",
+  "noc_qos_observer": {
+    "scope": "Stopped raw NoC QoS QOM observations; source-correlated DT comparisons",
+    "guest_memory_written": false,
+    "device_mmio_read": false,
+    "guest_cpu_executed_by_observer": false,
+    "android_boot_passed": false,
+    "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "ports": [
+      {
+        "path": "/machine/noc-qos-system-0",
+        "fabric": "system",
+        "port": 0,
+        "physical_port_address": 23273472,
+        "dt_client": "/soc/ad-hoc-bus/mas-qxm-pimem",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 23273472,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-system-1",
+        "fabric": "system",
+        "port": 1,
+        "physical_port_address": 23277568,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-gic",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 23277568,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-0",
+        "fabric": "aggre1",
+        "port": 0,
+        "physical_port_address": 23994368,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-usb3-0",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 23994368,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-1",
+        "fabric": "aggre1",
+        "port": 1,
+        "physical_port_address": 23998464,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-usb3-1",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 23998464,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-2",
+        "fabric": "aggre1",
+        "port": 2,
+        "physical_port_address": 24002560,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-sdc4",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24002560,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-3",
+        "fabric": "aggre1",
+        "port": 3,
+        "physical_port_address": 24006656,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-ufs-mem",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24006656,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-4",
+        "fabric": "aggre1",
+        "port": 4,
+        "physical_port_address": 24010752,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-pcie3-modem",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24010752,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-5",
+        "fabric": "aggre1",
+        "port": 5,
+        "physical_port_address": 24014848,
+        "dt_client": "/soc/ad-hoc-bus/mas-qhm-qup1",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24014848,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-6",
+        "fabric": "aggre1",
+        "port": 6,
+        "physical_port_address": 24018944,
+        "dt_client": "/soc/ad-hoc-bus/mas-qhm-qup2",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24018944,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-7",
+        "fabric": "aggre1",
+        "port": 7,
+        "physical_port_address": 24023040,
+        "dt_client": "/soc/ad-hoc-bus/mas-qhm-qspi",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24023040,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-8",
+        "fabric": "aggre1",
+        "port": 8,
+        "physical_port_address": 24027136,
+        "dt_client": "/soc/ad-hoc-bus/mas-qhm-tsif",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24027136,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-0",
+        "fabric": "aggre2",
+        "port": 0,
+        "physical_port_address": 24129536,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-cnoc",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24129536,
+        "address_matches": true,
+        "words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-1",
+        "fabric": "aggre2",
+        "port": 1,
+        "physical_port_address": 24133632,
+        "dt_client": "/soc/ad-hoc-bus/mas-qxm-crypto",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24133632,
+        "address_matches": true,
+        "words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-2",
+        "fabric": "aggre2",
+        "port": 2,
+        "physical_port_address": 24137728,
+        "dt_client": "/soc/ad-hoc-bus/mas-qxm-ipa",
+        "defer_init_qos": true,
+        "source_correlated_dt_words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24137728,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-3",
+        "fabric": "aggre2",
+        "port": 3,
+        "physical_port_address": 24141824,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-sdc2",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24141824,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-4",
+        "fabric": "aggre2",
+        "port": 4,
+        "physical_port_address": 24145920,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-ufs-card",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24145920,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-7",
+        "fabric": "aggre2",
+        "port": 7,
+        "physical_port_address": 24158208,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-qdss-etr",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24158208,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-8",
+        "fabric": "aggre2",
+        "port": 8,
+        "physical_port_address": 24162304,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-pcie3-0",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24162304,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-9",
+        "fabric": "aggre2",
+        "port": 9,
+        "physical_port_address": 24166400,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-pcie3-1",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24166400,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-11",
+        "fabric": "aggre2",
+        "port": 11,
+        "physical_port_address": 24174592,
+        "dt_client": "/soc/ad-hoc-bus/mas-qhm-qdss-bam",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24174592,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-12",
+        "fabric": "aggre2",
+        "port": 12,
+        "physical_port_address": 24178688,
+        "dt_client": "/soc/ad-hoc-bus/mas-qhm-qup0",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24178688,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-compute-6",
+        "fabric": "compute",
+        "port": 6,
+        "physical_port_address": 24338432,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-npu",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24338432,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-compute-7",
+        "fabric": "compute",
+        "port": 7,
+        "physical_port_address": 24340480,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-npu",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24340480,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-mmss-0",
+        "fabric": "mmss",
+        "port": 0,
+        "physical_port_address": 24420352,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-camnoc-sf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24420352,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-mmss-1",
+        "fabric": "mmss",
+        "port": 1,
+        "physical_port_address": 24422400,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-camnoc-sf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24422400,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-mmss-2",
+        "fabric": "mmss",
+        "port": 2,
+        "physical_port_address": 24424448,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-camnoc-icp",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 88,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24424448,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-mmss-4",
+        "fabric": "mmss",
+        "port": 4,
+        "physical_port_address": 24428544,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-camnoc-hf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24428544,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-mmss-5",
+        "fabric": "mmss",
+        "port": 5,
+        "physical_port_address": 24430592,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-camnoc-hf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24430592,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-mmss-6",
+        "fabric": "mmss",
+        "port": 6,
+        "physical_port_address": 24432640,
+        "dt_client": "/soc/ad-hoc-bus/mas-qxm-mdp0",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24432640,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-mmss-8",
+        "fabric": "mmss",
+        "port": 8,
+        "physical_port_address": 24436736,
+        "dt_client": "/soc/ad-hoc-bus/mas-qxm-mdp1",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24436736,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-mmss-10",
+        "fabric": "mmss",
+        "port": 10,
+        "physical_port_address": 24440832,
+        "dt_client": "/soc/ad-hoc-bus/mas-qxm-rot",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24440832,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-mmss-12",
+        "fabric": "mmss",
+        "port": 12,
+        "physical_port_address": 24444928,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-video0",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24444928,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-mmss-13",
+        "fabric": "mmss",
+        "port": 13,
+        "physical_port_address": 24446976,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-video1",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24446976,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-mmss-14",
+        "fabric": "mmss",
+        "port": 14,
+        "physical_port_address": 24449024,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-video-cvp",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24449024,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-gem-0",
+        "fabric": "gem",
+        "port": 0,
+        "physical_port_address": 152178688,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-cmpnoc",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152178688,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-1",
+        "fabric": "gem",
+        "port": 1,
+        "physical_port_address": 152182784,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-gpu",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152182784,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-2",
+        "fabric": "gem",
+        "port": 2,
+        "physical_port_address": 152186880,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-mnoc-hf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152186880,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-3",
+        "fabric": "gem",
+        "port": 3,
+        "physical_port_address": 152190976,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-mnoc-sf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152190976,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-gem-64",
+        "fabric": "gem",
+        "port": 64,
+        "physical_port_address": 152440832,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-cmpnoc",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152440832,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-65",
+        "fabric": "gem",
+        "port": 65,
+        "physical_port_address": 152444928,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-gpu",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152444928,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-66",
+        "fabric": "gem",
+        "port": 66,
+        "physical_port_address": 152449024,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-mnoc-hf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152449024,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-67",
+        "fabric": "gem",
+        "port": 67,
+        "physical_port_address": 152453120,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-mnoc-sf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152453120,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-gem-127",
+        "fabric": "gem",
+        "port": 127,
+        "physical_port_address": 152698880,
+        "dt_client": "/soc/ad-hoc-bus/mas-alm-gpu-tcu",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 16,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152698880,
+        "address_matches": true,
+        "words": {
+          "mainctl": 16,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-128",
+        "fabric": "gem",
+        "port": 128,
+        "physical_port_address": 152702976,
+        "dt_client": "/soc/ad-hoc-bus/mas-alm-sys-tcu",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 96,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152702976,
+        "address_matches": true,
+        "words": {
+          "mainctl": 96,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-129",
+        "fabric": "gem",
+        "port": 129,
+        "physical_port_address": 152707072,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-pcie",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152707072,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-gem-130",
+        "fabric": "gem",
+        "port": 130,
+        "physical_port_address": 152711168,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-snoc-gc",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152711168,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-gem-131",
+        "fabric": "gem",
+        "port": 131,
+        "physical_port_address": 152715264,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-snoc-sf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152715264,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      }
+    ],
+    "stopped_status": {
+      "status": "paused",
+      "running": false
+    },
+    "stopped_status_after": {
+      "status": "paused",
+      "running": false
+    },
+    "port_count": 47,
+    "address_matches": 47,
+    "nonzero_mainctl_ports": 28,
+    "dt_matches_excluding_deferred": 28,
+    "nondeferred_port_count": 46,
+    "interpretation": "Raw configuration only. A matching nonzero word demonstrates stored guest programming; it does not establish traffic, bandwidth enforcement, SBM, power readiness or full boot. Deferred IPA need not match its eventual DT policy."
+  },
+  "smmuv500_observer": {
+    "scope": "Stopped raw apps SMMUv500 QOM observation only",
+    "guest_memory_written": false,
+    "device_mmio_read": false,
+    "guest_cpu_executed_by_observer": false,
+    "native_dma_exercised_by_observer": false,
+    "android_boot_passed": false,
+    "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "stopped_status": {
+      "status": "paused",
+      "running": false
+    },
+    "configuration": {
+      "enabled-reference": true,
+      "reference-hw-version": 33554432,
+      "tcu-base": 353902592,
+      "tbu-count": 10
+    },
+    "state": {
+      "ecats-owner": -1,
+      "dma-blocked-mask": 0
+    },
+    "tbus": [
+      {
+        "dt_path": "/soc/apps-smmu@15000000/anoc_1_tbu@15185000",
+        "index": 0,
+        "base": 353914880,
+        "status_address": 353903104,
+        "sid_start": 0,
+        "sid_count": 1024,
+        "observed": {
+          "base": 353914880,
+          "status-address": 353903104,
+          "sid-start": 0,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/anoc_2_tbu@15189000",
+        "index": 1,
+        "base": 353931264,
+        "status_address": 353903112,
+        "sid_start": 1024,
+        "sid_count": 1024,
+        "observed": {
+          "base": 353931264,
+          "status-address": 353903112,
+          "sid-start": 1024,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/mnoc_hf_0_tbu@1518d000",
+        "index": 2,
+        "base": 353947648,
+        "status_address": 353903120,
+        "sid_start": 2048,
+        "sid_count": 1024,
+        "observed": {
+          "base": 353947648,
+          "status-address": 353903120,
+          "sid-start": 2048,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/mnoc_hf_1_tbu@15191000",
+        "index": 3,
+        "base": 353964032,
+        "status_address": 353903128,
+        "sid_start": 3072,
+        "sid_count": 1024,
+        "observed": {
+          "base": 353964032,
+          "status-address": 353903128,
+          "sid-start": 3072,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/compute_dsp_1_tbu@15195000",
+        "index": 4,
+        "base": 353980416,
+        "status_address": 353903136,
+        "sid_start": 4096,
+        "sid_count": 1024,
+        "observed": {
+          "base": 353980416,
+          "status-address": 353903136,
+          "sid-start": 4096,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/compute_dsp_0_tbu@15199000",
+        "index": 5,
+        "base": 353996800,
+        "status_address": 353903144,
+        "sid_start": 5120,
+        "sid_count": 1024,
+        "observed": {
+          "base": 353996800,
+          "status-address": 353903144,
+          "sid-start": 5120,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/adsp_tbu@1519d000",
+        "index": 6,
+        "base": 354013184,
+        "status_address": 353903152,
+        "sid_start": 6144,
+        "sid_count": 1024,
+        "observed": {
+          "base": 354013184,
+          "status-address": 353903152,
+          "sid-start": 6144,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/anoc_1_pcie_tbu@151a1000",
+        "index": 7,
+        "base": 354029568,
+        "status_address": 353903160,
+        "sid_start": 7168,
+        "sid_count": 1024,
+        "observed": {
+          "base": 354029568,
+          "status-address": 353903160,
+          "sid-start": 7168,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/mnoc_sf_0_tbu@151a5000",
+        "index": 8,
+        "base": 354045952,
+        "status_address": 353903168,
+        "sid_start": 8192,
+        "sid_count": 1024,
+        "observed": {
+          "base": 354045952,
+          "status-address": 353903168,
+          "sid-start": 8192,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/mnoc_sf_1_tbu@151a9000",
+        "index": 9,
+        "base": 354062336,
+        "status_address": 353903176,
+        "sid_start": 9216,
+        "sid_count": 1024,
+        "observed": {
+          "base": 354062336,
+          "status-address": 353903176,
+          "sid-start": 9216,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      }
+    ],
+    "stopped_status_after": {
+      "status": "paused",
+      "running": false
+    },
+    "tbu_count": 10,
+    "geometry_matches": 10,
+    "interpretation": "Reference model identity and raw device state only. Zero requests do not prove a native TBU probe or DMA test; native progress requires separate kernel-log evidence. Version and delays are declared reference assumptions, and firmware stream/context handoff remains unknown."
+  },
+  "tsens24xx_observer": {
+    "scope": "Stopped raw TSENS24xx QOM state and explicit reference inputs",
+    "guest_memory_written": false,
+    "device_mmio_read": false,
+    "host_environment_modified_by_observer": false,
+    "guest_cpu_executed_by_observer": false,
+    "analog_calibration_observed": false,
+    "android_boot_passed": false,
+    "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "controllers": [
+      {
+        "path": "/machine/tsens0",
+        "controller_id": 0,
+        "dt_path": "/soc/tsens@c222000",
+        "srot_base": 203563008,
+        "tm_base": 203829248,
+        "dt_srot_size": 4,
+        "dt_tm_size": 511,
+        "upper_lower_spi": 506,
+        "critical_spi": 508,
+        "thermal_reference_sensor_ids": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "configuration": {
+          "enabled-reference": true,
+          "controller-id": 0,
+          "reference-boot-enable-mask": 65535,
+          "reference-temperature-millicelsius": 25000,
+          "srot-base": 203563008,
+          "tm-base": 203829248,
+          "sensor-count": 16,
+          "sampling-period-ns": 1000000
+        },
+        "geometry_matches_actual_dt": true,
+        "state": {
+          "control": 524281,
+          "interrupt-enable": 0,
+          "upper-lower-status": 0,
+          "upper-lower-clear": 0,
+          "upper-lower-mask": 4294967295,
+          "critical-status": 0,
+          "critical-clear": 0,
+          "critical-mask": 3221291007,
+          "valid-mask": 65535,
+          "trdy": 8,
+          "captured-enable-mask": 65535,
+          "captured-valid-mask": 65535,
+          "sample-pending": true,
+          "deadline-exhausted": false,
+          "upper-lower-irq": false,
+          "critical-irq": false,
+          "sample-deadline-ns": 28275389904,
+          "last-sample-ns": 28274389904,
+          "sample-rounds": 16583,
+          "complete-rounds": 16583
+        },
+        "sensors": [
+          {
+            "index": 0,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 1,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 2,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 3,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 4,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 5,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 6,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 7,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 8,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 9,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 10,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 11,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 12,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 13,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 14,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 15,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          }
+        ],
+        "known_input_count": 16,
+        "valid_sensor_count": 16,
+        "all_sample_fields_consistent": true,
+        "completed_reference_sampling_observed": true
+      },
+      {
+        "path": "/machine/tsens1",
+        "controller_id": 1,
+        "dt_path": "/soc/tsens@c223000",
+        "srot_base": 203567104,
+        "tm_base": 203837440,
+        "dt_srot_size": 4,
+        "dt_tm_size": 511,
+        "upper_lower_spi": 507,
+        "critical_spi": 509,
+        "thermal_reference_sensor_ids": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "configuration": {
+          "enabled-reference": true,
+          "controller-id": 1,
+          "reference-boot-enable-mask": 65535,
+          "reference-temperature-millicelsius": 25000,
+          "srot-base": 203567104,
+          "tm-base": 203837440,
+          "sensor-count": 16,
+          "sampling-period-ns": 1000000
+        },
+        "geometry_matches_actual_dt": true,
+        "state": {
+          "control": 524281,
+          "interrupt-enable": 0,
+          "upper-lower-status": 0,
+          "upper-lower-clear": 0,
+          "upper-lower-mask": 4294967295,
+          "critical-status": 0,
+          "critical-clear": 0,
+          "critical-mask": 3221291007,
+          "valid-mask": 65535,
+          "trdy": 8,
+          "captured-enable-mask": 65535,
+          "captured-valid-mask": 65535,
+          "sample-pending": true,
+          "deadline-exhausted": false,
+          "upper-lower-irq": false,
+          "critical-irq": false,
+          "sample-deadline-ns": 28275390524,
+          "last-sample-ns": 28274390524,
+          "sample-rounds": 16584,
+          "complete-rounds": 16584
+        },
+        "sensors": [
+          {
+            "index": 0,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 1,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 2,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 3,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 4,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 5,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 6,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 7,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 8,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 9,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 10,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 11,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 12,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 13,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 14,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          },
+          {
+            "index": 15,
+            "observed": {
+              "input-millicelsius": 25000,
+              "input-valid": true,
+              "last-code": 250,
+              "captured-code": 250,
+              "last-millicelsius": 25000,
+              "valid": true,
+              "status": 2097402,
+              "threshold": 8386560,
+              "critical-threshold": 2047
+            },
+            "valid_fields_agree": true,
+            "last_code_matches_status_and_millicelsius": true
+          }
+        ],
+        "known_input_count": 16,
+        "valid_sensor_count": 16,
+        "all_sample_fields_consistent": true,
+        "completed_reference_sampling_observed": true
+      }
+    ],
+    "stopped_status": {
+      "status": "paused",
+      "running": false
+    },
+    "stopped_status_after": {
+      "status": "paused",
+      "running": false
+    },
+    "controller_count": 2,
+    "geometry_matches": 2,
+    "controllers_with_completed_reference_sampling": 2,
+    "interpretation": "Sampling counters, captured inputs, VALID and vendor TRDY are raw digital-reference observations. The boot mask, 25 C environment and 1 ms period are explicit model choices, not measured tablet state or analog calibration. DT thermal references establish consumer channels only; kernel logs independently establish native probe progress. IRQ metadata records DT wiring, not a native interrupt-delivery test."
+  },
+  "cpufreq_hw_observer": {
+    "scope": "Stopped CPUFreq EPSS reference identity and raw QOM state",
+    "guest_memory_written": false,
+    "device_mmio_read": false,
+    "host_environment_modified_by_observer": false,
+    "guest_cpu_executed_by_observer": false,
+    "factory_lut_observed": false,
+    "analog_voltage_measured": false,
+    "native_driver_success_assessed": false,
+    "userspace_success_assessed": false,
+    "counter_progress_observed": false,
+    "native_irq_delivery_proven": false,
+    "android_boot_passed": false,
+    "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "bounded_dt_capture_blob": "541c58de5c6711215cd6ebc24e48a11ea4a69127",
+    "domains": [
+      {
+        "path": "/machine/cpufreq0",
+        "domain_id": 0,
+        "memory_base": 408489984,
+        "resource_size": 4096,
+        "related_cpu_mask": 15,
+        "cpu_ids": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "max_cores": 4,
+        "core_counter_count": 4,
+        "spi": 30,
+        "gic_intid": 62,
+        "interrupt_flags": 4,
+        "configuration": {
+          "enabled-reference": true,
+          "domain-id": 0,
+          "reference-boot-perf-index": 0,
+          "memory-base": 408489984,
+          "resource-size": 4096,
+          "related-cpu-mask": 15,
+          "max-cores": 4,
+          "core-counter-count": 4,
+          "lut-max-entries": 40,
+          "lut-row-size": 4,
+          "valid-perf-count": 4
+        },
+        "geometry_matches_actual_dt": true,
+        "reference_configuration_matches": true,
+        "raw_state_recorded": true,
+        "reference_state_fields_consistent": true,
+        "state": {
+          "xo-frequency-hz": 19200000,
+          "alternate-frequency-hz": 600000000,
+          "performance-index": 0,
+          "requested-lval": 16,
+          "effective-lval": 16,
+          "requested-frequency-hz": 307200000,
+          "frequency-hz": 307200000,
+          "selected-voltage-microvolt": 750000,
+          "interrupt-status": 0,
+          "frequency-limit-lval": 0,
+          "limited": false,
+          "frequency-known": true,
+          "irq-level": false,
+          "counter": 96255575,
+          "counter-fraction": 449600000,
+          "counter-value-at-epoch": 0,
+          "counter-fraction-at-epoch": 0,
+          "counter-epoch-ns": 0
+        },
+        "lut_rows": [
+          {
+            "index": 0,
+            "observed": {
+              "frequency-word": 1074003984,
+              "voltage-word": 750,
+              "frequency-hz": 307200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 1,
+            "observed": {
+              "frequency-word": 1074004000,
+              "voltage-word": 800,
+              "frequency-hz": 614400000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 2,
+            "observed": {
+              "frequency-word": 1074004032,
+              "voltage-word": 900,
+              "frequency-hz": 1228800000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 3,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 4,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 5,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 6,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 7,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 8,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 9,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 10,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 11,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 12,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 13,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 14,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 15,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 16,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 17,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 18,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 19,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 20,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 21,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 22,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 23,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 24,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 25,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 26,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 27,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 28,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 29,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 30,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 31,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 32,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 33,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 34,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 35,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 36,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 37,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 38,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 39,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          }
+        ],
+        "all_lut_rows_match_declared_reference": true,
+        "declared_reference_terminal_row_index": 4,
+        "core_counters": [
+          {
+            "local_index": 0,
+            "cpu_id": 0,
+            "register_offset": 968,
+            "value": 96255575
+          },
+          {
+            "local_index": 1,
+            "cpu_id": 1,
+            "register_offset": 972,
+            "value": 96255575
+          },
+          {
+            "local_index": 2,
+            "cpu_id": 2,
+            "register_offset": 976,
+            "value": 96255575
+          },
+          {
+            "local_index": 3,
+            "cpu_id": 3,
+            "register_offset": 980,
+            "value": 96255575
+          }
+        ]
+      },
+      {
+        "path": "/machine/cpufreq1",
+        "domain_id": 1,
+        "memory_base": 408494080,
+        "resource_size": 4096,
+        "related_cpu_mask": 112,
+        "cpu_ids": [
+          4,
+          5,
+          6
+        ],
+        "max_cores": 4,
+        "core_counter_count": 3,
+        "spi": 31,
+        "gic_intid": 63,
+        "interrupt_flags": 4,
+        "configuration": {
+          "enabled-reference": true,
+          "domain-id": 1,
+          "reference-boot-perf-index": 0,
+          "memory-base": 408494080,
+          "resource-size": 4096,
+          "related-cpu-mask": 112,
+          "max-cores": 4,
+          "core-counter-count": 3,
+          "lut-max-entries": 40,
+          "lut-row-size": 4,
+          "valid-perf-count": 4
+        },
+        "geometry_matches_actual_dt": true,
+        "reference_configuration_matches": true,
+        "raw_state_recorded": true,
+        "reference_state_fields_consistent": true,
+        "state": {
+          "xo-frequency-hz": 19200000,
+          "alternate-frequency-hz": 600000000,
+          "performance-index": 0,
+          "requested-lval": 16,
+          "effective-lval": 16,
+          "requested-frequency-hz": 307200000,
+          "frequency-hz": 307200000,
+          "selected-voltage-microvolt": 750000,
+          "interrupt-status": 0,
+          "frequency-limit-lval": 0,
+          "limited": false,
+          "frequency-known": true,
+          "irq-level": false,
+          "counter": 96255575,
+          "counter-fraction": 449600000,
+          "counter-value-at-epoch": 0,
+          "counter-fraction-at-epoch": 0,
+          "counter-epoch-ns": 0
+        },
+        "lut_rows": [
+          {
+            "index": 0,
+            "observed": {
+              "frequency-word": 1074003984,
+              "voltage-word": 750,
+              "frequency-hz": 307200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 1,
+            "observed": {
+              "frequency-word": 1074004000,
+              "voltage-word": 800,
+              "frequency-hz": 614400000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 2,
+            "observed": {
+              "frequency-word": 1074004032,
+              "voltage-word": 900,
+              "frequency-hz": 1228800000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 3,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 4,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 5,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 6,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 7,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 8,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 9,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 10,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 11,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 12,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 13,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 14,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 15,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 16,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 17,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 18,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 19,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 20,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 21,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 22,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 23,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 24,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 25,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 26,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 27,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 28,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 29,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 30,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 31,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 32,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 33,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 34,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 35,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 36,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 37,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 38,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 39,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          }
+        ],
+        "all_lut_rows_match_declared_reference": true,
+        "declared_reference_terminal_row_index": 4,
+        "core_counters": [
+          {
+            "local_index": 0,
+            "cpu_id": 4,
+            "register_offset": 968,
+            "value": 96255575
+          },
+          {
+            "local_index": 1,
+            "cpu_id": 5,
+            "register_offset": 972,
+            "value": 96255575
+          },
+          {
+            "local_index": 2,
+            "cpu_id": 6,
+            "register_offset": 976,
+            "value": 96255575
+          }
+        ]
+      },
+      {
+        "path": "/machine/cpufreq2",
+        "domain_id": 2,
+        "memory_base": 408498176,
+        "resource_size": 4096,
+        "related_cpu_mask": 128,
+        "cpu_ids": [
+          7
+        ],
+        "max_cores": 4,
+        "core_counter_count": 1,
+        "spi": 19,
+        "gic_intid": 51,
+        "interrupt_flags": 4,
+        "configuration": {
+          "enabled-reference": true,
+          "domain-id": 2,
+          "reference-boot-perf-index": 0,
+          "memory-base": 408498176,
+          "resource-size": 4096,
+          "related-cpu-mask": 128,
+          "max-cores": 4,
+          "core-counter-count": 1,
+          "lut-max-entries": 40,
+          "lut-row-size": 4,
+          "valid-perf-count": 4
+        },
+        "geometry_matches_actual_dt": true,
+        "reference_configuration_matches": true,
+        "raw_state_recorded": true,
+        "reference_state_fields_consistent": true,
+        "state": {
+          "xo-frequency-hz": 19200000,
+          "alternate-frequency-hz": 600000000,
+          "performance-index": 0,
+          "requested-lval": 16,
+          "effective-lval": 16,
+          "requested-frequency-hz": 307200000,
+          "frequency-hz": 307200000,
+          "selected-voltage-microvolt": 750000,
+          "interrupt-status": 0,
+          "frequency-limit-lval": 0,
+          "limited": false,
+          "frequency-known": true,
+          "irq-level": false,
+          "counter": 96255575,
+          "counter-fraction": 449600000,
+          "counter-value-at-epoch": 0,
+          "counter-fraction-at-epoch": 0,
+          "counter-epoch-ns": 0
+        },
+        "lut_rows": [
+          {
+            "index": 0,
+            "observed": {
+              "frequency-word": 1074003984,
+              "voltage-word": 750,
+              "frequency-hz": 307200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 1,
+            "observed": {
+              "frequency-word": 1074004000,
+              "voltage-word": 800,
+              "frequency-hz": 614400000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 2,
+            "observed": {
+              "frequency-word": 1074004032,
+              "voltage-word": 900,
+              "frequency-hz": 1228800000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 3,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 4,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 5,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 6,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 7,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 8,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 9,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 10,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 11,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 12,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 13,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 14,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 15,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 16,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 17,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 18,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 19,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 20,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 21,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 22,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 23,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 24,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 25,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 26,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 27,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 28,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 29,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 30,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 31,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 32,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 33,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 34,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 35,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 36,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 37,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 38,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          },
+          {
+            "index": 39,
+            "observed": {
+              "frequency-word": 1074004064,
+              "voltage-word": 1000,
+              "frequency-hz": 1843200000
+            },
+            "matches_declared_reference_row": true
+          }
+        ],
+        "all_lut_rows_match_declared_reference": true,
+        "declared_reference_terminal_row_index": 4,
+        "core_counters": [
+          {
+            "local_index": 0,
+            "cpu_id": 7,
+            "register_offset": 968,
+            "value": 96255575
+          }
+        ]
+      }
+    ],
+    "stopped_status": {
+      "status": "paused",
+      "running": false
+    },
+    "stopped_status_after": {
+      "status": "paused",
+      "running": false
+    },
+    "domain_count": 3,
+    "geometry_matches": 3,
+    "reference_configuration_matches": 3,
+    "domains_with_raw_state": 3,
+    "domains_with_consistent_reference_state": 3,
+    "domains_with_known_frequency": 3,
+    "observation_status": "complete",
+    "interpretation": "This is a stopped raw QOM snapshot, not a CPUFreq probe, policy, userspace, frequency-transition or interrupt-delivery verdict. The four all-XO LUT states, voltage words, limit input, always-clocked per-core counters and edge-latched IRQ are declared reference policies, not measured tablet firmware or analog behavior. A single counter value does not prove progress, and a nonzero requested index does not identify its writer. The alternate GPLL0 input is reported but no row in this profile uses src=0. DT SPI/INTID fields describe wiring only. Native kernel progress must be assessed separately from printk and explicit userspace evidence."
+  },
+  "devfreq_fw_observer": {
+    "scope": "Stopped firmware-devfreq reference identity and raw request QOM state",
+    "path": "/machine/devfreq-l3",
+    "dt_node": "/soc/qcom,devfreq-l3",
+    "compatible": "qcom,devfreq-fw",
+    "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "bounded_dt_capture_blob": "777468d5612057ebd2394bd80b021d79762e9365",
+    "bounded_dt_capture_sha256": "3b4d663de9e5ea33f5a86fc7d9f49f26223a6217657594423691d59f0ded124b",
+    "reference_contract_model_commit": "cfda4e5c9e17ca540425b809ab21dbb983d26eda",
+    "guest_memory_written": false,
+    "device_mmio_read": false,
+    "device_property_written": false,
+    "host_environment_modified_by_observer": false,
+    "guest_cpu_executed_by_observer": false,
+    "factory_lut_observed": false,
+    "firmware_execution_proven": false,
+    "applied_cache_frequency_proven": false,
+    "request_writer_assessed": false,
+    "native_driver_success_assessed": false,
+    "userspace_success_assessed": false,
+    "android_boot_passed": false,
+    "raw_state_recorded": true,
+    "request_stable_during_capture": true,
+    "requested_state_matches_perf_selection": true,
+    "all_lut_rows_match_declared_reference": true,
+    "observation_status": "complete",
+    "stopped_status": {
+      "status": "paused",
+      "running": false
+    },
+    "configuration": {
+      "enabled-reference": true,
+      "reference-boot-perf-index": 0,
+      "instance-id": 0,
+      "enable-address": 408485888,
+      "frequency-table-address": 408486144,
+      "performance-address": 408486688,
+      "enable-resource-size": 4,
+      "frequency-table-resource-size": 160,
+      "performance-resource-size": 4,
+      "lut-row-size": 4,
+      "lut-max-entries": 40,
+      "valid-perf-count": 4,
+      "reference-lut-identity": 1145450545,
+      "reference-nominal-xo-hz": 19200000,
+      "mapped-window-count": 3,
+      "mapped-register-count": 42,
+      "mapped-bytes": 168
+    },
+    "expected_dt_resources": {
+      "enable-address": 408485888,
+      "enable-resource-size": 4,
+      "frequency-table-address": 408486144,
+      "frequency-table-resource-size": 160,
+      "performance-address": 408486688,
+      "performance-resource-size": 4
+    },
+    "expected_reference_geometry": {
+      "instance-id": 0,
+      "mapped-register-count": 42,
+      "mapped-window-count": 3,
+      "mapped-bytes": 168,
+      "lut-max-entries": 40,
+      "valid-perf-count": 4,
+      "lut-row-size": 4
+    },
+    "geometry_matches_actual_dt": true,
+    "geometry_matches_reference_contract": true,
+    "reference_identity_matches": true,
+    "reference_configuration_matches": true,
+    "state": {
+      "firmware-enabled": true,
+      "performance-index": 0,
+      "requested-lval": 16,
+      "requested-frequency-hz": 307200000
+    },
+    "lut_rows": [
+      {
+        "index": 0,
+        "register_address": 408486144,
+        "observed": {
+          "frequency-word": 1073741840,
+          "nominal-frequency-hz": 307200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 16,
+        "decoded_nominal_frequency_hz": 307200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 1,
+        "register_address": 408486148,
+        "observed": {
+          "frequency-word": 1073741856,
+          "nominal-frequency-hz": 614400000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 32,
+        "decoded_nominal_frequency_hz": 614400000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 2,
+        "register_address": 408486152,
+        "observed": {
+          "frequency-word": 1073741888,
+          "nominal-frequency-hz": 1228800000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 64,
+        "decoded_nominal_frequency_hz": 1228800000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 3,
+        "register_address": 408486156,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 4,
+        "register_address": 408486160,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 5,
+        "register_address": 408486164,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 6,
+        "register_address": 408486168,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 7,
+        "register_address": 408486172,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 8,
+        "register_address": 408486176,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 9,
+        "register_address": 408486180,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 10,
+        "register_address": 408486184,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 11,
+        "register_address": 408486188,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 12,
+        "register_address": 408486192,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 13,
+        "register_address": 408486196,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 14,
+        "register_address": 408486200,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 15,
+        "register_address": 408486204,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 16,
+        "register_address": 408486208,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 17,
+        "register_address": 408486212,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 18,
+        "register_address": 408486216,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 19,
+        "register_address": 408486220,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 20,
+        "register_address": 408486224,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 21,
+        "register_address": 408486228,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 22,
+        "register_address": 408486232,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 23,
+        "register_address": 408486236,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 24,
+        "register_address": 408486240,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 25,
+        "register_address": 408486244,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 26,
+        "register_address": 408486248,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 27,
+        "register_address": 408486252,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 28,
+        "register_address": 408486256,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 29,
+        "register_address": 408486260,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 30,
+        "register_address": 408486264,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 31,
+        "register_address": 408486268,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 32,
+        "register_address": 408486272,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 33,
+        "register_address": 408486276,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 34,
+        "register_address": 408486280,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 35,
+        "register_address": 408486284,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 36,
+        "register_address": 408486288,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 37,
+        "register_address": 408486292,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 38,
+        "register_address": 408486296,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      },
+      {
+        "index": 39,
+        "register_address": 408486300,
+        "observed": {
+          "frequency-word": 1073741920,
+          "nominal-frequency-hz": 1843200000
+        },
+        "decoded_source_field": 1,
+        "decoded_lval": 96,
+        "decoded_nominal_frequency_hz": 1843200000,
+        "matches_declared_reference_row": true
+      }
+    ],
+    "decoded_first_adjacent_duplicate_row": 4,
+    "declared_reference_terminal_row_index": 4,
+    "performance_index_after": 0,
+    "current_request_equals_boot_request": true,
+    "stopped_status_after": {
+      "status": "paused",
+      "running": false
+    },
+    "interpretation": "Complete means the stopped raw QOM snapshot matches this explicit reference identity, synthetic nominal LUT and stored PERF request. The firmware-enabled boolean describes the selected reference handoff; it does not establish firmware execution. The nominal rates do not establish applied cache frequency. The four DT voter children are Linux software consumers of one parent request, not four hardware banks. An unchanged boot request or a different request identifies neither a successful driver probe nor its writer. Kernel progress and userspace execution require separate printk and userspace evidence."
+  },
+  "noc_sbm_observer": {
+    "scope": "Stopped config NoC SBM reference identity and handshake state",
+    "path": "/machine/noc-sbm-config",
+    "dt_node": "/soc/ad-hoc-bus/fab-config_noc",
+    "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "source_contract_blob": "6346b2fab8d6ec380eaaab42ef9a21c5e27b5be5",
+    "source_contract_sha256": "231b262385d880b294d9622b7924017c4b2d8568de4036e42250d35ed67c2f9e",
+    "independent_dt_layout_blob": "614c1a2225a701be9fbce9f6a893db4080614882",
+    "reference_policy": "Connected cold/reset state and 1000 ns virtual delay",
+    "guest_memory_written": false,
+    "device_mmio_read": false,
+    "device_property_written": false,
+    "host_environment_modified_by_observer": false,
+    "guest_cpu_executed_by_observer": false,
+    "virtual_clock_advanced_by_observer": false,
+    "handshake_completed_by_observer": false,
+    "hardware_latency_measured": false,
+    "diagnostic_counters_are_hardware": false,
+    "traffic_drain_observed": false,
+    "camera_display_venus_execution_proven": false,
+    "request_writer_assessed": false,
+    "native_driver_success_assessed": false,
+    "userspace_success_assessed": false,
+    "android_boot_passed": false,
+    "raw_state_recorded": true,
+    "raw_state_stable_during_capture": true,
+    "state_matches_reference_invariants": true,
+    "observation_status": "complete",
+    "stopped_status": {
+      "status": "paused",
+      "running": false
+    },
+    "configuration": {
+      "enabled-reference": true,
+      "mmio-enabled": true,
+      "instance-id": 0,
+      "clear-address": 22044800,
+      "set-address": 22044808,
+      "sense-address": 22044928,
+      "supported-port-mask": 255,
+      "port-count": 8,
+      "reference-latency-ns": 1000,
+      "reference-identity": 1396854065,
+      "reference-boot-disconnected-mask": 0,
+      "mapped-window-count": 3,
+      "mapped-register-count": 3,
+      "mapped-bytes": 12
+    },
+    "expected_dt_geometry": {
+      "clear-address": 22044800,
+      "set-address": 22044808,
+      "sense-address": 22044928,
+      "supported-port-mask": 255,
+      "port-count": 8
+    },
+    "expected_reference_geometry": {
+      "instance-id": 0,
+      "mapped-window-count": 3,
+      "mapped-register-count": 3,
+      "mapped-bytes": 12
+    },
+    "geometry_matches_actual_dt": true,
+    "geometry_matches_reference_contract": true,
+    "reference_identity_matches": true,
+    "reference_configuration_matches": true,
+    "state": {
+      "reference-peer-stall-mask": 0,
+      "requested-mask": 0,
+      "sense-mask": 0,
+      "pending-mask": 0,
+      "accepted-set-writes": 0,
+      "accepted-clear-writes": 0,
+      "last-set-mask": 0,
+      "last-clear-mask": 0
+    },
+    "ports": [
+      {
+        "port": 0,
+        "remaining-ns": 0,
+        "deadline-ns": -1,
+        "consumer": "camera-cfg",
+        "requested_disconnected": false,
+        "sense_disconnected": false,
+        "pending": false,
+        "reference_peer_stalled": false,
+        "matches_reference_invariants": true
+      },
+      {
+        "port": 1,
+        "remaining-ns": 0,
+        "deadline-ns": -1,
+        "consumer": "camera-cfg",
+        "requested_disconnected": false,
+        "sense_disconnected": false,
+        "pending": false,
+        "reference_peer_stalled": false,
+        "matches_reference_invariants": true
+      },
+      {
+        "port": 2,
+        "remaining-ns": 0,
+        "deadline-ns": -1,
+        "consumer": "camera-cfg",
+        "requested_disconnected": false,
+        "sense_disconnected": false,
+        "pending": false,
+        "reference_peer_stalled": false,
+        "matches_reference_invariants": true
+      },
+      {
+        "port": 3,
+        "remaining-ns": 0,
+        "deadline-ns": -1,
+        "consumer": "display-cfg",
+        "requested_disconnected": false,
+        "sense_disconnected": false,
+        "pending": false,
+        "reference_peer_stalled": false,
+        "matches_reference_invariants": true
+      },
+      {
+        "port": 4,
+        "remaining-ns": 0,
+        "deadline-ns": -1,
+        "consumer": "display-cfg",
+        "requested_disconnected": false,
+        "sense_disconnected": false,
+        "pending": false,
+        "reference_peer_stalled": false,
+        "matches_reference_invariants": true
+      },
+      {
+        "port": 5,
+        "remaining-ns": 0,
+        "deadline-ns": -1,
+        "consumer": "venus-cfg",
+        "requested_disconnected": false,
+        "sense_disconnected": false,
+        "pending": false,
+        "reference_peer_stalled": false,
+        "matches_reference_invariants": true
+      },
+      {
+        "port": 6,
+        "remaining-ns": 0,
+        "deadline-ns": -1,
+        "consumer": "venus-cfg",
+        "requested_disconnected": false,
+        "sense_disconnected": false,
+        "pending": false,
+        "reference_peer_stalled": false,
+        "matches_reference_invariants": true
+      },
+      {
+        "port": 7,
+        "remaining-ns": 0,
+        "deadline-ns": -1,
+        "consumer": "venus-cfg",
+        "requested_disconnected": false,
+        "sense_disconnected": false,
+        "pending": false,
+        "reference_peer_stalled": false,
+        "matches_reference_invariants": true
+      }
+    ],
+    "state_after": {
+      "reference-peer-stall-mask": 0,
+      "requested-mask": 0,
+      "sense-mask": 0,
+      "pending-mask": 0,
+      "accepted-set-writes": 0,
+      "accepted-clear-writes": 0,
+      "last-set-mask": 0,
+      "last-clear-mask": 0
+    },
+    "ports_after": [
+      {
+        "port": 0,
+        "remaining-ns": 0,
+        "deadline-ns": -1
+      },
+      {
+        "port": 1,
+        "remaining-ns": 0,
+        "deadline-ns": -1
+      },
+      {
+        "port": 2,
+        "remaining-ns": 0,
+        "deadline-ns": -1
+      },
+      {
+        "port": 3,
+        "remaining-ns": 0,
+        "deadline-ns": -1
+      },
+      {
+        "port": 4,
+        "remaining-ns": 0,
+        "deadline-ns": -1
+      },
+      {
+        "port": 5,
+        "remaining-ns": 0,
+        "deadline-ns": -1
+      },
+      {
+        "port": 6,
+        "remaining-ns": 0,
+        "deadline-ns": -1
+      },
+      {
+        "port": 7,
+        "remaining-ns": 0,
+        "deadline-ns": -1
+      }
+    ],
+    "reference_state_checks": {
+      "supported_masks": true,
+      "pending_equals_request_xor_sense": true,
+      "command_history_reachable": true,
+      "per_port_remaining_and_deadline_shape": true
+    },
+    "reference_mmio_activity_observed": false,
+    "reference_requests_currently_settled": true,
+    "reference_peer_stall_mask_is_native_default": true,
+    "stopped_status_after": {
+      "status": "paused",
+      "running": false
+    },
+    "interpretation": "Complete means this stopped raw QOM snapshot matches the explicit reference geometry, identity and state invariants. Eight ports have independent deadlines scheduled by one QEMU virtual timer. Remaining zero with a pending bit is legal before that timer is dispatched. The observer neither advances virtual time nor completes a response. Accepted write counters and last masks are model diagnostics since reset, not physical registers or per-client success records. A clear write while already connected is idempotent. Settled reference bits do not prove real traffic drain, physical gating, successful driver probe or camera/display/venus execution. Kernel progress, userspace and Android boot require separate evidence."
+  }
+}

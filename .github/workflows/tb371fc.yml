@@ -34,6 +34,13 @@ jobs:
             libglib2.0-dev libpixman-1-dev zlib1g-dev libfdt-dev device-tree-compiler \
             gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu libc6-dev-arm64-cross \
             curl xz-utils bc bison flex libssl-dev libelf-dev util-linux
+      - name: Validate original Android input preservation and bounded orchestration
+        run: |
+          set -euo pipefail
+          python3 tb371fc/tests/test_android_boot_inputs.py
+          python3 tb371fc/tests/test_boot_android.py
+          python3 tb371fc/tests/test_acquire_block_ranges.py
+          python3 tb371fc/tests/test_assemble_lun.py
       - name: Build the dedicated machine and C QTests
         run: |
           set -euo pipefail
@@ -77,6 +84,16 @@ jobs:
             --kernel "$RUNNER_TEMP/clean-linux/artifacts/Image" \
             --out "$RUNNER_TEMP/tb371fc-results/linux" \
             2>&1 | tee "$RUNNER_TEMP/tb371fc-results/linux.log"
+      - name: Build the full-DTB user-space fixture without executing a guest
+        run: |
+          set -euo pipefail
+          python3 tb371fc/scripts/build_actual_dt_fixture.py \
+            --out "$RUNNER_TEMP/tb371fc-results/full-dtb-user-fixture" \
+            --dt-identity-receipt tb371fc/evidence/wholeboard-20261123-a47/actual-dt-model-3b31e8.json \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/full-dtb-user-fixture-build.log"
+          printf '%s\n' \
+            'The full-DTB eight-check initramfs was built and its ELF/ABI inspected; no production kernel, guest user-space or shutdown was executed by this build-only step.' \
+            >> "$GITHUB_STEP_SUMMARY"
       - name: Continue real Linux UFS I/O across a quiescent process checkpoint
         run: |
           set -euo pipefail
@@ -201,4 +218,3 @@ jobs:
             'A separate 17-case PCI UFS regression covers the shared controller core, legacy and MCQ crypto rejection without skips.' \
             'These architectural checks do not validate silicon cache capacities, cache timing, DSU behavior or performance.' \
             >> "$GITHUB_STEP_SUMMARY"
-

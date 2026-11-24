@@ -39,6 +39,7 @@ struct QcomGdscState {
     SysBusDevice parent_obj;
     QcomGdscWindow windows[QCOM_GDSC_NUM_REGIONS];
     qemu_irq power_on;
+    qemu_irq state_known;
     qemu_irq clamp_io;
     qemu_irq reset_asserted;
     uint32_t control;
@@ -46,6 +47,8 @@ struct QcomGdscState {
     uint32_t sw_reset;
     bool hw_enable;
     bool external_vote;
+    bool parent_known;
+    bool parent_on;
     bool enabled_reference;
     bool saved_enabled_reference;
     bool reference_on;
@@ -53,13 +56,24 @@ struct QcomGdscState {
     bool ready;
 };
 
+static bool gdsc_requested(QcomGdscState *s)
+{
+    bool requested = s->control & GDSCR_HW_CONTROL ?
+                     s->hw_enable : !(s->control & GDSCR_COLLAPSE);
+
+    return s->external_vote || requested;
+}
+
+static bool gdsc_power_known(QcomGdscState *s)
+{
+    /* A missing local request resolves the AND even with unknown parent. */
+    return s->enabled_reference && (s->parent_known || !gdsc_requested(s));
+}
+
 static bool gdsc_powered(QcomGdscState *s)
 {
-    bool requested;
-
-    requested = s->control & GDSCR_HW_CONTROL ?
-                s->hw_enable : !(s->control & GDSCR_COLLAPSE);
-    return s->enabled_reference && (s->external_vote || requested);
+    return s->enabled_reference && s->parent_known && s->parent_on &&
+           gdsc_requested(s);
 }
 
 static bool gdsc_reset_asserted(QcomGdscState *s)
@@ -74,7 +88,13 @@ static void gdsc_update(QcomGdscState *s)
     if (!s->ready) {
         return;
     }
-    qemu_set_irq(s->power_on, gdsc_powered(s));
+    if (!gdsc_power_known(s)) {
+        qemu_set_irq(s->state_known, 0);
+        qemu_set_irq(s->power_on, 0);
+    } else {
+        qemu_set_irq(s->power_on, gdsc_powered(s));
+        qemu_set_irq(s->state_known, 1);
+    }
     qemu_set_irq(s->clamp_io, s->enabled_reference &&
                  (s->domain_control & DOMAIN_CLAMP_IO));
     qemu_set_irq(s->reset_asserted, gdsc_reset_asserted(s));
@@ -93,6 +113,22 @@ static void gdsc_vote_input(void *opaque, int input, int level)
     QcomGdscState *s = opaque;
 
     s->external_vote = !!level;
+    gdsc_update(s);
+}
+
+static void gdsc_parent_known_input(void *opaque, int input, int level)
+{
+    QcomGdscState *s = opaque;
+
+    s->parent_known = !!level;
+    gdsc_update(s);
+}
+
+static void gdsc_parent_on_input(void *opaque, int input, int level)
+{
+    QcomGdscState *s = opaque;
+
+    s->parent_on = !!level;
     gdsc_update(s);
 }
 
@@ -116,6 +152,12 @@ static MemTxResult gdsc_read(void *opaque, hwaddr addr, uint64_t *value,
     *value = 0;
     if (!s->enabled_reference || addr || size != 4) {
         return gdsc_bad_access(window, addr, size, false, 0);
+    }
+    if ((window->index == QCOM_GDSC_CONTROL ||
+         window->index == QCOM_GDSC_HW_STATUS) && !gdsc_power_known(s)) {
+        qemu_log_mask(LOG_GUEST_ERROR, TYPE_QCOM_GDSC
+                      ": unknown parent availability; refusing power feedback\n");
+        return MEMTX_ERROR;
     }
     switch (window->index) {
     case QCOM_GDSC_CONTROL:
@@ -214,7 +256,17 @@ static bool gdsc_get_reset(Object *obj, Error **errp)
 
 static bool gdsc_get_known(Object *obj, Error **errp)
 {
-    return QCOM_GDSC(obj)->enabled_reference;
+    return gdsc_power_known(QCOM_GDSC(obj));
+}
+
+static bool gdsc_get_parent_known(Object *obj, Error **errp)
+{
+    return QCOM_GDSC(obj)->parent_known;
+}
+
+static bool gdsc_get_parent_on(Object *obj, Error **errp)
+{
+    return QCOM_GDSC(obj)->parent_on;
 }
 
 static void gdsc_reset(DeviceState *dev)
@@ -264,8 +316,9 @@ static int gdsc_post_load(void *opaque, int version_id)
 
 static const VMStateDescription vmstate_gdsc = {
     .name = TYPE_QCOM_GDSC,
-    .version_id = 1,
-    .minimum_version_id = 1,
+    /* Version 1 omitted the parent and cannot establish valid feedback. */
+    .version_id = 2,
+    .minimum_version_id = 2,
     .pre_save = gdsc_pre_save,
     .post_load = gdsc_post_load,
     .fields = (const VMStateField[]) {
@@ -274,6 +327,8 @@ static const VMStateDescription vmstate_gdsc = {
         VMSTATE_UINT32(sw_reset, QcomGdscState),
         VMSTATE_BOOL(hw_enable, QcomGdscState),
         VMSTATE_BOOL(external_vote, QcomGdscState),
+        VMSTATE_BOOL(parent_known, QcomGdscState),
+        VMSTATE_BOOL(parent_on, QcomGdscState),
         VMSTATE_BOOL(saved_enabled_reference, QcomGdscState),
         VMSTATE_BOOL(saved_reference_on, QcomGdscState),
         VMSTATE_END_OF_LIST()
@@ -314,7 +369,10 @@ static void gdsc_init(Object *obj)
     }
     qdev_init_gpio_in_named(DEVICE(s), gdsc_hw_input, "hw-enable", 1);
     qdev_init_gpio_in_named(DEVICE(s), gdsc_vote_input, "external-vote", 1);
+    qdev_init_gpio_in_named(DEVICE(s), gdsc_parent_known_input, "parent-known", 1);
+    qdev_init_gpio_in_named(DEVICE(s), gdsc_parent_on_input, "parent-on", 1);
     qdev_init_gpio_out_named(DEVICE(s), &s->power_on, "power-on", 1);
+    qdev_init_gpio_out_named(DEVICE(s), &s->state_known, "state-known", 1);
     qdev_init_gpio_out_named(DEVICE(s), &s->clamp_io, "clamp-io", 1);
     qdev_init_gpio_out_named(DEVICE(s), &s->reset_asserted, "reset-asserted", 1);
     object_property_add_bool(obj, "power-on", gdsc_get_powered, NULL);
@@ -324,6 +382,8 @@ static void gdsc_init(Object *obj)
     object_property_add_bool(obj, "clamp-io", gdsc_get_clamp, NULL);
     object_property_add_bool(obj, "reset-asserted", gdsc_get_reset, NULL);
     object_property_add_bool(obj, "state-known", gdsc_get_known, NULL);
+    object_property_add_bool(obj, "parent-known", gdsc_get_parent_known, NULL);
+    object_property_add_bool(obj, "parent-on", gdsc_get_parent_on, NULL);
 }
 
 static void gdsc_class_init(ObjectClass *klass, const void *data)

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "kind": "development-preflight-and-independent-source-review",
+  "source_commit": "99ef6052e3e10e84c67f3482471f4bde12ab295a",
+  "qemu_executed_by_preflight": false,
+  "syntax_and_plan": {
+    "passed": true,
+    "total_plan_gates": 70,
+    "registry_sha256": "a1a799f3fd0659b8d6e24be400c7b49f817c705a91993c9e34b5c92770b6d0e8",
+    "ci_unit_source_sha256": "e6173760d9e3df5dc8dd89b637216fdb61fe813699aa3307a332687b14dfa659",
+    "noc_test_source_sha256": "b2d3ff9127b4a7967e8fe89a4fce9cbeee4ceb5d4e0d655eea042c24407ead00",
+    "noc_test_bytes": 45927,
+    "scope": "Actual Python AST compilation and plan construction on doesvm; no device, socket or guest execution."
+  },
+  "independent_reviews": {
+    "model_commit": "3d649c15ffa00a094616dffb5f9e412a25a22833",
+    "test_commit": "4afe15cbade9aabf6e0e35b3cbcf8bf22c1b684b",
+    "atomicity_documentation_commit": "d0fb8850775d677ab6f4e1d9745bc9ae25ccf34c",
+    "findings": "Both independent source reviewers found no implementation/test blocker. The document clarifies single-word atomicity without claiming wider split requests roll back."
+  },
+  "native_observer": {
+    "source": "native-noc-observer-99ef.py",
+    "sha256": "649dce687afa6a5255713976681b81b5bb46d2e303432b50aad5306574742ecf",
+    "ast_passed": true,
+    "table_review": "noc-observer-review-99ef.json",
+    "pre_run_correction": "Added a strict running=false check after the pure NoC QOM observations. The earlier draft was never used for a native run.",
+    "initial_draft_blob": "a53a031704f50e8618e9c1dbc8357bef7d303f34",
+    "final_blob": "91ad058441194163ea358eccd67373eb1ba64a67",
+    "formal_failure_observed_before_correction": false
+  },
+  "formal_ci": "public-ci-99ef.json",
+  "formal_native": "native-99ef.json"
+}

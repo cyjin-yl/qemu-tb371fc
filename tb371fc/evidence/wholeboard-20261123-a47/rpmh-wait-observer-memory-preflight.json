@@ -1,0 +1,114 @@
+{
+  "schema": "tb371fc-rpmh-wait-observer-memory-preflight-v1",
+  "function_sha256": "f537d1a978e1829e9d140d0d7533f1c5f83b72137526a266ed810bbb68487f90",
+  "allowed_qmp_commands": [
+    "qom-get",
+    "query-status"
+  ],
+  "cases": [
+    {
+      "name": "enabled cold canonical state",
+      "passed": true,
+      "calls": 18,
+      "expected_status": "complete",
+      "expected_error": null
+    },
+    {
+      "name": "recorded production raw word",
+      "passed": true,
+      "calls": 18,
+      "expected_status": "complete",
+      "expected_error": null
+    },
+    {
+      "name": "display voter last legal TCS",
+      "passed": true,
+      "calls": 18,
+      "expected_status": "complete",
+      "expected_error": null
+    },
+    {
+      "name": "uint64 saturated count remains observable",
+      "passed": true,
+      "calls": 18,
+      "expected_status": "complete",
+      "expected_error": null
+    },
+    {
+      "name": "disabled strict policy is not enabled reference",
+      "passed": true,
+      "calls": 18,
+      "expected_status": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "invalid voter",
+      "passed": true,
+      "calls": 18,
+      "expected_status": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "invalid display TCS",
+      "passed": true,
+      "calls": 18,
+      "expected_status": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "zero count with stale diagnostics",
+      "passed": true,
+      "calls": 18,
+      "expected_status": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "broken effective relation",
+      "passed": true,
+      "calls": 18,
+      "expected_status": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "bool is not uint32",
+      "passed": true,
+      "calls": 4,
+      "expected_status": null,
+      "expected_error": "unexpected QOM type/range"
+    },
+    {
+      "name": "counter exceeds u64",
+      "passed": true,
+      "calls": 5,
+      "expected_status": null,
+      "expected_error": "unexpected QOM type/range"
+    },
+    {
+      "name": "double read unstable",
+      "passed": true,
+      "calls": 18,
+      "expected_status": "inconclusive",
+      "expected_error": null
+    },
+    {
+      "name": "guest running initially",
+      "passed": true,
+      "calls": 1,
+      "expected_status": null,
+      "expected_error": "requires a stopped guest"
+    },
+    {
+      "name": "guest resumed after capture",
+      "passed": true,
+      "calls": 18,
+      "expected_status": null,
+      "expected_error": "status changed"
+    }
+  ],
+  "passed": true,
+  "qemu_started": false,
+  "public_test_suite_executed": false,
+  "sockets_opened": false,
+  "guest_memory_read_or_written": false,
+  "scope": "Only this function is defined and exercised against in-memory values; no device/runtime acceptance."
+}

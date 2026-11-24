@@ -1,0 +1,55 @@
+{
+  "schema": "tb371fc-original-input-frontier-v1",
+  "run": "original-android-003",
+  "finished_utc": "2026-11-24T14:14:11Z",
+  "qemu_source_commit": "ce945f8dd74a704f0a0b0973a41c3a95e407f8d3",
+  "qemu_source_ci_run": 45408402483,
+  "qemu_sha256": "26d20d0835c42b880061bfb598d5973671feaa60307e6a4d3be26683c7d34a9c",
+  "scope": "Unchanged original direct-kernel inputs with explicit MDSS and NPU references; no original LUNs attached",
+  "original_inputs": {
+    "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "initrd_sha256": "563f4b334f8470155c6a451395342f7044b70e79b480a886c7641960f534f596",
+    "full_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "bootargs_preserved": true,
+    "core_input_digests_unchanged": {
+      "kernel": true,
+      "initrd": true,
+      "dtb": true,
+      "bootargs": true
+    },
+    "aop_unchanged": true
+  },
+  "observation": {
+    "requested_seconds": 120,
+    "elapsed_seconds": 122.55,
+    "final_qmp_status": "paused",
+    "qemu_unchanged": true,
+    "previous_npu_abort_not_observed": true,
+    "first_kernel_failure": {
+      "guest_seconds": 6.780231,
+      "kind": "synchronous external abort",
+      "esr": "0x96000010",
+      "far": "0xffffff800aea5d18",
+      "elr": "0xffffff800884e968",
+      "cpu": 4,
+      "pid": 79,
+      "process": "kworker/4:1",
+      "workqueue": "events deferred_probe_work_func",
+      "pc": "regmap_mmio_read32le+0x8/0x20",
+      "caller": "gdsc_probe+0x770/0x9d0",
+      "physical_address": "0x0abf0d18",
+      "access": "read",
+      "bytes": 4,
+      "domain": "mvs0_gdsc"
+    },
+    "original_luns_attached": 0,
+    "android_userspace_observed": false,
+    "android_boot_completed_observed": false,
+    "stock_android_boot_passed": false
+  },
+  "private_logs": {
+    "first_printk_sha256": "f5c1001ccc62a274005e9da55e13aa09e44b1d362b72cfde3a2505ead5729e8d",
+    "qemu_log_sha256": "43e208369292d4d32d8a10347e60001759fd28be686a902a1d224f5ce946b9fa"
+  },
+  "next_boundary": "The four source-bound VIDEO GDSC words share MMCX. This first actual abort is MVS0, not evidence that a VIDEOCC or video engine has executed."
+}

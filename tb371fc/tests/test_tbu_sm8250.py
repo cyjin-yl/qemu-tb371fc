@@ -12,6 +12,7 @@ import hashlib
 import json
 from pathlib import Path
 import struct
+import subprocess
 import time
 import traceback
 
@@ -226,6 +227,22 @@ def main():
 
     started = time.monotonic()
     try:
+        command = [args.qemu, "-machine", args.machine, "-accel", "qtest",
+                   "-m", "128M", "-display", "none", "-monitor", "none",
+                   "-serial", "null", "-S", "-global",
+                   "qcom-smmuv500.enabled-reference=on", "-global",
+                   "qcom-smmuv500.reference-hw-version=0x02000000"]
+        conflict = subprocess.run(command, capture_output=True, timeout=15)
+        (args.out / "profile-conflict.stderr").write_bytes(conflict.stderr)
+        (args.out / "profile-conflict.command.json").write_text(
+            json.dumps(command, indent=2) + "\n")
+        diagnostic = ("tbu-profile=reference-ecats and "
+                      "qcom-smmuv500.enabled-reference=on are mutually exclusive")
+        assert conflict.returncode == 1, conflict.returncode
+        assert diagnostic in conflict.stderr.decode(errors="replace")
+        passed("overlapping-reference-profiles-rejected-at-startup",
+               {"exit": conflict.returncode, "diagnostic": diagnostic})
+
         off = copy(args)
         off.machine = "tb371fc,ufs-enabled=off"
         r = start("default-off", config=off)
@@ -240,6 +257,9 @@ def main():
         close()
 
         r = start("functional")
+        tree = r.monitor("human-monitor-command", {"command-line": "info mtree"})
+        assert "sm8250-anoc" in tree and "sm8250-tcu-reference" in tree
+        assert "qcom-smmuv500-sparse" not in tree
         assert r.get(TCU + 0x18) == 0x02000000
         r.put(TCU + 0x18, 0)
         assert r.get(TCU + 0x18) == 0x02000000
@@ -416,7 +436,7 @@ def main():
         bad = args.out / "invalid-idle-HALT.migration"
         bad.write_bytes(invalid)
         reject("invalid-idle-HALT", bad, "invalid incoming bank 1")
-        assert len(checks) == 16 and len(transfers) == 1 and len(rejections) == 6
+        assert len(checks) == 17 and len(transfers) == 1 and len(rejections) == 6
         assert sha(args.qemu) == report["sha256"]["qemu"]
         report["all_passed"] = True
     except Exception:

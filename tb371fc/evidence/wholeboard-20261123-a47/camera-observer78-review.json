@@ -1,0 +1,134 @@
+{
+  "schema": "tb371fc-camera-gdsc-observer-static-review-v1",
+  "function_sha256": "db9710ab3b28b3dc69c8657e25b96f4c7e69a62d8f49340a4df66b9318ea469a",
+  "wrapper_sha256": "12566d0919dda9eac8239a9aca9890894eabcbc7c5856b9e7b248fa83f7b55ab",
+  "expected_camera_property_set_matches_api": true,
+  "case_count": 13,
+  "cases": [
+    {
+      "name": "unknown_parent_software_collapsed_is_known_off",
+      "passed": true,
+      "qom_reads": 160,
+      "status_reads": 2,
+      "expected_observation": "complete",
+      "expected_error": null,
+      "observed_error": null
+    },
+    {
+      "name": "on_parent_software_requested_is_on",
+      "passed": true,
+      "qom_reads": 160,
+      "status_reads": 2,
+      "expected_observation": "complete",
+      "expected_error": null,
+      "observed_error": null
+    },
+    {
+      "name": "on_parent_unknown_hardware_request_remains_unknown",
+      "passed": true,
+      "qom_reads": 160,
+      "status_reads": 2,
+      "expected_observation": "complete",
+      "expected_error": null,
+      "observed_error": null
+    },
+    {
+      "name": "off_parent_resolves_unknown_hardware_request_to_off",
+      "passed": true,
+      "qom_reads": 160,
+      "status_reads": 2,
+      "expected_observation": "complete",
+      "expected_error": null,
+      "observed_error": null
+    },
+    {
+      "name": "known_hardware_inputs_are_independent",
+      "passed": true,
+      "qom_reads": 160,
+      "status_reads": 2,
+      "expected_observation": "complete",
+      "expected_error": null,
+      "observed_error": null
+    },
+    {
+      "name": "disabled_profile_not_accepted",
+      "passed": true,
+      "qom_reads": 160,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null,
+      "observed_error": null
+    },
+    {
+      "name": "unsupported_hardware_mode_is_inconclusive",
+      "passed": true,
+      "qom_reads": 160,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null,
+      "observed_error": null
+    },
+    {
+      "name": "wrong_domain_identity_is_inconclusive",
+      "passed": true,
+      "qom_reads": 160,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null,
+      "observed_error": null
+    },
+    {
+      "name": "double_read_state_change_is_inconclusive",
+      "passed": true,
+      "qom_reads": 160,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null,
+      "observed_error": null
+    },
+    {
+      "name": "int_not_accepted_as_bool",
+      "passed": true,
+      "qom_reads": 11,
+      "status_reads": 2,
+      "expected_observation": null,
+      "expected_error": "type/range",
+      "observed_error": "Camera GDSC unexpected QOM type/range: parent-known"
+    },
+    {
+      "name": "parent_resource_input_mismatch_is_inconclusive",
+      "passed": true,
+      "qom_reads": 160,
+      "status_reads": 2,
+      "expected_observation": "inconclusive",
+      "expected_error": null,
+      "observed_error": null
+    },
+    {
+      "name": "running_guest_rejected_without_property_reads",
+      "passed": true,
+      "qom_reads": 0,
+      "status_reads": 1,
+      "expected_observation": null,
+      "expected_error": "requires a stopped guest",
+      "observed_error": "Camera GDSC observation requires a stopped guest"
+    },
+    {
+      "name": "guest_started_during_capture_rejected",
+      "passed": true,
+      "qom_reads": 160,
+      "status_reads": 2,
+      "expected_observation": null,
+      "expected_error": "status changed",
+      "observed_error": "Camera GDSC guest status changed during observation"
+    }
+  ],
+  "previous_wrapper_inverse_byte_identical": true,
+  "new_capture_only_query_status_and_qom_get": true,
+  "whole_existing_wrapper_is_mmio_free": false,
+  "validation": "Isolated in-memory mocks of only the new observer function",
+  "qemu_executed": false,
+  "public_gates_executed": false,
+  "remote_actions": false,
+  "guest_or_hardware_results_established": false
+}

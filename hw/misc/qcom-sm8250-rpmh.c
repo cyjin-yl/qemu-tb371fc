@@ -39,6 +39,7 @@
 #define BCM_MASK                (BCM_COMMIT | BCM_VALID | 0x0fffffff)
 #define DB_HEADER_SIZE          144
 #define DB_ENTRY_SIZE           24
+#define WAIT_COMMAND_MASK       ((1U << RPMH_COMMANDS) - 1)
 
 typedef enum RpmhResourceKind {
     RPMH_ARC,
@@ -548,11 +549,34 @@ static MemTxResult rpmh_write(void *opaque, hwaddr addr, uint64_t value,
         return rpmh_bad_access(drv, addr, true, value);
     }
     if (reg == 0x10 || reg == 0x1c) {
-        if (value & ~0xffffU) {
-            return rpmh_bad_access(drv, addr, true, value);
+        if (value & ~WAIT_COMMAND_MASK) {
+            uint32_t raw = value;
+
+            if (reg != 0x10 || !s->reference_wait_mask_reserved) {
+                return rpmh_bad_access(drv, addr, true, value);
+            }
+            /*
+             * Explicit reference compatibility, not measured silicon RAZ/WI.
+             * The production vendor path copies an uninitialized u32 wait
+             * field and ORs it into this word. Only implemented command bits
+             * affect the service; no command is triggered by this write.
+             * The running-TCS guard above remains strict in both profiles.
+             */
+            if (s->wait_reserved_masked_writes != UINT64_MAX) {
+                s->wait_reserved_masked_writes++;
+            }
+            s->wait_reserved_last_voter = voter;
+            s->wait_reserved_last_tcs = t;
+            s->wait_reserved_last_raw = raw;
+            qemu_log_mask(LOG_GUEST_ERROR, TYPE_QCOM_SM8250_RPMH
+                          ": DRV%u TCS%u reference WAIT mask raw=0x%08"
+                          PRIx32 " effective=0x%04" PRIx32
+                          " ignored=0x%08" PRIx32 "\n",
+                          voter, t, raw, raw & WAIT_COMMAND_MASK,
+                          raw & ~WAIT_COMMAND_MASK);
         }
         if (reg == 0x10) {
-            tcs->wait = value;
+            tcs->wait = value & WAIT_COMMAND_MASK;
         } else {
             tcs->enable = value;
         }
@@ -836,6 +860,12 @@ static void rpmh_reset(DeviceState *dev)
     unsigned d, t, i;
 
     timer_del(s->timer);
+    s->wait_reserved_incoming_policy = 0;
+    s->wait_reserved_incoming_seen = false;
+    s->wait_reserved_masked_writes = 0;
+    s->wait_reserved_last_voter = 0;
+    s->wait_reserved_last_tcs = 0;
+    s->wait_reserved_last_raw = 0;
     for (d = 0; d < RPMH_VOTERS; d++) {
         QcomRpmhDrv *drv = &s->drv[d];
         drv->irq_status = drv->irq_enable = 0;
@@ -879,11 +909,57 @@ static bool rpmh_tcs_is_reset(const QcomRpmhTcs *tcs)
     return true;
 }
 
+static int rpmh_pre_load(void *opaque)
+{
+    QcomSm8250RpmhState *s = opaque;
+
+    /* No input-clock callback or timer may publish partially loaded state. */
+    s->ready = false;
+    timer_del(s->timer);
+    s->wait_reserved_incoming_policy = 0;
+    s->wait_reserved_incoming_seen = false;
+    s->wait_reserved_masked_writes = 0;
+    s->wait_reserved_last_voter = 0;
+    s->wait_reserved_last_tcs = 0;
+    s->wait_reserved_last_raw = 0;
+    return 0;
+}
+
+static bool rpmh_wait_reserved_diagnostics_valid(QcomSm8250RpmhState *s)
+{
+    if (!s->wait_reserved_masked_writes) {
+        return !s->wait_reserved_last_voter && !s->wait_reserved_last_tcs &&
+               !s->wait_reserved_last_raw;
+    }
+    return s->reference_wait_mask_reserved &&
+           s->wait_reserved_last_voter < RPMH_VOTERS &&
+           s->wait_reserved_last_tcs <
+               rpmh_layout(s->wait_reserved_last_voter)->tcs_count &&
+           (s->wait_reserved_last_raw & ~WAIT_COMMAND_MASK);
+}
+
 static int rpmh_post_load(void *opaque, int version_id)
 {
     QcomSm8250RpmhState *s = opaque;
     unsigned d, t, i, f;
 
+    /* Check the optional policy before restoring any outputs or timers. */
+    if (s->wait_reserved_incoming_seen != s->reference_wait_mask_reserved ||
+        s->wait_reserved_incoming_policy !=
+            (s->reference_wait_mask_reserved ? 1U : 0U)) {
+        error_report(TYPE_QCOM_SM8250_RPMH
+                     ": wait-reserved migration profile mismatch "
+                     "(configured=%u incoming=%" PRIu32 " present=%u)",
+                     s->reference_wait_mask_reserved,
+                     s->wait_reserved_incoming_policy,
+                     s->wait_reserved_incoming_seen);
+        return -EINVAL;
+    }
+    if (!rpmh_wait_reserved_diagnostics_valid(s)) {
+        error_report(TYPE_QCOM_SM8250_RPMH
+                     ": invalid wait-reserved migration diagnostics");
+        return -EINVAL;
+    }
     if (memcmp(s->digest, s->expected_digest, sizeof(s->digest))) {
         return -EINVAL;
     }
@@ -1033,10 +1109,71 @@ static const VMStateDescription vmstate_rpmh_resource = {
     },
 };
 
+static bool rpmh_wait_reserved_needed(void *opaque)
+{
+    QcomSm8250RpmhState *s = opaque;
+
+    /* Even a cold enabled profile needs an identity on the wire. */
+    return s->reference_wait_mask_reserved;
+}
+
+static int rpmh_wait_reserved_pre_save(void *opaque)
+{
+    QcomSm8250RpmhState *s = opaque;
+
+    s->wait_reserved_incoming_policy = 1;
+    return 0;
+}
+
+static int rpmh_wait_reserved_pre_load(void *opaque)
+{
+    QcomSm8250RpmhState *s = opaque;
+
+    if (s->wait_reserved_incoming_seen) {
+        error_report(TYPE_QCOM_SM8250_RPMH
+                     ": duplicate wait-reserved migration subsection");
+        return -EINVAL;
+    }
+    s->wait_reserved_incoming_seen = true;
+    return 0;
+}
+
+static int rpmh_wait_reserved_post_load(void *opaque, int version_id)
+{
+    QcomSm8250RpmhState *s = opaque;
+
+    if (s->wait_reserved_incoming_policy != 1) {
+        error_report(TYPE_QCOM_SM8250_RPMH
+                     ": invalid wait-reserved subsection policy %" PRIu32,
+                     s->wait_reserved_incoming_policy);
+        return -EINVAL;
+    }
+    return 0;
+}
+
+static const VMStateDescription vmstate_rpmh_wait_reserved = {
+    .name = TYPE_QCOM_SM8250_RPMH "/wait-reserved-reference",
+    .version_id = 1,
+    .minimum_version_id = 1,
+    .needed = rpmh_wait_reserved_needed,
+    .pre_save = rpmh_wait_reserved_pre_save,
+    .pre_load = rpmh_wait_reserved_pre_load,
+    .post_load = rpmh_wait_reserved_post_load,
+    .fields = (const VMStateField[]) {
+        VMSTATE_UINT32(wait_reserved_incoming_policy, QcomSm8250RpmhState),
+        VMSTATE_UINT64(wait_reserved_masked_writes, QcomSm8250RpmhState),
+        VMSTATE_UINT32(wait_reserved_last_voter, QcomSm8250RpmhState),
+        VMSTATE_UINT32(wait_reserved_last_tcs, QcomSm8250RpmhState),
+        VMSTATE_UINT32(wait_reserved_last_raw, QcomSm8250RpmhState),
+        VMSTATE_END_OF_LIST()
+    },
+};
+
 static const VMStateDescription vmstate_rpmh = {
     .name = TYPE_QCOM_SM8250_RPMH,
     .version_id = 3,
     .minimum_version_id = 2,
+    .pre_load = rpmh_pre_load,
     .post_load = rpmh_post_load,
     .fields = (const VMStateField[]) {
         VMSTATE_BUFFER(digest, QcomSm8250RpmhState),
@@ -1050,7 +1187,53 @@ static const VMStateDescription vmstate_rpmh = {
                              RPMH_VOTERS, 3),
         VMSTATE_END_OF_LIST()
     },
+    .subsections = (const VMStateDescription * const []) {
+        &vmstate_rpmh_wait_reserved,
+        NULL
+    },
 };
+
+static void rpmh_get_wait_reserved_u32(Object *obj, Visitor *visitor,
+                                       const char *name, void *opaque,
+                                       Error **errp)
+{
+    QcomSm8250RpmhState *s = QCOM_SM8250_RPMH(obj);
+    uint32_t value;
+
+    switch (GPOINTER_TO_UINT(opaque)) {
+    case 0:
+        value = WAIT_COMMAND_MASK;
+        break;
+    case 1:
+        value = s->wait_reserved_last_voter;
+        break;
+    case 2:
+        value = s->wait_reserved_last_tcs;
+        break;
+    case 3:
+        value = s->wait_reserved_last_raw;
+        break;
+    case 4:
+        value = s->wait_reserved_last_raw & WAIT_COMMAND_MASK;
+        break;
+    case 5:
+        value = s->wait_reserved_last_raw & ~WAIT_COMMAND_MASK;
+        break;
+    default:
+        g_assert_not_reached();
+    }
+    visit_type_uint32(visitor, name, &value, errp);
+}
+
+static void rpmh_get_wait_reserved_count(Object *obj, Visitor *visitor,
+                                         const char *name, void *opaque,
+                                         Error **errp)
+{
+    QcomSm8250RpmhState *s = QCOM_SM8250_RPMH(obj);
+    uint64_t value = s->wait_reserved_masked_writes;
+
+    visit_type_uint64(visitor, name, &value, errp);
+}
 
 static void rpmh_get_resource(Object *obj, Visitor *visitor, const char *name,
                                void *opaque, Error **errp)
@@ -1174,6 +1357,11 @@ static void rpmh_init(Object *obj)
         "present", "address", "value", "enabled", "mode",
         "vote-x", "vote-y", "level-count",
     };
+    static const char * const wait_reserved_fields[] = {
+        "wait-command-mask", "wait-reserved-last-voter",
+        "wait-reserved-last-tcs", "wait-reserved-last-raw",
+        "wait-reserved-last-effective", "wait-reserved-last-ignored",
+    };
     unsigned i, f;
 
     QEMU_BUILD_BUG_ON(ARRAY_SIZE(rpmh_resources) != RPMH_RESOURCES);
@@ -1203,6 +1391,13 @@ static void rpmh_init(Object *obj)
         }
     }
     object_property_add_str(obj, "cmd-db-sha256", rpmh_get_db_sha256, NULL);
+    for (i = 0; i < ARRAY_SIZE(wait_reserved_fields); i++) {
+        object_property_add(obj, wait_reserved_fields[i], "uint32",
+                            rpmh_get_wait_reserved_u32, NULL, NULL,
+                            GUINT_TO_POINTER(i));
+    }
+    object_property_add(obj, "wait-reserved-masked-writes", "uint64",
+                        rpmh_get_wait_reserved_count, NULL, NULL, NULL);
     s->timer = timer_new_ns(QEMU_CLOCK_VIRTUAL, rpmh_timer, s);
 }
 
@@ -1219,6 +1414,8 @@ static const Property rpmh_properties[] = {
                      reference_cmd_db, false),
     DEFINE_PROP_BOOL("boot-configured", QcomSm8250RpmhState,
                      boot_configured, false),
+    DEFINE_PROP_BOOL("reference-wait-mask-reserved", QcomSm8250RpmhState,
+                     reference_wait_mask_reserved, false),
     DEFINE_PROP_UINT64("command-latency-ns", QcomSm8250RpmhState,
                        command_latency_ns, 1000),
 };

@@ -1,0 +1,239 @@
+{
+  "schema": "tb371fc-mpm2-sleep-counter-v1",
+  "passed": true,
+  "expected_checks": 17,
+  "checks": [
+    {
+      "name": "cold_zero_and_dt_frequency_are_distinct_from_the_gcc_sleep_carrier",
+      "passed": true
+    },
+    {
+      "name": "exact_fractional_tick_and_second_boundaries",
+      "passed": true
+    },
+    {
+      "name": "irregular_steps_and_repeated_reads_do_not_discard_fractional_phase",
+      "passed": true
+    },
+    {
+      "name": "counter_wraps_at_exactly_2_to_32_ticks",
+      "passed": true
+    },
+    {
+      "name": "wide_elapsed_time_uses_exact_math_before_low_word_wrap",
+      "passed": true
+    },
+    {
+      "name": "paused_virtual_time_ignores_host_wait_and_read_traffic",
+      "passed": true
+    },
+    {
+      "name": "system_reset_preserves_reference_count_and_fraction_with_a_real_reset_witness",
+      "passed": true
+    },
+    {
+      "name": "aligned_writes_are_rejected_without_changing_count_or_phase",
+      "passed": true
+    },
+    {
+      "name": "narrow_and_unaligned_accesses_have_exact_core_rejections",
+      "passed": true
+    },
+    {
+      "name": "configuration_is_immutable_and_qom_count_is_read_only",
+      "passed": true
+    },
+    {
+      "name": "only_the_four_byte_counter_is_mapped_within_the_dt_aperture",
+      "passed": true
+    },
+    {
+      "name": "non_dt_frequencies_are_rejected_during_realization",
+      "passed": true,
+      "rejected_configurations": [
+        {
+          "clock_frequency": 0,
+          "destination_exit": 1,
+          "expected_diagnostic_observed": true
+        },
+        {
+          "clock_frequency": 32000,
+          "destination_exit": 1,
+          "expected_diagnostic_observed": true
+        },
+        {
+          "clock_frequency": 32769,
+          "destination_exit": 1,
+          "expected_diagnostic_observed": true
+        }
+      ]
+    },
+    {
+      "name": "v1_presave_freshness_and_fraction_restore_at_a_different_virtual_origin",
+      "passed": true,
+      "source_fraction_numerator": 999981056,
+      "device_mmio_before_observation": false
+    },
+    {
+      "name": "v1_fraction_crosses_first_and_second_ticks_without_reset_or_downtime_drift",
+      "passed": true,
+      "first_delta_ns": 1,
+      "second_boundary_delta_ns": 30518
+    },
+    {
+      "name": "v1_wrap_count_is_sampled_at_save_and_restored_before_device_mmio",
+      "passed": true,
+      "source_fraction_numerator": 999967232,
+      "device_mmio_before_observation": false
+    },
+    {
+      "name": "v1_wrap_and_fraction_continue_from_saved_phase_at_destination",
+      "passed": true,
+      "first_delta_ns": 1,
+      "low_word_wrap_observed": true
+    },
+    {
+      "name": "one_real_stream_with_only_frequency_corrupted_is_rejected",
+      "passed": true,
+      "stream_modified": true,
+      "legitimate_alternate_frequency_profile": false
+    }
+  ],
+  "expected_completed_migrations": 2,
+  "migrations": [
+    {
+      "name": "v1_first_tick_fraction_actual_roundtrip",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 14,
+        "total-time": 19,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 987.8506666666666,
+          "transferred": 2222664,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "destination": {
+        "status": "completed"
+      },
+      "source_virtual_ns": 30517,
+      "destination_virtual_ns": 987654321,
+      "different_virtual_origins": true,
+      "source_counter_read_before_save": false,
+      "target_device_mmio_before_first_observation": false,
+      "snapshot_sha256": "11ea81ef00f3f0148e080c9b202bd596fc10b8ada196253d573be3c9ca1d022e",
+      "snapshot_bytes": 2222664
+    },
+    {
+      "name": "v1_wrap_boundary_count_and_fraction_actual_roundtrip",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 0,
+        "downtime": 14,
+        "total-time": 20,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 889.0656,
+          "transferred": 2222664,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "destination": {
+        "status": "completed"
+      },
+      "source_virtual_ns": 131071999999999,
+      "destination_virtual_ns": 73,
+      "different_virtual_origins": true,
+      "source_counter_read_before_save": false,
+      "target_device_mmio_before_first_observation": false,
+      "snapshot_sha256": "17d63c93d76c031e19580e4778049ae859ff2b4e674b713295ebee07b254703d",
+      "snapshot_bytes": 2222664
+    }
+  ],
+  "expected_corrupted_stream_rejections": 1,
+  "corrupted_stream_rejections": [
+    {
+      "name": "frequency_field_corruption_is_rejected",
+      "passed": true,
+      "stream_modified": true,
+      "actual_source_stream": true,
+      "legitimate_alternate_frequency_profile": false,
+      "source_status": "completed",
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-mpm2-sleep-counter",
+      "frequency_mismatch": "8000 != 7d00",
+      "original_snapshot_sha256": "11ea81ef00f3f0148e080c9b202bd596fc10b8ada196253d573be3c9ca1d022e",
+      "corrupted_snapshot_sha256": "e2b80f4876b23e541d6828fd6b84a4d6ba148e41e8d1d74904327e2465bce5c1",
+      "original_stream_unchanged": true,
+      "section_header_offset": 376407,
+      "frequency_field_offset": 376444,
+      "section_version": 1,
+      "instance_id": 0,
+      "original_frequency": 32768,
+      "corrupted_frequency": 32000,
+      "modified_field_bytes": 4,
+      "only_frequency_field_modified": true
+    }
+  ],
+  "vmstate_version": 1,
+  "clock_frequency_hz": 32768,
+  "legacy_gcc_sleep_input_hz": 32000,
+  "counter_bits": 32,
+  "mmio_register_count": 1,
+  "mmio_window_bytes": 4,
+  "dt_aperture_bytes": 4096,
+  "read_only": true,
+  "clock_domain": "QEMU_CLOCK_VIRTUAL",
+  "reference_cold_origin": "zero-at-realization",
+  "reference_system_reset_policy": "preserve-count-and-fraction",
+  "reference_policy_is_measured_hardware_reset_behavior": false,
+  "qemu_sha256": "f3582740b3ccbe3689181f796412d8d28cdfc92ad0ea48e639334dd464c6548b",
+  "script_sha256": "0bda0888ad43da8106a1f287d2c054cc8113edc09787b4f5eb64fbaf12690b9e",
+  "guest_cpu_executed": false,
+  "native_kernel_probe_observed": false,
+  "android_boot_passed": false,
+  "scope": "Actual compiled-device QTest/QMP transactions and real VMState migration of the explicit digital reference counter",
+  "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+  "source_url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/boot_stats.c",
+  "source_sha256": {
+    "boot_stats.c": "4fd7113b1755f4dcaac55c688abba97d00f15fa000b1d88b5b187946f6925ff6"
+  },
+  "binary_unchanged": true,
+  "duration_seconds": 0.751
+}

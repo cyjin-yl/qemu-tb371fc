@@ -54,18 +54,25 @@ Use their per-run hashes rather than treating a source table as execution proof.
 | --- | --- |
 | Board and loader | [machine.md](docs/machine.md), [runtime layout evidence](evidence/boot-layout-20261123/runtime-layout-frozen4.json) |
 | A77 CPU and PMU | [cpu.md](docs/cpu.md), Arm Cortex-A77 TRM references and native MIDR/REVIDR observations |
+| NoC QoS | [noc-qos-reference.md](docs/noc-qos-reference.md), pinned RPMh programming sequence and bounded DT; [actual 20-check receipt](evidence/wholeboard-20261123-a47/noc-qos-99ef.json) and [47-port native snapshot](evidence/wholeboard-20261123-a47/native-99ef.json); no traffic or SBM claim |
+| Config NoC SBM | [noc-sbm-reference.md](docs/noc-sbm-reference.md), [fixed vendor source/actual-DT contract](evidence/wholeboard-20261123-a47/noc-sbm-source-contract.json), [independent DT geometry](evidence/wholeboard-20261123-a47/noc-sbm-independent-dt-layout.json); component CI and all five streams verified. [09c638 native](evidence/wholeboard-20261123-a47/native-09c638.json) recorded three CLR writes and zero SET writes; settled cold bits prove neither traffic drain nor consumer power success. The earlier 3b31e8 unused cold state remains separate |
+| QSMMUv500 reference | [source contract](docs/smmuv500-source-contract.md) and [14-node actual DT slice](evidence/wholeboard-20261123-a47/smmuv500-dt-evidence-99ef.json); directly observed TCU VERSION fault, source-defined HALT/ECATS, [apps-only companion](docs/smmuv500-reference.md), and [exact Image IKCONFIG](evidence/wholeboard-20261123-a47/smmuv500-kernel-config.json); version, timing and firmware handoff remain unmeasured. Absent in 99ef; [3ef98 passed 36 checks and real migrations](evidence/wholeboard-20261123-a47/smmuv500-3ef98.json), with [separate native TBU resource progress](evidence/wholeboard-20261123-a47/native-3ef98.json) |
+| TBU power ownership | [Four complete GDSC DT nodes](evidence/wholeboard-20261123-a47/smmuv500-tbu-gdsc-dt.json) and [current GCC ownership/source review](evidence/wholeboard-20261123-a47/smmuv500-tbu-gdsc-review.json); existing GCC domains 7–10 own the words, while traffic/power coupling is not added by the companion |
+| TSENS24xx digital reference | [Two actual controllers and direct thermal references](evidence/wholeboard-20261123-a47/tsens-dt-evidence-3ef98.json), [pinned vendor/upstream source review](evidence/wholeboard-20261123-a47/tsens-dt-review-3ef98.json) and [model contract](docs/tsens24xx-reference.md); actual PA `0x0c222004` abort in [3ef98 native run](evidence/wholeboard-20261123-a47/native-3ef98.json). SROT DT size 4 remains distinct from sourced +4 access. Explicit temperature, boot mask, 1-ms timing, reset defaults and held-clear policy are reference assumptions. [52492a CI](evidence/wholeboard-20261123-a47/public-ci-52492a.json) and its [original TSENS 34/2/2/2 receipt](evidence/wholeboard-20261123-a47/tsens24xx-52492a.json) passed; the [same-binary full-DT run](evidence/wholeboard-20261123-a47/native-52492a.json) completed reference sampling on both controllers and next aborted in CPUFreq at `0x18591100` |
+| CPUFreq HW EPSS reference | [Bounded original-DT resources](evidence/wholeboard-20261123-a47/cpufreq-dt-evidence-52492a.json), [fixed official driver/clock review](evidence/wholeboard-20261123-a47/cpufreq-dt-review-52492a.json) and [model contract](docs/cpufreq-hw-reference.md). Three domains, actual 4/3/1 CPU counter addresses and SPI30/31/19; all DT max_cores arguments are 4. Synthetic all-XO LUTs, voltages, limit-event policy and always-clocked virtual cycles are explicit references. [1fe4e1 actual 30/2/2/2 receipt](evidence/wholeboard-20261123-a47/cpufreq-hw-1fe4e1.json) and [all 74 gates](evidence/wholeboard-20261123-a47/public-ci-1fe4e1.json) passed. Same-binary full DT explicitly registers CPUFreq, then faults in L3 devfreq at 0x18590000 |
+| VIDEOCC preparation | [fixed vendor source note](docs/videocc-source-note.md) and [actual v2 DT binding](evidence/wholeboard-20261123-a47/videocc-dt-evidence.json); probe was deferred, not the next fatal |
+| MPM sleep counter | [mpm2-sleep-counter.md](docs/mpm2-sleep-counter.md), pinned boot_stats read32 contract and actual TB371FC DT 32768-Hz declaration; explicit virtual-time, cold-epoch/reset and migration policies; [17-check/two-transfer receipt](evidence/wholeboard-20261123-a47/mpm2-0508.json) and [native read](evidence/wholeboard-20261123-a47/native-0508.json) |
 | Generic Timer | [mmio-timer.md](docs/mmio-timer.md), Arm ARM external-register contract, exact-count arithmetic and retained regression controls |
 | GENI | [geni-uart.md](docs/geni-uart.md), Linux FIFO/IRQ contract and actual clock/reset integration |
 | GCC | [gcc-sm8250.md](docs/gcc-sm8250.md), pinned Linux-derived register manifest and clock-parent assumptions |
-| GPU CX/GX GDSC | [gdsc.md](docs/gdsc.md), captured five-window topology, pinned Android/Qualcomm downstream register fields, and explicit digital request/reset assumptions |
-| SMMUv2 | [smmuv2.md](docs/smmuv2.md), architectural stage-1 model and explicit Qualcomm-extension limits |
+| GPUCC | [gpucc-sm8250.md](docs/gpucc-sm8250.md), pinned Kona Lucid PLL1, GMU, branch/reset contracts, actual Clock outputs and explicit analog/rendering limits |
+| NPUCC | [npucc-sm8250.md](docs/npucc-sm8250.md), pinned Kona v2 three-bank PLL/RCG/branch/reset contracts, bounded CRC divider and unresolved-parent limits |
+| SMMUv2 | [Architectural contract](docs/smmuv2.md), [migration geometry and v3 granule equality](docs/smmuv2-migration.md), and [explicit 16/64 KiB primary sources and vectors](docs/smmuv2-granules.md). Default remains 4 KiB; original default-branch [b5f4415/69ca28 receipts](evidence/smmuv2-granules-20261123/publication.json) retain their own binary scope. The merged core preserves apps companion hooks and requires a new combined run |
 | UFS | [ufs-sm8250.md](docs/ufs-sm8250.md), [clock diagnosis](docs/ufs-clock-diagnosis.md), [pinned upstream backports](docs/ufs-upstream-backports.json) |
 | RPMh | [rpmh-sm8250.md](docs/rpmh-sm8250.md), synthetic reference database versus optional external-file and AOP-derived partial metadata |
 | TLMM | [tlmm.md](docs/tlmm.md), native enclosing aperture and pinned Linux per-pin layout |
 | Watchdog | [watchdog.md](docs/watchdog.md), software-derived rate, digital timer/action behavior and migration |
 | IMEM / PS_HOLD | [boot-resources.md](docs/boot-resources.md), scoped SRAM/pin contracts and boot dependency evidence |
-| Empty SMEM handoff | [smem-reference.md](docs/smem-reference.md), [captured SMEM/TCSR geometry](evidence/smem-mutex-20261123/geometry.json), published shared-memory ABI and explicit loader/reference choices |
-| Production SMEM observation | [smem-driver-observer.md](docs/smem-driver-observer.md), exact-image symbol/disassembly validation and live successful-probe state, separate from handoff-image presence |
 | Guest acceptance | [guest-acceptance.md](docs/guest-acceptance.md), console-independent read-only GDB record and real shutdown requirement |
 | Public CI | [ci.md](docs/ci.md), mandatory component and unpatched-Linux gates with retained failures |
 
@@ -103,31 +110,134 @@ pinned driver sources, reference identity choices and unsupported modes.
 
 The [TCSR mutex](docs/tcsr-mutex.md), [AOP message SRAM](docs/aop-msgram.md), and [REFGEN request](docs/refgen.md) use selected captured DT fields and pinned driver sources. Each document distinguishes protocol evidence from unknown native initialization. The [integrated receipts](evidence/boot-resources-20261123-1005/publication.json) record actual checks and separately configured, unsuccessful native diagnostics.
 
+## L3 devfreq native boundary
 
-## GPU GDSC and SMEM reference interfaces
+The [exact-DT and production-symbol capture](evidence/wholeboard-20261123-a47/devfreq-dt-symbols-1fe4e1.json) has 6381 bytes, SHA256 `3b4d663de9e5ea33f5a86fc7d9f49f26223a6217657594423691d59f0ded124b`. It identifies one `qcom,devfreq-fw` parent, en-base `0x18590000/4`, ftbl-base `0x18590100/160`, perf-base `0x18590320/4`, and four software voters. The [source/DT review](evidence/wholeboard-20261123-a47/devfreq-dt-review-1fe4e1.json) pins `drivers/devfreq/devfreq_qcom_fw.c` at `94304e12a3509eac7b3716bf574ce0b1fcaacbae`, SHA256 `745457c2a20c90521772ef29c5f572570f481541d01ef427707d3da35bc5eb16`. Its first enable read agrees with the actual abort, but exact production C provenance remains source-correlated. No L3 hardware frequency table, firmware handoff or physical cache rate was measured.
 
-The [GPU GDSC contract](docs/gdsc.md) separates captured CX/GX register
-addresses from the unmeasured reset state and modeled external requests. Its
-field definitions are corroborated by the [official Android downstream
-driver at b6410c3f75259c0ca2df45a01838d2e46272723e](https://android.googlesource.com/kernel/msm/+/b6410c3f75259c0ca2df45a01838d2e46272723e/drivers/clk/qcom/gdsc-regulator.c)
-and the pinned TB371FC mirror cited in the component document. The source
-hashes and private-capture hash are recorded there. No physical supply timing,
-native power-on reset value, GPUCC or GPU/GMU implementation is inferred from
-those register fields.
+The [implemented request-reference contract](docs/devfreq-qcom-fw-reference.md) keeps this source boundary: four synthetic all-XO rows, the driver's adjacent-frequency sentinel, guest software vote aggregation, and no hardware Clock/IRQ/timer/counter claims. The [independent model/test review](evidence/wholeboard-20261123-a47/devfreq-model-test-review.json) binds model commit `cfda4e5c9e17ca540425b809ab21dbb983d26eda` and final test commit `c1bd8c03a625115f037d09518d0ccaca48167e1c` (test SHA256 `8c4e49817f58cb2dca002d446486e75fee45c65ee2142963ed9112fbe24669cf`). The [actual b95f97 75-gate run](evidence/wholeboard-20261123-a47/public-ci-b95f97.json) and [raw 20/2/2/2 receipt](evidence/wholeboard-20261123-a47/devfreq-qcom-fw-b95f97.json) passed. The same accepted binary's full-DT printk explicitly registers all four voters and initializes the parent, then records a new configuration-NoC SBM worker abort at 0x01506080. Synthetic nominal rates remain model data, not physical cache or firmware measurements.
 
-The [SMEM handoff](docs/smem-reference.md) uses the published shared-memory
-structures in [Linux v6.12](https://github.com/torvalds/linux/blob/v6.12/drivers/soc/qcom/smem.c)
-and the [official OnePlus SM8250 source at
-94304e12a3509eac7b3716bf574ce0b1fcaacbae](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/smem.c).
-The document records their exact hashes and corroboration from the pinned
-TB371FC mirror. The range and TCSR lock index come from captured geometry;
-empty v12 contents, cacheline, item capacity and reference lock ownership are
-explicit model choices. No original SBL RAM image or firmware-owned items
-are supplied.
+## Config NoC SBM and startup-input boundary
 
-Shared-memory ABI agreement does not establish the production driver's
-private object layout. The [real-driver observation procedure](docs/smem-driver-observer.md)
-requires verifying that layout and the final successful-probe store against
-the exact production instructions before decoding live state. Component test
-definitions, actual compiled-binary receipts, driver-probe observations and
-full native-DT/Android boot outcomes remain separate evidence categories.
+The [SBM source contract](evidence/wholeboard-20261123-a47/noc-sbm-source-contract.json)
+pins OnePlus vendor commit `94304e12a3509eac7b3716bf574ce0b1fcaacbae` and
+the RPMh NoC implementation selected by the recorded production configuration.
+The actual DT supplies config NoC base 0x01500000, SBM offset 0x6000 and
+ports 0..7. The source defines low CLR/SET/SENSE offsets 0x80/0x88/0x100.
+Polling and software timeout do not establish physical response latency;
+the model's 1000 ns, connected cold state and external stalls are explicit
+reference policies. The vendor commit is correlated source, not a proven
+byte-for-byte reproduction of the production kernel build.
+
+The [actual fixed-symbol and fstab collector result](evidence/wholeboard-20261123-a47/boot-fstab-and-sbm-symbols-b95f97.json)
+hashes the existing production kallsyms and locates the observed PC at
+`msm_bus_noc_sbm_config+0x84`. The next distinct symbol is 0x1e8 bytes away;
+that span is not an independent ELF function-size measurement. The same
+bounded read-only collection reports sanitized mount requirements from the
+already-hashed ramdisk slice, without opening any referenced partition or
+key path. The separate [boot metadata receipt](evidence/wholeboard-20261123-a47/boot-ramdisk-inputs-b95f97.json)
+records the full existing boot-file hash and raw init ELF metadata. Neither
+collector executes init, authenticates AVB or proves complete Android inputs.
+
+## Actual RPMh WAIT and complete-DT model evidence
+
+The [3b31e8 native observations](evidence/wholeboard-20261123-a47/native-observations-3b31e8.json)
+record the exact rejected DRV2 write, CPU7 PID1 abort and full printk context.
+The [bounded Image disassembly](evidence/wholeboard-20261123-a47/rpmh-production-disassembly-3b31e8.json)
+hashes the unchanged production Image and kallsyms, captures five named
+functions (4584 bytes) and matches the fault instruction plus four preceding
+instructions against the native Code dump. The Image offset mapping is
+therefore checked independently of a guessed symbol address. These are
+software execution facts; no hardware reserved-bit behavior was measured.
+
+The [direct actual-DT root-model read](evidence/wholeboard-20261123-a47/actual-dt-model-3b31e8.json)
+binds the full 5114262a DTB to the exact 37-byte property including its NUL:
+`Qualcomm Technologies, Inc. kona QRD`. The [legacy fixture review](evidence/wholeboard-20261123-a47/legacy-userspace-board-model-review.json)
+preserves its incompatible TB371FC-name predicate. Staging those old inputs
+was not a guest execution or an eight-check pass.
+
+The [independent source/production review](evidence/wholeboard-20261123-a47/rpmh-source-production-review-3b31e8.json) confirms the exact producer stack slot, 12-byte command copy and unnormalized WAIT accumulation in the unchanged production machine code. It distinguishes this local path equivalence from whole-kernel source provenance and from unmeasured silicon behavior.
+
+## WAIT compatibility policy and fixture provenance
+
+The [WAIT reference contract](docs/rpmh-wait-reserved-reference.md) separates
+the confirmed production uninitialized-command path from unknown silicon
+reserved-bit behavior. Only the explicit nondefault model policy permits
+high-bit masking; its original low16 command semantics and busy rejection
+remain required. The optional migration identity prevents importing a
+different policy as if it were the same machine configuration.
+
+The new `guest-init-actual-dt.c` and `boot_verdict_actual_dt.py` preserve every
+non-model check of the existing eight-check ABI. The separate CI builder
+records actual output hashes and symbols; its successful-build flag never
+means guest execution. The source-pinned consumer and pure ZIP-stage helper
+check the actual ELF/RET/CPIO relationships and bind any later execution to
+the same source, binary, original Image and complete DT. Original Android
+images and hardware endpoint behavior remain separate missing acceptance.
+
+## Actual 77-gate checkpoint and unexecuted full-DT fixture
+
+The [09c638 public receipt](evidence/wholeboard-20261123-a47/public-ci-09c638.json)
+binds 73 component passes, four Linux passes and the exact board executable to
+the [complete job-log audit](evidence/wholeboard-20261123-a47/official-ci-log-audit-09c638.json).
+The [raw WAIT result](evidence/wholeboard-20261123-a47/rpmh-wait-09c638.json)
+has 17 checks, one completed transfer and four rejection cases. The executed
+artifact guard read sixteen original reports and thirty-seven actual stream
+files. Its full raw JSON is preserved in gzip; the [index](evidence/wholeboard-20261123-a47/ci-artifact-audit-index-09c638.json)
+is a derived navigation record with both compressed and original hashes.
+
+The [original fixture manifest](evidence/wholeboard-20261123-a47/actual-dt-fixture-manifest-09c638.json)
+and [executed stage audit](evidence/wholeboard-20261123-a47/full-dtb-fixture-stage-audit-09c638.json)
+bind the new ELF, fixed native-tested arch probe and initrd to that same source
+and ZIP. They prove build and content validation, not guest execution. The
+subsequent [native diagnostic](evidence/wholeboard-20261123-a47/native-09c638.json)
+has a direct read fault at BPS GDSC 0x0ad07004 in a deferred-probe worker.
+The complete kernel log contains an Oops but no PID1 panic; the full-DT
+eight-check consumer was not run. WAIT masking was enabled with zero usage,
+so this trace does not establish it caused the later progress. No Android,
+physical reserved-bit behavior or endpoint traffic success is inferred.
+
+## Camera GDSC candidate and bounded GCC field correction
+
+The [camera source contract](docs/camera-gdsc-source-contract.md) binds the next
+increment to two read-only slices of the original full DT and fixed official
+vendor files. It accounts for all 24 DT GDSC owners and selects only the six
+same-protocol camera words. The second capture proves the parent resource
+name `mmcx.lvl`; RPMh index 3 and its digital level behavior remain properties
+of the existing explicit reference, not measured PMIC behavior.
+
+The [camera protocol](docs/camera-gdsc-reference.md) specifies the independent
+type, sparse geometry, unknown-input rules and 194-byte v1 state. The separate
+[GCC correction](docs/gcc-sm8250.md#camera-ahb-retention-request-fields) follows
+the exact `clk_set_flags` dispatch to bits 13/14 of `0xb008`; its generator now
+checks four fixed inputs while still reproducing two output files. No parent
+clock rate, retained camera memory or hidden hardware voter is inferred.
+Formal execution evidence for this combined candidate is still required.
+
+## MDSS GDSC and DISP_AHB bounded increment
+
+The [MDSS contract](docs/mdss-gdsc-reference.md) consumes the existing
+[remaining-frontier source analysis](evidence/wholeboard-20261123-a47/remaining-gdsc-frontier-contract.md).
+It selects only the MDSS word at `0x0af03000`, preserves the camera type and
+194-byte state, and shares the real mmcx output through a stateless splitter.
+Its self proxy remains a software consumer rather than a hardware parent.
+The GCC generator checks the fixed display branch declaration and stores
+only its two source-supported retention requests. The unknown parent clock,
+video GDSC holes and all other DISPCC addresses retain their old scope.
+Independent 64-byte MDSS migration and real-wiring acceptance are required;
+neither source generation nor component checks establish display or Android
+execution.
+
+## NPU GDSC and NPU_CFG_AHB bounded increment
+
+The [NPU contract](docs/npu-gdsc-reference.md) binds the next actual native
+read failure at `0x09981004` to the same fixed vendor regulator/branch
+sources and original DT. That node declares no parent supply and no hardware
+trigger, so the independent reference leaves parent inputs unconnected and
+rejects hardware mode. A collapsed request is known-off; an asserted
+request cannot produce ON feedback without an explicitly known parent.
+There is no inferred mmcx link. NPUCC's 26 sparse windows and VMState stay
+unchanged. The GCC generator adds only the two source-supported retention
+request bits to its existing NPU_CFG_AHB word, keeping HWCG, status and the
+unknown clock input. The 21-check gate and independent 64-byte migration
+require actual compiled execution; source inspection is not an Android or
+NPU workload result.

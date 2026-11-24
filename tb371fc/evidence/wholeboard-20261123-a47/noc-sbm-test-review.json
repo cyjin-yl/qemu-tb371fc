@@ -1,0 +1,58 @@
+{
+  "schema": "tb371fc-noc-sbm-test-independent-static-review-v1",
+  "reviewer": "board_gaps",
+  "result": "no-static-blocker-found",
+  "model_runtime_commit": "8acb748b8626ef8d574e0dc72a95e8318a2def0d",
+  "test": {
+    "path": "/run/tb371fc-sbm-tests-a47/tb371fc/tests/test_noc_sbm.py",
+    "bytes": 63574,
+    "sha256": "ebba6a0a4cc2139bb6657636f6160975f3bd070034d769c66e25c4ed5ba6563f",
+    "content_git_blob_sha1": "2be093b1b5dc0e076ba3b373cf3f6dc329cbcf73",
+    "commit": "844f4292c28e87c9d711a86a19741ad08a25e27c"
+  },
+  "scope_reviewed": [
+    "Rig and QMP/QTest transcript methods",
+    "source snapshots and 152-byte section parser",
+    "pre-save, incoming and continued target phases",
+    "two directional profile rejections and two single-field corrupted streams",
+    "strict width/unaligned/wide request and reset/overflow oracles",
+    "main result counts and final binary identity"
+  ],
+  "checks": {
+    "ordinary": 16,
+    "special": 4,
+    "positive_roundtrip_checks": 4,
+    "profile_rejection_checks": 2,
+    "corrupted_stream_rejection_checks": 2,
+    "total": 28,
+    "completed_source_destination_roundtrips": 2,
+    "separate_unknown_profile_negative_source_streams": 1
+  },
+  "findings": [
+    "The due-zero source case first pauses QEMU, advances QTest virtual time to the existing deadline, and verifies that all eight requests remain pending. It is not a previously completed timer mislabeled as due.",
+    "Two stopped source snapshots before save and a complete after-save snapshot must be identical; pre-save cannot hide an acknowledgement. The actual 152-byte payload is compared with all serialized source observations.",
+    "The incoming target begins with distinct request and external-stall state. It uses a different virtual origin. The first restored observation is pure QOM plus RAM witness with explicit no SBM MMIO/no cont guards.",
+    "Eight restored active deadlines are checked at individual -1/+1 boundaries before the first SBM MMIO; the source zero remainder is observed pending before cont and completes only after dispatch.",
+    "The second destination proves active reconnect completion without finishing a stalled port, then resumes the stored 600 ns phase. A canceled stalled port remains idle. These timer proofs precede the first SBM MMIO.",
+    "Reset has an independent GCC register witness plus drained QMP RESET event; the test preserves the external stall input and rejects late responses.",
+    "The section parser binds the actual qcom-noc-sbm version-1 instance and checks every payload byte. The disabled source explicitly uses the canonical zero runtime invariant, while acknowledging runtime QOM is unavailable.",
+    "Both profile failures use real source files and started incoming processes, require the specific device/load error and target-versus-source marker direction, and preserve the source file hash.",
+    "Each corrupted file starts from the verified real source section and changes one bit in one field only: identity at byte40, or port1 remaining at byte72 from100 to1124. Whole-file byte differences and exact rejection diagnostics are retained.",
+    "Mapped invalid sizes and unaligned fragments use core size errors; unmapped holes remain core rejected errors. Wide commands explicitly permit the first four-byte transaction before the subsequent hole fails.",
+    "The main report requires exactly28 distinct successful checks, two completed and resumed roundtrips, two profile failures, two malformed-stream failures, and unchanged QEMU binary bytes."
+  ],
+  "verification_performed_here": {
+    "read_only_source_review": true,
+    "ast_parse_and_defined_function_count": true,
+    "imported_test": false,
+    "executed_test_functions": false,
+    "qemu_executed": false,
+    "public_tests_run": false,
+    "remote_commands_run": false
+  },
+  "limits": [
+    "Static review is not an executed acceptance result. Formal CI must supply the actual QMP, QTest, stream and stderr artifacts.",
+    "The third saved unknown-profile source is a negative fixture and is not counted as another completed source-to-destination roundtrip.",
+    "Reference feedback has no physical traffic/drain/IRQ/Clock or userspace/Android success claim."
+  ]
+}

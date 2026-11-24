@@ -25,9 +25,14 @@ enum {
  * SW_RESET: RW reset bit 0.
  *
  * "hw-enable" and "external-vote" are one-bit reference GPIO inputs.
+ * "parent-known" / "parent-on" carry modeled upstream availability.
+ * "state-known" validates "power-on"; unknown feedback reads are rejected.
  * "power-on", "clamp-io", "reset-asserted" are one-bit digital outputs.
  * "enabled-reference" explicitly enables the reference register protocol.
  * "reference-on" selects a documented reset assumption, not a silicon dump.
+ * Neither profile asserts a parent input. Without a parent, requested power
+ * remains unknown; an absent request resolves to known off in reference mode.
+ * VMState v2 includes the parent; old streams without it are rejected.
  * This interface does not execute GPU/GMU/TrustZone firmware or model rails.
  */
 #endif

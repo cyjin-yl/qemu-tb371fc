@@ -1,0 +1,2617 @@
+{
+  "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+  "kernel_config": {
+    "ikconfig_found": true,
+    "sha256": "23d3db565be3cd6cfc07bb90541d971dc70e6a6ce3516360155b8fd15590e726",
+    "relevant_lines": [
+      "CONFIG_QCOM_RPMH=y",
+      "CONFIG_QCOM_BUS_SCALING=y",
+      "CONFIG_QCOM_BUS_CONFIG_RPMH=y"
+    ]
+  },
+  "physical_fault": [
+    {
+      "line": 8733,
+      "text": "Invalid read at addr 0x16E9008, size 4, region '(null)', reason: rejected",
+      "following": [
+        "Taking exception 4 [Data Abort] on CPU 5",
+        "...from EL1 to EL1",
+        "...with ESR 0x25/0x96000010",
+        "...with FAR 0xffffff800b2e9008",
+        "...with SPSR 0x60c00005",
+        "...with ELR 0xffffff80086a6670"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "name": "aggre1_noc-base",
+      "base": 23986176,
+      "base_hex": "0x16e0000",
+      "size": 127360,
+      "size_hex": "0x1f180"
+    },
+    {
+      "name": "aggre2_noc-base",
+      "base": 24117248,
+      "base_hex": "0x1700000",
+      "size": 250240,
+      "size_hex": "0x3d180"
+    },
+    {
+      "name": "config_noc-base",
+      "base": 22020096,
+      "base_hex": "0x1500000",
+      "size": 163840,
+      "size_hex": "0x28000"
+    },
+    {
+      "name": "dc_noc-base",
+      "base": 151781376,
+      "base_hex": "0x90c0000",
+      "size": 16896,
+      "size_hex": "0x4200"
+    },
+    {
+      "name": "mc_virt-base",
+      "base": 152043520,
+      "base_hex": "0x9100000",
+      "size": 713216,
+      "size_hex": "0xae200"
+    },
+    {
+      "name": "gem_noc-base",
+      "base": 152043520,
+      "base_hex": "0x9100000",
+      "size": 713216,
+      "size_hex": "0xae200"
+    },
+    {
+      "name": "mmss_noc-base",
+      "base": 24379392,
+      "base_hex": "0x1740000",
+      "size": 127104,
+      "size_hex": "0x1f080"
+    },
+    {
+      "name": "system_noc-base",
+      "base": 23199744,
+      "base_hex": "0x1620000",
+      "size": 115200,
+      "size_hex": "0x1c200"
+    },
+    {
+      "name": "ipa_virt-base",
+      "base": 23199744,
+      "base_hex": "0x1620000",
+      "size": 262144,
+      "size_hex": "0x40000"
+    },
+    {
+      "name": "compute_noc-base",
+      "base": 24117248,
+      "base_hex": "0x1700000",
+      "size": 250240,
+      "size_hex": "0x3d180"
+    },
+    {
+      "name": "npu_noc-base",
+      "base": 161021952,
+      "base_hex": "0x9990000",
+      "size": 5632,
+      "size_hex": "0x1600"
+    }
+  ],
+  "fabrics": [
+    {
+      "path": "/soc/ad-hoc-bus/fab-aggre1_noc",
+      "properties": {
+        "cell-id": [
+          6146
+        ],
+        "label": [
+          "fab-aggre1_noc"
+        ],
+        "qcom,fab-dev": [],
+        "qcom,base-name": [
+          "aggre1_noc-base"
+        ],
+        "qcom,qos-off": [
+          4096
+        ],
+        "qcom,base-offset": [
+          8192
+        ],
+        "qcom,sbm-offset": [
+          0
+        ],
+        "qcom,bus-type": [
+          1
+        ],
+        "clocks": [],
+        "phandle": [
+          183
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-aggre2_noc",
+      "properties": {
+        "cell-id": [
+          6147
+        ],
+        "label": [
+          "fab-aggre2_noc"
+        ],
+        "qcom,fab-dev": [],
+        "qcom,base-name": [
+          "aggre2_noc-base"
+        ],
+        "qcom,qos-off": [
+          4096
+        ],
+        "qcom,base-offset": [
+          12288
+        ],
+        "qcom,sbm-offset": [
+          0
+        ],
+        "qcom,bus-type": [
+          1
+        ],
+        "clocks": [],
+        "phandle": [
+          189
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-compute_noc",
+      "properties": {
+        "cell-id": [
+          6155
+        ],
+        "label": [
+          "fab-compute_noc"
+        ],
+        "qcom,fab-dev": [],
+        "qcom,base-name": [
+          "compute_noc-base"
+        ],
+        "qcom,qos-off": [
+          2048
+        ],
+        "qcom,base-offset": [
+          208896
+        ],
+        "qcom,sbm-offset": [
+          0
+        ],
+        "qcom,bus-type": [
+          1
+        ],
+        "clocks": [],
+        "phandle": [
+          194
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-config_noc",
+      "properties": {
+        "cell-id": [
+          5120
+        ],
+        "label": [
+          "fab-config_noc"
+        ],
+        "qcom,fab-dev": [],
+        "qcom,base-name": [
+          "config_noc-base"
+        ],
+        "qcom,qos-off": [
+          0
+        ],
+        "qcom,base-offset": [
+          0
+        ],
+        "qcom,sbm-offset": [
+          24576
+        ],
+        "qcom,bus-type": [
+          1
+        ],
+        "clocks": [],
+        "phandle": [
+          245
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-dc_noc",
+      "properties": {
+        "cell-id": [
+          6150
+        ],
+        "label": [
+          "fab-dc_noc"
+        ],
+        "qcom,fab-dev": [],
+        "qcom,base-name": [
+          "dc_noc-base"
+        ],
+        "qcom,qos-off": [
+          0
+        ],
+        "qcom,base-offset": [
+          0
+        ],
+        "qcom,sbm-offset": [
+          0
+        ],
+        "qcom,bus-type": [
+          1
+        ],
+        "clocks": [],
+        "phandle": [
+          251
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-gem_noc",
+      "properties": {
+        "cell-id": [
+          6156
+        ],
+        "label": [
+          "fab-gem_noc"
+        ],
+        "qcom,fab-dev": [],
+        "qcom,base-name": [
+          "gem_noc-base"
+        ],
+        "qcom,qos-off": [
+          4096
+        ],
+        "qcom,base-offset": [
+          135168
+        ],
+        "qcom,sbm-offset": [
+          0
+        ],
+        "qcom,bus-type": [
+          1
+        ],
+        "clocks": [],
+        "phandle": [
+          253
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-ipa_virt",
+      "properties": {
+        "cell-id": [
+          6153
+        ],
+        "label": [
+          "fab-ipa_virt"
+        ],
+        "qcom,fab-dev": [],
+        "qcom,base-name": [
+          "ipa_virt-base"
+        ],
+        "qcom,qos-off": [
+          0
+        ],
+        "qcom,base-offset": [
+          0
+        ],
+        "qcom,sbm-offset": [
+          0
+        ],
+        "qcom,bypass-qos-prg": [],
+        "clocks": [],
+        "phandle": [
+          262
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-mc_virt",
+      "properties": {
+        "cell-id": [
+          6151
+        ],
+        "label": [
+          "fab-mc_virt"
+        ],
+        "qcom,fab-dev": [],
+        "qcom,base-name": [
+          "mc_virt-base"
+        ],
+        "qcom,qos-off": [
+          0
+        ],
+        "qcom,base-offset": [
+          0
+        ],
+        "qcom,sbm-offset": [
+          0
+        ],
+        "qcom,bypass-qos-prg": [],
+        "clocks": [],
+        "phandle": [
+          264
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-mmss_noc",
+      "properties": {
+        "cell-id": [
+          2048
+        ],
+        "label": [
+          "fab-mmss_noc"
+        ],
+        "qcom,fab-dev": [],
+        "qcom,base-name": [
+          "mmss_noc-base"
+        ],
+        "qcom,qos-off": [
+          2048
+        ],
+        "qcom,base-offset": [
+          40960
+        ],
+        "qcom,sbm-offset": [
+          0
+        ],
+        "qcom,bus-type": [
+          1
+        ],
+        "clocks": [],
+        "phandle": [
+          266
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-npu_noc",
+      "properties": {
+        "cell-id": [
+          6157
+        ],
+        "label": [
+          "fab-npu_noc"
+        ],
+        "qcom,fab-dev": [],
+        "qcom,base-name": [
+          "npu_noc-base"
+        ],
+        "qcom,qos-off": [
+          0
+        ],
+        "qcom,base-offset": [
+          0
+        ],
+        "qcom,sbm-offset": [
+          0
+        ],
+        "qcom,bus-type": [
+          1
+        ],
+        "clocks": [],
+        "phandle": [
+          272
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-system_noc",
+      "properties": {
+        "cell-id": [
+          1024
+        ],
+        "label": [
+          "fab-system_noc"
+        ],
+        "qcom,fab-dev": [],
+        "qcom,base-name": [
+          "system_noc-base"
+        ],
+        "qcom,qos-off": [
+          4096
+        ],
+        "qcom,base-offset": [
+          73728
+        ],
+        "qcom,sbm-offset": [
+          0
+        ],
+        "qcom,bus-type": [
+          1
+        ],
+        "clocks": [],
+        "phandle": [
+          283
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-gem_noc_display",
+      "properties": {
+        "cell-id": [
+          26003
+        ],
+        "label": [
+          "fab-gem_noc_display"
+        ],
+        "qcom,fab-dev": [],
+        "qcom,base-name": [
+          "gem_noc-base"
+        ],
+        "qcom,qos-off": [
+          4096
+        ],
+        "qcom,base-offset": [
+          135168
+        ],
+        "qcom,sbm-offset": [
+          0
+        ],
+        "qcom,bypass-qos-prg": [],
+        "qcom,bus-type": [
+          1
+        ],
+        "clocks": [],
+        "phandle": [
+          300
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-mc_virt_display",
+      "properties": {
+        "cell-id": [
+          26000
+        ],
+        "label": [
+          "fab-mc_virt_display"
+        ],
+        "qcom,fab-dev": [],
+        "qcom,base-name": [
+          "mc_virt-base"
+        ],
+        "qcom,qos-off": [
+          0
+        ],
+        "qcom,base-offset": [
+          0
+        ],
+        "qcom,sbm-offset": [
+          0
+        ],
+        "qcom,bypass-qos-prg": [],
+        "clocks": [],
+        "phandle": [
+          302
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/fab-mmss_noc_display",
+      "properties": {
+        "cell-id": [
+          26002
+        ],
+        "label": [
+          "fab-mmss_noc_display"
+        ],
+        "qcom,fab-dev": [],
+        "qcom,base-name": [
+          "mmss_noc-base"
+        ],
+        "qcom,qos-off": [
+          2048
+        ],
+        "qcom,base-offset": [
+          40960
+        ],
+        "qcom,sbm-offset": [
+          0
+        ],
+        "qcom,bypass-qos-prg": [],
+        "qcom,bus-type": [
+          1
+        ],
+        "clocks": [],
+        "phandle": [
+          304
+        ]
+      }
+    }
+  ],
+  "clients": [
+    {
+      "path": "/soc/ad-hoc-bus/mas-qhm-qspi",
+      "ports": [
+        7
+      ],
+      "bus_dev": 183,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          165
+        ],
+        "label": [
+          "mas-qhm-qspi"
+        ],
+        "qcom,buswidth": [
+          4
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          7
+        ],
+        "qcom,connections": [
+          184
+        ],
+        "qcom,bus-dev": [
+          183
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          946
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qhm-qup1",
+      "ports": [
+        5
+      ],
+      "bus_dev": 183,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          152
+        ],
+        "label": [
+          "mas-qhm-qup1"
+        ],
+        "qcom,buswidth": [
+          4
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          5
+        ],
+        "qcom,connections": [
+          184
+        ],
+        "qcom,bus-dev": [
+          183
+        ],
+        "qcom,bcms": [
+          186
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          947
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qhm-qup2",
+      "ports": [
+        6
+      ],
+      "bus_dev": 183,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          153
+        ],
+        "label": [
+          "mas-qhm-qup2"
+        ],
+        "qcom,buswidth": [
+          4
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          6
+        ],
+        "qcom,connections": [
+          184
+        ],
+        "qcom,bus-dev": [
+          183
+        ],
+        "qcom,bcms": [
+          186
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          948
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qhm-tsif",
+      "ports": [
+        8
+      ],
+      "bus_dev": 183,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          82
+        ],
+        "label": [
+          "mas-qhm-tsif"
+        ],
+        "qcom,buswidth": [
+          4
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          8
+        ],
+        "qcom,connections": [
+          184
+        ],
+        "qcom,bus-dev": [
+          183
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          949
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-xm-pcie3-modem",
+      "ports": [
+        4
+      ],
+      "bus_dev": 183,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          108
+        ],
+        "label": [
+          "mas-xm-pcie3-modem"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          4
+        ],
+        "qcom,connections": [
+          187
+        ],
+        "qcom,bus-dev": [
+          183
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          950
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-xm-sdc4",
+      "ports": [
+        2
+      ],
+      "bus_dev": 183,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          80
+        ],
+        "label": [
+          "mas-xm-sdc4"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          2
+        ],
+        "qcom,connections": [
+          184
+        ],
+        "qcom,bus-dev": [
+          183
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          951
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-xm-ufs-mem",
+      "ports": [
+        3
+      ],
+      "bus_dev": 183,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          123
+        ],
+        "label": [
+          "mas-xm-ufs-mem"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          3
+        ],
+        "qcom,connections": [
+          184
+        ],
+        "qcom,bus-dev": [
+          183
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          952
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-xm-usb3-0",
+      "ports": [
+        0
+      ],
+      "bus_dev": 183,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          61
+        ],
+        "label": [
+          "mas-xm-usb3-0"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          0
+        ],
+        "qcom,connections": [
+          184
+        ],
+        "qcom,bus-dev": [
+          183
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          953
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-xm-usb3-1",
+      "ports": [
+        1
+      ],
+      "bus_dev": 183,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          101
+        ],
+        "label": [
+          "mas-xm-usb3-1"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          1
+        ],
+        "qcom,connections": [
+          184
+        ],
+        "qcom,bus-dev": [
+          183
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          954
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qhm-qdss-bam",
+      "ports": [
+        11
+      ],
+      "bus_dev": 189,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          53
+        ],
+        "label": [
+          "mas-qhm-qdss-bam"
+        ],
+        "qcom,buswidth": [
+          4
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          11
+        ],
+        "qcom,connections": [
+          190
+        ],
+        "qcom,bus-dev": [
+          189
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          955
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qhm-qup0",
+      "ports": [
+        12
+      ],
+      "bus_dev": 189,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          151
+        ],
+        "label": [
+          "mas-qhm-qup0"
+        ],
+        "qcom,buswidth": [
+          4
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          12
+        ],
+        "qcom,connections": [
+          190
+        ],
+        "qcom,bus-dev": [
+          189
+        ],
+        "qcom,bcms": [
+          186
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          956
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-cnoc",
+      "ports": [
+        0
+      ],
+      "bus_dev": 189,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          118
+        ],
+        "label": [
+          "mas-qnm-cnoc"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          0
+        ],
+        "qcom,connections": [
+          190
+        ],
+        "qcom,bus-dev": [
+          189
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "qcom,forwarding": [],
+        "phandle": [
+          319
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qxm-crypto",
+      "ports": [
+        1
+      ],
+      "bus_dev": 189,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          125
+        ],
+        "label": [
+          "mas-qxm-crypto"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          1
+        ],
+        "qcom,connections": [
+          190
+        ],
+        "qcom,bus-dev": [
+          189
+        ],
+        "qcom,bcms": [
+          191
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "qcom,forwarding": [],
+        "phandle": [
+          957
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qxm-ipa",
+      "ports": [
+        2
+      ],
+      "bus_dev": 189,
+      "ap_owned": true,
+      "defer": true,
+      "properties": {
+        "cell-id": [
+          90
+        ],
+        "label": [
+          "mas-qxm-ipa"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          2
+        ],
+        "qcom,connections": [
+          190
+        ],
+        "qcom,bus-dev": [
+          189
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "qcom,forwarding": [],
+        "qcom,defer-init-qos": [],
+        "qcom,node-qos-bcms": [
+          7035,
+          0,
+          1
+        ],
+        "phandle": [
+          958
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-xm-pcie3-0",
+      "ports": [
+        8
+      ],
+      "bus_dev": 189,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          45
+        ],
+        "label": [
+          "mas-xm-pcie3-0"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          8
+        ],
+        "qcom,connections": [
+          192
+        ],
+        "qcom,bus-dev": [
+          189
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          959
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-xm-pcie3-1",
+      "ports": [
+        9
+      ],
+      "bus_dev": 189,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          100
+        ],
+        "label": [
+          "mas-xm-pcie3-1"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          9
+        ],
+        "qcom,connections": [
+          192
+        ],
+        "qcom,bus-dev": [
+          189
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          960
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-xm-qdss-etr",
+      "ports": [
+        7
+      ],
+      "bus_dev": 189,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          60
+        ],
+        "label": [
+          "mas-xm-qdss-etr"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          7
+        ],
+        "qcom,connections": [
+          190
+        ],
+        "qcom,bus-dev": [
+          189
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          961
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-xm-sdc2",
+      "ports": [
+        3
+      ],
+      "bus_dev": 189,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          81
+        ],
+        "label": [
+          "mas-xm-sdc2"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          3
+        ],
+        "qcom,connections": [
+          190
+        ],
+        "qcom,bus-dev": [
+          189
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          962
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-xm-ufs-card",
+      "ports": [
+        4
+      ],
+      "bus_dev": 189,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          122
+        ],
+        "label": [
+          "mas-xm-ufs-card"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          4
+        ],
+        "qcom,connections": [
+          190
+        ],
+        "qcom,bus-dev": [
+          189
+        ],
+        "qcom,blacklist": [
+          185
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "phandle": [
+          963
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-npu",
+      "ports": [
+        6,
+        7
+      ],
+      "bus_dev": 194,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          154
+        ],
+        "label": [
+          "mas-qnm-npu"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          2
+        ],
+        "qcom,qport": [
+          6,
+          7
+        ],
+        "qcom,connections": [
+          193
+        ],
+        "qcom,bus-dev": [
+          194
+        ],
+        "qcom,bcms": [
+          195
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "phandle": [
+          964
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-alm-gpu-tcu",
+      "ports": [
+        127
+      ],
+      "bus_dev": 253,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          155
+        ],
+        "label": [
+          "mas-alm-gpu-tcu"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          127
+        ],
+        "qcom,connections": [
+          252,
+          248
+        ],
+        "qcom,bus-dev": [
+          253
+        ],
+        "qcom,bcms": [
+          254
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          1
+        ],
+        "phandle": [
+          966
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-alm-sys-tcu",
+      "ports": [
+        128
+      ],
+      "bus_dev": 253,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          156
+        ],
+        "label": [
+          "mas-alm-sys-tcu"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          128
+        ],
+        "qcom,connections": [
+          252,
+          248
+        ],
+        "qcom,bus-dev": [
+          253
+        ],
+        "qcom,bcms": [
+          254
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          6
+        ],
+        "phandle": [
+          967
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-cmpnoc",
+      "ports": [
+        0,
+        64
+      ],
+      "bus_dev": 253,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          158
+        ],
+        "label": [
+          "mas-qnm-cmpnoc"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          2
+        ],
+        "qcom,qport": [
+          0,
+          64
+        ],
+        "qcom,connections": [
+          252,
+          248
+        ],
+        "qcom,bus-dev": [
+          253
+        ],
+        "qcom,bcms": [
+          260
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "phandle": [
+          311
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-gpu",
+      "ports": [
+        1,
+        65
+      ],
+      "bus_dev": 253,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          26
+        ],
+        "label": [
+          "mas-qnm-gpu"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          2
+        ],
+        "qcom,qport": [
+          1,
+          65
+        ],
+        "qcom,connections": [
+          252,
+          248
+        ],
+        "qcom,bus-dev": [
+          253
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "phandle": [
+          969
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-mnoc-hf",
+      "ports": [
+        2,
+        66
+      ],
+      "bus_dev": 253,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          132
+        ],
+        "label": [
+          "mas-qnm-mnoc-hf"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          2
+        ],
+        "qcom,qport": [
+          2,
+          66
+        ],
+        "qcom,connections": [
+          252
+        ],
+        "qcom,bus-dev": [
+          253
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "qcom,node-qos-bcms": [
+          7012,
+          0,
+          1
+        ],
+        "phandle": [
+          328
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-mnoc-sf",
+      "ports": [
+        3,
+        67
+      ],
+      "bus_dev": 253,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          133
+        ],
+        "label": [
+          "mas-qnm-mnoc-sf"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          2
+        ],
+        "qcom,qport": [
+          3,
+          67
+        ],
+        "qcom,connections": [
+          252,
+          248
+        ],
+        "qcom,bus-dev": [
+          253
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "qcom,node-qos-bcms": [
+          7012,
+          0,
+          1
+        ],
+        "phandle": [
+          330
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-pcie",
+      "ports": [
+        129
+      ],
+      "bus_dev": 253,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          175
+        ],
+        "label": [
+          "mas-qnm-pcie"
+        ],
+        "qcom,buswidth": [
+          16
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          129
+        ],
+        "qcom,connections": [
+          252,
+          248
+        ],
+        "qcom,bus-dev": [
+          253
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "phandle": [
+          308
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-snoc-gc",
+      "ports": [
+        130
+      ],
+      "bus_dev": 253,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          134
+        ],
+        "label": [
+          "mas-qnm-snoc-gc"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          130
+        ],
+        "qcom,connections": [
+          252
+        ],
+        "qcom,bus-dev": [
+          253
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "phandle": [
+          333
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-snoc-sf",
+      "ports": [
+        131
+      ],
+      "bus_dev": 253,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          135
+        ],
+        "label": [
+          "mas-qnm-snoc-sf"
+        ],
+        "qcom,buswidth": [
+          16
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          131
+        ],
+        "qcom,connections": [
+          252,
+          248,
+          255
+        ],
+        "qcom,bus-dev": [
+          253
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "phandle": [
+          335
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-camnoc-hf",
+      "ports": [
+        4,
+        5
+      ],
+      "bus_dev": 266,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          170
+        ],
+        "label": [
+          "mas-qnm-camnoc-hf"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          2
+        ],
+        "qcom,qport": [
+          4,
+          5
+        ],
+        "qcom,connections": [
+          267
+        ],
+        "qcom,bus-dev": [
+          266
+        ],
+        "qcom,bcms": [
+          268
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "qcom,node-qos-bcms": [
+          7012,
+          0,
+          1
+        ],
+        "phandle": [
+          971
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-camnoc-icp",
+      "ports": [
+        2
+      ],
+      "bus_dev": 266,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          171
+        ],
+        "label": [
+          "mas-qnm-camnoc-icp"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          2
+        ],
+        "qcom,connections": [
+          269
+        ],
+        "qcom,bus-dev": [
+          266
+        ],
+        "qcom,bcms": [
+          270
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          5
+        ],
+        "qcom,forwarding": [],
+        "qcom,node-qos-bcms": [
+          7012,
+          0,
+          1
+        ],
+        "phandle": [
+          972
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-camnoc-sf",
+      "ports": [
+        0,
+        1
+      ],
+      "bus_dev": 266,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          137
+        ],
+        "label": [
+          "mas-qnm-camnoc-sf"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          2
+        ],
+        "qcom,qport": [
+          0,
+          1
+        ],
+        "qcom,connections": [
+          269
+        ],
+        "qcom,bus-dev": [
+          266
+        ],
+        "qcom,bcms": [
+          270
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "qcom,node-qos-bcms": [
+          7012,
+          0,
+          1
+        ],
+        "phandle": [
+          973
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-video0",
+      "ports": [
+        12
+      ],
+      "bus_dev": 266,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          63
+        ],
+        "label": [
+          "mas-qnm-video0"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          12
+        ],
+        "qcom,connections": [
+          269
+        ],
+        "qcom,bus-dev": [
+          266
+        ],
+        "qcom,bcms": [
+          270
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "qcom,node-qos-bcms": [
+          7012,
+          0,
+          1
+        ],
+        "phandle": [
+          974
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-video1",
+      "ports": [
+        13
+      ],
+      "bus_dev": 266,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          64
+        ],
+        "label": [
+          "mas-qnm-video1"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          13
+        ],
+        "qcom,connections": [
+          269
+        ],
+        "qcom,bus-dev": [
+          266
+        ],
+        "qcom,bcms": [
+          270
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "qcom,node-qos-bcms": [
+          7012,
+          0,
+          1
+        ],
+        "phandle": [
+          975
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-video-cvp",
+      "ports": [
+        14
+      ],
+      "bus_dev": 266,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          138
+        ],
+        "label": [
+          "mas-qnm-video-cvp"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          14
+        ],
+        "qcom,connections": [
+          269
+        ],
+        "qcom,bus-dev": [
+          266
+        ],
+        "qcom,bcms": [
+          270
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "qcom,node-qos-bcms": [
+          7012,
+          0,
+          1
+        ],
+        "phandle": [
+          976
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qxm-mdp0",
+      "ports": [
+        6
+      ],
+      "bus_dev": 266,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          22
+        ],
+        "label": [
+          "mas-qxm-mdp0"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          6
+        ],
+        "qcom,connections": [
+          267
+        ],
+        "qcom,bus-dev": [
+          266
+        ],
+        "qcom,bcms": [
+          268
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "qcom,node-qos-bcms": [
+          7012,
+          0,
+          1
+        ],
+        "phandle": [
+          977
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qxm-mdp1",
+      "ports": [
+        8
+      ],
+      "bus_dev": 266,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          23
+        ],
+        "label": [
+          "mas-qxm-mdp1"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          8
+        ],
+        "qcom,connections": [
+          267
+        ],
+        "qcom,bus-dev": [
+          266
+        ],
+        "qcom,bcms": [
+          268
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "qcom,node-qos-bcms": [
+          7012,
+          0,
+          1
+        ],
+        "phandle": [
+          978
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qxm-rot",
+      "ports": [
+        10
+      ],
+      "bus_dev": 266,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          25
+        ],
+        "label": [
+          "mas-qxm-rot"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          10
+        ],
+        "qcom,connections": [
+          269
+        ],
+        "qcom,bus-dev": [
+          266
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          0
+        ],
+        "qcom,forwarding": [],
+        "qcom,node-qos-bcms": [
+          7012,
+          0,
+          1
+        ],
+        "phandle": [
+          979
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qxm-pimem",
+      "ports": [
+        0
+      ],
+      "bus_dev": 283,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          141
+        ],
+        "label": [
+          "mas-qxm-pimem"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          0
+        ],
+        "qcom,connections": [
+          297
+        ],
+        "qcom,bus-dev": [
+          283
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "qcom,forwarding": [],
+        "phandle": [
+          982
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-xm-gic",
+      "ports": [
+        1
+      ],
+      "bus_dev": 283,
+      "ap_owned": true,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          149
+        ],
+        "label": [
+          "mas-xm-gic"
+        ],
+        "qcom,buswidth": [
+          8
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          1
+        ],
+        "qcom,connections": [
+          297
+        ],
+        "qcom,bus-dev": [
+          283
+        ],
+        "qcom,ap-owned": [],
+        "qcom,prio": [
+          2
+        ],
+        "qcom,forwarding": [],
+        "phandle": [
+          983
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-mnoc-hf_display",
+      "ports": [
+        2,
+        66
+      ],
+      "bus_dev": 300,
+      "ap_owned": false,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          20001
+        ],
+        "label": [
+          "mas-qnm-mnoc-hf_display"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          2
+        ],
+        "qcom,qport": [
+          2,
+          66
+        ],
+        "qcom,connections": [
+          299
+        ],
+        "qcom,bus-dev": [
+          300
+        ],
+        "phandle": [
+          346
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qnm-mnoc-sf_display",
+      "ports": [
+        3,
+        67
+      ],
+      "bus_dev": 300,
+      "ap_owned": false,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          20002
+        ],
+        "label": [
+          "mas-qnm-mnoc-sf_display"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          2
+        ],
+        "qcom,qport": [
+          3,
+          67
+        ],
+        "qcom,connections": [
+          299
+        ],
+        "qcom,bus-dev": [
+          300
+        ],
+        "phandle": [
+          348
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qxm-mdp0_display",
+      "ports": [
+        6
+      ],
+      "bus_dev": 304,
+      "ap_owned": false,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          20003
+        ],
+        "label": [
+          "mas-qxm-mdp0_display"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          6
+        ],
+        "qcom,connections": [
+          303
+        ],
+        "qcom,bus-dev": [
+          304
+        ],
+        "qcom,bcms": [
+          305
+        ],
+        "phandle": [
+          985
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qxm-mdp1_display",
+      "ports": [
+        8
+      ],
+      "bus_dev": 304,
+      "ap_owned": false,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          20004
+        ],
+        "label": [
+          "mas-qxm-mdp1_display"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          8
+        ],
+        "qcom,connections": [
+          303
+        ],
+        "qcom,bus-dev": [
+          304
+        ],
+        "qcom,bcms": [
+          305
+        ],
+        "phandle": [
+          986
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/mas-qxm-rot_display",
+      "ports": [
+        10
+      ],
+      "bus_dev": 304,
+      "ap_owned": false,
+      "defer": false,
+      "properties": {
+        "cell-id": [
+          20005
+        ],
+        "label": [
+          "mas-qxm-rot_display"
+        ],
+        "qcom,buswidth": [
+          32
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,qport": [
+          10
+        ],
+        "qcom,connections": [
+          306
+        ],
+        "qcom,bus-dev": [
+          304
+        ],
+        "phandle": [
+          987
+        ]
+      }
+    }
+  ],
+  "decode_note": "Numeric properties use their big-endian cells, including zero. A printable-byte heuristic is not used to interpret numeric binding properties.",
+  "disable_ports": [
+    {
+      "path": "/soc/ad-hoc-bus/slv-qhs-camera-cfg",
+      "bus_dev": 245,
+      "ports": [
+        0,
+        1,
+        2
+      ],
+      "properties": {
+        "cell-id": [
+          589
+        ],
+        "label": [
+          "slv-qhs-camera-cfg"
+        ],
+        "qcom,buswidth": [
+          4
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,bus-dev": [
+          245
+        ],
+        "qcom,bcms": [
+          246
+        ],
+        "qcom,disable-ports": [
+          0,
+          1,
+          2
+        ],
+        "mmcx-supply": [
+          104
+        ],
+        "node-reg-names": [
+          "mmcx"
+        ],
+        "phandle": [
+          197
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/slv-qhs-display-cfg",
+      "bus_dev": 245,
+      "ports": [
+        3,
+        4
+      ],
+      "properties": {
+        "cell-id": [
+          590
+        ],
+        "label": [
+          "slv-qhs-display-cfg"
+        ],
+        "qcom,buswidth": [
+          4
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,bus-dev": [
+          245
+        ],
+        "qcom,bcms": [
+          246
+        ],
+        "qcom,disable-ports": [
+          3,
+          4
+        ],
+        "mmcx-supply": [
+          104
+        ],
+        "node-reg-names": [
+          "mmcx"
+        ],
+        "phandle": [
+          211
+        ]
+      }
+    },
+    {
+      "path": "/soc/ad-hoc-bus/slv-qhs-venus-cfg",
+      "bus_dev": 245,
+      "ports": [
+        5,
+        6,
+        7
+      ],
+      "properties": {
+        "cell-id": [
+          596
+        ],
+        "label": [
+          "slv-qhs-venus-cfg"
+        ],
+        "qcom,buswidth": [
+          4
+        ],
+        "qcom,agg-ports": [
+          1
+        ],
+        "qcom,bus-dev": [
+          245
+        ],
+        "qcom,bcms": [
+          246
+        ],
+        "qcom,disable-ports": [
+          5,
+          6,
+          7
+        ],
+        "mmcx-supply": [
+          104
+        ],
+        "node-reg-names": [
+          "mmcx"
+        ],
+        "phandle": [
+          223
+        ]
+      }
+    }
+  ],
+  "raw_evidence_blob": "c300271fab1acabb6d1b45ddcf626f5e2f091d25"
+}

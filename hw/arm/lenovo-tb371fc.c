@@ -31,12 +31,14 @@
 #include "qom/object.h"
 #include "hw/arm/boot.h"
 #include "hw/arm/arm-smmuv2.h"
+#include "hw/arm/qcom-smmuv500.h"
 #include "hw/arm/qcom-sm8250-tbu.h"
 #include "hw/arm/machines-qom.h"
 #include "hw/char/qcom-geni-uart.h"
 #include "hw/core/boards.h"
 #include "hw/core/clock.h"
 #include "hw/core/irq.h"
+#include "hw/core/split-irq.h"
 #include "hw/core/qdev-clock.h"
 #include "hw/core/qdev-properties.h"
 #include "hw/core/sysbus.h"
@@ -44,20 +46,33 @@
 #include "hw/intc/arm_gicv3_common.h"
 #include "hw/intc/qcom-pdc.h"
 #include "hw/misc/qcom-sm8250-gcc.h"
+#include "hw/misc/qcom-sm8250-gpucc.h"
+#include "hw/misc/qcom-sm8250-npucc.h"
+#include "hw/misc/qcom-noc-qos.h"
 #include "hw/misc/qcom-pshold.h"
 #include "hw/misc/qcom-dcc.h"
 #include "hw/misc/qcom-ipcc.h"
 #include "hw/misc/qcom-qsee-irq.h"
 #include "hw/misc/qcom-tcsr-mutex.h"
+#include "hw/misc/qcom-tsens24xx.h"
+#include "hw/misc/qcom-cpufreq-hw.h"
+#include "hw/misc/qcom-devfreq-fw.h"
+#include "hw/misc/qcom-noc-sbm.h"
 #include "hw/misc/qcom-smem-handoff.h"
 #include "hw/misc/qcom-aop-msgram.h"
+#include "hw/misc/qcom-aop-qmp.h"
 #include "hw/misc/qcom-refgen.h"
+#include "hw/misc/qcom-gpu-cx-gdsc.h"
 #include "hw/misc/qcom-gdsc.h"
+#include "hw/misc/qcom-camera-gdsc.h"
+#include "hw/misc/qcom-mdss-gdsc.h"
+#include "hw/misc/qcom-npu-gdsc.h"
 #include "hw/misc/qcom-spmi-pmic-arb.h"
 #include "hw/gpio/qcom-tb371fc-tlmm.h"
 #include "hw/misc/qcom-sm8250-rpmh.h"
 #include "hw/ufs/qcom-sm8250-ufs.h"
 #include "hw/timer/arm-arch-timer-mmio.h"
+#include "hw/timer/qcom-mpm2-sleep-counter.h"
 #include "hw/watchdog/qcom-kpss.h"
 #include "system/address-spaces.h"
 #include "system/device_tree.h"
@@ -161,7 +176,7 @@ struct TB371FCMachineState {
     char *rpmh_profile, *rpmh_cmd_db;
     char *spmi_profile;
     char *smem_profile;
-    char *gdsc_profile;
+    char *aop_profile;
     char *tbu_profile;
     bool rpmh_boot_configured;
     MemoryRegion qtest_dma_alias;
@@ -490,7 +505,7 @@ static uint32_t tb371fc_add_smmu_fdt(void *fdt, const char *path,
                      count * 3 * sizeof(uint32_t));
     qemu_fdt_setprop_string(fdt, path, "qemu,model-note",
                             "Architectural SMMUv2 stage-1 AArch64 4K walks; "
-                            "reference IDRs; Qualcomm TCU/TBU extensions absent");
+                            "reference IDRs; apps TCU/TBU require explicit reference profile");
     return phandle;
 }
 
@@ -979,6 +994,277 @@ static void tb371fc_create_rpmh(TB371FCMachineState *s)
     clock_set_source(s->xo, qdev_get_clock_out(dev, "bi_tcxo"));
 }
 
+static void tb371fc_create_gpu_cx_gdsc(TB371FCMachineState *s)
+{
+    DeviceState *gdsc = qdev_new(TYPE_QCOM_GPU_CX_GDSC);
+
+    object_property_add_child(OBJECT(s), "gpu-cx-gdsc", OBJECT(gdsc));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(gdsc), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gdsc), 0, 0x03d9106c);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gdsc), 1, 0x03d91540);
+    if (s->rpmh) {
+        /* Resource power[1] is cx.lvl; this is digital ARC availability. */
+        qdev_connect_gpio_out_named(s->rpmh, "power", 1,
+            qdev_get_gpio_in_named(gdsc, "parent-on", 0));
+        /* RPMh res.* QOM properties are uint64, including 0/1 states. */
+        qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-on", 0),
+            object_property_get_uint(OBJECT(s->rpmh), "res.cx.lvl.enabled",
+                                     &error_fatal) != 0);
+        qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-known", 0),
+            object_property_get_uint(OBJECT(s->rpmh), "res.cx.lvl.present",
+                                     &error_fatal) != 0);
+    }
+}
+
+static void tb371fc_create_gpu_gx_gdsc(TB371FCMachineState *s)
+{
+    DeviceState *gdsc = qdev_new(TYPE_QCOM_GDSC);
+
+    /* Only the captured GX windows; CX keeps its independent timed model. */
+    object_property_add_child(OBJECT(s), "gpu-gx-gdsc", OBJECT(gdsc));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(gdsc), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gdsc), QCOM_GDSC_CONTROL, 0x03d9100c);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gdsc), QCOM_GDSC_DOMAIN_CONTROL, 0x03d91508);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gdsc), QCOM_GDSC_SW_RESET, 0x03d91008);
+    if (s->rpmh) {
+        /* Kona GX parent is VDD_GFX_LEVEL, not CX. res.* has uint64 type. */
+        qdev_connect_gpio_out_named(s->rpmh, "power", 4,
+            qdev_get_gpio_in_named(gdsc, "parent-on", 0));
+        qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-on", 0),
+            object_property_get_uint(OBJECT(s->rpmh), "res.gfx.lvl.enabled",
+                                     &error_fatal) != 0);
+        qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-known", 0),
+            object_property_get_uint(OBJECT(s->rpmh), "res.gfx.lvl.present",
+                                     &error_fatal) != 0);
+    }
+}
+
+
+static DeviceState *tb371fc_create_camera_gdsc(TB371FCMachineState *s)
+{
+    DeviceState *gdsc = qdev_new(TYPE_QCOM_CAMERA_GDSC);
+
+    object_property_add_child(OBJECT(s), "camera-gdsc", OBJECT(gdsc));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(gdsc), &error_fatal);
+    for (unsigned i = 0; i < QCOM_CAMERA_GDSC_DOMAINS; i++) {
+        sysbus_mmio_map(SYS_BUS_DEVICE(gdsc), i,
+                       qcom_camera_gdsc_domains[i].address);
+    }
+    return gdsc;
+}
+
+static void tb371fc_create_mdss_gdsc(TB371FCMachineState *s,
+                                   DeviceState *camera)
+{
+    DeviceState *mdss = qdev_new(TYPE_QCOM_MDSS_GDSC);
+
+    object_property_add_child(OBJECT(s), "mdss-gdsc", OBJECT(mdss));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(mdss), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(mdss), 0,
+                   qcom_mdss_gdsc_domains[0].address);
+    if (s->rpmh) {
+        DeviceState *splitter = qdev_new(TYPE_SPLIT_IRQ);
+        bool present, enabled;
+
+        /*
+         * Camera and MDSS are siblings on DT phandle 104 (mmcx.lvl).
+         * There is one RPMh output owner; never replace the camera wire with
+         * a second qdev_connect_gpio_out call. The splitter has no VMState.
+         * MDSS's self proxy is a software consumer, not a power-parent edge.
+         */
+        object_property_add_child(OBJECT(s), "mmcx-gdsc-fanout",
+                                  OBJECT(splitter));
+        qdev_prop_set_uint16(splitter, "num-lines", 2);
+        qdev_realize_and_unref(splitter, NULL, &error_fatal);
+        qdev_connect_gpio_out(splitter, 0,
+            qdev_get_gpio_in_named(camera, "parent-on", 0));
+        qdev_connect_gpio_out(splitter, 1,
+            qdev_get_gpio_in_named(mdss, "parent-on", 0));
+        qdev_connect_gpio_out_named(s->rpmh, "power", 3,
+            qdev_get_gpio_in(splitter, 0));
+        enabled = object_property_get_uint(OBJECT(s->rpmh),
+                                           "res.mmcx.lvl.enabled",
+                                           &error_fatal) != 0;
+        present = object_property_get_uint(OBJECT(s->rpmh),
+                                           "res.mmcx.lvl.present",
+                                           &error_fatal) != 0;
+        qemu_set_irq(qdev_get_gpio_in(splitter, 0), enabled);
+        qemu_set_irq(qdev_get_gpio_in_named(camera, "parent-known", 0),
+                     present);
+        qemu_set_irq(qdev_get_gpio_in_named(mdss, "parent-known", 0), present);
+    }
+}
+
+static void tb371fc_create_npu_gdsc(TB371FCMachineState *s)
+{
+    DeviceState *gdsc = qdev_new(TYPE_QCOM_NPU_GDSC);
+
+    object_property_add_child(OBJECT(s), "npu-gdsc", OBJECT(gdsc));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(gdsc), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gdsc), 0,
+                   qcom_npu_gdsc_domains[0].address);
+    /*
+     * The actual NPU GDSC node declares no parent supply. Keep both parent
+     * inputs unknown; neither mmcx, NPUCC nor a clock vote supplies evidence
+     * that this rail is available. The collapsed reference still reads OFF.
+     */
+}
+
+static void tb371fc_create_cpufreq(TB371FCMachineState *s)
+{
+    for (unsigned i = 0; i < QCOM_CPUFREQ_HW_DOMAINS; i++) {
+        const QcomCpufreqHwDomain *d = &qcom_cpufreq_hw_domains[i];
+        DeviceState *dev = qdev_new(TYPE_QCOM_CPUFREQ_HW_EPSS);
+        g_autofree char *name = g_strdup_printf("cpufreq%u", i);
+
+        object_property_add_child(OBJECT(s), name, OBJECT(dev));
+        qdev_prop_set_uint32(dev, "domain-id", i);
+        /*
+         * Actual DT: RPMh CXO and GCC GPLL0 (vendor binding ID 209).
+         * The explicit XO01 reference LUT uses only XO; alternate remains
+         * a real connected input, not a fabricated fixed 600 MHz value.
+         */
+        qdev_connect_clock_in(dev, "xo", s->xo);
+        qdev_connect_clock_in(dev, "alternate",
+                              qdev_get_clock_out(DEVICE(&s->gcc), "gpll0"));
+        sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, d->base);
+        sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0,
+                           qdev_get_gpio_in(s->gic, d->spi));
+    }
+}
+
+static void tb371fc_create_devfreq(TB371FCMachineState *s)
+{
+    DeviceState *dev = qdev_new(TYPE_QCOM_DEVFREQ_FW);
+    unsigned i;
+
+    object_property_add_child(OBJECT(s), "devfreq-l3", OBJECT(dev));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    for (i = 0; i < QCOM_DEVFREQ_FW_WINDOWS; i++) {
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), i,
+                       qcom_devfreq_fw_regions[i].physical_base);
+    }
+}
+
+static void tb371fc_create_sbm(TB371FCMachineState *s)
+{
+    DeviceState *dev = qdev_new(TYPE_QCOM_NOC_SBM);
+    unsigned i;
+
+    object_property_add_child(OBJECT(s), "noc-sbm-config", OBJECT(dev));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    for (i = 0; i < QCOM_NOC_SBM_WINDOWS; i++) {
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), i,
+                       qcom_noc_sbm_regions[i].physical_base);
+    }
+}
+
+static void tb371fc_create_gpucc(TB371FCMachineState *s)
+{
+    DeviceState *gpucc = qdev_new(TYPE_QCOM_SM8250_GPUCC);
+    unsigned i;
+
+    object_property_add_child(OBJECT(s), "gpucc", OBJECT(gpucc));
+    qdev_connect_clock_in(gpucc, "xo", s->xo);
+    qdev_connect_clock_in(gpucc, "gcc_gpu_gpll0_clk_src",
+        qdev_get_clock_out(DEVICE(&s->gcc), "gcc_gpu_gpll0_clk_src"));
+    qdev_connect_clock_in(gpucc, "gcc_gpu_gpll0_div_clk_src",
+        qdev_get_clock_out(DEVICE(&s->gcc), "gcc_gpu_gpll0_div_clk_src"));
+    /*
+     * PLL0, QDSS and branch parents not specified by the source remain
+     * unwired. An AOP QDSS vote is not a clock frequency. The opt-in
+     * enabled-reference property does not seed any PLL or clock vote.
+     */
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(gpucc), &error_fatal);
+    for (i = 0; i < GPUCC_WINDOWS; i++) {
+        sysbus_mmio_map(SYS_BUS_DEVICE(gpucc), i,
+                        0x03d90000 + qcom_sm8250_gpucc_window_offsets[i]);
+    }
+}
+
+static void tb371fc_create_npucc(TB371FCMachineState *s)
+{
+    static const hwaddr bases[] = { 0x09980000, 0x09800000, 0x09810000 };
+    DeviceState *npucc = qdev_new(TYPE_QCOM_SM8250_NPUCC);
+    unsigned i;
+
+    object_property_add_child(OBJECT(s), "npucc", OBJECT(npucc));
+    /*
+     * Both RPMh XO names use the same physical active carrier in the
+     * vendor driver. Separate logical SLEEP votes are not modeled here.
+     */
+    qdev_connect_clock_in(npucc, "bi_tcxo", s->xo);
+    qdev_connect_clock_in(npucc, "bi_tcxo_ao", s->xo);
+    qdev_connect_clock_in(npucc, "gcc_npu_gpll0_clk_src",
+        qdev_get_clock_out(DEVICE(&s->gcc), "gcc_npu_gpll0_clk_src"));
+    qdev_connect_clock_in(npucc, "gcc_npu_gpll0_div_clk_src",
+        qdev_get_clock_out(DEVICE(&s->gcc), "gcc_npu_gpll0_div_clk_src"));
+    /*
+     * Test, QDSS, NOC, S2P and LLM parents remain unknown until a real
+     * provider is connected. No boot rates or remote votes are seeded.
+     */
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(npucc), &error_fatal);
+    for (i = 0; i < NPUCC_WINDOWS; i++) {
+        const QcomNpuccWindowDef *w = &qcom_sm8250_npucc_windows[i];
+
+        sysbus_mmio_map(SYS_BUS_DEVICE(npucc), i, bases[w->bank] + w->offset);
+    }
+    /* cc + 0x1004 (the separate NPU GDSC) is intentionally not mapped. */
+}
+
+static void tb371fc_create_noc_qos(TB371FCMachineState *s)
+{
+    /*
+     * Original DT SHA256 5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207.
+     * Physical AP-owned QoS ports only: display aliases name existing ports.
+     * base + base-offset + port * qos-off is the vendor callback's geometry.
+     */
+    static const struct {
+        const char *name;
+        hwaddr base;
+        uint32_t offset, stride, count;
+        uint32_t ports[13];
+    } fabrics[] = {
+        { "aggre1", 0x016e0000, 0x2000, 0x1000, 9,
+          { 0, 1, 2, 3, 4, 5, 6, 7, 8 } },
+        { "aggre2", 0x01700000, 0x3000, 0x1000, 10,
+          { 0, 1, 2, 3, 4, 7, 8, 9, 11, 12 } },
+        { "compute", 0x01700000, 0x33000, 0x800, 2,
+          { 6, 7 } },
+        { "gem", 0x09100000, 0x21000, 0x1000, 13,
+          { 0, 1, 2, 3, 64, 65, 66, 67, 127, 128, 129, 130, 131 } },
+        { "mmss", 0x01740000, 0xa000, 0x800, 11,
+          { 0, 1, 2, 4, 5, 6, 8, 10, 12, 13, 14 } },
+        { "system", 0x01620000, 0x12000, 0x1000, 2,
+          { 0, 1 } },
+    };
+    unsigned f, p, r;
+
+    for (f = 0; f < ARRAY_SIZE(fabrics); f++) {
+        for (p = 0; p < fabrics[f].count; p++) {
+            uint32_t port = fabrics[f].ports[p];
+            hwaddr address = fabrics[f].base + fabrics[f].offset +
+                             port * fabrics[f].stride;
+            DeviceState *dev = qdev_new(TYPE_QCOM_NOC_QOS);
+            g_autofree char *name = g_strdup_printf("noc-qos-%s-%u",
+                                                     fabrics[f].name, port);
+
+            QCOM_NOC_QOS(dev)->port_address = address;
+            object_property_add_child(OBJECT(s), name, OBJECT(dev));
+            sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+            for (r = 0; r < QCOM_NOC_QOS_REGISTERS; r++) {
+                sysbus_mmio_map(SYS_BUS_DEVICE(dev), r,
+                                address + qcom_noc_qos_offsets[r]);
+            }
+        }
+    }
+    /*
+     * No fabric container, legacy QoS or SBM windows are mapped. The
+     * reference profile neither seeds DT policy nor supplies traffic/ACKs.
+     */
+}
+
 static void tb371fc_create_gcc(TB371FCMachineState *s)
 {
     DeviceState *gcc;
@@ -1045,6 +1331,35 @@ static DeviceState *tb371fc_create_smmu(TB371FCMachineState *s,
     return dev;
 }
 
+static void tb371fc_create_smmuv500(TB371FCMachineState *s)
+{
+    DeviceState *dev = qdev_new(TYPE_QCOM_SMMUV500);
+    bool legacy_tbu = !strcmp(s->tbu_profile, "reference-ecats");
+
+    /* Global properties have been applied by qdev's instance_post_init. */
+    if (legacy_tbu && object_property_get_bool(OBJECT(dev),
+                                               "enabled-reference",
+                                               &error_fatal)) {
+        error_report("tbu-profile=reference-ecats and "
+                     "qcom-smmuv500.enabled-reference=on are mutually "
+                     "exclusive: both own the APPS TCU/TBU MMIO windows");
+        exit(EXIT_FAILURE);
+    }
+    object_property_add_child(OBJECT(s), "apps-smmu-v500", OBJECT(dev));
+    object_property_set_link(OBJECT(dev), "smmu", OBJECT(s->apps_smmu),
+                             &error_fatal);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    /* Both profile identities migrate, but exactly one provider owns MMIO. */
+    if (!legacy_tbu) {
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, QCOM_SMMUV500_TCU_BASE);
+    }
+    if (qtest_enabled()) {
+        /* A real external IOMMU cache client, absent from normal TCG. */
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 1,
+                       QCOM_SMMUV500_QTEST_CACHE_BASE);
+    }
+}
+
 static void tb371fc_create_smmus(TB371FCMachineState *s)
 {
     s->apps_smmu = tb371fc_create_smmu(s, "apps-smmu",
@@ -1061,6 +1376,7 @@ static void tb371fc_create_smmus(TB371FCMachineState *s)
         memory_region_add_subregion(get_system_memory(), 0x50000000,
                                      &s->qtest_dma_alias);
     }
+    tb371fc_create_smmuv500(s);
 }
 
 static void tb371fc_create_tbu(TB371FCMachineState *s)
@@ -1173,9 +1489,22 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
 
 
     /* Actual shared storage, without an invented AOP descriptor or peer. */
+    QCOM_AOP_MSGRAM(msgram)->reference_peer =
+        !strcmp(s->aop_profile, "reference-qdss-vote");
     object_property_add_child(OBJECT(s), "aop-msgram", OBJECT(msgram));
     sysbus_realize_and_unref(SYS_BUS_DEVICE(msgram), &error_fatal);
     sysbus_mmio_map(SYS_BUS_DEVICE(msgram), 0, 0x0c300000);
+
+    if (!strcmp(s->aop_profile, "reference-qdss-vote")) {
+        DeviceState *peer = qdev_new(TYPE_QCOM_AOP_QMP);
+
+        object_property_add_child(OBJECT(s), "aop-peer", OBJECT(peer));
+        object_property_set_link(OBJECT(peer), "msgram", OBJECT(msgram),
+                                 &error_fatal);
+        object_property_set_link(OBJECT(peer), "ipcc", OBJECT(ipcc),
+                                 &error_fatal);
+        sysbus_realize_and_unref(SYS_BUS_DEVICE(peer), &error_fatal);
+    }
 
     /* Kona CTRL5 software request; firmware handoff is unknown by default. */
     object_property_add_child(OBJECT(s), "refgen", OBJECT(refgen));
@@ -1192,38 +1521,6 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
     sysbus_mmio_map(SYS_BUS_DEVICE(s->tlmm), 0, 0x0f000000);
     sysbus_connect_irq(SYS_BUS_DEVICE(s->tlmm), 0,
                         qdev_get_gpio_in(s->gic, 208));
-}
-
-static void tb371fc_create_gpu_gdsc(TB371FCMachineState *s)
-{
-    DeviceState *cx = qdev_new(TYPE_QCOM_GDSC);
-    DeviceState *gx = qdev_new(TYPE_QCOM_GDSC);
-    bool enabled = strcmp(s->gdsc_profile, "none") != 0;
-    bool reference_on = !strcmp(s->gdsc_profile, "reference-on");
-
-    /*
-     * Keep configuration markers present in every profile, so a migration
-     * cannot silently add or remove the mapped power-control devices.
-     * All addresses below are captured GPU windows, outside the GCC map.
-     */
-    object_property_add_child(OBJECT(s), "gpu-cx-gdsc", OBJECT(cx));
-    object_property_add_child(OBJECT(s), "gpu-gx-gdsc", OBJECT(gx));
-    qdev_prop_set_bit(cx, "enabled-reference", enabled);
-    qdev_prop_set_bit(gx, "enabled-reference", enabled);
-    qdev_prop_set_bit(cx, "reference-on", reference_on);
-    qdev_prop_set_bit(gx, "reference-on", reference_on);
-    sysbus_realize_and_unref(SYS_BUS_DEVICE(cx), &error_fatal);
-    sysbus_realize_and_unref(SYS_BUS_DEVICE(gx), &error_fatal);
-    if (!enabled) {
-        return;
-    }
-
-    sysbus_mmio_map(SYS_BUS_DEVICE(cx), QCOM_GDSC_CONTROL, 0x03d9106c);
-    sysbus_mmio_map(SYS_BUS_DEVICE(cx), QCOM_GDSC_HW_STATUS, 0x03d91540);
-    sysbus_mmio_map(SYS_BUS_DEVICE(gx), QCOM_GDSC_CONTROL, 0x03d9100c);
-    sysbus_mmio_map(SYS_BUS_DEVICE(gx), QCOM_GDSC_DOMAIN_CONTROL, 0x03d91508);
-    sysbus_mmio_map(SYS_BUS_DEVICE(gx), QCOM_GDSC_SW_RESET, 0x03d91008);
-    /* GPU/GMU consumers and external voters have no invented peer here. */
 }
 
 static void tb371fc_create_pdc(TB371FCMachineState *s)
@@ -1295,6 +1592,51 @@ static void tb371fc_create_watchdog(TB371FCMachineState *s)
     sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, TB371FC_WATCHDOG_BASE);
     sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0, qdev_get_gpio_in(s->gic, 0));
     sysbus_connect_irq(SYS_BUS_DEVICE(dev), 1, qdev_get_gpio_in(s->gic, 1));
+}
+
+static void tb371fc_create_mpm2_sleep_counter(TB371FCMachineState *s)
+{
+    DeviceState *dev = qdev_new(TYPE_QCOM_MPM2_SLEEP_COUNTER);
+
+    object_property_add_child(OBJECT(s), "mpm2-sleep-counter", OBJECT(dev));
+    /*
+     * Original DT declares 32768 Hz. This is a separate fixed reference
+     * domain, not the existing 32000 Hz GCC sleep input. Only offset zero
+     * is established by boot_stats.c; the rest of the DT's 4 KiB is absent.
+     */
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, 0x0c221000);
+}
+
+static void tb371fc_create_tsens(TB371FCMachineState *s)
+{
+    static const struct {
+        hwaddr srot, tm;
+        unsigned upper_lower_spi, critical_spi;
+    } controllers[] = {
+        { 0x0c222000, 0x0c263000, 506, 508 },
+        { 0x0c223000, 0x0c265000, 507, 509 },
+    };
+
+    for (unsigned i = 0; i < ARRAY_SIZE(controllers); i++) {
+        DeviceState *dev = qdev_new(TYPE_QCOM_TSENS24XX);
+        g_autofree char *name = g_strdup_printf("tsens%u", i);
+
+        object_property_add_child(OBJECT(s), name, OBJECT(dev));
+        qdev_prop_set_uint32(dev, "controller-id", i);
+        sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+        /*
+         * Actual DT lists a four-byte SROT resource, but the pinned driver
+         * and observed abort establish a read at +4 after page-rounded
+         * ioremap. Map only that control word; preserve the original DT.
+         */
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, controllers[i].srot + 4);
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 1, controllers[i].tm);
+        sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0,
+            qdev_get_gpio_in(s->gic, controllers[i].upper_lower_spi));
+        sysbus_connect_irq(SYS_BUS_DEVICE(dev), 1,
+            qdev_get_gpio_in(s->gic, controllers[i].critical_spi));
+    }
 }
 
 static void tb371fc_create_mmio_timer(TB371FCMachineState *s)
@@ -1403,9 +1745,10 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_pdc(s);
     tb371fc_create_spmi(s);
     tb371fc_create_mmio_timer(s);
+    tb371fc_create_mpm2_sleep_counter(s);
+    tb371fc_create_tsens(s);
     tb371fc_create_watchdog(s);
     tb371fc_create_boot_resources(s);
-    tb371fc_create_gpu_gdsc(s);
     tb371fc_create_smmus(s);
     tb371fc_create_tbu(s);
     if (s->enable_ufs) {
@@ -1414,6 +1757,16 @@ static void tb371fc_init(MachineState *ms)
         s->ufs->id = g_strdup("ufs0");
     }
     tb371fc_create_gcc(s);
+    tb371fc_create_cpufreq(s);
+    tb371fc_create_devfreq(s);
+    tb371fc_create_sbm(s);
+    tb371fc_create_gpucc(s);
+    tb371fc_create_npucc(s);
+    tb371fc_create_npu_gdsc(s);
+    tb371fc_create_noc_qos(s);
+    tb371fc_create_gpu_cx_gdsc(s);
+    tb371fc_create_gpu_gx_gdsc(s);
+    tb371fc_create_mdss_gdsc(s, tb371fc_create_camera_gdsc(s));
     if (s->ufs) {
         tb371fc_realize_ufs(s);
         /* Native pinctrl states: output-low asserts the dedicated pad. */
@@ -1587,29 +1940,27 @@ static void tb371fc_set_tbu_profile(Object *obj, const char *value,
     s->tbu_profile = g_strdup(value);
 }
 
-static char *tb371fc_get_gdsc_profile(Object *obj, Error **errp)
+static char *tb371fc_get_aop_profile(Object *obj, Error **errp)
 {
-    return g_strdup(TB371FC_MACHINE(obj)->gdsc_profile);
+    return g_strdup(TB371FC_MACHINE(obj)->aop_profile);
 }
 
-static void tb371fc_set_gdsc_profile(Object *obj, const char *value, Error **errp)
+static void tb371fc_set_aop_profile(Object *obj, const char *value, Error **errp)
 {
     TB371FCMachineState *s = TB371FC_MACHINE(obj);
 
     if (s->xo) {
-        error_setg(errp, "gdsc-profile is fixed after machine creation");
+        error_setg(errp, "aop-profile is fixed after machine creation");
         return;
     }
-    if (strcmp(value, "none") && strcmp(value, "reference-off") &&
-        strcmp(value, "reference-on")) {
-        error_setg(errp, "gdsc-profile must be none, reference-off, or "
-                         "reference-on");
+    if (!value || (strcmp(value, "none") &&
+                   strcmp(value, "reference-qdss-vote"))) {
+        error_setg(errp, "aop-profile must be none or reference-qdss-vote");
         return;
     }
-    g_free(s->gdsc_profile);
-    s->gdsc_profile = g_strdup(value);
+    g_free(s->aop_profile);
+    s->aop_profile = g_strdup(value);
 }
-
 
 static char *tb371fc_get_smem_profile(Object *obj, Error **errp)
 {
@@ -1716,7 +2067,7 @@ static void tb371fc_instance_init(Object *obj)
     s->rpmh_profile = g_strdup("off");
     s->spmi_profile = g_strdup("off");
     s->smem_profile = g_strdup("off");
-    s->gdsc_profile = g_strdup("none");
+    s->aop_profile = g_strdup("none");
     s->tbu_profile = g_strdup("off");
     s->rpmh_boot_configured = true;
     s->counter_exact = true;
@@ -1732,7 +2083,7 @@ static void tb371fc_instance_finalize(Object *obj)
     g_free(s->rpmh_cmd_db);
     g_free(s->spmi_profile);
     g_free(s->smem_profile);
-    g_free(s->gdsc_profile);
+    g_free(s->aop_profile);
     g_free(s->tbu_profile);
 }
 
@@ -1755,16 +2106,16 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
     mc->possible_cpu_arch_ids = tb371fc_possible_cpu_arch_ids;
     mc->cpu_index_to_instance_props = tb371fc_cpu_index_to_props;
 
+    object_class_property_add_str(oc, "aop-profile",
+        tb371fc_get_aop_profile, tb371fc_set_aop_profile);
+    object_class_property_set_description(oc, "aop-profile",
+        "none (default) or explicit reference QMP peer for QDSS off/dynamic "
+        "votes; no AOP firmware or physical clock-frequency model");
     object_class_property_add_str(oc, "tbu-profile",
         tb371fc_get_tbu_profile, tb371fc_set_tbu_profile);
     object_class_property_set_description(oc, "tbu-profile",
         "off (default) or reference-ecats ANOC1/2 HALT and debug translation; "
         "no silicon identity, physical transaction stall or clock-gate model");
-    object_class_property_add_str(oc, "gdsc-profile",
-        tb371fc_get_gdsc_profile, tb371fc_set_gdsc_profile);
-    object_class_property_set_description(oc, "gdsc-profile",
-        "none (default), reference-off or reference-on GPU CX/GX digital "
-        "power controls; no GPU execution or measured silicon reset state");
     object_class_property_add_str(oc, "smem-profile",
         tb371fc_get_smem_profile, tb371fc_set_smem_profile);
     object_class_property_set_description(oc, "smem-profile",

@@ -1,0 +1,43 @@
+{
+  "schema": "tb371fc-actual-dt-consumer-root-static-review-v1",
+  "files": {
+    "native-userspace8-actual-dt-draft.py": {
+      "bytes": 48393,
+      "sha256": "7466f3dc6ffffeaa40585d9f48429d5e74bb9d0b0144cd76ed5bf688f41db72b"
+    },
+    "stage-actual-dt-fixture.py": {
+      "bytes": 25622,
+      "sha256": "3615728f8f69d19e19cecbf9dcc6c0b2b45e273a1a155aa2175438f4cdcbe320"
+    }
+  },
+  "shared_validator_ast_identical": {
+    "inspect_init": true,
+    "verify_fixture": true
+  },
+  "stage_imports": [
+    "hashlib",
+    "json",
+    "pathlib",
+    "re",
+    "stat",
+    "struct",
+    "types",
+    "zlib"
+  ],
+  "root_reviewed": [
+    "source/binary/runner/ZIP/manifest and same-binary primary hash chain",
+    "full primary kernel hash and complete-log fatal gate; no device-error-count gate",
+    "fixed seventeen globals plus one explicitly configured RPMh reference global",
+    "raw ELF SHT_SYMTAB-to-section-to-PT_LOAD correspondence, exact RET and dynamic result address",
+    "fixed seven-entry CPIO, native-tested arch-probe hash and actual exact DT model",
+    "Z0 then PC/PSTATE at EL0; bounded 3120-byte read, no guest memory/register/PC write",
+    "checkpoint persistence before z0/continue and separate actual guest shutdown/exit verdict",
+    "fixed eight ZIP members, duplicate/path/symlink/size guards, validate before fresh host writes",
+    "stage uses only stdlib and creates exact read-only copies, never invokes guest/build/transport"
+  ],
+  "findings": "No static blocker found in the reviewed adapter, lifecycle and stage helper. Formal fixture build, actual ZIP staging and later native execution remain unperformed.",
+  "qemu_executed": false,
+  "public_tests_executed": false,
+  "functions_imported_or_called": false,
+  "code_objects_compiled_only": true
+}

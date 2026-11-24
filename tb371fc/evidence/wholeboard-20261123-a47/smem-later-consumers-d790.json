@@ -1,0 +1,65 @@
+{
+  "schema": "tb371fc-smem-client-source-boundary-v1",
+  "scope": "Source analysis correlated with root-reported native warnings; no new native run or firmware records created",
+  "vendor_repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+  "vendor_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+  "model_commit": "d79052f306ec37a797d05c9e4b2f8f7ea69c0675",
+  "conclusions": {
+    "smem_probe_uninitialized": false,
+    "item_602": "Request is outside declared item_count=512 and reaches WARN_ON at smem.c:652 before host partition lookup; initialized-driver state is distinct from missing firmware minidump data",
+    "item_137": "In-range SMEM_HW_SW_BUILD_ID is absent from initially empty reference global partition; the missing item path returns ENOENT and socinfo uses kernel dummy values",
+    "reference_changed": false,
+    "firmware_records_fabricated": false
+  },
+  "sources": [
+    {
+      "path": "drivers/soc/qcom/smem.c",
+      "bytes": 31342,
+      "sha256": "b0eef6fc4ba901731936ef8b5c1c91d4b709ee714350e1a86c6c44c379f933c2",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/smem.c",
+      "locations": "qcom_smem_get 642–676: !__smem returns EPROBE_DEFER before item_count WARN_ON line652; qcom_smem_get_item_count 809–822 reads SIII num_items; version12 probe1124–1134; qcom_smem_get_private empty search returns ENOENT624"
+    },
+    {
+      "path": "drivers/soc/qcom/minidump_private.h",
+      "bytes": 2568,
+      "sha256": "8db0c03308b9c798421a476c06f98bc16f38a4ccde460c59a93296abd5ead159",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/minidump_private.h",
+      "locations": "line10 SBL_MINIDUMP_SMEM_ID=602"
+    },
+    {
+      "path": "drivers/soc/qcom/msm_minidump.c",
+      "bytes": 13715,
+      "sha256": "0397f7e857a38d3f9c291a752b5e6ad7a4c2689c15485caf538a372e504bd4e3",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/msm_minidump.c",
+      "locations": "msm_minidump_init453–473: request602 at462; all error-or-null results produce generic uninitialized message465 and ENODEV466"
+    },
+    {
+      "path": "drivers/soc/qcom/peripheral-loader.c",
+      "bytes": 44803,
+      "sha256": "2893b83700082f22263e00b474c062285e275de019b620e2ad42845c0b008575",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/peripheral-loader.c",
+      "locations": "msm_pil_init1624–1671: second request602 at1653; only EPROBE_DEFER triggers uninitialized message and early return1656–1658"
+    },
+    {
+      "path": "drivers/soc/qcom/socinfo.c",
+      "bytes": 44590,
+      "sha256": "8578939ed50040000c2c888ba45cc6e9bd69e6d004c8e7636e68a9238b7d6853",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/socinfo.c",
+      "locations": "socinfo_init1580–1612: requestSMEM_HW_SW_BUILD_ID1589, fallbackdummy1590–1593, boot_stats_init1605"
+    },
+    {
+      "path": "include/soc/qcom/socinfo.h",
+      "bytes": 5896,
+      "sha256": "e655f21c03579ed0753ca2e6c19b872fa53d3fca6d524ff3e5a1d39ad9c5f2e9",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/94304e12a3509eac7b3716bf574ce0b1fcaacbae/include/soc/qcom/socinfo.h",
+      "locations": "SMEM_HW_SW_BUILD_ID=137 at115"
+    },
+    {
+      "path": "hw/misc/qcom-smem-handoff.c",
+      "bytes": 5795,
+      "sha256": "60775fbb03c1bf0bc652f33157262de9721dd61bbfc4a037c6500183d2be55c7",
+      "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/d79052f306ec37a797d05c9e4b2f8f7ea69c0675/hw/misc/qcom-smem-handoff.c",
+      "locations": "SMEM_REFERENCE_ITEMS=512 at31; reference version12 + initialized1 at58–59; empty global partition at71–76; SIII and num_items512 at78–81"
+    }
+  ]
+}

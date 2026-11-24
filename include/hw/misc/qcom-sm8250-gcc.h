@@ -10,8 +10,7 @@
 OBJECT_DECLARE_SIMPLE_TYPE(QcomSm8250GccState, QCOM_SM8250_GCC)
 
 #define GCC_CLOCKS 200
-/* Slot 63 remains for v1 migration; SYS_NOC_CPUSS now has a known parent. */
-#define GCC_EXTERNAL_PARENTS 84
+#define GCC_EXTERNAL_PARENTS 83
 #define GCC_RESETS 45
 #define GCC_POWER_DOMAINS 11
 #define GCC_REGISTER_WORDS (0x9c104 / 4)
@@ -23,6 +22,7 @@ struct QcomSm8250GccState {
     Clock *xo;
     Clock *sleep;
     Clock *audio;
+    Clock *test;
     Clock *external[GCC_EXTERNAL_PARENTS];
     Clock *clocks[GCC_CLOCKS];
     qemu_irq reset_out[GCC_RESETS];

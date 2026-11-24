@@ -1,0 +1,51 @@
+{
+  "schema": "tb371fc-rpmh-wait-observer-independent-static-review-v1",
+  "observer": {
+    "path": "/run/tb371fc-root77-a47/capture_rpmh_wait.py",
+    "bytes": 4920,
+    "sha256": "f537d1a978e1829e9d140d0d7533f1c5f83b72137526a266ed810bbb68487f90",
+    "entrypoint": "capture_rpmh_wait"
+  },
+  "model": {
+    "commit": "dbf0e411e3fedad43e9bdbe44e7e969ca2fc89b1",
+    "c_sha256": "5786aba96b932a615db0be716bbae3aa61612089191978cbc7940385be13e290",
+    "qom_path": "/machine/rpmh"
+  },
+  "reviewed_contract": {
+    "configuration_bool": "reference-wait-mask-reserved",
+    "uint32_properties": [
+      "wait-command-mask",
+      "wait-reserved-last-voter",
+      "wait-reserved-last-tcs",
+      "wait-reserved-last-raw",
+      "wait-reserved-last-effective",
+      "wait-reserved-last-ignored"
+    ],
+    "uint64_property": "wait-reserved-masked-writes",
+    "qom_get_calls_per_normal_capture": 16,
+    "query_status_calls_per_normal_capture": 2,
+    "actual_command_allowlist": [
+      "qom-get",
+      "query-status"
+    ]
+  },
+  "findings": [
+    "The eight exact QOM names and bool/u32/u64 widths match the committed model; integer validation excludes Python bool and bounds values to their unsigned widths.",
+    "Two complete QOM snapshots are read between stopped query-status observations. A changed guest status raises; unequal snapshots cannot produce a complete observation.",
+    "The mask is checked against 0xffff, effective/ignored are derived independently from the raw word, and zero history is canonical.",
+    "Nonzero history requires the explicit policy, valid voter, valid voter-specific TCS geometry, and ignored bits. Strict profile cannot carry masked history.",
+    "Complete means a stable stopped observation under the enabled reference policy. A cold zero-use policy can be complete; accepted masked write is separately represented by its counter.",
+    "The observer does not compare historical last-event data with current guest WAIT, execute MMIO, set a property, advance virtual time, acknowledge an IRQ, or complete a command.",
+    "Claims explicitly exclude hardware reserved-bit semantics, driver probe success, userspace success and Android boot."
+  ],
+  "conclusion": "No static blocker found in the bounded observer extension.",
+  "validation": {
+    "ast_parse": true,
+    "function_executed": false,
+    "mock_tests_executed_by_this_reviewer": false,
+    "qemu_executed": false,
+    "remote_commands_executed": false,
+    "guest_memory_written": false
+  },
+  "scope_limit": "This is an independent static review, not confirmation of the author memory cases, a QMP execution, native progress, or an exact CI artifact result."
+}

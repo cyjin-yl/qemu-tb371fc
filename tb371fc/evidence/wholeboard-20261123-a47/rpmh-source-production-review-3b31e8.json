@@ -1,0 +1,517 @@
+{
+  "schema": "tb371fc-rpmh76-source-production-review-v1",
+  "scope": {
+    "read_only_existing_local_evidence_and_public_sources": true,
+    "remote_device_accessed": false,
+    "qemu_started": false,
+    "kernel_image_changed": false,
+    "device_model_changed_by_this_review": false,
+    "hardware_reserved_bit_semantics_established": false
+  },
+  "conclusion": {
+    "confirmed": "The fixed production Image contains the same uninitialized tcs_cmd.wait path as the pinned vendor source. msm_bus_dev_init_qos passes a 12-byte command whose addr/data are stored but whose trailing 4-byte wait slot is not initialized by that function; the copied wait value is shifted and ORed into WAIT_FOR_CMPL.",
+    "fault_mapping": "DRV2 + 0x0d10 is APPS TCS0 WAIT_FOR_CMPL. The corresponding board physical address is 0x18220d10, derived from the implemented map and previously captured DT properties, not a core invalid_mem PA report.",
+    "silicon_limit": "No applicable primary source inspected here specifies read-as-zero/write-ignore, fault, or storage semantics for WAIT bits above the implemented command count. Existing QEMU strict rejection is a model policy, not proved SM8250 silicon behavior.",
+    "runtime_boundary": "The single native76 run faults before CPUFreq/Devfreq registration and before any SBM SET/CLR write. Its cold stopped SBM state is not a native SBM-handshake pass.",
+    "prior_success": "The prior b95 run passing this path does not refute an uninitialized-stack defect. Different residual stack contents and execution order are plausible, but the actual previous writer of the uninitialized word and the precise cause of the b95/3b31 difference were not established."
+  },
+  "vendor_pin": {
+    "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+    "commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+    "production_source_equivalence": "The relevant compiled producer/copy/consumer instruction paths are now corroborated against the fixed Image; this is not a claim that the entire production Image was built from this public repository."
+  },
+  "source_chain": [
+    {
+      "file": "drivers/soc/qcom/msm_bus/msm_bus_fabric_rpmh.c",
+      "lines": "950-1017",
+      "finding": "msm_bus_dev_init_qos invokes msm_bus_vote_qos_bcms before QoS MMIO and removes votes afterward."
+    },
+    {
+      "file": "drivers/soc/qcom/msm_bus/msm_bus_fabric_rpmh.c",
+      "lines": "830-902",
+      "finding": "The QoS vote and remove paths call bcm_commit_single_req."
+    },
+    {
+      "file": "drivers/soc/qcom/msm_bus/msm_bus_fabric_rpmh.c",
+      "lines": "726-741",
+      "finding": "bcm_commit_single_req declares struct tcs_cmd cmd_active without an initializer, then calls tcs_cmd_gen and rpmh_write(...,1)."
+    },
+    {
+      "file": "drivers/soc/qcom/msm_bus/msm_bus_fabric_rpmh.c",
+      "lines": "254-277",
+      "finding": "tcs_cmd_gen stores cmd->addr and cmd->data only; it does not assign cmd->wait."
+    },
+    {
+      "file": "include/soc/qcom/tcs.h",
+      "lines": "29-40",
+      "finding": "tcs_cmd consists of three u32 words: addr, data, wait. wait is not a C bool."
+    },
+    {
+      "file": "drivers/soc/qcom/rpmh.c",
+      "lines": "312-343",
+      "finding": "rpmh_write initializes its destination request but then memcpy copies n * sizeof(struct tcs_cmd) from the caller, including the uninitialized wait word. It does not normalize wait."
+    },
+    {
+      "file": "drivers/soc/qcom/rpmh-rsc.c",
+      "lines": "324-359",
+      "finding": "__tcs_buffer_write reads the prior WAIT word; for each command it ORs cmd->wait << j into that word, writes MSGID/ADDR/DATA, then writes WAIT and CMD_ENABLE. AMC trigger occurs afterward in tcs_write."
+    },
+    {
+      "file": "drivers/soc/qcom/rpmh-rsc.c",
+      "lines": "399-442",
+      "finding": "The active write path holds drv->lock, selects a free TCS, and calls __tcs_buffer_write with command index zero before triggering."
+    }
+  ],
+  "production_instruction_chain": [
+    {
+      "va": "0xffffff800869dd78",
+      "instruction": "sub sp, sp, #0x80",
+      "finding": "Producer stack frame allocation; the full 0x620-byte function was inspected."
+    },
+    {
+      "va": "0xffffff800869de88",
+      "instruction": "add x2, sp, #0x8",
+      "finding": "Caller command address."
+    },
+    {
+      "va": "0xffffff800869de90",
+      "instruction": "mov w3, #1",
+      "finding": "One command."
+    },
+    {
+      "va": "0xffffff800869de98",
+      "instruction": "stp w8, w9, [sp, #8]",
+      "finding": "Only addr/data at SP+8 and SP+12 are initialized. SP+16 is the trailing wait word. Neither this path nor the full producer function explicitly initializes SP+16."
+    },
+    {
+      "va": "0xffffff800869de9c",
+      "instruction": "bl 0xffffff8008675848",
+      "finding": "Call rpmh_write; return VA 0xffffff800869dea0 equals producer base + 0x128, matching the observed backtrace."
+    },
+    {
+      "va": "0xffffff800869e338",
+      "instruction": "stp w8, w23, [sp, #8]",
+      "finding": "The later remove-vote call has the same two-word-only initialization, followed by another rpmh_write at 0xffffff800869e33c."
+    },
+    {
+      "va": "0xffffff8008675954",
+      "instruction": "mov w8, #0xc",
+      "finding": "rpmh_write prepares 12-byte command width."
+    },
+    {
+      "va": "0xffffff8008675960",
+      "instruction": "umull x2, w21, w8",
+      "finding": "Copy length is n * 12; call at 0xffffff8008675964 matches the vendor memcpy site. This review did not independently disassemble the generic copy routine."
+    },
+    {
+      "va": "0xffffff8008673a10",
+      "instruction": "mov w2, wzr",
+      "finding": "rpmh_rsc_send_data passes command index 0 to __tcs_buffer_write at 0xffffff8008673a18."
+    },
+    {
+      "va": "0xffffff80086745f8",
+      "instruction": "ldr w20, [x8]",
+      "finding": "Initial WAIT_FOR_CMPL read."
+    },
+    {
+      "va": "0xffffff8008674698",
+      "instruction": "ldr w8, [x27, #8]!",
+      "finding": "Loads the third command word, cmd.wait."
+    },
+    {
+      "va": "0xffffff80086746c8",
+      "instruction": "lsl w8, w8, w22",
+      "finding": "Shifts the full unnormalized u32 by command index."
+    },
+    {
+      "va": "0xffffff80086746d0",
+      "instruction": "orr w20, w8, w20",
+      "finding": "Accumulates it into WAIT."
+    },
+    {
+      "va": "0xffffff80086747d8",
+      "instruction": "str w20, [x8]",
+      "finding": "Observed faulting instruction, exactly __tcs_buffer_write+0x220. Preceding four words and this word match the native Code dump and fixed Image."
+    }
+  ],
+  "observed_value_limits": {
+    "raw_write": "0x778bd800",
+    "implemented_low16": "0xd800",
+    "upper16": "0x778b0000",
+    "statement": "The model's reachable WAIT state contains only low16 bits. Under the matched producer/consumer path, the observed upper16 therefore require the unnormalized command wait value rather than a previously accepted high-bit model WAIT value.",
+    "not_proved": [
+      "the identity or meaning of the old stack contents",
+      "that 0x778bd800 is a pointer",
+      "the exact complete cmd.wait value before OR with the old low16 WAIT word",
+      "the exact scheduling or memory-history difference from b95"
+    ]
+  },
+  "dt_evidence": {
+    "capture_path": "tb371fc/evidence/expansion-20261123/rpmh-display-topology.json",
+    "capture_blob": "78a6872423f95d6d693757ba29ca72b4ee6a3754",
+    "capture_sha256": "23405d857ca401d13f16350b3b5cb2dc41a3b0cdecc3025363b90fadeaad001a",
+    "source_inventory": "tb371fc/evidence/expansion-20261123/android-device-inventory.json",
+    "source_inventory_sha256": "3797824168bc12cd65d8079ffe428c45a4126f54b2170460981ee8903d504263",
+    "scope_limit": "This prior raw-property capture is not independently bound here to the full DTB SHA511426. Its eight property payload sizes and SHA256 values were independently recomputed from base64. It agrees with the current board's physical mapping and generated geometry.",
+    "node": "/soc/rsc@18200000",
+    "compatible": "qcom,rpmh-rsc",
+    "registers": [
+      {
+        "name": "drv-0",
+        "base": "0x18200000",
+        "size": "0x10000"
+      },
+      {
+        "name": "drv-1",
+        "base": "0x18210000",
+        "size": "0x10000"
+      },
+      {
+        "name": "drv-2",
+        "base": "0x18220000",
+        "size": "0x10000"
+      }
+    ],
+    "selected_drv": 2,
+    "tcs_offset": "0xd00",
+    "tcs_config_be32": [
+      2,
+      2,
+      0,
+      3,
+      1,
+      3,
+      3,
+      1
+    ],
+    "decoded_groups": [
+      {
+        "type": "active",
+        "count": 2,
+        "ordinary_ids": [
+          0,
+          1
+        ]
+      },
+      {
+        "type": "sleep",
+        "count": 3,
+        "ordinary_ids": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "type": "wake",
+        "count": 3,
+        "ordinary_ids": [
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "type": "control",
+        "count": 1,
+        "ordinary_ids": [],
+        "note": "Vendor allocator skips CONTROL_TCS"
+      }
+    ],
+    "interrupts_be32": [
+      0,
+      3,
+      4,
+      0,
+      4,
+      4,
+      0,
+      5,
+      4
+    ],
+    "ncpt16": "The current digital model advertises 16 through child_config. Neither this DT property set nor the supplied fatal proves a sampled silicon NCPT value."
+  },
+  "kernel_config": {
+    "evidence": "tb371fc/evidence/wholeboard-20261123-a47/noc-dt-evidence-0508.json",
+    "blob": "c300271fab1acabb6d1b45ddcf626f5e2f091d25",
+    "embedded_ikconfig_sha256": "23d3db565be3cd6cfc07bb90541d971dc70e6a6ce3516360155b8fd15590e726",
+    "relevant": [
+      "CONFIG_QCOM_RPMH=y",
+      "CONFIG_QCOM_BUS_SCALING=y",
+      "CONFIG_QCOM_BUS_CONFIG_RPMH=y"
+    ],
+    "build_selection": "Pinned drivers/soc/qcom/Makefile 14-16 selects rpmh-rsc.o and rpmh.o; msm_bus/Makefile 9-13 selects msm_bus_fabric_rpmh.o for this config."
+  },
+  "reserved_bit_research": {
+    "vendor_result": "Pinned driver reads/writes u32 WAIT but provides no upper-bit mask, RAZ/WI promise, or reserved-bit fault requirement.",
+    "mainline_result": "Linux v6.12.114 rpmh-rsc.c states up to16 command slots; its current __tcs_buffer_write no longer programs WAIT and uses MSGID response-request. This does not establish old hardware upper-bit semantics.",
+    "qualcomm_reference_model": {
+      "repository": "qualcomm/qbox",
+      "commit": "75fbd27d718f70d553b1aadff40eaa371aa49453",
+      "paths": [
+        "systemc-components/rsc/include/rsc_gen.h",
+        "systemc-components/rsc/include/rsc.h",
+        "systemc-components/rsc/src/rsc.cc"
+      ],
+      "finding": "Official Qualcomm SystemC model has corresponding DRV2 WAIT geometry and16 commands. The header explicitly references SA8775P, and the implementation completes enabled commands without consulting WAIT. It is a different reference model, not an SM8250 reserved-bit specification. Its binary config ZIP was not readable through the available UTF8 source connector; no register-mask conclusion is drawn from it."
+    },
+    "search_scope": "Public indexed source searches covered exact CMD_WAIT_FOR_CMPL, RMSK, reserved and Qualcomm/quic official repositories. Third-party firmware mirrors surfaced but were not used as applicable primary evidence.",
+    "conclusion": "No applicable explicit WI/RAZ proof found in the inspected primary material; this is a bounded research result, not proof that no such specification exists."
+  },
+  "implementation_policy_authorized_by_root": {
+    "status": "Planned after this review; not yet implemented or executed",
+    "property": "reference-wait-mask-reserved",
+    "default": false,
+    "scope": "Explicit reference-only compatibility for the confirmed production uninitialized-wait path: idle WAIT high bits may be ignored while preserving low16 and recording raw diagnostics. Busy writes, CMD_ENABLE, IRQ masks, resources and completion semantics stay strict.",
+    "honesty": "The proposed opt-in must not be described as measured silicon reserved-bit behavior or a repair to the production kernel. No original Image modification is authorized.",
+    "migration_plan": "Main VMState v2/min2 remains; optional v1 subsection is present whenever policy is enabled, including cold count0. Both profile mismatch directions must reject before output/timer restoration."
+  },
+  "production_evidence": {
+    "path": "/run/tb371fc-root76-a47/rpmh-production-3b31e8.json",
+    "bytes": 79836,
+    "sha256": "147606dd2ed022fbb5e85891bbffd050af1a3ddbffb1d585949bfef65d69e147",
+    "image": {
+      "bytes": 37445648,
+      "path": "/work/device-assets/current-boot_a-kernel.Image",
+      "sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+      "unchanged_across_read": true
+    },
+    "image_header": {
+      "flags": 10,
+      "image_size": 44785664,
+      "magic_hex": "41524d64",
+      "mapping": "Image file offset = symbol virtual address minus _text; independently checked against exact fault instruction and preceding four instructions.",
+      "symbol_mapping_base": "0xffffff8008080000",
+      "text_offset": 524288
+    },
+    "symbols": {
+      "bytes": 5226424,
+      "path": "/work/kernel-symbols/production-4.19.157.kallsyms",
+      "sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+      "unchanged_across_read": true
+    },
+    "disassembler": {
+      "path": "/usr/bin/aarch64-linux-gnu-objdump",
+      "version_first_line": "GNU objdump (GNU Binutils for Debian) 2.44"
+    },
+    "fault": {
+      "image_offset": 6244312,
+      "matched_actual_native_code_dump": true,
+      "opcode": "str w20, [x8]",
+      "virtual_address": "0xffffff80086747d8",
+      "words_including_four_preceding": [
+        "0xf9400a68",
+        "0xf85f83aa",
+        "0x8b0a0108",
+        "0x91004108",
+        "0xb9000114"
+      ]
+    },
+    "all_4584_raw_bytes_rehashed_and_matched_to_disassembly_words": true,
+    "functions": [
+      {
+        "name": "__tcs_buffer_write",
+        "virtual_address": "0xffffff80086745b8",
+        "image_offset": 6243768,
+        "captured_bytes": 616,
+        "sha256": "c15b6761dab4a6217559981716dee14cfa58d07f4172f9b08724c42cc0717a7b"
+      },
+      {
+        "name": "rpmh_write",
+        "virtual_address": "0xffffff8008675848",
+        "image_offset": 6248520,
+        "captured_bytes": 408,
+        "sha256": "d59ea3bdf76fec662da08ded683ed6cd86b528bc1c44aa9577f2c2c5f3047627"
+      },
+      {
+        "name": "msm_bus_dev_init_qos",
+        "virtual_address": "0xffffff800869dd78",
+        "image_offset": 6413688,
+        "captured_bytes": 1568,
+        "sha256": "cbeca554c65bad043f9da2a6a5fb635d27d585baf4f1cfb1c1ed21db7f735321"
+      },
+      {
+        "name": "rpmh_rsc_send_data",
+        "virtual_address": "0xffffff80086736b0",
+        "image_offset": 6239920,
+        "captured_bytes": 992,
+        "sha256": "b989675a483c01264a483ccf86117d1b15284eeac63815954a99cde296f2c305"
+      },
+      {
+        "name": "__rpmh_write",
+        "virtual_address": "0xffffff8008675460",
+        "image_offset": 6247520,
+        "captured_bytes": 1000,
+        "sha256": "f88f2ebb4cf674ade54c55d3a080b0af8eb1a4b8ee19388376e7250ada078792"
+      }
+    ]
+  },
+  "native_evidence": {
+    "path": "/run/tb371fc-root76-a47/native-3b31e8-extra.json",
+    "bytes": 156261,
+    "sha256": "7f24e0d4cdcb277aad3d0a37f722ec1a08923637937a803dc579ce8bd60b0f58",
+    "source_commit": "3b31e83dc412962826ada872e361a1d32ea4e463",
+    "qemu_sha256": "e0e1a669fefee1b20e8421dc6943faabee7fccb91c35f72ae2cd2f45513d23f2",
+    "core_invalid_mem_count": 0,
+    "rpmh_error": [
+      {
+        "line": 8082,
+        "text": "qcom-sm8250-rpmh: DRV2 unsupported write @0x0d10 value=0x778bd800"
+      }
+    ],
+    "other_device_errors": "Four earlier SPMI observer denied/unimplemented status3 observations; distinct from the RPMh fatal.",
+    "kernel_fatal_time_seconds": 1.78191,
+    "pid": 1,
+    "cpu": 7,
+    "pc": "__tcs_buffer_write+0x220/0x268",
+    "caller": "msm_bus_dev_init_qos+0x128/0x620",
+    "panic": "Attempted to kill init! exitcode=0x0000000b",
+    "raw_evidence": [
+      {
+        "name": "diagnostic.json",
+        "bytes": 239851,
+        "sha256": "1d1e99a902511701010311279ad58306d45eef3fc1d06ef4f4b4ac6471fe847f"
+      },
+      {
+        "name": "qemu.log",
+        "bytes": 1394476,
+        "sha256": "cc79143e896ee0533cd8eab0eb900ff61b81186ba7a2cf9898cef30f2a847f11"
+      },
+      {
+        "name": "serial.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "kernel-banner.bin",
+        "bytes": 256,
+        "sha256": "f510bd2f9622842dbdb1d552dec1b1f83a4c8c8dafabe4b72f3c4810052687d9"
+      },
+      {
+        "name": "kernel-printk-ring.bin",
+        "bytes": 1048576,
+        "sha256": "02b95bea1af215fca7fbc1f0b4dcc8e952812f4d6c4c86892af5b8bac07797a5"
+      },
+      {
+        "name": "kernel-printk-metadata.json",
+        "bytes": 688,
+        "sha256": "97facf848eafc8cd79695cd4f28c023a8100046baea3aa38a19de8aa272e8963"
+      },
+      {
+        "name": "kernel-printk.log",
+        "bytes": 36781,
+        "sha256": "bf07301b7062594506bd8f4f4de01329fd9b0616f8027cc42e1b1b7750a0752e"
+      }
+    ],
+    "sbm_observation_status": "complete",
+    "sbm_state": {
+      "reference-peer-stall-mask": 0,
+      "requested-mask": 0,
+      "sense-mask": 0,
+      "pending-mask": 0,
+      "accepted-set-writes": 0,
+      "accepted-clear-writes": 0,
+      "last-set-mask": 0,
+      "last-clear-mask": 0
+    },
+    "sbm_reference_mmio_activity_observed": false
+  },
+  "primary_sources": [
+    {
+      "path": "drivers/soc/qcom/rpmh-rsc.c",
+      "local_path": "/run/tb371fc-rpmh76-source-a47/rpmh-rsc.c",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/rpmh-rsc.c",
+      "bytes": 22720,
+      "sha256": "bc0641e355309055228dd1978c925ba7fe772d1fa80bd28d892e916f990fd018",
+      "git_blob": "7537d18e6601f42d46c97e59712b2cfc5df1f63f"
+    },
+    {
+      "path": "drivers/soc/qcom/rpmh.c",
+      "local_path": "/run/tb371fc-rpmh76-source-a47/rpmh-client.c",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/rpmh.c",
+      "bytes": 14904,
+      "sha256": "51f8ba7548362b51586a749f8c920b343abeb778138a77a046dafaac5b458a68",
+      "git_blob": "82691f7b046ba8b61980c38233cc923051097a08"
+    },
+    {
+      "path": "include/soc/qcom/tcs.h",
+      "local_path": "/run/tb371fc-rpmh76-source-a47/tcs.h",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/include/soc/qcom/tcs.h",
+      "bytes": 1527,
+      "sha256": "40cd0160946b157f16641a1f17cb925cb6460107cd5510a1c0a32002e2fa6d35",
+      "git_blob": "262876a59e86dd509d721af8598b69e76c130150"
+    },
+    {
+      "path": "drivers/soc/qcom/Makefile",
+      "local_path": "/run/tb371fc-rpmh76-source-a47/soc-Makefile",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/Makefile",
+      "bytes": 4234,
+      "sha256": "11d04c59a5e922b08acdeaac4d31f229375ca6e0f0fee43a4459bb04ebfedc74",
+      "git_blob": "7d2ae357b8e8cfe0ffbefd10e583124175dee82a"
+    },
+    {
+      "path": "drivers/soc/qcom/Kconfig",
+      "local_path": "/run/tb371fc-rpmh76-source-a47/soc-Kconfig",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/Kconfig",
+      "bytes": 31480,
+      "sha256": "1752f802c1b207cd99850e9d96b02c28b860543a59eaa14015c74ee9f5b77073",
+      "git_blob": "e5ddad52d214a740eecee6dfe88b220361d7d600"
+    },
+    {
+      "path": "drivers/soc/qcom/msm_bus/Makefile",
+      "local_path": "/run/tb371fc-rpmh76-source-a47/bus-Makefile",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/msm_bus/Makefile",
+      "bytes": 695,
+      "sha256": "a169128203934897d1e2bd833f94653beabcbc0364c7b6c5a14762023c69ed50",
+      "git_blob": "0c8811247b19b612ab17045555f42993a4c10045"
+    },
+    {
+      "path": "include/dt-bindings/soc/qcom,rpmh-rsc.h",
+      "local_path": "/run/tb371fc-rpmh76-source-a47/qcom-rpmh-rsc-binding.h",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/include/dt-bindings/soc/qcom,rpmh-rsc.h",
+      "bytes": 300,
+      "sha256": "d57710164c227cf9d080d2885c44fe75a51cdc1b81ffd6aa27fc6ae0b70c1b73",
+      "git_blob": "868f998ea998f56bc671baaf37270f7432d410a3"
+    },
+    {
+      "path": "drivers/soc/qcom/msm_bus/msm_bus_fabric_rpmh.c",
+      "local_path": "/run/tb371fc-sbm-source-a47/msm_bus_fabric_rpmh.c",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/msm_bus/msm_bus_fabric_rpmh.c",
+      "bytes": 53370,
+      "sha256": "14563f3f965b030d68917b48b6185c2ff2b87f4f9de2ab212f2d8cb77b510bb7",
+      "git_blob": "3a48c03a8be79fd419ffb5acae2aa65b700666de"
+    }
+  ],
+  "supplemental_primary_source_identities": [
+    {
+      "url": "https://github.com/gregkh/linux/blob/v6.12.114/drivers/soc/qcom/rpmh-rsc.c",
+      "bytes": 35700,
+      "sha256": "0b5ceb9fd0876786ebd439ef9e042e7a8819883314a160bd2f7d1309868127f9",
+      "git_blob": "1b0b7081c9515d57dfab1d83ff53cfa0f22df309"
+    },
+    {
+      "url": "https://github.com/gregkh/linux/blob/v6.12.114/include/soc/qcom/tcs.h",
+      "bytes": 2641,
+      "sha256": "01bb877df3e1a8997a8a26feca9e4de1dc6b0d1d0bb8754dc6844a0c1e51b41c",
+      "git_blob": "3acca067c72b14396f273a65baf9c52868ab2348"
+    },
+    {
+      "url": "https://github.com/qualcomm/qbox/blob/75fbd27d718f70d553b1aadff40eaa371aa49453/systemc-components/rsc/include/rsc_gen.h",
+      "bytes": 13023,
+      "sha256": "32beb182b1b6d1e4722b038614f7cbf636e8593ad2f54ac452db6f6fdac72812",
+      "git_blob": "3ea82f83b25c8d61214e243dba6e26eda3facb0a"
+    },
+    {
+      "url": "https://github.com/qualcomm/qbox/blob/75fbd27d718f70d553b1aadff40eaa371aa49453/systemc-components/rsc/include/rsc.h",
+      "bytes": 2127,
+      "sha256": "e08bee3a745f8aed17780094ebdc0f8d39a7b6dd38e98926bd81ac2b84a2303f",
+      "git_blob": "970dd93589f25a704bada6eff1b4951231d80d32"
+    },
+    {
+      "url": "https://github.com/qualcomm/qbox/blob/75fbd27d718f70d553b1aadff40eaa371aa49453/systemc-components/rsc/src/rsc.cc",
+      "bytes": 5199,
+      "sha256": "6f92c7e0ac4d6b36caa20307eddd6e7686c593f2d7f0321709729081f3703e14",
+      "git_blob": "ea349478216af6905fe915a3f22b523300e4c215"
+    }
+  ]
+}

@@ -117,3 +117,4 @@ arm_common_ss.add(when: 'CONFIG_LENOVO_TB371FC', if_true: files('lenovo-tb371fc.
 
 hw_common_arch += {'arm': arm_common_ss}
 arm_common_ss.add(when: 'CONFIG_ARM_SMMUV2', if_true: files('arm-smmuv2.c'))
+arm_common_ss.add(when: 'CONFIG_QCOM_SMMUV500', if_true: files('qcom-smmuv500.c'))

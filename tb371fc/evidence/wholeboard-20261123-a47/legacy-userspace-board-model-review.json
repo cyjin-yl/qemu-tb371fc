@@ -1,0 +1,124 @@
+{
+  "schema": "tb371fc-existing-userspace8-full-dt-model-compatibility-v1",
+  "scope": "Read-only existing source and evidence review; no new remote capture, guest execution, build, fixture or verdict changes",
+  "result": "Known actual DT model is incompatible with the fixed legacy board_model predicate",
+  "existing_fixture_contract_blob": "b0e9d96fd80fa2ad3b6535dcd1ffda90182c1b75",
+  "deployment_manifest_blob": "d7d9d035825c0bd531e44353ccea758044e08af3",
+  "fixed_fixture": {
+    "init_sha256": "5c62d22ab5c7115506733e5a2bed8e8c0aa49b3b22e9ef9b9f5b8d7ec3389293",
+    "initramfs_sha256": "88c075fc15487f3d6dc8e7cb1b61a35aa74a8f25ec6001a7d883c9623f86d7f6",
+    "guest_source": {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "tb371fc/tests/guest-init.c",
+      "local_path": "/run/tb371fc-native8-adapter-a47/guest-init.c",
+      "sha256": "4f1aac3a68e6c660abebdc04f239191a46ee1330ffb47a494ee37d6081d38a79",
+      "lines": [
+        198,
+        199
+      ],
+      "predicate": "read_text(\"/proc/device-tree/model\", buf, sizeof(buf)) > 0 && strstr(buf, \"TB371FC\")",
+      "case_sensitive": true,
+      "check_index": 6
+    },
+    "host_validator": {
+      "commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+      "path": "tb371fc/scripts/boot_smoke_gdb.py",
+      "blob": "ed2a79a5b1fcda4e96bcb11292c355d96f20a378",
+      "sha256": "93e046b915b71cd74198e8dd518564c4c0e7ea85b75a29966f08c42a8897b737",
+      "lines": [
+        71,
+        72
+      ],
+      "predicate": "\"TB371FC\" in record[\"model\"]",
+      "error": "device tree model does not identify TB371FC"
+    }
+  },
+  "observed_actual_root_model": {
+    "evidence_path": "tb371fc/evidence/android-board.json",
+    "blob": "08f7cb27567887e4c6fbfef03a4a712d44a22497",
+    "captured_at_utc": "2026-11-22T21:54:30.897388+00:00",
+    "json_pointer": "/dt_nodes/~1/properties/model",
+    "property": {
+      "base64": "UXVhbGNvbW0gVGVjaG5vbG9naWVzLCBJbmMuIGtvbmEgUVJEAA==",
+      "be32": null,
+      "sha256": "9bf6d330148e3423a006773f7ece6eac4c9719787a7da87c75574a00186d2878",
+      "size": 37,
+      "strings": [
+        "Qualcomm Technologies, Inc. kona QRD"
+      ]
+    },
+    "decoded_string": "Qualcomm Technologies, Inc. kona QRD",
+    "contains_required_substring": false,
+    "android_ro_product_model": "TB371FC",
+    "android_ro_product_model_is_not_the_dt_model_property": true,
+    "source_boundary": "This is an already-published real-device root-property capture. It was not newly collected in this review and does not itself declare the later complete DTB511426 hash."
+  },
+  "external_dtb_loading": {
+    "fixed_input_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "input_path": "/work/device-assets/live-android-20261123.dtb",
+    "root_model_preserved": true,
+    "core_source": {
+      "commit": "b95f973f9b20d53e3a0b8843c919156e3acb58d9",
+      "path": "hw/arm/boot.c",
+      "read_url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/b95f973f9b20d53e3a0b8843c919156e3acb58d9/hw/arm/boot.c",
+      "machine_to_filename_line": 1207,
+      "external_tree_precedes_get_dtb_lines": [
+        480,
+        496
+      ],
+      "modify_hook_lines": [
+        632,
+        633
+      ]
+    },
+    "board_source": {
+      "runtime_commit": "8acb748b8626ef8d574e0dc72a95e8318a2def0d",
+      "path": "hw/arm/lenovo-tb371fc.c",
+      "memory_fixup_lines": [
+        234,
+        315
+      ],
+      "memory_fixup_changes": "Memory banks, firmware hole and explicit SMEM reservation; no root model write",
+      "generated_only_model_lines": [
+        618,
+        619
+      ],
+      "generated_only_model": "QEMU experimental Lenovo TB371FC functional subset"
+    },
+    "inference": "The adapter retains -dtb and its exact hash; the external tree wins over the generated subset tree, so the generated TB371FC substring cannot rescue an external-model mismatch.",
+    "exact_511426_root_model_bytes_newly_read": false,
+    "remaining_identity_boundary": "No remote access was authorized for this task. The published root capture supplies the expected external-model value; a future fixed-input guest RAM record should retain its actual model text as the direct guest-visible confirmation."
+  },
+  "expected_if_known_external_model_is_seen_and_other_seven_checks_pass": {
+    "completed": 1,
+    "checks_completed": 255,
+    "pass_mask": 191,
+    "fail_mask": 64,
+    "failures": 1,
+    "failed_check": "board_model",
+    "userspace_record_passed": false,
+    "overall_eight_check_pass": false,
+    "not_a_claim_the_other_seven_have_executed": true
+  },
+  "independent_evidence_still_collectible": {
+    "guest_runs_remaining_arch_probe_after_model_failure": true,
+    "guest_marks_record_complete_before_checkpoint": true,
+    "el0_pc_pstate_and_raw_record_can_prove_user_execution": true,
+    "guest_sync_and_reboot_are_not_conditional_on_zero_failures": true,
+    "real_guest_shutdown_can_be_recorded_separately": true,
+    "adapter_retains_checkpoint_record_before_lifecycle": true,
+    "strict_overall_false_must_be_preserved": true,
+    "not_android_init": true
+  },
+  "decision": "Keep existing fixture and all eight original verdict predicates unchanged. Treat the expected model mismatch honestly. A separately reviewed full-DT-specific fixture can be built only through its own formal CI increment while preserving the legacy fixture/gate.",
+  "verification": {
+    "read_existing_public_sources": true,
+    "read_existing_local_files": true,
+    "remote_access": false,
+    "qemu": false,
+    "build": false,
+    "tests_run": false,
+    "fixture_modified": false,
+    "verdict_modified": false
+  }
+}

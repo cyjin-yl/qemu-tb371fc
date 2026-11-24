@@ -1,0 +1,47 @@
+{
+  "schema": "tb371fc-smmuv2-granule-core-companion-merge-review-v1",
+  "reviewed_at_utc": "2026-11-23 17:53:52 UTC",
+  "scope": "Independent source and fixture review only; no QEMU execution, native launch or build",
+  "inputs": {
+    "base_commit": "339b9cd277aeae84fba52b60ae34ede90b7ff101",
+    "ours_commit": "52492a797d2acd9c918a8639564e8ff3e7beab3f",
+    "theirs_commit": "69ca28dec6add998d252fa6436dfcc9b9cab6e36",
+    "merged_core_blob": "31f3ff5013df6b6a5e48181474f86738f9bbc2b1",
+    "merged_core_bytes": 31139,
+    "merged_core_sha256": "7dd0d32d28887702509d5e48eaade4dfd0abb2c14f685055d3fb60a3704d2b5d",
+    "companion_path": "hw/arm/qcom-smmuv500.c",
+    "companion_bytes": 32240,
+    "companion_sha256": "0c2c416d5c817284df2a3ac1c6444cf5cfb38274126c905a080f6126a355a205",
+    "required_ours_header_path": "include/hw/arm/arm-smmuv2.h",
+    "required_ours_header_bytes": 1917,
+    "required_ours_header_sha256": "f960f10f80b5804bdc7afadfac9b5eaf41054d9738247a33bf827ace3caa1cc2",
+    "revised_companion_test_bytes": 66563,
+    "revised_companion_test_sha256": "25496714d8d961419cfb50045cdd62eef942a67cfb155cf7cff0bcaa451d453b"
+  },
+  "merge_check": {
+    "method": "git merge-file -p ours.c base.c theirs.c; in-memory stdout comparison against merged.c",
+    "exit_code": 0,
+    "output_byte_identical": true,
+    "any_file_modified": false
+  },
+  "findings": [
+    "The merged core only adds the default branch's explicit granule profile, walk geometry, IDR2 reporting, profile validation and VMState version 3 changes to the reviewed ours core. The blocker and debug-translation APIs and implementations are retained.",
+    "With default granule mask 1, existing 4 KiB geometry and previous unsupported-granule failure tests remain applicable. The newly accepted 16/64 KiB profiles require explicit configuration; no previous native record is reclassified as proof for them.",
+    "TG0/TG1 decoding, table stride and first-level alignment, table pointer mask and permitted block levels are internally consistent for the advertised 4/16/64 KiB subset. Read-only source review does not substitute for the separate granule gate.",
+    "The normal DMA path still checks the companion's atomic blocked mask before SID matching and translation; denied halted traffic does not create a walk fault. The debug path bypasses only that external halt filter and shares the SID match and page walker.",
+    "Companion ECATS reconstructs the byte PA using the returned addr_mask, then applies its documented 36-bit packing limit. It has no hard-coded 4 KiB mask that would truncate new granule offsets.",
+    "The real QTest client cache uses the returned IOMMUTLBEntry's mask and real IOMMU UNMAP notifier. The core invalidation and companion restore paths remain intact.",
+    "Core version 3 places the granule profile equality marker before mutable register arrays. Loading version 2 is explicitly allowed only with profile mask 1. The separate companion version remains 1 with 744-byte payload and its existing immutable reference geometry markers.",
+    "Core post_load re-drives fault IRQs and invalidates clients; companion pre_load stops its timer and closes DMA gating, then post_load validates restored state, publishes the blocker and schedules original deadlines without executing a translation. No added code introduces a first-MMIO repair dependency.",
+    "The revised companion fixture reads the two actual arm-smmuv2 migration section headers, version 3, geometries (0x100000,96,128)/(0x10000,8,128) and profile mask 1. Companion payload comparisons remain against all 744 bytes from the stopped source QOM snapshot.",
+    "The fixture still reports 36 checks, two completed migrations, two profile rejections and two corrupt-state rejections. Those counts are expected contract, not claimed execution results from this review."
+  ],
+  "required_integration_preservation": [
+    "Keep the ours 1917-byte public header containing companion APIs, rather than the default branch's 778-byte header.",
+    "Retain both the old companion transaction gate and the new granule gate in the unified CI; no additional broad test expansion is requested."
+  ],
+  "verdict": "no-static-integration-blocker",
+  "qemu_executed": false,
+  "ci_results_inferred": false,
+  "branch_ref_changed": false
+}

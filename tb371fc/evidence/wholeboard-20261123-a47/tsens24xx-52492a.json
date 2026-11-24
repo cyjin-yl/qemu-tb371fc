@@ -1,0 +1,471 @@
+{
+  "schema": "tb371fc-tsens24xx-v1",
+  "passed": true,
+  "expected_checks": 34,
+  "checks": [
+    {
+      "name": "cold_reference_has_no_fabricated_temperature_or_firmware_enable",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "first_sample_and_validity_follow_the_exact_virtual_deadline",
+      "passed": true,
+      "irq_controller": 1
+    },
+    {
+      "name": "a_partial_round_cannot_claim_all_enabled_inputs_were_sampled",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "all_thirty_two_channels_preserve_signed_codes_and_controller_isolation",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "changes_to_environment_inputs_do_not_rewrite_the_inflight_sample",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "withdrawn_sources_lose_validity_without_becoming_an_invented_zero",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "controllers_keep_independent_sampling_phases_and_enable_masks",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "literal_driver_threshold_rmw_preserves_the_other_field_and_c_signed_division",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "signed_upper_and_lower_comparators_include_equality_on_real_irq",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "critical_comparator_and_second_irq_are_independent_of_upper_lower",
+      "passed": true,
+      "irq_controller": 1
+    },
+    {
+      "name": "global_enables_filter_real_latched_irqs_without_erasing_status",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "channel_masks_isolate_events_and_rearming_does_not_require_a_fake_sample",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "clear_pulses_clear_latches_and_held_clear_suppresses_only_the_selected_event",
+      "passed": true,
+      "irq_controller": 1
+    },
+    {
+      "name": "control_changes_cancel_pending_samples_but_preserve_programmed_thresholds",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "software_reset_is_a_real_held_reset_and_preserves_external_environment",
+      "passed": true,
+      "irq_controller": 1
+    },
+    {
+      "name": "system_reset_cancels_timers_and_irqs_and_retains_only_external_inputs",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "read_only_feedback_and_reserved_bits_cannot_forge_a_sample_or_irq",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "narrow_and_unaligned_accesses_fail_while_wide_bus_accesses_split_into_words",
+      "passed": true,
+      "irq_controller": 1
+    },
+    {
+      "name": "host_environment_validation_is_atomic_and_never_directly_updates_guest_feedback",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "paused_time_and_late_dispatch_commit_only_one_captured_round",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "active_channel_gating_changes_wires_without_destroying_latched_history",
+      "passed": true,
+      "irq_controller": 0
+    },
+    {
+      "name": "default_unknown_profile_rejects_raw_state_and_cannot_become_a_thermal_success",
+      "passed": true
+    },
+    {
+      "name": "explicit_handoff_requires_known_inputs_and_valid_configuration",
+      "passed": true
+    },
+    {
+      "name": "paused_tcg_environment_properties_are_inputs_and_do_not_execute_a_conversion",
+      "passed": true
+    },
+    {
+      "name": "source_bounded_windows_preserve_version_calibration_watchdog_and_0c_holes",
+      "passed": true
+    },
+    {
+      "name": "both_controllers_drive_all_four_real_gic_routes_without_interception",
+      "passed": true
+    },
+    {
+      "name": "v1_both_captured_rounds_restore_before_first_tsens_mmio",
+      "passed": true
+    },
+    {
+      "name": "v1_both_exact_deadlines_and_later_changed_or_withdrawn_sources_continue",
+      "passed": true,
+      "remaining_deadlines_ns": [
+        600000,
+        800000
+      ]
+    },
+    {
+      "name": "v1_both_asserted_irq_wires_and_clear_hold_restore_before_first_tsens_mmio",
+      "passed": true
+    },
+    {
+      "name": "v1_pending_sample_consumes_saved_capture_then_new_real_irq_events_continue",
+      "passed": true,
+      "remaining_deadline_ns": 600000
+    },
+    {
+      "name": "reference_to_unknown_profile_is_rejected",
+      "passed": true,
+      "stream_modified": false
+    },
+    {
+      "name": "unknown_to_reference_profile_is_rejected",
+      "passed": true,
+      "stream_modified": false
+    },
+    {
+      "name": "one_real_valid_mask_outside_sensors_field_corruption_is_rejected",
+      "passed": true,
+      "stream_modified": true,
+      "only_one_field_modified": true
+    },
+    {
+      "name": "one_real_captured_code_reserved_bit_field_corruption_is_rejected",
+      "passed": true,
+      "stream_modified": true,
+      "only_one_field_modified": true
+    }
+  ],
+  "expected_completed_migrations": 2,
+  "migrations": [
+    {
+      "name": "v1_two_controller_captured_inputs_configuration_and_ram_roundtrip",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 23,
+        "total-time": 32,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 579.5597419354839,
+          "transferred": 2245794,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "destination": {
+        "status": "completed"
+      },
+      "source_virtual_ns": 400000,
+      "destination_virtual_ns": 400000,
+      "target_tsens_mmio_before_first_observation": false,
+      "target_real_irq_observed_before_first_mmio": true,
+      "observed_irq_controller": 0,
+      "destination_inputs_were_different_before_load": true,
+      "controller_sections_verified": 2,
+      "payload_bytes_per_controller": 375,
+      "sections": [
+        {
+          "controller": 0,
+          "instance_id": 0,
+          "version": 1,
+          "section_header_offset": 376461,
+          "payload_offset": 376489,
+          "payload_bytes": 375,
+          "srot_base": 203563008,
+          "tm_base": 203829248,
+          "all_serialized_fields_match_source_qom": true
+        },
+        {
+          "controller": 1,
+          "instance_id": 1,
+          "version": 1,
+          "section_header_offset": 376869,
+          "payload_offset": 376897,
+          "payload_bytes": 375,
+          "srot_base": 203567104,
+          "tm_base": 203837440,
+          "all_serialized_fields_match_source_qom": true
+        }
+      ],
+      "stream_modified": false,
+      "snapshot_sha256": "8a8e44d8007c93fbd22d6359aa0c9ba352d2fd8829c0f3d52433c5983ec0f032",
+      "snapshot_bytes": 2245794
+    },
+    {
+      "name": "v1_actual_latched_irqs_held_clear_current_inputs_and_ram_roundtrip",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 21,
+        "total-time": 29,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 641.6554285714285,
+          "transferred": 2245794,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "destination": {
+        "status": "completed"
+      },
+      "source_virtual_ns": 1400000,
+      "destination_virtual_ns": 1400000,
+      "target_tsens_mmio_before_first_observation": false,
+      "target_real_irq_observed_before_first_mmio": true,
+      "observed_irq_controller": 1,
+      "destination_inputs_were_different_before_load": true,
+      "controller_sections_verified": 2,
+      "payload_bytes_per_controller": 375,
+      "sections": [
+        {
+          "controller": 0,
+          "instance_id": 0,
+          "version": 1,
+          "section_header_offset": 376461,
+          "payload_offset": 376489,
+          "payload_bytes": 375,
+          "srot_base": 203563008,
+          "tm_base": 203829248,
+          "all_serialized_fields_match_source_qom": true
+        },
+        {
+          "controller": 1,
+          "instance_id": 1,
+          "version": 1,
+          "section_header_offset": 376869,
+          "payload_offset": 376897,
+          "payload_bytes": 375,
+          "srot_base": 203567104,
+          "tm_base": 203837440,
+          "all_serialized_fields_match_source_qom": true
+        }
+      ],
+      "stream_modified": false,
+      "snapshot_sha256": "8fff9a0769d93e9f9a1bd9e3386d31156fe79d4f355c07ae886eb16fd6c918a0",
+      "snapshot_bytes": 2245794
+    }
+  ],
+  "expected_rejected_migrations": 2,
+  "rejected_migrations": [
+    {
+      "name": "reference_to_unknown_profile_is_rejected",
+      "passed": true,
+      "actual_source_stream": true,
+      "stream_modified": false,
+      "source_status": "completed",
+      "source_reference": true,
+      "target_reference": false,
+      "snapshot_sha256": "8a8e44d8007c93fbd22d6359aa0c9ba352d2fd8829c0f3d52433c5983ec0f032",
+      "snapshot_bytes": 2245794,
+      "profile_mismatch": "0 != 1",
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-tsens24xx",
+      "expected_diagnostic": "0 != 1",
+      "specific_load_failure_observed": true
+    },
+    {
+      "name": "unknown_to_reference_profile_is_rejected",
+      "passed": true,
+      "actual_source_stream": true,
+      "stream_modified": false,
+      "source_status": "completed",
+      "source_reference": false,
+      "target_reference": true,
+      "snapshot_sha256": "a2bd2c104c4e49c6f738739bbdd213b88ce233ccb9caa0a67fa93371a6bf2ec4",
+      "snapshot_bytes": 2245794,
+      "profile_mismatch": "1 != 0",
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-tsens24xx",
+      "expected_diagnostic": "1 != 0",
+      "specific_load_failure_observed": true
+    }
+  ],
+  "expected_corrupted_stream_rejections": 2,
+  "corrupted_stream_rejections": [
+    {
+      "name": "valid-mask-outside-sensors",
+      "passed": true,
+      "actual_source_stream": true,
+      "stream_modified": true,
+      "source_status": "completed",
+      "legitimate_alternate_configuration": false,
+      "original_stream_unchanged": true,
+      "original_snapshot_sha256": "8a8e44d8007c93fbd22d6359aa0c9ba352d2fd8829c0f3d52433c5983ec0f032",
+      "corrupted_snapshot_sha256": "b4d333cbcd320d1db66a002b44fc5a0f8b144244c359cd2e0e662c1046c66729",
+      "original_snapshot_bytes": 2245794,
+      "corrupted_snapshot_bytes": 2245794,
+      "controller": 0,
+      "instance_id": 0,
+      "version": 1,
+      "section_header_offset": 376461,
+      "payload_offset": 376489,
+      "payload_bytes": 375,
+      "srot_base": 203563008,
+      "tm_base": 203829248,
+      "all_serialized_fields_match_source_qom": true,
+      "modified_field": "valid-mask-outside-sensors",
+      "field_offset": 376785,
+      "modified_field_bytes": 4,
+      "old_value": 0,
+      "new_value": 65536,
+      "only_one_field_modified": true,
+      "changed_byte_count": 1,
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-tsens24xx",
+      "expected_diagnostic": "qcom-tsens24xx: invalid migrated TSENS state",
+      "specific_load_failure_observed": true
+    },
+    {
+      "name": "captured-code-reserved-bit",
+      "passed": true,
+      "actual_source_stream": true,
+      "stream_modified": true,
+      "source_status": "completed",
+      "legitimate_alternate_configuration": false,
+      "original_stream_unchanged": true,
+      "original_snapshot_sha256": "8a8e44d8007c93fbd22d6359aa0c9ba352d2fd8829c0f3d52433c5983ec0f032",
+      "corrupted_snapshot_sha256": "d719ed27743ccc7c22f5c92861024f2c276e292d5e03aedace2a4ceef0c65d07",
+      "original_snapshot_bytes": 2245794,
+      "corrupted_snapshot_bytes": 2245794,
+      "controller": 0,
+      "instance_id": 0,
+      "version": 1,
+      "section_header_offset": 376461,
+      "payload_offset": 376489,
+      "payload_bytes": 375,
+      "srot_base": 203563008,
+      "tm_base": 203829248,
+      "all_serialized_fields_match_source_qom": true,
+      "modified_field": "captured-code-reserved-bit",
+      "field_offset": 376818,
+      "modified_field_bytes": 2,
+      "old_value": 3976,
+      "new_value": 8072,
+      "only_one_field_modified": true,
+      "changed_byte_count": 1,
+      "destination_exit": 1,
+      "request_sent": true,
+      "command_error": null,
+      "device": "qcom-tsens24xx",
+      "expected_diagnostic": "qcom-tsens24xx: invalid migrated sensor 5 state",
+      "specific_load_failure_observed": true
+    }
+  ],
+  "controller_count": 2,
+  "sensor_count": 32,
+  "sensors_per_controller": 16,
+  "register_count": 114,
+  "sparse_window_count": 6,
+  "mapped_bytes": 456,
+  "registers_per_controller": 57,
+  "mapped_bytes_per_controller": 228,
+  "irq_count": 4,
+  "sampling_period_ns": 1000000,
+  "vmstate_version": 1,
+  "vmstate_payload_bytes_per_controller": 375,
+  "reference_profile_is_default": false,
+  "reference_boot_state_is_measured": false,
+  "environment_input_is_host_controlled": true,
+  "analogue_calibration_implemented": false,
+  "watchdog_producer_implemented": false,
+  "cycle_monitor_producer_implemented": false,
+  "original_dt_srot_declared_bytes_per_controller": 4,
+  "source_observed_control_offset_beyond_declared_srot_size": 4,
+  "original_dt_tm_declared_bytes_per_controller": 511,
+  "unique_dt_referenced_sensor_counts": [
+    16,
+    9
+  ],
+  "dt_references_are_measured_firmware_enable_masks": false,
+  "qemu_sha256": "debe05589d1673680231dada5377c68b0f7f7ec1b2432f8fb7eff249e8a582e3",
+  "script_sha256": "a921258c6e5372952a4e4a2ee497357241e5563cf28954818f68cea2a484ce22",
+  "guest_cpu_executed": false,
+  "native_kernel_probe_observed": false,
+  "android_boot_passed": false,
+  "scope": "Actual compiled two-controller TSENS transactions, captured external reference inputs, virtual sample deadlines, signed thresholds, real IRQ outputs/GIC routes and state/RAM migration",
+  "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+  "source_url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/thermal/tsens2xxx.c",
+  "source_sha256": {
+    "tsens2xxx.c": "8e3bcb1179ecbb482cb2e7a32ad0daff28caace4ee2582b9521e016fb5ce1283",
+    "tsens.h": "dc878c52e6d0cd41b102759018c15b7982004957562ade83db3cd3fa5db0970e",
+    "msm-tsens.c": "07de996bd2b5e4f4bcf06508535a75f70fa59b9b174f9dad397284753658e282"
+  },
+  "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "dt_evidence_blob": "b6110a64c701db6727f35234cbbb27f932c6f098",
+  "binary_unchanged": true,
+  "duration_seconds": 23.25
+}

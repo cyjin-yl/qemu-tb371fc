@@ -38,6 +38,7 @@ class Case:
     tap_count: int | None = None
     timeout: int = 180
     expected_lengths: dict = field(default_factory=dict)
+    guest_errno: bool = False
 
 
 def sha(path):
@@ -62,7 +63,7 @@ def plan(args, runtime):
 
     def add(name, script, flags=(), output=None, verdict="passed", count=None,
             result="stdout", expected=None, count_field="checks", timeout=180,
-            expected_lengths=None):
+            expected_lengths=None, guest_errno=False):
         fixture = runtime / f"{len(cases):02d}"
         data = fixture / "data"
         argv = [sys.executable, str(script)]
@@ -73,7 +74,8 @@ def plan(args, runtime):
             result = str(data / "result.json")
         cases.append(Case(name, argv, fixture, result, verdict, count,
                           count_field, expected or {}, timeout=timeout,
-                          expected_lengths=expected_lengths or {}))
+                          expected_lengths=expected_lengths or {},
+                          guest_errno=guest_errno))
         return data
 
     def device(name, script, *flags, **kwargs):
@@ -82,14 +84,20 @@ def plan(args, runtime):
     if args.suite in ("all", "components"):
         for name, script in (
             ("ci-verdict-unit", scripts / "test_ci_device_tests.py"),
+            ("smem-observer-unit", scripts / "test_observe_smem.py"),
+            ("aop-observer-unit", scripts / "test_observe_aop.py"),
             ("board-profile-unit", scripts / "test_board_profile.py"),
             ("machine-validator-unit", scripts / "test_validate_machine.py"),
             ("dt-inventory-unit", scripts / "test_inventory_dtb.py"),
             ("hardware-sysfs-unit", scripts / "test_collect_hardware_sysfs.py"),
             ("guest-result-unit", tests / "test_guest_result.py"),
+            ("console-boot-verdict-unit", tests / "test_boot_verdict.py"),
             ("tlmm-map-unit", tests / "test_tlmm_map.py"),
         ):
             add(name, script, result="exit")
+        add("gcc-source-generation", scripts / "verify_gcc_generation.py",
+            output="--out", result="file", count=2,
+            expected={"source_pins_verified": True})
         add("live-machine-profile", scripts / "validate_machine.py",
             ("--qemu", qemu, "--output", "@DATA@/result.json",
              "--dtb-output", "@DATA@/generated.dtb"), result="file")
@@ -98,15 +106,47 @@ def plan(args, runtime):
         device("geni-migration", "test_geni_migration.py",
                verdict="success", count=6)
         device("gcc-registers", "test_gcc_sm8250.py",
-               output="--work-dir", verdict="success", count=24,
-               expected={"expected_checks": 24})
+               output="--work-dir", verdict="success", count=19)
         device("gcc-migration", "test_gcc_sm8250.py", "--migration-only",
-               output="--work-dir", verdict="success", count=8,
-               expected={"expected_checks": 8})
+               output="--work-dir", verdict="success", count=5)
+        device("gcc-cpuss-branch", "test_gcc_cpuss.py",
+               output="--out", result="file", count=11,
+               expected={"expected_checks": 11, "vmstate_version": 3,
+                         "external_parent_inputs": 83,
+                         "guest_cpu_executed": False,
+                         "native_kernel_probe_observed": False},
+               expected_lengths={"migrations": 2})
+        device("gcc-usb-pipe-mux", "test_gcc_usb_mux.py",
+               output="--out", result="file", count=15,
+               expected={"expected_checks": 15, "vmstate_version": 3,
+                         "external_parent_inputs": 83,
+                         "expected_completed_migrations": 1,
+                         "expected_rejected_migrations": 1,
+                         "completed_migrations": 1,
+                         "rejected_migration_attempts": 1,
+                         "binary_unchanged": True,
+                         "guest_cpu_executed": False,
+                         "usb_phy_emulated": False,
+                         "native_kernel_probe_observed": False},
+               expected_lengths={"migrations": 1, "rejected_migrations": 1})
         device("geni-clock-reset", "test_geni_clock_reset.py",
                output="--work-dir", verdict="success", count=6)
         device("geni-clock-migration", "test_geni_clock_reset.py",
                "--migration-only", output="--work-dir", verdict="success", count=4)
+        device("mpm2-sleep-counter", "test_mpm2_sleep_counter.py",
+               output="--out", result="file", count=17,
+               expected={"expected_checks": 17,
+                         "expected_completed_migrations": 2,
+                         "expected_corrupted_stream_rejections": 1,
+                         "vmstate_version": 1,
+                         "clock_frequency_hz": 32768,
+                         "mmio_register_count": 1, "mmio_window_bytes": 4,
+                         "guest_cpu_executed": False,
+                         "native_kernel_probe_observed": False,
+                         "android_boot_passed": False,
+                         "binary_unchanged": True},
+               expected_lengths={"migrations": 2,
+                                 "corrupted_stream_rejections": 1})
         add("counter-arithmetic", tests / "test_counter_conversion.py",
             ("--build-config", str(build)), output="--out", result="file",
             expected={"cases": 1848, "errors": []})
@@ -154,7 +194,7 @@ def plan(args, runtime):
             cases.append(Case(name, [str(build / "tests/qtest" / binary), "--tap"],
                               fixture, result="tap", tap_count=count))
         device("tbu-reference-ecats", "test_tbu_sm8250.py",
-               output="--out", result="file", verdict="all_passed", count=16,
+               output="--out", result="file", verdict="all_passed", count=17,
                expected_lengths={"migrations": 1, "rejections": 6})
         device("rpmh-reference", "test_rpmh_sm8250.py",
                output="--work-dir", verdict="success", count=22)
@@ -164,6 +204,37 @@ def plan(args, runtime):
                output="--work-dir", verdict="success", count=11)
         device("rpmh-display-migration", "test_rpmh_display.py",
                "--migration-only", output="--work-dir", verdict="success", count=6)
+        device("rpmh-wait-mask-reference", "test_rpmh_wait_mask.py",
+               output="--out", result="file", verdict="success", count=17,
+               expected={'schema': 'tb371fc-rpmh-wait-mask-v1',
+                         'success': True,
+                         'expected_checks': 17,
+                         'expected_completed_migrations': 1,
+                         'expected_rejected_migrations': 2,
+                         'expected_corrupted_stream_rejections': 2,
+                         'vmstate_version': 3,
+                         'vmstate_minimum_version': 2,
+                         'subsection_version': 1,
+                         'subsection_payload_bytes': 24,
+                         'main_payload_bytes_with_default_clock': 19424,
+                         'commands_per_tcs': 16,
+                         'voter_count': 4,
+                         'apps_tcs_per_drv': 8,
+                         'display_tcs_count': 2,
+                         'wait_command_mask': 65535,
+                         'strict_and_wait_reference_main_v3_payload_identical': True,
+                         'old_rpmh_tests_changed': False,
+                         'old_rpmh_test_blobs_match': True,
+                         'silicon_reserved_bit_semantics_proved': False,
+                         'guest_cpu_executed': False,
+                         'native_kernel_probe_observed': False,
+                         'guest_image_patched': False,
+                         'android_boot_passed': False,
+                         'binary_unchanged': True,
+                         'diagnostic_counters_are_model_observations': True,
+                         'reference_policy_auto_enabled': False},
+               expected_lengths={"migrations": 1, "rejected_migrations": 2,
+                                 "corrupted_stream_rejections": 2, "source_streams": 3})
         device("qsee-notification", "test_qsee_irq.py",
                output="--work-dir", verdict="success", count=12)
         device("qsee-notification-migration", "test_qsee_irq.py",
@@ -180,17 +251,334 @@ def plan(args, runtime):
                          "expected_checks": 16, "migration_expected_checks": 6,
                          "socket_directories_retained": True},
                expected_lengths={"migrations": 6})
+        device("gpucc-sm8250", "test_gpucc_sm8250.py",
+               output="--out", result="file", count=30,
+               expected={"expected_checks": 30,
+                         "expected_completed_migrations": 2,
+                         "expected_rejected_migrations": 2,
+                         "vmstate_version": 1, "register_count": 36,
+                         "sparse_window_count": 7, "branch_count": 15,
+                         "reset_count": 5, "input_clock_count": 15,
+                         "guest_cpu_executed": False,
+                         "native_kernel_probe_observed": False,
+                         "gpu_execution_observed": False,
+                         "android_boot_passed": False,
+                         "binary_unchanged": True},
+               expected_lengths={"migrations": 2, "rejected_migrations": 2})
+        device("npucc-sm8250", "test_npucc_sm8250.py",
+               output="--out", result="file", count=37,
+               expected={"expected_checks": 37,
+                         "expected_completed_migrations": 2,
+                         "expected_rejected_migrations": 2,
+                         "vmstate_version": 1, "register_count": 95,
+                         "sparse_window_count": 26, "branch_count": 33,
+                         "reset_count": 7, "input_clock_count": 12,
+                         "pll_count": 3, "rcg_count": 6,
+                         "output_clock_count": 45,
+                         "guest_cpu_executed": False,
+                         "native_kernel_probe_observed": False,
+                         "npu_execution_observed": False,
+                         "android_boot_passed": False,
+                         "binary_unchanged": True},
+               expected_lengths={"migrations": 2, "rejected_migrations": 2})
+        device("noc-qos", "test_noc_qos.py",
+               output="--out", result="file", count=20,
+               expected={"expected_checks": 20,
+                         "expected_completed_migrations": 2,
+                         "expected_rejected_migrations": 2,
+                         "expected_corrupted_stream_rejections": 2,
+                         "vmstate_version": 1, "port_count": 47,
+                         "register_count": 188, "sparse_window_count": 188,
+                         "mapped_bytes": 752,
+                         "guest_cpu_executed": False,
+                         "native_kernel_probe_observed": False,
+                         "android_boot_passed": False,
+                         "binary_unchanged": True},
+               expected_lengths={"migrations": 2, "rejected_migrations": 2,
+                                 "corrupted_stream_rejections": 2})
+        device("noc-sbm-reference", "test_noc_sbm.py",
+               output="--out", result="file", count=28,
+               expected={"schema": "tb371fc-noc-sbm-v1",
+                         "expected_checks": 28,
+                         "expected_completed_migrations": 2,
+                         "expected_rejected_migrations": 2,
+                         "expected_corrupted_stream_rejections": 2,
+                         "vmstate_version": 1,
+                         "vmstate_payload_bytes_per_device": 152,
+                         "device_count": 1, "port_count": 8,
+                         "register_count": 3, "sparse_window_count": 3,
+                         "mapped_bytes": 12,
+                         "reference_latency_ns": 1000,
+                         "supported_port_mask": 255,
+                         "reference_boot_disconnected_mask": 0,
+                         "reference_profile_is_default": False,
+                         "default_profile_leaves_mmio_unmapped": True,
+                         "diagnostic_counters_are_hardware": False,
+                         "hardware_latency_measured": False,
+                         "traffic_blocking_implemented": False,
+                         "traffic_drain_observed": False,
+                         "clock_control_implemented": False,
+                         "irq_implemented": False,
+                         "guest_cpu_executed": False,
+                         "native_kernel_probe_observed": False,
+                         "android_boot_passed": False,
+                         "binary_unchanged": True},
+               expected_lengths={"migrations": 2, "rejected_migrations": 2,
+                                 "corrupted_stream_rejections": 2})
+        device("smmuv500-reference", "test_smmuv500.py",
+               output="--out", result="file", count=36,
+               expected={"expected_checks": 36,
+                         "expected_completed_migrations": 2,
+                         "expected_rejected_migrations": 2,
+                         "expected_corrupted_stream_rejections": 2,
+                         "vmstate_version": 1,
+                         "architectural_smmuv2_vmstate_version": 3,
+                         "tcu_count": 1, "tbu_count": 10,
+                         "register_count": 71, "sparse_window_count": 71,
+                         "mapped_bytes": 484,
+                         "guest_cpu_executed": False,
+                         "native_kernel_probe_observed": False,
+                         "android_boot_passed": False,
+                         "binary_unchanged": True},
+               expected_lengths={"migrations": 2, "rejected_migrations": 2,
+                                 "corrupted_stream_rejections": 2})
+        device("tsens24xx-reference", "test_tsens24xx.py",
+               output="--out", result="file", count=34,
+               expected={"expected_checks": 34,
+                         "expected_completed_migrations": 2,
+                         "expected_rejected_migrations": 2,
+                         "expected_corrupted_stream_rejections": 2,
+                         "vmstate_version": 1,
+                         "vmstate_payload_bytes_per_controller": 375,
+                         "controller_count": 2, "sensor_count": 32,
+                         "sensors_per_controller": 16,
+                         "register_count": 114, "sparse_window_count": 6,
+                         "mapped_bytes": 456, "irq_count": 4,
+                         "sampling_period_ns": 1000000,
+                         "guest_cpu_executed": False,
+                         "native_kernel_probe_observed": False,
+                         "android_boot_passed": False,
+                         "binary_unchanged": True},
+               expected_lengths={"migrations": 2, "rejected_migrations": 2,
+                                 "corrupted_stream_rejections": 2})
+        device("cpufreq-hw-reference", "test_cpufreq_hw.py",
+               output="--out", result="file", count=30,
+               expected={"schema": "tb371fc-cpufreq-hw-v1",
+                         "expected_checks": 30,
+                         "expected_completed_migrations": 2,
+                         "expected_rejected_migrations": 2,
+                         "expected_corrupted_stream_rejections": 2,
+                         "domain_count": 3, "cpu_count": 8,
+                         "per_cpu_counter_count": 8,
+                         "register_count": 263, "sparse_window_count": 24,
+                         "mapped_bytes": 1052,
+                         "registers_per_domain": [89, 88, 86],
+                         "windows_per_domain": 8, "lut_rows_per_domain": 40,
+                         "lut_row_bytes": 4, "valid_perf_states_per_domain": 4,
+                         "irq_count": 3, "input_clock_count": 6,
+                         "output_clock_count": 3,
+                         "vmstate_version": 1,
+                         "vmstate_payload_bytes_per_domain": 84,
+                         "reference_profile_is_default": False,
+                         "reference_lut_is_synthetic": True,
+                         "factory_lut_observed": False,
+                         "counter_source_is_virtual_time": True,
+                         "counter_measures_retired_cpu_cycles": False,
+                         "cpu_execution_speed_controlled": False,
+                         "analogue_voltage_control_implemented": False,
+                         "hardware_thermal_throttling_observed": False,
+                         "reference_lut_lvals": [16, 32, 64, 96],
+                         "reference_lut_voltage_words": [750, 800, 900, 1000],
+                         "reference_max_cores": [4, 4, 4],
+                         "actual_domain_cpu_counts": [4, 3, 1],
+                         "guest_cpu_executed": False,
+                         "native_kernel_probe_observed": False,
+                         "android_boot_passed": False,
+                         "binary_unchanged": True},
+               expected_lengths={"migrations": 2, "rejected_migrations": 2,
+                                 "corrupted_stream_rejections": 2})
+        device("devfreq-qcom-fw-reference", "test_devfreq_qcom_fw.py",
+               output="--out", result="file", count=20,
+               expected={"schema": "tb371fc-devfreq-qcom-fw-v1",
+                         "expected_checks": 20,
+                         "expected_completed_migrations": 2,
+                         "expected_rejected_migrations": 2,
+                         "expected_corrupted_stream_rejections": 2,
+                         "vmstate_version": 1,
+                         "vmstate_payload_bytes_per_device": 72,
+                         "device_count": 1, "register_count": 42,
+                         "sparse_window_count": 3, "mapped_bytes": 168,
+                         "lut_rows": 40, "lut_row_bytes": 4,
+                         "valid_perf_states": 4, "software_voter_count": 4,
+                         "reference_nominal_xo_hz": 19200000,
+                         "reference_profile_is_default": False,
+                         "reference_lut_is_synthetic": True,
+                         "factory_lut_observed": False,
+                         "hardware_voter_slots_implemented": False,
+                         "clock_control_implemented": False,
+                         "actual_cache_frequency_measured": False,
+                         "irq_implemented": False, "timer_implemented": False,
+                         "counter_implemented": False,
+                         "voltage_control_implemented": False,
+                         "firmware_execution_observed": False,
+                         "guest_cpu_executed": False,
+                         "native_kernel_probe_observed": False,
+                         "android_boot_passed": False,
+                         "binary_unchanged": True},
+               expected_lengths={"migrations": 2, "rejected_migrations": 2,
+                                 "corrupted_stream_rejections": 2})
+        device("gpu-gx-gdsc", "test_gpu_gx_gdsc.py",
+               output="--out", result="file", count=37,
+               expected={"all_passed": True, "success": True,
+                         "expected_checks": 37, "migration_expected_checks": 12,
+                         "expected_migration_attempts": 12,
+                         "completed_migration_attempts": 8,
+                         "rejected_migration_attempts": 4,
+                         "passed_checks": 37},
+               expected_lengths={"migrations": 12, "migration_attempts": 12})
+        device("gpu-cx-gdsc", "test_gpu_cx_gdsc.py",
+               output="--out", result="file", count=26,
+               expected={"all_passed": True, "success": True,
+                         "expected_checks": 26, "migration_expected_checks": 8,
+                         "expected_migration_attempts": 9,
+                         "completed_migration_attempts": 6,
+                         "rejected_migration_attempts": 3,
+                         "socket_directories_retained": True},
+               expected_lengths={"migrations": 8, "migration_attempts": 9})
+        device("camera-gdsc-reference", "test_camera_gdsc.py",
+               output="--out", result="file", count=29,
+               expected={'schema': 'tb371fc-camera-gdsc-v1',
+                         'expected_checks': 29,
+                         'expected_completed_migrations': 2,
+                         'expected_rejected_migrations': 2,
+                         'expected_corrupted_stream_rejections': 2,
+                         'expected_unmodified_streams': 3,
+                         'expected_stream_files': 5,
+                         'vmstate_version': 1,
+                         'vmstate_payload_bytes': 194,
+                         'domain_count': 6,
+                         'register_count': 6,
+                         'sparse_window_count': 6,
+                         'mapped_bytes': 24,
+                         'gpio_output_count': 12,
+                         'parent_resource_index': 3,
+                         'reference_identity': 1128743985,
+                         'hardware_mode_domain_mask': 3,
+                         'modeled_timer_count': 0,
+                         'modeled_clock_count': 0,
+                         'gcc_vmstate_version': 3,
+                         'gcc_camera_ahb_clock_id': 10,
+                         'gcc_camera_ahb_write_mask': 24577,
+                         'guest_cpu_executed': False,
+                         'native_kernel_probe_observed': False,
+                         'camera_execution_observed': False,
+                         'analog_power_modeled': False,
+                         'retention_effect_modeled': False,
+                         'android_boot_passed': False,
+                         'binary_unchanged': True},
+               expected_lengths={'migrations': 2,
+                                 'rejected_migrations': 2,
+                                 'corrupted_stream_rejections': 2,
+                                 'migration_sources': 3})
+        device("mdss-gdsc-reference", "test_mdss_gdsc.py",
+               output="--out", result="file", count=20,
+               expected={"schema": "tb371fc-mdss-gdsc-v1",
+                         "expected_checks": 20,
+                         "expected_completed_migrations": 3,
+                         "expected_rejected_migrations": 2,
+                         "expected_corrupted_stream_rejections": 2,
+                         "expected_unmodified_streams": 4,
+                         "expected_stream_files": 6,
+                         "vmstate_version": 1,
+                         "vmstate_payload_bytes": 64,
+                         "domain_count": 1,
+                         "register_count": 1,
+                         "sparse_window_count": 1,
+                         "mapped_bytes": 4,
+                         "gpio_output_count": 2,
+                         "parent_resource_index": 3,
+                         "reference_identity": 0x4d445331,
+                         "camera_vmstate_version": 1,
+                         "camera_vmstate_payload_bytes": 194,
+                         "modeled_timer_count": 0,
+                         "modeled_clock_count": 0,
+                         "gcc_vmstate_version": 3,
+                         "gcc_display_ahb_clock_id": 23,
+                         "gcc_display_ahb_write_mask": 0x6001,
+                         "guest_cpu_executed": False,
+                         "native_kernel_probe_observed": False,
+                         "display_execution_observed": False,
+                         "analog_power_modeled": False,
+                         "retention_effect_modeled": False,
+                         "android_boot_passed": False,
+                         "parent_output_intercepted": False,
+                         "binary_unchanged": True},
+               expected_lengths={"migrations": 3,
+                                 "rejected_migrations": 2,
+                                 "corrupted_stream_rejections": 2,
+                                 "migration_sources": 4,
+                                 "actual_stream_files": 6})
+        device("npu-gdsc-reference", "test_npu_gdsc.py",
+               output="--out", result="file", count=21,
+               expected={"schema": "tb371fc-npu-gdsc-v1",
+                         "expected_checks": 21,
+                         "expected_completed_migrations": 3,
+                         "expected_rejected_migrations": 2,
+                         "expected_corrupted_stream_rejections": 2,
+                         "expected_unmodified_streams": 4,
+                         "expected_stream_files": 6,
+                         "vmstate_version": 1,
+                         "vmstate_payload_bytes": 64,
+                         "domain_count": 1,
+                         "register_count": 1,
+                         "sparse_window_count": 1,
+                         "mapped_bytes": 4,
+                         "gpio_output_count": 2,
+                         "parent_resource_index": 0xffffffff,
+                         "parent_supply_declared": False,
+                         "parent_power_connected": False,
+                         "hardware_mode_domain_mask": 0,
+                         "domain_dt_flags": 1,
+                         "reference_identity": 0x4e504731,
+                         "camera_vmstate_version": 1,
+                         "camera_vmstate_payload_bytes": 194,
+                         "mdss_vmstate_version": 1,
+                         "mdss_vmstate_payload_bytes": 64,
+                         "modeled_timer_count": 0,
+                         "modeled_clock_count": 0,
+                         "gcc_vmstate_version": 3,
+                         "gcc_npu_cfg_ahb_clock_id": 42,
+                         "gcc_npu_cfg_ahb_write_mask": 0x6003,
+                         "gcc_npu_cfg_ahb_external_parent_index": 21,
+                         "gcc_npu_cfg_ahb_status_mask": 0xf0000000,
+                         "guest_cpu_executed": False,
+                         "native_kernel_probe_observed": False,
+                         "npu_execution_observed": False,
+                         "analog_power_modeled": False,
+                         "retention_effect_modeled": False,
+                         "android_boot_passed": False,
+                         "parent_output_intercepted": False,
+                         "binary_unchanged": True},
+               expected_lengths={"migrations": 3,
+                                 "rejected_migrations": 2,
+                                 "corrupted_stream_rejections": 2,
+                                 "migration_sources": 4,
+                                 "actual_stream_files": 6})
+        device("aop-reference-peer", "test_aop_reference.py",
+               output="--out", result="file", count=30,
+               expected={"all_passed": True, "expected_checks": 30,
+                         "expected_completed_migrations": 6,
+                         "expected_rejected_migrations": 2,
+                         "completed_migrations": 6,
+                         "rejected_migration_attempts": 2,
+                         "guest_cpu_executed": False,
+                         "ipcc_output_intercepted": False},
+               expected_lengths={"migrations": 6, "rejected_migrations": 2})
         device("aop-msgram", "test_aop_msgram.py",
                output="--out", result="file", count=10,
                expected={"all_passed": True, "expected_checks": 10,
                          "output_interception_installed": False},
                expected_lengths={"migrations": 1})
-        device("gpu-gdsc", "test_gdsc.py",
-               output="--out", result="file", count=29,
-               expected={"all_passed": True, "success": True,
-                         "expected_checks": 29, "migration_expected_checks": 10,
-                         "socket_directories_retained": True},
-               expected_lengths={"migrations": 10})
         device("smem-reference-handoff", "test_smem_reference.py",
                output="--out", result="file", count=22,
                expected={"all_passed": True, "expected_checks": 22,
@@ -233,7 +621,11 @@ def plan(args, runtime):
         device("pdc-migration", "test_pdc_migration.py",
                output="--out", result="file", verdict="all_passed", count=10)
         device("smmuv2-migration", "test_smmuv2_migration.py",
-               output="--out", result="file", verdict="all_passed", count=18)
+               output="--out", result="file", verdict="all_passed", count=18,
+               expected={"schema_version": 1,
+                         "kind": "tb371fc-smmuv2-process-migration",
+                         "geometry_only": False},
+               expected_lengths={"migrations": 4})
         device("smmuv2-granules", "test_smmuv2_granules.py",
                output="--out", result="file", verdict="all_passed", count=26,
                expected={"expected_checks": 26, "legacy_v2_transfer_tested": False},
@@ -245,13 +637,15 @@ def plan(args, runtime):
             ("--qemu", qemu, "--kernel", kernel, "--timeout", "120"),
             output="--out", result="file", count=8,
             count_field="guest_checks",
-            expected={"arch_counter_matches_native_frequency_and_progress": True})
+            expected={"arch_counter_matches_native_frequency_and_progress": True,
+                      "guest_shutdown_observed": True, "validation_errors": []})
         add("linux-console-empty-ufs", scripts / "boot_smoke.py",
             ("--qemu", qemu, "--kernel", kernel, "--timeout", "120",
              "--without-ufs-lu", "--debug-mmio"),
             output="--out", result="file", count=8,
             count_field="guest_checks",
             expected={"arch_counter_matches_native_frequency_and_progress": True,
+                      "guest_shutdown_observed": True, "validation_errors": [],
                       "ufs_fixture": {"populated": False, "kind": "none", "bytes": 0}})
         add("linux-ufs-smmu", scripts / "boot_ufs.py",
             ("--qemu", qemu, "--kernel", kernel, "--timeout", "120"),
@@ -268,7 +662,7 @@ def plan(args, runtime):
         add("linux-ufs-runtime-pm", scripts / "boot_ufs_runtime_pm.py",
             ("--qemu", qemu, "--kernel", kernel, "--timeout", "120"),
             output="--out", result="file", count=40,
-            count_field="guest_checks",
+            count_field="guest_checks", guest_errno=True,
             expected={"inputs_unchanged": True, "qemu_exit_code": 0,
                       "kernel_failure_lines": [],
                       "guest_verdicts": [["PASS", "40", "0"]],
@@ -315,6 +709,53 @@ def expected_json_value(actual, expected):
     return actual == expected
 
 
+def checked_verdict_fields(record, location):
+    """A true aggregate cannot conceal a contradictory local verdict."""
+    present = False
+    for field in ("passed", "success", "all_passed"):
+        if field in record:
+            present = True
+            if record[field] is not True:
+                raise ValueError(f"Contradictory {location}.{field}")
+    return present
+
+
+def check_identity(check, location, guest=False, guest_errno=False):
+    """Validate the three receipt formats produced by component/guest tests."""
+    if guest and isinstance(check, str):
+        match = re.fullmatch(r"TB371FC_CHECK PASS ([A-Za-z0-9_]+)", check)
+        if match:
+            return match[1]
+        raise ValueError(f"Unsuccessful or malformed {location}")
+    if guest and isinstance(check, list):
+        # Only the runtime-PM fixture emits an explicit errno observation.
+        # errno is diagnostic (a successful syscall need not clear it).
+        valid_shape = (len(check) == 3 and isinstance(check[2], str) and
+                       re.fullmatch(r"[0-9]+", check[2])) if guest_errno else len(check) == 2
+        if (valid_shape and check[0] == "PASS" and
+                isinstance(check[1], str) and
+                re.fullmatch(r"[A-Za-z0-9_]+", check[1])):
+            return check[1]
+        raise ValueError(f"Unsuccessful or malformed {location}")
+    if not isinstance(check, dict):
+        raise ValueError(f"{location} is not an attested check object")
+    verdict = checked_verdict_fields(check, location)
+    if "status" in check:
+        if (not isinstance(check["status"], str) or
+                check["status"].lower() not in ("pass", "passed", "ok")):
+            raise ValueError(f"Unsuccessful {location}.status")
+        verdict = True
+    if not verdict:
+        raise ValueError(f"{location} has no positive check verdict")
+    names = [check[field] for field in ("name", "test", "check") if field in check]
+    if not names or any(not isinstance(name, str) or not name.strip()
+                        for name in names):
+        raise ValueError(f"{location} has no valid check identity")
+    if len(set(names)) != 1:
+        raise ValueError(f"{location} has conflicting check identities")
+    return names[0]
+
+
 def judge(case, stdout):
     if case.result == "exit":
         return {"verdict": "successful test process"}
@@ -339,24 +780,19 @@ def judge(case, stdout):
     data = json.loads(path.read_text())
     if not isinstance(data, dict) or data.get(case.verdict) is not True:
         raise ValueError(f"Missing true JSON verdict {case.verdict!r}: {path}")
+    checked_verdict_fields(data, "summary")
     details = {"verdict_field": case.verdict, "verdict": True}
     if case.expected_count is not None:
         checks = data.get(case.count_field)
         if not isinstance(checks, list) or len(checks) != case.expected_count:
             raise ValueError(
                 f"{case.count_field} must contain {case.expected_count} entries")
-        for index, check in enumerate(checks):
-            if not isinstance(check, dict):
-                continue
-            for field in ("passed", "success", "all_passed"):
-                if field in check and check[field] is not True:
-                    raise ValueError(
-                        f"Contradictory {case.count_field}[{index}].{field}")
-            if "status" in check and (
-                    not isinstance(check["status"], str) or
-                    check["status"].lower() not in ("pass", "passed", "ok")):
-                raise ValueError(
-                    f"Unsuccessful {case.count_field}[{index}].status")
+        identities = [check_identity(check, f"{case.count_field}[{index}]",
+                                     guest=case.count_field == "guest_checks",
+                                     guest_errno=case.guest_errno)
+                      for index, check in enumerate(checks)]
+        if len(set(identities)) != len(identities):
+            raise ValueError(f"Duplicate check identities in {case.count_field}")
         details["check_count"] = len(checks)
     for key, count in case.expected_lengths.items():
         value = data.get(key)

@@ -1,0 +1,67 @@
+{
+  "schema": "tb371fc-actual-dt-userspace8-consumer-static-delivery-v1",
+  "files": [
+    {
+      "name": "native-userspace8-actual-dt-draft.py",
+      "bytes": 48393,
+      "sha256": "7466f3dc6ffffeaa40585d9f48429d5e74bb9d0b0144cd76ed5bf688f41db72b",
+      "git_blob_expected": "dda0426a6061aceced38f47cc9d4b94c72c4f03d"
+    },
+    {
+      "name": "stage-actual-dt-fixture.py",
+      "bytes": 25622,
+      "sha256": "3615728f8f69d19e19cecbf9dcc6c0b2b45e273a1a155aa2175438f4cdcbe320",
+      "git_blob_expected": "49a81dbc3a5188ff003e4470565f0b72303dee81"
+    },
+    {
+      "name": "DRAFT.md",
+      "bytes": 13826,
+      "sha256": "96a8cc614f5e180cef6e8b90ea3de65d4d8f25ada91c2b2391f5f453d1c21aeb",
+      "git_blob_expected": "21beb56f3c4bc22dc5a3c983a53739bfffa846dc"
+    },
+    {
+      "name": "config-template.json",
+      "bytes": 2078,
+      "sha256": "a46cef9cae275cf5fc1bb74bedf6bf98acc7783a333329dee533d40e2896a3ea",
+      "git_blob_expected": "fc00e1d1cab416ebabb1786cd19c468660ef77ca"
+    },
+    {
+      "name": "stage-receipt-template.json",
+      "bytes": 2827,
+      "sha256": "8c29620f5f1f94f496bd9f917fa25cdda235d32451ee0c18fee7ea62b8d2dbb3",
+      "git_blob_expected": "5db495b764c592d4f9401bfe165f6788cc0e5770"
+    }
+  ],
+  "fixture_commit": "896a02a8ed82e03552039f3f813012c092ef293d",
+  "reviewed_legacy_17_global_adapter_sha256": "efb1be65396dbb5d4524bad3a5391afd8bf833c4c37285d2ad57ed15c6a4f864",
+  "checks": {
+    "python_AST_and_compile_to_code_object": true,
+    "json_templates_parsed": true,
+    "zip_helper_is_one_self_contained_function": true,
+    "zip_helper_no_subprocess_call": true,
+    "zip_and_consumer_pure_ELF_and_manifest_validators_AST_equal": true,
+    "base_17_globals_preserved": true,
+    "only_known_explicit_optional_18th_global": "qcom-sm8250-rpmh.reference-wait-mask-reserved=on",
+    "primary_extra_and_full_kernel_log_fatal_guard_present": true,
+    "checkpoint_and_lifecycle_saved_separately": true
+  },
+  "independent_review": {
+    "reviewer": "/root/smem_integration",
+    "snapshot_sha256": "33f69e3e4bd4ae23eb866d39a48f888947b1cb5405cc21a468c998cc94e01054",
+    "scope": "inspect_init, verify_fixture, helper dependency imports and bounded GDB packet audit",
+    "conclusion": "No static blocker in those reviewed sections",
+    "not_independently_reviewed": "The final run/lifecycle changes, new full-primary fatal guard and standalone stage wrapper are author-reviewed and pending root review; the source-derived ELF/manifest validators are unchanged."
+  },
+  "actions": {
+    "adapter_imported": false,
+    "adapter_or_ZIP_helper_invoked": false,
+    "actual_CI_fixture_manifest_consumed": false,
+    "guest_compiled": false,
+    "qemu_or_qtest_executed": false,
+    "public_test_executed": false,
+    "remote_command_executed": false,
+    "refs_updated": false
+  },
+  "runtime_result": "not established; current76 primary fatal must reject before any launch",
+  "scope": "Preparation only. Build completion is not userspace success; validation PID1 is not Android init."
+}

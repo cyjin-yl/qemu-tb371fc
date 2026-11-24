@@ -1,0 +1,2023 @@
+{
+  "scope": "Unmodified production 4.19.157-perf+ Image and full supplied native DT, validation initramfs and explicitly selected reference handoffs; this diagnostic still ends in kernel panic.",
+  "initramfs_sha256": "8c2f582b72f19ba6043af7e85f91a3936c3c8fcb3c2a306ae4f76efe6d72ae7e",
+  "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+  "cmd_db_sha256": "a971809c06fa1a3ff44c9d28463bc6ff53203d9375ffd0f76dc73d4c8a3ea6f9",
+  "auxiliary_input_hash_measurement": "Kernel, full DT, initramfs, symbols, partial command DB and QEMU were all SHA256-checked before launch. QEMU was additionally rehashed after the diagnostic and remained unchanged.",
+  "append": "rdinit=/init nokaslr panic=0",
+  "reference_profiles": {
+    "rpmh": "file:partial-aop-derived-command-db",
+    "spmi": "reference",
+    "smem": "reference-empty",
+    "aop": "reference-qdss-vote"
+  },
+  "panic_mailbox": {
+    "length_word": 96,
+    "command": "{class: ddr, res: ddr_log, val: 0}",
+    "reference_service_supported": false,
+    "dt_node": "/soc/qcom,aopclk",
+    "dt_property_present": "qcom,clk-stop-bimc-log",
+    "public_source": "https://github.com/aosp-mirror/kernel_msm/blob/c1f10561211fb6cfe2985027ca58d8e1541d821c/drivers/clk/qcom/clk-aop-qmp.c",
+    "public_source_function": "aop_qmp_clk_panic_callback",
+    "interpretation": "Source-correlated inference: the payload matches the nonblocking panic notifier for stopping BIMC logging. The DT enables that notifier and the guest has already panicked. This is not evidence of a normal-boot prerequisite or executed AOP DDR firmware.",
+    "public_source_sha256": "5d92e20c8fdbc5b902c71332a84fdb2acca0fa010c7dafe1132685885c28f428"
+  },
+  "npu_source": {
+    "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/npucc-kona.c",
+    "sha256": "6c5e241d61d685e0bb14bcfcebd689d36d23d0c803a4bf621105bae03d1ade60",
+    "scope": "Public source-correlated register interpretation; this does not establish that the production Image was built from that exact public tree."
+  },
+  "sleep_counter_dt": {
+    "path": "/soc/qcom,mpm2-sleep-counter@c221000",
+    "compatible": "qcom,mpm2-sleep-counter",
+    "reg": "c221000 1000",
+    "clock-frequency": "8000",
+    "clock_frequency_hz": 32768,
+    "frequency_scope": "Declared by the actual supplied DT; not a physical oscillator measurement. This differs from the board's existing 32000-Hz chip_sleep_clk."
+  },
+  "boot_stats_source": {
+    "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/boot_stats.c",
+    "symbols": [
+      "mpm_parse_dt",
+      "print_boot_stats",
+      "boot_stats_init"
+    ],
+    "source_correlation": "The pinned driver reads the declared clock frequency and one read32 at the counter base after four IMEM values. This run actually logged the MPM timestamp and 32768-Hz frequency and continued into the NoC bus driver. The four bootloader KPI values stayed zero; no bootloader execution or firmware handoff values were invented.",
+    "supported_access": {
+      "offset": 0,
+      "width_bits": 32
+    },
+    "unknown": [
+      "upper-word registers",
+      "counter epoch",
+      "warm-reset policy",
+      "interrupts"
+    ],
+    "exact_production_source_proven": false,
+    "sha256": "4fd7113b1755f4dcaac55c688abba97d00f15fa000b1d88b5b187946f6925ff6",
+    "bytes": 2355
+  },
+  "noc_source_contract": {
+    "selected_driver": "drivers/soc/qcom/msm_bus/msm_bus_noc_rpmh.c",
+    "selection_basis": "CONFIG_QCOM_BUS_CONFIG_RPMH=y was read from the exact production Image's embedded IKCONFIG; the pinned public Makefile selects this driver.",
+    "exact_production_source_proven": false,
+    "layout_receipt": "noc-layout-0508.json",
+    "bounded_original_dt_receipt": "noc-dt-evidence-0508.json",
+    "unique_ports": 47,
+    "registers_per_port": 4,
+    "unique_32bit_registers": 188,
+    "sources": [
+      {
+        "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/msm_bus/msm_bus_noc_rpmh.c",
+        "sha256": "9e408e18745857c575be792a92cb3eb7bcab1fb51b181cc389fd2b81213560a6"
+      },
+      {
+        "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/msm_bus/msm_bus_fabric_rpmh.c",
+        "sha256": "14563f3f965b030d68917b48b6185c2ff2b87f4f9de2ab212f2d8cb77b510bb7"
+      },
+      {
+        "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/msm_bus/msm_bus_of_rpmh.c",
+        "sha256": "4b55e3a31e4c762ee686dc235ba755381bc8001d13c4e2b67d6bac4bbce83af2"
+      }
+    ],
+    "reference_implemented_in_this_binary": true,
+    "model_contract": "../../docs/noc-qos-reference.md",
+    "native_qspi_read_abort_resolved": true,
+    "native_configuration_comparison": {
+      "physical_addresses_matching": 47,
+      "ports_observed": 47,
+      "nondeferred_ports": 46,
+      "nondeferred_configuration_matches": 46,
+      "deferred_ipa_words": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "not_all_ports_required_to_be_programmed": true,
+      "no_bandwidth_enforcement_claim": true,
+      "no_sbm_claim": true
+    },
+    "component_receipt": "noc-qos-99ef.json",
+    "component_scope_note": "The component receipt correctly keeps native_kernel_probe_observed=false; the separate real production-driver observation is recorded in this native receipt.",
+    "mapped_bytes_in_reference": 752
+  },
+  "schema_version": 1,
+  "source_commit": "3ef98a8afb49a873d677288693d6491c50fd75e1",
+  "qemu_sha256": "703af9a899455c1c32636a9e3535294031c93cd9624fdc193177c61cb8ff7600",
+  "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+  "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "global_properties": [
+    "qcom-refgen.boot-disabled-reference=on",
+    "qcom-tcsr-mutex.boot-unlocked-reference=on",
+    "qcom-gpu-cx-gdsc.boot-collapsed-reference=on",
+    "qcom-gdsc.enabled-reference=on",
+    "qcom-sm8250-gpucc.enabled-reference=on",
+    "qcom-sm8250-npucc.enabled-reference=on",
+    "qcom-noc-qos.enabled-reference=on",
+    "qcom-smmuv500.enabled-reference=on",
+    "qcom-smmuv500.reference-hw-version=0x02000000"
+  ],
+  "observer": {
+    "commit": "d0f890f5456a0ed8732776300a7d03170ff612f9",
+    "diagnostic_source_sha256": "c0f1a98f4c24158334e0a9cd5c8037d33754c49ee0c17d2d1d845b906980e7a9",
+    "aop_observer_sha256": "bae8d0bab168978e87c101d1dad7de7e876ac068bc0ba099c69e7a70d8f53ebf",
+    "smem_observer_sha256": "6d0c11ccd866c965e05bf2f0dbf9dd6af38f515c1acde54f139d3d22c885e4b3",
+    "private_wrapper_sha256": "b9788c1141c20fc84d78843dd37a699c9f886ee2282191c1b8c09d1e17e79850",
+    "extension": "After the standard stopped observer, exactly one read-only HMP xp /256bx at the fixed reference APSS mailbox 0x0c300200, then pure QOM/query-status observations of 47 NoC ports and the apps SMMUv500 companion. No guest-memory writes or NoC/TCU/TBU MMIO. Raw mailbox dump remains private. Both added observers require running=false before and after all reads.",
+    "diagnostic_base_sha256": "4ecae8825d919ebd61971bace9571bb34570aa9d76a5a1d13dc137ecc703a18b",
+    "diagnostic_modification": "Adds invalid_mem to the QEMU log mask only",
+    "base_commit_is_unmodified_script": false,
+    "wrapper_source": "native-smmuv500-observer.py",
+    "wrapper_source_git_blob": "97f716c7f7135d7fb747dc7953905a7f116f8b60",
+    "noc_table_review": "noc-observer-review-99ef.json",
+    "smmuv500_observer_review": "smmuv500-observer-review.json"
+  },
+  "stopped_by_timeout": true,
+  "elapsed_seconds": 31.584,
+  "diagnostic_exit_code": 0,
+  "diagnostic_exit_code_note": "Zero is successful diagnostic collection, not successful guest boot; this guest panicked.",
+  "observer_error": null,
+  "legacy_printk_error": null,
+  "full_native_dt_boot_passed": false,
+  "android_boot_passed": false,
+  "native_smmu_dma_passed": false,
+  "smem_probe": {
+    "success_path_observed": true,
+    "publication_instructions_verified": true,
+    "guest_memory_written": false,
+    "native_sbl_captured": false,
+    "android_boot_passed": false,
+    "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+    "verdict": "production-driver-success-path-observed",
+    "checks": [
+      {
+        "name": "published_driver_pointer",
+        "passed": true
+      },
+      {
+        "name": "dev_kernel_pointer",
+        "passed": true
+      },
+      {
+        "name": "hwlock_kernel_pointer",
+        "passed": true
+      },
+      {
+        "name": "item_count",
+        "passed": true
+      },
+      {
+        "name": "ptable_base_kernel_pointer",
+        "passed": true
+      },
+      {
+        "name": "global_virtual_base_kernel_pointer",
+        "passed": true
+      },
+      {
+        "name": "global_physical_base",
+        "passed": true
+      },
+      {
+        "name": "global_cacheline",
+        "passed": true
+      },
+      {
+        "name": "global_size",
+        "passed": true
+      },
+      {
+        "name": "region_count",
+        "passed": true
+      },
+      {
+        "name": "region_physical_base",
+        "passed": true
+      },
+      {
+        "name": "region_virtual_base_kernel_pointer",
+        "passed": true
+      },
+      {
+        "name": "region_size",
+        "passed": true
+      },
+      {
+        "name": "ptable_magic",
+        "passed": true
+      },
+      {
+        "name": "ptable_version",
+        "passed": true
+      },
+      {
+        "name": "ptable_entries",
+        "passed": true
+      },
+      {
+        "name": "partition_magic",
+        "passed": true
+      },
+      {
+        "name": "partition_hosts",
+        "passed": true
+      },
+      {
+        "name": "partition_size",
+        "passed": true
+      },
+      {
+        "name": "allocation_frontiers",
+        "passed": true
+      },
+      {
+        "name": "header_version",
+        "passed": true
+      },
+      {
+        "name": "header_initialized",
+        "passed": true
+      },
+      {
+        "name": "header_reserved",
+        "passed": true
+      }
+    ]
+  },
+  "aop_peer": {
+    "schema_version": 1,
+    "scope": "Stopped reference AOP peer state and supported-command consumption",
+    "qom_path": "/machine/aop-peer",
+    "reference_exchange_observed": true,
+    "aop_firmware_executed": false,
+    "android_boot_passed": false,
+    "guest_memory_written": false,
+    "verdict": "reference-exchange-observed",
+    "reason": "Connected reference peer consumed a supported command; IPCC notifications exist and no completion notification is pending",
+    "observations": {
+      "state": "connected",
+      "accepted-messages": 1,
+      "rejected-requests": 1,
+      "last-error": "command",
+      "qdss-vote": true,
+      "qdss-ao-vote": false,
+      "notifications": 4,
+      "work-pending": false,
+      "notification-pending": false
+    },
+    "stopped_status": {
+      "status": "paused",
+      "running": false
+    },
+    "stopped_status_after": {
+      "status": "paused",
+      "running": false
+    },
+    "unmet_conditions": [],
+    "private_mailbox_capture_recorded": true
+  },
+  "observed_milestones": [
+    "[    0.000000] Successfully registered dummy reset controller for cpucc_clocks",
+    "[    0.000000] Successfully registered dummy clock controller for cpucc_clocks",
+    "[    1.534558] qmp-aop-clk soc:qcom,aopclk: Registered clocks with AOP",
+    "[    1.558284] pc : clk_branch_toggle+0x12c/0x178",
+    "[    1.564063] pc : clk_branch_toggle+0x12c/0x178",
+    "[    1.712469] gcc-kona 100000.qcom,gcc: Registered GCC clocks",
+    "[    1.742014] gpu_cc-kona 3d90000.qcom,gpucc: Registered GPU CC clocks",
+    "[    1.846531] npu_cc-kona 9980000.qcom,npucc: Registered NPU_CC clocks",
+    "[    1.850609] video_cc-kona abf0000.qcom,videocc: Linked as a consumer to regulator.1",
+    "[    1.850751] video_cc-kona abf0000.qcom,videocc: Linked as a consumer to regulator.10",
+    "[    1.851188] video_cc-kona abf0000.qcom,videocc: Unable to register for bw voting",
+    "[    1.851276] video_cc-kona abf0000.qcom,videocc: Dropping the link to regulator.10",
+    "[    1.851414] video_cc-kona abf0000.qcom,videocc: Dropping the link to regulator.1",
+    "[    1.866794] pc : qcom_smem_get+0x194/0x1b8",
+    "[    1.870439] pc : qcom_smem_get+0x194/0x1b8",
+    "[    1.872853] socinfo_init: Can't find SMEM_HW_SW_BUILD_ID; falling back on dummy values.",
+    "[    1.875547] KPI: Bootloader start count = 0",
+    "[    1.875604] KPI: Bootloader end count = 0",
+    "[    1.875643] KPI: Bootloader display count = 0",
+    "[    1.875682] KPI: Bootloader load kernel count = 0",
+    "[    1.875738] KPI: Kernel MPM timestamp = 91750",
+    "[    1.875776] KPI: Kernel MPM Clock frequency = 32768",
+    "[    1.875903] socinfo_print: v0.1, id=356, ver=0.1",
+    "[    1.876002] msm_bus_fabric_rpmh_init_driver",
+    "[    1.877763] msm_bus: Probe started",
+    "[    1.894860] msm_bus: DT Parsing complete",
+    "[    2.115040] arm-smmu 3da0000.kgsl-smmu: Linked as a consumer to regulator.25",
+    "[    2.119397] pc : clk_branch_toggle+0x12c/0x178",
+    "[    2.119990]  arm_smmu_power_on_atomic+0x5c/0xe0",
+    "[    2.120013]  arm_smmu_power_on+0x4c/0x1b0",
+    "[    2.120037]  arm_smmu_device_dt_probe+0x35c/0xdb8",
+    "[    2.120370]  arm_smmu_init+0x68/0x134",
+    "[    2.120657] arm-smmu 3da0000.kgsl-smmu: Couldn't enable clock #0",
+    "[    2.122499] arm-smmu 3da0000.kgsl-smmu: Dropping the link to regulator.25",
+    "[    2.122678] arm-smmu: probe of 3da0000.kgsl-smmu failed with error -16",
+    "[    2.128260] register_client_adhoc:Client handle 1 apps_smmu",
+    "[    2.134715] arm-smmu 15000000.apps-smmu: \tnon-coherent table walk",
+    "[    2.134899] arm-smmu 15000000.apps-smmu: \t(IDR0.CTTW overridden by FW configuration)",
+    "[    2.135037] arm-smmu 15000000.apps-smmu: \tstream matching with 128 register groups",
+    "[    2.156298] register_client_adhoc:Client handle 2 apps_smmu",
+    "[    2.158221] register_client_adhoc:Client handle 3 apps_smmu",
+    "[    2.160401] qsmmuv500-tbu 1518d000.mnoc_hf_0_tbu: Linked as a consumer to regulator.21",
+    "[    2.161615] register_client_adhoc:Client handle 4 mnoc_hf_0_tbu",
+    "[    2.162346] qsmmuv500-tbu 15191000.mnoc_hf_1_tbu: Linked as a consumer to regulator.22",
+    "[    2.162967] register_client_adhoc:Client handle 5 mnoc_hf_1_tbu",
+    "[    2.164083] register_client_adhoc:Client handle 6 apps_smmu",
+    "[    2.165616] register_client_adhoc:Client handle 7 apps_smmu",
+    "[    2.167649] register_client_adhoc:Client handle 8 apps_smmu",
+    "[    2.170904] register_client_adhoc:Client handle 9 apps_smmu",
+    "[    2.171568] qsmmuv500-tbu 151a5000.mnoc_sf_0_tbu: Linked as a consumer to regulator.23",
+    "[    2.172048] register_client_adhoc:Client handle 10 mnoc_sf_0_tbu",
+    "[    2.172693] qsmmuv500-tbu 151a9000.mnoc_sf_1_tbu: Linked as a consumer to regulator.24",
+    "[    2.173484] register_client_adhoc:Client handle 11 mnoc_sf_1_tbu",
+    "[    2.179431] Error: Driver 'arm-smmu' is already registered, aborting...",
+    "[    2.243844] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP",
+    "[    2.244417] pc : __tsens2xxx_hw_init+0x10/0xe8",
+    "[    2.250474] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b",
+    "[    2.262069] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b"
+  ],
+  "failure": {
+    "kind": "synchronous-external-abort",
+    "process": "kernel init PID1",
+    "cpu_index": 5,
+    "pc": "__tsens2xxx_hw_init+0x10/0xe8",
+    "caller": "tsens2xxx_hw_init+0x14/0x60",
+    "guest_seconds": 2.243844,
+    "fault_instruction": "0xb9400108: ldr w8, [x8]",
+    "fault_virtual_address": "0xffffff800ae0d004",
+    "exception_link_register": "0xffffff8008c032e8",
+    "esr": "0x96000010",
+    "physical_address": "0x0c222004",
+    "physical_address_basis": "QEMU invalid_mem logged the exact unmapped read immediately before CPU5 DataAbort, with matching FAR and ELR.",
+    "invalid_mem_count": 1,
+    "qemu_log_observation": {
+      "line": 10238,
+      "text": "Invalid read at addr 0xC222004, size 4, region '(null)', reason: rejected",
+      "following": [
+        "Taking exception 4 [Data Abort] on CPU 5",
+        "...from EL1 to EL1",
+        "...with ESR 0x25/0x96000010",
+        "...with FAR 0xffffff800ae0d004",
+        "...with SPSR 0xa0c00005",
+        "...with ELR 0xffffff8008c032e8",
+        "...to EL1 PC 0xffffff8008084200 PSTATE 0x4003c5"
+      ]
+    },
+    "source_correlated_resource": "TSENS controller 0 SROT control at base +0x4",
+    "actual_dt_note": "The supplied DT declares SROT base 0x0c222000 with size 4; the directly observed driver access is at +4. Do not silently rewrite the original DT resource length.",
+    "actual_dt_receipt": "tsens-dt-evidence-3ef98.json"
+  },
+  "raw_evidence": [
+    {
+      "name": "diagnostic.json",
+      "bytes": 93905,
+      "sha256": "e616654fb1fa8b739c1b73c6ccee912c2b6bb02104c0e8ff1e8ed714d5aad07f"
+    },
+    {
+      "name": "qemu.log",
+      "bytes": 1616713,
+      "sha256": "8154eb632b25f14009b3c8328f72c7133ede5309f71e3c1a96be0b57303d4d91"
+    },
+    {
+      "name": "serial.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "kernel-banner.bin",
+      "bytes": 256,
+      "sha256": "f510bd2f9622842dbdb1d552dec1b1f83a4c8c8dafabe4b72f3c4810052687d9"
+    },
+    {
+      "name": "kernel-printk-ring.bin",
+      "bytes": 1048576,
+      "sha256": "9b9261054b644a694e60600fe961b0c78e500ece31f172c27b62159e05a635c6"
+    },
+    {
+      "name": "kernel-printk-metadata.json",
+      "bytes": 688,
+      "sha256": "c799fa78daaf058ca700ffe8e76c7f780f0a8dee767499adc570c0aedfb21776"
+    },
+    {
+      "name": "kernel-printk.log",
+      "bytes": 43102,
+      "sha256": "ca121ef258b60574ec749567a5214dba63f7a4ef4cbf99ac4b4bf843983a0e23"
+    }
+  ],
+  "public_ci": "public-ci-3ef98.json",
+  "qemu_unchanged": true,
+  "gpucc_probe_completed": true,
+  "gpu_execution_observed": false,
+  "npucc_probe_completed": true,
+  "npu_execution_observed": false,
+  "deferred_video_probe": {
+    "guest_seconds": 1.851188,
+    "message": "Unable to register for bw voting",
+    "preceding_message": "msm_bus_scale_register_client: Bus driver not ready.",
+    "fatal": false,
+    "pll_mmio_reached": false,
+    "actual_dt_receipt": "videocc-dt-evidence.json",
+    "actual_compatible": "qcom,videocc-kona-v2"
+  },
+  "sleep_counter_observation": {
+    "production_driver_read_completed": true,
+    "kernel_mpm_timestamp": 91750,
+    "clock_frequency_hz": 32768,
+    "kpi_timestamp_guest_seconds": 1.875738,
+    "kpi_frequency_guest_seconds": 1.875776,
+    "component_receipt": "public-ci-3ef98.json",
+    "component_checks_passed": 17,
+    "completed_process_migrations": 2,
+    "deliberately_modified_stream_rejections": 1,
+    "physical_oscillator_measurement": false,
+    "model_epoch_and_reset_are_reference_policy": true
+  },
+  "noc_qos_observer": {
+    "scope": "Stopped raw NoC QoS QOM observations; source-correlated DT comparisons",
+    "guest_memory_written": false,
+    "device_mmio_read": false,
+    "guest_cpu_executed_by_observer": false,
+    "android_boot_passed": false,
+    "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "ports": [
+      {
+        "path": "/machine/noc-qos-system-0",
+        "fabric": "system",
+        "port": 0,
+        "physical_port_address": 23273472,
+        "dt_client": "/soc/ad-hoc-bus/mas-qxm-pimem",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 23273472,
+        "address_matches": true,
+        "words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-system-1",
+        "fabric": "system",
+        "port": 1,
+        "physical_port_address": 23277568,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-gic",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 23277568,
+        "address_matches": true,
+        "words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-0",
+        "fabric": "aggre1",
+        "port": 0,
+        "physical_port_address": 23994368,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-usb3-0",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 23994368,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-1",
+        "fabric": "aggre1",
+        "port": 1,
+        "physical_port_address": 23998464,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-usb3-1",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 23998464,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-2",
+        "fabric": "aggre1",
+        "port": 2,
+        "physical_port_address": 24002560,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-sdc4",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24002560,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-3",
+        "fabric": "aggre1",
+        "port": 3,
+        "physical_port_address": 24006656,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-ufs-mem",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24006656,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-4",
+        "fabric": "aggre1",
+        "port": 4,
+        "physical_port_address": 24010752,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-pcie3-modem",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24010752,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-5",
+        "fabric": "aggre1",
+        "port": 5,
+        "physical_port_address": 24014848,
+        "dt_client": "/soc/ad-hoc-bus/mas-qhm-qup1",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24014848,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-6",
+        "fabric": "aggre1",
+        "port": 6,
+        "physical_port_address": 24018944,
+        "dt_client": "/soc/ad-hoc-bus/mas-qhm-qup2",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24018944,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-7",
+        "fabric": "aggre1",
+        "port": 7,
+        "physical_port_address": 24023040,
+        "dt_client": "/soc/ad-hoc-bus/mas-qhm-qspi",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24023040,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre1-8",
+        "fabric": "aggre1",
+        "port": 8,
+        "physical_port_address": 24027136,
+        "dt_client": "/soc/ad-hoc-bus/mas-qhm-tsif",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24027136,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-0",
+        "fabric": "aggre2",
+        "port": 0,
+        "physical_port_address": 24129536,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-cnoc",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24129536,
+        "address_matches": true,
+        "words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-1",
+        "fabric": "aggre2",
+        "port": 1,
+        "physical_port_address": 24133632,
+        "dt_client": "/soc/ad-hoc-bus/mas-qxm-crypto",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24133632,
+        "address_matches": true,
+        "words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-2",
+        "fabric": "aggre2",
+        "port": 2,
+        "physical_port_address": 24137728,
+        "dt_client": "/soc/ad-hoc-bus/mas-qxm-ipa",
+        "defer_init_qos": true,
+        "source_correlated_dt_words": {
+          "mainctl": 40,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24137728,
+        "address_matches": true,
+        "words": {
+          "mainctl": 0,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": false
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-3",
+        "fabric": "aggre2",
+        "port": 3,
+        "physical_port_address": 24141824,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-sdc2",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24141824,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-4",
+        "fabric": "aggre2",
+        "port": 4,
+        "physical_port_address": 24145920,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-ufs-card",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24145920,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-7",
+        "fabric": "aggre2",
+        "port": 7,
+        "physical_port_address": 24158208,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-qdss-etr",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24158208,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-8",
+        "fabric": "aggre2",
+        "port": 8,
+        "physical_port_address": 24162304,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-pcie3-0",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24162304,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-9",
+        "fabric": "aggre2",
+        "port": 9,
+        "physical_port_address": 24166400,
+        "dt_client": "/soc/ad-hoc-bus/mas-xm-pcie3-1",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24166400,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-11",
+        "fabric": "aggre2",
+        "port": 11,
+        "physical_port_address": 24174592,
+        "dt_client": "/soc/ad-hoc-bus/mas-qhm-qdss-bam",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24174592,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-aggre2-12",
+        "fabric": "aggre2",
+        "port": 12,
+        "physical_port_address": 24178688,
+        "dt_client": "/soc/ad-hoc-bus/mas-qhm-qup0",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24178688,
+        "address_matches": true,
+        "words": {
+          "mainctl": 32,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-compute-6",
+        "fabric": "compute",
+        "port": 6,
+        "physical_port_address": 24338432,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-npu",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24338432,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-compute-7",
+        "fabric": "compute",
+        "port": 7,
+        "physical_port_address": 24340480,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-npu",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24340480,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-mmss-0",
+        "fabric": "mmss",
+        "port": 0,
+        "physical_port_address": 24420352,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-camnoc-sf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24420352,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-mmss-1",
+        "fabric": "mmss",
+        "port": 1,
+        "physical_port_address": 24422400,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-camnoc-sf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24422400,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-mmss-2",
+        "fabric": "mmss",
+        "port": 2,
+        "physical_port_address": 24424448,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-camnoc-icp",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 88,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24424448,
+        "address_matches": true,
+        "words": {
+          "mainctl": 88,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-mmss-4",
+        "fabric": "mmss",
+        "port": 4,
+        "physical_port_address": 24428544,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-camnoc-hf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24428544,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-mmss-5",
+        "fabric": "mmss",
+        "port": 5,
+        "physical_port_address": 24430592,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-camnoc-hf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24430592,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-mmss-6",
+        "fabric": "mmss",
+        "port": 6,
+        "physical_port_address": 24432640,
+        "dt_client": "/soc/ad-hoc-bus/mas-qxm-mdp0",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24432640,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-mmss-8",
+        "fabric": "mmss",
+        "port": 8,
+        "physical_port_address": 24436736,
+        "dt_client": "/soc/ad-hoc-bus/mas-qxm-mdp1",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24436736,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-mmss-10",
+        "fabric": "mmss",
+        "port": 10,
+        "physical_port_address": 24440832,
+        "dt_client": "/soc/ad-hoc-bus/mas-qxm-rot",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24440832,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-mmss-12",
+        "fabric": "mmss",
+        "port": 12,
+        "physical_port_address": 24444928,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-video0",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24444928,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-mmss-13",
+        "fabric": "mmss",
+        "port": 13,
+        "physical_port_address": 24446976,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-video1",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24446976,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-mmss-14",
+        "fabric": "mmss",
+        "port": 14,
+        "physical_port_address": 24449024,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-video-cvp",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 24449024,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-0",
+        "fabric": "gem",
+        "port": 0,
+        "physical_port_address": 152178688,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-cmpnoc",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152178688,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-1",
+        "fabric": "gem",
+        "port": 1,
+        "physical_port_address": 152182784,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-gpu",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152182784,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-2",
+        "fabric": "gem",
+        "port": 2,
+        "physical_port_address": 152186880,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-mnoc-hf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152186880,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-3",
+        "fabric": "gem",
+        "port": 3,
+        "physical_port_address": 152190976,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-mnoc-sf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152190976,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-64",
+        "fabric": "gem",
+        "port": 64,
+        "physical_port_address": 152440832,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-cmpnoc",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152440832,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-65",
+        "fabric": "gem",
+        "port": 65,
+        "physical_port_address": 152444928,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-gpu",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152444928,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-66",
+        "fabric": "gem",
+        "port": 66,
+        "physical_port_address": 152449024,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-mnoc-hf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152449024,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-67",
+        "fabric": "gem",
+        "port": 67,
+        "physical_port_address": 152453120,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-mnoc-sf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152453120,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-127",
+        "fabric": "gem",
+        "port": 127,
+        "physical_port_address": 152698880,
+        "dt_client": "/soc/ad-hoc-bus/mas-alm-gpu-tcu",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 16,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152698880,
+        "address_matches": true,
+        "words": {
+          "mainctl": 16,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-128",
+        "fabric": "gem",
+        "port": 128,
+        "physical_port_address": 152702976,
+        "dt_client": "/soc/ad-hoc-bus/mas-alm-sys-tcu",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 96,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152702976,
+        "address_matches": true,
+        "words": {
+          "mainctl": 96,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-129",
+        "fabric": "gem",
+        "port": 129,
+        "physical_port_address": 152707072,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-pcie",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152707072,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-130",
+        "fabric": "gem",
+        "port": 130,
+        "physical_port_address": 152711168,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-snoc-gc",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152711168,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      },
+      {
+        "path": "/machine/noc-qos-gem-131",
+        "fabric": "gem",
+        "port": 131,
+        "physical_port_address": 152715264,
+        "dt_client": "/soc/ad-hoc-bus/mas-qnm-snoc-sf",
+        "defer_init_qos": false,
+        "source_correlated_dt_words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "reference_enabled": true,
+        "observed_physical_port_address": 152715264,
+        "address_matches": true,
+        "words": {
+          "mainctl": 8,
+          "limitbw": 0,
+          "regul0ctl": 0,
+          "regul0bw": 0
+        },
+        "configuration_matches_source_correlated_dt": true
+      }
+    ],
+    "stopped_status": {
+      "status": "paused",
+      "running": false
+    },
+    "stopped_status_after": {
+      "status": "paused",
+      "running": false
+    },
+    "port_count": 47,
+    "address_matches": 47,
+    "nonzero_mainctl_ports": 46,
+    "dt_matches_excluding_deferred": 46,
+    "nondeferred_port_count": 46,
+    "interpretation": "Raw configuration only. A matching nonzero word demonstrates stored guest programming; it does not establish traffic, bandwidth enforcement, SBM, power readiness or full boot. Deferred IPA need not match its eventual DT policy."
+  },
+  "smmuv500_observer": {
+    "scope": "Stopped raw apps SMMUv500 QOM observation only",
+    "guest_memory_written": false,
+    "device_mmio_read": false,
+    "guest_cpu_executed_by_observer": false,
+    "native_dma_exercised_by_observer": false,
+    "android_boot_passed": false,
+    "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "stopped_status": {
+      "status": "paused",
+      "running": false
+    },
+    "configuration": {
+      "enabled-reference": true,
+      "reference-hw-version": 33554432,
+      "tcu-base": 353902592,
+      "tbu-count": 10
+    },
+    "state": {
+      "ecats-owner": -1,
+      "dma-blocked-mask": 0
+    },
+    "tbus": [
+      {
+        "dt_path": "/soc/apps-smmu@15000000/anoc_1_tbu@15185000",
+        "index": 0,
+        "base": 353914880,
+        "status_address": 353903104,
+        "sid_start": 0,
+        "sid_count": 1024,
+        "observed": {
+          "base": 353914880,
+          "status-address": 353903104,
+          "sid-start": 0,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/anoc_2_tbu@15189000",
+        "index": 1,
+        "base": 353931264,
+        "status_address": 353903112,
+        "sid_start": 1024,
+        "sid_count": 1024,
+        "observed": {
+          "base": 353931264,
+          "status-address": 353903112,
+          "sid-start": 1024,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/mnoc_hf_0_tbu@1518d000",
+        "index": 2,
+        "base": 353947648,
+        "status_address": 353903120,
+        "sid_start": 2048,
+        "sid_count": 1024,
+        "observed": {
+          "base": 353947648,
+          "status-address": 353903120,
+          "sid-start": 2048,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/mnoc_hf_1_tbu@15191000",
+        "index": 3,
+        "base": 353964032,
+        "status_address": 353903128,
+        "sid_start": 3072,
+        "sid_count": 1024,
+        "observed": {
+          "base": 353964032,
+          "status-address": 353903128,
+          "sid-start": 3072,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/compute_dsp_1_tbu@15195000",
+        "index": 4,
+        "base": 353980416,
+        "status_address": 353903136,
+        "sid_start": 4096,
+        "sid_count": 1024,
+        "observed": {
+          "base": 353980416,
+          "status-address": 353903136,
+          "sid-start": 4096,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/compute_dsp_0_tbu@15199000",
+        "index": 5,
+        "base": 353996800,
+        "status_address": 353903144,
+        "sid_start": 5120,
+        "sid_count": 1024,
+        "observed": {
+          "base": 353996800,
+          "status-address": 353903144,
+          "sid-start": 5120,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/adsp_tbu@1519d000",
+        "index": 6,
+        "base": 354013184,
+        "status_address": 353903152,
+        "sid_start": 6144,
+        "sid_count": 1024,
+        "observed": {
+          "base": 354013184,
+          "status-address": 353903152,
+          "sid-start": 6144,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/anoc_1_pcie_tbu@151a1000",
+        "index": 7,
+        "base": 354029568,
+        "status_address": 353903160,
+        "sid_start": 7168,
+        "sid_count": 1024,
+        "observed": {
+          "base": 354029568,
+          "status-address": 353903160,
+          "sid-start": 7168,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/mnoc_sf_0_tbu@151a5000",
+        "index": 8,
+        "base": 354045952,
+        "status_address": 353903168,
+        "sid_start": 8192,
+        "sid_count": 1024,
+        "observed": {
+          "base": 354045952,
+          "status-address": 353903168,
+          "sid-start": 8192,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      },
+      {
+        "dt_path": "/soc/apps-smmu@15000000/mnoc_sf_1_tbu@151a9000",
+        "index": 9,
+        "base": 354062336,
+        "status_address": 353903176,
+        "sid_start": 9216,
+        "sid_count": 1024,
+        "observed": {
+          "base": 354062336,
+          "status-address": 353903176,
+          "sid-start": 9216,
+          "halt-sid": 0,
+          "va": 0,
+          "trigger": 0,
+          "axuser": 0,
+          "par": 1,
+          "status": 0,
+          "halt-pending": false,
+          "halted": false,
+          "ecats-pending": false,
+          "halt-deadline-ns": 0,
+          "ecats-deadline-ns": 0,
+          "captured-sid": 0,
+          "captured-va": 0,
+          "captured-write": false
+        },
+        "geometry_matches_actual_dt": true
+      }
+    ],
+    "stopped_status_after": {
+      "status": "paused",
+      "running": false
+    },
+    "tbu_count": 10,
+    "geometry_matches": 10,
+    "interpretation": "Reference model identity and raw device state only. Zero requests do not prove a native TBU probe or DMA test; native progress requires separate kernel-log evidence. Version and delays are declared reference assumptions, and firmware stream/context handoff remains unknown."
+  },
+  "clock_warnings": [
+    "[    1.552473] gcc_npu_cfg_ahb_clk: status stuck at 'off'",
+    "[    1.563729] gcc_npu_cfg_ahb_clk: status stuck at 'off'",
+    "[    2.118930] gcc_gpu_memnoc_gfx_clk: status stuck at 'off'",
+    "[    2.120657] arm-smmu 3da0000.kgsl-smmu: Couldn't enable clock #0"
+  ],
+  "kgsl_smmu_probe": {
+    "clock_enable_failed": true,
+    "clock": "gcc_gpu_memnoc_gfx_clk",
+    "clock_status": "off",
+    "probe_error": -16,
+    "guest_seconds": 2.122678,
+    "core_vendor_tcu_read_reached": false,
+    "warning_suppressed": false,
+    "parent_frequency_invented": false
+  },
+  "apps_smmu_probe": {
+    "previous_version_read_abort_resolved": true,
+    "bus_client_registered": true,
+    "bus_client_name": "apps_smmu",
+    "bus_client_handle": 1,
+    "guest_seconds": 2.12826,
+    "stream_matching_groups_logged": 128,
+    "coherent_table_walk": false,
+    "tbu_consumer_links_observed": [
+      "[    2.160401] qsmmuv500-tbu 1518d000.mnoc_hf_0_tbu: Linked as a consumer to regulator.21",
+      "[    2.162346] qsmmuv500-tbu 15191000.mnoc_hf_1_tbu: Linked as a consumer to regulator.22",
+      "[    2.171568] qsmmuv500-tbu 151a5000.mnoc_sf_0_tbu: Linked as a consumer to regulator.23",
+      "[    2.172693] qsmmuv500-tbu 151a9000.mnoc_sf_1_tbu: Linked as a consumer to regulator.24"
+    ],
+    "tbu_bus_registration_log": [
+      "[    2.156298] register_client_adhoc:Client handle 2 apps_smmu",
+      "[    2.158221] register_client_adhoc:Client handle 3 apps_smmu",
+      "[    2.161615] register_client_adhoc:Client handle 4 mnoc_hf_0_tbu",
+      "[    2.162967] register_client_adhoc:Client handle 5 mnoc_hf_1_tbu",
+      "[    2.164083] register_client_adhoc:Client handle 6 apps_smmu",
+      "[    2.165616] register_client_adhoc:Client handle 7 apps_smmu",
+      "[    2.167649] register_client_adhoc:Client handle 8 apps_smmu",
+      "[    2.170904] register_client_adhoc:Client handle 9 apps_smmu",
+      "[    2.172048] register_client_adhoc:Client handle 10 mnoc_sf_0_tbu",
+      "[    2.173484] register_client_adhoc:Client handle 11 mnoc_sf_1_tbu"
+    ],
+    "duplicate_driver_registration_warning": "[    2.179431] Error: Driver 'arm-smmu' is already registered, aborting...",
+    "native_dma_passed": false,
+    "ecats_execution_observed": false,
+    "interpretation": "Kernel execution passed the former VERSION abort, populated TBU resources and continued into SCSI/USB initialization. A cold QOM request snapshot does not prove native DMA, ECATS execution or reconstructed firmware contexts."
+  },
+  "smmuv500_source_contract": {
+    "public_source": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/iommu/arm-smmu.c",
+    "public_source_sha256": "ccc4b09010c420ea42c9838d397b0b81fe6a0a4e345e95cb935c2e70308fbf49",
+    "exact_production_source_proven": false,
+    "actual_dt_receipt": "smmuv500-dt-evidence-99ef.json",
+    "research_contract": "../../docs/smmuv500-source-contract.md",
+    "apps_core_resource": {
+      "base": "0x15000000",
+      "bytes": "0x100000"
+    },
+    "apps_tcu_resource": {
+      "base": "0x15182000",
+      "bytes": "0x20"
+    },
+    "apps_tbus": 10,
+    "hardware_version_measured": false,
+    "skip_init_property_present": true,
+    "static_cb_property_present": false,
+    "skip_init_scope": "The source skips some stream/context-bank reset initialization, not the TCU VERSION read, sACR or all subsequent global operations.",
+    "version_or_tbu_extension_implemented_in_this_binary": true,
+    "reference_hw_version": "0x02000000",
+    "reference_hw_version_is_measured": false,
+    "reference_delay_ns": 1000,
+    "implementation_contract": "../../docs/smmuv500-reference.md",
+    "power_ownership_review": "smmuv500-tbu-gdsc-review.json",
+    "power_dt_receipt": "smmuv500-tbu-gdsc-dt.json"
+  },
+  "kernel_config": "smmuv500-kernel-config.json",
+  "other_nonfatal_device_observations": [
+    "[    2.179431] Error: Driver 'arm-smmu' is already registered, aborting...",
+    "[    2.183671] SCSI subsystem initialized",
+    "[    2.185746] usbcore: registered new interface driver usbfs",
+    "[    2.186299] usbcore: registered new interface driver hub",
+    "[    2.189022] usbcore: registered new device driver usb",
+    "[    2.198967] qcom,qpnp-power-on c440000.qcom,spmi:qcom,pm8150@0:qcom,power-on@800: Register read failed, addr=0x0805, rc=-19",
+    "[    2.201727] qcom,qpnp-power-on c440000.qcom,spmi:qcom,pm8150b@2:qcom,power-on@800: Register read failed, addr=0x0805, rc=-19",
+    "[    2.201980] qcom,qpnp-power-on c440000.qcom,spmi:qcom,pm8150l@4:qcom,power-on@800: Register read failed, addr=0x0805, rc=-19",
+    "[    2.202250] qcom,qpnp-power-on c440000.qcom,spmi:qcom,pm8009@a:qcom,power-on@800: Register read failed, addr=0x0805, rc=-19",
+    "[    2.202789] qcom,qpnp-power-on c440000.qcom,spmi:qcom,pmxprairie@8:qcom,power-on@800: Register read failed, addr=0x0805, rc=-19"
+  ],
+  "qemu_device_error_observations": [
+    {
+      "line": 5948,
+      "text": "qcom-spmi-pmic-arb: observer APID 0 command 0x08000010 status 0x3 (unimplemented, invalid or denied transaction)"
+    },
+    {
+      "line": 5990,
+      "text": "qcom-spmi-pmic-arb: observer APID 1 command 0x08000010 status 0x3 (unimplemented, invalid or denied transaction)"
+    },
+    {
+      "line": 6068,
+      "text": "qcom-spmi-pmic-arb: observer APID 2 command 0x08000010 status 0x3 (unimplemented, invalid or denied transaction)"
+    },
+    {
+      "line": 6126,
+      "text": "qcom-spmi-pmic-arb: observer APID 3 command 0x08000010 status 0x3 (unimplemented, invalid or denied transaction)"
+    }
+  ],
+  "prior_checkpoint": "native-99ef.json",
+  "tsens_source_contract": {
+    "actual_dt_receipt": "tsens-dt-evidence-3ef98.json",
+    "dt_source_review": "tsens-dt-review-3ef98.json",
+    "public_source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+    "public_source_path": "drivers/thermal/tsens2xxx.c",
+    "public_source_sha256": "8e3bcb1179ecbb482cb2e7a32ad0daff28caace4ee2582b9521e016fb5ce1283",
+    "exact_production_source_proven": false,
+    "controller_count": 2,
+    "actual_compatible": "qcom,tsens24xx",
+    "srot_dt_declared_bytes": 4,
+    "actual_read_offset": 4,
+    "hardware_version_measured": false,
+    "firmware_enable_mask_measured": false,
+    "physical_temperature_measured": false,
+    "tsens_implemented_in_this_binary": false
+  }
+}

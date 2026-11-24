@@ -1,0 +1,677 @@
+{
+  "schema": "tb371fc-camera-gdsc-parent-dtb-capture-v1",
+  "captured_at_utc": "2026-11-23T21:26:58.774140+00:00",
+  "collector_source_sha256": "db7d781809cd3c431db6af9ae15162a8613336de0205cf302b77fe1ed54f43bf",
+  "triggering_qemu_source": "09c638d6a6d4fa4a4e4e332a7b39aa7bf7f5418e",
+  "input_dtb": {
+    "path": "/work/device-assets/live-android-20261123.dtb",
+    "bytes": 973052,
+    "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "read_only": true,
+    "nofollow_all_path_components": true,
+    "stat_before": {
+      "st_dev": 58,
+      "st_ino": 16648692,
+      "st_mode": 33152,
+      "st_size": 973052,
+      "st_mtime_ns": 1795411032785076044,
+      "st_ctime_ns": 1795411032785076044
+    },
+    "stat_after": {
+      "st_dev": 58,
+      "st_ino": 16648692,
+      "st_mode": 33152,
+      "st_size": 973052,
+      "st_mtime_ns": 1795411032785076044,
+      "st_ctime_ns": 1795411032785076044
+    },
+    "path_stat_after": {
+      "st_dev": 58,
+      "st_ino": 16648692,
+      "st_mode": 33152,
+      "st_size": 973052,
+      "st_mtime_ns": 1795411032785076044,
+      "st_ctime_ns": 1795411032785076044
+    },
+    "stat_unchanged": true
+  },
+  "fdt_header": {
+    "magic": 3490578157,
+    "total_size": 973052,
+    "structure_offset": 56,
+    "strings_offset": 915096,
+    "reserve_map_offset": 40,
+    "version": 17,
+    "last_compatible_version": 16,
+    "strings_size": 57956,
+    "structure_size": 915040
+  },
+  "selected_leaf_phandle": 104,
+  "selected_leaf_path": "/soc/rsc@18200000/rpmh-regulator-mmcxlvl/regulator-pm8150a-s4-level",
+  "scope": "One exact camera parent regulator, its resource/RSC ancestors and resolved supply-chain referents",
+  "nodes": [
+    {
+      "path": "/soc/rsc@18200000",
+      "role": "rsc-ancestor-identity",
+      "parent_path": "/soc",
+      "properties": {
+        "compatible": {
+          "bytes": 14,
+          "hex": "71636f6d2c72706d682d72736300",
+          "strings": [
+            "qcom,rpmh-rsc"
+          ]
+        },
+        "phandle": {
+          "bytes": 4,
+          "hex": "0000037a",
+          "be32": [
+            890
+          ]
+        },
+        "reg": {
+          "bytes": 24,
+          "hex": "182000000001000018210000000100001822000000010000",
+          "be32": [
+            404750336,
+            65536,
+            404815872,
+            65536,
+            404881408,
+            65536
+          ]
+        },
+        "reg-names": {
+          "bytes": 18,
+          "hex": "6472762d30006472762d31006472762d3200",
+          "strings": [
+            "drv-0",
+            "drv-1",
+            "drv-2"
+          ]
+        }
+      }
+    },
+    {
+      "path": "/soc/rsc@18200000/rpmh-regulator-cxlvl",
+      "role": "supply-referent-rpmh-ancestor",
+      "parent_path": "/soc/rsc@18200000",
+      "properties": {
+        "compatible": {
+          "bytes": 24,
+          "hex": "71636f6d2c72706d682d6172632d726567756c61746f7200",
+          "be32": [
+            1902341997,
+            745697389,
+            1747804530,
+            1663922789,
+            1735748705,
+            1953460736
+          ],
+          "strings": [
+            "qcom,rpmh-arc-regulator"
+          ]
+        },
+        "pm8150_s3_level-parent-supply": {
+          "bytes": 4,
+          "hex": "00000069",
+          "be32": [
+            105
+          ]
+        },
+        "pm8150_s3_level_ao-parent-supply": {
+          "bytes": 4,
+          "hex": "0000007b",
+          "be32": [
+            123
+          ]
+        },
+        "proxy-supply": {
+          "bytes": 4,
+          "hex": "0000007a",
+          "be32": [
+            122
+          ]
+        },
+        "qcom,resource-name": {
+          "bytes": 7,
+          "hex": "63782e6c766c00",
+          "strings": [
+            "cx.lvl"
+          ]
+        }
+      },
+      "source_resource_property_present": {
+        "qcom,always-wait-for-ack": false,
+        "qcom,default-mode": false,
+        "qcom,default-voltage": false,
+        "qcom,init-enable": false,
+        "qcom,init-headroom": false,
+        "qcom,init-mode": false,
+        "qcom,init-voltage": false,
+        "qcom,regulator-type": false,
+        "qcom,resource-name": true,
+        "qcom,set": false,
+        "regulator-allow-bypass": false,
+        "regulator-always-on": false,
+        "regulator-boot-on": false,
+        "regulator-enable-ramp-delay": false,
+        "regulator-initial-mode": false,
+        "regulator-max-microvolt": false,
+        "regulator-min-microvolt": false,
+        "regulator-ramp-delay": false,
+        "regulator-system-load": false
+      }
+    },
+    {
+      "path": "/soc/rsc@18200000/rpmh-regulator-cxlvl/regulator-pm8150-s3-mmcx-sup-level",
+      "role": "supply-chain-referent",
+      "parent_path": "/soc/rsc@18200000/rpmh-regulator-cxlvl",
+      "properties": {
+        "phandle": {
+          "bytes": 4,
+          "hex": "0000007a",
+          "be32": [
+            122
+          ]
+        },
+        "qcom,set": {
+          "bytes": 4,
+          "hex": "00000003",
+          "be32": [
+            3
+          ]
+        },
+        "regulator-max-microvolt": {
+          "bytes": 4,
+          "hex": "0000ffff",
+          "be32": [
+            65535
+          ]
+        },
+        "regulator-min-microvolt": {
+          "bytes": 4,
+          "hex": "00000030",
+          "be32": [
+            48
+          ]
+        },
+        "regulator-name": {
+          "bytes": 25,
+          "hex": "706d383135305f73335f6d6d63785f7375705f6c6576656c00",
+          "strings": [
+            "pm8150_s3_mmcx_sup_level"
+          ]
+        }
+      },
+      "source_resource_property_present": {
+        "qcom,always-wait-for-ack": false,
+        "qcom,default-mode": false,
+        "qcom,default-voltage": false,
+        "qcom,init-enable": false,
+        "qcom,init-headroom": false,
+        "qcom,init-mode": false,
+        "qcom,init-voltage": false,
+        "qcom,regulator-type": false,
+        "qcom,resource-name": false,
+        "qcom,set": true,
+        "regulator-allow-bypass": false,
+        "regulator-always-on": false,
+        "regulator-boot-on": false,
+        "regulator-enable-ramp-delay": false,
+        "regulator-initial-mode": false,
+        "regulator-max-microvolt": true,
+        "regulator-min-microvolt": true,
+        "regulator-ramp-delay": false,
+        "regulator-system-load": false
+      }
+    },
+    {
+      "path": "/soc/rsc@18200000/rpmh-regulator-mmcxlvl",
+      "role": "rpmh-resource-ancestor",
+      "parent_path": "/soc/rsc@18200000",
+      "properties": {
+        "compatible": {
+          "bytes": 24,
+          "hex": "71636f6d2c72706d682d6172632d726567756c61746f7200",
+          "be32": [
+            1902341997,
+            745697389,
+            1747804530,
+            1663922789,
+            1735748705,
+            1953460736
+          ],
+          "strings": [
+            "qcom,rpmh-arc-regulator"
+          ]
+        },
+        "pm8150a_s4_level-parent-supply": {
+          "bytes": 4,
+          "hex": "0000007f",
+          "be32": [
+            127
+          ]
+        },
+        "pm8150a_s4_level_ao-parent-supply": {
+          "bytes": 4,
+          "hex": "0000007b",
+          "be32": [
+            123
+          ]
+        },
+        "proxy-supply": {
+          "bytes": 4,
+          "hex": "00000068",
+          "be32": [
+            104
+          ]
+        },
+        "qcom,resource-name": {
+          "bytes": 9,
+          "hex": "6d6d63782e6c766c00",
+          "strings": [
+            "mmcx.lvl"
+          ]
+        }
+      },
+      "source_resource_property_present": {
+        "qcom,always-wait-for-ack": false,
+        "qcom,default-mode": false,
+        "qcom,default-voltage": false,
+        "qcom,init-enable": false,
+        "qcom,init-headroom": false,
+        "qcom,init-mode": false,
+        "qcom,init-voltage": false,
+        "qcom,regulator-type": false,
+        "qcom,resource-name": true,
+        "qcom,set": false,
+        "regulator-allow-bypass": false,
+        "regulator-always-on": false,
+        "regulator-boot-on": false,
+        "regulator-enable-ramp-delay": false,
+        "regulator-initial-mode": false,
+        "regulator-max-microvolt": false,
+        "regulator-min-microvolt": false,
+        "regulator-ramp-delay": false,
+        "regulator-system-load": false
+      }
+    },
+    {
+      "path": "/soc/rsc@18200000/rpmh-regulator-mmcxlvl/regulator-pm8150a-s4-level",
+      "role": "camera-parent-regulator",
+      "parent_path": "/soc/rsc@18200000/rpmh-regulator-mmcxlvl",
+      "properties": {
+        "phandle": {
+          "bytes": 4,
+          "hex": "00000068",
+          "be32": [
+            104
+          ]
+        },
+        "qcom,set": {
+          "bytes": 4,
+          "hex": "00000003",
+          "be32": [
+            3
+          ]
+        },
+        "regulator-max-microvolt": {
+          "bytes": 4,
+          "hex": "0000ffff",
+          "be32": [
+            65535
+          ]
+        },
+        "regulator-min-microvolt": {
+          "bytes": 4,
+          "hex": "00000040",
+          "be32": [
+            64
+          ]
+        },
+        "regulator-name": {
+          "bytes": 17,
+          "hex": "706d38313530615f73345f6c6576656c00",
+          "strings": [
+            "pm8150a_s4_level"
+          ]
+        }
+      },
+      "source_resource_property_present": {
+        "qcom,always-wait-for-ack": false,
+        "qcom,default-mode": false,
+        "qcom,default-voltage": false,
+        "qcom,init-enable": false,
+        "qcom,init-headroom": false,
+        "qcom,init-mode": false,
+        "qcom,init-voltage": false,
+        "qcom,regulator-type": false,
+        "qcom,resource-name": false,
+        "qcom,set": true,
+        "regulator-allow-bypass": false,
+        "regulator-always-on": false,
+        "regulator-boot-on": false,
+        "regulator-enable-ramp-delay": false,
+        "regulator-initial-mode": false,
+        "regulator-max-microvolt": true,
+        "regulator-min-microvolt": true,
+        "regulator-ramp-delay": false,
+        "regulator-system-load": false
+      }
+    },
+    {
+      "path": "/soc/rsc@18200000/rpmh-regulator-mxlvl",
+      "role": "supply-referent-rpmh-ancestor",
+      "parent_path": "/soc/rsc@18200000",
+      "properties": {
+        "compatible": {
+          "bytes": 24,
+          "hex": "71636f6d2c72706d682d6172632d726567756c61746f7200",
+          "be32": [
+            1902341997,
+            745697389,
+            1747804530,
+            1663922789,
+            1735748705,
+            1953460736
+          ],
+          "strings": [
+            "qcom,rpmh-arc-regulator"
+          ]
+        },
+        "pm8150a_s3_mmcx_sup_level-parent-supply": {
+          "bytes": 4,
+          "hex": "0000007a",
+          "be32": [
+            122
+          ]
+        },
+        "qcom,resource-name": {
+          "bytes": 7,
+          "hex": "6d782e6c766c00",
+          "strings": [
+            "mx.lvl"
+          ]
+        }
+      },
+      "source_resource_property_present": {
+        "qcom,always-wait-for-ack": false,
+        "qcom,default-mode": false,
+        "qcom,default-voltage": false,
+        "qcom,init-enable": false,
+        "qcom,init-headroom": false,
+        "qcom,init-mode": false,
+        "qcom,init-voltage": false,
+        "qcom,regulator-type": false,
+        "qcom,resource-name": true,
+        "qcom,set": false,
+        "regulator-allow-bypass": false,
+        "regulator-always-on": false,
+        "regulator-boot-on": false,
+        "regulator-enable-ramp-delay": false,
+        "regulator-initial-mode": false,
+        "regulator-max-microvolt": false,
+        "regulator-min-microvolt": false,
+        "regulator-ramp-delay": false,
+        "regulator-system-load": false
+      }
+    },
+    {
+      "path": "/soc/rsc@18200000/rpmh-regulator-mxlvl/regulator-pm8150a-s3-level",
+      "role": "supply-chain-referent",
+      "parent_path": "/soc/rsc@18200000/rpmh-regulator-mxlvl",
+      "properties": {
+        "phandle": {
+          "bytes": 4,
+          "hex": "00000069",
+          "be32": [
+            105
+          ]
+        },
+        "qcom,set": {
+          "bytes": 4,
+          "hex": "00000003",
+          "be32": [
+            3
+          ]
+        },
+        "regulator-max-microvolt": {
+          "bytes": 4,
+          "hex": "0000ffff",
+          "be32": [
+            65535
+          ]
+        },
+        "regulator-min-microvolt": {
+          "bytes": 4,
+          "hex": "00000010",
+          "be32": [
+            16
+          ]
+        },
+        "regulator-name": {
+          "bytes": 17,
+          "hex": "706d38313530615f73335f6c6576656c00",
+          "strings": [
+            "pm8150a_s3_level"
+          ]
+        }
+      },
+      "source_resource_property_present": {
+        "qcom,always-wait-for-ack": false,
+        "qcom,default-mode": false,
+        "qcom,default-voltage": false,
+        "qcom,init-enable": false,
+        "qcom,init-headroom": false,
+        "qcom,init-mode": false,
+        "qcom,init-voltage": false,
+        "qcom,regulator-type": false,
+        "qcom,resource-name": false,
+        "qcom,set": true,
+        "regulator-allow-bypass": false,
+        "regulator-always-on": false,
+        "regulator-boot-on": false,
+        "regulator-enable-ramp-delay": false,
+        "regulator-initial-mode": false,
+        "regulator-max-microvolt": true,
+        "regulator-min-microvolt": true,
+        "regulator-ramp-delay": false,
+        "regulator-system-load": false
+      }
+    },
+    {
+      "path": "/soc/rsc@18200000/rpmh-regulator-mxlvl/regulator-pm8150a-s3-level-ao",
+      "role": "supply-chain-referent",
+      "parent_path": "/soc/rsc@18200000/rpmh-regulator-mxlvl",
+      "properties": {
+        "phandle": {
+          "bytes": 4,
+          "hex": "0000007b",
+          "be32": [
+            123
+          ]
+        },
+        "qcom,set": {
+          "bytes": 4,
+          "hex": "00000001",
+          "be32": [
+            1
+          ]
+        },
+        "regulator-max-microvolt": {
+          "bytes": 4,
+          "hex": "0000ffff",
+          "be32": [
+            65535
+          ]
+        },
+        "regulator-min-microvolt": {
+          "bytes": 4,
+          "hex": "00000010",
+          "be32": [
+            16
+          ]
+        },
+        "regulator-name": {
+          "bytes": 20,
+          "hex": "706d38313530615f73335f6c6576656c5f616f00",
+          "be32": [
+            1886206001,
+            892363103,
+            1932746604,
+            1702258028,
+            1600220928
+          ],
+          "strings": [
+            "pm8150a_s3_level_ao"
+          ]
+        }
+      },
+      "source_resource_property_present": {
+        "qcom,always-wait-for-ack": false,
+        "qcom,default-mode": false,
+        "qcom,default-voltage": false,
+        "qcom,init-enable": false,
+        "qcom,init-headroom": false,
+        "qcom,init-mode": false,
+        "qcom,init-voltage": false,
+        "qcom,regulator-type": false,
+        "qcom,resource-name": false,
+        "qcom,set": true,
+        "regulator-allow-bypass": false,
+        "regulator-always-on": false,
+        "regulator-boot-on": false,
+        "regulator-enable-ramp-delay": false,
+        "regulator-initial-mode": false,
+        "regulator-max-microvolt": true,
+        "regulator-min-microvolt": true,
+        "regulator-ramp-delay": false,
+        "regulator-system-load": false
+      }
+    },
+    {
+      "path": "/soc/rsc@18200000/rpmh-regulator-mxlvl/regulator-pm8150a-s3-mmcx-sup-level",
+      "role": "supply-chain-referent",
+      "parent_path": "/soc/rsc@18200000/rpmh-regulator-mxlvl",
+      "properties": {
+        "phandle": {
+          "bytes": 4,
+          "hex": "0000007f",
+          "be32": [
+            127
+          ]
+        },
+        "qcom,set": {
+          "bytes": 4,
+          "hex": "00000003",
+          "be32": [
+            3
+          ]
+        },
+        "regulator-max-microvolt": {
+          "bytes": 4,
+          "hex": "0000ffff",
+          "be32": [
+            65535
+          ]
+        },
+        "regulator-min-microvolt": {
+          "bytes": 4,
+          "hex": "00000010",
+          "be32": [
+            16
+          ]
+        },
+        "regulator-name": {
+          "bytes": 26,
+          "hex": "706d38313530615f73335f6d6d63785f7375705f6c6576656c00",
+          "strings": [
+            "pm8150a_s3_mmcx_sup_level"
+          ]
+        }
+      },
+      "source_resource_property_present": {
+        "qcom,always-wait-for-ack": false,
+        "qcom,default-mode": false,
+        "qcom,default-voltage": false,
+        "qcom,init-enable": false,
+        "qcom,init-headroom": false,
+        "qcom,init-mode": false,
+        "qcom,init-voltage": false,
+        "qcom,regulator-type": false,
+        "qcom,resource-name": false,
+        "qcom,set": true,
+        "regulator-allow-bypass": false,
+        "regulator-always-on": false,
+        "regulator-boot-on": false,
+        "regulator-enable-ramp-delay": false,
+        "regulator-initial-mode": false,
+        "regulator-max-microvolt": true,
+        "regulator-min-microvolt": true,
+        "regulator-ramp-delay": false,
+        "regulator-system-load": false
+      }
+    }
+  ],
+  "supply_relationships": [
+    {
+      "from": "/soc/rsc@18200000/rpmh-regulator-mmcxlvl",
+      "property": "pm8150a_s4_level-parent-supply",
+      "phandle": 127,
+      "to": "/soc/rsc@18200000/rpmh-regulator-mxlvl/regulator-pm8150a-s3-mmcx-sup-level"
+    },
+    {
+      "from": "/soc/rsc@18200000/rpmh-regulator-mmcxlvl",
+      "property": "pm8150a_s4_level_ao-parent-supply",
+      "phandle": 123,
+      "to": "/soc/rsc@18200000/rpmh-regulator-mxlvl/regulator-pm8150a-s3-level-ao"
+    },
+    {
+      "from": "/soc/rsc@18200000/rpmh-regulator-mmcxlvl",
+      "property": "proxy-supply",
+      "phandle": 104,
+      "to": "/soc/rsc@18200000/rpmh-regulator-mmcxlvl/regulator-pm8150a-s4-level"
+    },
+    {
+      "from": "/soc/rsc@18200000/rpmh-regulator-mxlvl",
+      "property": "pm8150a_s3_mmcx_sup_level-parent-supply",
+      "phandle": 122,
+      "to": "/soc/rsc@18200000/rpmh-regulator-cxlvl/regulator-pm8150-s3-mmcx-sup-level"
+    },
+    {
+      "from": "/soc/rsc@18200000/rpmh-regulator-cxlvl",
+      "property": "pm8150_s3_level-parent-supply",
+      "phandle": 105,
+      "to": "/soc/rsc@18200000/rpmh-regulator-mxlvl/regulator-pm8150a-s3-level"
+    },
+    {
+      "from": "/soc/rsc@18200000/rpmh-regulator-cxlvl",
+      "property": "pm8150_s3_level_ao-parent-supply",
+      "phandle": 123,
+      "to": "/soc/rsc@18200000/rpmh-regulator-mxlvl/regulator-pm8150a-s3-level-ao"
+    },
+    {
+      "from": "/soc/rsc@18200000/rpmh-regulator-cxlvl",
+      "property": "proxy-supply",
+      "phandle": 122,
+      "to": "/soc/rsc@18200000/rpmh-regulator-cxlvl/regulator-pm8150-s3-mmcx-sup-level"
+    }
+  ],
+  "unresolved_supply_relationships": [],
+  "counts": {
+    "published_nodes": 9,
+    "supply_relationships": 7
+  },
+  "interpretation": "DT declarations only. No measured regulator level, actual power, voltage, firmware handoff, command-db address, successful probe or guest execution is inferred.",
+  "actions": {
+    "input_written": false,
+    "complete_dtb_published": false,
+    "unselected_property_values_published": false,
+    "hardware_mmio": false,
+    "partitions_read": false,
+    "qemu_started": false,
+    "guest_executed": false
+  },
+  "output_path": "/work/wholeboard-a47/camera-parent-dt-evidence-09c638.json"
+}

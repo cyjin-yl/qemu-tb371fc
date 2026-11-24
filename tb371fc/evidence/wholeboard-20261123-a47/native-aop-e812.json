@@ -1,0 +1,102 @@
+{
+  "qemu_sha256": "118af63f84b1a6bcd95809d7b1f3bb5dee812c0e3646c1cb98e3d6258bc08897",
+  "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+  "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "stopped_by_timeout": true,
+  "elapsed_seconds": 31.034,
+  "observer_error": null,
+  "legacy_printk_error": null,
+  "source_commit": "e8122489600349c242a11d8b2b14390fcfedc888",
+  "smem_probe": {
+    "success_path_observed": true,
+    "verdict": "production-driver-success-path-observed",
+    "publication_instructions_verified": true,
+    "guest_memory_written": false,
+    "error": null
+  },
+  "smem_checks": {
+    "passed": 23,
+    "total": 23
+  },
+  "aop_peer": {
+    "schema_version": 1,
+    "scope": "Stopped reference AOP peer state and supported-command consumption",
+    "machine": "tb371fc,rpmh-profile=file:partial,spmi-profile=reference,smem-profile=reference-empty,aop-profile=reference-qdss-vote",
+    "qom_path": "/machine/aop-peer",
+    "reference_exchange_observed": true,
+    "aop_firmware_executed": false,
+    "android_boot_passed": false,
+    "guest_memory_written": false,
+    "verdict": "reference-exchange-observed",
+    "reason": "Connected reference peer consumed a supported command; IPCC notifications exist and no completion notification is pending",
+    "observations": {
+      "state": "connected",
+      "accepted-messages": 1,
+      "rejected-requests": 1,
+      "last-error": "command",
+      "qdss-vote": true,
+      "qdss-ao-vote": false,
+      "notifications": 4,
+      "work-pending": false,
+      "notification-pending": false
+    },
+    "stopped_status": {
+      "status": "paused",
+      "running": false
+    },
+    "stopped_status_after": {
+      "status": "paused",
+      "running": false
+    },
+    "unmet_conditions": []
+  },
+  "events": [
+    {
+      "timestamp": {
+        "seconds": 1795438541,
+        "microseconds": 651743
+      },
+      "event": "RESUME"
+    },
+    {
+      "timestamp": {
+        "seconds": 1795438570,
+        "microseconds": 599575
+      },
+      "event": "STOP"
+    }
+  ],
+  "diagnostic_sha256": "f1fae3989c7d02d26ea9bb73fdd010ea1c5dc3f7064f686b835a08028febe979",
+  "scope": "Unmodified production kernel, full native DT, explicit reference AOP; failed full boot, actual supported reference exchange observed.",
+  "binary_validation": {
+    "source": "e8122489600349c242a11d8b2b14390fcfedc888",
+    "workflow_run": 45176844327,
+    "artifact_id": 14820237855,
+    "artifact_sha256": "9db5e38321147b05a6b847f2413572ece99d9daceff306c26bf177451384f40f",
+    "qemu_sha256": "118af63f84b1a6bcd95809d7b1f3bb5dee812c0e3646c1cb98e3d6258bc08897",
+    "suites": [
+      {
+        "suite": "components",
+        "passed": true,
+        "passed_gates": 57,
+        "expected_gates": 57,
+        "qemu_sha256": "118af63f84b1a6bcd95809d7b1f3bb5dee812c0e3646c1cb98e3d6258bc08897",
+        "qemu_unchanged": true
+      },
+      {
+        "suite": "linux",
+        "passed": true,
+        "passed_gates": 4,
+        "expected_gates": 4,
+        "qemu_sha256": "118af63f84b1a6bcd95809d7b1f3bb5dee812c0e3646c1cb98e3d6258bc08897",
+        "qemu_unchanged": true
+      }
+    ]
+  },
+  "observer_commit": "d0f890f5456a0ed8732776300a7d03170ff612f9",
+  "diagnostic_source_sha256": "4ecae8825d919ebd61971bace9571bb34570aa9d76a5a1d13dc137ecc703a18b",
+  "aop_observer_sha256": "bae8d0bab168978e87c101d1dad7de7e876ac068bc0ba099c69e7a70d8f53ebf",
+  "full_native_dt_boot_passed": false,
+  "android_boot_passed": false,
+  "unimplemented_request_note": "One request was rejected with last-error=command; its payload was not captured by this observer. The positive exchange only covers the one consumed supported request."
+}

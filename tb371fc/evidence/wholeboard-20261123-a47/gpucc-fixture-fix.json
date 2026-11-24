@@ -1,0 +1,371 @@
+{
+  "schema_version": 1,
+  "scope": "GPUCC initial CI fixture failure and corrected test on the exact unchanged CI executable; this does not retroactively turn the old full CI run green.",
+  "initial_ci": {
+    "source_commit": "db3ac11b499ce3eec1169e24221ee69904c75e46",
+    "workflow_run": 45185472505,
+    "board_job": 137729818030,
+    "board_conclusion": "failure",
+    "components_passed": 61,
+    "components_expected": 62,
+    "linux_run": false,
+    "a77_job": 137729818585,
+    "a77_conclusion": "success",
+    "artifact_id": 14824016867,
+    "artifact_sha256": "438bad02c0cd3d9120e21a7a465e5a00ab53a58307a7525315a4e881622fcf3a",
+    "qemu_sha256": "de268e6a51d1f813a02bb08eff290a8ffe48a944b77a710d5b1cad7e68e585dd",
+    "source_dirty": false,
+    "failed_gate": "gpucc-sm8250",
+    "fixture_receipt": {
+      "schema": "tb371fc-gpucc-sm8250-v1",
+      "passed": false,
+      "expected_checks": 30,
+      "checks": [
+        {
+          "name": "cold_reference_has_no_running_or_invented_clock",
+          "passed": true
+        },
+        {
+          "name": "actual_vendor_configure_vector_remains_in_standby",
+          "passed": true
+        },
+        {
+          "name": "lucid_lock_is_delayed_and_outputs_have_two_gates",
+          "passed": true
+        },
+        {
+          "name": "invalid_l_and_unqualified_analog_programming_cannot_lock",
+          "passed": true
+        },
+        {
+          "name": "calibration_survives_standby_and_real_reset_clears_it",
+          "passed": true
+        },
+        {
+          "name": "pll_latch_captures_shadow_and_requires_software_ack_clear",
+          "passed": true
+        },
+        {
+          "name": "rcg_shadow_is_atomic_and_commits_at_the_reference_deadline",
+          "passed": true
+        },
+        {
+          "name": "rcg_hid_zero_one_and_fractional_divisor_follow_the_driver",
+          "passed": true
+        },
+        {
+          "name": "legal_unknown_rcg_source_latches_without_inventing_a_clock",
+          "passed": true
+        },
+        {
+          "name": "undefined_source_and_mnd_mode_do_not_commit",
+          "passed": true
+        },
+        {
+          "name": "live_pll_feeds_both_gmu_branches",
+          "passed": true
+        },
+        {
+          "name": "actual_gcc_provider_changes_propagate_through_board_clock_links",
+          "passed": true
+        },
+        {
+          "name": "every_branch_has_independent_local_and_remote_requests",
+          "passed": true
+        },
+        {
+          "name": "unknown_branch_parent_stays_stopped_and_live_qdss_input_fans_out",
+          "passed": true
+        },
+        {
+          "name": "reset_registers_drive_five_distinct_gpio_outputs",
+          "passed": true
+        }
+      ],
+      "migrations": [],
+      "rejected_migrations": [],
+      "expected_completed_migrations": 2,
+      "expected_rejected_migrations": 2,
+      "vmstate_version": 1,
+      "qemu_sha256": "de268e6a51d1f813a02bb08eff290a8ffe48a944b77a710d5b1cad7e68e585dd",
+      "script_sha256": "ab146f2c96d09f06b9a4a29ec0c61d38dbd497cac647fa0d937bf618be60a199",
+      "register_count": 36,
+      "sparse_window_count": 7,
+      "branch_count": 15,
+      "reset_count": 5,
+      "input_clock_count": 15,
+      "guest_cpu_executed": false,
+      "native_kernel_probe_observed": false,
+      "gpu_execution_observed": false,
+      "android_boot_passed": false,
+      "scope": "Actual compiled-device QTest/QMP transactions, Clock providers, and migration of explicit digital reference state",
+      "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "source_sha256": {
+        "gpucc-kona.c": "a9653a258c24397e366c04bb89c737d392f9cd198a2ba97c26c47a3250673c8a",
+        "clk-alpha-pll.c": "cdfb050d522069590b780819e5ca3c291c7886e63c38330f61726457606e2fac"
+      },
+      "error": "",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_gpucc_sm8250.py\", line 1016, in main\n    test(rig)\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_gpucc_sm8250.py\", line 568, in reserved_status_and_invalid_accesses_are_atomic\n    assert rig.diagnostic_count(\"Invalid \") - core_count >= len(operations)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "binary_unchanged": true,
+      "duration_seconds": 1.224
+    }
+  },
+  "cause": {
+    "kind": "missing_test_log_category",
+    "details": "The fixture enabled unimp,guest_errors but core invalid-width/alignment diagnostics use the separate LOG_INVALID_MEM category. All register/Clock/state-preservation assertions had passed before the missing-log assertion.",
+    "runtime_model_changed": false
+  },
+  "correction": {
+    "test_commit": "5b6c2436959e92425b40e5622b979cd15653572c",
+    "script_sha256": "3fde64d74406729714b4d5c86d21f745a918baf12475858217971c6bcce23967",
+    "changes": "Enable invalid_mem and compare each of the five high-level requests against its exact split access list: 1 + 1 + 3 + 1 + 2 = 8 invalid accesses, including direction, local offset, width, region and rejection reason. Preserve all state and migration assertions.",
+    "actual_run_on_unchanged_ci_binary": {
+      "passed": true,
+      "expected_checks": 30,
+      "error": null,
+      "traceback": null,
+      "qemu_sha256": "de268e6a51d1f813a02bb08eff290a8ffe48a944b77a710d5b1cad7e68e585dd",
+      "script_sha256": "3fde64d74406729714b4d5c86d21f745a918baf12475858217971c6bcce23967",
+      "binary_unchanged": true,
+      "duration_seconds": 10.134,
+      "completed_checks": 30,
+      "checks": [
+        {
+          "name": "cold_reference_has_no_running_or_invented_clock",
+          "passed": true
+        },
+        {
+          "name": "actual_vendor_configure_vector_remains_in_standby",
+          "passed": true
+        },
+        {
+          "name": "lucid_lock_is_delayed_and_outputs_have_two_gates",
+          "passed": true
+        },
+        {
+          "name": "invalid_l_and_unqualified_analog_programming_cannot_lock",
+          "passed": true
+        },
+        {
+          "name": "calibration_survives_standby_and_real_reset_clears_it",
+          "passed": true
+        },
+        {
+          "name": "pll_latch_captures_shadow_and_requires_software_ack_clear",
+          "passed": true
+        },
+        {
+          "name": "rcg_shadow_is_atomic_and_commits_at_the_reference_deadline",
+          "passed": true
+        },
+        {
+          "name": "rcg_hid_zero_one_and_fractional_divisor_follow_the_driver",
+          "passed": true
+        },
+        {
+          "name": "legal_unknown_rcg_source_latches_without_inventing_a_clock",
+          "passed": true
+        },
+        {
+          "name": "undefined_source_and_mnd_mode_do_not_commit",
+          "passed": true
+        },
+        {
+          "name": "live_pll_feeds_both_gmu_branches",
+          "passed": true
+        },
+        {
+          "name": "actual_gcc_provider_changes_propagate_through_board_clock_links",
+          "passed": true
+        },
+        {
+          "name": "every_branch_has_independent_local_and_remote_requests",
+          "passed": true
+        },
+        {
+          "name": "unknown_branch_parent_stays_stopped_and_live_qdss_input_fans_out",
+          "passed": true
+        },
+        {
+          "name": "reset_registers_drive_five_distinct_gpio_outputs",
+          "passed": true
+        },
+        {
+          "name": "reserved_status_and_invalid_accesses_are_atomic",
+          "passed": true
+        },
+        {
+          "name": "read_only_feedback_cannot_be_forged_by_guest_writes",
+          "passed": true
+        },
+        {
+          "name": "reset_cancels_pending_work_but_preserves_external_inputs_and_votes",
+          "passed": true
+        },
+        {
+          "name": "qtest_fixture_types_and_connected_providers_are_protected",
+          "passed": true
+        },
+        {
+          "name": "late_timer_dispatch_preserves_the_original_latch_and_relock_deadlines",
+          "passed": true
+        },
+        {
+          "name": "clearing_update_cancels_captured_pll_and_rcg_requests",
+          "passed": true
+        },
+        {
+          "name": "default_profile_rejects_all_defined_mmio_and_stays_uninitialized",
+          "passed": true
+        },
+        {
+          "name": "normal_tcg_exposes_no_fixture_setters",
+          "passed": true,
+          "accel": "tcg",
+          "guest_cpu_executed": false,
+          "paused_before_and_after": true,
+          "fixture_properties_absent": true
+        },
+        {
+          "name": "sparse_gpucc_windows_preserve_existing_cx_and_gx_owners",
+          "passed": true
+        },
+        {
+          "name": "v1_lock_pending_state_inputs_gpio_and_ram_restore",
+          "passed": true
+        },
+        {
+          "name": "v1_lock_remaining_3000ns_and_destination_requests_resume",
+          "passed": true
+        },
+        {
+          "name": "v1_independent_captured_requests_survive_migration",
+          "passed": true
+        },
+        {
+          "name": "v1_latch_rcg_deadlines_and_new_clock_values_resume_after_restore",
+          "passed": true
+        },
+        {
+          "name": "reference_to_default_profile_is_rejected",
+          "passed": true
+        },
+        {
+          "name": "default_to_reference_profile_is_rejected",
+          "passed": true
+        }
+      ],
+      "migrations": [
+        {
+          "name": "v1_lock_pending_clock_input_vote_gpio_and_ram_roundtrip",
+          "passed": true,
+          "source_status": "completed",
+          "target_status": "completed",
+          "source": {
+            "status": "completed",
+            "setup-time": 5,
+            "downtime": 26,
+            "total-time": 43,
+            "ram": {
+              "total": 134250496,
+              "postcopy-requests": 0,
+              "dirty-sync-count": 2,
+              "multifd-bytes": 0,
+              "pages-per-second": 0,
+              "downtime-bytes": 307340,
+              "page-size": 4096,
+              "remaining": 0,
+              "postcopy-bytes": 0,
+              "mbps": 466.9707368421053,
+              "transferred": 2218111,
+              "dirty-sync-missed-zero-copy": 0,
+              "precopy-bytes": 0,
+              "duplicate": 32773,
+              "dirty-pages-rate": 0,
+              "normal-bytes": 12288,
+              "normal": 3
+            }
+          },
+          "destination": {
+            "status": "completed"
+          },
+          "snapshot_sha256": "5e8a4e47106921e4f593a36bca8235848d4ee37ab41c8910610ecc4ecd2368dd",
+          "snapshot_bytes": 2218111
+        },
+        {
+          "name": "v1_captured_pll_latch_and_rcg_shadow_roundtrip",
+          "passed": true,
+          "source_status": "completed",
+          "target_status": "completed",
+          "source": {
+            "status": "completed",
+            "setup-time": 1,
+            "downtime": 33,
+            "total-time": 45,
+            "ram": {
+              "total": 134250496,
+              "postcopy-requests": 0,
+              "dirty-sync-count": 2,
+              "multifd-bytes": 0,
+              "pages-per-second": 0,
+              "downtime-bytes": 307340,
+              "page-size": 4096,
+              "remaining": 0,
+              "postcopy-bytes": 0,
+              "mbps": 403.2929090909091,
+              "transferred": 2218111,
+              "dirty-sync-missed-zero-copy": 0,
+              "precopy-bytes": 0,
+              "duplicate": 32773,
+              "dirty-pages-rate": 0,
+              "normal-bytes": 12288,
+              "normal": 3
+            }
+          },
+          "destination": {
+            "status": "completed"
+          },
+          "snapshot_sha256": "202b2c8febeb2407cb72eeb7aa03e6ce6716c02d2365edcf6ee91802d1e8bde5",
+          "snapshot_bytes": 2218111
+        }
+      ],
+      "rejected_migrations": [
+        {
+          "name": "reference_to_default_profile_is_rejected",
+          "passed": true,
+          "source_status": "completed",
+          "destination_exit": 1,
+          "source_reference": true,
+          "target_reference": false,
+          "request_sent": true,
+          "command_error": null,
+          "device": "qcom-sm8250-gpucc",
+          "profile_mismatch": "0 != 1",
+          "actual_source_stream": true,
+          "stream_relabelled": false
+        },
+        {
+          "name": "default_to_reference_profile_is_rejected",
+          "passed": true,
+          "source_status": "completed",
+          "destination_exit": 1,
+          "source_reference": false,
+          "target_reference": true,
+          "request_sent": true,
+          "command_error": null,
+          "device": "qcom-sm8250-gpucc",
+          "profile_mismatch": "1 != 0",
+          "actual_source_stream": true,
+          "stream_relabelled": false
+        }
+      ]
+    }
+  },
+  "local_environment_attempt": {
+    "checks": 0,
+    "migrations": 0,
+    "reason": "AF_UNIX socket creation EPERM; stopped without requesting permission changes. Not counted as a model failure or successful test."
+  },
+  "full_native_dt_boot_passed": false,
+  "android_boot_passed": false
+}

@@ -170,6 +170,8 @@ system_ss.add(when: 'CONFIG_SBSA_REF', if_true: files('sbsa_ec.c'))
 system_ss.add(when: 'CONFIG_LASI', if_true: files('lasi.c'))
 
 system_ss.add(when: 'CONFIG_QCOM_SM8250_GCC', if_true: files('qcom-sm8250-gcc.c'))
+system_ss.add(when: 'CONFIG_QCOM_SM8250_GPUCC', if_true: files('qcom-sm8250-gpucc.c'))
+system_ss.add(when: 'CONFIG_QCOM_SM8250_NPUCC', if_true: files('qcom-sm8250-npucc.c'))
 system_ss.add(when: 'CONFIG_QCOM_SM8250_RPMH', if_true: files('qcom-sm8250-rpmh.c'))
 system_ss.add(when: 'CONFIG_QCOM_PSHOLD', if_true: files('qcom-pshold.c'))
 system_ss.add(when: 'CONFIG_QCOM_DCC', if_true: files('qcom-dcc.c'))
@@ -177,7 +179,21 @@ system_ss.add(when: 'CONFIG_QCOM_IPCC', if_true: files('qcom-ipcc.c'))
 system_ss.add(when: 'CONFIG_QCOM_QSEE_IRQ', if_true: files('qcom-qsee-irq.c'))
 system_ss.add(when: 'CONFIG_QCOM_TCSR_MUTEX', if_true: files('qcom-tcsr-mutex.c'))
 system_ss.add(when: 'CONFIG_QCOM_SMEM_HANDOFF', if_true: files('qcom-smem-handoff.c'))
-system_ss.add(when: 'CONFIG_QCOM_AOP_MSGRAM', if_true: files('qcom-aop-msgram.c'))
+system_ss.add(when: 'CONFIG_QCOM_AOP_MSGRAM', if_true: files('qcom-aop-msgram.c', 'qcom-aop-qmp.c'))
 system_ss.add(when: 'CONFIG_QCOM_REFGEN', if_true: files('qcom-refgen.c'))
-system_ss.add(when: 'CONFIG_QCOM_GDSC', if_true: files('qcom-gdsc.c'))
+system_ss.add(when: 'CONFIG_QCOM_GPU_CX_GDSC', if_true: files('qcom-gpu-cx-gdsc.c'))
 system_ss.add(when: 'CONFIG_QCOM_SPMI_PMIC_ARB', if_true: files('qcom-spmi-pmic-arb.c'))
+
+system_ss.add(when: 'CONFIG_QCOM_GDSC', if_true: files('qcom-gdsc.c'))
+system_ss.add(when: 'CONFIG_QCOM_CAMERA_GDSC', if_true: files('qcom-camera-gdsc.c'))
+system_ss.add(when: 'CONFIG_QCOM_MDSS_GDSC', if_true: files('qcom-mdss-gdsc.c'))
+system_ss.add(when: 'CONFIG_QCOM_NPU_GDSC', if_true: files('qcom-npu-gdsc.c'))
+system_ss.add(when: 'CONFIG_QCOM_NOC_QOS', if_true: files('qcom-noc-qos.c'))
+
+system_ss.add(when: 'CONFIG_QCOM_TSENS24XX', if_true: files('qcom-tsens24xx.c'))
+
+system_ss.add(when: 'CONFIG_QCOM_CPUFREQ_HW', if_true: files('qcom-cpufreq-hw.c'))
+
+system_ss.add(when: 'CONFIG_QCOM_DEVFREQ_FW', if_true: files('qcom-devfreq-fw.c'))
+
+system_ss.add(when: 'CONFIG_QCOM_NOC_SBM', if_true: files('qcom-noc-sbm.c'))

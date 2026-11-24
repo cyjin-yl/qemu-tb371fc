@@ -2,9 +2,8 @@
 /*
  * SM8250 global clock controller: software-visible register state and gates.
  * Register evidence: Linux v6.12.114 drivers/clk/qcom/gcc-sm8250.c,
- * clk-alpha-pll.c, clk-rcg2.c, clk-branch.c, gdsc.c, reset.c.
- * The SYS_NOC_CPUSS halt register and parent also use the pinned official
- * OnePlus SM8250 gcc-kona.c contract recorded in the generated manifest.
+ * clk-alpha-pll.c, clk-rcg2.c, clk-branch.c, gdsc.c, reset.c; the pinned
+ * official Kona source supplies CPUSS topology and USB PHY pipe muxes.
  * See tb371fc/docs/gcc-sm8250.md for evidence, assumptions and limitations.
  * This implements neither analog PLLs nor undocumented Qualcomm firmware.
  */
@@ -14,6 +13,9 @@
 #include "hw/core/qdev-properties.h"
 #include "hw/core/irq.h"
 #include "migration/vmstate.h"
+#include "qapi/error.h"
+#include "qapi/visitor.h"
+#include "system/qtest.h"
 #include "qemu/log.h"
 #include "qemu/module.h"
 
@@ -42,7 +44,7 @@
 #define GDSC_TRANSITION_NS 3000
 
 typedef enum GccClockKind {
-    GCC_NONE, GCC_PLL, GCC_POSTDIV, GCC_RCG, GCC_DIV, GCC_BRANCH,
+    GCC_NONE, GCC_PLL, GCC_POSTDIV, GCC_RCG, GCC_DIV, GCC_BRANCH, GCC_MUX,
 } GccClockKind;
 
 typedef struct GccClockDesc {
@@ -165,6 +167,7 @@ static uint64_t gcc_rate(QcomSm8250GccState *s, int id,
         case -1: return clock_get_hz(s->xo);
         case -2: return clock_get_hz(s->sleep);
         case -3: return clock_get_hz(s->audio);
+        case -5: return clock_get_hz(s->test);
         default: return 0;
         }
     }
@@ -215,12 +218,23 @@ static uint64_t gcc_rate(QcomSm8250GccState *s, int id,
             parent = parent * (s->active_m[id] & mask) / n;
         }
         return parent;
+    case GCC_MUX: {
+        unsigned selector = (REG(s, d->reg) >> d->mnd_width) &
+                            ((1U << d->hid_width) - 1);
+        int parent_id = d->parents[selector];
+
+        /* -4 is this mux's preserved external PHY input; -5 is test. */
+        if (parent_id == -4) {
+            return clock_get_hz(s->external[d->external]);
+        }
+        return gcc_rate(s, parent_id, demand, depth + 1);
+    }
     case GCC_BRANCH:
         if (!demand[id]) {
             return 0;
         }
-        /* Keep legacy Clock input slots without overriding a known parent. */
-        if (d->parent < 0 && d->external >= 0) {
+        /* USB branches retain an input slot but consume their real mux. */
+        if (d->external >= 0 && d->parent < 0) {
             return clock_get_hz(s->external[d->external]);
         }
         return gcc_rate(s, d->parent, demand, depth + 1);
@@ -655,8 +669,13 @@ static int gcc_post_load(void *opaque, int version)
 
 static const VMStateDescription vmstate_gcc = {
     .name = TYPE_QCOM_SM8250_GCC,
-    .version_id = 1,
-    .minimum_version_id = 1,
+    /*
+     * v1 had 84 external inputs; v2 corrected CPUSS and retained 83.
+     * v3 keeps those 83 slots/names but adds the shared USB mux test input.
+     * Reject older streams before decoding the changed clock state.
+     */
+    .version_id = 3,
+    .minimum_version_id = 3,
     .post_load = gcc_post_load,
     .fields = (const VMStateField[]) {
         VMSTATE_UINT32_ARRAY(regs, QcomSm8250GccState, GCC_REGISTER_WORDS),
@@ -676,11 +695,45 @@ static const VMStateDescription vmstate_gcc = {
         VMSTATE_CLOCK(xo, QcomSm8250GccState),
         VMSTATE_CLOCK(sleep, QcomSm8250GccState),
         VMSTATE_CLOCK(audio, QcomSm8250GccState),
+        VMSTATE_CLOCK(test, QcomSm8250GccState),
         VMSTATE_ARRAY_CLOCK(external, QcomSm8250GccState,
                              GCC_EXTERNAL_PARENTS),
         VMSTATE_END_OF_LIST()
     },
 };
+
+/*
+ * Explicit synthetic providers for compiled QTest coverage. Normal TCG
+ * exposes only the real Clock inputs; it has none of these fixture knobs.
+ * Setters alter inputs, never the mux/branch outputs, and cannot override
+ * a real connected provider.
+ */
+static void gcc_fixture_clock_get(Object *obj, Visitor *v, const char *name,
+                                  void *opaque, Error **errp)
+{
+    Clock *input = opaque;
+    uint32_t hz = clock_get_hz(input);
+
+    visit_type_uint32(v, name, &hz, errp);
+}
+
+static void gcc_fixture_clock_set(Object *obj, Visitor *v, const char *name,
+                                  void *opaque, Error **errp)
+{
+    QcomSm8250GccState *s = QCOM_SM8250_GCC(obj);
+    Clock *input = opaque;
+    uint32_t hz;
+
+    if (!visit_type_uint32(v, name, &hz, errp)) {
+        return;
+    }
+    if (clock_has_source(input)) {
+        error_setg(errp, "%s cannot override a connected clock source", name);
+        return;
+    }
+    clock_set_hz(input, hz);
+    gcc_update(s);
+}
 
 static void gcc_init(Object *obj)
 {
@@ -700,6 +753,8 @@ static void gcc_init(Object *obj)
                                  ClockUpdate);
     s->audio = qdev_init_clock_in(dev, "audio", gcc_clock_changed, s,
                                  ClockUpdate);
+    s->test = qdev_init_clock_in(dev, "core_bi_pll_test_se",
+                                gcc_clock_changed, s, ClockUpdate);
     for (i = 0; i < GCC_CLOCKS; i++) {
         const GccClockDesc *d = &gcc_clocks[i];
         if (d->name) {
@@ -713,6 +768,19 @@ static void gcc_init(Object *obj)
         }
     }
     assert(count == GCC_EXTERNAL_PARENTS);
+    if (qtest_enabled()) {
+        object_property_add(obj, "qtest-usb3-primary-phy-hz", "uint32",
+                            gcc_fixture_clock_get, gcc_fixture_clock_set,
+                            NULL, qdev_get_clock_in(dev,
+                                "gcc_usb3_prim_phy_pipe_clk_parent"));
+        object_property_add(obj, "qtest-usb3-secondary-phy-hz", "uint32",
+                            gcc_fixture_clock_get, gcc_fixture_clock_set,
+                            NULL, qdev_get_clock_in(dev,
+                                "gcc_usb3_sec_phy_pipe_clk_parent"));
+        object_property_add(obj, "qtest-core-bi-pll-test-hz", "uint32",
+                            gcc_fixture_clock_get, gcc_fixture_clock_set,
+                            NULL, s->test);
+    }
     s->timer = timer_new_ns(QEMU_CLOCK_VIRTUAL, gcc_timer, s);
 }
 

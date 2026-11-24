@@ -1,0 +1,439 @@
+{
+  "schema": "tb371fc-74-gate-independent-plan-review-v1",
+  "original_source_commit": "52492a797d2acd9c918a8639564e8ff3e7beab3f",
+  "runner_bytes": 37770,
+  "runner_sha256": "d3b4ac99b3498dca4cabe724281fc622307afa1102d6d713c53a81808f681d18",
+  "unit_bytes": 16196,
+  "unit_sha256": "0d5bb1de54c610ac7e6e813468ea75e4520e80f2e9e74916142000b61dcf6d59",
+  "cpufreq_test_sha256": "0a11d0f3c8f70c09716083830b8f672a2c62b82d3ff42589373b480b3998dd03",
+  "granules_test_sha256": "9a83189384fb9f1f07bfc7d2a744b579a08bc459c231c2639ac7cefa0759111a",
+  "components": 70,
+  "linux": 4,
+  "total": 74,
+  "original_68_component_and_4_linux_order_preserved": true,
+  "added_gate_indices_zero_based": {
+    "cpufreq-hw-reference": 51,
+    "smmuv2-granules": 69
+  },
+  "added_gate_contracts": {
+    "cpufreq-hw-reference": {
+      "name": "cpufreq-hw-reference",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/_audit/repo/tb371fc/tests/test_cpufreq_hw.py",
+        "--qemu",
+        "/_audit/qemu",
+        "--out",
+        "/_audit/runtime/cpufreq-hw-reference/data"
+      ],
+      "fixture": "/_audit/runtime/cpufreq-hw-reference",
+      "result": "/_audit/runtime/cpufreq-hw-reference/data/result.json",
+      "verdict": "passed",
+      "expected_count": 30,
+      "count_field": "checks",
+      "expected_values": {
+        "schema": "tb371fc-cpufreq-hw-v1",
+        "expected_checks": 30,
+        "expected_completed_migrations": 2,
+        "expected_rejected_migrations": 2,
+        "expected_corrupted_stream_rejections": 2,
+        "domain_count": 3,
+        "cpu_count": 8,
+        "per_cpu_counter_count": 8,
+        "register_count": 263,
+        "sparse_window_count": 24,
+        "mapped_bytes": 1052,
+        "registers_per_domain": [
+          89,
+          88,
+          86
+        ],
+        "windows_per_domain": 8,
+        "lut_rows_per_domain": 40,
+        "lut_row_bytes": 4,
+        "valid_perf_states_per_domain": 4,
+        "irq_count": 3,
+        "input_clock_count": 6,
+        "output_clock_count": 3,
+        "vmstate_version": 1,
+        "vmstate_payload_bytes_per_domain": 84,
+        "reference_profile_is_default": false,
+        "reference_lut_is_synthetic": true,
+        "factory_lut_observed": false,
+        "counter_source_is_virtual_time": true,
+        "counter_measures_retired_cpu_cycles": false,
+        "cpu_execution_speed_controlled": false,
+        "analogue_voltage_control_implemented": false,
+        "hardware_thermal_throttling_observed": false,
+        "reference_lut_lvals": [
+          16,
+          32,
+          64,
+          96
+        ],
+        "reference_lut_voltage_words": [
+          750,
+          800,
+          900,
+          1000
+        ],
+        "reference_max_cores": [
+          4,
+          4,
+          4
+        ],
+        "actual_domain_cpu_counts": [
+          4,
+          3,
+          1
+        ],
+        "guest_cpu_executed": false,
+        "native_kernel_probe_observed": false,
+        "android_boot_passed": false,
+        "binary_unchanged": true
+      },
+      "tap_count": null,
+      "timeout": 180,
+      "expected_lengths": {
+        "migrations": 2,
+        "rejected_migrations": 2,
+        "corrupted_stream_rejections": 2
+      }
+    },
+    "smmuv2-granules": {
+      "name": "smmuv2-granules",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/_audit/repo/tb371fc/tests/test_smmuv2_granules.py",
+        "--qemu",
+        "/_audit/qemu",
+        "--out",
+        "/_audit/runtime/smmuv2-granules/data"
+      ],
+      "fixture": "/_audit/runtime/smmuv2-granules",
+      "result": "/_audit/runtime/smmuv2-granules/data/result.json",
+      "verdict": "all_passed",
+      "expected_count": 26,
+      "count_field": "checks",
+      "expected_values": {
+        "expected_checks": 26,
+        "legacy_v2_transfer_tested": false
+      },
+      "tap_count": null,
+      "timeout": 180,
+      "expected_lengths": {
+        "migrations": 3
+      }
+    }
+  },
+  "existing_contract_changes": {
+    "smmuv500-reference": {
+      "expected_values": {
+        "old": {
+          "expected_checks": 36,
+          "expected_completed_migrations": 2,
+          "expected_rejected_migrations": 2,
+          "expected_corrupted_stream_rejections": 2,
+          "vmstate_version": 1,
+          "architectural_smmuv2_vmstate_version": 2,
+          "tcu_count": 1,
+          "tbu_count": 10,
+          "register_count": 71,
+          "sparse_window_count": 71,
+          "mapped_bytes": 484,
+          "guest_cpu_executed": false,
+          "native_kernel_probe_observed": false,
+          "android_boot_passed": false,
+          "binary_unchanged": true
+        },
+        "new": {
+          "expected_checks": 36,
+          "expected_completed_migrations": 2,
+          "expected_rejected_migrations": 2,
+          "expected_corrupted_stream_rejections": 2,
+          "vmstate_version": 1,
+          "architectural_smmuv2_vmstate_version": 3,
+          "tcu_count": 1,
+          "tbu_count": 10,
+          "register_count": 71,
+          "sparse_window_count": 71,
+          "mapped_bytes": 484,
+          "guest_cpu_executed": false,
+          "native_kernel_probe_observed": false,
+          "android_boot_passed": false,
+          "binary_unchanged": true
+        }
+      }
+    }
+  },
+  "all_other_existing_case_fields_preserved": true,
+  "runner_outside_plan_ast_unchanged": true,
+  "unit_only_change": [
+    "--- old",
+    "+++ new",
+    "@@ -172,7 +172,7 @@",
+    "         args = SimpleNamespace(suite=\"all\", qemu=Path(\"/test/qemu\"),",
+    "                                build_dir=Path(\"/test/build\"), kernel=None)",
+    "         cases = ci.plan(args, Path(\"/test/runtime\"))",
+    "-        self.assertEqual(len(cases), 72)",
+    "+        self.assertEqual(len(cases), 74)",
+    "         matches = [case for case in cases if case.name == \"spmi-pdc-gic-route\"]",
+    "         self.assertEqual(len(matches), 1)",
+    "         case = matches[0]"
+  ],
+  "cpufreq_expected_values_checked": {
+    "schema": {
+      "expected": "tb371fc-cpufreq-hw-v1",
+      "source": "test report AST"
+    },
+    "expected_checks": {
+      "expected": 30,
+      "source": "test report AST"
+    },
+    "expected_completed_migrations": {
+      "expected": 2,
+      "source": "test report AST"
+    },
+    "expected_rejected_migrations": {
+      "expected": 2,
+      "source": "test report AST"
+    },
+    "expected_corrupted_stream_rejections": {
+      "expected": 2,
+      "source": "test report AST"
+    },
+    "domain_count": {
+      "expected": 3,
+      "source": "test report AST"
+    },
+    "cpu_count": {
+      "expected": 8,
+      "source": "test report AST"
+    },
+    "per_cpu_counter_count": {
+      "expected": 8,
+      "source": "test report AST"
+    },
+    "register_count": {
+      "expected": 263,
+      "source": "test report AST"
+    },
+    "sparse_window_count": {
+      "expected": 24,
+      "source": "test report AST"
+    },
+    "mapped_bytes": {
+      "expected": 1052,
+      "source": "test report AST"
+    },
+    "registers_per_domain": {
+      "expected": [
+        89,
+        88,
+        86
+      ],
+      "source": "test report AST"
+    },
+    "windows_per_domain": {
+      "expected": 8,
+      "source": "test report AST"
+    },
+    "lut_rows_per_domain": {
+      "expected": 40,
+      "source": "test report AST"
+    },
+    "lut_row_bytes": {
+      "expected": 4,
+      "source": "test report AST"
+    },
+    "valid_perf_states_per_domain": {
+      "expected": 4,
+      "source": "test report AST"
+    },
+    "irq_count": {
+      "expected": 3,
+      "source": "test report AST"
+    },
+    "input_clock_count": {
+      "expected": 6,
+      "source": "test report AST"
+    },
+    "output_clock_count": {
+      "expected": 3,
+      "source": "test report AST"
+    },
+    "vmstate_version": {
+      "expected": 1,
+      "source": "test report AST"
+    },
+    "vmstate_payload_bytes_per_domain": {
+      "expected": 84,
+      "source": "test report AST"
+    },
+    "reference_profile_is_default": {
+      "expected": false,
+      "source": "test report AST"
+    },
+    "reference_lut_is_synthetic": {
+      "expected": true,
+      "source": "test report AST"
+    },
+    "factory_lut_observed": {
+      "expected": false,
+      "source": "test report AST"
+    },
+    "counter_source_is_virtual_time": {
+      "expected": true,
+      "source": "test report AST"
+    },
+    "counter_measures_retired_cpu_cycles": {
+      "expected": false,
+      "source": "test report AST"
+    },
+    "cpu_execution_speed_controlled": {
+      "expected": false,
+      "source": "test report AST"
+    },
+    "analogue_voltage_control_implemented": {
+      "expected": false,
+      "source": "test report AST"
+    },
+    "hardware_thermal_throttling_observed": {
+      "expected": false,
+      "source": "test report AST"
+    },
+    "reference_lut_lvals": {
+      "expected": [
+        16,
+        32,
+        64,
+        96
+      ],
+      "source": "test report AST"
+    },
+    "reference_lut_voltage_words": {
+      "expected": [
+        750,
+        800,
+        900,
+        1000
+      ],
+      "source": "test report AST"
+    },
+    "reference_max_cores": {
+      "expected": [
+        4,
+        4,
+        4
+      ],
+      "source": "test report AST"
+    },
+    "actual_domain_cpu_counts": {
+      "expected": [
+        4,
+        3,
+        1
+      ],
+      "source": "test report AST"
+    },
+    "guest_cpu_executed": {
+      "expected": false,
+      "source": "test report AST"
+    },
+    "native_kernel_probe_observed": {
+      "expected": false,
+      "source": "test report AST"
+    },
+    "android_boot_passed": {
+      "expected": false,
+      "source": "test report AST"
+    },
+    "binary_unchanged": {
+      "expected": true,
+      "source": "digest equality and final verdict guard"
+    }
+  },
+  "names": [
+    "ci-verdict-unit",
+    "smem-observer-unit",
+    "aop-observer-unit",
+    "board-profile-unit",
+    "machine-validator-unit",
+    "dt-inventory-unit",
+    "hardware-sysfs-unit",
+    "guest-result-unit",
+    "console-boot-verdict-unit",
+    "tlmm-map-unit",
+    "gcc-source-generation",
+    "live-machine-profile",
+    "geni-registers",
+    "geni-migration",
+    "gcc-registers",
+    "gcc-migration",
+    "gcc-cpuss-branch",
+    "gcc-usb-pipe-mux",
+    "geni-clock-reset",
+    "geni-clock-migration",
+    "mpm2-sleep-counter",
+    "counter-arithmetic",
+    "mmio-timer-exact",
+    "mmio-timer-legacy",
+    "cpu-counter-exact",
+    "cpu-counter-legacy",
+    "mmio-timer-migration",
+    "mmio-timer-legacy-migration",
+    "reject-exact-to-legacy",
+    "reject-legacy-to-exact",
+    "cpu-timer-migration",
+    "cpu-timer-control",
+    "cpu-irq-realtime",
+    "cpu-irq-exact-icount",
+    "cpu-irq-legacy-icount",
+    "smmuv2-c-qtest",
+    "tlmm-c-qtest",
+    "pdc-c-qtest",
+    "rpmh-reference",
+    "rpmh-reference-migration",
+    "rpmh-display",
+    "rpmh-display-migration",
+    "qsee-notification",
+    "qsee-notification-migration",
+    "tcsr-mutex",
+    "refgen-request",
+    "gpucc-sm8250",
+    "npucc-sm8250",
+    "noc-qos",
+    "smmuv500-reference",
+    "tsens24xx-reference",
+    "cpufreq-hw-reference",
+    "gpu-gx-gdsc",
+    "gpu-cx-gdsc",
+    "aop-reference-peer",
+    "aop-msgram",
+    "smem-reference-handoff",
+    "dcc-operations",
+    "ufs-register-dma",
+    "watchdog-registers",
+    "watchdog-migration",
+    "boot-resources",
+    "ipcc-messages",
+    "dcc-capture",
+    "spmi-pmic-arb",
+    "spmi-pdc-gic-route",
+    "tlmm-migration",
+    "pdc-migration",
+    "smmuv2-migration",
+    "smmuv2-granules",
+    "linux-console-userspace",
+    "linux-console-empty-ufs",
+    "linux-ufs-smmu",
+    "linux-ufs-rpmh"
+  ],
+  "ast_and_pure_plan_only": true,
+  "qemu_started": false,
+  "tests_executed": false,
+  "build_executed": false,
+  "artifact_downloaded": false,
+  "native_started": false,
+  "verdict": "no-static-integration-blocker-found"
+}

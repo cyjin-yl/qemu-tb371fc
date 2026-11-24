@@ -1,0 +1,526 @@
+{
+  "schema_version": 1,
+  "kind": "source-and-actual-DT-contract-for-config-NoC-SBM",
+  "scope": "Read-only source and existing exact-DTB evidence review; proposal and parent-approved reference boundaries, not an implemented or executed SBM result.",
+  "date_label": "wholeboard-20261123-a47",
+  "current_native_boundary": {
+    "source_commit": "b95f973f9b20d53e3a0b8843c919156e3acb58d9",
+    "qemu_sha256": "0f6ebed05f414484f1ef04196457c314bbd635245683c547c40d0a601065c88e",
+    "evidence_origin": "Latest native facts supplied by root from its single exact-CI-binary run; this reviewer did not rerun or download native logs.",
+    "component_gates_reported_passed": 71,
+    "linux_boots_reported_passed": 4,
+    "total_wholeboard_gates_reported_passed": 75,
+    "devfreq_progress": "Four voters registered at 2.108492/2.109696/2.110379/2.111039 and parent inited at2.111164; stopped PERF3.",
+    "invalid_access": {
+      "kind": "write",
+      "physical_address": "0x01506080",
+      "bytes": 4,
+      "qemu_log_line": 11562,
+      "direct_log_value_observed": false
+    },
+    "exception": {
+      "cpu": 4,
+      "current_el": 1,
+      "esr": "0x96000050",
+      "far": "0xffffff800b3c6080",
+      "elr": "0xffffff80086a6844",
+      "pc_function": "msm_bus_noc_sbm_config",
+      "pc_function_offset": "0x84",
+      "reported_function_extent": "0x1e8",
+      "lr_function": "msm_bus_dev_sbm_config",
+      "lr_offset": "0x114",
+      "thread": "kworker/4:1",
+      "pid": 58,
+      "context": "deferred_probe_work_func",
+      "first_error_guest_seconds": 2.265489,
+      "not_pid1_panic": true,
+      "later_thermal_messages_reported": true,
+      "userspace_acceptance_passed": false,
+      "userspace_execution_not_independently_established": true,
+      "userspace_evidence_limit": "No EL0 checkpoint or validated userspace record was collected; this does not prove that no user instructions executed."
+    },
+    "call_chain": [
+      "gdsc_probe+0x73c",
+      "msm_bus_scale_client_update_request",
+      "update_request_adhoc",
+      "update_client_paths",
+      "msm_bus_commit_data",
+      "msm_bus_dev_sbm_config+0x114",
+      "msm_bus_noc_sbm_config+0x84"
+    ],
+    "operand_reconstruction": {
+      "instruction_word": "0xb9000138",
+      "decoded": "STR W24, [X9, #0]",
+      "rt": 24,
+      "rn": 9,
+      "imm12": 0,
+      "width_bytes": 4,
+      "saved_x24": "0x0000000000000001",
+      "saved_x9": "0xffffff800b3c6080",
+      "inferred_written_value": "0x00000001",
+      "inference_from_instruction_and_saved_registers": true,
+      "not_a_value_printed_by_invalid_mem_log": true,
+      "source_correlated_operation": "Clear disable request for low-bank port0 (reconnect), not an observed completed SENSE handshake."
+    }
+  },
+  "fixed_primary_sources": {
+    "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+    "commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+    "private_kernel_built_from_this_commit_proven": false,
+    "correlation_scope": "The exported function names/call sequence and actual DT agree; no private-kernel rebuild identity is asserted.",
+    "files": [
+      {
+        "path": "drivers/soc/qcom/msm_bus/msm_bus_noc_rpmh.c",
+        "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/msm_bus/msm_bus_noc_rpmh.c",
+        "git_blob": "b3bc943008f826346283b649fb5f9099fabc6410",
+        "bytes": 13806,
+        "sha256": "9e408e18745857c575be792a92cb3eb7bcab1fb51b181cc389fd2b81213560a6",
+        "read_line_ranges": [
+          [
+            28,
+            43
+          ],
+          [
+            374,
+            458
+          ]
+        ],
+        "local_git_blob_hash_verified": true
+      },
+      {
+        "path": "drivers/soc/qcom/msm_bus/msm_bus_fabric_rpmh.c",
+        "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/msm_bus/msm_bus_fabric_rpmh.c",
+        "git_blob": "3a48c03a8be79fd419ffb5acae2aa65b700666de",
+        "bytes": 53370,
+        "sha256": "14563f3f965b030d68917b48b6185c2ff2b87f4f9de2ab212f2d8cb77b510bb7",
+        "read_line_ranges": [
+          [
+            554,
+            685
+          ],
+          [
+            1019,
+            1097
+          ],
+          [
+            1129,
+            1139
+          ]
+        ],
+        "local_git_blob_hash_verified": true
+      },
+      {
+        "path": "drivers/soc/qcom/msm_bus/msm_bus_of_rpmh.c",
+        "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/msm_bus/msm_bus_of_rpmh.c",
+        "git_blob": "ecd7898a5209718a314324962fafaa834eb3f82c",
+        "bytes": 19002,
+        "sha256": "4b55e3a31e4c762ee686dc235ba755381bc8001d13c4e2b67d6bac4bbce83af2",
+        "read_line_ranges": [
+          [
+            101,
+            149
+          ],
+          [
+            294,
+            355
+          ]
+        ],
+        "local_git_blob_hash_verified": true
+      },
+      {
+        "path": "drivers/soc/qcom/msm_bus/msm_bus_rpmh.h",
+        "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/msm_bus/msm_bus_rpmh.h",
+        "git_blob": "351902b0fabce0cc9c835cd55a74731c526303bc",
+        "bytes": 6573,
+        "sha256": "9a06eef8ff994581310677d1869927ea81dde55524203e90c503da0bc602eec9",
+        "read_line_ranges": [
+          [
+            36,
+            50
+          ],
+          [
+            105,
+            119
+          ]
+        ],
+        "local_git_blob_hash_verified": true
+      },
+      {
+        "path": "drivers/soc/qcom/msm_bus/Makefile",
+        "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/soc/qcom/msm_bus/Makefile",
+        "git_blob": "0c8811247b19b612ab17045555f42993a4c10045",
+        "bytes": 695,
+        "sha256": "a169128203934897d1e2bd833f94653beabcbc0364c7b6c5a14762023c69ed50",
+        "read_line_ranges": [
+          [
+            9,
+            19
+          ]
+        ],
+        "local_git_blob_hash_verified": true
+      }
+    ],
+    "selected_implementation": {
+      "kernel_config": [
+        "CONFIG_QCOM_BUS_SCALING=y",
+        "CONFIG_QCOM_BUS_CONFIG_RPMH=y"
+      ],
+      "existing_extracted_ikconfig_sha256": "23d3db565be3cd6cfc07bb90541d971dc70e6a6ce3516360155b8fd15590e726",
+      "makefile_rpmh_selection": true,
+      "adhoc_sources_inspected_but_not_selected": true
+    }
+  },
+  "existing_implementation": {
+    "source_commit": "b95f973f9b20d53e3a0b8843c919156e3acb58d9",
+    "c": {
+      "path": "hw/misc/qcom-noc-qos.c",
+      "bytes": 7409,
+      "sha256": "52fad0e72bf21bb920a90181b8a3af25d6b620a7cf74ef49b7eecf0d12e29b2f"
+    },
+    "documentation": {
+      "path": "tb371fc/docs/noc-qos-reference.md",
+      "bytes": 13184,
+      "sha256": "2f67d5798533497389192e5eb58dfd8ebb3e9c3ec7b60d0a4d06c240796cdd24"
+    },
+    "device_instances": 47,
+    "mapped_qos_words": 188,
+    "word_offsets": [
+      "0x08",
+      "0x18",
+      "0x40",
+      "0x48"
+    ],
+    "sbm_words_mapped": false,
+    "sbm_ack_or_traffic_model_present": false,
+    "old_negative_test_contract": "Existing NoC QoS sparse test requires all eight source-named SBM addresses to remain unassigned/rejected in its default-off fixture. Preserve C/header/test bytes by keeping the independent new device's MemoryRegions disabled when its profile is off."
+  },
+  "actual_dt": {
+    "input_dtb": {
+      "path": "/work/device-assets/live-android-20261123.dtb",
+      "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207"
+    },
+    "existing_bounded_capture": {
+      "git_blob": "c300271fab1acabb6d1b45ddcf626f5e2f091d25",
+      "nodes": 219,
+      "scope": "Prior NoC/RSC subtree capture, reused for unchanged DT geometry. Its embedded fault evidence is from0508 and is not the new b95 write evidence."
+    },
+    "independent_decode": {
+      "git_blob": "614c1a2225a701be9fbce9f6a893db4080614882",
+      "bytes": 10981,
+      "sha256": "537f6cf0364a4edca6c892ae5b6acc3396a12c0be3600fd9a47e6d980aca9c86",
+      "method": "Decode raw hex as big-endian cells and NUL-terminated resource names; do not trust printable-string hints for numeric properties."
+    },
+    "bus_path": "/soc/ad-hoc-bus",
+    "resource_tuple_count": 11,
+    "fabric_node_count": 14,
+    "resources": [
+      {
+        "name": "aggre1_noc-base",
+        "base": 23986176,
+        "size": 127360,
+        "base_hex": "0x16e0000",
+        "size_hex": "0x1f180"
+      },
+      {
+        "name": "aggre2_noc-base",
+        "base": 24117248,
+        "size": 250240,
+        "base_hex": "0x1700000",
+        "size_hex": "0x3d180"
+      },
+      {
+        "name": "config_noc-base",
+        "base": 22020096,
+        "size": 163840,
+        "base_hex": "0x1500000",
+        "size_hex": "0x28000"
+      },
+      {
+        "name": "dc_noc-base",
+        "base": 151781376,
+        "size": 16896,
+        "base_hex": "0x90c0000",
+        "size_hex": "0x4200"
+      },
+      {
+        "name": "mc_virt-base",
+        "base": 152043520,
+        "size": 713216,
+        "base_hex": "0x9100000",
+        "size_hex": "0xae200"
+      },
+      {
+        "name": "gem_noc-base",
+        "base": 152043520,
+        "size": 713216,
+        "base_hex": "0x9100000",
+        "size_hex": "0xae200"
+      },
+      {
+        "name": "mmss_noc-base",
+        "base": 24379392,
+        "size": 127104,
+        "base_hex": "0x1740000",
+        "size_hex": "0x1f080"
+      },
+      {
+        "name": "system_noc-base",
+        "base": 23199744,
+        "size": 115200,
+        "base_hex": "0x1620000",
+        "size_hex": "0x1c200"
+      },
+      {
+        "name": "ipa_virt-base",
+        "base": 23199744,
+        "size": 262144,
+        "base_hex": "0x1620000",
+        "size_hex": "0x40000"
+      },
+      {
+        "name": "compute_noc-base",
+        "base": 24117248,
+        "size": 250240,
+        "base_hex": "0x1700000",
+        "size_hex": "0x3d180"
+      },
+      {
+        "name": "npu_noc-base",
+        "base": 161021952,
+        "size": 5632,
+        "base_hex": "0x9990000",
+        "size_hex": "0x1600"
+      }
+    ],
+    "fabrics_with_nonzero_sbm_offset": [
+      {
+        "path": "/soc/ad-hoc-bus/fab-config_noc",
+        "phandle": 245,
+        "base_resource": "config_noc-base",
+        "base": "0x01500000",
+        "resource_size": "0x28000",
+        "sbm_offset": "0x6000",
+        "bus_type": 1
+      }
+    ],
+    "disable_port_clients": [
+      {
+        "path": "/soc/ad-hoc-bus/slv-qhs-camera-cfg",
+        "id": 589,
+        "phandle": 197,
+        "bus_dev": 245,
+        "fabric_path": "/soc/ad-hoc-bus/fab-config_noc",
+        "ports": [
+          0,
+          1,
+          2
+        ],
+        "mmcx_supply": 104,
+        "node_reg_names": [
+          "mmcx"
+        ],
+        "bcm_phandles": [
+          246
+        ]
+      },
+      {
+        "path": "/soc/ad-hoc-bus/slv-qhs-display-cfg",
+        "id": 590,
+        "phandle": 211,
+        "bus_dev": 245,
+        "fabric_path": "/soc/ad-hoc-bus/fab-config_noc",
+        "ports": [
+          3,
+          4
+        ],
+        "mmcx_supply": 104,
+        "node_reg_names": [
+          "mmcx"
+        ],
+        "bcm_phandles": [
+          246
+        ]
+      },
+      {
+        "path": "/soc/ad-hoc-bus/slv-qhs-venus-cfg",
+        "id": 596,
+        "phandle": 223,
+        "bus_dev": 245,
+        "fabric_path": "/soc/ad-hoc-bus/fab-config_noc",
+        "ports": [
+          5,
+          6,
+          7
+        ],
+        "mmcx_supply": 104,
+        "node_reg_names": [
+          "mmcx"
+        ],
+        "bcm_phandles": [
+          246
+        ]
+      }
+    ],
+    "unique_ports": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "supported_low_mask": "0x000000ff",
+    "unestablished_low_mask": "0xffffff00",
+    "ports32_through63_observed": false,
+    "all_three_clients_same_fabric": true,
+    "bus_and_fabric_interrupt_properties_observed": false,
+    "all_fabric_clocks_property_bytes": 0,
+    "provider_caution": "All three clients name mmcx-supply phandle104 and BCM phandle246. This existing bounded capture identifies those references; it does not prove physical rail readiness or cross-port traffic quiescence."
+  },
+  "source_register_contract": {
+    "address_formula": "physical fabric resource base + DT qcom,sbm-offset + register offset; QoS base-offset/qos-off are not added.",
+    "all_source_named_words": [
+      {
+        "name": "FLAGOUTCLR0_LOW",
+        "offset": "0x80",
+        "physical": "0x01506080",
+        "driver_use": "write one reconnect bit for ports0..31"
+      },
+      {
+        "name": "FLAGOUTCLR0_HIGH",
+        "offset": "0x84",
+        "physical": "0x01506084",
+        "driver_use": "generic ports32..63 only; not used by captured DT"
+      },
+      {
+        "name": "FLAGOUTSET0_LOW",
+        "offset": "0x88",
+        "physical": "0x01506088",
+        "driver_use": "write one disconnect bit for ports0..31"
+      },
+      {
+        "name": "FLAGOUTSET0_HIGH",
+        "offset": "0x8c",
+        "physical": "0x0150608c",
+        "driver_use": "generic ports32..63 only; not used by captured DT"
+      },
+      {
+        "name": "FLAGOUTSTATUS0_LOW",
+        "offset": "0x90",
+        "physical": "0x01506090",
+        "driver_use": "macro only; callback does not read or write"
+      },
+      {
+        "name": "FLAGOUTSTATUS0_HIGH",
+        "offset": "0x94",
+        "physical": "0x01506094",
+        "driver_use": "macro only; callback does not read or write"
+      },
+      {
+        "name": "SENSEIN0_LOW",
+        "offset": "0x100",
+        "physical": "0x01506100",
+        "driver_use": "poll one low-bank bit"
+      },
+      {
+        "name": "SENSEIN0_HIGH",
+        "offset": "0x104",
+        "physical": "0x01506104",
+        "driver_use": "generic ports32..63 only; not used by captured DT"
+      }
+    ],
+    "width_bytes": 4,
+    "source_write_values": "Exactly one bit 1 << (port %32), one port at a time; driver rejects port>=64 before accessing it.",
+    "reconnect": "Write the bit to CLR, execute wmb, then read SENSE until that bit is zero.",
+    "disconnect": "Write the bit to SET, execute wmb, then read SENSE until that bit is one.",
+    "sense_interpretation": "The callback treats1 as disconnected and0 as connected; it polls a state/handshake response separate from the command.",
+    "polling": {
+      "delay_microseconds": 10,
+      "timeout_expression": "msecs_to_jiffies(1)",
+      "comparison": "time_after(jiffies, start+timeout)",
+      "hardware_completion_time_established": false,
+      "note": "This is a software polling budget with jiffy rounding and a strict-after test, not a measured one-millisecond hardware deadline."
+    },
+    "command_read_behavior_established": false,
+    "sense_write_behavior_established": false,
+    "reset_value_established": false,
+    "hardware_reset_sequence_established": false,
+    "sbm_irq_established": false,
+    "hardware_clock_or_cycle_counter_established": false
+  },
+  "caller_constraints": {
+    "enable": "When a connected bandwidth request is needed, obtain/enable node regulators; set software is_connected=true before invoking sbm_config.",
+    "disable": "Call sbm_config and then disable node regulators and set is_connected=false; a timeout return does not itself prevent the subsequent regulator block.",
+    "commit": "The disconnect/reconnect calls in msm_bus_commit_data do not capture the return value.",
+    "consequence": "Software is_connected, probe continuation, absent panic or a later regulator message cannot independently prove the SBM SENSE condition completed."
+  },
+  "parent_approved_minimal_reference": {
+    "independent_device": true,
+    "old_qos_devices_unchanged": true,
+    "always_present_for_vmstate": true,
+    "default_profile": "unknown/off",
+    "default_memory_regions_enabled": false,
+    "enabled_word_count": 3,
+    "enabled_mmio_bytes": 12,
+    "enabled_addresses": [
+      "0x01506080",
+      "0x01506088",
+      "0x01506100"
+    ],
+    "high_and_status_words_remain_holes": true,
+    "ports": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "CLR_and_SET": "Write-one command masks; reject read transactions and any bit outside0xff without partial state change. Multi-bit mask handling is declared reference behavior; the pinned guest sequence writes one bit at a time.",
+    "SENSE": "Read-only low8 actual reference connection-state mask, not a constant success value or an alias of the request field.",
+    "cold_state": "Explicit reference connected: requested-disable mask=0, sense-disconnected mask=0, no pending transitions; not observed firmware/silicon reset state.",
+    "transition_latency_ns": 1000,
+    "latency_is_reference_policy": true,
+    "request_and_sense_separate": true,
+    "independent_pending_per_port": true,
+    "repeated_same_request_does_not_reorder_deadline": true,
+    "reverse_request_cancels_or_retargets_pending_state": true,
+    "reference_peer_stall_mask": "Mutable reference environment input can prevent completion; precise pause/resume, reset retention, counters and VMState layout are to be finalized with implementation/test authors.",
+    "no_irq": true,
+    "no_clock": true,
+    "no_hardware_drain_claim": true,
+    "no_unrelated_ufs_or_apps_smmu_dma_blocking": true,
+    "traffic_scope": "These are camera/display/venus configuration-side ports. Their real endpoint traffic is not executed by the existing QoS model. The state machine represents a declared digital reference peer, not actual DMA drain, bandwidth enforcement or power-domain readiness."
+  },
+  "acceptance_boundary": {
+    "component": "Literal single-bit CLR/SET/SENSE sequences; real virtual-time completion, per-port independence, duplicate/no-op/reversal, stall/resume, strict holes/width/RO/WO/reserved masks, reset and actual migration with first observation before device MMIO.",
+    "native": "Bind the actual CI binary/source and unchanged Image/DT; inspect request/sense/pending and accepted/completed-operation state read-only while stopped, and independently inspect SBM timeout logs.",
+    "initial_noop": "In the declared cold-connected profile, the first CLR1 may be a valid idempotent request. Acceptance may establish its recorded reception and a coherent no-pending state, but must not label it an observed delayed transition.",
+    "not_a_userspace_or_Android_pass": true
+  },
+  "optional_symbols_collector": {
+    "local_path": "/run/tb371fc-sbm-source-a47/collect_sbm_symbols.py",
+    "git_blob": "4df789e999ee475acf6011dd87b829bbb310cdc8",
+    "bytes": 1781,
+    "sha256": "5f36c7db5c56d580699b98fc42945a5f0b4aa4f0c3d71f3de3448635dce08048",
+    "input_path": "/work/kernel-symbols/production-4.19.157.kallsyms",
+    "expected_input_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+    "output_scope": "Only four named symbols, their next distinct symbol and PC offset; next-symbol span is not an independent ELF-size measurement.",
+    "ast_compile_only_passed": true,
+    "collector_executed": false,
+    "remote_execution_owner": "root",
+    "new_dtb_capture_needed": false
+  },
+  "execution_scope": {
+    "new_qemu_run": false,
+    "new_native_run": false,
+    "hardware_mmio_read": false,
+    "remote_device_call": false,
+    "model_or_test_modified": false,
+    "branch_ref_changed": false
+  }
+}

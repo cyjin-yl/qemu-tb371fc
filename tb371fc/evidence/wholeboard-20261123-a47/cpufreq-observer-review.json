@@ -1,0 +1,123 @@
+{
+  "schema": "tb371fc-native-cpufreq-observer-review-v1",
+  "reviewed_at_utc": "2026-11-23 18:04:07 UTC",
+  "base_observer": {
+    "git_blob": "1a55614267205c5ac0fdeb317e91ea30cfff8d27",
+    "bytes": 26958,
+    "sha256": "71dd4ed62aa620f2c2766edcc504a5c353c747fade7081669c9159ed1ef3e64d"
+  },
+  "observer": {
+    "git_blob": "546b7a3bc83957e6cd11e863c9e220a7da01d0be",
+    "bytes": 37328,
+    "sha256": "56fad0f32aec8d344782f62c0e731b68424f62571ed900d01e26f8d1125fe0c5",
+    "local_path": "/run/tb371fc-cpufreq-observer-a47/native-cpufreq-observer.py"
+  },
+  "model_reviewed": {
+    "commit": "e133c1c85b53ca5d3afe81bda2c1767d9e0d39d8",
+    "path": "hw/misc/qcom-cpufreq-hw.c",
+    "bytes": 26016,
+    "sha256": "34d46cfb9fc9b4735978c9c7927a8ea02a703e98af7a03732d992f3b779f4e84"
+  },
+  "actual_dt": {
+    "input_dtb": {
+      "path": "/work/device-assets/live-android-20261123.dtb",
+      "bytes": 973052,
+      "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207"
+    },
+    "capture": {
+      "git_blob": "541c58de5c6711215cd6ebc24e48a11ea4a69127",
+      "bytes": 40324,
+      "sha256": "815874739b5ccfd4f248fd953849f775387dab53b2859dff508bee74ae74136d"
+    },
+    "contract_review_blob": "230c524e407eec3fd70922f66551a1f2a2aba770"
+  },
+  "legacy_preservation": {
+    "method": "Remove the exact appended CPUFREQ_DOMAINS/capture_cpufreq_hw block and the exact one try/except insertion, then compare bytes with the original Git blob.",
+    "byte_identical": true,
+    "existing_aop_noc_smmuv500_tsens_functions_unchanged": true,
+    "existing_imports_cli_and_main_unchanged": true,
+    "note": "The complete inherited wrapper includes its existing private AOP mailbox read and diagnostic launch flow. The new CPUFreq capture function itself uses only query-status and qom-get."
+  },
+  "new_observer_behavior": {
+    "paths": [
+      "/machine/cpufreq0",
+      "/machine/cpufreq1",
+      "/machine/cpufreq2"
+    ],
+    "allowed_commands": [
+      "query-status",
+      "qom-get"
+    ],
+    "normal_success_command_counts": {
+      "query-status": 2,
+      "qom-get": 455
+    },
+    "raw_lut_rows_observed": 120,
+    "actual_related_core_counters_observed": 8,
+    "status_guards": "Before any reads, require a dictionary with running exactly False and nonempty string status. In a finally block, query again and require stopped and the identical status, even when a QOM read fails.",
+    "schema_guards": "Exact Python bool/int types, unsigned/signed widths, supported performance/limit/status/phase ranges. bool is never accepted as an int.",
+    "configuration_guards": "Actual DT geometry/masks/max_cores and reference profile geometry are evaluated independently of device-returned counts; loops remain bounded by fixed 3 domains, 40 rows and the actual 4/3/1 CPU membership.",
+    "raw_state": "Requested/effective L and rate, selected voltage descriptor, limit input, IRQ latch and level, known frequency, input Clock rates, sampled count/phase and stored count/phase/epoch are retained. Counter getters are pure calculations in the reviewed C and do not commit state.",
+    "irq_semantics": "Checks IRQ level against the latch, not against the limited condition. A stale latched event after lifting a cap and a cleared event during unchanged restriction are both legitimate.",
+    "unknown_profile": "Configuration remains observable, raw state is explicitly unavailable and the overall observation is inconclusive.",
+    "observation_status": "complete means a coherent stopped reference snapshot was collected. A zero/unknown XO or cold zero count does not become a driver or progress verdict.",
+    "nonclaims": [
+      "native driver or policy initialization",
+      "userspace or Android boot",
+      "frequency transition executed",
+      "counter progress from a single snapshot",
+      "native interrupt delivery",
+      "factory firmware LUT equivalence",
+      "physical voltage, execution rate or WFI power gating"
+    ],
+    "stimulation_or_guest_write_commands": 0
+  },
+  "isolated_validation": {
+    "test_source_blob": "b3014881b7c5e566b461bb6d4ad3525612307344",
+    "test_source": {
+      "bytes": 9379,
+      "sha256": "eb90ed29ecdab09f7cf6b051c26cbe0ee6a545056c0d2df58f01302ab69f1114"
+    },
+    "test_method": "AST-select only CPUFREQ_DOMAINS assignment and capture_cpufreq_hw into an isolated namespace, then drive a fake QMP callable. No existing wrapper import, diagnostic main, QEMU process, native run or device connection.",
+    "tests_run": 20,
+    "failures": 0,
+    "errors": 0,
+    "exit_code": 0,
+    "test_case_names": [
+      "test_complete_raw_snapshot_only",
+      "test_unknown_profile_is_inconclusive",
+      "test_bool_not_uint_configuration",
+      "test_bool_not_uint_state",
+      "test_negative_unsigned_counter",
+      "test_out_of_range_fraction",
+      "test_missing_device_property_still_checks_stopped_after",
+      "test_running_before_does_not_read_qom",
+      "test_running_after_is_rejected",
+      "test_changed_stopped_status_is_rejected",
+      "test_geometry_mismatch_never_complete",
+      "test_reserved_irq_bits_are_rejected",
+      "test_inconsistent_rate_never_complete",
+      "test_wrong_reference_row_never_complete",
+      "test_zero_cold_counter_does_not_claim_progress",
+      "test_unknown_clock_is_recorded_as_unknown_not_ready",
+      "test_latched_irq_after_restriction_is_legitimate",
+      "test_w1c_during_unchanged_restriction_is_legitimate",
+      "test_bool_not_uint_lut_word",
+      "test_terminal_index_not_a_valid_performance_state"
+    ],
+    "observed_normal_case_qom_gets": 455,
+    "observed_normal_case_status_queries": 2,
+    "legacy_wrapper_executed": false,
+    "qemu_executed": false
+  },
+  "additional_c_review": {
+    "wide_counter_arithmetic": "Verified current QEMU host-utils.h divu128 returns the full 128-bit quotient through low/high plus exact remainder. Retaining quotient low 32 bits and carry from saved phase implements modulo-2^32 exactly.",
+    "transition_order": "Updates settle the cached old rate before deriving the new PERF/limit/Clock rate.",
+    "reset_and_migration": "SysBus participates in reset tree; reset preserves external cap/provider inputs and clears count/latch; incoming count+phase is reanchored at target virtual time, IRQ is restored before first MMIO, and normal post_load avoids downstream Clock callbacks.",
+    "board_wiring": "Three actual physical resources and SPI30/31/19 map to the GIC, XO uses the board carrier, alternate is the real GCC gpll0 output.",
+    "c_runtime_executed_for_this_review": false,
+    "static_blockers": []
+  },
+  "verdict": "observer-source-and-mock-review-passed; live-native-observation-pending",
+  "branch_ref_changed": false
+}

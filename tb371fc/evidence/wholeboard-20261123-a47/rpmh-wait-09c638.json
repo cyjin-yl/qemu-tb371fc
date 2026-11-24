@@ -1,0 +1,2315 @@
+{
+  "schema": "tb371fc-rpmh-wait-mask-v1",
+  "suite": "RPMh WAIT explicit reserved-mask reference",
+  "base_source_commit": "3b31e83dc412962826ada872e361a1d32ea4e463",
+  "qemu": "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+  "machine": "tb371fc,gcc-boot-configured=off,ufs-enabled=off,rpmh-profile=reference,rpmh-boot-configured=off",
+  "work_dir": "/tmp/tbci-vfgn4kvt/42/data",
+  "qemu_sha256_before": "7211873740226d0509e354cfbf1c23bb4eb0459b6eca470187ea3dfd3a2e04ca",
+  "test_sha256": "b72b503c8c968310ea435dc058c6db1a072cad2a20281761696e2ffb3bd16032",
+  "expected_checks": 17,
+  "expected_completed_migrations": 1,
+  "expected_rejected_migrations": 2,
+  "expected_corrupted_stream_rejections": 2,
+  "vmstate_version": 2,
+  "vmstate_minimum_version": 2,
+  "subsection_version": 1,
+  "subsection_payload_bytes": 24,
+  "main_payload_bytes_with_default_clock": 19420,
+  "commands_per_tcs": 16,
+  "voter_count": 4,
+  "apps_tcs_per_drv": 8,
+  "display_tcs_count": 2,
+  "wait_command_mask": 65535,
+  "default_strict_main_vmstate_unchanged": true,
+  "old_rpmh_tests_changed": false,
+  "old_rpmh_test_blobs_match": true,
+  "silicon_reserved_bit_semantics_proved": false,
+  "guest_cpu_executed": false,
+  "native_kernel_probe_observed": false,
+  "guest_image_patched": false,
+  "android_boot_passed": false,
+  "diagnostic_counters_are_model_observations": true,
+  "reference_policy_auto_enabled": false,
+  "reference_command_db_sha256": "416efcf69817cc7b0465a33724bace31e576040b3ec775e0a184a2d051f8c6f8",
+  "checks": [
+    {
+      "name": "default_strict_geometry_and_readonly_diagnostics",
+      "passed": true,
+      "fixture": "00",
+      "policy": false
+    },
+    {
+      "name": "strict_reserved_wait_writes_are_atomic",
+      "passed": true,
+      "fixture": "01",
+      "policy": false
+    },
+    {
+      "name": "reference_masks_only_high_bits_and_audits_each_write",
+      "passed": true,
+      "fixture": "02",
+      "policy": true
+    },
+    {
+      "name": "reference_isolated_across_all_voters_and_boundary_tcs",
+      "passed": true,
+      "fixture": "03",
+      "policy": true
+    },
+    {
+      "name": "low_wait_bits_control_completion_without_response",
+      "passed": true,
+      "fixture": "04",
+      "policy": true
+    },
+    {
+      "name": "masked_high_bits_do_not_request_low_slot_completion",
+      "passed": true,
+      "fixture": "05",
+      "policy": true
+    },
+    {
+      "name": "busy_wait_rejection_does_not_restart_original_deadline",
+      "passed": true,
+      "fixture": "06",
+      "policy": true
+    },
+    {
+      "name": "pending_irq_is_independent_of_idle_wait_programming",
+      "passed": true,
+      "fixture": "07",
+      "policy": true
+    },
+    {
+      "name": "cmd_enable_and_invalid_resource_validation_remain_strict",
+      "passed": true,
+      "fixture": "08",
+      "policy": true
+    },
+    {
+      "name": "system_reset_clears_wait_diagnostics_and_pending_command",
+      "passed": true,
+      "fixture": "09",
+      "policy": true
+    },
+    {
+      "name": "paused_tcg_exposes_the_same_pure_readonly_diagnostics",
+      "passed": true,
+      "normal_tcg": true,
+      "guest_cpu_executed": false,
+      "device_mmio_used": false,
+      "qom_observations": {
+        "wait-command-mask": 65535,
+        "wait-reserved-masked-writes": 0,
+        "wait-reserved-last-voter": 0,
+        "wait-reserved-last-tcs": 0,
+        "wait-reserved-last-raw": 0,
+        "wait-reserved-last-effective": 0,
+        "wait-reserved-last-ignored": 0
+      }
+    },
+    {
+      "name": "real_v2_main_and_v1_subsection_restore_before_first_rpmh_mmio",
+      "passed": true
+    },
+    {
+      "name": "restored_nonresponse_wait_completes_at_599_plus_1_ns_and_accepts_new_work",
+      "passed": true
+    },
+    {
+      "name": "strict_source_rejected_by_prewarmed_masked_target",
+      "passed": true
+    },
+    {
+      "name": "cold_masked_source_emits_policy_and_is_rejected_by_strict_target",
+      "passed": true
+    },
+    {
+      "name": "single_bit_policy_corruption",
+      "passed": true,
+      "original_stream_unchanged": true
+    },
+    {
+      "name": "single_bit_last_voter_corruption",
+      "passed": true,
+      "original_stream_unchanged": true
+    }
+  ],
+  "migrations": [
+    {
+      "name": "v2_with_wait_reference_v1_inflight",
+      "passed": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "source": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 14,
+        "total-time": 20,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 957.8513684210526,
+          "transferred": 2274897,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "destination": {
+        "status": "completed"
+      },
+      "snapshot_file": "rpmh-wait-v2-subv1-masked-inflight.migration",
+      "snapshot_sha256": "9695dbc199b18d891a2c1ef0fcb48bc432698f88cb2d1e949eb79b18bec687fd",
+      "snapshot_bytes": 2274897,
+      "stream_modified": false,
+      "source_directory": "mig-source",
+      "target_directory": "mig-target",
+      "source_virtual_ns": 400,
+      "destination_virtual_ns": 400,
+      "absolute_command_deadline_ns": 1000,
+      "remaining_ns_at_transfer": 600,
+      "existing_absolute_deadline_clock_alignment_preserved": true,
+      "sections": {
+        "main": {
+          "name": "qcom-sm8250-rpmh",
+          "instance_id": 0,
+          "version": 2,
+          "header_offset": 1474709,
+          "payload_offset": 1474739,
+          "payload_bytes": 19420,
+          "section_id": 38,
+          "payload_file": "rpmh-wait-v2-subv1-masked-inflight.migration.main-v2.payload.bin",
+          "payload_sha256": "93c89571d9f603f1333428d4a5999bb2d3088f197109b8278a99738788ebf656",
+          "complete_payload_verified_against_fixed_source_scenario": true,
+          "scenario": "inflight",
+          "serialized_waits": [
+            {
+              "voter": 0,
+              "tcs": 0,
+              "offset": 57,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 1,
+              "offset": 403,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 2,
+              "offset": 749,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 3,
+              "offset": 1095,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 4,
+              "offset": 1441,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 5,
+              "offset": 1787,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 6,
+              "offset": 2133,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 7,
+              "offset": 2479,
+              "value": 1
+            },
+            {
+              "voter": 1,
+              "tcs": 0,
+              "offset": 2842,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 1,
+              "offset": 3188,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 2,
+              "offset": 3534,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 3,
+              "offset": 3880,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 4,
+              "offset": 4226,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 5,
+              "offset": 4572,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 6,
+              "offset": 4918,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 7,
+              "offset": 5264,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 0,
+              "offset": 5627,
+              "value": 32768
+            },
+            {
+              "voter": 2,
+              "tcs": 1,
+              "offset": 5973,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 2,
+              "offset": 6319,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 3,
+              "offset": 6665,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 4,
+              "offset": 7011,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 5,
+              "offset": 7357,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 6,
+              "offset": 7703,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 7,
+              "offset": 8049,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 0,
+              "offset": 8412,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 1,
+              "offset": 8758,
+              "value": 2
+            },
+            {
+              "voter": 3,
+              "tcs": 2,
+              "offset": 9104,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 3,
+              "offset": 9450,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 4,
+              "offset": 9796,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 5,
+              "offset": 10142,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 6,
+              "offset": 10488,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 7,
+              "offset": 10834,
+              "value": 0
+            }
+          ]
+        },
+        "subsection": {
+          "name": "qcom-sm8250-rpmh/wait-reserved-reference",
+          "version": 1,
+          "header_offset": 1494159,
+          "payload_offset": 1494205,
+          "payload_bytes": 24,
+          "payload_file": "rpmh-wait-v2-subv1-masked-inflight.migration.sub-v1.payload.bin",
+          "payload_sha256": "71fa8e0085ef6925f259daeb72e7f789aaaf40075bdecc356b7f8836e1c19b16",
+          "payload_hex": "000000010000000000000003000000030000000100020002",
+          "decoded": {
+            "policy": 1,
+            "masked_write_count": 3,
+            "last_voter": 3,
+            "last_tcs": 1,
+            "last_raw": 131074
+          },
+          "all_24_bytes_match_actual_stopped_source_qom": true
+        },
+        "stream_sha256": "9695dbc199b18d891a2c1ef0fcb48bc432698f88cb2d1e949eb79b18bec687fd",
+        "stream_bytes": 2274897
+      },
+      "snapshot_before": {
+        "policy": true,
+        "diagnostics": {
+          "wait-command-mask": 65535,
+          "wait-reserved-masked-writes": 3,
+          "wait-reserved-last-voter": 3,
+          "wait-reserved-last-tcs": 1,
+          "wait-reserved-last-raw": 131074,
+          "wait-reserved-last-effective": 2,
+          "wait-reserved-last-ignored": 131072
+        },
+        "cmd_db_sha256": "416efcf69817cc7b0465a33724bace31e576040b3ec775e0a184a2d051f8c6f8",
+        "xo_value": 0,
+        "ldoa12_value": 0,
+        "xo_input_period": 111848106666,
+        "xo_output_period": 0
+      },
+      "snapshot_after": {
+        "policy": true,
+        "diagnostics": {
+          "wait-command-mask": 65535,
+          "wait-reserved-masked-writes": 3,
+          "wait-reserved-last-voter": 3,
+          "wait-reserved-last-tcs": 1,
+          "wait-reserved-last-raw": 131074,
+          "wait-reserved-last-effective": 2,
+          "wait-reserved-last-ignored": 131072
+        },
+        "cmd_db_sha256": "416efcf69817cc7b0465a33724bace31e576040b3ec775e0a184a2d051f8c6f8",
+        "xo_value": 0,
+        "ldoa12_value": 0,
+        "xo_input_period": 111848106666,
+        "xo_output_period": 0
+      },
+      "target_first_observation_before_rpmh_mmio": true,
+      "source_qom_before_file": "mig-source/source-qom-before-save.json",
+      "source_qom_after_file": "mig-source/source-qom-after-save.json",
+      "target_qom_before_first_mmio_file": "mig-target/destination-before-first-rpmh-mmio.json",
+      "target_query_migrate_file": "mig-target/destination-query-migrate.json",
+      "continued_after_restore": true,
+      "restored_timer_observations_file": "mig-target/restored-timer-before-first-rpmh-mmio.json"
+    }
+  ],
+  "rejected_migrations": [
+    {
+      "name": "strict_to_prewarmed_masked_requires_present_policy",
+      "passed": true,
+      "source_policy": false,
+      "target_policy": true,
+      "source_status": "completed",
+      "source_directory": "strict-source",
+      "snapshot_file": "rpmh-wait-v2-strict-source.migration",
+      "snapshot_sha256": "dccc31532dbf46693160f70d4cca3df8a17780c49657584264b598e5c31cb751",
+      "snapshot_bytes": 2274386,
+      "stream_modified": false,
+      "source_sections": {
+        "main": {
+          "name": "qcom-sm8250-rpmh",
+          "instance_id": 0,
+          "version": 2,
+          "header_offset": 1474709,
+          "payload_offset": 1474739,
+          "payload_bytes": 19420,
+          "section_id": 38,
+          "payload_file": "rpmh-wait-v2-strict-source.migration.main-v2.payload.bin",
+          "payload_sha256": "c21d960b07ed1c3b557126875e4807224e2f5bfb07a0e72683cde28d44261e68",
+          "complete_payload_verified_against_fixed_source_scenario": true,
+          "scenario": "cold",
+          "serialized_waits": [
+            {
+              "voter": 0,
+              "tcs": 0,
+              "offset": 57,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 1,
+              "offset": 403,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 2,
+              "offset": 749,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 3,
+              "offset": 1095,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 4,
+              "offset": 1441,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 5,
+              "offset": 1787,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 6,
+              "offset": 2133,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 7,
+              "offset": 2479,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 0,
+              "offset": 2842,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 1,
+              "offset": 3188,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 2,
+              "offset": 3534,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 3,
+              "offset": 3880,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 4,
+              "offset": 4226,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 5,
+              "offset": 4572,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 6,
+              "offset": 4918,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 7,
+              "offset": 5264,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 0,
+              "offset": 5627,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 1,
+              "offset": 5973,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 2,
+              "offset": 6319,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 3,
+              "offset": 6665,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 4,
+              "offset": 7011,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 5,
+              "offset": 7357,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 6,
+              "offset": 7703,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 7,
+              "offset": 8049,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 0,
+              "offset": 8412,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 1,
+              "offset": 8758,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 2,
+              "offset": 9104,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 3,
+              "offset": 9450,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 4,
+              "offset": 9796,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 5,
+              "offset": 10142,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 6,
+              "offset": 10488,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 7,
+              "offset": 10834,
+              "value": 0
+            }
+          ]
+        },
+        "subsection": null,
+        "stream_sha256": "dccc31532dbf46693160f70d4cca3df8a17780c49657584264b598e5c31cb751",
+        "stream_bytes": 2274386
+      },
+      "destination_exit": 1,
+      "request_sent": true,
+      "expected_diagnostic": "qcom-sm8250-rpmh: wait-reserved migration profile mismatch (configured=1 incoming=0 present=0)",
+      "specific_load_failure_observed": true,
+      "command_error": null,
+      "target_directory": "reject-s-m",
+      "stderr_file": "reject-s-m/qemu.stderr"
+    },
+    {
+      "name": "cold_masked_to_strict_rejects_even_without_prior_masking",
+      "passed": true,
+      "source_policy": true,
+      "target_policy": false,
+      "source_status": "completed",
+      "source_directory": "cold-source",
+      "snapshot_file": "rpmh-wait-v2-subv1-cold-masked.migration",
+      "snapshot_sha256": "dc3bee92b084af4a4b081f3dfa988882409e78199c96f93969da9106774c2891",
+      "snapshot_bytes": 2274897,
+      "stream_modified": false,
+      "source_sections": {
+        "main": {
+          "name": "qcom-sm8250-rpmh",
+          "instance_id": 0,
+          "version": 2,
+          "header_offset": 1474709,
+          "payload_offset": 1474739,
+          "payload_bytes": 19420,
+          "section_id": 38,
+          "payload_file": "rpmh-wait-v2-subv1-cold-masked.migration.main-v2.payload.bin",
+          "payload_sha256": "c21d960b07ed1c3b557126875e4807224e2f5bfb07a0e72683cde28d44261e68",
+          "complete_payload_verified_against_fixed_source_scenario": true,
+          "scenario": "cold",
+          "serialized_waits": [
+            {
+              "voter": 0,
+              "tcs": 0,
+              "offset": 57,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 1,
+              "offset": 403,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 2,
+              "offset": 749,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 3,
+              "offset": 1095,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 4,
+              "offset": 1441,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 5,
+              "offset": 1787,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 6,
+              "offset": 2133,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 7,
+              "offset": 2479,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 0,
+              "offset": 2842,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 1,
+              "offset": 3188,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 2,
+              "offset": 3534,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 3,
+              "offset": 3880,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 4,
+              "offset": 4226,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 5,
+              "offset": 4572,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 6,
+              "offset": 4918,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 7,
+              "offset": 5264,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 0,
+              "offset": 5627,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 1,
+              "offset": 5973,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 2,
+              "offset": 6319,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 3,
+              "offset": 6665,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 4,
+              "offset": 7011,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 5,
+              "offset": 7357,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 6,
+              "offset": 7703,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 7,
+              "offset": 8049,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 0,
+              "offset": 8412,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 1,
+              "offset": 8758,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 2,
+              "offset": 9104,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 3,
+              "offset": 9450,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 4,
+              "offset": 9796,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 5,
+              "offset": 10142,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 6,
+              "offset": 10488,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 7,
+              "offset": 10834,
+              "value": 0
+            }
+          ]
+        },
+        "subsection": {
+          "name": "qcom-sm8250-rpmh/wait-reserved-reference",
+          "version": 1,
+          "header_offset": 1494159,
+          "payload_offset": 1494205,
+          "payload_bytes": 24,
+          "payload_file": "rpmh-wait-v2-subv1-cold-masked.migration.sub-v1.payload.bin",
+          "payload_sha256": "801245b7db3d402bc74fd346e6d65fc940f1eba0b4856f17d8a366878f177ed4",
+          "payload_hex": "000000010000000000000000000000000000000000000000",
+          "decoded": {
+            "policy": 1,
+            "masked_write_count": 0,
+            "last_voter": 0,
+            "last_tcs": 0,
+            "last_raw": 0
+          },
+          "all_24_bytes_match_actual_stopped_source_qom": true
+        },
+        "stream_sha256": "dc3bee92b084af4a4b081f3dfa988882409e78199c96f93969da9106774c2891",
+        "stream_bytes": 2274897
+      },
+      "source_masked_write_count": 0,
+      "destination_exit": 1,
+      "request_sent": true,
+      "expected_diagnostic": "qcom-sm8250-rpmh: wait-reserved migration profile mismatch (configured=0 incoming=1 present=1)",
+      "specific_load_failure_observed": true,
+      "command_error": null,
+      "target_directory": "reject-m-s",
+      "stderr_file": "reject-m-s/qemu.stderr"
+    }
+  ],
+  "corrupted_stream_rejections": [
+    {
+      "name": "single_bit_policy_corruption",
+      "passed": true,
+      "source_status": "completed",
+      "source_directory": "mig-source",
+      "original_sections": {
+        "main": {
+          "name": "qcom-sm8250-rpmh",
+          "instance_id": 0,
+          "version": 2,
+          "header_offset": 1474709,
+          "payload_offset": 1474739,
+          "payload_bytes": 19420,
+          "section_id": 38,
+          "payload_file": "rpmh-wait-v2-subv1-masked-inflight.migration.main-v2.payload.bin",
+          "payload_sha256": "93c89571d9f603f1333428d4a5999bb2d3088f197109b8278a99738788ebf656",
+          "complete_payload_verified_against_fixed_source_scenario": true,
+          "scenario": "inflight",
+          "serialized_waits": [
+            {
+              "voter": 0,
+              "tcs": 0,
+              "offset": 57,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 1,
+              "offset": 403,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 2,
+              "offset": 749,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 3,
+              "offset": 1095,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 4,
+              "offset": 1441,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 5,
+              "offset": 1787,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 6,
+              "offset": 2133,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 7,
+              "offset": 2479,
+              "value": 1
+            },
+            {
+              "voter": 1,
+              "tcs": 0,
+              "offset": 2842,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 1,
+              "offset": 3188,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 2,
+              "offset": 3534,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 3,
+              "offset": 3880,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 4,
+              "offset": 4226,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 5,
+              "offset": 4572,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 6,
+              "offset": 4918,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 7,
+              "offset": 5264,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 0,
+              "offset": 5627,
+              "value": 32768
+            },
+            {
+              "voter": 2,
+              "tcs": 1,
+              "offset": 5973,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 2,
+              "offset": 6319,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 3,
+              "offset": 6665,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 4,
+              "offset": 7011,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 5,
+              "offset": 7357,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 6,
+              "offset": 7703,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 7,
+              "offset": 8049,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 0,
+              "offset": 8412,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 1,
+              "offset": 8758,
+              "value": 2
+            },
+            {
+              "voter": 3,
+              "tcs": 2,
+              "offset": 9104,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 3,
+              "offset": 9450,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 4,
+              "offset": 9796,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 5,
+              "offset": 10142,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 6,
+              "offset": 10488,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 7,
+              "offset": 10834,
+              "value": 0
+            }
+          ]
+        },
+        "subsection": {
+          "name": "qcom-sm8250-rpmh/wait-reserved-reference",
+          "version": 1,
+          "header_offset": 1494159,
+          "payload_offset": 1494205,
+          "payload_bytes": 24,
+          "payload_file": "rpmh-wait-v2-subv1-masked-inflight.migration.sub-v1.payload.bin",
+          "payload_sha256": "71fa8e0085ef6925f259daeb72e7f789aaaf40075bdecc356b7f8836e1c19b16",
+          "payload_hex": "000000010000000000000003000000030000000100020002",
+          "decoded": {
+            "policy": 1,
+            "masked_write_count": 3,
+            "last_voter": 3,
+            "last_tcs": 1,
+            "last_raw": 131074
+          },
+          "all_24_bytes_match_actual_stopped_source_qom": true
+        },
+        "stream_sha256": "9695dbc199b18d891a2c1ef0fcb48bc432698f88cb2d1e949eb79b18bec687fd",
+        "stream_bytes": 2274897
+      },
+      "field": "policy",
+      "field_offset_in_subsection": 0,
+      "field_width": 4,
+      "absolute_field_offset": 1494205,
+      "original_value": 1,
+      "modified_value": 0,
+      "xor_mask": 1,
+      "changed_byte_offsets": [
+        1494208
+      ],
+      "changed_bits": 1,
+      "original_file": "rpmh-wait-v2-subv1-masked-inflight.migration",
+      "original_sha256": "9695dbc199b18d891a2c1ef0fcb48bc432698f88cb2d1e949eb79b18bec687fd",
+      "snapshot_file": "rpmh-wait-v2-subv1-policy-bit.migration",
+      "snapshot_sha256": "7eba48369134202497d5ab68b197ce82f7df4442012e19b31bc8905ec943cc6f",
+      "snapshot_bytes": 2274897,
+      "stream_modified": true,
+      "original_stream_unchanged": true,
+      "destination_exit": 1,
+      "request_sent": true,
+      "expected_diagnostic": "qcom-sm8250-rpmh: invalid wait-reserved subsection policy 0",
+      "specific_load_failure_observed": true,
+      "command_error": null,
+      "target_directory": "reject-policy",
+      "stderr_file": "reject-policy/qemu.stderr"
+    },
+    {
+      "name": "single_bit_last_voter_corruption",
+      "passed": true,
+      "source_status": "completed",
+      "source_directory": "mig-source",
+      "original_sections": {
+        "main": {
+          "name": "qcom-sm8250-rpmh",
+          "instance_id": 0,
+          "version": 2,
+          "header_offset": 1474709,
+          "payload_offset": 1474739,
+          "payload_bytes": 19420,
+          "section_id": 38,
+          "payload_file": "rpmh-wait-v2-subv1-masked-inflight.migration.main-v2.payload.bin",
+          "payload_sha256": "93c89571d9f603f1333428d4a5999bb2d3088f197109b8278a99738788ebf656",
+          "complete_payload_verified_against_fixed_source_scenario": true,
+          "scenario": "inflight",
+          "serialized_waits": [
+            {
+              "voter": 0,
+              "tcs": 0,
+              "offset": 57,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 1,
+              "offset": 403,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 2,
+              "offset": 749,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 3,
+              "offset": 1095,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 4,
+              "offset": 1441,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 5,
+              "offset": 1787,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 6,
+              "offset": 2133,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 7,
+              "offset": 2479,
+              "value": 1
+            },
+            {
+              "voter": 1,
+              "tcs": 0,
+              "offset": 2842,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 1,
+              "offset": 3188,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 2,
+              "offset": 3534,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 3,
+              "offset": 3880,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 4,
+              "offset": 4226,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 5,
+              "offset": 4572,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 6,
+              "offset": 4918,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 7,
+              "offset": 5264,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 0,
+              "offset": 5627,
+              "value": 32768
+            },
+            {
+              "voter": 2,
+              "tcs": 1,
+              "offset": 5973,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 2,
+              "offset": 6319,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 3,
+              "offset": 6665,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 4,
+              "offset": 7011,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 5,
+              "offset": 7357,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 6,
+              "offset": 7703,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 7,
+              "offset": 8049,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 0,
+              "offset": 8412,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 1,
+              "offset": 8758,
+              "value": 2
+            },
+            {
+              "voter": 3,
+              "tcs": 2,
+              "offset": 9104,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 3,
+              "offset": 9450,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 4,
+              "offset": 9796,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 5,
+              "offset": 10142,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 6,
+              "offset": 10488,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 7,
+              "offset": 10834,
+              "value": 0
+            }
+          ]
+        },
+        "subsection": {
+          "name": "qcom-sm8250-rpmh/wait-reserved-reference",
+          "version": 1,
+          "header_offset": 1494159,
+          "payload_offset": 1494205,
+          "payload_bytes": 24,
+          "payload_file": "rpmh-wait-v2-subv1-masked-inflight.migration.sub-v1.payload.bin",
+          "payload_sha256": "71fa8e0085ef6925f259daeb72e7f789aaaf40075bdecc356b7f8836e1c19b16",
+          "payload_hex": "000000010000000000000003000000030000000100020002",
+          "decoded": {
+            "policy": 1,
+            "masked_write_count": 3,
+            "last_voter": 3,
+            "last_tcs": 1,
+            "last_raw": 131074
+          },
+          "all_24_bytes_match_actual_stopped_source_qom": true
+        },
+        "stream_sha256": "9695dbc199b18d891a2c1ef0fcb48bc432698f88cb2d1e949eb79b18bec687fd",
+        "stream_bytes": 2274897
+      },
+      "field": "last_voter",
+      "field_offset_in_subsection": 12,
+      "field_width": 4,
+      "absolute_field_offset": 1494217,
+      "original_value": 3,
+      "modified_value": 7,
+      "xor_mask": 4,
+      "changed_byte_offsets": [
+        1494220
+      ],
+      "changed_bits": 1,
+      "original_file": "rpmh-wait-v2-subv1-masked-inflight.migration",
+      "original_sha256": "9695dbc199b18d891a2c1ef0fcb48bc432698f88cb2d1e949eb79b18bec687fd",
+      "snapshot_file": "rpmh-wait-v2-subv1-last-voter-bit.migration",
+      "snapshot_sha256": "594751606eb367cc46515a79985b7df7f7f26e3d6f5657c7440c13be1d63f755",
+      "snapshot_bytes": 2274897,
+      "stream_modified": true,
+      "original_stream_unchanged": true,
+      "destination_exit": 1,
+      "request_sent": true,
+      "expected_diagnostic": "qcom-sm8250-rpmh: invalid wait-reserved migration diagnostics",
+      "specific_load_failure_observed": true,
+      "command_error": null,
+      "target_directory": "reject-diag",
+      "stderr_file": "reject-diag/qemu.stderr"
+    }
+  ],
+  "source_streams": [
+    {
+      "file": "rpmh-wait-v2-subv1-masked-inflight.migration",
+      "sha256": "9695dbc199b18d891a2c1ef0fcb48bc432698f88cb2d1e949eb79b18bec687fd",
+      "bytes": 2274897,
+      "source_directory": "mig-source",
+      "source_status": "completed",
+      "source_virtual_ns": 400,
+      "source_query_migrate": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 14,
+        "total-time": 20,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 957.8513684210526,
+          "transferred": 2274897,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "source_qom_before_file": "mig-source/source-qom-before-save.json",
+      "source_qom_after_file": "mig-source/source-qom-after-save.json",
+      "source_query_migrate_file": "mig-source/source-query-migrate.json",
+      "source_qom": {
+        "policy": true,
+        "diagnostics": {
+          "wait-command-mask": 65535,
+          "wait-reserved-masked-writes": 3,
+          "wait-reserved-last-voter": 3,
+          "wait-reserved-last-tcs": 1,
+          "wait-reserved-last-raw": 131074,
+          "wait-reserved-last-effective": 2,
+          "wait-reserved-last-ignored": 131072
+        },
+        "cmd_db_sha256": "416efcf69817cc7b0465a33724bace31e576040b3ec775e0a184a2d051f8c6f8",
+        "xo_value": 0,
+        "ldoa12_value": 0,
+        "xo_input_period": 111848106666,
+        "xo_output_period": 0
+      },
+      "sections": {
+        "main": {
+          "name": "qcom-sm8250-rpmh",
+          "instance_id": 0,
+          "version": 2,
+          "header_offset": 1474709,
+          "payload_offset": 1474739,
+          "payload_bytes": 19420,
+          "section_id": 38,
+          "payload_file": "rpmh-wait-v2-subv1-masked-inflight.migration.main-v2.payload.bin",
+          "payload_sha256": "93c89571d9f603f1333428d4a5999bb2d3088f197109b8278a99738788ebf656",
+          "complete_payload_verified_against_fixed_source_scenario": true,
+          "scenario": "inflight",
+          "serialized_waits": [
+            {
+              "voter": 0,
+              "tcs": 0,
+              "offset": 57,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 1,
+              "offset": 403,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 2,
+              "offset": 749,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 3,
+              "offset": 1095,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 4,
+              "offset": 1441,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 5,
+              "offset": 1787,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 6,
+              "offset": 2133,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 7,
+              "offset": 2479,
+              "value": 1
+            },
+            {
+              "voter": 1,
+              "tcs": 0,
+              "offset": 2842,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 1,
+              "offset": 3188,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 2,
+              "offset": 3534,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 3,
+              "offset": 3880,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 4,
+              "offset": 4226,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 5,
+              "offset": 4572,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 6,
+              "offset": 4918,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 7,
+              "offset": 5264,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 0,
+              "offset": 5627,
+              "value": 32768
+            },
+            {
+              "voter": 2,
+              "tcs": 1,
+              "offset": 5973,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 2,
+              "offset": 6319,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 3,
+              "offset": 6665,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 4,
+              "offset": 7011,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 5,
+              "offset": 7357,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 6,
+              "offset": 7703,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 7,
+              "offset": 8049,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 0,
+              "offset": 8412,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 1,
+              "offset": 8758,
+              "value": 2
+            },
+            {
+              "voter": 3,
+              "tcs": 2,
+              "offset": 9104,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 3,
+              "offset": 9450,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 4,
+              "offset": 9796,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 5,
+              "offset": 10142,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 6,
+              "offset": 10488,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 7,
+              "offset": 10834,
+              "value": 0
+            }
+          ]
+        },
+        "subsection": {
+          "name": "qcom-sm8250-rpmh/wait-reserved-reference",
+          "version": 1,
+          "header_offset": 1494159,
+          "payload_offset": 1494205,
+          "payload_bytes": 24,
+          "payload_file": "rpmh-wait-v2-subv1-masked-inflight.migration.sub-v1.payload.bin",
+          "payload_sha256": "71fa8e0085ef6925f259daeb72e7f789aaaf40075bdecc356b7f8836e1c19b16",
+          "payload_hex": "000000010000000000000003000000030000000100020002",
+          "decoded": {
+            "policy": 1,
+            "masked_write_count": 3,
+            "last_voter": 3,
+            "last_tcs": 1,
+            "last_raw": 131074
+          },
+          "all_24_bytes_match_actual_stopped_source_qom": true
+        },
+        "stream_sha256": "9695dbc199b18d891a2c1ef0fcb48bc432698f88cb2d1e949eb79b18bec687fd",
+        "stream_bytes": 2274897
+      },
+      "ram_witness": 1465142577,
+      "source_stream_modified": false
+    },
+    {
+      "file": "rpmh-wait-v2-strict-source.migration",
+      "sha256": "dccc31532dbf46693160f70d4cca3df8a17780c49657584264b598e5c31cb751",
+      "bytes": 2274386,
+      "source_directory": "strict-source",
+      "source_status": "completed",
+      "source_virtual_ns": 23,
+      "source_query_migrate": {
+        "status": "completed",
+        "setup-time": 0,
+        "downtime": 15,
+        "total-time": 20,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 909.7544,
+          "transferred": 2274386,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "source_qom_before_file": "strict-source/source-qom-before-save.json",
+      "source_qom_after_file": "strict-source/source-qom-after-save.json",
+      "source_query_migrate_file": "strict-source/source-query-migrate.json",
+      "source_qom": {
+        "policy": false,
+        "diagnostics": {
+          "wait-command-mask": 65535,
+          "wait-reserved-masked-writes": 0,
+          "wait-reserved-last-voter": 0,
+          "wait-reserved-last-tcs": 0,
+          "wait-reserved-last-raw": 0,
+          "wait-reserved-last-effective": 0,
+          "wait-reserved-last-ignored": 0
+        },
+        "cmd_db_sha256": "416efcf69817cc7b0465a33724bace31e576040b3ec775e0a184a2d051f8c6f8",
+        "xo_value": 0,
+        "ldoa12_value": 0,
+        "xo_input_period": 111848106666,
+        "xo_output_period": 0
+      },
+      "sections": {
+        "main": {
+          "name": "qcom-sm8250-rpmh",
+          "instance_id": 0,
+          "version": 2,
+          "header_offset": 1474709,
+          "payload_offset": 1474739,
+          "payload_bytes": 19420,
+          "section_id": 38,
+          "payload_file": "rpmh-wait-v2-strict-source.migration.main-v2.payload.bin",
+          "payload_sha256": "c21d960b07ed1c3b557126875e4807224e2f5bfb07a0e72683cde28d44261e68",
+          "complete_payload_verified_against_fixed_source_scenario": true,
+          "scenario": "cold",
+          "serialized_waits": [
+            {
+              "voter": 0,
+              "tcs": 0,
+              "offset": 57,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 1,
+              "offset": 403,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 2,
+              "offset": 749,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 3,
+              "offset": 1095,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 4,
+              "offset": 1441,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 5,
+              "offset": 1787,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 6,
+              "offset": 2133,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 7,
+              "offset": 2479,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 0,
+              "offset": 2842,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 1,
+              "offset": 3188,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 2,
+              "offset": 3534,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 3,
+              "offset": 3880,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 4,
+              "offset": 4226,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 5,
+              "offset": 4572,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 6,
+              "offset": 4918,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 7,
+              "offset": 5264,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 0,
+              "offset": 5627,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 1,
+              "offset": 5973,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 2,
+              "offset": 6319,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 3,
+              "offset": 6665,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 4,
+              "offset": 7011,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 5,
+              "offset": 7357,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 6,
+              "offset": 7703,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 7,
+              "offset": 8049,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 0,
+              "offset": 8412,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 1,
+              "offset": 8758,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 2,
+              "offset": 9104,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 3,
+              "offset": 9450,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 4,
+              "offset": 9796,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 5,
+              "offset": 10142,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 6,
+              "offset": 10488,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 7,
+              "offset": 10834,
+              "value": 0
+            }
+          ]
+        },
+        "subsection": null,
+        "stream_sha256": "dccc31532dbf46693160f70d4cca3df8a17780c49657584264b598e5c31cb751",
+        "stream_bytes": 2274386
+      },
+      "ram_witness": 1398034992,
+      "source_stream_modified": false
+    },
+    {
+      "file": "rpmh-wait-v2-subv1-cold-masked.migration",
+      "sha256": "dc3bee92b084af4a4b081f3dfa988882409e78199c96f93969da9106774c2891",
+      "bytes": 2274897,
+      "source_directory": "cold-source",
+      "source_status": "completed",
+      "source_virtual_ns": 37,
+      "source_query_migrate": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 14,
+        "total-time": 20,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 307340,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 957.8513684210526,
+          "transferred": 2274897,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32773,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 12288,
+          "normal": 3
+        }
+      },
+      "source_qom_before_file": "cold-source/source-qom-before-save.json",
+      "source_qom_after_file": "cold-source/source-qom-after-save.json",
+      "source_query_migrate_file": "cold-source/source-query-migrate.json",
+      "source_qom": {
+        "policy": true,
+        "diagnostics": {
+          "wait-command-mask": 65535,
+          "wait-reserved-masked-writes": 0,
+          "wait-reserved-last-voter": 0,
+          "wait-reserved-last-tcs": 0,
+          "wait-reserved-last-raw": 0,
+          "wait-reserved-last-effective": 0,
+          "wait-reserved-last-ignored": 0
+        },
+        "cmd_db_sha256": "416efcf69817cc7b0465a33724bace31e576040b3ec775e0a184a2d051f8c6f8",
+        "xo_value": 0,
+        "ldoa12_value": 0,
+        "xo_input_period": 111848106666,
+        "xo_output_period": 0
+      },
+      "sections": {
+        "main": {
+          "name": "qcom-sm8250-rpmh",
+          "instance_id": 0,
+          "version": 2,
+          "header_offset": 1474709,
+          "payload_offset": 1474739,
+          "payload_bytes": 19420,
+          "section_id": 38,
+          "payload_file": "rpmh-wait-v2-subv1-cold-masked.migration.main-v2.payload.bin",
+          "payload_sha256": "c21d960b07ed1c3b557126875e4807224e2f5bfb07a0e72683cde28d44261e68",
+          "complete_payload_verified_against_fixed_source_scenario": true,
+          "scenario": "cold",
+          "serialized_waits": [
+            {
+              "voter": 0,
+              "tcs": 0,
+              "offset": 57,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 1,
+              "offset": 403,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 2,
+              "offset": 749,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 3,
+              "offset": 1095,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 4,
+              "offset": 1441,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 5,
+              "offset": 1787,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 6,
+              "offset": 2133,
+              "value": 0
+            },
+            {
+              "voter": 0,
+              "tcs": 7,
+              "offset": 2479,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 0,
+              "offset": 2842,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 1,
+              "offset": 3188,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 2,
+              "offset": 3534,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 3,
+              "offset": 3880,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 4,
+              "offset": 4226,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 5,
+              "offset": 4572,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 6,
+              "offset": 4918,
+              "value": 0
+            },
+            {
+              "voter": 1,
+              "tcs": 7,
+              "offset": 5264,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 0,
+              "offset": 5627,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 1,
+              "offset": 5973,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 2,
+              "offset": 6319,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 3,
+              "offset": 6665,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 4,
+              "offset": 7011,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 5,
+              "offset": 7357,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 6,
+              "offset": 7703,
+              "value": 0
+            },
+            {
+              "voter": 2,
+              "tcs": 7,
+              "offset": 8049,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 0,
+              "offset": 8412,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 1,
+              "offset": 8758,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 2,
+              "offset": 9104,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 3,
+              "offset": 9450,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 4,
+              "offset": 9796,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 5,
+              "offset": 10142,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 6,
+              "offset": 10488,
+              "value": 0
+            },
+            {
+              "voter": 3,
+              "tcs": 7,
+              "offset": 10834,
+              "value": 0
+            }
+          ]
+        },
+        "subsection": {
+          "name": "qcom-sm8250-rpmh/wait-reserved-reference",
+          "version": 1,
+          "header_offset": 1494159,
+          "payload_offset": 1494205,
+          "payload_bytes": 24,
+          "payload_file": "rpmh-wait-v2-subv1-cold-masked.migration.sub-v1.payload.bin",
+          "payload_sha256": "801245b7db3d402bc74fd346e6d65fc940f1eba0b4856f17d8a366878f177ed4",
+          "payload_hex": "000000010000000000000000000000000000000000000000",
+          "decoded": {
+            "policy": 1,
+            "masked_write_count": 0,
+            "last_voter": 0,
+            "last_tcs": 0,
+            "last_raw": 0
+          },
+          "all_24_bytes_match_actual_stopped_source_qom": true
+        },
+        "stream_sha256": "dc3bee92b084af4a4b081f3dfa988882409e78199c96f93969da9106774c2891",
+        "stream_bytes": 2274897
+      },
+      "ram_witness": 1296126795,
+      "source_stream_modified": false
+    }
+  ],
+  "success": true,
+  "old_rpmh_test_identities": {
+    "test_rpmh_sm8250.py": {
+      "git_blob": "2eb42c9aa4187d585a903dcda659cc004a9aee7d",
+      "bytes": 27170,
+      "sha256": "aa8250a4799da7e6db8cd871d3115d6c3b747baa99cd6aee0c99e3bca1c24baf"
+    },
+    "test_rpmh_display.py": {
+      "git_blob": "de7a6303cf009cf07115e87eb42db8016ccbc6f0",
+      "bytes": 19616,
+      "sha256": "eedc4d025763a91e89e0f4fea038054aa16763c4ceb8d303037d3e4d636b5557"
+    }
+  },
+  "strict_and_cold_masked_main_payload_bytes_identical": true,
+  "strict_and_cold_masked_main_payload_sha256": "c21d960b07ed1c3b557126875e4807224e2f5bfb07a0e72683cde28d44261e68",
+  "qemu_sha256_after": "7211873740226d0509e354cfbf1c23bb4eb0459b6eca470187ea3dfd3a2e04ca",
+  "binary_unchanged": true,
+  "duration_seconds": 2.901752
+}

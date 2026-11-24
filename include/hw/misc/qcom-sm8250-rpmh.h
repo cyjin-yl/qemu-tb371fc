@@ -89,6 +89,14 @@ struct QcomSm8250RpmhState {
     bool sleep_request[RPMH_VOTERS];
     bool reference_cmd_db;
     bool boot_configured;
+    bool reference_wait_mask_reserved;
+    /* Optional v1 migration subsection; the main v2 payload stays unchanged. */
+    uint32_t wait_reserved_incoming_policy;
+    bool wait_reserved_incoming_seen;
+    uint64_t wait_reserved_masked_writes;
+    uint32_t wait_reserved_last_voter;
+    uint32_t wait_reserved_last_tcs;
+    uint32_t wait_reserved_last_raw;
     bool ready;
 };
 
