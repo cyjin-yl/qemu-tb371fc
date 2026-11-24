@@ -1,5 +1,7 @@
 # QEMU TB371FC
 
+主线 Linux、QEMU 与 UniXNU 路线 A 的分工、实机基线和共用验收约定见[跨仓库硬件契约](tb371fc/docs/cross-project-hardware-contract.md)。
+
 [![TB371FC public functional gates](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml/badge.svg?branch=tb371fc)](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml)
 
 面向 **Lenovo TB371FC / SM8250（Kona）** 的整机模拟开发分支，基于 QEMU **11.1.3**，提供独立的 `-M tb371fc`。目标是实现真实来宾驱动可使用的软件可见硬件接口，并用平板的只读证据和实际运行的测试逐项核对。

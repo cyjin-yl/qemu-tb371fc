@@ -1,5 +1,9 @@
 # Sources and provenance
 
+The [cross-project hardware contract](docs/cross-project-hardware-contract.md)
+links the current owner-device inventory, mainline driver roadmap and UniXNU
+Route A work without equating source availability, model tests and device acceptance.
+
 ## Upstream baseline
 
 - [QEMU 11.1.3 release](https://www.qemu.org/download/)
