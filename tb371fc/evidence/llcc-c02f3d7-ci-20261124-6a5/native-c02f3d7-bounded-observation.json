@@ -1,0 +1,290 @@
+{
+  "android_boot_completed_observed": false,
+  "android_userspace_observed": false,
+  "aop_unchanged": true,
+  "artifact": {
+    "archive_sha256": "40015b5451fcdd45aef215637eb76979638d3d36d5b967a97bc9048107834678",
+    "id": 14973051830,
+    "qemu_sha256": "10d21844e6c411e64af7a6aade7354d90c0aeffb82643d9676986fc0a160c214"
+  },
+  "automatic_retry": false,
+  "backup_complete": false,
+  "completed_utc": "2026-11-24T23:14:57.830098+00:00",
+  "core_input_digests": {
+    "bootargs": {
+      "sha256": "63c5738bb0c67419dd7efa0c585156499d163479d01b421203c0b51756fc6732",
+      "size": 1392
+    },
+    "dtb": {
+      "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+      "size": 973052
+    },
+    "initrd": {
+      "sha256": "563f4b334f8470155c6a451395342f7044b70e79b480a886c7641960f534f596",
+      "size": 1298323
+    },
+    "kernel": {
+      "sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+      "size": 37445648
+    }
+  },
+  "core_input_preservation": {
+    "bootargs": true,
+    "dtb": true,
+    "initrd": true,
+    "kernel": true
+  },
+  "elapsed_seconds": 6.77,
+  "exact_ci_evidence_commit": "d19ff0846d1973020327eed984ba6f9631b63420",
+  "global_properties": [
+    "qcom-refgen.boot-disabled-reference=on",
+    "qcom-tcsr-mutex.boot-unlocked-reference=on",
+    "qcom-gpu-cx-gdsc.boot-collapsed-reference=on",
+    "qcom-gdsc.enabled-reference=on",
+    "qcom-sm8250-gpucc.enabled-reference=on",
+    "qcom-sm8250-npucc.enabled-reference=on",
+    "qcom-noc-qos.enabled-reference=on",
+    "qcom-smmuv500.enabled-reference=on",
+    "qcom-smmuv500.reference-hw-version=0x02000000",
+    "qcom-tsens24xx.enabled-reference=on",
+    "qcom-tsens24xx.reference-boot-enable-mask=0xffff",
+    "qcom-tsens24xx.reference-temperature-millicelsius=25000",
+    "qcom-cpufreq-hw-epss.enabled-reference=on",
+    "qcom-cpufreq-hw-epss.reference-boot-perf-index=0",
+    "qcom-devfreq-fw.enabled-reference=on",
+    "qcom-devfreq-fw.reference-boot-perf-index=0",
+    "qcom-noc-sbm.enabled-reference=on",
+    "qcom-sm8250-rpmh.reference-wait-mask-reserved=on",
+    "qcom-camera-gdsc.enabled-reference=on",
+    "qcom-mdss-gdsc.enabled-reference=on",
+    "qcom-npu-gdsc.enabled-reference=on",
+    "qcom-video-gdsc.enabled-reference=on",
+    "qcom-sm8250-camcc.enabled-reference=on",
+    "qcom-sm8250-dispcc.enabled-reference=on",
+    "qcom-sm8250-videocc.enabled-reference=on",
+    "qcom-sm8250-dsi-pll.enabled-reference=on",
+    "qcom-sm8250-dp-pll.enabled-reference=on",
+    "qcom-sm8250-llcc.enabled-reference=on"
+  ],
+  "global_property_count": 28,
+  "host_boot_id": "f093b2c8-08ac-413b-92ea-f2c1efd77c5a",
+  "host_job_result_sha256": "fa84ed4768999d8ac4ce7a831543d2f2c2f2ba618b7c8930a39a195f7fbda59e",
+  "interactive_display_verified": false,
+  "native_command_plan_sha256": "883716eb565ce0c5c3ce6a2aa517133f98a5f29f554c2b4d9048186febaf3182",
+  "native_executed": true,
+  "next_frontier": {
+    "access": "write",
+    "access_bytes": 4,
+    "actual_dt_and_probe_evidence": {
+      "bytes": 24334,
+      "sha256": "a3688a0791c6f69c58ca7d3dd81637bb749e1059e0481a7236fa5386957e7519"
+    },
+    "actual_dt_node": "/soc/qcom,spss@1880000",
+    "actual_dt_resource": "sp2soc_irq_mask",
+    "actual_dt_scsr_bits": [
+      24,
+      25
+    ],
+    "fault_frame_w8": "0xfcffffff",
+    "guest_failure_seconds": 3.740434,
+    "guest_panic_seconds": 3.743483,
+    "instruction": "STR W8, [X10, #0]",
+    "interpretation": "Cold SPSS probe masks interrupt bits other than the two handled events. This store does not establish remote firmware readiness or successful PAS authentication.",
+    "lr": "pil_tz_driver_probe+0x684/0x788",
+    "opcode": "0xb9000148",
+    "original_probe_bytes": 1928,
+    "original_probe_code_sha256": "e4776f8aa7ab65d93ec670dd08a95e34777ff438f04f6c25785ae79b85f5cf08",
+    "pc": "pil_tz_driver_probe+0x6bc/0x788",
+    "physical_address": "0x01881028"
+  },
+  "observed_utc": "2026-11-24T23:30:41.068948+00:00",
+  "one_artifact_one_attempt": true,
+  "outcome": "kernel-failure",
+  "owner_pre_native": {
+    "active_foreground_orchestration": true,
+    "checkpoint": "/home/ezra/qemu-stockboot-e1a9-control/checkpoint.json",
+    "checkpoint_sha256": "2705ebaa04f54f97f796286a7ca3514e416550a0acd429b93b3522cd4d049055",
+    "native_processes": {
+      "container": {
+        "matches": [],
+        "schema": "tb371fc-native-process-scan-v1"
+      },
+      "host": {
+        "matches": [],
+        "schema": "tb371fc-native-process-scan-v1"
+      }
+    },
+    "observed_utc": "2026-11-24T23:14:43.988563+00:00",
+    "owner": "root/e1a9",
+    "owner_updated_utc": "2026-11-24T18:49:48.514660+00:00",
+    "run008": {
+      "deployed": false,
+      "started": false,
+      "state": "local_only_unbound_not_deployed"
+    }
+  },
+  "owner_preflight": {
+    "active_foreground_orchestration": true,
+    "checkpoint": "/home/ezra/qemu-stockboot-e1a9-control/checkpoint.json",
+    "checkpoint_sha256": "2705ebaa04f54f97f796286a7ca3514e416550a0acd429b93b3522cd4d049055",
+    "native_processes": {
+      "container": {
+        "matches": [],
+        "schema": "tb371fc-native-process-scan-v1"
+      },
+      "host": {
+        "matches": [],
+        "schema": "tb371fc-native-process-scan-v1"
+      }
+    },
+    "observed_utc": "2026-11-24T23:14:07.355115+00:00",
+    "owner": "root/e1a9",
+    "owner_updated_utc": "2026-11-24T18:49:48.514660+00:00",
+    "run008": {
+      "deployed": false,
+      "started": false,
+      "state": "local_only_unbound_not_deployed"
+    }
+  },
+  "printk": {
+    "bytes": 69938,
+    "llcc_probe_completion_explicitly_logged": false,
+    "selected_lines": [
+      {
+        "line": 883,
+        "text": "[    3.216469] dsi_pll_clock_register_7nm: Registered DSI PLL ndx=0, clocks successfully"
+      },
+      {
+        "line": 886,
+        "text": "[    3.241839] dsi_pll_clock_register_7nm: Registered DSI PLL ndx=1, clocks successfully"
+      },
+      {
+        "line": 909,
+        "text": "[    3.315201] Trying to unpack rootfs image as initramfs..."
+      },
+      {
+        "line": 910,
+        "text": "[    3.387404] Freeing initrd memory: 1264K"
+      },
+      {
+        "line": 980,
+        "text": "[    3.734513] subsys-pil-tz 188101c.qcom,spss: Linked as a consumer to regulator.4"
+      },
+      {
+        "line": 981,
+        "text": "[    3.734548] minidump-id not found for spss"
+      },
+      {
+        "line": 982,
+        "text": "[    3.740434] Internal error: synchronous external abort: 96000050 [#1] PREEMPT SMP"
+      },
+      {
+        "line": 988,
+        "text": "[    3.740866] pc : pil_tz_driver_probe+0x6bc/0x788"
+      },
+      {
+        "line": 989,
+        "text": "[    3.740881] lr : pil_tz_driver_probe+0x684/0x788"
+      },
+      {
+        "line": 1001,
+        "text": "[    3.741057] x9 : 0000000001000000 x8 : 00000000fcffffff "
+      },
+      {
+        "line": 1022,
+        "text": "[    3.741597] Code: 52800023 2a2803e8 9ac92169 0a290108 (b9000148) "
+      },
+      {
+        "line": 1024,
+        "text": "[    3.743483] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b"
+      }
+    ],
+    "sha256": "1968167d87a3209232a6eab0056516a5f66869ae5b322733e8ccb94721cc6435"
+  },
+  "qemu_log": {
+    "all_invalid_accesses": [
+      "Invalid write at addr 0x1881028, size 4, region '(null)', reason: rejected"
+    ],
+    "bytes": 751448,
+    "previous_llcc_0923000c_rejection_observed": false,
+    "sha256": "6c1f1e386e87cfb0a47ae3473e2305734bf6c2d6bd1c4b140caf2381baea8c0b",
+    "total_lines": 20600
+  },
+  "qemu_returncode": 0,
+  "qmp_drain": {
+    "closed": true,
+    "errno": 104,
+    "error": null,
+    "message_count": 22,
+    "prior_command_error": null,
+    "residual_bytes": 0,
+    "terminal": "reset",
+    "transport_error": "[Errno 104] Connection reset by peer"
+  },
+  "qmp_quit": {
+    "acknowledged": true,
+    "message_start": 20,
+    "messages": [
+      {
+        "data": {
+          "guest": false,
+          "reason": "host-qmp-quit"
+        },
+        "event": "SHUTDOWN",
+        "timestamp": {
+          "microseconds": 830785,
+          "seconds": 1795562096
+        }
+      },
+      {
+        "id": 16,
+        "return": {}
+      }
+    ],
+    "request_id": 16,
+    "response": {
+      "id": 16,
+      "return": {}
+    }
+  },
+  "qmp_shutdown_normal": true,
+  "qualification_sha256": "6c3ca7cfabe3c3992c9a5795bda3fe7c40ecfbf6d1b547e09089a76a1f8461ea",
+  "result_sha256": "41a8823e2bd10dc2e938fe4ba5188677993044343fb3f4f62d7f69f2f75e4043",
+  "run_tag": "llcc-c02f3d7-diagnostic-f093",
+  "runner_exit_code": 2,
+  "schema": "tb371fc-llcc-c02f3d7-original-native-bounded-observation-v1",
+  "scope": "Unchanged original core inputs executed through the previous LLCC rejected-read frontier and reached a later SPSS PIL probe store. No original storage LUNs were attached. No explicit LLCC probe-completion log, Android userspace, UI, boot completion, cache performance or physical bank count claim.",
+  "shared_native_lock": {
+    "device": 29,
+    "exclusive": true,
+    "inode": 6066218,
+    "nonblocking": true,
+    "open_mode": "rb",
+    "path": "/home/ezra/qemu-stockboot-e1a9-control/native-run.lock"
+  },
+  "snapshot_consistent": false,
+  "source_commit": "c02f3d794e85cb5bc95d1aca62780542e806d4dc",
+  "started_utc": "2026-11-24T23:14:49.160380+00:00",
+  "stock_android_boot_passed": false,
+  "storage_complete": false,
+  "storage_selection": {
+    "capture_qualification": {
+      "all_backups_complete": false,
+      "android_boot_tested": false,
+      "pristine_factory_images": false,
+      "restore_tested": false,
+      "snapshot_consistent": false,
+      "source_immutable_claim_verified": false
+    },
+    "classification": "no-lun-diagnostic",
+    "original_luns_attached": 0,
+    "prepared_manifest": "/work/stockboot-e1a9/runner-5223/prepared-001/manifest.json",
+    "prepared_manifest_sha256": "1a4e7fbdb34062ee815a445a065d6b7b3edffb1ea7a9e9ae38d5b9737fa2680f",
+    "ready_candidate": "/work/stockboot-e1a9/full-original-20261124-e1a9/generation2-assembly-20261124T152912Z-d32c9387/ready.json",
+    "ready_present_at_selection": false,
+    "reason": "generation2-ready-not-present-at-selection",
+    "selected_utc": "2026-11-24T23:14:45.316726+00:00",
+    "storage_complete": false
+  },
+  "symbols_unchanged": true
+}

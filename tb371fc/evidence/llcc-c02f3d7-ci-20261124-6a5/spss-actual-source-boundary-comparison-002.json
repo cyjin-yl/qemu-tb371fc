@@ -1,0 +1,195 @@
+{
+  "schema": "tb371fc-spss-actual-source-boundary-comparison-v1",
+  "comparison_passed": true,
+  "created_utc": "2026-11-24T23:27:27.659791+00:00",
+  "actual_receipt": {
+    "path": "/dev/shm/pil-tz-review-6a5/actual-dt-and-pil-probe.json",
+    "bytes": 24334,
+    "sha256": "a3688a0791c6f69c58ca7d3dd81637bb749e1059e0481a7236fa5386957e7519"
+  },
+  "original_dt": {
+    "bytes": 973052,
+    "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207"
+  },
+  "original_kernel": {
+    "bytes": 37445648,
+    "sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "text_base": "0xffffff8008080000"
+  },
+  "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+  "pins": {
+    "kona_dt": {
+      "path": "/workspace/scratch/6a5ea697094c/llcc-review-6a5/primary-r11/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+      "bytes": 132499,
+      "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+      "git_blob_sha": "e9651f09bd579616787894dc8514429063623b2d"
+    },
+    "pil_driver": {
+      "path": "/dev/shm/pil-tz-review-6a5/primary-r11/drivers/soc/qcom/subsys-pil-tz.c",
+      "bytes": 32203,
+      "sha256": "c574017a8f4e5ad5a4215434029d73bdc2c9ee9736b006429aa30a30ac219608",
+      "git_blob_sha": "ed5e07c193b3841c60c94d92a4db259335d665c9"
+    },
+    "current_qsee_document": {
+      "path": "/dev/shm/pil-tz-review-6a5/current-qemu/tb371fc/docs/qsee-irq.md",
+      "bytes": 7307,
+      "sha256": "5374c77683dc1ff540178c8de9b53a16f223c1442fe80e4ca88a8f0395387b39",
+      "git_blob_sha": "30469f49262e3ea20ae6fa8b5bd3ea902d076a3c"
+    },
+    "current_tcsr_document": {
+      "path": "/dev/shm/pil-tz-review-6a5/current-qemu/tb371fc/docs/tcsr-mutex.md",
+      "bytes": 5979,
+      "sha256": "c9b7b6431f72b0aba5c6e07fd478e0fc084f20e6e4a8e327d793b1befd5fd8ce",
+      "git_blob_sha": "32740a2b945a926a03bb37989f2d401e56b3135d"
+    },
+    "current_boot_resources_document": {
+      "path": "/dev/shm/pil-tz-review-6a5/current-qemu/tb371fc/docs/boot-resources.md",
+      "bytes": 3784,
+      "sha256": "7b2a2eb222d4214aba436535a8ab003c0c8bf7ba6b5bd43eca27a50466b18b26",
+      "git_blob_sha": "ce1d6b4175ce96c4df04879e350a87114c446e7f"
+    },
+    "actual_printk": {
+      "path": "/dev/shm/llcc-native-evidence/native-c02f3d7-kernel-printk-0.log",
+      "bytes": 69938,
+      "sha256": "1968167d87a3209232a6eab0056516a5f66869ae5b322733e8ccb94721cc6435",
+      "git_blob_sha": "7056cc62499c2cd2841856a0c97860baf41b3942"
+    },
+    "current_board": {
+      "path": "/workspace/scratch/6a5ea697094c/llcc-candidate/hw/arm/lenovo-tb371fc.c",
+      "bytes": 101974,
+      "sha256": "6c69de977a4fbd71bc4860c7054909d3f1a69aac3ddf32abe32815977ca38683",
+      "git_blob_sha": "aa4cb970cd474ddee65159c3709f75b75ad08e76"
+    }
+  },
+  "raw_bytes_decoded_independently": true,
+  "soc_address_size_cells": [
+    1,
+    1
+  ],
+  "soc_ranges_decoded": [
+    0,
+    0,
+    0,
+    4294967295
+  ],
+  "resource_comparison": [
+    {
+      "name": "sp2soc_irq_status",
+      "base": "0x0188101c",
+      "size": 4,
+      "source_equals_actual": true
+    },
+    {
+      "name": "sp2soc_irq_clr",
+      "base": "0x01881024",
+      "size": 4,
+      "source_equals_actual": true
+    },
+    {
+      "name": "sp2soc_irq_mask",
+      "base": "0x01881028",
+      "size": 4,
+      "source_equals_actual": true
+    },
+    {
+      "name": "rmb_err",
+      "base": "0x0188103c",
+      "size": 4,
+      "source_equals_actual": true
+    },
+    {
+      "name": "rmb_err_spare2",
+      "base": "0x01882014",
+      "size": 4,
+      "source_equals_actual": true
+    }
+  ],
+  "native_fault_instruction": {
+    "probe_bytes": 1928,
+    "probe_sha256": "e4776f8aa7ab65d93ec670dd08a95e34777ff438f04f6c25785ae79b85f5cf08",
+    "offset": "0x6bc",
+    "opcode": "0xb9000148",
+    "decoded": "STR W8, [X10, #0]",
+    "access_size": 4,
+    "source_register": 8,
+    "base_register": 10,
+    "unsigned_byte_offset": 0,
+    "actual_printk_w8": "0xfcffffff",
+    "bits": [
+      24,
+      25
+    ],
+    "mask_formula_matches": true
+  },
+  "source_boundaries": {
+    "generic_irq_handler": true,
+    "pas_id": 14,
+    "firmware": "spss",
+    "pil_no_auth_absent_in_actual_and_source": true,
+    "interrupt_cells": [
+      0,
+      352,
+      1
+    ],
+    "cold_probe_direct_mmio": [
+      {
+        "address": "0x01881028",
+        "operation": "write",
+        "bytes": 4,
+        "value": "0xfcffffff"
+      }
+    ],
+    "cold_ioremap_of_other_four_words_is_not_a_read_or_write": true,
+    "mask_write_creates_remote_completion_or_pending_event": false,
+    "future_unmask_of_an_existing_pending_event_is_a_separate_irq_routing_semantic": true,
+    "one_in_mask_means_masked_by_source_contract": true
+  },
+  "minimal_reference_scope_supported_for_review": {
+    "one_aligned_write32_word": "0x01881028+4",
+    "retain_only_the_guest_programmed_mask_control": true,
+    "readback_not_established_by_current_probe_or_driver": true,
+    "native_reset_mask_not_observed": true,
+    "no_status_or_remote_error_values_invented": true,
+    "no_remote_ready_or_pbl_done_injected": true,
+    "no_irq_output_claim_for_mask_only_scope": true,
+    "no_scm_pas_success_or_firmware_execution": true,
+    "no_64k_syscon_catchall": true,
+    "no_shared_qsee_or_tcsr_behavior_change": true,
+    "this_is_a_scope_recommendation_not_an_implemented_model": true
+  },
+  "memory_layout_difference": {
+    "actual_cells": [
+      0,
+      2346713088,
+      0,
+      1048576
+    ],
+    "actual_base": "0x8be00000",
+    "actual_size": 1048576,
+    "source_cells": [
+      0,
+      2452619264,
+      0,
+      1048576
+    ],
+    "must_not_import_source_memory_layout_as_actual": true
+  },
+  "existing_model_separation": {
+    "qsee_two_windows": [
+      "0x01886000+0x20",
+      "0x01888000+0x20"
+    ],
+    "tcsr_mutex": "0x01f40000+0x20000",
+    "mutex_reference_does_not_unlock_pas_or_secure_firmware": true
+  },
+  "not_established": [
+    "Complete production kernel source identity",
+    "Native reset/readback state of the SPSS mask",
+    "Remote SPSS execution, firmware image authentication or ready notification",
+    "Firmware-selected error/spare contents",
+    "Complete Android boot"
+  ],
+  "model_or_test_code_changed": false,
+  "device_rpc_performed": false,
+  "qemu_or_guest_executed": false
+}

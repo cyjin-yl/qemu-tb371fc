@@ -1,0 +1,427 @@
+{
+  "schema": "tb371fc-pil-tz-actual-fault-source-analysis-v1",
+  "conclusion": "The actual write is the SPSS generic-interrupt mask configuration from mask_scsr_irqs, inlined into pil_tz_driver_probe. The actual mask value matches both fixed source and the unchanged production DT.",
+  "read_only_analysis": true,
+  "model_added": false,
+  "tests_added": false,
+  "device_rpc_used_by_this_reviewer": false,
+  "guest_executed_by_this_reviewer": false,
+  "firmware_readiness_inferred": false,
+  "source_pins": [
+    {
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "path": "drivers/soc/qcom/subsys-pil-tz.c",
+      "bytes": 32203,
+      "git_blob_sha": "ed5e07c193b3841c60c94d92a4db259335d665c9",
+      "sha256": "c574017a8f4e5ad5a4215434029d73bdc2c9ee9736b006429aa30a30ac219608",
+      "source_url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/soc/qcom/subsys-pil-tz.c",
+      "download_url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/soc/qcom/subsys-pil-tz.c",
+      "local_path": "/dev/shm/pil-tz-review-6a5/primary-r11/drivers/soc/qcom/subsys-pil-tz.c",
+      "retrieval": "GitHub connector fetch at exact commit; independently matched git blob from exact directory inventory",
+      "independently_rehashed": true
+    },
+    {
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "path": "arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+      "bytes": 132499,
+      "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+      "git_blob_sha": "e9651f09bd579616787894dc8514429063623b2d",
+      "local_path": "/workspace/scratch/6a5ea697094c/llcc-review-6a5/primary-r11/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+      "source_url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/98719830b0de5584f5588bbe9f4c8304d97a64c6/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+      "independently_rehashed": true
+    }
+  ],
+  "actual_evidence": {
+    "extraction_record": {
+      "path": "/dev/shm/pil-tz-review-6a5/actual-dt-and-pil-probe.json",
+      "bytes": 24334,
+      "sha256": "a3688a0791c6f69c58ca7d3dd81637bb749e1059e0481a7236fa5386957e7519"
+    },
+    "printk": {
+      "path": "/dev/shm/llcc-native-evidence/native-c02f3d7-kernel-printk-0.log",
+      "bytes": 69938,
+      "sha256": "1968167d87a3209232a6eab0056516a5f66869ae5b322733e8ccb94721cc6435"
+    },
+    "kernel": {
+      "bytes": 37445648,
+      "sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+      "text_base": "0xffffff8008080000"
+    },
+    "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+    "dt": {
+      "path": "/work/stockboot-e1a9/runner-5223/prepared-001/full.dtb",
+      "bytes": 973052,
+      "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207"
+    },
+    "scope": "Original DT/kernel pins and extracted actual bytes were provided by the root device-only evidence reader; this reviewer rehashed the local evidence and decoded the retained production probe bytes."
+  },
+  "actual_fault": {
+    "symbol": "pil_tz_driver_probe",
+    "pc_offset": 1724,
+    "lr_offset": 1668,
+    "function_bytes": 1928,
+    "production_probe_address": "0xffffff8008685478",
+    "production_probe_kernel_offset": 6313080,
+    "production_probe_sha256": "e4776f8aa7ab65d93ec670dd08a95e34777ff438f04f6c25785ae79b85f5cf08",
+    "opcode_hex": "0xb9000148",
+    "decoded_instruction": "str w8, [x10]",
+    "width_bytes": 4,
+    "register_offset_bytes": 0,
+    "value_register": "w8",
+    "actual_value": 4244635647,
+    "actual_value_hex": "0xfcffffff",
+    "address_register": "x10",
+    "actual_virtual_address": "0xffffff800b03d028",
+    "reported_physical_fault_address": "0x01881028",
+    "physical_resource_match": "sp2soc_irq_mask",
+    "physical_address_basis": "Root native invalid-MMIO observation plus exact actual-DT named resource; printk independently provides the virtual address and store data.",
+    "preceding_and_fault_opcodes": [
+      "52800023",
+      "2a2803e8",
+      "9ac92169",
+      "0a290108",
+      "b9000148"
+    ],
+    "esr": "0x96000050",
+    "esr_write_not_read": true,
+    "esr_dfsc": 16,
+    "actual_device_log": "subsys-pil-tz 188101c.qcom,spss",
+    "fault_guest_seconds": "3.740434",
+    "panic_guest_seconds": "3.743483",
+    "panic": "Attempted to kill init! exitcode=0x0000000b",
+    "pid": 1,
+    "cpu": 6
+  },
+  "actual_dt": {
+    "node": "/soc/qcom,spss@1880000",
+    "resources": [
+      {
+        "name": "sp2soc_irq_status",
+        "physical_address": 25694236,
+        "physical_address_hex": "0x188101c",
+        "bytes": 4
+      },
+      {
+        "name": "sp2soc_irq_clr",
+        "physical_address": 25694244,
+        "physical_address_hex": "0x1881024",
+        "bytes": 4
+      },
+      {
+        "name": "sp2soc_irq_mask",
+        "physical_address": 25694248,
+        "physical_address_hex": "0x1881028",
+        "bytes": 4
+      },
+      {
+        "name": "rmb_err",
+        "physical_address": 25694268,
+        "physical_address_hex": "0x188103c",
+        "bytes": 4
+      },
+      {
+        "name": "rmb_err_spare2",
+        "physical_address": 25698324,
+        "physical_address_hex": "0x1882014",
+        "bytes": 4
+      }
+    ],
+    "properties": {
+      "compatible": {
+        "raw_hex": "71636f6d2c70696c2d747a2d67656e6572696300",
+        "cells": [
+          "0x71636f6d",
+          "0x2c70696c",
+          "0x2d747a2d",
+          "0x67656e65",
+          "0x72696300"
+        ],
+        "strings": [
+          "qcom,pil-tz-generic"
+        ]
+      },
+      "interrupts": {
+        "raw_hex": "000000000000016000000001",
+        "cells": [
+          "0x0",
+          "0x160",
+          "0x1"
+        ]
+      },
+      "vdd_cx-supply": {
+        "raw_hex": "00000066",
+        "cells": [
+          "0x66"
+        ]
+      },
+      "qcom,proxy-reg-names": {
+        "raw_hex": "7664645f637800",
+        "strings": [
+          "vdd_cx"
+        ]
+      },
+      "qcom,vdd_cx-uV-uA": {
+        "raw_hex": "00000180000186a0",
+        "cells": [
+          "0x180",
+          "0x186a0"
+        ]
+      },
+      "vdd_mx-supply": {
+        "raw_hex": "00000069",
+        "cells": [
+          "0x69"
+        ]
+      },
+      "vdd_mx-uV": {
+        "raw_hex": "00000180000186a0",
+        "cells": [
+          "0x180",
+          "0x186a0"
+        ]
+      },
+      "clocks": {
+        "raw_hex": "0000001500000000",
+        "cells": [
+          "0x15",
+          "0x0"
+        ]
+      },
+      "clock-names": {
+        "raw_hex": "786f00",
+        "strings": [
+          "xo"
+        ]
+      },
+      "qcom,proxy-clock-names": {
+        "raw_hex": "786f00",
+        "strings": [
+          "xo"
+        ]
+      },
+      "qcom,pil-generic-irq-handler": {
+        "raw_hex": "",
+        "cells": []
+      },
+      "status": {
+        "raw_hex": "6f6b00",
+        "strings": [
+          "ok"
+        ]
+      },
+      "qcom,signal-aop": {
+        "raw_hex": "",
+        "cells": []
+      },
+      "qcom,complete-ramdump": {
+        "raw_hex": "",
+        "cells": []
+      },
+      "qcom,pas-id": {
+        "raw_hex": "0000000e",
+        "cells": [
+          "0xe"
+        ]
+      },
+      "qcom,proxy-timeout-ms": {
+        "raw_hex": "00002710",
+        "cells": [
+          "0x2710"
+        ]
+      },
+      "qcom,firmware-name": {
+        "raw_hex": "7370737300",
+        "strings": [
+          "spss"
+        ]
+      },
+      "memory-region": {
+        "raw_hex": "00000086",
+        "cells": [
+          "0x86"
+        ]
+      },
+      "qcom,spss-scsr-bits": {
+        "raw_hex": "0000001800000019",
+        "cells": [
+          "0x18",
+          "0x19"
+        ]
+      },
+      "qcom,extra-size": {
+        "raw_hex": "00001000",
+        "cells": [
+          "0x1000"
+        ]
+      },
+      "mboxes": {
+        "raw_hex": "0000000200000000",
+        "cells": [
+          "0x2",
+          "0x0"
+        ]
+      },
+      "mbox-names": {
+        "raw_hex": "737073732d70696c00",
+        "strings": [
+          "spss-pil"
+        ]
+      }
+    },
+    "spss_reserved_region": {
+      "compatible": {
+        "raw_hex": "72656d6f7665642d646d612d706f6f6c00",
+        "strings": [
+          "removed-dma-pool"
+        ]
+      },
+      "no-map": {
+        "raw_hex": "",
+        "cells": []
+      },
+      "reg": {
+        "raw_hex": "000000008be000000000000000100000",
+        "cells": [
+          "0x0",
+          "0x8be00000",
+          "0x0",
+          "0x100000"
+        ]
+      },
+      "phandle": {
+        "raw_hex": "00000086",
+        "cells": [
+          "0x86"
+        ]
+      }
+    },
+    "source_resource_addresses_sizes_names_bits_exactly_match_actual_dt": true,
+    "source_dts_lines": [
+      3872,
+      3908
+    ]
+  },
+  "mask_store": {
+    "source_function": "mask_scsr_irqs",
+    "source_lines": [
+      1058,
+      1064
+    ],
+    "callsite_function": "pil_tz_driver_probe",
+    "callsite_line": 1212,
+    "named_resource_mapping_lines": [
+      1176,
+      1184
+    ],
+    "bit_array_read_lines": [
+      1203,
+      1211
+    ],
+    "ERR_READY_array_index": 0,
+    "PBL_DONE_array_index": 1,
+    "ERR_READY_bit": 24,
+    "PBL_DONE_bit": 25,
+    "expression": "(uint32_t)~0 & ~BIT(24) & ~BIT(25)",
+    "computed_value": 4244635647,
+    "actual_store_matches_computed_value": true,
+    "written_once_by_this_generic_irq_probe_block": true,
+    "comment_semantics": "Masking all interrupts not handled by HLOS.",
+    "no_mask_readback_or_poll_in_this_probe_block": true,
+    "does_not_announce_firmware_completion": true,
+    "pending_irq_exposure_is_distinct_from_creation_of_a_remote_event": true
+  },
+  "probe_order": [
+    {
+      "step": "Acquire named clock and regulator handles; set a clock rate only if reported rate is zero.",
+      "source_function": "piltz_resc_init / of_read_clocks / of_read_regs",
+      "clock_or_regulator_enable_here": false
+    },
+    {
+      "step": "Initialize PIL descriptor and subsystem callbacks.",
+      "source_lines": [
+        1141,
+        1154
+      ]
+    },
+    {
+      "step": "Map five named resources. Mapping five resources is not evidence of five MMIO transactions.",
+      "source_lines": [
+        1155,
+        1201
+      ]
+    },
+    {
+      "step": "Read ERR_READY/PBL_DONE bit positions then perform the one mask store.",
+      "source_lines": [
+        1203,
+        1212
+      ]
+    },
+    {
+      "step": "Read extra-size and signal-aop; request mailbox if signaled.",
+      "source_lines": [
+        1214,
+        1241
+      ]
+    },
+    {
+      "step": "Create ramdump/minidump devices then register subsystem.",
+      "source_lines": [
+        1246,
+        1268
+      ]
+    }
+  ],
+  "future_irq_path_separate_from_current_probe": {
+    "handler": "subsys_generic_handler",
+    "source_lines": [
+      1035,
+      1055
+    ],
+    "first_reads": [
+      "rmb_err_spare2 at 0x01882014",
+      "sp2soc_irq_status at 0x0188101c"
+    ],
+    "ERR_READY_dispatch": "Status BIT(24) with err_spare2 zero calls clear_err_ready and complete_err_ready; 0x44554d50 follows watchdog path; other nonzero values follow error reporting.",
+    "PBL_DONE_dispatch": "Status BIT(25) calls clear_pbl_done, reads rmb_err, optionally spare registers, and requests clearing BIT(25).",
+    "clear_requests": {
+      "resource": "sp2soc_irq_clr",
+      "address": "0x01881024",
+      "values": [
+        "BIT(24)",
+        "BIT(25)"
+      ]
+    },
+    "additional_error_reads_not_in_the_five_4byte_DT_resources": [
+      {
+        "address": "0x01882010",
+        "expression": "err_status_spare - 4",
+        "source_lines": [
+          970,
+          1010
+        ]
+      },
+      {
+        "address": "0x0188200c",
+        "expression": "err_status_spare - 8",
+        "source_lines": [
+          971,
+          1011
+        ]
+      }
+    ],
+    "actual_irq_or_remote_completion_observed": false
+  },
+  "scope_boundaries": [
+    "No model, readiness acknowledgment, firmware event, power-on completion, or successful secure-service call is added by this analysis.",
+    "The mask store precedes subsys_register; neither the fault nor this register write establishes an initialized interrupt handler or a ready SPSS firmware.",
+    "Proxy clock/regulator enable and PAS authentication/reset occur in later dedicated callbacks, not as prerequisites demonstrated for the cold mask store.",
+    "Do not map the entire 0x01880000 syscon: neighboring QSEE, SPCOM, mailbox and SPSS utility resources have separate owners and protocols.",
+    "The driver source does not prove a silicon reset value, live remote event source, or counter/performance model for this register bank.",
+    "The retained full production probe bytes validate the fault word and nearby mask instructions; fixed vendor source is a semantic reference and is not claimed to reproduce the entire production binary."
+  ],
+  "binding_document_retrieved": false,
+  "binding_document_boundary": "The fixed Documentation/devicetree/bindings link target is absent according to the separate source reviewer; no missing binding content is invented."
+}
