@@ -38,6 +38,7 @@
 #include "hw/core/boards.h"
 #include "hw/core/clock.h"
 #include "hw/core/irq.h"
+#include "hw/core/split-irq.h"
 #include "hw/core/qdev-clock.h"
 #include "hw/core/qdev-properties.h"
 #include "hw/core/sysbus.h"
@@ -64,6 +65,7 @@
 #include "hw/misc/qcom-gpu-cx-gdsc.h"
 #include "hw/misc/qcom-gdsc.h"
 #include "hw/misc/qcom-camera-gdsc.h"
+#include "hw/misc/qcom-mdss-gdsc.h"
 #include "hw/misc/qcom-spmi-pmic-arb.h"
 #include "hw/gpio/qcom-tb371fc-tlmm.h"
 #include "hw/misc/qcom-sm8250-rpmh.h"
@@ -1037,7 +1039,7 @@ static void tb371fc_create_gpu_gx_gdsc(TB371FCMachineState *s)
 }
 
 
-static void tb371fc_create_camera_gdsc(TB371FCMachineState *s)
+static DeviceState *tb371fc_create_camera_gdsc(TB371FCMachineState *s)
 {
     DeviceState *gdsc = qdev_new(TYPE_QCOM_CAMERA_GDSC);
 
@@ -1047,20 +1049,48 @@ static void tb371fc_create_camera_gdsc(TB371FCMachineState *s)
         sysbus_mmio_map(SYS_BUS_DEVICE(gdsc), i,
                        qcom_camera_gdsc_domains[i].address);
     }
+    return gdsc;
+}
+
+static void tb371fc_create_mdss_gdsc(TB371FCMachineState *s,
+                                   DeviceState *camera)
+{
+    DeviceState *mdss = qdev_new(TYPE_QCOM_MDSS_GDSC);
+
+    object_property_add_child(OBJECT(s), "mdss-gdsc", OBJECT(mdss));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(mdss), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(mdss), 0,
+                   qcom_mdss_gdsc_domains[0].address);
     if (s->rpmh) {
+        DeviceState *splitter = qdev_new(TYPE_SPLIT_IRQ);
+        bool present, enabled;
+
         /*
-         * Actual DT phandle 104 is the mmcx.lvl ARC regulator. One aggregate
-         * input fans out internally to the six sibling camera domains.
-         * This is existing digital availability, not measured PMIC voltage.
+         * Camera and MDSS are siblings on DT phandle 104 (mmcx.lvl).
+         * There is one RPMh output owner; never replace the camera wire with
+         * a second qdev_connect_gpio_out call. The splitter has no VMState.
+         * MDSS's self proxy is a software consumer, not a power-parent edge.
          */
+        object_property_add_child(OBJECT(s), "mmcx-gdsc-fanout",
+                                  OBJECT(splitter));
+        qdev_prop_set_uint16(splitter, "num-lines", 2);
+        qdev_realize_and_unref(splitter, NULL, &error_fatal);
+        qdev_connect_gpio_out(splitter, 0,
+            qdev_get_gpio_in_named(camera, "parent-on", 0));
+        qdev_connect_gpio_out(splitter, 1,
+            qdev_get_gpio_in_named(mdss, "parent-on", 0));
         qdev_connect_gpio_out_named(s->rpmh, "power", 3,
-            qdev_get_gpio_in_named(gdsc, "parent-on", 0));
-        qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-on", 0),
-            object_property_get_uint(OBJECT(s->rpmh), "res.mmcx.lvl.enabled",
-                                     &error_fatal) != 0);
-        qemu_set_irq(qdev_get_gpio_in_named(gdsc, "parent-known", 0),
-            object_property_get_uint(OBJECT(s->rpmh), "res.mmcx.lvl.present",
-                                     &error_fatal) != 0);
+            qdev_get_gpio_in(splitter, 0));
+        enabled = object_property_get_uint(OBJECT(s->rpmh),
+                                           "res.mmcx.lvl.enabled",
+                                           &error_fatal) != 0;
+        present = object_property_get_uint(OBJECT(s->rpmh),
+                                           "res.mmcx.lvl.present",
+                                           &error_fatal) != 0;
+        qemu_set_irq(qdev_get_gpio_in(splitter, 0), enabled);
+        qemu_set_irq(qdev_get_gpio_in_named(camera, "parent-known", 0),
+                     present);
+        qemu_set_irq(qdev_get_gpio_in_named(mdss, "parent-known", 0), present);
     }
 }
 
@@ -1719,7 +1749,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_noc_qos(s);
     tb371fc_create_gpu_cx_gdsc(s);
     tb371fc_create_gpu_gx_gdsc(s);
-    tb371fc_create_camera_gdsc(s);
+    tb371fc_create_mdss_gdsc(s, tb371fc_create_camera_gdsc(s));
     if (s->ufs) {
         tb371fc_realize_ufs(s);
         /* Native pinctrl states: output-low asserts the dedicated pad. */

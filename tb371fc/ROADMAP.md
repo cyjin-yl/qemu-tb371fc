@@ -33,6 +33,7 @@ Linux 板级补齐与 UniXNU 路线 A 并行推进，按[跨仓库硬件契约](
 - [x] 完整 DT 用户态夹具构建／暂存：`09c638` 正式 CI 构建 exact-model 变体；同一 ZIP 的八个成员、ELF/CPIO/3120 B ABI 已实际校验。
 - [ ] 完整 DT 夹具执行：primary 在 BPS GDSC `0x0ad07004` 出现工作线程 Oops，尚未运行后续 EL0／八项记录／独立 guest shutdown 验收；旧夹具和四个 Linux gate 不改。
 - [ ] 六域相机 GDSC：实际 DT／固定驱动合同、独立默认关闭类型、三态父／请求、194 B 身份保护迁移和 29 组候选检查已准备；配套 GCC AHB retention 仅扩充两个源码支持的请求位，待本组合正式 CI 与同二进制原厂复测。
+- [ ] MDSS GDSC：`0x0af03000` 单 word、独立显式 profile／64 B v1、共享 mmcx 分流及 DISP_AHB 两个 retention 请求位；20 组和 3/2/2 迁移门禁待真实编译／CI，原厂输入继续按下一实际异常推进。
 - [ ] 原厂完整 DT 用户态及 Android 启动；不能将 77 项公共成功、控制器注册或 NoC 配置匹配当作整板可用。
 
 本轮精确构建与原厂证据见 [README](../README.md) 和

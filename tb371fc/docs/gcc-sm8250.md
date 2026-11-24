@@ -226,8 +226,9 @@ dispatches them to the branch operations.
 | `0xb008` | 14 | `CLKFLAG_RETAIN_MEM`, cleared by `CLKFLAG_NORETAIN_MEM` |
 
 The write mask for this one existing word becomes `0x6001`. Bit 12 and
-other unsupported bits still reject the whole write, and adjacent `0xb004`
-and `0xb00c` retain their previous masks. Reads, reset and the existing GCC
+other unsupported bits still reject the whole write. The camera-only
+increment left adjacent `0xb004` and `0xb00c` unchanged; the later MDSS
+increment described below adds retention only to `0xb00c`. Reads, reset and the existing GCC
 v3 register array preserve these two request fields. No new register, timer,
 Clock input or migration field is added. This records the requested retention
 policy; no camera SRAM contents, peripheral retention, interconnect drain,
@@ -248,6 +249,20 @@ read/modify/write, unsupported-field and neighboring-register checks, and
 restores a nonzero retention word from a real GCC v3 migration stream.
 This source change awaits its own formal CI and exact-binary native result;
 the older GCC receipts below remain attached to their original binaries.
+
+## MDSS display AHB retention request fields
+
+The [independent MDSS GDSC](mdss-gdsc-reference.md) uses vendor binding
+`GCC_DISP_AHB_CLK = 24`, existing QEMU descriptor 23 and external input 10.
+The same pinned branch driver stores PERIPH/MEM requests in bits 13/14 at
+`0xb00c`, whose new mask is `0x6001`. The generator verifies the exact fixed
+`gcc_disp_ahb_clk` declaration and records its source line in the manifest.
+The clock descriptor, unknown parent, GPIO behavior and GCC v3 layout remain
+unchanged. The vendor's separate HWCG bit 1 remains outside the currently
+implemented mask; retention support does not imply that mode is implemented.
+VIDEO_AHB `0xb004` and NPU_CFG_AHB `0x4d004` keep their existing permissions.
+The MDSS gate requires real retention round trips, rejected reserved writes
+and restoration of a nonzero DISP_AHB word without inventing a clock rate.
 
 ## Actual tablet observations and frequency assumptions
 

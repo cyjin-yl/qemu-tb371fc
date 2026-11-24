@@ -1,0 +1,54 @@
+{
+  "schema": "tb371fc-native-mdss-frontier-v1",
+  "kind": "sanitized_excerpt_and_digest_summary_of_preserved_private_capture",
+  "source_commit": "42144e86685aeb47f6a1eef8472d222795722863",
+  "qemu_sha256": "3be30157af1ca7ec511897effef06c5d7dfb8bfc5395b2e4de744ee1751f3f74",
+  "ci_run": 45394039772,
+  "ci_artifact_sha256": "04d1d4df7c3e3a80e82c1c5b430e8612699e91759a3d614931a2c9e5b8a9de10",
+  "kernel_log_sha256": "38ed52bc8c58071bc9069888ae25191c9996bdf8d0b8a806066b6f5e57589090",
+  "qemu_log_sha256": "3317c77639136b0d6c09b07d3ee1a14eb7e5319fbe5343bd4d047867a0516c9a",
+  "input_preservation": {
+    "kernel": true,
+    "initrd": true,
+    "dtb": true,
+    "bootargs": true
+  },
+  "original_luns": [],
+  "first_observed_native_fault": {
+    "physical_address": "0x0af03000",
+    "access": "read",
+    "bytes": 4,
+    "guest_time_seconds": 3.69683,
+    "type": "synchronous external abort",
+    "oops_number": 1,
+    "cpu": 4,
+    "pid": 78,
+    "process": "kworker/4:1",
+    "workqueue_function": "deferred_probe_work_func",
+    "caller": "gdsc_probe+0x770",
+    "fault_function": "regmap_mmio_read32le+0x8",
+    "classification": "deferred-probe worker Oops",
+    "pid1_panic_observed": false
+  },
+  "kernel_excerpt": [
+    "[    3.694295] register_client_adhoc:Client handle 21 mdss_core_gdsc_ahb",
+    "[    3.696830] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP",
+    "[    3.697251] CPU: 4 PID: 78 Comm: kworker/4:1 Tainted: G S      W         4.19.157-perf+ #1",
+    "[    3.698154] Workqueue: events deferred_probe_work_func",
+    "[    3.698293] pc : regmap_mmio_read32le+0x8/0x20",
+    "[    3.698801]  gdsc_probe+0x770/0x9d0"
+  ],
+  "qemu_excerpt": [
+    "Invalid read at addr 0xAF03000, size 4, region '(null)', reason: rejected"
+  ],
+  "userspace_evidence_observed": false,
+  "stock_android_boot_passed": false,
+  "new_mdss_model_executed_in_this_capture": false,
+  "private_content_included": false,
+  "omitted_content": [
+    "complete boot arguments",
+    "original firmware bytes",
+    "original full DT",
+    "endpoint identifiers"
+  ]
+}

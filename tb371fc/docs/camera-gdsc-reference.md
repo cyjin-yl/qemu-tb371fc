@@ -39,6 +39,9 @@ All six are siblings supplied by the same `mmcx.lvl` regulator. The name
 The DT contains no `domain-addr`, `sw-reset`, or `hw-ctrl-addr` for these domains.
 No such auxiliary windows are added. NPU, VIDEO, and MDSS GDSCs are outside this
 increment, as are the ten DT GDSCs already owned by the existing GCC model.
+The later [MDSS increment](mdss-gdsc-reference.md) adds its own separate
+four-byte owner and shares mmcx through a stateless splitter; the six-camera
+device and its migration payload remain unchanged.
 
 The six GDSCs refer to vendor binding `GCC_CAMERA_AHB_CLK = 11`. The current QEMU
 GCC descriptor with that name has internal array index 10 and an unknown external

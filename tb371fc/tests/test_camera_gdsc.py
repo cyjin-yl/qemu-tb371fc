@@ -603,7 +603,8 @@ def camera_holes_and_unrelated_gdsc_addresses_stay_unmapped(r):
     before = r.pure_snapshot()
     holes = sorted({x + displacement for x in ADDRESSES for displacement in (-4, 4, 0x10)}
                    | {0x0ad00000, 0x0ad0fffc, 0x09981004,
-                      0x0abf0bf8, 0x0abf0c98, 0x0abf0d18, 0x0abf0d98, 0x0af03000})
+                      0x0abf0bf8, 0x0abf0c98, 0x0abf0d18, 0x0abf0d98,
+                      0x0af02ffc, 0x0af03004})
     assert not set(holes) & set(ADDRESSES)
     previous = core_diagnostics(r.log_path.read_text(errors="replace"))
     expected = []
@@ -614,6 +615,19 @@ def camera_holes_and_unrelated_gdsc_addresses_stay_unmapped(r):
                         for op in ("read", "write"))
     actual = core_diagnostics(r.log_path.read_text(errors="replace"))[len(previous):]
     assert actual == expected, (actual, expected)
+    # MDSS now has its own four-byte owner, disabled in this camera fixture.
+    # Its neighbors remain unassigned; camera opt-in must not enable MDSS.
+    for operation in ("read", "write"):
+        line = ("qcom-mdss-gdsc: rejected " + operation +
+                " domain=0 offset=0x0 size=4 value=0x" +
+                ("0" if operation == "read" else "ffffffff") +
+                " reason=reference-disabled")
+        count = r.diagnostic_count(line)
+        if operation == "read":
+            r.read_absolute(0x0af03000)
+        else:
+            r.write_absolute(0x0af03000, 0xffffffff)
+        assert r.diagnostic_count(line) == count + 1, line
     assert_snapshot(r, before)
 
 
@@ -742,7 +756,7 @@ def gcc_retention_reserved_bits_and_neighbor_permissions_remain_strict(r):
         r.raw_write(address, 1)
         assert r.raw_read(address) & 1 == 1
     for address, bad in ((CAMERA_AHB, 0x7001), (CAMERA_AHB, 0x8001),
-                         (GCC + 0xb004, 0x6001), (GCC + 0xb00c, 0x6001)):
+                         (GCC + 0xb004, 0x6001), (GCC + 0xb00c, 0x7001)):
         line = (f"qcom-sm8250-gcc: unsupported write 0x{bad:08x} "
                 f"at 0x{address - GCC:x}")
         count = r.diagnostic_count(line)

@@ -1,0 +1,214 @@
+{
+  "schema": "tb371fc-mdss-source-validation-v1",
+  "base_commit": "19dcd12af4c897d0788d38f0cf84426cfd12749e",
+  "kind": "source_generation_and_metadata_contract_only",
+  "compiled_qemu_executed": false,
+  "ci_component_plan_count": 79,
+  "ci_all_plan_count": 84,
+  "ci_metadata_requirements_match_producer": [
+    {
+      "name": "schema",
+      "value": "tb371fc-mdss-gdsc-v1"
+    },
+    {
+      "name": "expected_checks",
+      "value": 20
+    },
+    {
+      "name": "expected_completed_migrations",
+      "value": 3
+    },
+    {
+      "name": "expected_rejected_migrations",
+      "value": 2
+    },
+    {
+      "name": "expected_corrupted_stream_rejections",
+      "value": 2
+    },
+    {
+      "name": "expected_unmodified_streams",
+      "value": 4
+    },
+    {
+      "name": "expected_stream_files",
+      "value": 6
+    },
+    {
+      "name": "vmstate_version",
+      "value": 1
+    },
+    {
+      "name": "vmstate_payload_bytes",
+      "value": 64
+    },
+    {
+      "name": "domain_count",
+      "value": 1
+    },
+    {
+      "name": "register_count",
+      "value": 1
+    },
+    {
+      "name": "sparse_window_count",
+      "value": 1
+    },
+    {
+      "name": "mapped_bytes",
+      "value": 4
+    },
+    {
+      "name": "gpio_output_count",
+      "value": 2
+    },
+    {
+      "name": "parent_resource_index",
+      "value": 3
+    },
+    {
+      "name": "reference_identity",
+      "value": 1296323377
+    },
+    {
+      "name": "camera_vmstate_version",
+      "value": 1
+    },
+    {
+      "name": "camera_vmstate_payload_bytes",
+      "value": 194
+    },
+    {
+      "name": "modeled_timer_count",
+      "value": 0
+    },
+    {
+      "name": "modeled_clock_count",
+      "value": 0
+    },
+    {
+      "name": "gcc_vmstate_version",
+      "value": 3
+    },
+    {
+      "name": "gcc_display_ahb_clock_id",
+      "value": 23
+    },
+    {
+      "name": "gcc_display_ahb_write_mask",
+      "value": 24577
+    },
+    {
+      "name": "guest_cpu_executed",
+      "value": false
+    },
+    {
+      "name": "native_kernel_probe_observed",
+      "value": false
+    },
+    {
+      "name": "display_execution_observed",
+      "value": false
+    },
+    {
+      "name": "analog_power_modeled",
+      "value": false
+    },
+    {
+      "name": "retention_effect_modeled",
+      "value": false
+    },
+    {
+      "name": "android_boot_passed",
+      "value": false
+    },
+    {
+      "name": "parent_output_intercepted",
+      "value": false
+    },
+    {
+      "name": "binary_unchanged",
+      "initial": false,
+      "required": true,
+      "only_dynamic_requirement": true
+    }
+  ],
+  "preserved_existing_implementations": [
+    {
+      "path": "hw/misc/qcom-camera-gdsc.c",
+      "sha256": "c683bb924fcd7adc254a4f8dcb694e37961c91c19f9657f683f2d223f4422009",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "include/hw/misc/qcom-camera-gdsc.h",
+      "sha256": "443a57604158e762c9c39b9330375b519e234f38efe1fb3d631c37fbb5379231",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "hw/misc/qcom-sm8250-rpmh.c",
+      "sha256": "a7b25741793e1b35713cf5e86e71ad3b3079097aecc170b5759b4458210720f2",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "include/hw/misc/qcom-sm8250-rpmh.h",
+      "sha256": "9a9bcccba2adfd6f5e4e9c98ff533845783e7692b7952e18430f4e2df320757e",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "hw/misc/qcom-sm8250-gcc.c",
+      "sha256": "f9f0dc291e6a183298a0114082df1f5ea65a369dc4f1685dfc330996121da95a",
+      "unchanged_from_base": true
+    }
+  ],
+  "pinned_generator_inputs": {
+    "linux/drivers/clk/qcom/gcc-sm8250.c": "b3b3865de3a297f906d5562a720d8d304538cef3c8d3703dee026cfd6dba06c8",
+    "linux/include/dt-bindings/clock/qcom,gcc-sm8250.h": "34682c01e5b21bb13db125afa3504c73606c294c23cfb3a96f6ea52cdffd2ff7",
+    "vendor/clk-branch.c": "375830dc9cd0ecbc12ea018eee1d260d8ba724dc52f1ac8b3589a07bc75d08aa",
+    "vendor/gcc-kona.c": "ed208678508c983d0989f1f135fac898c5a9a91c14af1fa42cd7ea2f24cd14cd",
+    "vendor/gdsc-regulator.c": "41acd7aa326c656db5b9dbe57c5fe05f1783abf8a299aaf9f8d4c58b9ecea3d2"
+  },
+  "python_compile_passed": true,
+  "ci_unit_tests": {
+    "total": 31,
+    "passed": 30,
+    "errors": 1,
+    "error_test": "test_fixture_copy_ignores_sockets_and_symlinks",
+    "error_reason": "local sandbox rejects AF_UNIX socket creation with EPERM",
+    "tests_weakened_or_skipped": false
+  },
+  "generator_counts": {
+    "clock_descriptors": 200,
+    "external_parents": 83,
+    "registers": 462,
+    "resets": 45,
+    "power_domains": 11
+  },
+  "actual_compiled_tests_required": [
+    "mdss-gdsc-reference",
+    "camera-gdsc-reference",
+    "gcc-registers",
+    "gcc-migration",
+    "rpmh-reference-migration",
+    "rpmh-display-migration",
+    "rpmh-wait-mask-reference"
+  ],
+  "c_style_check": {
+    "command": "scripts/checkpatch.pl --no-tree --no-signoff mdss-c-diff.patch",
+    "errors": 0,
+    "warnings": 1,
+    "warning": "new files: consider MAINTAINERS ownership; existing TB371FC models have no dedicated entry"
+  },
+  "independent_source_review": {
+    "reviewer": "mdss_acceptance",
+    "scope": [
+      "new model and header",
+      "board fanout",
+      "RPMh publication order",
+      "stateless SplitIRQ",
+      "original MDSS DT fields",
+      "fixed vendor source"
+    ],
+    "static_blockers_found": false,
+    "compiled_execution_performed": false
+  }
+}

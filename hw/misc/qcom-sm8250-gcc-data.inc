@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /* Generated register facts from Linux v6.12.114 gcc-sm8250.c.
  * Source copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
- * CPUSS branch, USB pipe muxes and camera AHB retention use pinned Kona facts.
+ * CPUSS, USB pipe muxes and camera/MDSS AHB retention use pinned Kona facts.
  * Regenerate with tb371fc/scripts/generate_gcc_sm8250.py; see manifest.
  */
 static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {
@@ -1098,7 +1098,7 @@ static const GccRegisterDesc gcc_registers[] = {
     { 0x0b000, 0x00000001, 0x00000000 },
     { 0x0b004, 0x00000001, 0x00000000 },
     { 0x0b008, 0x00006001, 0x00000000 },
-    { 0x0b00c, 0x00000001, 0x00000000 },
+    { 0x0b00c, 0x00006001, 0x00000000 },
     { 0x0b010, 0x00000003, 0xf0000000 },
     { 0x0b014, 0x00000003, 0xf0000000 },
     { 0x0b018, 0x00000003, 0xf0000000 },

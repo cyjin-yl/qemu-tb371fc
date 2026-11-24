@@ -152,6 +152,13 @@ def main():
                     required(r'\.ops\s*=\s*&(\w+)', camera_body).group(1))
     if camera_facts != (0xb008, 0xb008, 1, 'clk_branch2_ops'):
         raise ValueError('unexpected Kona camera AHB branch description')
+    display_body, display_line = vendor['gcc_disp_ahb_clk']
+    display_facts = (number(display_body, 'halt_reg'),
+                     number(display_body, 'enable_reg'),
+                     bit(display_body, 'enable_mask'),
+                     required(r'\.ops\s*=\s*&(\w+)', display_body).group(1))
+    if display_facts != (0xb00c, 0xb00c, 1, 'clk_branch2_ops'):
+        raise ValueError('unexpected Kona display AHB branch description')
     branch_ops = required(r'const struct clk_ops clk_branch2_ops = \{([\s\S]*?)\n\};',
                           branch_source).group(1)
     required(r'\.set_flags\s*=\s*clk_branch_set_flags\b', branch_ops)
@@ -310,6 +317,7 @@ def main():
             add(d['enable_reg'], d['enable_mask'])
             if d['hwcg_reg']: add(d['hwcg_reg'], d['hwcg_mask'])
     add(camera_facts[0], retention_mask)
+    add(display_facts[0], retention_mask)
     for d in resets: add(d['reg'], d['mask'])
     for d in gdscs: add(d['reg'], 0xfff007, 0x80000000)
     add(0x4d110, 3); add(0x71028, 3)
@@ -337,6 +345,18 @@ def main():
                                             register_owner=dict(path=VENDOR_PATH,
                                                                 sha256=VENDOR_SHA256,
                                                                 line=camera_line),
+                                            scope='Digital request fields only; no retained payload or clock availability is inferred'),
+                                       dict(name='oneplus-kona-mdss-ahb-retention',
+                                            revision=VENDOR_REVISION,
+                                            path=VENDOR_BRANCH_PATH, url=VENDOR_BRANCH_URL,
+                                            sha256=VENDOR_BRANCH_SHA256,
+                                            clock_ids=[ids['GCC_DISP_AHB_CLK']],
+                                            register_offset=display_facts[0],
+                                            write_mask=retention_mask,
+                                            field_bits=retention_fields,
+                                            register_owner=dict(path=VENDOR_PATH,
+                                                                sha256=VENDOR_SHA256,
+                                                                line=display_line),
                                             scope='Digital request fields only; no retained payload or clock availability is inferred')],
                     clocks=clocks, resets=resets, power_domains=gdscs,
                     registers=[dict(offset=reg, write_mask=rw, status_mask=ro) for reg, (rw, ro) in sorted(regs.items())])
@@ -344,7 +364,7 @@ def main():
     out = ['/* SPDX-License-Identifier: GPL-2.0-only */',
            '/* Generated register facts from Linux v6.12.114 gcc-sm8250.c.',
            ' * Source copyright (c) 2018-2020, The Linux Foundation. All rights reserved.',
-           ' * CPUSS branch, USB pipe muxes and camera AHB retention use pinned Kona facts.',
+           ' * CPUSS, USB pipe muxes and camera/MDSS AHB retention use pinned Kona facts.',
            ' * Regenerate with tb371fc/scripts/generate_gcc_sm8250.py; see manifest.',
            ' */', 'static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {']
     for d in clocks:

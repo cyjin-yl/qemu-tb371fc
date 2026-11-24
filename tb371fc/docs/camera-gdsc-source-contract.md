@@ -183,6 +183,10 @@ same-protocol group. The remaining six domains are outside this increment.
 | `0x0ad0c144` | `titan_top_gdsc` | new six-domain camera reference |
 | `0x0af03000` | `mdss_core_gdsc` | outside this increment; no newly assigned owner |
 
+This table records the camera-only increment. The later
+[MDSS reference](mdss-gdsc-reference.md) assigns only its own four-byte word,
+without expanding this camera type or its six-entry VMState.
+
 The six camera registers sit within the declared CAMCC address range, but the
 current board has no CAMCC controller mapping there. A future CAMCC model must
 exclude these six four-byte resources or use a container that preserves their

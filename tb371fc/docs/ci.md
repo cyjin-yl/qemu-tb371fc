@@ -186,11 +186,16 @@ still apply to any future authorized consumer execution.
 
 ## Gates
 
-The current integration plan registers **83 gates: 78 component/parser gates
+The current integration plan registers **84 gates: 79 component/parser gates
 and five Linux integration gates**, plus separate active and runtime-suspended
 real-Linux UFS checkpoints and the A77/PCI UFS compatibility job. This union
 preserves the wholeboard reference peripherals and default-branch storage,
 power and timer regressions. Each new source revision needs its own receipts.
+The [MDSS reference gate](mdss-gdsc-reference.md) adds 20 required checks,
+three completed process migrations, two profile rejections and two single-bit
+corruption rejections. Its 64-byte section is independent of the unchanged
+194-byte camera section. Shared mmcx and unknown-clock behavior are tested
+through the real board wiring; the added gate is not native Android evidence.
 The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.

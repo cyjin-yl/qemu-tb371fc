@@ -212,3 +212,17 @@ the exact `clk_set_flags` dispatch to bits 13/14 of `0xb008`; its generator now
 checks four fixed inputs while still reproducing two output files. No parent
 clock rate, retained camera memory or hidden hardware voter is inferred.
 Formal execution evidence for this combined candidate is still required.
+
+## MDSS GDSC and DISP_AHB bounded increment
+
+The [MDSS contract](docs/mdss-gdsc-reference.md) consumes the existing
+[remaining-frontier source analysis](evidence/wholeboard-20261123-a47/remaining-gdsc-frontier-contract.md).
+It selects only the MDSS word at `0x0af03000`, preserves the camera type and
+194-byte state, and shares the real mmcx output through a stateless splitter.
+Its self proxy remains a software consumer rather than a hardware parent.
+The GCC generator checks the fixed display branch declaration and stores
+only its two source-supported retention requests. The unknown parent clock,
+NPU/video GDSC holes and all other DISPCC addresses retain their old scope.
+Independent 64-byte MDSS migration and real-wiring acceptance are required;
+neither source generation nor component checks establish display or Android
+execution.

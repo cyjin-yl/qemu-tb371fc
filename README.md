@@ -14,9 +14,17 @@
 
 ## 当前整合：原厂 Android 启动开发基线
 
-本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。当前公开计划为 **83 项：78 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
+本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。加入下面的 MDSS gate 后，当前公开计划为 **84 项：79 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
 
 两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
+
+### MDSS GDSC 与显示 AHB 请求字段
+
+[原始输入运行摘要](tb371fc/evidence/mdss-20261124-e1a9/native-frontier-before-mdss.json)记录：相机域继续注册后，`42144e8` 的正式二进制在 guest 3.696830 秒对 `0x0af03000` 的 4 B 读取触发新的首个同步外部异常；进程是 CPU4 的 PID78 `kworker/4:1`，调用链经过 `gdsc_probe`。这是延迟 probe 线程 Oops，未观察到 PID1 panic 或用户态成功。原始 kernel／ramdisk／完整 DT／bootargs 摘要前后一致，本次没有挂载原始 LUN。
+
+[MDSS 独立参考模型](tb371fc/docs/mdss-gdsc-reference.md)只拥有 `0x0af03000` 的 4 B 控制字，需显式 `qcom-mdss-gdsc.enabled-reference=on`。其三态父资源／硬件请求与 64 B v1 状态独立于原有六域相机；无状态分流器保留相机连接并共享实际 RPMh `mmcx.lvl` 输出。DISP_AHB `0xb00c` 只增加源码支持的 retention 位 13/14，未知父时钟不变。DISPCC 其余范围、NPU 和视频 GDSC 仍未实现。
+
+新增组件 gate 要求 20 组、3 次完成迁移、2 次 profile 拒绝和 2 次单 bit 损坏拒绝，并核验共享父资源、未知输入和恢复前首次只读状态。此处记录源码与验收要求；必须取得本组合的真实编译／CI 及原始输入复测结果，才能声称越过 MDSS 原厂异常。
 
 ## 默认分支既有验收：2026-11-24 存储与电源修复
 
