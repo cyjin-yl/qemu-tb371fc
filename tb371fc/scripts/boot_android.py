@@ -11,11 +11,13 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import errno
 import hashlib
 import json
 import os
 from pathlib import Path
 import re
+import select
 import shutil
 import stat
 import subprocess
@@ -202,18 +204,171 @@ def prepare_overlays(plan, run=subprocess.run):
 
 
 class BoundedQMP(QMP):
+    def __init__(self, sock):
+        super().__init__(sock)
+        self.first_command_error = None
+
+    def command(self, name, arguments=None):
+        try:
+            return super().command(name, arguments)
+        except Exception as exc:
+            # A printk capture may catch its callback's exception and continue.
+            # A later clean quit cannot erase that QMP command failure. Final
+            # drain receives directly, so its expected reset is not latched here.
+            if self.first_command_error is None:
+                self.first_command_error = {"command": name, "type": type(exc).__name__,
+                                            "message": str(exc), "errno": getattr(exc, "errno", None)}
+            raise
+
     def receive(self, timeout):
-        messages = super().receive(timeout)
-        if len(self.buffer) > MAX_QMP_BUFFER or len(self.messages) > MAX_QMP_MESSAGES:
-            raise RuntimeError("QMP observation bound exceeded")
+        if self.closed:
+            return None
+        if not select.select([self.sock], [], [], timeout)[0]:
+            return []
+        data = self.sock.recv(65536)
+        if not data:
+            self.closed = True
+            return None
+        self.buffer += data
+        messages = []
+        while True:
+            end = self.buffer.find(b"\n")
+            # Check the complete frame before splitting/decoding it: a final
+            # fragment containing the newline must not erase an oversized frame.
+            if (end < 0 and len(self.buffer) > MAX_QMP_BUFFER) or end + 1 > MAX_QMP_BUFFER:
+                raise RuntimeError("QMP observation bound exceeded")
+            if end < 0:
+                break
+            line, self.buffer = self.buffer[:end], self.buffer[end + 1:]
+            if not line.strip():
+                continue
+            if len(self.messages) >= MAX_QMP_MESSAGES:
+                raise RuntimeError("QMP observation bound exceeded")
+            message = json.loads(line)
+            self.messages.append(message)
+            validate_qmp_message(message)
+            messages.append(message)
         return messages
 
-    def drain(self):
-        deadline = time.monotonic() + 2
-        while not self.closed and time.monotonic() < deadline:
-            messages = self.receive(0)
-            if messages is None or (not messages and not self.buffer):
-                break
+    def drain(self, timeout=2):
+        """Record a bounded transport terminus; only the caller can qualify it."""
+        result = {"terminal": None, "errno": None, "error": None,
+                  "prior_command_error": self.first_command_error}
+        deadline = time.monotonic() + timeout
+        try:
+            while not self.closed:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    result["terminal"] = "timeout"
+                    raise TimeoutError("QMP drain timed out before socket closure")
+                try:
+                    self.receive(min(.1, remaining))
+                except ConnectionResetError as exc:
+                    if exc.errno != errno.ECONNRESET:
+                        raise
+                    result.update(terminal="reset", errno=exc.errno,
+                                  transport_error=str(exc))
+                    self.closed = True
+            if result["terminal"] is None:
+                result["terminal"] = "eof"
+            if self.buffer:
+                raise ValueError("partial QMP frame at socket closure")
+        except Exception as exc:
+            result["terminal"] = result["terminal"] or "error"
+            result["error"] = f"{type(exc).__name__}: {exc}"
+            if isinstance(exc, OSError):
+                result["errno"] = exc.errno
+        result.update(closed=self.closed, residual_bytes=len(self.buffer),
+                      message_count=len(self.messages))
+        return result
+
+
+def validate_qmp_message(message):
+    if type(message) is not dict:
+        raise ValueError("QMP message is not an object")
+    kinds = [key for key in ("QMP", "event", "return", "error") if key in message]
+    if len(kinds) != 1:
+        raise ValueError("ambiguous or missing QMP message kind")
+    kind = kinds[0]
+    allowed = {"QMP": {"QMP"}, "event": {"event", "data", "timestamp"},
+               "return": {"return", "id"}, "error": {"error", "id"}}
+    if set(message) - allowed[kind]:
+        raise ValueError("unexpected QMP message fields")
+    if kind == "event":
+        if (type(message["event"]) is not str or not message["event"] or
+                ("data" in message and type(message["data"]) is not dict)):
+            raise ValueError("invalid QMP event")
+    elif kind == "QMP":
+        if type(message["QMP"]) is not dict:
+            raise ValueError("invalid QMP greeting")
+    elif type(message.get("id")) is not int or message["id"] <= 0:
+        raise ValueError("invalid QMP response id")
+    if kind == "error":
+        raise ValueError(f"QMP error response: {message}")
+
+
+def quit_response(messages, request_id):
+    """Require one actual matching ACK; QMP itself does not guarantee quit ACKs."""
+    if type(request_id) is not int or request_id <= 0:
+        raise ValueError("invalid quit request id")
+    replies = []
+    for message in messages:
+        validate_qmp_message(message)
+        if "event" in message:
+            continue
+        if (set(message) != {"id", "return"} or message["id"] != request_id or
+                type(message["return"]) is not dict or message["return"] != {}):
+            raise ValueError("unexpected response after quit request")
+        replies.append(message)
+    if len(replies) != 1:
+        raise ValueError("quit requires exactly one matching empty-object ACK")
+    return replies[0]
+
+
+def normal_qmp_shutdown(report):
+    """Qualify only a fully observed host-requested close after a paused guest."""
+    final, quit_info, drain = (report.get(key, {}) for key in
+                              ("final_status", "qmp_quit", "qmp_drain"))
+    if any(type(value) is not dict for value in (final, quit_info, drain)):
+        return False
+    if (final.get("status") != "paused" or final.get("running") is not False or
+            type(report.get("qemu_returncode")) is not int or report["qemu_returncode"] != 0 or
+            report.get("error") or report.get("host_terminated_qemu") or
+            report.get("qmp_drain_error") or quit_info.get("acknowledged") is not True or
+            drain.get("terminal") not in ("eof", "reset") or
+            drain.get("closed") is not True or type(drain.get("residual_bytes")) is not int or
+            drain["residual_bytes"] != 0 or type(drain.get("message_count")) is not int or
+            not 0 <= drain["message_count"] <= MAX_QMP_MESSAGES or
+            "error" not in drain or drain["error"] is not None or
+            "prior_command_error" not in drain or drain["prior_command_error"] is not None):
+        return False
+    if ((drain["terminal"] == "eof" and drain.get("errno") is not None) or
+            (drain["terminal"] == "reset" and
+             (type(drain.get("errno")) is not int or drain["errno"] != errno.ECONNRESET or
+              type(drain.get("transport_error")) is not str or not drain["transport_error"]))):
+        return False
+    tail = quit_info.get("messages", [])
+    if (type(tail) is not list or type(quit_info.get("message_start")) is not int or
+            quit_info["message_start"] < 0 or
+            quit_info["message_start"] + len(tail) != drain["message_count"]):
+        return False
+    try:
+        ack = quit_response(tail, quit_info.get("request_id"))
+        if (quit_response([quit_info.get("response")], quit_info["request_id"]) != ack):
+            return False
+    except (TypeError, ValueError):
+        return False
+    host_quit = False
+    for message in tail:
+        event = message.get("event")
+        if event in ("RESUME", "RESET", "GUEST_PANICKED", "WATCHDOG"):
+            return False
+        if event == "SHUTDOWN":
+            data = message.get("data", {})
+            if data.get("guest") is not False or data.get("reason") != "host-qmp-quit":
+                return False
+            host_quit = True
+    return host_quit
 
 
 def open_qmp(path, process, deadline):
@@ -323,8 +478,24 @@ def observe(plan, *, seconds, max_log_bytes, symbols=None, snapshot_interval=15,
                 if symbols:
                     result["printk"].append(capture_stopped_printk(
                         qmp, symbols, out, len(result["printk"]), capture))
+                pause_start = len(qmp.messages)
                 result["final_status"] = qmp.command("query-status")
-                qmp.command("quit")
+                if (result["final_status"].get("running") is not False or
+                        result["final_status"].get("status") != "paused"):
+                    raise RuntimeError("QEMU did not pause before quit")
+                if any(message.get("event") in
+                       ("RESUME", "RESET", "GUEST_PANICKED", "WATCHDOG", "SHUTDOWN")
+                       for message in qmp.messages[pause_start:]):
+                    raise RuntimeError("guest state changed during final pause confirmation")
+                quit_info = {"request_id": qmp.identifier + 1,
+                             "message_start": len(qmp.messages), "acknowledged": False}
+                result["qmp_quit"] = quit_info
+                returned = qmp.command("quit")
+                if type(returned) is not dict or returned != {}:
+                    raise RuntimeError("quit did not return an empty-object ACK")
+                quit_info["response"] = quit_response(
+                    qmp.messages[quit_info["message_start"]:], quit_info["request_id"])
+                quit_info["acknowledged"] = True
     except Exception as exc:
         result["error"] = f"{type(exc).__name__}: {exc}"
         result["stop_reason"] = "runner-error"
@@ -343,10 +514,20 @@ def observe(plan, *, seconds, max_log_bytes, symbols=None, snapshot_interval=15,
             result["qemu_returncode"] = process.returncode
         if qmp is not None:
             try:
-                qmp.drain()
+                result["qmp_drain"] = qmp.drain()
             except Exception as exc:
                 result["qmp_drain_error"] = str(exc)
-            result["qmp_events"] = [x for x in qmp.messages if "event" in x]
+            result["qmp_events"] = [x for x in qmp.messages if isinstance(x, dict) and "event" in x]
+            if "qmp_quit" in result:
+                quit_info = result["qmp_quit"]
+                quit_info["messages"] = qmp.messages[quit_info["message_start"]:]
+            result["qmp_shutdown_normal"] = normal_qmp_shutdown(result)
+            if not result["qmp_shutdown_normal"]:
+                drain = result.get("qmp_drain", {})
+                if type(drain) is not dict:
+                    drain = {"error": "QMP drain did not produce a terminal receipt"}
+                result.setdefault("qmp_drain_error", drain.get("error") or
+                                  drain.get("transport_error") or "QMP shutdown was not fully confirmed")
             write_json(out / "qmp-messages.json", qmp.messages)
             qmp.sock.close()
         result["elapsed_seconds"] = round(clock() - start, 3)
@@ -444,6 +625,7 @@ def stock_boot_passed(report, plan):
         report["stop_reason"] == "time-bound" and
         report.get("final_status", {}).get("running") is False and
         not report.get("qmp_drain_error") and not report.get("host_terminated_qemu") and
+        normal_qmp_shutdown(report) and
         not any(x["analysis_truncated"] for x in report["logs"]))
 
 
