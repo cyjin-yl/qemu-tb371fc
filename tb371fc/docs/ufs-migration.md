@@ -77,7 +77,13 @@ rejection scenarios, with at most one 128 MiB QEMU process at a time:
   UPIU and data DMA on UFS SID `0xe0`. Writes are flushed and compared to the
   host file; resumed reads check exact payloads.
 - Controller version profile, transfer-slot count and LUN capacity mismatches reject
-  the receiver. Corrupt doorbell, WB bound and SCSI queue streams also reject.
+  the receiver. Three additional quiescent source captures provide each proposed
+  receiver's actual immutable prefix; they are not counted as successful
+  transfers. The gate identifies the differing field from these real streams
+  and requires its exact VMState diagnostic. Corrupt doorbell, WB bound and
+  SCSI queue streams also reject. Every rejected receiver must exit 1 without
+  changing its medium; QMP is drained to EOF after exit before checking for
+  any RESUME event, including one queued after the command response.
 - A real unmapped UTRD produces an unfinished source DMA request and a failed
   checkpoint. The test then clears its SMMU fault, resets HCE and continues
   actual I/O on that same source.
@@ -91,6 +97,23 @@ the recorded source timestamp before checking remaining deadlines. QTest
 clock steps briefly resume the VM and return it to its prior paused state.
 
 ## Recorded validation
+
+### Profile and QMP-drain follow-up
+
+The stricter quiescent UFS gate passed at exact source commit
+`839ae46791ecf9db3bc6f622fd69b4ffd4496f6c`:
+[21 groups](../evidence/ufs-migration-20261123/verified-839ae467/ufs-migration-result.json),
+three actual process transfers, seven rejection scenarios and three additional
+profile captures. All six rejected receivers were drained to QMP EOF before
+the no-RESUME check, closing the earlier fixture's gap after the command reply.
+The same unchanged QEMU binary passed
+[55 component gates](../evidence/ufs-migration-20261123/verified-839ae467/components-result.json)
+and [four Linux gates](../evidence/ufs-migration-20261123/verified-839ae467/linux-result.json).
+The [artifact/source binding](../evidence/ufs-migration-20261123/verified-839ae467/source-binding.json)
+records every hash and the separately pending A77/PCI job at collection; the
+full workflow is not described as complete from the board job alone.
+
+### Original UFS acceptance
 
 [CI run 45260760828](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45260760828)
 completed successfully. It checked out merge commit

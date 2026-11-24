@@ -152,6 +152,43 @@ def section_body(data, suffix):
     return matches[0]
 
 
+def profile_mismatch(source, target):
+    """Bind a configuration rejection to actual unequal wire state.
+
+    VMState uint32 equality loaders report values, not field names; the UFS
+    configuration loader reports an explicit configuration mismatch.
+    The v1 prefix is three big-endian uint32 values followed by a 32-byte
+    immutable configuration digest. Read both real streams so an unrelated
+    load failure cannot satisfy a profile-mismatch test.
+    """
+    prefixes = []
+    for raw in (source, target):
+        body = section_body(raw, "qcom-sm8250-ufs")
+        prefix = raw[body:body + 44]
+        assert len(prefix) == 44
+        prefixes.append(prefix)
+    original, receiver = prefixes
+    for offset, field in ((0, "hw_version"), (4, "hci_version"),
+                          (8, "symbol_hz")):
+        a = struct.unpack_from(">I", original, offset)[0]
+        b = struct.unpack_from(">I", receiver, offset)[0]
+        if a != b:
+            break
+    else:
+        field = "migration_config"
+        offset = next((n for n in range(12, 44)
+                       if original[n] != receiver[n]), None)
+        assert offset is not None, "profile fixtures must differ"
+        a, b = original[offset], receiver[offset]
+    diagnostic = ("SM8250 UFS migration: configuration mismatch" if
+                  field == "migration_config" else f"{b:x} != {a:x}")
+    return {
+        "field": field, "wire_offset": offset,
+        "source_prefix": original.hex(), "receiver_prefix": receiver.hex(),
+        "diagnostic": f"of device 'qcom-sm8250-ufs': {diagnostic}\n",
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--qemu", required=True, type=Path)
@@ -159,12 +196,13 @@ def main():
     args = parser.parse_args()
     args.qemu, args.out = args.qemu.resolve(), args.out.resolve()
     args.out.mkdir(parents=True, exist_ok=False)
-    checks, migrations, rejections, processes = [], [], [], []
+    checks, migrations, rejections, processes, profile_fixtures = [], [], [], [], []
     report = {
         "schema_version": 1, "kind": "sm8250-ufs-quiescent-migration",
         "started_utc": datetime.now(timezone.utc).isoformat(),
         "all_passed": False, "checks": checks, "migrations": migrations,
         "rejections": rejections, "processes": processes,
+        "profile_fixtures": profile_fixtures,
         "qemu_sha256": sha(args.qemu), "test_sha256": sha(__file__),
         "helpers_sha256": {name: sha(Path(__file__).with_name(name)) for name in
                            ("test_ufs_sm8250.py", "test_geni_migration.py")},
@@ -228,7 +266,8 @@ def main():
         passed(name + "-qmp-completed-and-receiver-paused")
         return target, path
 
-    def rejected(name, path, expected, *, image=disk, extra_args=()):
+    def rejected(name, path, expected, *, image=disk, extra_args=(),
+                 profile=None):
         before = sha(image)
         r = start(name, incoming=True, image=image, extra_args=extra_args)
         error = None
@@ -240,13 +279,47 @@ def main():
         text = (r.d / "qemu.stderr").read_text(errors="replace")
         assert code == 1, (name, code, text)
         assert expected in text, (name, expected, text)
+        # A RESUME can arrive after the migrate-incoming command's reply.
+        # The process has exited, so drain its finite QMP stream to EOF before
+        # asserting that it never resumed. Socket timeout/invalid JSON fail.
+        for _ in range(1024):
+            line = r.m.readline(1024 * 1024)
+            if not line:
+                break
+            message = json.loads(line)
+            if "event" in message:
+                r.events.append(message)
+        else:
+            raise AssertionError((name, "QMP stream did not reach EOF"))
         assert not any(e.get("event") == "RESUME" for e in r.events), r.events
         assert sha(image) == before
         rejections.append({"name": name, "exit_code": code,
                            "expected_diagnostic": expected, "qmp_error": error,
-                           "stream_sha256": sha(path), "media_sha256": before})
+                           "stream_sha256": sha(path), "media_sha256": before,
+                           "profile_mismatch": profile,
+                           "qmp_drained_to_eof": True, "qmp_events": r.events})
         passed(name + "-rejected-without-resume-or-media-change")
         close()
+
+    def reject_profile(name, original, field, *, image=disk, extra_args=()):
+        # Save a real quiescent instance with the proposed receiver's profile.
+        # This is only a fixture capture, not a successful migration transfer.
+        before = sha(image)
+        r = start(name + "-profile", image=image, extra_args=extra_args)
+        setup(r)
+        path = args.out / (name + "-profile.migration")
+        r.monitor("migrate", {"uri": "file:" + str(path)})
+        state = wait_migration(r)
+        assert r.monitor("query-status")["status"] == "postmigrate"
+        close()
+        assert sha(image) == before
+        mismatch = profile_mismatch(original.read_bytes(), path.read_bytes())
+        assert mismatch["field"] == field, mismatch
+        profile_fixtures.append({"name": name, "source": state,
+                                 "stream_sha256": sha(path),
+                                 "media_sha256": before})
+        rejected(name, original, mismatch["diagnostic"], image=image,
+                 extra_args=extra_args, profile=mismatch)
 
     try:
         r = start("source")
@@ -352,16 +425,15 @@ def main():
         passed("restored-virtual-rt-idle-timer-flushes-wb-in-hibern8")
         close()
 
-        for prop, value in (("hw-version", "0x30000000"), ("nutrs", "16")):
-            diagnostic = ("qcom-sm8250-ufs" if prop == "hw-version" else
-                          "SM8250 UFS migration: configuration mismatch")
-            rejected("reject-" + prop, original, diagnostic,
-                     extra_args=("-global", f"qcom-sm8250-ufs.{prop}={value}"))
+        for prop, value, field in (("hw-version", "0x30000000", "hw_version"),
+                                   ("nutrs", "16", "migration_config")):
+            reject_profile("reject-" + prop, original, field,
+                           extra_args=("-global", f"qcom-sm8250-ufs.{prop}={value}"))
         small = args.out / "different-capacity.raw"
         with small.open("xb") as stream:
             stream.truncate(32 * 1024 * 1024)
-        rejected("reject-lun-capacity", original,
-                 "SM8250 UFS migration: configuration mismatch", image=small)
+        reject_profile("reject-lun-capacity", original, "migration_config",
+                       image=small)
 
         raw = original.read_bytes()
         body = section_body(raw, "qcom-sm8250-ufs")
@@ -424,6 +496,7 @@ def main():
         passed("failed-source-checkpoint-keeps-controller-recoverable-by-hce-reset")
         close()
         assert len(migrations) == 3 and len(rejections) == 7
+        assert len(profile_fixtures) == 3
         assert sha(args.qemu) == report["qemu_sha256"]
         report["all_passed"] = True
     except Exception as exc:
