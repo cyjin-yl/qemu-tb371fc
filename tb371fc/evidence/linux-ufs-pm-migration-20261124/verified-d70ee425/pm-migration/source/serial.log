@@ -1,0 +1,240 @@
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x412fd050]
+[    0.000000] Linux version 6.12.114-tb371fc-qemu-smoke (tb371fc-qemu@isolated-builder) (aarch64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #1 SMP 2026-11-22 00:00:00 +0000
+[    0.000000] Machine model: QEMU experimental Lenovo TB371FC functional subset
+[    0.000000] earlycon: qcom_geni0 at MMIO 0x0000000000a90000 (options '')
+[    0.000000] printk: legacy bootconsole [qcom_geni0] enabled
+[    0.000000] OF: reserved mem: 0x00000000bbb00000..0x00000000bfffffff (70656 KiB) nomap non-reusable firmware-hole@bbb00000
+[    0.000000] Zone ranges:
+[    0.000000]   Normal   [mem 0x0000000080000000-0x000000027fffffff]
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000080000000-0x00000000bbafffff]
+[    0.000000]   node   0: [mem 0x00000000c0000000-0x000000027fffffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000080000000-0x000000027fffffff]
+[    0.000000] On node 0, zone Normal: 17664 pages in unavailable ranges
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.1 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: Trusted OS migration not required
+[    0.000000] psci: SMC Calling Convention v1.0
+[    0.000000] percpu: Embedded 17 pages/cpu s37344 r0 d32288 u69632
+[    0.000000] Detected VIPT I-cache on CPU0
+[    0.000000] CPU features: detected: GIC system register CPU interface
+[    0.000000] CPU features: detected: Virtualization Host Extensions
+[    0.000000] alternatives: applying boot alternatives
+[    0.000000] Kernel command line: earlycon=qcom_geni,0xa90000 console=ttyMSM0,115200n8 rdinit=/init loglevel=7 panic=-1 nokaslr
+[    0.000000] Unknown kernel command line parameters "nokaslr", will be passed to user space.
+[    0.000000] Dentry cache hash table entries: 1048576 (order: 11, 8388608 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 524288 (order: 10, 4194304 bytes, linear)
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 2079488
+[    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+[    0.000000] software IO TLB: SWIOTLB bounce buffer size adjusted to 7MB
+[    0.000000] software IO TLB: area num 8.
+[    0.000000] software IO TLB: mapped [mem 0x0000000275a00000-0x0000000276200000] (8MB)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=8, Nodes=1
+[    0.000000] rcu: Hierarchical RCU implementation.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[    0.000000] GICv3: GIC: Using split EOI/Deactivate mode
+[    0.000000] GICv3: 960 SPIs implemented
+[    0.000000] GICv3: 0 Extended SPIs implemented
+[    0.000000] Root IRQ handler: 0xffff800080010088
+[    0.000000] GICv3: GICv3 features: 16 PPIs
+[    0.000000] GICv3: GICD_CTRL.DS=1, SCR_EL3.FIQ=0
+[    0.000000] GICv3: CPU0: found redistributor 0 region 0:0x0000000017a60000
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.000000] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.000000] arch_timer: cp15 and mmio timer(s) running at 19.20MHz (phys/virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x46d987e47, max_idle_ns: 440795202767 ns
+[    0.000071] sched_clock: 56 bits at 19MHz, resolution 52ns, wraps every 4398046511078ns
+[    0.004950] Calibrating delay loop (skipped), value calculated using timer frequency.. 38.40 BogoMIPS (lpj=76800)
+[    0.005123] pid_max: default: 32768 minimum: 301
+[    0.006183] Mount-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.006315] Mountpoint-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.037647] rcu: Hierarchical SRCU implementation.
+[    0.037789] rcu: 	Max phase no-delay instances is 1000.
+[    0.041159] smp: Bringing up secondary CPUs ...
+[    0.044005] CPU features: detected: Spectre-v4
+[    0.044103] CPU features: detected: Spectre-BHB
+[    0.044152] Detected VIPT I-cache on CPU1
+[    0.044889] GICv3: CPU1: found redistributor 700 region 0:0x0000000017b40000
+[    0.045141] CPU1: Booted secondary processor 0x0000000700 [0x411fd0d0]
+[    0.049163] Detected VIPT I-cache on CPU2
+[    0.049606] GICv3: CPU2: found redistributor 600 region 0:0x0000000017b20000
+[    0.049747] CPU2: Booted secondary processor 0x0000000600 [0x411fd0d0]
+[    0.051331] Detected VIPT I-cache on CPU3
+[    0.051474] GICv3: CPU3: found redistributor 500 region 0:0x0000000017b00000
+[    0.051567] CPU3: Booted secondary processor 0x0000000500 [0x411fd0d0]
+[    0.052635] Detected VIPT I-cache on CPU4
+[    0.052760] GICv3: CPU4: found redistributor 400 region 0:0x0000000017ae0000
+[    0.052866] CPU4: Booted secondary processor 0x0000000400 [0x411fd0d0]
+[    0.053978] Detected VIPT I-cache on CPU5
+[    0.054114] GICv3: CPU5: found redistributor 300 region 0:0x0000000017ac0000
+[    0.054198] CPU5: Booted secondary processor 0x0000000300 [0x412fd050]
+[    0.055493] Detected VIPT I-cache on CPU6
+[    0.055649] GICv3: CPU6: found redistributor 200 region 0:0x0000000017aa0000
+[    0.055742] CPU6: Booted secondary processor 0x0000000200 [0x412fd050]
+[    0.056733] Detected VIPT I-cache on CPU7
+[    0.056874] GICv3: CPU7: found redistributor 100 region 0:0x0000000017a80000
+[    0.056958] CPU7: Booted secondary processor 0x0000000100 [0x412fd050]
+[    0.057569] smp: Brought up 1 node, 8 CPUs
+[    0.058219] SMP: Total of 8 processors activated.
+[    0.058294] CPU: All CPU(s) started at EL2
+[    0.058369] CPU features: detected: 32-bit EL0 Support
+[    0.058429] CPU features: detected: Data cache clean to the PoU not required for I/D coherence
+[    0.058468] CPU features: detected: CRC32 instructions
+[    0.058525] CPU features: detected: RCpc load-acquire (LDAPR)
+[    0.058590] CPU features: detected: Speculative Store Bypassing Safe (SSBS)
+[    0.081914] spectre-bhb mitigation disabled by compile time option
+[    0.081924] spectre-bhb mitigation disabled by compile time option
+[    0.109324] alternatives: applying system-wide alternatives
+[    0.155707] Memory: 8138600K/8317952K available (2240K kernel code, 1090K rwdata, 496K rodata, 384K init, 341K bss, 174732K reserved, 0K cma-reserved)
+[    0.170511] devtmpfs: initialized
+[    0.184624] futex hash table entries: 2048 (order: 5, 131072 bytes, linear)
+[    0.185091] pinctrl core: initialized pinctrl subsystem
+[    0.199291] DMA: preallocated 1024 KiB GFP_KERNEL pool for atomic allocations
+[    0.201463] ASID allocator initialised with 65536 entries
+[    0.208739] /soc/phy@1d87000: Fixed dependency cycle(s) with /soc/ufshc@1d84000
+[    0.208986] /soc/ufshc@1d84000: Fixed dependency cycle(s) with /soc/phy@1d87000
+[    0.209099] /soc/interrupt-controller@17a00000: Fixed dependency cycle(s) with /soc/interrupt-controller@17a00000
+[    0.210049] /soc/phy@1d87000: Fixed dependency cycle(s) with /soc/ufshc@1d84000
+[    0.210364] /soc/phy@1d87000: Fixed dependency cycle(s) with /soc/ufshc@1d84000
+[    0.211140] /soc/ufshc@1d84000: Fixed dependency cycle(s) with /soc/phy@1d87000
+[    0.242936] iommu: Default domain type: Translated
+[    0.243088] iommu: DMA domain TLB invalidation policy: strict mode
+[    0.246177] SCSI subsystem initialized
+[    0.263271] clocksource: Switched to clocksource arch_sys_counter
+[    0.275986] Unpacking initramfs...
+[    0.285843] workingset: timestamp_bits=62 max_order=21 bucket_order=0
+[    0.296245] qcom-qmp-ufs-phy 1d87000.phy: supply vdda-phy not found, using dummy regulator
+[    0.297437] qcom-qmp-ufs-phy 1d87000.phy: supply vdda-pll not found, using dummy regulator
+[    0.304939] Freeing initrd memory: 316K
+[    0.311722] a90000.serial: ttyMSM0 at MMIO 0xa90000 (irq = 17, base_baud = 0) is a MSM
+[    0.315609] printk: legacy console [ttyMSM0] enabled
+[    0.315609] printk: legacy console [ttyMSM0] enabled
+[    0.315998] printk: legacy bootconsole [qcom_geni0] disabled
+[    0.315998] printk: legacy bootconsole [qcom_geni0] disabled
+[    0.324730] arm-smmu 3da0000.iommu: probing hardware configuration...
+[    0.324868] arm-smmu 3da0000.iommu: SMMUv2 with:
+[    0.324963] arm-smmu 3da0000.iommu: 	stage 1 translation
+[    0.325031] arm-smmu 3da0000.iommu: 	address translation ops
+[    0.325082] arm-smmu 3da0000.iommu: 	coherent table walk
+[    0.325163] arm-smmu 3da0000.iommu: 	stream matching with 128 register groups
+[    0.325296] arm-smmu 3da0000.iommu: 	8 context banks (0 stage-2 only)
+[    0.325612] arm-smmu 3da0000.iommu: 	Supported page sizes: 0x40201000
+[    0.325681] arm-smmu 3da0000.iommu: 	Stage-1: 48-bit VA -> 48-bit IPA
+[    0.326506] arm-smmu 3da0000.iommu: 	preserved 0 boot mappings
+[    0.335933] arm-smmu 15000000.iommu: probing hardware configuration...
+[    0.336024] arm-smmu 15000000.iommu: SMMUv2 with:
+[    0.336067] arm-smmu 15000000.iommu: 	stage 1 translation
+[    0.336102] arm-smmu 15000000.iommu: 	address translation ops
+[    0.336136] arm-smmu 15000000.iommu: 	coherent table walk
+[    0.336173] arm-smmu 15000000.iommu: 	stream matching with 128 register groups
+[    0.336216] arm-smmu 15000000.iommu: 	96 context banks (0 stage-2 only)
+[    0.336281] arm-smmu 15000000.iommu: 	Supported page sizes: 0x40201000
+[    0.336321] arm-smmu 15000000.iommu: 	Stage-1: 48-bit VA -> 48-bit IPA
+[    0.336665] arm-smmu 15000000.iommu: 	preserved 0 boot mappings
+[    0.345922] ufshcd-qcom 1d84000.ufshc: Adding to iommu group 0
+[    0.351666] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vdd-hba-supply regulator, assuming enabled
+[    0.351808] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vcc-supply regulator, assuming enabled
+[    0.351934] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vccq-supply regulator, assuming enabled
+[    0.351996] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vccq2-supply regulator, assuming enabled
+[    0.364353] scsi host0: ufshcd
+[    0.383686] ufshcd-qcom 1d84000.ufshc: Undefined ref clk gating wait time, use default 255us
+[    0.399504] scsi 0:0:0:49488: Well-known LUN    QEMU     QEMU UFS              PQ: 0 ANSI: 6
+[    0.408766] scsi 0:0:0:49476: Well-known LUN    QEMU     QEMU UFS              PQ: 0 ANSI: 6
+[    0.409398] clk: Disabling unused clocks
+[    0.410742] PM: genpd: Disabling unused power domains
+[    0.412473] scsi 0:0:0:49456: Well-known LUN    QEMU     QEMU UFS              PQ: 0 ANSI: 6
+[    0.417802] scsi 0:0:0:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
+[    0.425696] sd 0:0:0:0: [sda] 16384 4096-byte logical blocks: (67.1 MB/64.0 MiB)
+[    0.426356] sd 0:0:0:0: [sda] Write Protect is off
+[    0.427529] sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, supports DPO and FUA
+[    0.470001] sd 0:0:0:0: [sda] Attached SCSI disk
+[    0.518258] Freeing unused kernel memory: 384K
+[    0.522983] Run /init as init process
+TB371FC_UFS_MIGRATION_BOOT pid=1
+TB371FC_UFS_MIGRATION_CHECK PASS procfs
+TB371FC_UFS_MIGRATION_CHECK PASS sysfs
+TB371FC_UFS_MIGRATION_CHECK PASS devtmpfs
+TB371FC_UFS_MIGRATION_CHECK PASS eight_online_cpus
+TB371FC_UFS_MIGRATION_BINDING /sys/bus/platform/devices/1d84000.ufshc/driver ../../../../bus/platform/drivers/ufshcd-qcom
+TB371FC_UFS_MIGRATION_CHECK PASS qcom_host_driver
+TB371FC_UFS_MIGRATION_BINDING /sys/bus/platform/devices/1d87000.phy/driver ../../../../bus/platform/drivers/qcom-qmp-ufs-phy
+TB371FC_UFS_MIGRATION_CHECK PASS qmp_phy_driver
+TB371FC_UFS_MIGRATION_BINDING /sys/bus/platform/devices/100000.clock-controller/driver ../../../../bus/platform/drivers/gcc-sm8250
+TB371FC_UFS_MIGRATION_CHECK PASS gcc_driver
+TB371FC_UFS_MIGRATION_BINDING /sys/bus/platform/devices/15000000.iommu/driver ../../../../bus/platform/drivers/arm-smmu
+TB371FC_UFS_MIGRATION_CHECK PASS apps_smmu_driver
+TB371FC_UFS_MIGRATION_IOMMU /sys/kernel/iommu_groups/0/type DMA
+TB371FC_UFS_MIGRATION_CHECK PASS ufs_translated_dma_domain_before
+TB371FC_UFS_MIGRATION_CHECK PASS ufs_block_discovered
+TB371FC_UFS_MIGRATION_CHECK PASS logical_sector_4096_before
+TB371FC_UFS_MIGRATION_CHECK PASS capacity_64_mib_before
+TB371FC_UFS_MIGRATION_CHECK PASS aligned_buffers
+TB371FC_UFS_MIGRATION_CHECK PASS source_direct_write
+TB371FC_UFS_MIGRATION_CHECK PASS source_flush
+TB371FC_UFS_MIGRATION_CHECK PASS source_direct_readback
+TB371FC_UFS_MIGRATION_CHECK PASS source_close
+TB371FC_UFS_MIGRATION_CHECK PASS source_boot_id
+TB371FC_UFS_MIGRATION_CHECK PASS source_monotonic
+TB371FC_UFS_MIGRATION_CHECK PASS control_tty_raw
+TB371FC_UFS_MIGRATION_READY
+TB371FC_UFS_MIGRATION_CHECK PASS stored_host_nonce
+TB371FC_UFS_MIGRATION_CHECK PASS pm_source_reopen
+TB371FC_UFS_MIGRATION_CHECK PASS pm_source_block_identity
+TB371FC_UFS_MIGRATION_PM_SYSFS_WRITE /sys/bus/platform/devices/1d84000.ufshc/power/control value=on bytes=2 errno=0
+TB371FC_UFS_MIGRATION_CHECK PASS pm_host_control_on
+TB371FC_UFS_MIGRATION_PM_SYSFS_WRITE /sys/block/sda/device/power/control value=on bytes=2 errno=0
+TB371FC_UFS_MIGRATION_CHECK PASS pm_lun_control_on
+TB371FC_UFS_MIGRATION_CHECK PASS pm_host_active
+TB371FC_UFS_MIGRATION_CHECK PASS pm_lun_active
+TB371FC_UFS_MIGRATION_CHECK PASS pm_target_hibern8
+TB371FC_UFS_MIGRATION_PM_OBSERVE before_suspend /sys/bus/platform/devices/1d84000.ufshc/power/control value=on readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE before_suspend /sys/bus/platform/devices/1d84000.ufshc/power/runtime_status value=active readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE before_suspend /sys/bus/platform/devices/1d84000.ufshc/power/runtime_active_time value=250 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE before_suspend /sys/bus/platform/devices/1d84000.ufshc/power/runtime_suspended_time value=0 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE before_suspend /sys/block/sda/device/power/control value=on readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE before_suspend /sys/block/sda/device/power/runtime_status value=active readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE before_suspend /sys/block/sda/device/power/runtime_active_time value=208 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE before_suspend /sys/block/sda/device/power/runtime_suspended_time value=0 readable=1
+TB371FC_UFS_MIGRATION_PM_SCSI /sys/bus/scsi/devices/0:0:0:49476 resolved=/sys/devices/platform/soc/1d84000.ufshc/host0/target0:0:0/0:0:0:49476 before=active
+TB371FC_UFS_MIGRATION_PM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:49476/power/autosuspend_delay_ms value=500 bytes=3 errno=0
+TB371FC_UFS_MIGRATION_PM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:49476/power/control value=auto bytes=4 errno=0
+TB371FC_UFS_MIGRATION_PM_SCSI /sys/bus/scsi/devices/target0:0:0 resolved=/sys/devices/platform/soc/1d84000.ufshc/host0/target0:0:0 before=active
+TB371FC_UFS_MIGRATION_PM_SYSFS_WRITE /sys/bus/scsi/devices/target0:0:0/power/control value=auto bytes=4 errno=0
+TB371FC_UFS_MIGRATION_PM_SCSI /sys/bus/scsi/devices/0:0:0:49456 resolved=/sys/devices/platform/soc/1d84000.ufshc/host0/target0:0:0/0:0:0:49456 before=active
+TB371FC_UFS_MIGRATION_PM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:49456/power/autosuspend_delay_ms value=500 bytes=3 errno=0
+TB371FC_UFS_MIGRATION_PM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:49456/power/control value=auto bytes=4 errno=0
+TB371FC_UFS_MIGRATION_PM_SCSI /sys/bus/scsi/devices/0:0:0:49488 resolved=/sys/devices/platform/soc/1d84000.ufshc/host0/target0:0:0/0:0:0:49488 before=active
+TB371FC_UFS_MIGRATION_PM_DEVICE_WLUN /sys/bus/scsi/devices/0:0:0:49488 driver=../../../../../../../bus/scsi/drivers/ufs_device_wlun
+TB371FC_UFS_MIGRATION_PM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:49488/power/autosuspend_delay_ms value=500 bytes=3 errno=0
+TB371FC_UFS_MIGRATION_PM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:49488/power/control value=auto bytes=4 errno=0
+TB371FC_UFS_MIGRATION_PM_SCSI /sys/bus/scsi/devices/0:0:0:0 resolved=/sys/devices/platform/soc/1d84000.ufshc/host0/target0:0:0/0:0:0:0 before=active
+TB371FC_UFS_MIGRATION_PM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:0/power/autosuspend_delay_ms value=500 bytes=3 errno=0
+TB371FC_UFS_MIGRATION_PM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:0/power/control value=auto bytes=4 errno=0
+TB371FC_UFS_MIGRATION_PM_SCSI /sys/bus/scsi/devices/host0 resolved=/sys/devices/platform/soc/1d84000.ufshc/host0 before=active
+TB371FC_UFS_MIGRATION_PM_SYSFS_WRITE /sys/bus/scsi/devices/host0/power/control value=auto bytes=4 errno=0
+TB371FC_UFS_MIGRATION_PM_SCSI_CONFIGURED 4
+TB371FC_UFS_MIGRATION_CHECK PASS pm_scsi_autosuspend
+TB371FC_UFS_MIGRATION_PM_SYSFS_WRITE /sys/bus/platform/devices/1d84000.ufshc/power/control value=auto bytes=4 errno=0
+TB371FC_UFS_MIGRATION_CHECK PASS pm_host_control_auto
+TB371FC_UFS_MIGRATION_PM_IDLE_WAIT_MS 1260
+TB371FC_UFS_MIGRATION_PM_OBSERVE source_suspended /sys/bus/platform/devices/1d84000.ufshc/power/control value=auto readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE source_suspended /sys/bus/platform/devices/1d84000.ufshc/power/runtime_status value=suspended readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE source_suspended /sys/bus/platform/devices/1d84000.ufshc/power/runtime_active_time value=1540 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE source_suspended /sys/bus/platform/devices/1d84000.ufshc/power/runtime_suspended_time value=15 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE source_suspended /sys/block/sda/device/power/control value=auto readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE source_suspended /sys/block/sda/device/power/runtime_status value=suspended readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE source_suspended /sys/block/sda/device/power/runtime_active_time value=868 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE source_suspended /sys/block/sda/device/power/runtime_suspended_time value=644 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE source_suspended /sys/bus/scsi/devices/0:0:0:49488/power/control value=auto readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE source_suspended /sys/bus/scsi/devices/0:0:0:49488/power/runtime_status value=suspended readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE source_suspended /sys/bus/scsi/devices/0:0:0:49488/power/runtime_active_time value=1509 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE source_suspended /sys/bus/scsi/devices/0:0:0:49488/power/runtime_suspended_time value=19 readable=1
+TB371FC_UFS_MIGRATION_CHECK PASS pm_source_host_suspended
+TB371FC_UFS_MIGRATION_CHECK PASS pm_source_lun_suspended
+TB371FC_UFS_MIGRATION_CHECK PASS pm_source_wlun_suspended
+TB371FC_UFS_MIGRATION_PM_SUSPENDED_MS before=16 checkpoint=137
+TB371FC_UFS_MIGRATION_CHECK PASS pm_source_stays_suspended
+TB371FC_UFS_MIGRATION_CHECKPOINT nonce=ab78910d9b26c8fc48d2e28acf536d2b boot_id=f954111d-43e0-4292-be5d-dc9a879d66ae monotonic_ns=514285104 checks=34 failures=0

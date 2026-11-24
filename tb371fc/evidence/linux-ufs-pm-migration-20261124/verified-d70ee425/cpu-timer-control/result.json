@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "suite": "Real CPU timer expiry without migration",
+  "qemu_sha256": "4240bb5caf2b1ec101878adf18ed31b5a5bc3fabbf89b80122c99f74a5695697",
+  "elf_sha256": "cddabf74eced5774c4b9658003c118adfd9892008e28a89c4cba1e129e341481",
+  "machine": "tb371fc,ufs-enabled=off",
+  "ram_per_process": "128 MiB",
+  "compile_command": null,
+  "passed": true,
+  "provided_elf": "/tmp/tbci-nofrfqkx/23/data/probe.elf",
+  "scope": "Identical guest ELF, no debugger and no migration",
+  "hyp_timer_intid": 28,
+  "hyp_timer_observation": "GICR pending before and after expiry, then clear after disable; no CNTHP CTL read or CNTHP write between restore and expiry",
+  "symbols": {
+    "timer_migration_checkpoint": 2148016212,
+    "timer_migration_done": 2148016216,
+    "timer_migration_result": 2148017216
+  },
+  "command": [
+    "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+    "-M",
+    "tb371fc,ufs-enabled=off",
+    "-accel",
+    "tcg,thread=single",
+    "-m",
+    "128M",
+    "-display",
+    "none",
+    "-serial",
+    "none",
+    "-monitor",
+    "none",
+    "-semihosting-config",
+    "enable=on,target=native",
+    "-kernel",
+    "/tmp/tbci-nofrfqkx/23/data/probe.elf",
+    "-no-reboot"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.222
+}

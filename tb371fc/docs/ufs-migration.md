@@ -242,8 +242,61 @@ then clear after the guest disables CNTHP. It does not read CNTHP CTL or write
 CNTHP between restore and expiry: an exact-mode CTL read recalculates a timer
 and could hide a missing event. The identical ELF also runs without migration
 as a control. The original physical/virtual checks, all original Linux checks
-and their host timeouts remain mandatory. A successful new CI result is still
-required before claiming that the suspended Linux continuation passes.
+and their host timeouts remain mandatory. The recorded run below passes these
+gates with the pending CNTHP event preserved.
+
+### Recorded runtime-suspended continuation acceptance
+
+[Run 45374585821](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45374585821)
+completed successfully on **2026-11-24 at 10:32:34 UTC** for code head
+`d70ee4255c5305abff0d718d2e97f60c3d6472e0`. The actual CI checkout was merge
+`a9e450bf385bcea27771b9b8731c6a9c494b6e29`; both have tree
+`9cc576655c8390f6541eae050c1a5ff654edbf5b`. The
+[source binding](../evidence/linux-ufs-pm-migration-20261124/source-binding.json)
+records both attempts, complete artifact digests, jobs, runtime Git blobs and
+the hashes of every archived raw JSON/log. This evidence archive changes no
+runtime, fixture, configuration or workflow file from the tested code head.
+
+| Gate | Measured result | Raw evidence |
+| --- | --- | --- |
+| Suspended real-Linux UFS continuation | **61/61**, source 34 plus receiver 27; both QEMU processes exit 0 | [Result](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/pm-migration/result.json) |
+| Original active-controller continuation | **39/39**, source 21 plus receiver 18 | [Result](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/active-migration/result.json) |
+| CNTHP migration and identical-ELF control | INTID 28 clear before migration, asserted after its compare deadline, clear after disable; both runs pass | [Migration](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/cpu-timer-migration/result.json), [control](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/cpu-timer-control/result.json) |
+| Public component gates | **59/59** | [Result](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/components-result.json) |
+| Independent unpatched-Linux gates | **5/5**, including standalone UFS runtime suspend/read-wake | [Result](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/linux-result.json) |
+| UFS QTest migrations | **21/21 groups**, three completed transfers and seven rejection scenarios | [Result](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/ufs-migration-result.json) |
+| Shared PCI UFS regression | **17/17**, no skipped cases | [Result](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/pci-ufs-result.json) |
+| Isolated A77 architectural probes | **852 checks** across nine configurations, plus two invalid-configuration rejections | [Result](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/a77-result.json) |
+
+The suspended run retained the same PID 1, nonce, boot ID and open descriptor.
+Host, LUN and device-WLUN remained runtime-suspended on the receiver. The source
+running/paused, receiver loaded/paused and receiver running/before-I/O QMP
+observations all reported Hibern8 and zero core/iface/unipro clocks. Only the
+ordinary direct read started the wake path. After the I/O sequence, QMP reported
+an active link and restored core/unipro clocks of 37.5 MHz and iface of 100 MHz.
+Both 64 MiB whole-media comparisons passed, all retained input hashes remained
+unchanged during the run, and no kernel failure line was found. The complete
+suspended-mode harness run took 5.345 seconds; this is not a per-I/O latency
+measurement.
+
+The focused CNTHP probe observed its compare value at **3,860,236 ticks** and
+the asserted GIC input at **3,862,244 ticks**, without a CNTHP control read or
+register rewrite between restore and expiry. Its control used the identical
+ELF. The tested board QEMU SHA-256 was
+`4240bb5caf2b1ec101878adf18ed31b5a5bc3fabbf89b80122c99f74a5695697`;
+the archive digests and individual raw files are independently recorded in
+the source binding.
+
+The [first failure](../evidence/linux-ufs-pm-migration-20261124/first-3ed38f3d/result.json)
+and its separate source/receiver logs remain alongside the passing evidence.
+The Linux Image, effective config, guest source, compiled init, initramfs,
+Linux migration harness and all imported harness modules were byte-identical
+between those two attempts. Within the Linux continuation input set, the QEMU
+binary and the timestamp-bearing kernel build receipt changed. The old
+120-second timeout and all original
+Linux assertions were retained. This acceptance covers these public emulated
+queues and runtime-PM states; it adds no system-suspend, in-flight UFS or native
+tablet Linux pass.
 
 ### Recorded Linux continuation acceptance
 
