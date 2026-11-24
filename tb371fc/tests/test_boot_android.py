@@ -5,6 +5,7 @@ import copy
 import errno
 import hashlib
 import json
+import os
 from pathlib import Path
 import socket
 import subprocess
@@ -328,7 +329,8 @@ class AndroidRunnerTests(unittest.TestCase):
         self.assertFalse(process.terminated)
         self.assertFalse(observed.get("stock_android_boot_passed", False))
 
-    def run_main_with_printk(self, text, *, early_stop):
+    def run_main_with_printk(self, text, *, early_stop, parse_failure=None,
+                            serial_text=None, expected_status=2):
         """Exercise the CLI and real observation/finalization flow with fake I/O."""
         self.add_lun(0)
         process, clock = Process(), Clock()
@@ -350,13 +352,24 @@ class AndroidRunnerTests(unittest.TestCase):
         def capture(command, symbols, out):
             self.assertFalse(monitor.running)
             captures.append(out)
+            if parse_failure == "all" or (parse_failure == "first" and len(captures) == 1):
+                # Exercise the real symbol parser, not an injected error field or
+                # a failed QMP command. The fixture symbol file is intentionally
+                # incomplete; the QMP transport remains healthy.
+                return boot.capture_kernel_log(command, symbols, out)
             (out / "kernel-printk.log").write_text(text)
             return {"records": len(text.splitlines())}
 
         observe = boot.observe
 
+        def launch(*args, **kwargs):
+            if serial_text is not None:
+                kwargs["stdout"].write(serial_text.encode())
+                kwargs["stdout"].flush()
+            return process
+
         def run_observation(plan, **kwargs):
-            return observe(plan, **kwargs, popen=lambda *a, **k: process,
+            return observe(plan, **kwargs, popen=launch,
                            qmp_open=lambda *a: monitor, clock=clock, capture=capture)
 
         manifest = self.root / "prepared-manifest.json"
@@ -378,7 +391,7 @@ class AndroidRunnerTests(unittest.TestCase):
               patch("builtins.print")):
             status = boot.main(argv)
         report = json.loads((out / "result.json").read_text())
-        self.assertEqual(status, 2)
+        self.assertEqual(status, expected_status)
         overlays.assert_called_once()
         preserved.assert_called_once()
         self.assertTrue(report["preservation"]["preserved"])
@@ -399,10 +412,51 @@ class AndroidRunnerTests(unittest.TestCase):
         self.assertEqual(report["qemu_returncode"], 0)
         self.assertFalse(process.terminated)
         self.assertFalse(process.killed)
-        self.assertFalse(report["stock_android_boot_passed"])
+        self.assertEqual(report["stock_android_boot_passed"], expected_status == 0)
         self.assertEqual(report["stop_on_kernel_failure"], early_stop)
-        self.assertTrue(any(row["path"].startswith("printk-") for row in report["logs"]))
+        if parse_failure != "all":
+            self.assertTrue(any(row["path"].startswith("printk-") for row in report["logs"]))
         return report, monitor, captures
+
+    def test_printk_symbol_parse_failure_rejects_serial_boot_completion(self):
+        serial = ("[ 4.0] init: init second stage started!\n"
+                  "[ 5.0] init: processing action (sys.boot_completed=1) from (/system/etc/init/hw/init.rc:1)\n")
+        report, monitor, captures = self.run_main_with_printk(
+            "Linux version 4.19\n", early_stop=True, parse_failure="all",
+            serial_text=serial, expected_status=1)
+        self.assertTrue(report["observation"]["android_boot_completed_observed"])
+        self.assertEqual(report["outcome"], "diagnostic-failure")
+        self.assertEqual(report["elapsed_seconds"], 120)
+        self.assertEqual(report["stop_reason"], "time-bound")
+        self.assertNotIn("early_kernel_failure", report)
+        self.assertNotIn("error", report)
+        self.assertIsNone(report["qmp_drain"]["prior_command_error"])
+        self.assertGreater(len(captures), 2)
+        self.assertTrue(all("matching canonical kernel symbols" in row["error"]
+                            for row in report["printk"]))
+
+    def test_later_printk_success_does_not_erase_symbol_parse_failure(self):
+        report, monitor, captures = self.run_main_with_printk(
+            "[ 4.0] init: init second stage started!\n"
+            "[ 5.0] init: processing action (sys.boot_completed=1) from (/system/etc/init/hw/init.rc:1)\n",
+            early_stop=False, parse_failure="first", expected_status=1)
+        self.assertEqual(report["outcome"], "diagnostic-failure")
+        self.assertTrue(report["observation"]["android_boot_completed_observed"])
+        self.assertEqual(report["elapsed_seconds"], 120)
+        self.assertIn("matching canonical kernel symbols", report["printk"][0]["error"])
+        self.assertGreater(len(captures), 2)
+        self.assertTrue(all("capture" in row and "error" not in row
+                            for row in report["printk"][1:]))
+        self.assertIsNone(report["qmp_drain"]["prior_command_error"])
+
+    def test_successful_printk_capture_allows_normal_boot_observation(self):
+        report, monitor, captures = self.run_main_with_printk(
+            "[ 4.0] init: init second stage started!\n"
+            "[ 5.0] init: processing action (sys.boot_completed=1) from (/system/etc/init/hw/init.rc:1)\n",
+            early_stop=True, expected_status=0)
+        self.assertEqual(report["outcome"], "android-boot-complete-observed")
+        self.assertTrue(all("capture" in row and "error" not in row
+                            for row in report["printk"]))
 
     def test_opt_in_kernel_failure_runs_complete_finalization(self):
         report, monitor, captures = self.run_main_with_printk(
@@ -480,7 +534,12 @@ class AndroidRunnerTests(unittest.TestCase):
     def test_preservation_reports_modified_original_even_without_a_supplied_lun_hash(self):
         self.add_lun(0)
         plan = self.plan()
-        Path(self.manifest["luns"][0]["path"]).write_bytes(b"x" * 8192)
+        original = Path(self.manifest["luns"][0]["path"])
+        before = original.stat()
+        original.write_bytes(b"x" * 8192)
+        # Post-run LU preservation compares file identity and timestamps, not a
+        # full digest. Make this real write observable even on coarse clocks.
+        os.utime(original, ns=(before.st_atime_ns, before.st_mtime_ns + 2_000_000_000))
         result = boot.verify_preserved(plan)
         self.assertFalse(result["preserved"])
         self.assertIsNone(result["original_luns"][0]["base_sha256_supplied"])

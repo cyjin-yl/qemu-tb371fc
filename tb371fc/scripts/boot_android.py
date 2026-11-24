@@ -609,6 +609,13 @@ def verify_preserved(plan):
             "preserved": all(core.values()) and all(x["stat_unchanged"] for x in luns)}
 
 
+def printk_capture_failed(report):
+    # A healthy QMP transport does not make symbol parsing, virtual-memory
+    # reads or ring decoding successful. Retain failures even if a later
+    # snapshot succeeds; missing diagnostics cannot establish a clean run.
+    return any("error" in snapshot for snapshot in report.get("printk", []))
+
+
 def stock_boot_passed(report, plan):
     """Require Android evidence and reject contradictory guest/runtime outcomes."""
     adverse_event = any(
@@ -619,6 +626,7 @@ def stock_boot_passed(report, plan):
     return bool(
         plan["overlays"] and obs["android_boot_completed_observed"] and
         not obs["kernel_failures"] and not report.get("early_kernel_failure") and not adverse_event and
+        not printk_capture_failed(report) and
         report["preservation"]["preserved"] and not report.get("error") and
         report["base_files_opened_read_only"] and report.get("qemu_returncode") == 0 and
         report.get("qemu_unchanged") is True and
@@ -714,9 +722,10 @@ def main(argv=None):
                                      "input-preservation-failure" if not report["preservation"]["preserved"] else
                                      "kernel-failure" if obs["kernel_failures"] or report.get("early_kernel_failure") else
                                      "runner-error" if report.get("error") else
+                                     "diagnostic-failure" if printk_capture_failed(report) else
                                      "android-userspace-incomplete" if obs["android_userspace_observed"] else
                                      "no-android-userspace-evidence")
-                exit_code = (0 if passed else 1 if report.get("error") or
+                exit_code = (0 if passed else 1 if report.get("error") or printk_capture_failed(report) or
                              not report["preservation"]["preserved"] else 2)
         except Exception as exc:
             report["error"] = f"{type(exc).__name__}: {exc}"
