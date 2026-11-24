@@ -50,6 +50,7 @@
 #include "hw/misc/qcom-sm8250-npucc.h"
 #include "hw/misc/qcom-sm8250-camcc.h"
 #include "hw/misc/qcom-sm8250-dispcc.h"
+#include "hw/misc/qcom-sm8250-videocc.h"
 #include "hw/misc/qcom-noc-qos.h"
 #include "hw/misc/qcom-pshold.h"
 #include "hw/misc/qcom-dcc.h"
@@ -1265,6 +1266,19 @@ static void tb371fc_create_dispcc(TB371FCMachineState *s)
     sysbus_mmio_map(SYS_BUS_DEVICE(dispcc), 0, DISPCC_PHYSICAL_BASE);
 }
 
+static void tb371fc_create_videocc(TB371FCMachineState *s)
+{
+    DeviceState *videocc = qdev_new(TYPE_QCOM_SM8250_VIDEOCC);
+
+    object_property_add_child(OBJECT(s), "videocc", OBJECT(videocc));
+    /* Both sourced XO carriers share xo_board; test and sleep stay unknown. */
+    qdev_connect_clock_in(videocc, "bi_tcxo", s->xo);
+    qdev_connect_clock_in(videocc, "bi_tcxo_ao", s->xo);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(videocc), &error_fatal);
+    /* 26 exact leaves preserve all four independent VIDEO GDSCR owners. */
+    sysbus_mmio_map(SYS_BUS_DEVICE(videocc), 0, VIDEOCC_PHYSICAL_BASE);
+}
+
 static void tb371fc_create_noc_qos(TB371FCMachineState *s)
 {
     /*
@@ -1816,6 +1830,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_npucc(s);
     tb371fc_create_camcc(s);
     tb371fc_create_dispcc(s);
+    tb371fc_create_videocc(s);
     tb371fc_create_npu_gdsc(s);
     tb371fc_create_noc_qos(s);
     tb371fc_create_gpu_cx_gdsc(s);

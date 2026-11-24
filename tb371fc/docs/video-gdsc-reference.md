@@ -8,7 +8,7 @@ TB371FC DT. Its profile defaults to disabled; select the reference explicitly:
 ```
 
 The reference models software-visible digital power requests and qualified
-feedback. It adds no VIDEOCC clock controller, codec, DSP firmware, video DMA,
+feedback. Its independent scope adds no clock controller, codec, DSP firmware, video DMA,
 retained memory contents or physical transition timing. Existing camera,
 MDSS and NPU types and VMState are unchanged.
 
@@ -87,7 +87,9 @@ commit `94304e12a3509eac7b3716bf574ce0b1fcaacbae`:
 ## Exact access and three-state power protocol
 
 Only aligned 32-bit accesses to each listed word are supported. Unassigned
-neighbors and every other VIDEOCC address remain unassigned. In particular,
+neighbors still reject; source-declared BCR neighbors now belong to the
+separate [VIDEOCC clock model](videocc-sm8250.md), which independently defaults
+to disabled. That model's26 precise leaves exclude these four GDSCRs. In particular,
 the board does not map the enclosing `0x0abf0000..0x0abfffff` range as RAM
 or as a successful default register bank.
 

@@ -60,7 +60,7 @@ Use their per-run hashes rather than treating a source table as execution proof.
 | TBU power ownership | [Four complete GDSC DT nodes](evidence/wholeboard-20261123-a47/smmuv500-tbu-gdsc-dt.json) and [current GCC ownership/source review](evidence/wholeboard-20261123-a47/smmuv500-tbu-gdsc-review.json); existing GCC domains 7–10 own the words, while traffic/power coupling is not added by the companion |
 | TSENS24xx digital reference | [Two actual controllers and direct thermal references](evidence/wholeboard-20261123-a47/tsens-dt-evidence-3ef98.json), [pinned vendor/upstream source review](evidence/wholeboard-20261123-a47/tsens-dt-review-3ef98.json) and [model contract](docs/tsens24xx-reference.md); actual PA `0x0c222004` abort in [3ef98 native run](evidence/wholeboard-20261123-a47/native-3ef98.json). SROT DT size 4 remains distinct from sourced +4 access. Explicit temperature, boot mask, 1-ms timing, reset defaults and held-clear policy are reference assumptions. [52492a CI](evidence/wholeboard-20261123-a47/public-ci-52492a.json) and its [original TSENS 34/2/2/2 receipt](evidence/wholeboard-20261123-a47/tsens24xx-52492a.json) passed; the [same-binary full-DT run](evidence/wholeboard-20261123-a47/native-52492a.json) completed reference sampling on both controllers and next aborted in CPUFreq at `0x18591100` |
 | CPUFreq HW EPSS reference | [Bounded original-DT resources](evidence/wholeboard-20261123-a47/cpufreq-dt-evidence-52492a.json), [fixed official driver/clock review](evidence/wholeboard-20261123-a47/cpufreq-dt-review-52492a.json) and [model contract](docs/cpufreq-hw-reference.md). Three domains, actual 4/3/1 CPU counter addresses and SPI30/31/19; all DT max_cores arguments are 4. Synthetic all-XO LUTs, voltages, limit-event policy and always-clocked virtual cycles are explicit references. [1fe4e1 actual 30/2/2/2 receipt](evidence/wholeboard-20261123-a47/cpufreq-hw-1fe4e1.json) and [all 74 gates](evidence/wholeboard-20261123-a47/public-ci-1fe4e1.json) passed. Same-binary full DT explicitly registers CPUFreq, then faults in L3 devfreq at 0x18590000 |
-| VIDEOCC preparation | [fixed vendor source note](docs/videocc-source-note.md) and [actual v2 DT binding](evidence/wholeboard-20261123-a47/videocc-dt-evidence.json); probe was deferred, not the next fatal |
+| VIDEOCC | [Historical source preparation](docs/videocc-source-note.md), [actual v2 DT binding](evidence/videocc-20261124-e1a9/actual-dt-videocc-node.json) and [implemented digital contract](docs/videocc-sm8250.md); run006 first fatal at0x0abf042c after Display CC registration; ten pinned primary sources,55 words/26 leaves and independent474-byte state |
 | MPM sleep counter | [mpm2-sleep-counter.md](docs/mpm2-sleep-counter.md), pinned boot_stats read32 contract and actual TB371FC DT 32768-Hz declaration; explicit virtual-time, cold-epoch/reset and migration policies; [17-check/two-transfer receipt](evidence/wholeboard-20261123-a47/mpm2-0508.json) and [native read](evidence/wholeboard-20261123-a47/native-0508.json) |
 | Generic Timer | [mmio-timer.md](docs/mmio-timer.md), Arm ARM external-register contract, exact-count arithmetic and retained regression controls |
 | GENI | [geni-uart.md](docs/geni-uart.md), Linux FIFO/IRQ contract and actual clock/reset integration |
@@ -274,3 +274,21 @@ is copied from the existing public inventory, original DT SHA-256
 `5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207`.
 No unspecified PHY rate, PLL1-even provider, parentless critical-XO carrier,
 opaque PLL STATUS, physical display execution or panel behavior is inferred.
+
+## Kona v2 VIDEOCC increment after native run006
+
+The [VIDEOCC contract](docs/videocc-sm8250.md),
+[register manifest](docs/videocc-sm8250-registers.json) and
+[generator](scripts/generate_videocc_sm8250.py) pin ten primary files to the
+same fixed94304e12 kernel revision. The controller SHA-256 is
+`33a0f85c8d9efae1cc97f1916b0742a533ca0c79e35516b485c61b5eddd909e5`;
+the binding SHA-256 is
+`0f51753e9eb497399d3c2d9a362e6d3ee7baf4f789b6e6628a7911b00f89d774`.
+The other eight pins cover Lucid, integer RCG, branch source/header,
+regmap/generic divider, reset bit updates and the two sourced XO names.
+The actual node uses `qcom,videocc-kona-v2`, GCC205 and MX/MMCX supplies.
+Source-known initial then v2 PLL1 configuration, four RO two-bit divider
+fields and two shared CBCR/ARES words are handled separately. Neither
+`div2` names, software critical flags, an undeclared input rate nor the
+resource/regmap extent authorizes invented clock demand or generic RAM.
+Four VIDEO GDSC words keep their prior owners and migration format.

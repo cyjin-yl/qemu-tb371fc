@@ -25,6 +25,7 @@ from test_camera_gdsc import (
     CameraRig, GLOBAL_FIELDS, DOMAIN_FIELDS, camera_payload, core_diagnostics,
     literal_rpmh_payload, unique_section, provider_snapshot, write_json,
     GCC_VMSTATE_BYTES, DT_SHA256, DRIVER_SHA256,
+    VIDEOCC_NEIGHBOR_BCRS, assert_disabled_videocc_neighbors,
 )
 from test_mdss_gdsc import mdss_payload
 from test_npu_gdsc import npu_payload, oracle as npu_oracle
@@ -422,6 +423,7 @@ def access_shapes_and_unowned_videocc_holes_are_exact(r):
     holes = sorted({0x0abf0000, 0x0abf1000, 0x0abffffc,
                     *(address - 4 for address in ADDRESSES),
                     *(address + 4 for address in ADDRESSES)})
+    holes = [address for address in holes if address not in VIDEOCC_NEIGHBOR_BCRS]
     previous = core_diagnostics(r.log_path.read_text(errors="replace"))
     expected = []
     for address in holes:
@@ -430,6 +432,7 @@ def access_shapes_and_unowned_videocc_holes_are_exact(r):
         expected.extend((op, address, 4, "(null)", "rejected") for op in ("read", "write"))
     assert core_diagnostics(r.log_path.read_text(errors="replace"))[len(previous):] == expected
     assert r.pure_snapshot() == before
+    assert_disabled_videocc_neighbors(r)
     # Each spanning write commits its valid low word, then rejects the next
     # unowned word. The gate does not claim an atomic 64-bit device access.
     for i, address in enumerate(ADDRESSES):

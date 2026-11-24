@@ -14,7 +14,7 @@
 
 ## 当前整合：原厂 Android 启动开发基线
 
-本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。加入 DISPCC 协议及固定源码再生两个 gate 后，当前公开计划为 **90 项：85 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
+本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。加入 VIDEOCC 协议及固定源码再生两个 gate 后，当前公开计划为 **92 项：87 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。精确 `f209f65` 已实际通过此前 85+5 计划并完成原厂 run006；新增 VIDEOCC 仍需自己的编译和运行回执。
 
 两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
 
@@ -38,7 +38,7 @@ NPU_CFG_AHB `0x4d004` 仅增加源码支持的 retention 位 13/14，保留原 H
 
 同一二进制的[完整 run003 回执](https://github.com/cyjin-yl/qemu-tb371fc/blob/4e030d048b152038a75c0e2a49df0dcd24e30352/tb371fc/evidence/npu-20261124-e1a9/native-frontier-after-npu.json)记录 122.55 秒观察，原始 kernel／ramdisk／完整 DT／bootargs、AOP 和 QEMU 摘要不变，旧 NPU 读取异常未再出现。新的首个同步外部异常是 guest 6.780231 秒读取 MVS0 GDSC `0x0abf0d18` 的 4 B，进程为 CPU4、PID79 `kworker/4:1`，调用链经过 `gdsc_probe`。仍未挂载原始 LUN，没有 Android 用户态或完成启动证据。
 
-[VIDEO 独立参考模型](tb371fc/docs/video-gdsc-reference.md)按实际 DT 只接管 mvs0c／mvs1c／mvs0／mvs1 四个 4 B 控制字，默认关闭，需显式 `qcom-video-gdsc.enabled-reference=on`。四域均为 mmcx 的同级 consumer，硬件模式仅在后两域声明。三路分流保留原 camera/MDSS 连接，NPU 继续无供电连接。VIDEO_AHB `0xb004` 只增加 retention 位 13/14，未知 external79 和其余 VIDEOCC 范围不变。
+[VIDEO 独立参考模型](tb371fc/docs/video-gdsc-reference.md)按实际 DT 只接管 mvs0c／mvs1c／mvs0／mvs1 四个 4 B 控制字，默认关闭，需显式 `qcom-video-gdsc.enabled-reference=on`。四域均为 mmcx 的同级 consumer，硬件模式仅在后两域声明。三路分流保留原 camera/MDSS 连接，NPU 继续无供电连接。VIDEO_AHB `0xb004` 只增加 retention 位 13/14，未知 external79 不变；时钟控制由下述独立 VIDEOCC 增量处理。
 
 `4cc9dee` 的[正式 CI 45414535386](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45414535386)已实际通过 81+5 全计划及独立 A77/PCI UFS，VIDEO 的 22 组／3 次完成／2 次 profile／2 次损坏流已从实际 ZIP 独立核验。二进制 SHA-256 为 `33da659249dab043671e0de0d04326ba9a52c6a53dedffcf7b1e6f42130d6808`。同二进制原始输入 run004 已注册四个 VIDEO GDSC；下一首错位于 CAMCC。这四个请求接口仍不代表视频解码、DSP 固件或 Android 已启动。
 
@@ -56,7 +56,17 @@ Lucid UPDATE/ACK 与 Zonda BYPASS/直接重调频分开；M/N/D、HID 和 SBI �
 
 run005 的首个显示异常发生于 guest 3.697772 秒，CPU4、PID84 `kworker/4:1` 经 `disp_cc_kona_probe` → `clk_lucid_pll_configure` 读取 `0x0af00000`。新的 [DISPCC 有界协议](tb371fc/docs/dispcc-sm8250.md)按实际 `qcom,kona-dispcc` 复核两 Lucid PLL、22 个 RCG、32 个 branch、五个 divider、两条 reset 和 MISC bit4；130 个字分为 39 个窗口，共 520 B。MDSS GDSC `0x0af03000` 保持原 owner 和独立迁移。
 
-需显式 `qcom-sm8250-dispcc.enabled-reference=on`。只有 `bi_tcxo` 接现有 XO；16 个其它 carrier 保持未知，包括 DSI／DP／eDP PHY、未导出的 PLL1 even 和源中没有父声明的 critical XO branch。8／16 位 M/N/D、两路显式 remote vote、两可写／三只读 divider 与独立 1676 B v1 迁移按源码分开处理。41 组及 3/2/2 迁移、九源两文件再生加入新 85+5 计划，仍需该增量的正式编译／CI及原厂运行；显示执行和 Android 尚未通过。
+需显式 `qcom-sm8250-dispcc.enabled-reference=on`。只有 `bi_tcxo` 接现有 XO；16 个其它 carrier 保持未知，包括 DSI／DP／eDP PHY、未导出的 PLL1 even 和源中没有父声明的 critical XO branch。8／16 位 M/N/D、两路显式 remote vote、两可写／三只读 divider 与独立 1676 B v1 迁移按源码分开处理。
+
+精确 `f209f658316ada5ddd5c245f0be6c2c0eca271bd` 的[正式 CI 45434451557](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45434451557)已通过全部 85+5、DISPCC 41 组／3/2/2 迁移、九源两文件再生及独立 A77/PCI UFS。[实际 ZIP 独立审计](tb371fc/evidence/dispcc-20261124-e1a9/ci-artifact-audit-f209f65.json)核验六份流、完整 DISPCC/MDSS 负载、全部 61 输出率与首次恢复纯观察。板级二进制 SHA-256 为 `0738a1910ef86c8ccc403ba100ae2094de573d4f0c11fdff9877e1b9fa798d6c`。同二进制的[原厂 run006](tb371fc/evidence/dispcc-20261124-e1a9/native-frontier-after-dispcc.json)在 guest 3.503753 秒注册 Display CC；critical XO 确有警告，但 probe 继续，未为未知父钟填入固定成功状态。
+
+### VIDEOCC：实际 Kona v2 PLL0 配置异常
+
+run006 下一首个 fatal 是 guest 3.508680 秒读取 `0x0abf042c` 的 4 B，CPU4、PID78 `kworker/4:1` 经 `video_cc_kona_probe` → `clk_lucid_pll_configure` 进入 Data Abort。其后相对 `0x42c` 的拒绝是同一次访问。16.449 秒后正常 QMP 停止，原始输入、AOP、symbols 和二进制摘要不变；仍未挂载原始 LUN、没有 Android 用户态。
+
+[VIDEOCC 有界模型](tb371fc/docs/videocc-sm8250.md)核对实际 `qcom,videocc-kona-v2`，实现两 Lucid PLL、五个整数 RCG、八个 branch、四个只读 divider 和七条 reset；55 个字分为 26 个窗口，共 220 B。四个 VIDEO GDSC 继续保留原 owner、mmcx 连线和 142 B v1 状态。需显式 `qcom-sm8250-videocc.enabled-reference=on`，两 XO 名称接已有 carrier，test/sleep 输入保持未知。
+
+PLL1 的通用配置再 v2 覆写、四路 remote vote、共享 CBCR/ARES 和向上取整 RO divider 分别按源码处理，不从 `div2` 名称推定固定分频，不为 critical 标志自动创建请求。独立 474 B v1 只保存整数 RCG 的实际 CFG 状态。新增 41 组／3/2/2 迁移与十源再生加入 87+5 计划；此源码增量的 compiled CI 和原厂复测仍待执行，不代表视频处理或 Android 完成。
 
 ## 默认分支既有验收：2026-11-24 存储与电源修复
 

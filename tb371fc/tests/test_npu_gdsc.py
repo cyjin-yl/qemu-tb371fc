@@ -25,6 +25,7 @@ from test_camera_gdsc import (
     CameraRig, GLOBAL_FIELDS, DOMAIN_FIELDS, camera_payload, core_diagnostics,
     literal_rpmh_payload, unique_section, provider_snapshot, write_json,
     GCC_VMSTATE_BYTES, DT_SHA256, DRIVER_SHA256,
+    VIDEOCC_NEIGHBOR_BCRS, assert_disabled_videocc_neighbors,
 )
 from test_mdss_gdsc import mdss_payload
 from test_geni_uart import connect_unix
@@ -370,6 +371,7 @@ def access_shapes_and_unowned_controller_holes_are_exact(r):
              MDSS_ADDRESS + 4,
              0x0abf0bf4, 0x0abf0bfc, 0x0abf0c94, 0x0abf0c9c,
              0x0abf0d14, 0x0abf0d1c, 0x0abf0d94, 0x0abf0d9c)
+    holes = [address for address in holes if address not in VIDEOCC_NEIGHBOR_BCRS]
     previous = core_diagnostics(r.log_path.read_text(errors="replace"))
     expected = []
     for address in holes:
@@ -377,6 +379,7 @@ def access_shapes_and_unowned_controller_holes_are_exact(r):
         r.raw_write(address, 0xffffffff)
         expected.extend((op, address, 4, "(null)", "rejected") for op in ("read", "write"))
     assert core_diagnostics(r.log_path.read_text(errors="replace"))[len(previous):] == expected
+    assert_disabled_videocc_neighbors(r)
     # The new VIDEO owner is independent and remains disabled in this fixture.
     for domain, address in enumerate((0x0abf0bf8, 0x0abf0c98,
                                       0x0abf0d18, 0x0abf0d98)):

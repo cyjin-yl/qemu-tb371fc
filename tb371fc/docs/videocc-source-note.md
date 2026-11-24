@@ -1,13 +1,16 @@
-# VIDEOCC source note for subsequent native fault diagnosis
+# VIDEOCC source preparation and subsequent implementation
 
-This is read-only preparation, not a device implementation or a prediction
-of the next fault. The current native observation is a nonfatal
+This note preserves the earlier read-only preparation. The subsequent
+[VIDEOCC implementation contract](videocc-sm8250.md) follows the actually
+observed run006 read32 failure at physical0x0abf042c after Display CC registered.
+At the preparation checkpoint, the native observation was a nonfatal
 `Unable to register for bw voting` defer. In the pinned driver,
 bus-client registration precedes both PLL configuration calls. Successful
 NoC configuration would not by itself prove that this dependency or
 VIDEOCC is usable. The original DT now establishes the resource and v2
-compatible below; no later VIDEOCC invalid-memory address has been observed
-in this evidence.
+compatible below; that earlier evidence contained no later VIDEOCC invalid
+memory address. The new receipt and planned compiled acceptance retain their
+own exact-source identities, separate from this historical preparation.
 
 ## Fixed evidence
 
@@ -114,7 +117,7 @@ does not register these GDSCs. Preserve their ownership as separate
 dependencies. Neither max_register=f4c nor an eventual DT resource size
 authorizes a RAM window or invented power/status success.
 
-A future implementation still requires an observed fault, an explicit
-policy for unknown divider values, and independent state/timing/migration
-tests. This note establishes no video codec,
+The subsequent contract records the observed fault, an explicit reference
+reset policy for unknown hardware divider values, and independent
+state/timing/migration tests. This note establishes no video codec,
 DSP firmware, frame processing, throughput, suspend or Android functionality.

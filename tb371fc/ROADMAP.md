@@ -37,7 +37,8 @@ Linux 板级补齐与 UniXNU 路线 A 并行推进，按[跨仓库硬件契约](
 - [x] NPU GDSC：`ce945f8` 正式 CI 45408402483 实际通过 21 组、3/2/2 迁移及 80+5 全计划；同二进制原始输入 run003 已越过 NPU 旧读取异常，下一首个异常为 MVS0 `0x0abf0d18`。无声明父供电保持未知，仍不证明 NPU 执行。
 - [x] VIDEO GDSC：`4cc9dee` 正式 CI 45414535386 实际通过 22 组、3/2/2 迁移及 81+5 全计划；独立实际 ZIP 审核通过。同二进制原始 run004 已注册四域，新的首错是 CAMCC `0x0ad00000`；视频引擎执行仍未证明。
 - [x] CAMCC：`8798465` 正式 CI 45426713919 实际通过 83+5 全计划、41 组／3/2/2 迁移与八源两文件再生；独立 ZIP 全负载／111 输出核验通过。同二进制原始 run005 已注册 CAMCC，下一首错为 DISPCC `0x0af00000`；不代表相机执行。
-- [ ] DISPCC：实际 compatible／九份固定主源已核对；两 Lucid、22 RCG、32 branches、五 dividers、两 resets、130 字／39 窗口、61 Clock 与独立 1676 B v1 已实现。8／16 位 MND、显式两路 vote 与三只读 divider 分别处理；41 组及 3/2/2 迁移和新 85+5 计划待正式 CI／原厂复测。16 未知父钟与 MDSS 独立 owner 保持。
+- [x] DISPCC：`f209f65` 正式 CI 45434451557 实际通过 85+5、41 组／3/2/2 迁移与九源再生；实际 ZIP 的 1676 B／MDSS64／61 输出和首次恢复已独立核验。原厂 run006 已注册 Display CC，下一首错为 VIDEOCC PLL0 `0x0abf042c`；16 未知父钟与 MDSS owner 保持，critical XO 警告未被伪造 ACK 隐藏。
+- [ ] VIDEOCC：实际 Kona v2／十份固定主源核对；两 Lucid、五整数 RCG、八 branches、四 RO dividers、七 resets、55 字／26 窗口／19 Clock 与独立 474 B v1 已实现。PLL1 双配方、共享 ARES、四显式 vote、四独立 VIDEO GDSC 和未知 test/sleep 保留；41 组／3/2/2 及新 87+5 计划待实际 compiled CI／原厂复测。
 - [ ] 原厂完整 DT 用户态及 Android 启动；不能将 77 项公共成功、控制器注册或 NoC 配置匹配当作整板可用。
 
 本轮精确构建与原厂证据见 [README](../README.md) 和

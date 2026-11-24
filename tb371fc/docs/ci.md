@@ -186,7 +186,7 @@ still apply to any future authorized consumer execution.
 
 ## Gates
 
-The current integration plan registers **90 gates: 85 component/parser gates
+The current integration plan registers **92 gates: 87 component/parser gates
 and five Linux integration gates**, plus separate active and runtime-suspended
 real-Linux UFS checkpoints and the A77/PCI UFS compatibility job. This union
 preserves the wholeboard reference peripherals and default-branch storage,
@@ -213,8 +213,20 @@ rejections and two single-bit corrupted streams. Its four Lucid PLLs and one
 Zonda PLL retain different protocols; 74 precise leaf windows exclude all
 camera GDSCs and unmodeled words. A separate two-check generation gate verifies
 eight fixed primary inputs and reproduces both register tables byte for byte.
-The preceding 4cc source passed 81+5, but this new combination still needs its
-own actual compiled receipt and native original-input run.
+Exact CAMCC source8798465 passed83+5 and the41-check gate; its original-input
+run005 registered CAMCC and next reached DISPCC. Exact DISPCC sourcef209f65
+then passed85+5 and its41-check/3/2/2 gate in
+[CI45434451557](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45434451557).
+The [independent actual ZIP audit](../evidence/dispcc-20261124-e1a9/ci-artifact-audit-f209f65.json)
+and [run006 receipt](../evidence/dispcc-20261124-e1a9/native-frontier-after-dispcc.json)
+bind the compiled binary and subsequent VIDEOCC failure.
+The new [VIDEOCC protocol gate](videocc-sm8250.md) requires41 checks, a complete
+474-byte v1 oracle plus independent VIDEO GDSC142 bytes, three completed
+transfers and2/2 profile/corruption rejections. It covers both Lucid PLLs,
+all19 outputs, five integer roots, four RO dividers, shared branch/ARES words,
+four explicit remote votes and the four existing GDSCR owners. Ten fixed
+primary inputs reproduce its two generated data files. This new87+5
+combination still needs its own actual compiled and original-input receipts.
 The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
@@ -246,6 +258,7 @@ pass does not attest newly added devices.
 | NPUCC | 37 checks across three physical banks, actual Clock outputs, source-bound CRC/dividers, two completed migrations and two profile rejections; full NPU/DSP execution remains outside scope |
 | CAMCC | 41 checks; four Lucid/one Zonda PLL, 111 actual Clock outputs, 236 words/74 windows, full 2579-byte migration oracle, three completed transfers and 2/2 profile/corruption rejections; separate eight-source regeneration of both data files |
 | DISPCC | 41 checks; two Lucid PLLs, 8/16-bit MND, two explicit remote votes, five dividers, 61 actual Clock outputs, 130 words/39 windows, full 1676-byte migration oracle plus MDSS64, three completed transfers and 2/2 rejections; separate nine-source regeneration |
+| VIDEOCC | 41 checks; actual Kona v2 dual Lucid recipes, 19 Clock outputs, 55 words/26 windows, integer-only roots, four RO dividers/votes and two shared ARES words; full474-byte oracle plus VIDEO GDSC142, three completed transfers and2/2 rejections; separate ten-source regeneration |
 | NPU GDSC | 21 checks; independent 4-byte word and 64-byte v1 state, unknown parent preserved, hardware mode rejected, NPU_CFG_AHB retention only, three completed transfers, two profile and two corruption rejections |
 | VIDEO GDSC | 22 checks; four sparse words and 142-byte v1 state, HW mode only on two DT-declared domains, real three-consumer mmcx fanout, VIDEO_AHB retention, three completed transfers and 2/2 profile/corruption rejections |
 | GPUCC | 30 actual digital PLL/RCG/branch/reset checks, two completed migrations and two profile rejections; actual Clock providers and sparse ownership boundaries |

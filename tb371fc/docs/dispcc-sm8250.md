@@ -129,9 +129,9 @@ is not aliased to PLL1 or divided speculatively. `disp_cc_xo_clk` is marked
 software-critical but declares no parent. Its separate unknown input preserves
 that missing evidence: a local request does not clear CLK_OFF without a known
 carrier. No physical DSI/DP/eDP link rate or 32-kHz sleep clock is guessed.
-Consequently the native critical-clock enable may time out at this branch.
-That outcome requires a new observation and source/physical-clock evidence;
-it is not a reason to insert a constant successful halt response.
+The same-binary original-input run006 actually warned at the critical XO
+branch, then registered Display CC and continued to VIDEOCC. The missing
+carrier remains unknown; a constant successful halt response was not added.
 
 The DP link table literally uses values 162000, 270000, 540000 and 810000,
 whereas eDP uses MHz-scale values. The model derives rates from actual input
@@ -250,5 +250,15 @@ oracle is independently derived from the fixed primary sources; it verifies the
 full1676-byte payload plus MDSS64 bytes, actual memory-region ownership with
 both devices enabled, and the first destination QOM state before device MMIO
 or `cont`. A separate gate requires two exact regeneration comparisons from
-nine pinned source files. This creates an85-component +5-Linux plan; this new
-combination still requires its own formal build and original-input run.
+nine pinned source files. Exact sourcef209f658 actually passed this complete
+85-component +5-Linux plan in
+[CI45434451557](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45434451557).
+The [independent artifact audit](../evidence/dispcc-20261124-e1a9/ci-artifact-audit-f209f65.json)
+verified all six streams, complete DISPCC/MDSS payloads,61 rates and first
+restored pure observations. Its binary SHA-256 is
+`0738a1910ef86c8ccc403ba100ae2094de573d4f0c11fdff9877e1b9fa798d6c`.
+Original-input [run006](../evidence/dispcc-20261124-e1a9/native-frontier-after-dispcc.json)
+registered Display CC at3.503753s; the first fatal at3.508680s was VIDEOCC
+PLL0 MODE, physical0x0abf042c. That next increment has its own
+[VIDEOCC contract](videocc-sm8250.md). These results establish neither
+physical display execution nor complete original Android boot.

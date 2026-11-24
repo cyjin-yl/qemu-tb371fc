@@ -1,0 +1,323 @@
+{
+  "schema": "tb371fc-dispcc-ci-artifact-audit-v1",
+  "source_commit": "f209f658316ada5ddd5c245f0be6c2c0eca271bd",
+  "run_id": 45434451557,
+  "artifact_id": 14941137151,
+  "artifact_zip_sha256": "b7cf7c58cdecfc4dd5f5a0a69313ec939c97a3c35face7f01d3a45ec4c1e97bb",
+  "compiled_artifact_read": true,
+  "private_original_inputs_used": false,
+  "stock_android_boot_passed": false,
+  "independent_cpu_job": {
+    "source_commit": "f209f658316ada5ddd5c245f0be6c2c0eca271bd",
+    "run_id": 45434451557,
+    "job_id": 138588336306,
+    "job_conclusion": "success",
+    "cpu_guest_checks": 852,
+    "configuration_rejections": 2,
+    "pci_ufs_checks": 17,
+    "variants": [
+      {
+        "name": "default",
+        "checks": 94
+      },
+      {
+        "name": "observed-revidr",
+        "checks": 94
+      },
+      {
+        "name": "l2-128k",
+        "checks": 94
+      },
+      {
+        "name": "l2-256k",
+        "checks": 94
+      },
+      {
+        "name": "l3-512k",
+        "checks": 95
+      },
+      {
+        "name": "l3-1m",
+        "checks": 95
+      },
+      {
+        "name": "l3-2m",
+        "checks": 95
+      },
+      {
+        "name": "l3-4m",
+        "checks": 95
+      },
+      {
+        "name": "crypto-off",
+        "checks": 96
+      }
+    ],
+    "pci_checks": [
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/reg-read",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/init",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-read-write",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-read-write",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-crypto-rejected",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-crypto-rejected",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/no-prdt",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/sync-cache",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/long-prdt",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/short-prdt",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-cq-wraparound",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-flag",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-attribute",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-desciptor",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-init",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-read-write",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/hid"
+    ],
+    "rejected_configurations": [
+      ",l2-cache-size=1M",
+      ",l3-cache-size=128K"
+    ],
+    "actual_job_log_read": true,
+    "guest_architecture_only": true,
+    "stock_android_boot_passed": false
+  },
+  "binary_sha256": "0738a1910ef86c8ccc403ba100ae2094de573d4f0c11fdff9877e1b9fa798d6c",
+  "binary_member": "qemu-build/qemu-system-aarch64",
+  "binary_hash_verified_from_zip": true,
+  "aggregates": {
+    "components": {
+      "count": 85,
+      "passed": true,
+      "source_dirty": false,
+      "qemu_unchanged": true
+    },
+    "linux": {
+      "count": 5,
+      "passed": true,
+      "source_dirty": false,
+      "qemu_unchanged": true
+    }
+  },
+  "ufs_quiescent": {
+    "checks": 21,
+    "migrations": 3,
+    "rejections": 7,
+    "passed": true
+  },
+  "linux_ufs_checkpoints": {
+    "linux-ufs-migration": {
+      "passed": true,
+      "source_checks": 21,
+      "target_checks": 18,
+      "inputs_unchanged": true,
+      "source_exited_before_target_started": true,
+      "runtime_pm_state_preserved": false,
+      "bytes_compared_at_each_checkpoint": 67108864
+    },
+    "linux-ufs-pm-migration": {
+      "passed": true,
+      "source_checks": 34,
+      "target_checks": 27,
+      "inputs_unchanged": true,
+      "source_exited_before_target_started": true,
+      "runtime_pm_state_preserved": true,
+      "bytes_compared_at_each_checkpoint": 67108864
+    }
+  },
+  "source_generation": {
+    "verified_primary_inputs": 9,
+    "exact_file_comparisons": 2,
+    "manifest_sha256": "4e20dc6b6d6cd49e8986d43ad986a6813d56bb42d9ff1920b61d4b3ee52222e0"
+  },
+  "dispcc_checks": 41,
+  "dispcc_test_seconds": 15.313572,
+  "sibling_gates": {
+    "camera-gdsc-reference": {
+      "passed": true,
+      "checks": 29
+    },
+    "mdss-gdsc-reference": {
+      "passed": true,
+      "checks": 20
+    },
+    "npu-gdsc-reference": {
+      "passed": true,
+      "checks": 21
+    },
+    "video-gdsc-reference": {
+      "passed": true,
+      "checks": 22
+    },
+    "npucc-sm8250": {
+      "passed": true,
+      "checks": 37
+    },
+    "gpucc-sm8250": {
+      "passed": true,
+      "checks": 30
+    },
+    "camcc-sm8250-reference": {
+      "passed": true,
+      "checks": 41
+    }
+  },
+  "actual_files": [
+    {
+      "name": "dispcc-corrupt-misc_reserved_control.migration",
+      "bytes": 2272275,
+      "sha256": "36f06d5767ab7c062b69c7cce964ca27b661f036f2a114fc5f94a41b3a39f435",
+      "zip_member_verified": true
+    },
+    {
+      "name": "dispcc-corrupt-physical_base.migration",
+      "bytes": 2272275,
+      "sha256": "bc94741a2116b3843675518da3a537b39c2a99c2f5b12c257f2acd0f9dc0c6b3",
+      "zip_member_verified": true
+    },
+    {
+      "name": "dispcc-v1-default.migration",
+      "bytes": 2272275,
+      "sha256": "e83d79efe20cc5a0f76db35ff512b14c0338c9f615bcc21fe6759669718730fc",
+      "zip_member_verified": true
+    },
+    {
+      "name": "dispcc-v1-steady.migration",
+      "bytes": 2272275,
+      "sha256": "a5fdd36e95a04f38bab36f69f729db00d71d2fc8c6e91b89c78e43022f8e4086",
+      "zip_member_verified": true
+    },
+    {
+      "name": "dispcc-v1-two-latches-six-mnd.migration",
+      "bytes": 2272275,
+      "sha256": "599e69797e2f0f899fef288b0c53ced12efc183ee7f7a267315aef9851d878da",
+      "zip_member_verified": true
+    },
+    {
+      "name": "dispcc-v1-two-locks-22-rcgs.migration",
+      "bytes": 2272275,
+      "sha256": "c319b02128ab0879c9aa68623b3c2cecd46918b702ab9cf132730c483fa1ed5b",
+      "zip_member_verified": true
+    }
+  ],
+  "source_wire_checks": [
+    {
+      "file": "dispcc-v1-steady.migration",
+      "dispcc": {
+        "version": 1,
+        "bytes": 1676,
+        "sha256": "c3cc9ca531558508e31021b8ed34c4efdf89d4865e6599f63e2a980084b39295",
+        "complete_payload_verified": true
+      },
+      "mdss": {
+        "version": 1,
+        "bytes": 64,
+        "sha256": "2f83c65980b58eb27ad87717e204c206c8104cb14cef988b65f26d71d93acc05",
+        "complete_payload_verified": true
+      },
+      "all_61_output_hz_and_periods_independently_recomputed": true
+    },
+    {
+      "file": "dispcc-v1-two-locks-22-rcgs.migration",
+      "dispcc": {
+        "version": 1,
+        "bytes": 1676,
+        "sha256": "acd7e0eb74bd8cf1f884891466e886e5cf72a903be0a2ad63e3601403d94b376",
+        "complete_payload_verified": true
+      },
+      "mdss": {
+        "version": 1,
+        "bytes": 64,
+        "sha256": "1b440ef0fba9f19b743290da940074106556e288153f81e006ee1ca48866ad86",
+        "complete_payload_verified": true
+      },
+      "all_61_output_hz_and_periods_independently_recomputed": true
+    },
+    {
+      "file": "dispcc-v1-two-latches-six-mnd.migration",
+      "dispcc": {
+        "version": 1,
+        "bytes": 1676,
+        "sha256": "f4fab6c191cd500714152b885ee7a0653393805409cb9be4aa1ecc329bca604a",
+        "complete_payload_verified": true
+      },
+      "mdss": {
+        "version": 1,
+        "bytes": 64,
+        "sha256": "a6ab861b384b7d6dd962509ab79e5d245fc139bf91954d376d5791a171b10197",
+        "complete_payload_verified": true
+      },
+      "all_61_output_hz_and_periods_independently_recomputed": true
+    },
+    {
+      "file": "dispcc-v1-default.migration",
+      "dispcc": {
+        "version": 1,
+        "bytes": 1676,
+        "sha256": "18eeff120414f1f4decb3f40cf63317517c9a66c6aa058019fdc91b4d2b80111",
+        "complete_payload_verified": true
+      },
+      "mdss": {
+        "version": 1,
+        "bytes": 64,
+        "sha256": "1b440ef0fba9f19b743290da940074106556e288153f81e006ee1ca48866ad86",
+        "complete_payload_verified": true
+      },
+      "all_61_output_hz_and_periods_independently_recomputed": true
+    }
+  ],
+  "migrations": [
+    {
+      "name": "v1_steady_clocks_dividers_votes_and_mdss_replace_stale_target",
+      "source_status": "completed",
+      "target_status": "completed",
+      "continued_after_restore": true,
+      "first_destination_state_verified": true,
+      "actual_qmp_pre_cont_getters": 556
+    },
+    {
+      "name": "v1_two_locks_and_22_rcg_deadlines_resume_without_mmio_repair",
+      "source_status": "completed",
+      "target_status": "completed",
+      "continued_after_restore": true,
+      "first_destination_state_verified": true,
+      "actual_qmp_pre_cont_getters": 556
+    },
+    {
+      "name": "v1_two_pll_latches_and_mixed_width_mnd_keep_captured_state",
+      "source_status": "completed",
+      "target_status": "completed",
+      "continued_after_restore": true,
+      "first_destination_state_verified": true,
+      "actual_qmp_pre_cont_getters": 559
+    }
+  ],
+  "rejections": [
+    {
+      "name": "enabled_to_disabled",
+      "exit_code": 1,
+      "expected_diagnostic": "0 != 1",
+      "actual_stderr_verified": true
+    },
+    {
+      "name": "disabled_to_enabled",
+      "exit_code": 1,
+      "expected_diagnostic": "1 != 0",
+      "actual_stderr_verified": true
+    },
+    {
+      "name": "physical_base",
+      "exit_code": 1,
+      "expected_diagnostic": "af00000 != af00004",
+      "actual_stderr_verified": true,
+      "actual_single_bit_difference_verified": true,
+      "field_offset": 52
+    },
+    {
+      "name": "misc_reserved_control",
+      "exit_code": 1,
+      "expected_diagnostic": "qcom-sm8250-dispcc: invalid migrated register 129",
+      "actual_stderr_verified": true,
+      "actual_single_bit_difference_verified": true,
+      "field_offset": 576
+    }
+  ]
+}
