@@ -1,0 +1,236 @@
+{
+  "schema": "tb371fc-qmp-shutdown-host-validation-v1",
+  "scope": "host-only validation with synthetic Android eligibility gates",
+  "vm_executed": false,
+  "android_boot_evidence": false,
+  "device_rpc_used": false,
+  "historical_run003_modified": false,
+  "test_execution_during_packaging": false,
+  "original_files_byte_preserved": true,
+  "original_file_count": 23,
+  "generated_files": [
+    "README.md",
+    "index.json"
+  ],
+  "local_source_identities": [
+    {
+      "role": "standalone QMP fix",
+      "identity_scope": "local Git identity recorded during implementation",
+      "commit": "f717649ea860dcdbb30da48dc2d74e4db5e40d66",
+      "tree": "374cde1b1df3ba3dddfc98ee19f8854182d270e2",
+      "binding_attempt": "attempt-006-final-file",
+      "source_files": {
+        "tb371fc/scripts/boot_android.py": {
+          "bytes": 37197,
+          "sha256": "812c8b0769f37276336f178b46f321edab50abd1ee48a499b2462504db1d2bea"
+        },
+        "tb371fc/tests/test_boot_android.py": {
+          "bytes": 31556,
+          "sha256": "d2b37cbbb66b1d4b0b35e0ec42e7db8133c1bad5e99256a4bf6762be17912f76"
+        }
+      }
+    },
+    {
+      "role": "combined source merge",
+      "identity_scope": "local Git identity recorded during implementation",
+      "commit": "d13df9784f3e0170c9ce66e40f5dac0469f9b39f",
+      "tree": "ca666a37698e4671475973c50923977583d7ec89",
+      "binding_attempt": "attempt-007-combined-video",
+      "source_files": {
+        "tb371fc/scripts/boot_android.py": {
+          "bytes": 38765,
+          "sha256": "2d3e4c5206eca92a5ffdf9dab1b69d3a0482305a1b1756f9df509b22a464baf6"
+        },
+        "tb371fc/tests/test_boot_android.py": {
+          "bytes": 38006,
+          "sha256": "549a498c5739c17fd5c229093b017bb18fac5898a23e3f50c7883f1f2a3f4152"
+        }
+      }
+    }
+  ],
+  "attempts": [
+    {
+      "directory": "attempt-001",
+      "description": "Initial real AF_UNIX socket regression subset",
+      "tests_reported": 9,
+      "exit_code": 0,
+      "result": "passed",
+      "files": [
+        {
+          "path": "attempt-001/receipt.json",
+          "bytes": 921,
+          "sha256": "ac7f57cbc30e39a54ab241c9456e5e8ee9f96203bd8c818963d731fca0cb9386"
+        },
+        {
+          "path": "attempt-001/stderr.log",
+          "bytes": 1337,
+          "sha256": "f0fb6b1aa51ff37af733078d72fec76003e7689438f62c8ba56d11134a6030b9"
+        },
+        {
+          "path": "attempt-001/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "directory": "attempt-002",
+      "description": "Initial complete test file before the two additional counterexamples",
+      "tests_reported": 25,
+      "exit_code": 0,
+      "result": "passed",
+      "files": [
+        {
+          "path": "attempt-002/receipt.json",
+          "bytes": 949,
+          "sha256": "ce816e35426e38fcc694cf8105cf814ed313af11ec6137e6cae17aa95d94afd8"
+        },
+        {
+          "path": "attempt-002/stderr.log",
+          "bytes": 3838,
+          "sha256": "6d3dace3f628e85086192c2512c35474666de700f861559a48e497c3a02194d4"
+        },
+        {
+          "path": "attempt-002/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "directory": "attempt-003-before-pause-fix",
+      "description": "Actual red: paused reply followed by RESUME in the same read",
+      "tests_reported": 1,
+      "exit_code": 1,
+      "result": "actual failure before fix",
+      "files": [
+        {
+          "path": "attempt-003-before-pause-fix/receipt.json",
+          "bytes": 749,
+          "sha256": "5390e4cb88cc1a27f6307f8a798979bc659ba0a96b4a9940a269ef8ac816c055"
+        },
+        {
+          "path": "attempt-003-before-pause-fix/stderr.log",
+          "bytes": 866,
+          "sha256": "18557835d03e2658b1059402a9d272043780b42815e6bbb8de671edcf5018105"
+        },
+        {
+          "path": "attempt-003-before-pause-fix/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "directory": "attempt-004-before-sticky-fix",
+      "description": "Actual red: capture callback catches an earlier QMP command error",
+      "tests_reported": 1,
+      "exit_code": 1,
+      "result": "actual failure before fix",
+      "files": [
+        {
+          "path": "attempt-004-before-sticky-fix/receipt.json",
+          "bytes": 754,
+          "sha256": "88f382fe7317a2e4e33bdf265f075f1184065701c3fa7f5a57f608c36d099ab4"
+        },
+        {
+          "path": "attempt-004-before-sticky-fix/stderr.log",
+          "bytes": 891,
+          "sha256": "a008e2f0eebc0b1164220b16b0b0b5c3a7d33535d886637c1cd119398da200d0"
+        },
+        {
+          "path": "attempt-004-before-sticky-fix/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "directory": "attempt-005-delta-regressions",
+      "description": "Three regressions after the pause, sticky-error and cleanup fixes",
+      "tests_reported": 3,
+      "exit_code": 0,
+      "result": "passed",
+      "files": [
+        {
+          "path": "attempt-005-delta-regressions/receipt.json",
+          "bytes": 938,
+          "sha256": "985a5f3073a50c2d540006d7fceb6bfcb5a8ff77964703fd2de8ae502d2cb1aa"
+        },
+        {
+          "path": "attempt-005-delta-regressions/stderr.log",
+          "bytes": 585,
+          "sha256": "a522f4c69a1651e496f887376487a45f5cb8cd6b67dfb51e68fb6d387028ee69"
+        },
+        {
+          "path": "attempt-005-delta-regressions/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "directory": "attempt-006-final-file",
+      "description": "Final standalone QMP fix: complete test file",
+      "tests_reported": 28,
+      "exit_code": 0,
+      "result": "passed",
+      "files": [
+        {
+          "path": "attempt-006-final-file/receipt.json",
+          "bytes": 949,
+          "sha256": "833391828a00468365d83427f59f6dfa81fa7e6fe4655c85f1f4deeee084dd04"
+        },
+        {
+          "path": "attempt-006-final-file/stderr.log",
+          "bytes": 4325,
+          "sha256": "53e32324f0e3a4a2fb977e8a5b7f71ebd76c5d9db8441ccb646f26c7f1991d2b"
+        },
+        {
+          "path": "attempt-006-final-file/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "directory": "attempt-007-combined-video",
+      "description": "Combined VIDEO/early-stop and QMP fix: complete test file",
+      "tests_reported": 31,
+      "exit_code": 0,
+      "result": "passed",
+      "files": [
+        {
+          "path": "attempt-007-combined-video/merge-identity.json",
+          "bytes": 1191,
+          "sha256": "c7a586fd7212124aa99d1d277547935347777ba75a4db3414850e68055c29f06"
+        },
+        {
+          "path": "attempt-007-combined-video/pretest-tree-and-preservation.json",
+          "bytes": 1335,
+          "sha256": "82bbf5c4e7d46e80b30d33b9345e5b1589968400df933d5f7c3e719b9c26e342"
+        },
+        {
+          "path": "attempt-007-combined-video/receipt.json",
+          "bytes": 1334,
+          "sha256": "39106399189f229158e28a74f4761cf6fb6ce1c496b0bfb11fc42460d18e507b"
+        },
+        {
+          "path": "attempt-007-combined-video/stderr.log",
+          "bytes": 4764,
+          "sha256": "f7acd29700af600748011126a1e934ecfb44c8b60113c77ef26bc7579a717750"
+        },
+        {
+          "path": "attempt-007-combined-video/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  ],
+  "readme": {
+    "path": "README.md",
+    "bytes": 4191,
+    "sha256": "568b03fc66f93fa482fd8f3164a26ded50eadc10d5426da0b56ad1ac2cc7e010"
+  }
+}

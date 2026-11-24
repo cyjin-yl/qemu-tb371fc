@@ -2,12 +2,15 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 """Host-only tests of stock-input preservation and bounded Android orchestration."""
 import copy
+import errno
 import hashlib
 import json
 from pathlib import Path
+import socket
 import subprocess
 import sys
 import tempfile
+import threading
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
@@ -54,10 +57,13 @@ class Monitor:
     def __init__(self, process, clock, overlays, readonly=True):
         self.process, self.clock, self.overlays = process, clock, overlays
         self.commands, self.messages = [], []
+        self.identifier = 0
+        self.quit_event = True
         self.running, self.closed, self.readonly = False, False, readonly
         self.sock = SimpleNamespace(close=lambda: None)
 
     def command(self, name, arguments=None):
+        self.identifier += 1
         self.commands.append(name)
         if name == "query-status":
             return {"running": self.running, "status": "running" if self.running else "paused"}
@@ -74,6 +80,10 @@ class Monitor:
         if name == "stop":
             self.running = False
         if name == "quit":
+            self.messages.append({"return": {}, "id": self.identifier})
+            if self.quit_event:
+                self.messages.append(
+                    {"event": "SHUTDOWN", "data": {"guest": False, "reason": "host-qmp-quit"}})
             self.process.returncode = 0
             self.closed = True
         return {}
@@ -83,7 +93,8 @@ class Monitor:
         return []
 
     def drain(self):
-        pass
+        return {"terminal": "eof", "errno": None, "error": None, "closed": True,
+                "residual_bytes": 0, "message_count": len(self.messages), "prior_command_error": None}
 
 
 class AndroidRunnerTests(unittest.TestCase):
@@ -261,6 +272,12 @@ class AndroidRunnerTests(unittest.TestCase):
                   "stop_reason": "time-bound", "logs": [],
                   "final_status": {"running": False, "status": "paused"},
                   "qmp_events": [{"event": "SHUTDOWN", "data": {"guest": False, "reason": "host-qmp-quit"}}]}
+        ack = {"return": {}, "id": 1}
+        report["qmp_quit"] = {"request_id": 1, "message_start": 0, "acknowledged": True,
+                              "response": ack, "messages": [ack] + report["qmp_events"]}
+        report["qmp_drain"] = {"terminal": "eof", "errno": None, "error": None,
+                               "closed": True, "residual_bytes": 0, "message_count": 2,
+                               "prior_command_error": None}
         self.assertTrue(boot.stock_boot_passed(report, plan))
         for event in ({"event": "GUEST_PANICKED", "data": {"action": "pause"}},
                       {"event": "SHUTDOWN", "data": {"guest": True}},
@@ -316,12 +333,16 @@ class AndroidRunnerTests(unittest.TestCase):
         self.add_lun(0)
         process, clock = Process(), Clock()
         monitor = Monitor(process, clock, self.plan()["overlays"])
+        monitor.quit_event = False  # This fixture delivers SHUTDOWN during final drain.
         captures, cleanup = [], []
         final_event = {"event": "SHUTDOWN", "data": {"guest": False, "reason": "host-qmp-quit"}}
 
         def drain():
             cleanup.append("drain")
             monitor.messages.append(final_event)
+            return {"terminal": "eof", "errno": None, "error": None, "closed": True,
+                    "residual_bytes": 0, "message_count": len(monitor.messages),
+                    "prior_command_error": None}
 
         monitor.drain = drain
         monitor.sock = SimpleNamespace(close=lambda: cleanup.append("close"))
@@ -370,8 +391,11 @@ class AndroidRunnerTests(unittest.TestCase):
         self.assertFalse(report["final_status"]["running"])
         self.assertEqual(monitor.commands[-1], "quit")
         self.assertEqual(cleanup, ["drain", "close"])
-        self.assertEqual(json.loads((out / "qmp-messages.json").read_text()), [final_event])
+        self.assertEqual(json.loads((out / "qmp-messages.json").read_text()),
+                         [{"return": {}, "id": monitor.identifier}, final_event])
         self.assertIn(final_event, report["qmp_events"])
+        self.assertTrue(report["qmp_shutdown_normal"])
+        self.assertNotIn("qmp_drain_error", report)
         self.assertEqual(report["qemu_returncode"], 0)
         self.assertFalse(process.terminated)
         self.assertFalse(process.killed)
@@ -439,6 +463,20 @@ class AndroidRunnerTests(unittest.TestCase):
         self.assertEqual(observed["qemu_returncode"], -15)
         self.assertEqual(observed["stop_reason"], "runner-error")
 
+    def test_unstructured_drain_result_still_saves_messages_and_closes(self):
+        plan, process, clock = self.plan(), Process(), Clock()
+        monitor = Monitor(process, clock, plan["overlays"])
+        monitor.drain = lambda: None
+        closed = []
+        monitor.sock.close = lambda: closed.append(True)
+        report = boot.observe(plan, seconds=1, max_log_bytes=4096,
+                              popen=lambda *a, **k: process,
+                              qmp_open=lambda *a: monitor, clock=clock)
+        self.assertFalse(report["qmp_shutdown_normal"])
+        self.assertIn("terminal receipt", report["qmp_drain_error"])
+        self.assertEqual(json.loads((self.out / "qmp-messages.json").read_text()), monitor.messages)
+        self.assertEqual(closed, [True])
+
     def test_preservation_reports_modified_original_even_without_a_supplied_lun_hash(self):
         self.add_lun(0)
         plan = self.plan()
@@ -447,6 +485,271 @@ class AndroidRunnerTests(unittest.TestCase):
         self.assertFalse(result["preserved"])
         self.assertIsNone(result["original_luns"][0]["base_sha256_supplied"])
         self.assertFalse(result["original_luns"][0]["full_base_digest_rechecked_after_run"])
+
+
+class QMPShutdownTests(unittest.TestCase):
+    """Real local AF_UNIX transport, synthetic process/Android evidence; no VM."""
+
+    HOST_QUIT = {"event": "SHUTDOWN", "data": {"guest": False, "reason": "host-qmp-quit"}}
+
+    @staticmethod
+    def wire(message):
+        return json.dumps(message).encode() + b"\n"
+
+    def observe_peer(self, *, reset=False, ack="valid", tail=None, event_before_ack=False,
+                     early_reset=False, exit_code=0, forced=False, old_host_event=False,
+                     pause_tail=b"", capture_failure=False):
+        client, peer = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
+        finish = threading.Event()
+        quit_received = threading.Event()
+        errors = []
+
+        class PeerProcess(Process):
+            def wait(self, timeout):
+                finish.set()
+                if not quit_received.is_set() and self.returncode is None:
+                    raise subprocess.TimeoutExpired("synthetic-qmp-peer", timeout)
+                worker.join(timeout)
+                if worker.is_alive() or (forced and not self.terminated):
+                    raise subprocess.TimeoutExpired("synthetic-qmp-peer", timeout)
+                return super().wait(timeout)
+
+            def terminate(self):
+                super().terminate()
+                try:
+                    peer.shutdown(socket.SHUT_RDWR)
+                except OSError:
+                    pass
+
+        process = PeerProcess()
+
+        def serve():
+            running = False
+            status_queries = 0
+            try:
+                while True:
+                    frame = b""
+                    while True:
+                        byte = peer.recv(1)
+                        if not byte:
+                            return
+                        frame += byte
+                        if byte == b"\n":
+                            request = json.loads(frame)
+                            break
+                        # Leaving only the request's newline unread makes Linux
+                        # AF_UNIX close report ECONNRESET after queued replies.
+                        # This is a controlled transport fixture, not a claim
+                        # about why the actual QEMU process reset its socket.
+                        if (reset or early_reset) and byte == b"}":
+                            try:
+                                request = json.loads(frame)
+                            except ValueError:
+                                continue
+                            if early_reset or request.get("execute") == "quit":
+                                break
+                    name, identifier = request["execute"], request["id"]
+                    if early_reset:
+                        return
+                    if name == "query-status":
+                        status_queries += 1
+                        if old_host_event and status_queries == 1:
+                            peer.sendall(self.wire(self.HOST_QUIT))
+                        returned = {"running": running, "status": "running" if running else "paused"}
+                    elif name == "query-named-block-nodes":
+                        returned = [{"node-name": "ufs-base-file-0", "ro": True},
+                                    {"node-name": "ufs-base-0", "ro": True},
+                                    {"node-name": "ufs-disk-0", "ro": False}]
+                    elif name == "cont":
+                        running, returned = True, {}
+                    elif name == "stop":
+                        running, returned = False, {}
+                    elif name == "query-version" and capture_failure:
+                        peer.sendall(b"[]\n")
+                        continue
+                    elif name == "quit":
+                        quit_received.set()
+                        response = {"return": {}, "id": identifier}
+                        if ack == "missing-return":
+                            del response["return"]
+                        elif ack == "wrong-id":
+                            response["id"] += 1
+                        elif ack == "boolean-id":
+                            response["id"] = True
+                        elif ack == "list-return":
+                            response["return"] = []
+                        elif ack == "mixed-envelope":
+                            response["event"] = "STOP"
+                        if event_before_ack:
+                            peer.sendall(self.wire(self.HOST_QUIT))
+                        if ack != "absent":
+                            peer.sendall(self.wire(response))
+                        if ack in ("absent", "wrong-id"):
+                            return
+                        if not finish.wait(2):
+                            raise TimeoutError("test never reached process wait")
+                        if tail is None:
+                            if not event_before_ack:
+                                peer.sendall(self.wire(self.HOST_QUIT))
+                        else:
+                            peer.sendall(tail)
+                        if ack == "duplicate-tail":
+                            peer.sendall(self.wire(response))
+                        return
+                    else:
+                        raise AssertionError(name)
+                    reply = self.wire({"return": returned, "id": identifier})
+                    if name == "query-status" and status_queries == 2:
+                        reply += pause_tail
+                    peer.sendall(reply)
+            except Exception as exc:
+                errors.append(repr(exc))
+            finally:
+                peer.close()
+                if not forced and not process.terminated:
+                    process.returncode = exit_code
+
+        worker = threading.Thread(target=serve, daemon=True)
+        worker.start()
+        try:
+            with tempfile.TemporaryDirectory(prefix="qmp-shutdown-test-") as directory:
+                plan = {"out": directory, "command": ["synthetic-qmp-peer"],
+                        "qmp_socket": "unused", "overlays": [{"lun": 0}]}
+                report = boot.observe(plan, seconds=.01, max_log_bytes=4096,
+                                      popen=lambda *a, **k: process,
+                                      qmp_open=lambda *a: boot.BoundedQMP(client),
+                                      symbols="synthetic-symbols" if capture_failure else None,
+                                      capture=lambda command, *args: command("query-version"))
+                saved = json.loads((Path(directory) / "qmp-messages.json").read_text())
+                if "qmp_quit" in report:
+                    quit_info = report["qmp_quit"]
+                    self.assertEqual(quit_info["messages"], saved[quit_info["message_start"]:])
+                # These are explicitly synthetic eligibility inputs, not
+                # observations of Android or a claim that Android booted.
+                report.update(observation={"android_boot_completed_observed": True,
+                                           "kernel_failures": []},
+                              preservation={"preserved": True}, qemu_unchanged=True, logs=[])
+                return report, plan
+        finally:
+            finish.set()
+            client.close()
+            peer.close()
+            worker.join(2)
+            self.assertFalse(worker.is_alive(), "socket fixture did not finish")
+            self.assertEqual(errors, [])
+
+    def test_complete_quit_tail_eof_and_real_reset_qualify(self):
+        for reset in (False, True):
+            with self.subTest(reset=reset):
+                report, plan = self.observe_peer(reset=reset, event_before_ack=not reset)
+                self.assertTrue(report["qmp_quit"]["acknowledged"])
+                self.assertEqual(report["qmp_drain"]["terminal"], "reset" if reset else "eof")
+                self.assertEqual(report["qmp_drain"]["errno"], errno.ECONNRESET if reset else None)
+                if reset:
+                    self.assertIn("Connection reset", report["qmp_drain"]["transport_error"])
+                self.assertEqual(report["qmp_drain"]["residual_bytes"], 0)
+                self.assertTrue(report["qmp_shutdown_normal"])
+                self.assertNotIn("qmp_drain_error", report)
+                self.assertTrue(boot.stock_boot_passed(report, plan))
+
+    def test_partial_event_after_ack_rejected_at_eof_and_reset(self):
+        tail = self.wire(self.HOST_QUIT) + b'{"event":"GUEST_PANICKED"'
+        for reset in (False, True):
+            with self.subTest(reset=reset):
+                report, plan = self.observe_peer(reset=reset, tail=tail)
+                self.assertTrue(report["qmp_quit"]["acknowledged"])
+                self.assertEqual(report["qmp_drain"]["terminal"], "reset" if reset else "eof")
+                self.assertGreater(report["qmp_drain"]["residual_bytes"], 0)
+                self.assertIn("partial QMP frame", report["qmp_drain_error"])
+                self.assertFalse(report["qmp_shutdown_normal"])
+                self.assertFalse(boot.stock_boot_passed(report, plan))
+
+    def test_quit_ack_must_be_unique_matching_and_empty_object(self):
+        for ack in ("absent", "missing-return", "wrong-id", "boolean-id", "list-return",
+                    "mixed-envelope", "duplicate-tail"):
+            with self.subTest(ack=ack):
+                report, plan = self.observe_peer(ack=ack)
+                self.assertFalse(report["qmp_shutdown_normal"])
+                self.assertFalse(boot.stock_boot_passed(report, plan))
+                self.assertTrue(report.get("error") or report.get("qmp_drain_error"))
+
+    def test_malformed_or_contradictory_quit_tail_is_rejected(self):
+        tails = [b'{invalid JSON}\n', self.wire([])]
+        tails += [self.wire({"event": name}) for name in ("RESUME", "RESET", "GUEST_PANICKED")]
+        tails.append(self.wire({"event": "SHUTDOWN", "data": {"guest": False, "reason": "host-error"}}))
+        for tail in tails:
+            with self.subTest(tail=tail):
+                report, plan = self.observe_peer(tail=self.wire(self.HOST_QUIT) + tail)
+                self.assertFalse(report["qmp_shutdown_normal"])
+                self.assertFalse(boot.stock_boot_passed(report, plan))
+
+    def test_old_host_shutdown_event_cannot_qualify_this_quit(self):
+        report, plan = self.observe_peer(old_host_event=True, tail=b"")
+        self.assertIn(self.HOST_QUIT, report["qmp_events"])
+        self.assertNotIn(self.HOST_QUIT, report["qmp_quit"]["messages"])
+        self.assertFalse(report["qmp_shutdown_normal"])
+        self.assertFalse(boot.stock_boot_passed(report, plan))
+
+    def test_pause_reply_followed_by_resume_in_same_read_is_rejected(self):
+        report, plan = self.observe_peer(pause_tail=self.wire({"event": "RESUME"}))
+        self.assertFalse(report["qmp_shutdown_normal"])
+        self.assertFalse(boot.stock_boot_passed(report, plan))
+
+    def test_capture_command_failure_cannot_be_erased_by_later_clean_quit(self):
+        report, plan = self.observe_peer(capture_failure=True)
+        self.assertIn("not an object", report["printk"][0]["error"])
+        self.assertNotIn("error", report)
+        self.assertTrue(report["qmp_quit"]["acknowledged"])
+        self.assertEqual(report["qmp_drain"]["terminal"], "eof")
+        self.assertEqual(report["qmp_drain"]["prior_command_error"]["type"], "ValueError")
+        self.assertFalse(report["qmp_shutdown_normal"])
+        self.assertFalse(boot.stock_boot_passed(report, plan))
+
+    def test_reset_before_quit_is_not_a_normal_shutdown(self):
+        report, plan = self.observe_peer(early_reset=True)
+        self.assertIn("ConnectionResetError", report["error"])
+        self.assertNotIn("qmp_quit", report)
+        self.assertFalse(report["qmp_shutdown_normal"])
+        self.assertFalse(boot.stock_boot_passed(report, plan))
+
+    def test_nonzero_and_forced_process_exit_are_rejected(self):
+        for options in ({"exit_code": 7}, {"forced": True}):
+            with self.subTest(options=options):
+                report, plan = self.observe_peer(**options)
+                self.assertTrue(report["qmp_quit"]["acknowledged"])
+                self.assertNotEqual(report["qemu_returncode"], 0)
+                self.assertFalse(report["qmp_shutdown_normal"])
+                self.assertFalse(boot.stock_boot_passed(report, plan))
+
+    def test_open_empty_socket_drain_times_out(self):
+        client, peer = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
+        try:
+            result = boot.BoundedQMP(client).drain(timeout=.01)
+            self.assertEqual(result["terminal"], "timeout")
+            self.assertEqual(result["residual_bytes"], 0)
+            self.assertFalse(result["closed"])
+            self.assertIn("TimeoutError", result["error"])
+        finally:
+            client.close()
+            peer.close()
+
+    def test_frame_bound_checked_before_final_fragment_is_split(self):
+        client, peer = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
+        try:
+            monitor = boot.BoundedQMP(client)
+            payload = self.wire({"event": "STOP", "data": {"padding": "x" * 64}})
+            with patch.object(boot, "MAX_QMP_BUFFER", 64):
+                peer.sendall(payload[:60])
+                self.assertEqual(monitor.receive(.1), [])
+                peer.sendall(payload[60:])
+                peer.close()
+                result = monitor.drain()
+            self.assertEqual(result["terminal"], "error")
+            self.assertIn("bound exceeded", result["error"])
+            self.assertEqual(monitor.messages, [])
+        finally:
+            client.close()
+            peer.close()
 
 
 if __name__ == "__main__":
