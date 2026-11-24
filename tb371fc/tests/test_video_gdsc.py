@@ -420,7 +420,6 @@ def access_shapes_and_unowned_videocc_holes_are_exact(r):
                 assert core_diagnostics(r.log_path.read_text(errors="replace"))[len(previous):] == expected
     assert r.pure_snapshot() == before
     holes = sorted({0x0abf0000, 0x0abf1000, 0x0abffffc,
-                    *(address - 4 for address in ADDRESSES),
                     *(address + 4 for address in ADDRESSES)})
     previous = core_diagnostics(r.log_path.read_text(errors="replace"))
     expected = []
@@ -430,6 +429,25 @@ def access_shapes_and_unowned_videocc_holes_are_exact(r):
         expected.extend((op, address, 4, "(null)", "rejected") for op in ("read", "write"))
     assert core_diagnostics(r.log_path.read_text(errors="replace"))[len(previous):] == expected
     assert r.pure_snapshot() == before
+    # The four preceding BCR words now belong to the disabled VIDEOCC model.
+    # They must still reject accesses without changing either device's state.
+    videocc_path = "/machine/videocc"
+    assert r.qom("enabled-reference", videocc_path) is False
+    for address in (address - 4 for address in ADDRESSES):
+        offset = address - 0x0abf0000
+        register = f"reg.{offset:04x}"
+        original = r.qom(register, videocc_path)
+        for operation in ("read", "write"):
+            diagnostic = (f"qcom-sm8250-videocc: unmodeled {operation} "
+                          f"+0x{offset:x} size 4")
+            count = r.diagnostic_count(diagnostic)
+            if operation == "read":
+                r.raw_read(address)
+            else:
+                r.raw_write(address, 0xffffffff)
+            assert r.diagnostic_count(diagnostic) == count + 1
+            assert r.qom(register, videocc_path) == original
+            assert r.pure_snapshot() == before
     # Each spanning write commits its valid low word, then rejects the next
     # unowned word. The gate does not claim an atomic 64-bit device access.
     for i, address in enumerate(ADDRESSES):
@@ -440,7 +458,9 @@ def access_shapes_and_unowned_videocc_holes_are_exact(r):
         assert core_diagnostics(r.log_path.read_text(errors="replace"))[len(previous):] == [
             ("write", address + 4, 4, "(null)", "rejected")]
     check_state(r, oracle(controls))
-    return {"unowned_controller_words_checked": len(holes), "wide_write_atomicity_claimed": False}
+    return {"unowned_controller_words_checked": len(holes),
+            "disabled_videocc_reset_words_checked": len(ADDRESSES),
+            "wide_write_atomicity_claimed": False}
 
 
 def four_domain_controls_and_hardware_inputs_are_isolated(r):
