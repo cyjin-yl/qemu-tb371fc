@@ -1,0 +1,1840 @@
+{
+  "schema_version": 1,
+  "passed": true,
+  "started_utc": "2026-11-24T02:44:23.811718+00:00",
+  "scope": "Real Linux qcom UFS and translated SMMU DMA after a quiescent process checkpoint",
+  "guest_shutdown_tested": false,
+  "inflight_ufs_migration_tested": false,
+  "external_disk_bytes_migrated": false,
+  "expected_source_checks": [
+    "procfs",
+    "sysfs",
+    "devtmpfs",
+    "eight_online_cpus",
+    "qcom_host_driver",
+    "qmp_phy_driver",
+    "gcc_driver",
+    "apps_smmu_driver",
+    "ufs_translated_dma_domain_before",
+    "ufs_block_discovered",
+    "logical_sector_4096_before",
+    "capacity_64_mib_before",
+    "aligned_buffers",
+    "source_direct_write",
+    "source_flush",
+    "source_direct_readback",
+    "source_close",
+    "source_boot_id",
+    "source_monotonic",
+    "control_tty_raw",
+    "stored_host_nonce"
+  ],
+  "expected_target_checks": [
+    "resume_control_received",
+    "preserved_pid1",
+    "preserved_boot_id",
+    "preserved_monotonic",
+    "eight_online_cpus_after",
+    "ufs_translated_dma_domain_after",
+    "target_open",
+    "logical_sector_4096_after",
+    "capacity_64_mib_after",
+    "target_reads_source_payload",
+    "target_direct_write",
+    "target_flush",
+    "target_direct_readback",
+    "target_close",
+    "target_reopen",
+    "target_reopen_source_payload",
+    "target_reopen_target_payload",
+    "target_final_close"
+  ],
+  "limitations": [
+    "One stopped checkpoint, one synthetic 64 MiB LUN and a generated device tree.",
+    "The source exits before the receiver opens the same disk with normal locking.",
+    "No firmware, stock Android, native device tree or hardware equivalence is tested."
+  ],
+  "kernel_build_receipt": {
+    "schema_version": 1,
+    "completed_utc": "2026-11-24T02:44:18.099138+00:00",
+    "scope": "Independent upstream Linux input for QEMU tb371fc smoke; no tablet flash or boot",
+    "source_version": "6.12.114",
+    "source_url": "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.114.tar.xz",
+    "source_tar_sha256": "7a8589912bd7a8adb07fed074283652cf482a35facef8954554654f0154b4af3",
+    "patches_applied_by_script": [],
+    "config_fragment_path": "/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/configs/linux-smoke.config",
+    "config_fragment_sha256": "d2b1a838adff1aef57c3db5f3d425c140bada50464ee6a4757fbb7ef41e5c43d",
+    "effective_config_sha256": "da11e8b874ec5e9a4a23a117eb09a4e3faeb2c0b38086fa1adec9fe4abdc5554",
+    "image_path": "/home/runner/work/_temp/clean-linux/artifacts/Image",
+    "image_bytes": 4458504,
+    "image_sha256": "f4e00305947da98b7ed38d66ab46411b35fc3f317cf462233f0be17d10257299",
+    "cross_compiler": {
+      "command": "aarch64-linux-gnu-gcc",
+      "path": "/usr/bin/aarch64-linux-gnu-gcc-13",
+      "sha256": "cd90adc7801f4595267f61a5d25bd3a0c6beb2f9f1f107ab919a97a12972dc9a",
+      "version": "aarch64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+    },
+    "cross_linker": {
+      "command": "aarch64-linux-gnu-ld",
+      "path": "/usr/bin/aarch64-linux-gnu-ld.bfd",
+      "sha256": "7c903ac277dd1f5c4397277db865f12d8239fe45782f71afbeb3d42180a4b1ae",
+      "version": "GNU ld (GNU Binutils for Ubuntu) 2.42"
+    },
+    "host_compiler": {
+      "command": "gcc",
+      "path": "/usr/bin/x86_64-linux-gnu-gcc-13",
+      "sha256": "1b99826121ae6682a634e5efe09bd3e3df58ce58e0b28f849114ab5b89139c26",
+      "version": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+    },
+    "config_command": [
+      "make",
+      "-C",
+      "/home/runner/work/_temp/clean-linux/source/linux-6.12.114",
+      "O=/home/runner/work/_temp/clean-linux/build",
+      "ARCH=arm64",
+      "CROSS_COMPILE=aarch64-linux-gnu-",
+      "allnoconfig"
+    ],
+    "config_environment": {
+      "KCONFIG_ALLCONFIG": "/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/configs/linux-smoke.config"
+    },
+    "build_command": [
+      "make",
+      "-C",
+      "/home/runner/work/_temp/clean-linux/source/linux-6.12.114",
+      "O=/home/runner/work/_temp/clean-linux/build",
+      "ARCH=arm64",
+      "CROSS_COMPILE=aarch64-linux-gnu-",
+      "-j2",
+      "Image"
+    ],
+    "build_environment": {
+      "KBUILD_BUILD_TIMESTAMP": "2026-11-22 00:00:00 +0000",
+      "KBUILD_BUILD_USER": "tb371fc-qemu",
+      "KBUILD_BUILD_HOST": "isolated-builder",
+      "KBUILD_BUILD_VERSION": "1",
+      "SOURCE_DATE_EPOCH": "1795305600"
+    },
+    "build_completed": true,
+    "guest_boot_tested_by_this_script": false
+  },
+  "kernel_build_receipt_sha256": "6ccc9c5e509dadc60dadf57cd021edba566125fc271f736ac3521169110de960",
+  "compile_command": [
+    "aarch64-linux-gnu-gcc",
+    "-static",
+    "-Os",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/ufs-migration-guest.c",
+    "-o",
+    "/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/init"
+  ],
+  "input_sha256_before": {
+    "qemu": "f4b02d882acb0e83a90ea258ac61689a77690728e03bfd22b5f37ab35f108a3b",
+    "kernel": "f4e00305947da98b7ed38d66ab46411b35fc3f317cf462233f0be17d10257299",
+    "kernel_build_receipt": "6ccc9c5e509dadc60dadf57cd021edba566125fc271f736ac3521169110de960",
+    "guest_source": "cb1420514b2ce205b8f6f7bf5e0b147f1c9dcad2d71a7fe141061d557e4ae200",
+    "harness": "cf41cf2f7259f968e8bfea47add415ffe06610e61305d7b9418b9d0a02e7694a",
+    "init": "825047c52957cbe23569c100e0ff019dc1c2ea4602df76be8a1e6625bacf9994",
+    "initramfs": "f22517617188bc0e3b8432c356935cedebfc55efb6482fa3566f42ced3e30106"
+  },
+  "nonce": "4cf9a75f2e6daff6ce8082985afbbdff",
+  "checkpoint_markers": [
+    [
+      "4cf9a75f2e6daff6ce8082985afbbdff",
+      "6271ec7f-6034-4892-bd71-fcd09602ac8d",
+      "514271770",
+      "21",
+      "0"
+    ]
+  ],
+  "source_disk": {
+    "passed": true,
+    "size_bytes": 67108864,
+    "bytes_compared": 67108864,
+    "first_mismatch_offset": null,
+    "sha256": "cd8fa520c10bf1662c14b1289d4cad803758599aa546452592319d5a9e1b93cd",
+    "expected_sha256": "cd8fa520c10bf1662c14b1289d4cad803758599aa546452592319d5a9e1b93cd",
+    "payloads": [
+      {
+        "offset": 4194304,
+        "length": 32768,
+        "sha256": "faf3511fec2180665df534811d7ed01fdf14127f1d0596c46b34fb9ba6ee466e"
+      }
+    ],
+    "all_other_bytes_expected": 0
+  },
+  "migration_sha256_before_load": "e4d5f2215fd79c36ae7c0ad2a90be2f97a0b64001805072cbca9ee8de62e19c5",
+  "source_exited_before_target_started": true,
+  "target_disk": {
+    "passed": true,
+    "size_bytes": 67108864,
+    "bytes_compared": 67108864,
+    "first_mismatch_offset": null,
+    "sha256": "ffa6c370e3673bc23fe97c8f1c54be181d9bacb54999a44317cd5cd7f47376b4",
+    "expected_sha256": "ffa6c370e3673bc23fe97c8f1c54be181d9bacb54999a44317cd5cd7f47376b4",
+    "payloads": [
+      {
+        "offset": 4194304,
+        "length": 32768,
+        "sha256": "faf3511fec2180665df534811d7ed01fdf14127f1d0596c46b34fb9ba6ee466e"
+      },
+      {
+        "offset": 8388608,
+        "length": 32768,
+        "sha256": "3bc36b53bcd42aefb59c22a24a423f300ab98f3947656909c1eaa1a6a697d6e7"
+      }
+    ],
+    "all_other_bytes_expected": 0
+  },
+  "migration_sha256_after_load": "e4d5f2215fd79c36ae7c0ad2a90be2f97a0b64001805072cbca9ee8de62e19c5",
+  "guests": {
+    "source": {
+      "command": [
+        "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "tcg,thread=multi",
+        "-m",
+        "8G",
+        "-smp",
+        "8",
+        "-display",
+        "none",
+        "-monitor",
+        "none",
+        "-serial",
+        "stdio",
+        "-no-reboot",
+        "-qmp",
+        "unix:/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/source/qmp.sock,server=on,wait=off",
+        "-kernel",
+        "/home/runner/work/_temp/clean-linux/artifacts/Image",
+        "-initrd",
+        "/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/initramfs.cpio.gz",
+        "-append",
+        "earlycon=qcom_geni,0xa90000 console=ttyMSM0,115200n8 rdinit=/init loglevel=7 panic=-1 nokaslr",
+        "-blockdev",
+        "{\"driver\": \"file\", \"node-name\": \"f0\", \"filename\": \"/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/disk.raw\"}",
+        "-blockdev",
+        "driver=raw,node-name=d0,file=f0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=d0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-D",
+        "/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/source/qemu-debug.log"
+      ],
+      "qmp": [
+        {
+          "direction": "receive",
+          "message": {
+            "QMP": {
+              "version": {
+                "qemu": {
+                  "micro": 3,
+                  "minor": 1,
+                  "major": 11
+                },
+                "package": ""
+              },
+              "capabilities": [
+                "oob"
+              ]
+            }
+          }
+        },
+        {
+          "direction": "send",
+          "command": "qmp_capabilities",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {},
+            "id": 1
+          }
+        },
+        {
+          "direction": "send",
+          "command": "stop",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "timestamp": {
+              "seconds": 1795488265,
+              "microseconds": 116636
+            },
+            "event": "STOP"
+          }
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {},
+            "id": 2
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-status",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "status": "paused",
+              "running": false
+            },
+            "id": 3
+          }
+        },
+        {
+          "direction": "send",
+          "command": "migrate",
+          "arguments": {
+            "uri": "file:/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/checkpoint.migration"
+          }
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {},
+            "id": 4
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "status": "setup"
+            },
+            "id": 5
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 8589967360,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 52,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 0,
+                "downtime-bytes": 13425041,
+                "page-size": 4096,
+                "remaining": 7754305536,
+                "postcopy-bytes": 0,
+                "mbps": 0,
+                "transferred": 13425239,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 201189,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 11591680,
+                "normal": 2830
+              }
+            },
+            "id": 6
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 7754305536,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 102,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 2040190,
+                "downtime-bytes": 13471130,
+                "page-size": 4096,
+                "remaining": 7733321728,
+                "postcopy-bytes": 0,
+                "mbps": 1074.0191200000002,
+                "transferred": 13458007,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 206311,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 11591680,
+                "normal": 2830
+              }
+            },
+            "id": 7
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 6289965056,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 153,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 2040190,
+                "downtime-bytes": 16677352,
+                "page-size": 4096,
+                "remaining": 6274142208,
+                "postcopy-bytes": 0,
+                "mbps": 1074.0191200000002,
+                "transferred": 16675570,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 562555,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 11591680,
+                "normal": 2830
+              }
+            },
+            "id": 8
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 4798885888,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 203,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 7073901,
+                "downtime-bytes": 19918908,
+                "page-size": 4096,
+                "remaining": 4798877696,
+                "postcopy-bytes": 0,
+                "mbps": 509.32376470588235,
+                "transferred": 19919117,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 922727,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 11591680,
+                "normal": 2830
+              }
+            },
+            "id": 9
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 4798885888,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 253,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 7073901,
+                "downtime-bytes": 23176062,
+                "page-size": 4096,
+                "remaining": 3316506624,
+                "postcopy-bytes": 0,
+                "mbps": 509.32376470588235,
+                "transferred": 23163149,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 1284632,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 11591680,
+                "normal": 2830
+              }
+            },
+            "id": 10
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 3303088128,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 304,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 7073901,
+                "downtime-bytes": 26071379,
+                "page-size": 4096,
+                "remaining": 1998811136,
+                "postcopy-bytes": 0,
+                "mbps": 509.32376470588235,
+                "transferred": 26056616,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 1606335,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 11591680,
+                "normal": 2830
+              }
+            },
+            "id": 11
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 1970081792,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 354,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 6770843,
+                "downtime-bytes": 29301838,
+                "page-size": 4096,
+                "remaining": 528605184,
+                "postcopy-bytes": 0,
+                "mbps": 487.50352941176476,
+                "transferred": 29280515,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 1965274,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 11591680,
+                "normal": 2830
+              }
+            },
+            "id": 12
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 484507648,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 405,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 6770843,
+                "downtime-bytes": 39601409,
+                "page-size": 4096,
+                "remaining": 149999616,
+                "postcopy-bytes": 0,
+                "mbps": 487.50352941176476,
+                "transferred": 39601667,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 21061632,
+                "normal": 5142
+              }
+            },
+            "id": 13
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 149999616,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 455,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 4443560,
+                "downtime-bytes": 53128201,
+                "page-size": 4096,
+                "remaining": 136499200,
+                "postcopy-bytes": 0,
+                "mbps": 1077.3503999999998,
+                "transferred": 53128469,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 34562048,
+                "normal": 8438
+              }
+            },
+            "id": 14
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 136499200,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 506,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 54700041,
+                "page-size": 4096,
+                "remaining": 134926336,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 54573087,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 36130816,
+                "normal": 8821
+              }
+            },
+            "id": 15
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 136499200,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 556,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 66654993,
+                "page-size": 4096,
+                "remaining": 122998784,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 66655271,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 48062464,
+                "normal": 11734
+              }
+            },
+            "id": 16
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 122998784,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 607,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 72991569,
+                "page-size": 4096,
+                "remaining": 116666368,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 72959025,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 54386688,
+                "normal": 13278
+              }
+            },
+            "id": 17
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 122998784,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 657,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 80181785,
+                "page-size": 4096,
+                "remaining": 109498368,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 80182073,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 61562880,
+                "normal": 15030
+              }
+            },
+            "id": 18
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 109498368,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 708,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 88320025,
+                "page-size": 4096,
+                "remaining": 101371904,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 88193091,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 69685248,
+                "normal": 17013
+              }
+            },
+            "id": 19
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 109498368,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 758,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 93708577,
+                "page-size": 4096,
+                "remaining": 95997952,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 93708875,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 75063296,
+                "normal": 18326
+              }
+            },
+            "id": 20
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 95997952,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 809,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 103923433,
+                "page-size": 4096,
+                "remaining": 85794816,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 103821141,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 85258240,
+                "normal": 20815
+              }
+            },
+            "id": 21
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 95997952,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 859,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 107235369,
+                "page-size": 4096,
+                "remaining": 82497536,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 107235677,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 88563712,
+                "normal": 21622
+              }
+            },
+            "id": 22
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 82497536,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 909,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 120762161,
+                "page-size": 4096,
+                "remaining": 68997120,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 120762479,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 102064128,
+                "normal": 24918
+              }
+            },
+            "id": 23
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 82497536,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 960,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 120762161,
+                "page-size": 4096,
+                "remaining": 68997120,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 120762479,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 102064128,
+                "normal": 24918
+              }
+            },
+            "id": 24
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 68997120,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 1010,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 134288953,
+                "page-size": 4096,
+                "remaining": 55496704,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 134289281,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 115564544,
+                "normal": 28214
+              }
+            },
+            "id": 25
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 68997120,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 1061,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 134288953,
+                "page-size": 4096,
+                "remaining": 55496704,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 134289281,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 115564544,
+                "normal": 28214
+              }
+            },
+            "id": 26
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 55496704,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 1111,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 147815745,
+                "page-size": 4096,
+                "remaining": 41996288,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 147816083,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 129064960,
+                "normal": 31510
+              }
+            },
+            "id": 27
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 55496704,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 1161,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 147815745,
+                "page-size": 4096,
+                "remaining": 41996288,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 147816083,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 129064960,
+                "normal": 31510
+              }
+            },
+            "id": 28
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 41996288,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 1212,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 161342537,
+                "page-size": 4096,
+                "remaining": 28495872,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 161342885,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 142565376,
+                "normal": 34806
+              }
+            },
+            "id": 29
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "expected-downtime": 300,
+              "remaining": 41996288,
+              "status": "active",
+              "setup-time": 1,
+              "total-time": 1262,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 1,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 161342537,
+                "page-size": 4096,
+                "remaining": 28495872,
+                "postcopy-bytes": 0,
+                "mbps": 1082.1441599999998,
+                "transferred": 161342885,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055397,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 142565376,
+                "normal": 34806
+              }
+            },
+            "id": 30
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "status": "completed",
+              "setup-time": 1,
+              "downtime": 24,
+              "total-time": 1329,
+              "ram": {
+                "total": 8589967360,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 2,
+                "multifd-bytes": 0,
+                "pages-per-second": 32960,
+                "downtime-bytes": 188211071,
+                "page-size": 4096,
+                "remaining": 0,
+                "postcopy-bytes": 0,
+                "mbps": 1145.4987891566263,
+                "transferred": 190152799,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 2055808,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 169377792,
+                "normal": 41352
+              }
+            },
+            "id": 31
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-status",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "status": "postmigrate",
+              "running": false
+            },
+            "id": 32
+          }
+        },
+        {
+          "direction": "send",
+          "command": "quit",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "timestamp": {
+              "seconds": 1795488266,
+              "microseconds": 742758
+            },
+            "event": "SHUTDOWN",
+            "data": {
+              "guest": false,
+              "reason": "host-qmp-quit"
+            }
+          }
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {},
+            "id": 33
+          }
+        }
+      ],
+      "pid": 23431,
+      "started_monotonic": 1152.618443258,
+      "serial_input": [
+        "STORE:4cf9a75f2e6daff6ce8082985afbbdff"
+      ],
+      "stopped_status": {
+        "status": "paused",
+        "running": false
+      },
+      "migration": {
+        "status": "completed",
+        "setup-time": 1,
+        "downtime": 24,
+        "total-time": 1329,
+        "ram": {
+          "total": 8589967360,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 32960,
+          "downtime-bytes": 188211071,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 1145.4987891566263,
+          "transferred": 190152799,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 2055808,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 169377792,
+          "normal": 41352
+        }
+      },
+      "postmigration_status": {
+        "status": "postmigrate",
+        "running": false
+      },
+      "exited_monotonic": 1155.257541333,
+      "exit_code": 0,
+      "guest_checks": [
+        [
+          "PASS",
+          "procfs"
+        ],
+        [
+          "PASS",
+          "sysfs"
+        ],
+        [
+          "PASS",
+          "devtmpfs"
+        ],
+        [
+          "PASS",
+          "eight_online_cpus"
+        ],
+        [
+          "PASS",
+          "qcom_host_driver"
+        ],
+        [
+          "PASS",
+          "qmp_phy_driver"
+        ],
+        [
+          "PASS",
+          "gcc_driver"
+        ],
+        [
+          "PASS",
+          "apps_smmu_driver"
+        ],
+        [
+          "PASS",
+          "ufs_translated_dma_domain_before"
+        ],
+        [
+          "PASS",
+          "ufs_block_discovered"
+        ],
+        [
+          "PASS",
+          "logical_sector_4096_before"
+        ],
+        [
+          "PASS",
+          "capacity_64_mib_before"
+        ],
+        [
+          "PASS",
+          "aligned_buffers"
+        ],
+        [
+          "PASS",
+          "source_direct_write"
+        ],
+        [
+          "PASS",
+          "source_flush"
+        ],
+        [
+          "PASS",
+          "source_direct_readback"
+        ],
+        [
+          "PASS",
+          "source_close"
+        ],
+        [
+          "PASS",
+          "source_boot_id"
+        ],
+        [
+          "PASS",
+          "source_monotonic"
+        ],
+        [
+          "PASS",
+          "control_tty_raw"
+        ],
+        [
+          "PASS",
+          "stored_host_nonce"
+        ]
+      ],
+      "guest_verdicts": [],
+      "serial.log_sha256": "adf63a3adc055e89cb5a98e12ef898504830f8b9ffef30d7aa18741a6810f29e",
+      "qemu-debug.log_sha256": "1068099ff15a38dd0e0e83f3f1c5e18c33b9d4c2d052243767db3a2a14e3ae90"
+    },
+    "target": {
+      "command": [
+        "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "tcg,thread=multi",
+        "-m",
+        "8G",
+        "-smp",
+        "8",
+        "-display",
+        "none",
+        "-monitor",
+        "none",
+        "-serial",
+        "stdio",
+        "-no-reboot",
+        "-qmp",
+        "unix:/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/target/qmp.sock,server=on,wait=off",
+        "-kernel",
+        "/home/runner/work/_temp/clean-linux/artifacts/Image",
+        "-initrd",
+        "/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/initramfs.cpio.gz",
+        "-append",
+        "earlycon=qcom_geni,0xa90000 console=ttyMSM0,115200n8 rdinit=/init loglevel=7 panic=-1 nokaslr",
+        "-blockdev",
+        "{\"driver\": \"file\", \"node-name\": \"f0\", \"filename\": \"/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/disk.raw\"}",
+        "-blockdev",
+        "driver=raw,node-name=d0,file=f0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=d0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-D",
+        "/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/target/qemu-debug.log",
+        "-incoming",
+        "defer",
+        "-S"
+      ],
+      "qmp": [
+        {
+          "direction": "receive",
+          "message": {
+            "QMP": {
+              "version": {
+                "qemu": {
+                  "micro": 3,
+                  "minor": 1,
+                  "major": 11
+                },
+                "package": ""
+              },
+              "capabilities": [
+                "oob"
+              ]
+            }
+          }
+        },
+        {
+          "direction": "send",
+          "command": "qmp_capabilities",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {},
+            "id": 1
+          }
+        },
+        {
+          "direction": "send",
+          "command": "migrate-incoming",
+          "arguments": {
+            "uri": "file:/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/checkpoint.migration"
+          }
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {},
+            "id": 2
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "status": "active"
+            },
+            "id": 3
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "status": "active"
+            },
+            "id": 4
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "status": "active"
+            },
+            "id": 5
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "status": "active"
+            },
+            "id": 6
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-migrate",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "status": "completed"
+            },
+            "id": 7
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-status",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "status": "paused",
+              "running": false
+            },
+            "id": 8
+          }
+        },
+        {
+          "direction": "send",
+          "command": "cont",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "timestamp": {
+              "seconds": 1795488267,
+              "microseconds": 48551
+            },
+            "event": "RESUME"
+          }
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {},
+            "id": 9
+          }
+        },
+        {
+          "direction": "send",
+          "command": "stop",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "timestamp": {
+              "seconds": 1795488267,
+              "microseconds": 149856
+            },
+            "event": "STOP"
+          }
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {},
+            "id": 10
+          }
+        },
+        {
+          "direction": "send",
+          "command": "query-status",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {
+              "status": "paused",
+              "running": false
+            },
+            "id": 11
+          }
+        },
+        {
+          "direction": "send",
+          "command": "quit",
+          "arguments": null
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "timestamp": {
+              "seconds": 1795488267,
+              "microseconds": 263026
+            },
+            "event": "SHUTDOWN",
+            "data": {
+              "guest": false,
+              "reason": "host-qmp-quit"
+            }
+          }
+        },
+        {
+          "direction": "receive",
+          "message": {
+            "return": {},
+            "id": 12
+          }
+        }
+      ],
+      "pid": 23444,
+      "started_monotonic": 1155.258088143,
+      "migration": {
+        "status": "completed"
+      },
+      "loaded_status": {
+        "status": "paused",
+        "running": false
+      },
+      "serial_input": [
+        "CONTINUE"
+      ],
+      "stopped_status": {
+        "status": "paused",
+        "running": false
+      },
+      "exited_monotonic": 1155.777812958,
+      "exit_code": 0,
+      "guest_checks": [
+        [
+          "PASS",
+          "resume_control_received"
+        ],
+        [
+          "PASS",
+          "preserved_pid1"
+        ],
+        [
+          "PASS",
+          "preserved_boot_id"
+        ],
+        [
+          "PASS",
+          "preserved_monotonic"
+        ],
+        [
+          "PASS",
+          "eight_online_cpus_after"
+        ],
+        [
+          "PASS",
+          "ufs_translated_dma_domain_after"
+        ],
+        [
+          "PASS",
+          "target_open"
+        ],
+        [
+          "PASS",
+          "logical_sector_4096_after"
+        ],
+        [
+          "PASS",
+          "capacity_64_mib_after"
+        ],
+        [
+          "PASS",
+          "target_reads_source_payload"
+        ],
+        [
+          "PASS",
+          "target_direct_write"
+        ],
+        [
+          "PASS",
+          "target_flush"
+        ],
+        [
+          "PASS",
+          "target_direct_readback"
+        ],
+        [
+          "PASS",
+          "target_close"
+        ],
+        [
+          "PASS",
+          "target_reopen"
+        ],
+        [
+          "PASS",
+          "target_reopen_source_payload"
+        ],
+        [
+          "PASS",
+          "target_reopen_target_payload"
+        ],
+        [
+          "PASS",
+          "target_final_close"
+        ]
+      ],
+      "guest_verdicts": [
+        [
+          "PASS",
+          "4cf9a75f2e6daff6ce8082985afbbdff",
+          "6271ec7f-6034-4892-bd71-fcd09602ac8d",
+          "39",
+          "0"
+        ]
+      ],
+      "serial.log_sha256": "8225cd9b684a8fc379cf7eafc10254fe650b563a80422116143e3968f95e4d9b",
+      "qemu-debug.log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "qemu_sha256": "f4b02d882acb0e83a90ea258ac61689a77690728e03bfd22b5f37ab35f108a3b",
+  "qemu_size_bytes": 62202840,
+  "kernel_sha256": "f4e00305947da98b7ed38d66ab46411b35fc3f317cf462233f0be17d10257299",
+  "kernel_size_bytes": 4458504,
+  "kernel_build_receipt_size_bytes": 2611,
+  "guest_source_sha256": "cb1420514b2ce205b8f6f7bf5e0b147f1c9dcad2d71a7fe141061d557e4ae200",
+  "guest_source_size_bytes": 9541,
+  "harness_sha256": "cf41cf2f7259f968e8bfea47add415ffe06610e61305d7b9418b9d0a02e7694a",
+  "harness_size_bytes": 19437,
+  "init_sha256": "825047c52957cbe23569c100e0ff019dc1c2ea4602df76be8a1e6625bacf9994",
+  "init_size_bytes": 636536,
+  "initramfs_sha256": "f22517617188bc0e3b8432c356935cedebfc55efb6482fa3566f42ced3e30106",
+  "initramfs_size_bytes": 283966,
+  "disk_sha256": "ffa6c370e3673bc23fe97c8f1c54be181d9bacb54999a44317cd5cd7f47376b4",
+  "disk_size_bytes": 67108864,
+  "migration_sha256": "e4d5f2215fd79c36ae7c0ad2a90be2f97a0b64001805072cbca9ee8de62e19c5",
+  "migration_size_bytes": 190152799,
+  "inputs_unchanged": true,
+  "elapsed_seconds": 3.807,
+  "finished_utc": "2026-11-24T02:44:27.618347+00:00"
+}

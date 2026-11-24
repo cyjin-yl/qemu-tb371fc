@@ -144,7 +144,7 @@ The workflow runs this gate in addition to all existing component, four Linux,
 21-group QTest migration, PCI and CPU gates. `result.json`, per-process receipts,
 commands, QMP messages, serial/debug logs, public kernel receipt and hashes of
 the runnable inputs are retained even on failure. Read the receipt for the
-actual verdict; adding this gate alone is not a passing runtime result.
+actual verdict; the measured run below binds it to the tested source.
 The CI upload excludes the temporary migration stream and synthetic disk;
 their exact sizes, SHA-256 values and whole-media comparison results remain
 in the receipt. The public kernel, QEMU binary, init and initramfs are retained.
@@ -154,6 +154,54 @@ In-flight UFS requests, a changed external disk, a native device-tree boot,
 stock Android, power-cycle persistence and full-device migration equivalence
 remain outside the result. The host ends the successful receiver with QMP;
 guest shutdown is not tested.
+
+### Recorded Linux continuation acceptance
+
+[Run 45312366652](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45312366652)
+completed successfully on **2026-11-24 at 02:44:38 UTC**, for code head
+`6d9d834397720318a51f070977df985d9beb7443`. GitHub actually checked out merge
+`9d69a45f18ecac42c65a3aad2fa11da431a61cd7`, whose other parent was the already
+merged documentation head `8babe85b1cd7990a1a113b223d51ec8a7732fed5`.
+The [source binding](../evidence/linux-ufs-migration-20261124/verified-6d9d8343/source-binding.json)
+records both trees, the five runtime/config/workflow Git blobs, input hashes,
+artifact identities, independent review and the complete evidence manifest.
+
+| Measured gate in this run | Actual result |
+| --- | --- |
+| New real Linux UFS continuation | **39/39 guest checks**: 21 source, 18 receiver; one completed source/receiver pair |
+| Existing public components | **55/55** |
+| Existing clean Linux boots | **4/4** |
+| Existing UFS QTest migration | **21/21 groups**, three transfers, seven rejection scenarios and three additional profile captures |
+| Shared PCI UFS regression | **15/15**, no skips |
+| Separate Cortex-A77 configuration | **852 guest checks** across nine variants, plus two rejected invalid configurations |
+
+The [raw continuation result](../evidence/linux-ufs-migration-20261124/verified-6d9d8343/linux-ufs-migration-result.json)
+and separate source/receiver serial and QMP receipts retain the original
+nonce and boot ID. Both QEMU processes exited zero, the source exited before
+the receiver started, and the receiver completed loading while paused before
+its explicit `cont`. The source received one `STORE` command and the receiver
+received only `CONTINUE`. Both complete 64 MiB comparisons passed, including
+every unwritten byte; all seven immutable inputs kept the same hashes.
+
+The ordinary Linux/QTest/component gates and this new continuation used the
+same board binary, SHA-256
+`f4b02d882acb0e83a90ea258ac61689a77690728e03bfd22b5f37ab35f108a3b`.
+The public unpatched kernel was SHA-256
+`f4e00305947da98b7ed38d66ab46411b35fc3f317cf462233f0be17d10257299`;
+the archived resolved configuration confirms both `PROC_SYSCTL` and its selected
+`SYSCTL` dependency are enabled. The separate A77/PCI binary has its own hash
+in the binding and raw results.
+
+The 190,152,799-byte temporary checkpoint and the 64 MiB synthetic medium were
+verified absent from the downloaded CI ZIP. Their size/hash receipts remain
+in Git alongside the actual logs and results. The public runnable binaries
+remain in the separately identified CI artifacts, subject to their recorded
+retention period. The two earlier revisions were superseded before this new
+Linux gate ran: one addressed review of artifact scope and input identity,
+and one enabled the necessary boot-ID interface discovered in the actual
+previous kernel configuration. They are recorded without counting them as
+runtime passes or failures. This evidence/doc update leaves the tested runtime
+files unchanged and does not widen the quiescent-only boundary above.
 
 ## Recorded validation
 
