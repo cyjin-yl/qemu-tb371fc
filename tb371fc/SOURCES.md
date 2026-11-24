@@ -60,7 +60,7 @@ Use their per-run hashes rather than treating a source table as execution proof.
 | TBU power ownership | [Four complete GDSC DT nodes](evidence/wholeboard-20261123-a47/smmuv500-tbu-gdsc-dt.json) and [current GCC ownership/source review](evidence/wholeboard-20261123-a47/smmuv500-tbu-gdsc-review.json); existing GCC domains 7–10 own the words, while traffic/power coupling is not added by the companion |
 | TSENS24xx digital reference | [Two actual controllers and direct thermal references](evidence/wholeboard-20261123-a47/tsens-dt-evidence-3ef98.json), [pinned vendor/upstream source review](evidence/wholeboard-20261123-a47/tsens-dt-review-3ef98.json) and [model contract](docs/tsens24xx-reference.md); actual PA `0x0c222004` abort in [3ef98 native run](evidence/wholeboard-20261123-a47/native-3ef98.json). SROT DT size 4 remains distinct from sourced +4 access. Explicit temperature, boot mask, 1-ms timing, reset defaults and held-clear policy are reference assumptions. [52492a CI](evidence/wholeboard-20261123-a47/public-ci-52492a.json) and its [original TSENS 34/2/2/2 receipt](evidence/wholeboard-20261123-a47/tsens24xx-52492a.json) passed; the [same-binary full-DT run](evidence/wholeboard-20261123-a47/native-52492a.json) completed reference sampling on both controllers and next aborted in CPUFreq at `0x18591100` |
 | CPUFreq HW EPSS reference | [Bounded original-DT resources](evidence/wholeboard-20261123-a47/cpufreq-dt-evidence-52492a.json), [fixed official driver/clock review](evidence/wholeboard-20261123-a47/cpufreq-dt-review-52492a.json) and [model contract](docs/cpufreq-hw-reference.md). Three domains, actual 4/3/1 CPU counter addresses and SPI30/31/19; all DT max_cores arguments are 4. Synthetic all-XO LUTs, voltages, limit-event policy and always-clocked virtual cycles are explicit references. [1fe4e1 actual 30/2/2/2 receipt](evidence/wholeboard-20261123-a47/cpufreq-hw-1fe4e1.json) and [all 74 gates](evidence/wholeboard-20261123-a47/public-ci-1fe4e1.json) passed. Same-binary full DT explicitly registers CPUFreq, then faults in L3 devfreq at 0x18590000 |
-| VIDEOCC preparation | [fixed vendor source note](docs/videocc-source-note.md) and [actual v2 DT binding](evidence/wholeboard-20261123-a47/videocc-dt-evidence.json); probe was deferred, not the next fatal |
+| VIDEOCC | [Kona-v2 contract](docs/videocc-sm8250.md), [generated register facts](docs/videocc-sm8250-registers.json) and [actual node](evidence/videocc-20261124-6a5/actual-dt-videocc-node.json); ten pinned primary sources, 55 unique words/26 windows and independent VIDEO GDSCs. [Run006](evidence/videocc-20261124-6a5/native-frontier-after-dispcc.json) registered Display CC before the actual VIDEOCC read32 abort at `0x0abf042c`; the earlier [deferred-probe source note](docs/videocc-source-note.md) remains historical |
 | MPM sleep counter | [mpm2-sleep-counter.md](docs/mpm2-sleep-counter.md), pinned boot_stats read32 contract and actual TB371FC DT 32768-Hz declaration; explicit virtual-time, cold-epoch/reset and migration policies; [17-check/two-transfer receipt](evidence/wholeboard-20261123-a47/mpm2-0508.json) and [native read](evidence/wholeboard-20261123-a47/native-0508.json) |
 | Generic Timer | [mmio-timer.md](docs/mmio-timer.md), Arm ARM external-register contract, exact-count arithmetic and retained regression controls |
 | GENI | [geni-uart.md](docs/geni-uart.md), Linux FIFO/IRQ contract and actual clock/reset integration |
@@ -274,3 +274,34 @@ is copied from the existing public inventory, original DT SHA-256
 `5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207`.
 No unspecified PHY rate, PLL1-even provider, parentless critical-XO carrier,
 opaque PLL STATUS, physical display execution or panel behavior is inferred.
+
+## Kona-v2 VIDEOCC increment after native run006
+
+The [VIDEOCC contract](docs/videocc-sm8250.md),
+[register manifest](docs/videocc-sm8250-registers.json),
+[generator](scripts/generate_videocc_sm8250.py) and
+[regeneration verifier](scripts/verify_videocc_generation.py) pin ten complete
+primary files to OnePlusOSS/android_kernel_oneplus_sm8250 commit
+`94304e12a3509eac7b3716bf574ce0b1fcaacbae`. The controller source SHA-256 is
+`33a0f85c8d9efae1cc97f1916b0742a533ca0c79e35516b485c61b5eddd909e5`;
+the clock/reset binding SHA-256 is
+`0f51753e9eb497399d3c2d9a362e6d3ee7baf4f789b6e6628a7911b00f89d774`.
+The other eight pins cover Lucid, RCG, branch source/header, regmap/generic
+dividers, reset masked updates and RPMh XO provenance.
+
+The [actual DT extraction](evidence/videocc-20261124-6a5/actual-dt-videocc-node.json)
+records `qcom,videocc-kona-v2` at `0x0abf0000`, size `0x10000`, with
+GCC binding 205, MX phandle 105 and MMCX phandle 104. The
+[run006 receipt](evidence/videocc-20261124-6a5/native-frontier-after-dispcc.json)
+binds unchanged original inputs and source `f209f65` to Display CC registration
+at guest 3.503753 s and the first VIDEOCC read32 failure at `0x0abf042c` at
+3.508680 s. It is a zero-LUN kernel-failure diagnostic, not Android acceptance.
+
+Generation preserves PLL1's base-then-v2 fixup, the final `0x329a699c`
+CONFIG_CTL_U1 value and both shared ARES/branch words. Four dividers use
+the source-defined read-only `field + 1` encoding; neither `DIV2` names nor
+the sleep frequency table establish additional input rates. Four VIDEO GDSC
+owners remain separate. The [36-group compiled fixture](tests/test_videocc_sm8250.py)
+and the two-output generation gate enter the new 87-component plus five-Linux
+CI plan. Compiled acceptance of this increment still requires its own exact
+source/binary receipt; no video engine, firmware or Android success is inferred.

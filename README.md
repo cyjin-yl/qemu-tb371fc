@@ -14,7 +14,7 @@
 
 ## 当前整合：原厂 Android 启动开发基线
 
-本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。加入 DISPCC 协议及固定源码再生两个 gate 后，当前公开计划为 **90 项：85 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
+本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。在已合入的 DISPCC 之后加入 VIDEOCC 协议及固定源码再生两个 gate，当前公开计划为 **92 项：87 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
 
 两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
 
@@ -56,7 +56,17 @@ Lucid UPDATE/ACK 与 Zonda BYPASS/直接重调频分开；M/N/D、HID 和 SBI �
 
 run005 的首个显示异常发生于 guest 3.697772 秒，CPU4、PID84 `kworker/4:1` 经 `disp_cc_kona_probe` → `clk_lucid_pll_configure` 读取 `0x0af00000`。新的 [DISPCC 有界协议](tb371fc/docs/dispcc-sm8250.md)按实际 `qcom,kona-dispcc` 复核两 Lucid PLL、22 个 RCG、32 个 branch、五个 divider、两条 reset 和 MISC bit4；130 个字分为 39 个窗口，共 520 B。MDSS GDSC `0x0af03000` 保持原 owner 和独立迁移。
 
-需显式 `qcom-sm8250-dispcc.enabled-reference=on`。只有 `bi_tcxo` 接现有 XO；16 个其它 carrier 保持未知，包括 DSI／DP／eDP PHY、未导出的 PLL1 even 和源中没有父声明的 critical XO branch。8／16 位 M/N/D、两路显式 remote vote、两可写／三只读 divider 与独立 1676 B v1 迁移按源码分开处理。41 组及 3/2/2 迁移、九源两文件再生加入新 85+5 计划，仍需该增量的正式编译／CI及原厂运行；显示执行和 Android 尚未通过。
+需显式 `qcom-sm8250-dispcc.enabled-reference=on`。只有 `bi_tcxo` 接现有 XO；16 个其它 carrier 保持未知，包括 DSI／DP／eDP PHY、未导出的 PLL1 even 和源中没有父声明的 critical XO branch。8／16 位 M/N/D、两路显式 remote vote、两可写／三只读 divider 与独立 1676 B v1 迁移按源码分开处理。其 85+5 计划要求 41 组及 3/2/2 迁移、九源两文件再生。固定源码 `f209f65` 的[正式 push CI 45434451557](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45434451557)已实际完成，board-components-and-linux 和 cortex-a77-architecture 两项 job 均成功；后续 run006 已观察到 Display CC 注册。显示执行和 Android 仍未通过。
+
+### VIDEOCC：Display CC 注册后的实际下一异常
+
+同一 `f209f65` 二进制的[原始输入 run006 回执](tb371fc/evidence/videocc-20261124-6a5/native-frontier-after-dispcc.json)记录 guest 3.503753 秒的 Registered Display CC clocks。下一首个同步外部异常发生于 3.508680 秒，CPU4、PID78 `kworker/4:1` 经 `video_cc_kona_probe` → `clk_lucid_pll_configure` 读取物理 `0x0abf042c` 的 4 B；QEMU 日志独立记录了该地址。16.449 秒后正常 QMP 停止，原始 kernel／ramdisk／完整 DT／bootargs 与二进制摘要保持不变。该诊断挂载原始 LUN 数为 0，结果为 kernel-failure，没有观察到 Android 用户态、启动完成或交互界面。
+
+[VIDEOCC 有界协议](tb371fc/docs/videocc-sm8250.md)按[实际 Kona-v2 DT 节点](tb371fc/evidence/videocc-20261124-6a5/actual-dt-videocc-node.json)实现两 Lucid PLL、五个零 MND RCG、四个只读 2-bit divider、八个 branch、七条 reset 和 19 路输出时钟。55 个唯一字分为 26 个窗口，共 220 B；`0xc34`／`0xcd4` 的 ARES 与 branch 共享原 word，四个 VIDEO GDSC 仍由既有设备独立拥有。
+
+需显式 `qcom-sm8250-videocc.enabled-reference=on`。PLL1 按源码先接收 base 配置，再应用 v2 `CONFIG_CTL_U1=0x329a699c`；两个有来源依据的 XO 输入接现有 carrier，sleep／test 输入仍未知。divider 的 `DIV2` 名称不额外生成除数，sleep 频表也不生成 32 kHz 输入。独立 v1 迁移默认负载为 474 B，VIDEO GDSC 的 142 B 状态保持独立。
+
+[固定源码生成及逐字节核验](tb371fc/scripts/verify_videocc_generation.py)检查十个输入和两个输出。[36 组 compiled gate](tb371fc/tests/test_videocc_sm8250.py)要求真实 MMIO、三次完成迁移、两次 profile 拒绝、两次单 bit 损坏拒绝，以及四个 VIDEO GDSC 的独立状态。该 VIDEOCC 增量及新的 **87+5** 组合仍待正式 CI；run006 是引出本次实现的失败诊断，不是这份模型的原厂启动通过证据。
 
 ## 默认分支既有验收：2026-11-24 存储与电源修复
 
