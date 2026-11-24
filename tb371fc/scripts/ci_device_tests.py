@@ -404,6 +404,7 @@ def plan(args, runtime):
                          "video_vmstate_payload_bytes": 142,
                          "reference_enabled_by_default": False,
                          "legacy_then_v2_recipe_supported": True,
+                         "legacy_pll1_lock_accepted": False,
                          "generic_dividers_round_up": True,
                          "div2_name_assumed": False,
                          "critical_requests_forced": False,

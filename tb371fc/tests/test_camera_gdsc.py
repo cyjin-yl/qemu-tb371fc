@@ -605,6 +605,28 @@ VIDEOCC_NEIGHBOR_BCRS = (0x0abf0bf4, 0x0abf0c94, 0x0abf0d14, 0x0abf0d94)
 def assert_disabled_videocc_neighbors(r):
     # VIDEOCC now owns the source-declared BCR immediately before each GDSC.
     # Its independent default-off profile must still reject every access.
+    path = "/machine/videocc"
+    video = "/machine/video-gdsc"
+
+    def neighbor_snapshot():
+        return {
+            "enabled-reference": r.qom("enabled-reference", path),
+            "registers": [r.qom(f"reg.{address - 0x0abf0000:04x}", path)
+                          for address in VIDEOCC_NEIGHBOR_BCRS],
+            "video": {
+                "enabled-reference": r.qom("enabled-reference", video),
+                "globals": {name: r.qom(name, video) for name in GLOBAL_FIELDS},
+                "parent-known": r.qom("parent-known", video),
+                "parent-on": r.qom("parent-on", video),
+                "domains": [{name: r.qom(f"domain{i}.{name}", video)
+                             for name in DOMAIN_FIELDS} for i in range(4)],
+            },
+        }
+
+    before = r.pure_snapshot()
+    neighbors = neighbor_snapshot()
+    assert neighbors["enabled-reference"] is False
+    assert neighbors["registers"] == [0] * 4
     for address in VIDEOCC_NEIGHBOR_BCRS:
         for operation in ("read", "write"):
             line = (f"qcom-sm8250-videocc: unmodeled {operation} "
@@ -615,6 +637,8 @@ def assert_disabled_videocc_neighbors(r):
             else:
                 r.write_absolute(address, 0xffffffff)
             assert r.diagnostic_count(line) == count + 1, line
+            assert neighbor_snapshot() == neighbors, (address, operation)
+            assert r.pure_snapshot() == before, (address, operation)
 
 
 def camera_holes_and_unrelated_gdsc_addresses_stay_unmapped(r):

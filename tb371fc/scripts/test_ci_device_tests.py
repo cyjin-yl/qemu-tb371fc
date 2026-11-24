@@ -251,6 +251,7 @@ class PlanTests(unittest.TestCase):
         self.assertEqual(videocc.expected_values["video_vmstate_payload_bytes"], 142)
         self.assertEqual(videocc.expected_values["actual_compatible"],
                          "qcom,videocc-kona-v2")
+        self.assertIs(videocc.expected_values["legacy_pll1_lock_accepted"], False)
         self.assertIs(videocc.expected_values["generic_dividers_round_up"], True)
         self.assertIs(videocc.expected_values["critical_requests_forced"], False)
         self.assertIs(videocc.expected_values["reference_enabled_by_default"], False)

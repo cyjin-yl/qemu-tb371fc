@@ -86,7 +86,7 @@ div2 does not establish its reset or firmware-programmed encoding.
 
 At an actual 19.2 MHz parent, floor-Q16 arithmetic gives:
 
-| PLL recipe | L / ALPHA | CONFIG_U1 | Integer output, before gating |
+| PLL recipe | L / ALPHA | CONFIG_U1 | Calculated integer factor rate |
 | --- | --- | --- | ---: |
 | PLL0, both revisions | `25 / 8000` | `029a699c` | 720000000 Hz |
 | PLL1 initial / v1 | `29 / faaa` | `029a699c` | 805999804 Hz |
@@ -97,6 +97,15 @@ includes CAL_L 44, CONFIG 20485699/2261, USER_U 805. The probe first
 configures both initial recipes, then the
 `qcom,videocc-kona-v2` match reconfigures PLL1 and replaces the MVS1
 rate/VDD table. PLL0 does not inherit the NPU or PLL1-v2 CONFIG_U1 value.
+
+The actual v2 probe's initial PLL1 writes establish configuration storage,
+not a working legacy PLL1 carrier. The pinned `clk_lucid_pll_configure`
+ends with OUTCTRL cleared, OPMODE_STANDBY and RESET_N set (lines1853–1868);
+it does not start RUN or wait for LOCK. The v2 fixup executes before
+`qcom_cc_really_probe` (videocc-kona.c lines645–652). Accordingly the v2
+reference permits new PLL1 LOCK/ACK only with CONFIG_U1 `0x329a699c`.
+Its initial `0x029a699c` remains accepted for standby storage; the
+805999804-Hz calculation above does not qualify a modeled v2 output.
 
 ## Inputs and exclusions to retain
 

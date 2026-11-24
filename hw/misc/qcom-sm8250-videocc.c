@@ -105,12 +105,12 @@ static bool videocc_user_supported(uint32_t value)
 
 static bool videocc_recipe(QcomSm8250VideoccState *s, unsigned p)
 {
+    /* The v2 probe replaces PLL1's generic standby setup before enabling it. */
     return !PREG(s, p, R_TEST) && !PREG(s, p, R_TEST_U) &&
            !PREG(s, p, R_TEST_U1) && PREG(s, p, R_CAL_L) == 0x44 &&
            PREG(s, p, R_CONFIG) == 0x20485699 &&
            PREG(s, p, R_CONFIG_U) == 0x2261 &&
-           (PREG(s, p, R_CONFIG_U1) == 0x029a699c ||
-            (p == 1 && PREG(s, p, R_CONFIG_U1) == 0x329a699c)) &&
+           PREG(s, p, R_CONFIG_U1) == (p == 1 ? 0x329a699c : 0x029a699c) &&
            PREG(s, p, R_USER_U) == 0x805 &&
            PREG(s, p, R_USER_U1) == 0;
 }

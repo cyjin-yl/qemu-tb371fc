@@ -382,12 +382,47 @@ def literal_probe_applies_legacy_then_v2_without_clearing_conditional_zeros(r):
     assert pll_rate(0) == 720_000_000 and pll_rate(1) == 840_000_000
     r.write(base+20, 0)
     r.write(base+36, 0)
+
+    # Negative profile challenge, not an extra native probe transaction.
+    # Remove the zero-field witnesses above: a bad common recipe field or
+    # missing carrier must not mask the legacy CONFIG_U1 qualification check.
+    r.write(base, 0)
+    configure_pll(r, 1, legacy=True)
+    assert (r.reg(base+4), r.reg(base+64), r.reg(base+32)) == (0x29, 0xfaaa, 0x029a699c)
+    assert r.reg(base+56) == 0 and r.reg(base) == UPDATE_BYPASS | RESET_N
+    assert tuple(r.reg(base+o) for o in (8, 16, 20, 24, 28, 36, 40, 44)) == (
+        0x44, 0x805, 0, 0x20485699, 0x2261, 0, 0, 0)
+    assert 249_600_000 <= pll_rate(1, 0x29, 0xfaaa) <= 2_000_000_000
+    assert r.period("bi_tcxo") == PERIOD_UNIT//XO
+    output_on(r, 1)
+    r.write(base+56, 1)
+    for request_update in (False, True):
+        if request_update:
+            r.write(base, r.read(base) | UPDATE)
+        r.step(20_000)
+        assert r.reg(base+12) == 7 and r.reg(base) & OUTCTRL
+        assert r.reg(base+56) == 1
+        assert not any(r.pll(1, f) for f in (
+            "locked", "ack", "calibrated", "lock-pending", "latch-pending"))
+        assert r.pll(1, "lock-deadline") == r.pll(1, "latch-deadline") == -1
+        assert not r.read(base) & (LOCK | ACK | PCAL)
+        r.expect_hz("video_pll1", 0)
+    # Return the challenged bank to standby before replaying the actual v2
+    # helper; its OUTCTRL/RUN early return must not hide the required rewrite.
+    r.write(base, r.read(base) & ~(UPDATE | OUTCTRL))
+    r.write(base+56, 0)
+    configure_pll(r, 1)
+    assert (r.reg(base+4), r.reg(base+64), r.reg(base+32)) == (0x2b, 0xc000, 0x329a699c)
     enable_all(r)
+    assert r.pll(1, "locked") and r.pll(1, "calibrated") and not r.pll(1, "ack")
+    r.expect_hz("video_pll1", 840_000_000)
     before = r.pure_snapshot()
     configure_all(r)  # Running OUTCTRL/RUN banks are skipped by the vendor helper.
     assert r.pure_snapshot() == before
     return {"probe_configuration_order": ["pll0", "pll1-legacy", "pll1-v2"],
-            "v2_pll1_config_ctl_u1": 0x329a699c, "zero_recipe_fields_are_omitted": True}
+            "v2_pll1_config_ctl_u1": 0x329a699c, "zero_recipe_fields_are_omitted": True,
+            "legacy_pll1_writes_and_standby_accepted": True,
+            "legacy_pll1_lock_accepted": False, "legacy_pll1_update_ack_accepted": False}
 
 
 def nonzero_pll_offsets_and_variant_recipes_remain_independent(r):
@@ -459,6 +494,36 @@ def invalid_recipes_and_quantized_vco_endpoints_cannot_invent_lock(r):
         output_on(r, 0)
         r.expect_hz("video_pll0", pll_rate(0, factor >> 16, factor & 0xffff))
     assert not r.pll(1, "locked")
+    # Restore nominal source recipes before testing live qualification. The
+    # running driver's early-return check would otherwise keep the VCO vector.
+    for base, *_rest in PLLS:
+        r.write(base, r.read(base) & ~(OUTCTRL | UPDATE))
+        r.write(base+56, 0)
+    configure_all(r)
+    enable_all(r)
+    for index, (base, name, *_rest) in enumerate(PLLS):
+        sibling = 1-index
+        for delta in (8, 16, 32, 36):  # CAL_L, USER_U, CONFIG_U1, TEST.
+            original = r.reg(base+delta)
+            r.write(base+delta, original ^ 1)
+            assert not r.pll(index, "locked") and r.pll(index, "lock-deadline") == -1
+            r.expect_hz(name, 0)
+            assert r.pll(sibling, "locked")
+            r.expect_hz(PLLS[sibling][1], pll_rate(sibling))
+            r.step(LOCK_NS)
+            assert not r.pll(index, "locked")
+            r.expect_hz(name, 0)
+            r.expect_hz(PLLS[sibling][1], pll_rate(sibling))
+            r.write(base+delta, original)
+            assert r.pll(index, "lock-deadline") == r.last_clock+LOCK_NS
+            r.step(LOCK_NS-1)
+            assert not r.pll(index, "locked")
+            r.expect_hz(name, 0)
+            r.expect_hz(PLLS[sibling][1], pll_rate(sibling))
+            r.step(1)
+            assert r.pll(index, "locked")
+            r.expect_hz(name, pll_rate(index))
+            r.expect_hz(PLLS[sibling][1], pll_rate(sibling))
 
 
 def both_lucid_updates_capture_shadow_once_then_ack_and_relock(r):
@@ -545,6 +610,16 @@ def five_rcgs_capture_configuration_once_at_original_deadlines(r):
         assert r.rcg(i, "active-cfg") == rcg_cfg(i, 7, 4+i)
         assert r.reg(offset+4) == rcg_cfg(i, 0, 1)
         assert not r.read(offset) & BUSY and not r.rcg(i, "pending")
+        r.expect_hz(name, divided(99_000_001, 4+i))
+    for i, (offset, *_rest) in enumerate(RCGS):
+        configure_rcg(r, i, 0, 7, wait=False)
+        assert r.rcg(i, "pending")
+        r.write(offset, ROOT)  # Withdraw UPDATE before its captured deadline.
+        assert not r.rcg(i, "pending") and r.rcg(i, "deadline") == -1
+    r.step(RCG_NS)
+    for i, (_offset, name, *_rest) in enumerate(RCGS):
+        assert r.rcg(i, "active-cfg") == rcg_cfg(i, 7, 4+i)
+        assert not r.rcg(i, "pending")
         r.expect_hz(name, divided(99_000_001, 4+i))
 
 
@@ -657,14 +732,25 @@ def critical_xo_uses_declared_ao_parent_without_invented_safe_config(r):
 def four_readonly_dividers_round_up_from_all_two_bit_values(r):
     r.fixture("core_bi_pll_test_se", 101_000_003)
     for index in (1, 2):
-        configure_rcg(r, index, 7, 2)
+        configure_rcg(r, index, 7, 2, root=False)
     parent = divided(101_000_003, 2)
-    for i, (_offset, name, _parent) in enumerate(DIVIDERS):
+    for i, (offset, name, source) in enumerate(DIVIDERS):
+        branch = next(row for row in BRANCHES if row[2] == name)
+        r.expect_hz(source, 0)
         for value in range(4):
             r.divider(i, value)
             assert r.qom(f"divider{i}-value") == value
-            assert r.read(DIVIDERS[i][0]) == value
-            r.expect_hz(name, (parent+value)//(value+1))
+            assert r.read(offset) == value
+            r.reject_write(offset, value)
+            r.write(branch[0], 1)
+            expected = (parent+value)//(value+1)
+            r.expect_hz(source, parent)
+            r.expect_hz(name, expected)
+            r.expect_hz(branch[1], expected)
+            r.write(branch[0], 0)
+            r.expect_hz(source, 0)
+            r.expect_hz(name, 0)
+        r.divider(i, 0)
     assert parent % 4 != 0
 
 
@@ -744,16 +830,22 @@ def remote_vote_indices_are_distinct_and_do_not_become_local_requests(r):
 
 
 def seven_reset_bindings_preserve_plls_and_independent_video_domains(r):
-    configure_all(r)
-    enable_all(r)
+    run_defaults(r)
+    for offset, *_rest in BRANCHES:
+        r.write(offset, 1)
+    rates = {name: r.hz(name) for name in OUTPUTS}
     video = r.video_snapshot()
     for index, (offset, mask) in enumerate(RESETS):
-        r.write(offset, mask)
+        previous = r.reg(offset)
+        r.write(offset, r.read(offset) | mask)
+        assert r.reg(offset) == previous | mask
         r.reset_lines([i == index for i in range(7)])
-        for i, row in enumerate(PLLS):
-            r.expect_hz(row[1], pll_rate(i))
+        assert {name: r.hz(name) for name in OUTPUTS} == rates
         assert r.video_snapshot() == video
-        r.write(offset, 0)
+        r.write(offset, r.read(offset) & ~mask)
+        assert r.reg(offset) == previous & ~mask
+        assert {name: r.hz(name) for name in OUTPUTS} == rates
+        assert r.video_snapshot() == video
     r.reset_lines([False]*7, require_seen=True)
 
 
@@ -1459,7 +1551,9 @@ def main():
         "shared_branch_reset_count": 2, "modeled_timer_count": 1,
         "video_vmstate_version": 1, "video_vmstate_payload_bytes": 142,
         "actual_compatible": "qcom,videocc-kona-v2", "reference_enabled_by_default": False,
-        "legacy_then_v2_recipe_supported": True, "generic_dividers_round_up": True,
+        # Accepted generic-to-fixup writes do not qualify legacy PLL1 locking.
+        "legacy_then_v2_recipe_supported": True, "legacy_pll1_lock_accepted": False,
+        "generic_dividers_round_up": True,
         "div2_name_assumed": False, "critical_requests_forced": False,
         "source_commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
         "actual_dt_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",

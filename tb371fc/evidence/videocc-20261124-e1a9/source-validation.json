@@ -169,6 +169,7 @@
       "video_vmstate_payload_bytes",
       "reference_enabled_by_default",
       "legacy_then_v2_recipe_supported",
+      "legacy_pll1_lock_accepted",
       "generic_dividers_round_up",
       "div2_name_assumed",
       "critical_requests_forced",
@@ -208,8 +209,8 @@
   "files": [
     {
       "path": "hw/misc/qcom-sm8250-videocc.c",
-      "sha256": "e0dca68f414b1d352966c9c1b685e635651271d69fad2ffe47828a730d0c302c",
-      "bytes": 37495
+      "sha256": "cff82f78bb34271f51a1340c52f859a64ff88974c69b10ed02d38d25fef3c8f9",
+      "bytes": 37533
     },
     {
       "path": "hw/misc/qcom-sm8250-videocc-data.inc",
@@ -228,8 +229,8 @@
     },
     {
       "path": "tb371fc/tests/test_videocc_sm8250.py",
-      "sha256": "ebe48dbd8d1dad1c2874a3d9cf8408ef047f6bb4ea7a7323b284b8961763867d",
-      "bytes": 72048
+      "sha256": "fd5ca1d38c5e30de1116329958d43991d760696ced465e276031378ebf3ae601",
+      "bytes": 76728
     },
     {
       "path": "tb371fc/scripts/generate_videocc_sm8250.py",
@@ -249,5 +250,82 @@
   "compiled_device_execution": false,
   "native_videocc_probe_observed": false,
   "android_boot_passed": false,
-  "scope": "Host source generation, structure and CI-plan checks only. Formal compiled QTest/migration and native run require a new exact-source binary."
+  "scope": "Host source generation, structure and CI-plan checks only. Formal compiled QTest/migration and native run require a new exact-source binary.",
+  "qualification_correction": {
+    "reviewed_candidate": "c51c7da3e166dfce69e7829fa832a05fd3ee8871",
+    "parallel_review_candidate": "c232d14e46241934442a71b8cde40cb2eea1145b",
+    "actual_compatible": "qcom,videocc-kona-v2",
+    "generic_pll1_configuration_storage_accepted": true,
+    "legacy_pll1_lock_accepted": false,
+    "new_pll0_lock_ack_config_u1": "0x029a699c",
+    "new_pll1_lock_ack_config_u1": "0x329a699c",
+    "source_reason": "clk_lucid_pll_configure clears OUTCTRL, writes STANDBY and sets RESET_N without RUN or LOCK polling; the actual v2 probe replaces generic PLL1 configuration before qcom_cc_really_probe.",
+    "source_locations": [
+      {
+        "path": "drivers/clk/qcom/clk-alpha-pll.c",
+        "lines": "1799-1869",
+        "role": "accepted configuration storage and final standby state"
+      },
+      {
+        "path": "drivers/clk/qcom/clk-alpha-pll.c",
+        "lines": "1871-1911",
+        "role": "separate enable operation starts RUN and waits for LOCK"
+      },
+      {
+        "path": "drivers/clk/qcom/videocc-kona.c",
+        "lines": "588-595,645-652",
+        "role": "v2 fixup precedes clock registration"
+      }
+    ],
+    "vmstate_layout_unchanged": true,
+    "vmstate_version": 1,
+    "vmstate_payload_bytes": 474,
+    "reference_identity": "0x56494432",
+    "migration_boundary": "Standby generic configuration remains representable. Earlier experimental states with a legacy PLL1 lock or pending lock/latch fail recipe consistency; existing historical calibration or ACK does not qualify newly edited settings.",
+    "compiled_device_execution": false,
+    "native_kernel_probe_observed": false,
+    "direct_source_assertions": {
+      "passed": true,
+      "probe_order": [
+        "configure PLL0 generic",
+        "configure PLL1 generic",
+        "conditional actual-compatible v2 fixup",
+        "qcom_cc_really_probe"
+      ],
+      "zero_omitted_fields": [
+        "l",
+        "alpha",
+        "config_ctl_val",
+        "config_ctl_hi_val",
+        "config_ctl_hi1_val",
+        "user_ctl_val",
+        "user_ctl_hi_val",
+        "user_ctl_hi1_val",
+        "test_ctl_val",
+        "test_ctl_hi_val",
+        "test_ctl_hi1_val"
+      ],
+      "cal_l_has_default_fallback": true,
+      "configure_starts_run_or_polls_lock": false,
+      "already_enabled_configure_is_skipped": true,
+      "v2_mvs1_frequency_table_hz": [
+        840000000,
+        1098000000,
+        1332000000
+      ],
+      "v2_mvs1_vdd_lower_max_hz": 840000000,
+      "v2_mvs1_vdd_low_max_hz": 1098000000,
+      "frequency_table_is_software_policy_not_analog_evidence": true
+    },
+    "ordinary_group_count_unchanged": 31,
+    "total_group_count_unchanged": 41,
+    "additional_assertions": [
+      "cold generic PLL1 RUN/UPDATE fails before successful v2 rewrite",
+      "both PLLs lose qualification on CAL_L/USER_U/CONFIG_U1/TEST corruption and relock after field restoration",
+      "all five pending RCG updates cancel without committing",
+      "all four RO divider values propagate branch demand with ROOT disabled",
+      "all seven masked resets preserve all 19 rates and VIDEO GDSC state",
+      "all four old GDSC suites preserve current/video snapshots and disabled VIDEOCC BCRs after each rejected neighbor access"
+    ]
+  }
 }

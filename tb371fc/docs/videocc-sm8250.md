@@ -124,16 +124,29 @@ PLL0 begins at `0x42c`, PLL1 at `0x7d0`. Both are Lucid; no exported
 postdivider or Zonda protocol is introduced. The actual v2 probe first applies
 both generic configurations, then rewrites PLL1 with its v2 recipe:
 
-| Recipe | L / ALPHA | CONFIG_U1 | Rate at 19.2 MHz |
+| Recipe | L / ALPHA | CONFIG_U1 | Calculated factor rate at 19.2 MHz |
 | --- | --- | --- | ---: |
 | PLL0 | `0x25 / 0x8000` | `0x029a699c` |720000000 Hz|
-| PLL1 initial | `0x29 / 0xfaaa` | `0x029a699c` |805999804 Hz|
+| PLL1 initial, standby storage only | `0x29 / 0xfaaa` | `0x029a699c` |805999804 Hz|
 | PLL1 v2 | `0x2b / 0xc000` | `0x329a699c` |840000000 Hz|
 
 Common fields are CAL_L0x44, CONFIG0x20485699, CONFIG_U0x2261, USER_U0x805,
 with USER_U1 and TEST words zero. Configuration storage admits the source's
-write sequence; lock/ACK qualification requires a known recipe. PLL0 does
-not accept PLL1's v2 CONFIG_U1 for a successful lock. MODE write mask is
+write sequence. On this actual v2 profile, PLL0 requires CONFIG_U1
+`0x029a699c` and PLL1 requires `0x329a699c` for new LOCK/ACK qualification.
+The generic PLL1 value remains readable and writable in configuration
+storage, but cannot gain LOCK, ACK, calibration or output from a cold state.
+The calculated generic factor rate in the table is not a supported v2
+carrier. In the fixed
+[configure helper](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/clk-alpha-pll.c#L1799-L1869),
+configuration ends with OUTCTRL cleared, OPMODE_STANDBY and RESET_N set;
+it never starts RUN or waits for LOCK. The
+[v2 probe](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/videocc-kona.c#L645-L652)
+immediately applies the v2 fixup before registering clocks. Accepting those
+initial writes therefore does not establish that the generic PLL1 recipe
+can lock on v2. No separate v1 hardware profile is implied.
+
+MODE write mask is
 0x00c00007 with generated LOCK31, ACK29 and PCAL27. L/CAL_L/ALPHA are16-bit,
 OPMODE is0/1, and USER supports grouped output selection0/7. Output requires
 the whole group7, OUTCTRL, RESET_N and a qualified locked RUN state.
@@ -229,6 +242,13 @@ stored words, captured values, status/deadlines, divider fields, votes and
 input/divider setters are absent in ordinary TCG; connected XO overrides and
 rates whose period would quantize beyond u32 are rejected.
 
+This correction retains the v1 474-byte layout and VID2 identity. Standby
+generic-configuration states remain representable. A stream from the earlier
+experimental candidate with a legacy PLL1 lock or pending lock/latch is
+rejected by the strengthened recipe consistency check; its prior qualification
+cannot be reused for this source. Historical calibration or ACK is not an
+assertion that a subsequently edited recipe can newly qualify.
+
 The new gate requires41 groups:31 ordinary cases, three independent runs,
 three completed migrations, two profile mismatch rejections and two deliberate
 single-bit stream rejections. Four original streams and two mutants must be
@@ -238,12 +258,20 @@ or `cont`. The geometry case enables both controllers and verifies all four
 existing GDSCR owners through actual accesses. Migrations cover a prewarmed
 destination, two pending PLL locks, two pending latches, all five captured RCGs,
 unknown-input replacement, four remote votes and shared ARES fields.
+The actual generic-to-v2 write sequence remains covered, with a separate
+cold generic RUN/UPDATE attempt required to remain unlocked and unacknowledged
+before the v2 rewrite succeeds. The result field
+`legacy_then_v2_recipe_supported` describes that write sequence;
+`legacy_pll1_lock_accepted=false` records the narrower qualification.
 
 A separate two-check generation gate verifies ten primary hashes and
 reproduces both data files byte for byte. Existing camera/MDSS/NPU/VIDEO tests
 still require rejection at the four adjacent BCRs; those accesses now must
 reach the independently disabled VIDEOCC owner rather than an unassigned hole.
-Their original suite counts and remaining negative checks are preserved.
+After every rejected neighboring read/write, the four BCR words, reference
+enable state, current GDSC snapshot and complete VIDEO GDSC snapshot must
+remain unchanged. Their original suite counts and remaining negative checks
+are preserved.
 This creates an87-component +5-Linux plan. Host generation, syntax and plan
 checks are recorded separately; actual compiled QTest, migration and the
 next original-input run require a new exact-source binary. Neither f209's
