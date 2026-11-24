@@ -221,8 +221,8 @@ It selects only the MDSS word at `0x0af03000`, preserves the camera type and
 194-byte state, and shares the real mmcx output through a stateless splitter.
 Its self proxy remains a software consumer rather than a hardware parent.
 The GCC generator checks the fixed display branch declaration and stores
-only its two source-supported retention requests. The unknown parent clock,
-video GDSC holes and all other DISPCC addresses retain their old scope.
+only its two source-supported retention requests. The unknown parent clock
+and all other DISPCC addresses retain their old scope.
 Independent 64-byte MDSS migration and real-wiring acceptance are required;
 neither source generation nor component checks establish display or Android
 execution.
@@ -241,3 +241,17 @@ request bits to its existing NPU_CFG_AHB word, keeping HWCG, status and the
 unknown clock input. The 21-check gate and independent 64-byte migration
 require actual compiled execution; source inspection is not an Android or
 NPU workload result.
+
+## VIDEO GDSC and VIDEO_AHB bounded increment
+
+The [VIDEO contract](docs/video-gdsc-reference.md) follows the next actual
+original-input failure at `0x0abf0d18` in run003, using the same fixed driver
+and DT extraction. It gives four sparse words their own default-disabled
+type and 142-byte v1 state. Only mvs0 and mvs1 have hardware mode declared;
+the four domains share the evidenced mmcx parent as siblings. The stateless
+fanout adds a third output while preserving camera and MDSS connections;
+NPU remains unconnected. The generator adds only VIDEO_AHB retention bits
+13/14 at `0xb004`, preserving descriptor 196, unknown external input 79,
+all clock geometry and GCC v3. The 22-check compiled gate requires actual
+MMIO, three completed transfers and real negative cases; codec, firmware,
+DMA and Android execution are not established by these control words.

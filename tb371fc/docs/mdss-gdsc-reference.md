@@ -107,9 +107,11 @@ provider inputs, restores SW_COLLAPSE, and republishes the resulting state.
 
 ## Shared mmcx connection and proxy consumer
 
-RPMh resource `power[3]` drives the stateless two-output
+RPMh resource `power[3]` drives the stateless
 `/machine/mmcx-gdsc-fanout` splitter. Output 0 preserves the existing camera
-parent input; output 1 drives MDSS. Both knowledge inputs are initialized
+parent input; output 1 drives MDSS. The later
+[VIDEO increment](video-gdsc-reference.md) adds output 2 while retaining
+both existing connections. Each consumer's knowledge input is initialized
 from the selected RPMh profile's `res.mmcx.lvl.present` value. No second
 connection overwrites the camera wire, and neither domain becomes a parent
 of the other. Camera retains its original type, six entries and 194-byte
@@ -134,8 +136,9 @@ The existing GCC descriptor ID 23, external-parent index 10, clock name,
 clock array and GCC v3 wire layout stay unchanged. There is no declared
 clock parent in the fixed vendor node, so the current unknown external
 input remains unknown. Setting the branch vote or either retention bit
-does not produce a frequency. VIDEO_AHB `0xb004` retains its old mask and
-the camera branch keeps `0x6001`. The later
+does not produce a frequency. The camera branch keeps `0x6001`. The later
+[VIDEO increment](video-gdsc-reference.md) independently adds the same two
+retention requests at VIDEO_AHB `0xb004`. The
 [NPU increment](npu-gdsc-reference.md) independently adds the two retention
 bits to NPU_CFG_AHB `0x4d004`, preserving that word's existing HWCG support.
 

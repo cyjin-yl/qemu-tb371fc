@@ -186,7 +186,7 @@ still apply to any future authorized consumer execution.
 
 ## Gates
 
-The current integration plan registers **85 gates: 80 component/parser gates
+The current integration plan registers **86 gates: 81 component/parser gates
 and five Linux integration gates**, plus separate active and runtime-suspended
 real-Linux UFS checkpoints and the A77/PCI UFS compatibility job. This union
 preserves the wholeboard reference peripherals and default-branch storage,
@@ -202,6 +202,11 @@ rejections. Its separate 64-byte section binds a no-declared-parent sentinel;
 the board leaves both parent inputs unconnected. Actual RPMh mmcx votes must
 not resolve NPU power, and NPU_CFG_AHB retention requests must not invent a
 clock rate. NPUCC's 26 sparse windows and all earlier migration formats remain.
+The [VIDEO GDSC gate](video-gdsc-reference.md) adds 22 checks and a separate
+142-byte v1 section for four exact words. It requires three completed
+migrations, two profile rejections and two single-bit corruption rejections;
+the real mmcx fanout must preserve camera/MDSS while serving VIDEO and still
+leave NPU unconnected. Only the two VIDEO_AHB retention requests are added.
 The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
@@ -232,6 +237,7 @@ pass does not attest newly added devices.
 | Config NoC SBM reference | 28 checks; eight independent logical deadlines, three words, pure stopped state, two completed transfers, two profile mismatches and two corrupted-field rejections; no real traffic drain |
 | NPUCC | 37 checks across three physical banks, actual Clock outputs, source-bound CRC/dividers, two completed migrations and two profile rejections; full NPU/DSP execution remains outside scope |
 | NPU GDSC | 21 checks; independent 4-byte word and 64-byte v1 state, unknown parent preserved, hardware mode rejected, NPU_CFG_AHB retention only, three completed transfers, two profile and two corruption rejections |
+| VIDEO GDSC | 22 checks; four sparse words and 142-byte v1 state, HW mode only on two DT-declared domains, real three-consumer mmcx fanout, VIDEO_AHB retention, three completed transfers and 2/2 profile/corruption rejections |
 | GPUCC | 30 actual digital PLL/RCG/branch/reset checks, two completed migrations and two profile rejections; actual Clock providers and sparse ownership boundaries |
 | GPU CX and GX power domains | CX 26 checks with 9 migration attempts (6 completed, 3 rejected); GX 37 checks with 12 attempts (8 completed, 4 rejected); explicit digital reference states only |
 | SMEM reference handoff | 22 checks and 4 real migration cases; the separate stopped-production-kernel observer never substitutes for a native run |
