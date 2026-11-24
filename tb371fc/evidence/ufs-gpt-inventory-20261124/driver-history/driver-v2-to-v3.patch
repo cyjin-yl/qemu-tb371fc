@@ -1,0 +1,101 @@
+diff --git a/tb371fc/scripts/inspect_ufs_gpt.py b/tb371fc/scripts/inspect_ufs_gpt.py
+index d72b2ea42f98a465dd06641fc8eadc5333701f5c..4086fedc8767063a3f768ce6957418dd9f0677fb 100644
+--- a/tb371fc/scripts/inspect_ufs_gpt.py
++++ b/tb371fc/scripts/inspect_ufs_gpt.py
+@@ -161,15 +161,35 @@ def read_array(fd, regions, side, header, block_bytes, disk_bytes):
+     return raw
+ 
+ 
+-def partitions_from_array(raw, header, block_bytes):
++def partitions_from_array(raw, header, block_bytes, unused_policy='strict'):
++    require(unused_policy in ('strict', 'allow-type-zero-residue'), 'unused_entry_policy',
++            'Unknown unused partition entry policy')
+     parts, unique_ids, names = [], set(), set()
++    residues = []
+     width = header['entry_bytes']
+     for index in range(header['entry_count']):
+         entry = raw[index*width:(index+1)*width]
+         type_guid, unique_guid = entry[:16], entry[16:32]
+         if type_guid == ZERO_GUID:
+-            require(not any(entry), 'unused_entry',
+-                    'Nonzero unused entry is outside the strict inventory profile')
++            if any(entry):
++                require(unused_policy == 'allow-type-zero-residue', 'unused_entry',
++                        'Nonzero unused entry is outside the strict inventory profile')
++                require(not any(entry[128:]), 'entry_reserved',
++                        'Reserved extended partition entry bytes must be zero')
++                # Type zero is unused. Hash opaque residue, without interpreting
++                # stale addresses, names, IDs or attributes as a partition.
++                fields = {}
++                for name, start, end in (('unique_guid', 16, 32), ('first_lba', 32, 40),
++                                         ('last_lba', 40, 48), ('attributes', 48, 56),
++                                         ('name_utf16', 56, 128)):
++                    if any(entry[start:end]):
++                        fields[name] = {'offset_bytes': start, 'size_bytes': end-start,
++                                        'sha256': sha(entry[start:end])}
++                residues.append({'entry_index': index+1, 'entry_bytes': width,
++                                 'classification': 'unused_type_zero_residue',
++                                 'record_sha256': sha(entry), 'nonzero_fields': fields,
++                                 'stale_fields_interpreted': False,
++                                 'included_in_partitions': False})
+             continue
+         require(unique_guid != ZERO_GUID and unique_guid not in unique_ids,
+                 'partition_guid', 'Partition GUID is zero or duplicated within the LUN')
+@@ -206,7 +226,7 @@ def partitions_from_array(raw, header, block_bytes):
+     for left, right in zip(ordered, ordered[1:]):
+         require(left['last_lba'] < right['first_lba'], 'partition_overlap',
+                 'Defined partitions overlap')
+-    return parts
++    return parts, residues
+ 
+ 
+ def metadata_digest(regions, disk_bytes, block_bytes):
+@@ -219,7 +239,7 @@ def metadata_digest(regions, disk_bytes, block_bytes):
+ 
+ 
+ def inspect(path, logical_block_bytes=None, allow_block_device=False, required_names=(),
+-            pmbr_policy='strict'):
++            pmbr_policy='strict', unused_entry_policy='strict'):
+     """Return a qualified metadata-only report, or raise without changing input."""
+     path = Path(path)
+     before_path = path.lstat()
+@@ -259,7 +279,7 @@ def inspect(path, logical_block_bytes=None, allow_block_device=False, required_n
+         backup_array = read_array(fd, regions, 'backup', backup, block_bytes, disk_bytes)
+         require(array == backup_array, 'array_disagreement',
+                 'Primary and backup GPT arrays differ byte for byte')
+-        parts = partitions_from_array(array, primary, block_bytes)
++        parts, residues = partitions_from_array(array, primary, block_bytes, unused_entry_policy)
+         required_names = sorted(set(required_names))
+         require(all(name and name in {p['name'] for p in parts} for name in required_names),
+                 'missing_partition', 'One or more required partition labels are absent')
+@@ -291,6 +311,10 @@ def inspect(path, logical_block_bytes=None, allow_block_device=False, required_n
+                 'metadata_read_passes': 2, 'metadata_observed_unchanged': True,
+                 'gpt_metadata_verified': True, 'partition_count': len(parts),
+                 'unused_entry_count': primary['entry_count']-len(parts),
++                'unused_zero_entry_count': primary['entry_count']-len(parts)-len(residues),
++                'unused_entry_policy': unused_entry_policy,
++                'unused_type_zero_residue_count': len(residues),
++                'unused_type_zero_residues': residues,
+                 'partitions': parts, 'required_partition_labels': required_names,
+                 'required_partition_labels_verified': bool(required_names),
+                 'partition_contents_verified': False, 'full_lun_content_hashed': False,
+@@ -314,6 +338,9 @@ def main(argv=None):
+     parser.add_argument('--pmbr-policy', choices=('strict', 'allow-saturated-size'),
+                         default='strict',
+                         help='Strict by default; opt in only to the observed 0xffffffff size sentinel')
++    parser.add_argument('--unused-entry-policy', choices=('strict', 'allow-type-zero-residue'),
++                        default='strict',
++                        help='Strict by default; opt in to classifying opaque residue in type-zero entries')
+     parser.add_argument('--require-partition', action='append', default=[],
+                         help='Require this exact label in this LUN; repeat for more labels')
+     parser.add_argument('--output', type=Path, help='New JSON receipt; existing paths are never overwritten')
+@@ -322,7 +349,8 @@ def main(argv=None):
+         parser.error('Output already exists; choose a new receipt path')
+     try:
+         report = inspect(args.input, args.logical_block_size,
+-                         args.allow_block_device, args.require_partition, args.pmbr_policy)
++                         args.allow_block_device, args.require_partition, args.pmbr_policy,
++                         args.unused_entry_policy)
+         exit_code = 0
+     except (InvalidGPT, OSError) as exc:
+         report = {'schema_version': 1, 'kind': 'ufs-gpt-metadata-inventory',

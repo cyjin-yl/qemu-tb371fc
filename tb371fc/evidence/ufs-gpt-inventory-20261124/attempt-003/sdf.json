@@ -1,0 +1,251 @@
+{
+  "android_boot_verified": false,
+  "atomic_snapshot_verified": false,
+  "complete_backup_verified": false,
+  "disk_guid_sha256": "3328fd1b23306a712bcfc10511fab4df7838134c136e51b38f2b813aa34ecc28",
+  "full_lun_content_hashed": false,
+  "geometry_source": "BLKSSZGET+BLKGETSIZE64",
+  "gpt_metadata_verified": true,
+  "headers": {
+    "backup": {
+      "alternate_lba": 1,
+      "array_bytes": 4096,
+      "array_crc32": 3571254657,
+      "array_lba": 8187,
+      "current_lba": 8191,
+      "entry_bytes": 128,
+      "entry_count": 32,
+      "first_usable_lba": 6,
+      "header_crc32": 380691062,
+      "header_size": 92,
+      "last_usable_lba": 8186,
+      "revision": 65536
+    },
+    "primary": {
+      "alternate_lba": 8191,
+      "array_bytes": 4096,
+      "array_crc32": 3571254657,
+      "array_lba": 2,
+      "current_lba": 1,
+      "entry_bytes": 128,
+      "entry_count": 32,
+      "first_usable_lba": 6,
+      "header_crc32": 1036873076,
+      "header_size": 92,
+      "last_usable_lba": 8186,
+      "revision": 65536
+    }
+  },
+  "input_bytes": 33554432,
+  "input_kind": "block_device",
+  "input_name": "sdf",
+  "kind": "ufs-gpt-metadata-inventory",
+  "limitations": [
+    "Only the five listed GPT metadata regions were read, twice.",
+    "No partition content, super metadata, AVB signature or encrypted data was read.",
+    "Stable metadata during these reads does not prove a coherent full-LUN backup.",
+    "This bounded profile requires both GPT copies; it does not repair or recover either."
+  ],
+  "logical_block_bytes": 4096,
+  "metadata_bytes_per_pass": 20480,
+  "metadata_observed_unchanged": true,
+  "metadata_read_passes": 2,
+  "metadata_sha256": "4bed90650bfb101b9494d8e85ec395516fa001bc68c815c2fc3028e7c240dbe0",
+  "observed_regions": [
+    {
+      "name": "protective_mbr",
+      "offset_bytes": 0,
+      "sha256": "e53182c76db6385b5bb8e9235f35c193fa0dd2fd2941a0fd86a641dec8db9920",
+      "size_bytes": 4096
+    },
+    {
+      "name": "primary_header",
+      "offset_bytes": 4096,
+      "sha256": "0b3ea2a76b75c8d0e6b0798701143a2c29b4eb3f9fffd6fd7e641058df5f3728",
+      "size_bytes": 4096
+    },
+    {
+      "name": "backup_header",
+      "offset_bytes": 33550336,
+      "sha256": "01c5cdfb58b76a66d5123030a13be6ef9cd68259864c7d8dffddd0abfdbcb2e1",
+      "size_bytes": 4096
+    },
+    {
+      "name": "primary_entries",
+      "offset_bytes": 8192,
+      "sha256": "228175beb50a0053c2c59513aeecddd4093bcd8f405ba010c721167d57f21f41",
+      "size_bytes": 4096
+    },
+    {
+      "name": "backup_entries",
+      "offset_bytes": 33533952,
+      "sha256": "228175beb50a0053c2c59513aeecddd4093bcd8f405ba010c721167d57f21f41",
+      "size_bytes": 4096
+    }
+  ],
+  "partition_contents_verified": false,
+  "partition_count": 9,
+  "partitions": [
+    {
+      "attributes": "0x1000000000000000",
+      "entry_index": 1,
+      "first_lba": 6,
+      "last_lba": 31,
+      "name": "ALIGN_TO_128K_2",
+      "offset_bytes": 24576,
+      "size_bytes": 106496,
+      "type_guid": "6891a3b7-0ccc-4705-bb53-2673cac193bd",
+      "unique_guid_sha256": "77b08b0d41a10ce8ec5e4e07d3a1bf41ce32d3bc4e16df5ec4739d13618f2a64"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 2,
+      "first_lba": 32,
+      "last_lba": 543,
+      "name": "modemst1",
+      "offset_bytes": 131072,
+      "size_bytes": 2097152,
+      "type_guid": "ebbeadaf-22c9-e33b-8f5d-0e81686a68cb",
+      "unique_guid_sha256": "4222a1f3025ad985781275271bc47ef2ea3da433b62c57ed7bc20b0c763038d9"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 3,
+      "first_lba": 544,
+      "last_lba": 1055,
+      "name": "modemst2",
+      "offset_bytes": 2228224,
+      "size_bytes": 2097152,
+      "type_guid": "0a288b1f-22c9-e33b-8f5d-0e81686a68cb",
+      "unique_guid_sha256": "8c451afb21098e4a5304cacf009ba89a7ea0034124d3ebee4babbfbfed076622"
+    },
+    {
+      "attributes": "0x1000000000000000",
+      "entry_index": 4,
+      "first_lba": 1056,
+      "last_lba": 1567,
+      "name": "fsg",
+      "offset_bytes": 4325376,
+      "size_bytes": 2097152,
+      "type_guid": "638ff8e2-22c9-e33b-8f5d-0e81686a68cb",
+      "unique_guid_sha256": "e9bf83a64fd50f04fe828fc5570d383c1868080bd91cf1fbf11414bfd3430b91"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 5,
+      "first_lba": 1568,
+      "last_lba": 1599,
+      "name": "fsc",
+      "offset_bytes": 6422528,
+      "size_bytes": 131072,
+      "type_guid": "57b90a16-22c9-e33b-8f5d-0e81686a68cb",
+      "unique_guid_sha256": "876953f600159430b41be8df0211dc0b75cc283e6ad4472fef6b2a4d90051073"
+    },
+    {
+      "attributes": "0x1000000000000000",
+      "entry_index": 6,
+      "first_lba": 1600,
+      "last_lba": 2111,
+      "name": "mdm1m9kefs3",
+      "offset_bytes": 6553600,
+      "size_bytes": 2097152,
+      "type_guid": "bf64fb9c-22c9-e33b-8f5d-0e81686a68cb",
+      "unique_guid_sha256": "206961e86aa6672483f53e70d16e25b5469097bc6a116c736d5bdc76e61efcd7"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 7,
+      "first_lba": 2112,
+      "last_lba": 2623,
+      "name": "mdm1m9kefs1",
+      "offset_bytes": 8650752,
+      "size_bytes": 2097152,
+      "type_guid": "2290be64-22c9-e33b-8f5d-0e81686a68cb",
+      "unique_guid_sha256": "93a5b8dfdfe211f8ffea44b6e29f19cde63cc0ba17961e9b7cf0abbbacbafdb7"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 8,
+      "first_lba": 2624,
+      "last_lba": 3135,
+      "name": "mdm1m9kefs2",
+      "offset_bytes": 10747904,
+      "size_bytes": 2097152,
+      "type_guid": "346c26d1-22c9-e33b-8f5d-0e81686a68cb",
+      "unique_guid_sha256": "9f35b774a9d7a46ff03cf8b74281afa2d1b224b1fb93db6662c00cdfe7660479"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 9,
+      "first_lba": 3136,
+      "last_lba": 3136,
+      "name": "mdm1m9kefsc",
+      "offset_bytes": 12845056,
+      "size_bytes": 4096,
+      "type_guid": "5cb43a64-22c9-e33b-8f5d-0e81686a68cb",
+      "unique_guid_sha256": "123b6050038eb8f756cdabead5d7f486cb5c68aecde364d329158da6155b550a"
+    }
+  ],
+  "protective_mbr": {
+    "actual_size_lbas": 4294967295,
+    "boot_indicator": 0,
+    "expected_size_lbas": 8191,
+    "extent_policy": "allow-saturated-size",
+    "hybrid_mbr": false,
+    "partition_type": 238,
+    "pmbr_standard_extent": false,
+    "sentinel_compatibility": true,
+    "size_lbas": 4294967295,
+    "start_lba": 1
+  },
+  "required_partition_labels": [],
+  "required_partition_labels_verified": false,
+  "schema_version": 1,
+  "sources": [
+    "https://uefi.org/specs/UEFI/2.11/05_GUID_Partition_Table_Format.html",
+    "https://github.com/gregkh/linux/blob/v6.12.114/block/partitions/efi.c"
+  ],
+  "status": "gpt_metadata_verified",
+  "total_lbas": 8192,
+  "unused_entry_count": 23,
+  "unused_entry_policy": "allow-type-zero-residue",
+  "unused_type_zero_residue_count": 1,
+  "unused_type_zero_residues": [
+    {
+      "classification": "unused_type_zero_residue",
+      "entry_bytes": 128,
+      "entry_index": 10,
+      "included_in_partitions": false,
+      "nonzero_fields": {
+        "attributes": {
+          "offset_bytes": 48,
+          "sha256": "998e907bfbb34f71c66b6dc6c40fe98ca6d2d5a29755bc5a04824c36082a61d1",
+          "size_bytes": 8
+        },
+        "first_lba": {
+          "offset_bytes": 32,
+          "sha256": "1229724b33b191c4114957776e1cf29512fb80292be89a33ee2ebe8e8a4e0fea",
+          "size_bytes": 8
+        },
+        "last_lba": {
+          "offset_bytes": 40,
+          "sha256": "3f888153148c9c01e67d4d1553401c41521d032417f45354e98b14e502f5138f",
+          "size_bytes": 8
+        },
+        "name_utf16": {
+          "offset_bytes": 56,
+          "sha256": "53ea152f12396db5d00ca16753e83ac6074307d355464ba2fe4e4737aa8dd9c2",
+          "size_bytes": 72
+        },
+        "unique_guid": {
+          "offset_bytes": 16,
+          "sha256": "4ffb8433b74c7a4bb29a303aad07507d84a09d2a6bd6dba9297ed2749888deda",
+          "size_bytes": 16
+        }
+      },
+      "record_sha256": "38c406fe77443cb020938fbfbc5135cef4678cd9d0dd9d1efba007812e12b987",
+      "stale_fields_interpreted": false
+    }
+  ],
+  "unused_zero_entry_count": 22
+}

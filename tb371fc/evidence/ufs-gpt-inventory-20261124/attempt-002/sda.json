@@ -1,0 +1,281 @@
+{
+  "android_boot_verified": false,
+  "atomic_snapshot_verified": false,
+  "complete_backup_verified": false,
+  "disk_guid_sha256": "bf4b75085b7b5b35bfc217b1a41f2298f8a231276dcb547085aa8009c03f1c54",
+  "full_lun_content_hashed": false,
+  "geometry_source": "BLKSSZGET+BLKGETSIZE64",
+  "gpt_metadata_verified": true,
+  "headers": {
+    "backup": {
+      "alternate_lba": 1,
+      "array_bytes": 4096,
+      "array_crc32": 1483835077,
+      "array_lba": 30693371,
+      "current_lba": 30693375,
+      "entry_bytes": 128,
+      "entry_count": 32,
+      "first_usable_lba": 6,
+      "header_crc32": 3187130720,
+      "header_size": 92,
+      "last_usable_lba": 30693370,
+      "revision": 65536
+    },
+    "primary": {
+      "alternate_lba": 30693375,
+      "array_bytes": 4096,
+      "array_crc32": 1483835077,
+      "array_lba": 2,
+      "current_lba": 1,
+      "entry_bytes": 128,
+      "entry_count": 32,
+      "first_usable_lba": 6,
+      "header_crc32": 143660207,
+      "header_size": 92,
+      "last_usable_lba": 30693370,
+      "revision": 65536
+    }
+  },
+  "input_bytes": 125720068096,
+  "input_kind": "block_device",
+  "input_name": "sda",
+  "kind": "ufs-gpt-metadata-inventory",
+  "limitations": [
+    "Only the five listed GPT metadata regions were read, twice.",
+    "No partition content, super metadata, AVB signature or encrypted data was read.",
+    "Stable metadata during these reads does not prove a coherent full-LUN backup.",
+    "This bounded profile requires both GPT copies; it does not repair or recover either."
+  ],
+  "logical_block_bytes": 4096,
+  "metadata_bytes_per_pass": 20480,
+  "metadata_observed_unchanged": true,
+  "metadata_read_passes": 2,
+  "metadata_sha256": "b6075b2157a5ac232a182aeeaa35b5139306e8620dbf51d39ad0286eaea5e231",
+  "observed_regions": [
+    {
+      "name": "protective_mbr",
+      "offset_bytes": 0,
+      "sha256": "e53182c76db6385b5bb8e9235f35c193fa0dd2fd2941a0fd86a641dec8db9920",
+      "size_bytes": 4096
+    },
+    {
+      "name": "primary_header",
+      "offset_bytes": 4096,
+      "sha256": "8071081cb88e136ce05fcb662e04b97301c4c9462a49c6e877a1899ce58d3127",
+      "size_bytes": 4096
+    },
+    {
+      "name": "backup_header",
+      "offset_bytes": 125720064000,
+      "sha256": "9ce5a9cb204858b29acfde0d5ada25164b456cdfb2af47217cf2cb4de0502559",
+      "size_bytes": 4096
+    },
+    {
+      "name": "primary_entries",
+      "offset_bytes": 8192,
+      "sha256": "732ecc4e84e9c79b6ee011de35274339eabef057bc3e46f2ff637d90c1f54de7",
+      "size_bytes": 4096
+    },
+    {
+      "name": "backup_entries",
+      "offset_bytes": 125720047616,
+      "sha256": "732ecc4e84e9c79b6ee011de35274339eabef057bc3e46f2ff637d90c1f54de7",
+      "size_bytes": 4096
+    }
+  ],
+  "partition_contents_verified": false,
+  "partition_count": 15,
+  "partitions": [
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 1,
+      "first_lba": 6,
+      "last_lba": 7,
+      "name": "ssd",
+      "offset_bytes": 24576,
+      "size_bytes": 8192,
+      "type_guid": "2c86e742-745e-4fdd-bfd8-b6a7ac638772",
+      "unique_guid_sha256": "1e46de66df66c50d12be2a3e0a78de71c7a57829969586e52caf2e17c7cc5ef6"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 2,
+      "first_lba": 8,
+      "last_lba": 8199,
+      "name": "persist",
+      "offset_bytes": 32768,
+      "size_bytes": 33554432,
+      "type_guid": "6c95e238-e343-4ba8-b489-8681ed22ad0b",
+      "unique_guid_sha256": "242fbdc4fcde4c501815cee08a51af4963e9fec7567470f9abdc950b98b62835"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 3,
+      "first_lba": 8200,
+      "last_lba": 8455,
+      "name": "misc",
+      "offset_bytes": 33587200,
+      "size_bytes": 1048576,
+      "type_guid": "82acc91f-357c-4a68-9c8f-689e1b1a23a1",
+      "unique_guid_sha256": "cc2d870dcf6be13b4a22ad103d89f55500c63ea033b36ac7e84d19ebad510613"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 4,
+      "first_lba": 8456,
+      "last_lba": 8583,
+      "name": "keystore",
+      "offset_bytes": 34635776,
+      "size_bytes": 524288,
+      "type_guid": "de7d4029-0f5b-41c8-ae7e-f6c023a02b33",
+      "unique_guid_sha256": "3725646d1f3dae6619330e3cf85b08ede025b3dd9239022cfaea3a3dceb83d7b"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 5,
+      "first_lba": 8584,
+      "last_lba": 8711,
+      "name": "frp",
+      "offset_bytes": 35160064,
+      "size_bytes": 524288,
+      "type_guid": "91b72d4d-71e0-4cbf-9b8e-236381cff17a",
+      "unique_guid_sha256": "8b00d584758cb88ab4591bb90065cb38d2a0d844feb8fbd870b03c0e00aa449b"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 6,
+      "first_lba": 8712,
+      "last_lba": 3154439,
+      "name": "super",
+      "offset_bytes": 35684352,
+      "size_bytes": 12884901888,
+      "type_guid": "89a12de1-5e41-4cb3-8b4c-b1441eb5da38",
+      "unique_guid_sha256": "696602071af53428a38dea6cf8b4ee3b354ca183bae715b230452f226f8411ad"
+    },
+    {
+      "attributes": "0x0004000000000000",
+      "entry_index": 7,
+      "first_lba": 3154440,
+      "last_lba": 3180039,
+      "name": "recovery_a",
+      "offset_bytes": 12920586240,
+      "size_bytes": 104857600,
+      "type_guid": "352b8083-9c0c-4bed-9917-cb5eabd64d41",
+      "unique_guid_sha256": "155548c15d2782b832aa16f0f5934a7fa8c6726c4e92cdbfcbdef58233f5e65b"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 8,
+      "first_lba": 3180040,
+      "last_lba": 3205639,
+      "name": "recovery_b",
+      "offset_bytes": 13025443840,
+      "size_bytes": 104857600,
+      "type_guid": "d504d6db-fa92-4853-b59e-c7f292e2ea19",
+      "unique_guid_sha256": "e0aa1e38cbbb2b3b13e246a75225be652f8898a500c5e6f84ab158608259fcef"
+    },
+    {
+      "attributes": "0x1004000000000000",
+      "entry_index": 9,
+      "first_lba": 3205640,
+      "last_lba": 3205655,
+      "name": "vbmeta_system_a",
+      "offset_bytes": 13130301440,
+      "size_bytes": 65536,
+      "type_guid": "fe3ab853-5b66-4d4a-bf85-8d90af1c2c4a",
+      "unique_guid_sha256": "20b59f5492b6151175d357e582196a2857c3cb6d56644aff92d0984bc18232cc"
+    },
+    {
+      "attributes": "0x1000000000000000",
+      "entry_index": 10,
+      "first_lba": 3205656,
+      "last_lba": 3205671,
+      "name": "vbmeta_system_b",
+      "offset_bytes": 13130366976,
+      "size_bytes": 65536,
+      "type_guid": "1344859d-3a6a-4c14-a316-9e696b3a5400",
+      "unique_guid_sha256": "65ee25e751f9b1a1ac83f577765c4646ed41e9f4ead6ec3ace9f0798dacb1375"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 11,
+      "first_lba": 3205672,
+      "last_lba": 3209767,
+      "name": "metadata",
+      "offset_bytes": 13130432512,
+      "size_bytes": 16777216,
+      "type_guid": "988a98c9-2910-4123-aaec-1cf6b1bc28f9",
+      "unique_guid_sha256": "fbd9698c5bff11f6cf6143a25fbcb7e0a144a14cb3174e73db0c43cf62fa99c7"
+    },
+    {
+      "attributes": "0x0004000000000000",
+      "entry_index": 12,
+      "first_lba": 3209768,
+      "last_lba": 3242535,
+      "name": "vm-system_a",
+      "offset_bytes": 13147209728,
+      "size_bytes": 134217728,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "31163b1832d6fb3019ef0ff11e4f8c8de4901ad71626e331a32412e5616921b8"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 13,
+      "first_lba": 3242536,
+      "last_lba": 3275303,
+      "name": "vm-system_b",
+      "offset_bytes": 13281427456,
+      "size_bytes": 134217728,
+      "type_guid": "c5f681cc-9742-4641-be4e-976eeb638eee",
+      "unique_guid_sha256": "d6563d069eeb00b775a7526e9fcd79af7cf543726f3d855afb2fe3f9eea428fd"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 14,
+      "first_lba": 3275304,
+      "last_lba": 3308071,
+      "name": "rawdump",
+      "offset_bytes": 13415645184,
+      "size_bytes": 134217728,
+      "type_guid": "66c9b323-f7fc-48b6-bf96-6f32e335a428",
+      "unique_guid_sha256": "385cb29c3cfdc7ced9a6853a89b58d5d8a8cff1e443dd3493c3fd9c275a6cbdc"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 15,
+      "first_lba": 3308072,
+      "last_lba": 30693370,
+      "name": "userdata",
+      "offset_bytes": 13549862912,
+      "size_bytes": 112170184704,
+      "type_guid": "1b81e7e6-f50d-419b-a739-2aeef8da3335",
+      "unique_guid_sha256": "01d2cc876cf7947fdcf06636c89ca2776c9747f202a053bad480984dbe00b114"
+    }
+  ],
+  "protective_mbr": {
+    "actual_size_lbas": 4294967295,
+    "boot_indicator": 0,
+    "expected_size_lbas": 30693375,
+    "extent_policy": "allow-saturated-size",
+    "hybrid_mbr": false,
+    "partition_type": 238,
+    "pmbr_standard_extent": false,
+    "sentinel_compatibility": true,
+    "size_lbas": 4294967295,
+    "start_lba": 1
+  },
+  "required_partition_labels": [
+    "metadata",
+    "super",
+    "vbmeta_system_a"
+  ],
+  "required_partition_labels_verified": true,
+  "schema_version": 1,
+  "sources": [
+    "https://uefi.org/specs/UEFI/2.11/05_GUID_Partition_Table_Format.html",
+    "https://github.com/gregkh/linux/blob/v6.12.114/block/partitions/efi.c"
+  ],
+  "status": "gpt_metadata_verified",
+  "total_lbas": 30693376,
+  "unused_entry_count": 17
+}
