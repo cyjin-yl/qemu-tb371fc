@@ -28,6 +28,27 @@ capacities, line sizes or associativity on this tablet. The capture confirms
 presence and sharing, not cache geometry. See the
 [expansion inventory](../evidence/expansion-20261123/).
 
+The [fresh stock-Android sysfs capture](../evidence/stock-cpu-cache-20261123/result.json)
+at `2026-11-23T20:45:01.137991+00:00` repeats this observation on
+`4.19.157-perf+`: all eight CPUs expose L1 Data, L1 Instruction, private
+L2 Unified and L3 Unified shared by CPUs `0-7`. All 128 requested geometry
+fields (size, sets, associativity and line size for 32 entries) are absent
+with `FileNotFoundError`; no numeric geometry is inferred. The exact
+[read-only collector and file hashes](../evidence/stock-cpu-cache-20261123/source-binding.json)
+are retained beside the receipt.
+
+| CPUs | MIDR from sysfs | Scheduler `cpu_capacity` | Sysfs package ID |
+| --- | --- | --- | --- |
+| 0-3 | `0x51df805e` | `313` | `0` |
+| 4-6 | `0x411fd0d0` | `777` | `1` |
+| 7 | `0x411fd0d0` | `1024` | `2` |
+
+These are the running kernel's software topology and capacity declarations.
+As described by the [Linux capacity documentation](https://docs.kernel.org/scheduler/sched-capacity.html),
+capacity is a normalized scheduler quantity. This capture runs no performance
+benchmark and does not turn the package IDs into a claim about physical
+packages. It also does not validate a replacement Linux kernel on the tablet.
+
 The observed Linux feature line is:
 
 ~~~text

@@ -1,0 +1,251 @@
+{
+  "schema_version": 1,
+  "sampled_utc": "2026-11-24T02:41:30Z",
+  "model": "TB371FC",
+  "kernel_release": "4.19.157-perf+",
+  "scope": "Read-only allowlisted device-tree properties and public driver sysfs attributes; no raw MMIO, storage, credentials or device identifiers.",
+  "device_tree": [
+    {
+      "path": "/soc/ufshc@1d84000/reg",
+      "raw_hex": "01d840000000300001d9000000008000",
+      "sha256": "16e22b22b4cebe608db4014cdbfd37db3cd3233c8327e0d7ea56206f34d93dc8",
+      "be32": [
+        30949376,
+        12288,
+        30998528,
+        32768
+      ]
+    },
+    {
+      "path": "/soc/ufshc@1d84000/reg-names",
+      "raw_hex": "7566735f6d656d007566735f69636500",
+      "sha256": "631f00f7e6d203f6b9b7b2cad51576f135168e5542b0fbcc760d90e604fe0810",
+      "strings": [
+        "ufs_mem",
+        "ufs_ice"
+      ]
+    },
+    {
+      "path": "/soc/ufsice@1d90000/reg",
+      "raw_hex": "01d9000000008000",
+      "sha256": "ac430916a9092e90f4413f4267f84173c4f9b48a301a407137444d4b48148d36",
+      "be32": [
+        30998528,
+        32768
+      ]
+    },
+    {
+      "path": "/soc/ufsice@1d90000/compatible",
+      "raw_hex": "71636f6d2c69636500",
+      "sha256": "e3f5b3f6144ecc2e8c6433f2d39906dad0abb1f74133ed59ae75f94dcb1ddd72",
+      "strings": [
+        "qcom,ice"
+      ]
+    },
+    {
+      "path": "/soc/apps-smmu@15000000/reg",
+      "raw_hex": "15000000001000001518200000000020",
+      "sha256": "b22b4afe5d0199fb8dafcfaf066487d4bd9f93b750dde8d69fcd4ed2220769aa",
+      "be32": [
+        352321536,
+        1048576,
+        353902592,
+        32
+      ]
+    },
+    {
+      "path": "/soc/apps-smmu@15000000/reg-names",
+      "raw_hex": "62617365007463752d6261736500",
+      "sha256": "2cf19b3999864301f3b36a738b1421e25c3d76dac481b88a435bc88bba53ea82",
+      "strings": [
+        "base",
+        "tcu-base"
+      ]
+    },
+    {
+      "path": "/soc/apps-smmu@15000000/anoc_1_tbu@15185000/reg",
+      "raw_hex": "15185000000010001518220000000008",
+      "sha256": "409a253edbcd0ddbd6967ce39be6e00016c2c4520bd6edacbf6325ec5d4f8b90",
+      "be32": [
+        353914880,
+        4096,
+        353903104,
+        8
+      ]
+    },
+    {
+      "path": "/soc/apps-smmu@15000000/anoc_1_tbu@15185000/qcom,stream-id-range",
+      "raw_hex": "0000000000000400",
+      "sha256": "f44b28e2244100cba558060065aa621e982bd6987a9ded05095b6047270d9b21",
+      "be32": [
+        0,
+        1024
+      ]
+    },
+    {
+      "path": "/soc/apps-smmu@15000000/anoc_2_tbu@15189000/reg",
+      "raw_hex": "15189000000010001518220800000008",
+      "sha256": "02c0a825de798b0cb53467528417034b784d9a38d2d8349cdd4f6d3e5f27da7f",
+      "be32": [
+        353931264,
+        4096,
+        353903112,
+        8
+      ]
+    },
+    {
+      "path": "/soc/apps-smmu@15000000/anoc_2_tbu@15189000/qcom,stream-id-range",
+      "raw_hex": "0000040000000400",
+      "sha256": "154409d25b7abe9b21a8bfd3b3a3ec5a8e3e0b715d64765794fa3f029d101706",
+      "be32": [
+        1024,
+        1024
+      ]
+    }
+  ],
+  "sysfs": [
+    {
+      "path": "/sys/devices/platform/soc/1d84000.ufshc/auto_hibern8",
+      "value": "1000"
+    },
+    {
+      "path": "/sys/devices/platform/soc/1d84000.ufshc/rpm_lvl",
+      "value": "3"
+    },
+    {
+      "path": "/sys/devices/platform/soc/1d84000.ufshc/spm_lvl",
+      "value": "3"
+    },
+    {
+      "path": "/sys/devices/platform/soc/1d84000.ufshc/power/runtime_status",
+      "value": "suspended"
+    },
+    {
+      "path": "/sys/devices/platform/soc/1d84000.ufshc/device_descriptor/specification_version",
+      "value": "0x0310"
+    },
+    {
+      "path": "/sys/devices/platform/soc/1d84000.ufshc/device_descriptor/manufacturer_id",
+      "value": "0x01CE"
+    }
+  ],
+  "negative_observations": [
+    {
+      "path": "/soc/ufshc@1d84000/iommus",
+      "result": "property absent in live tree"
+    },
+    {
+      "path": "/sys/devices/platform/soc/1d84000.ufshc/iommu_group",
+      "result": "link absent at sampling"
+    },
+    {
+      "nodes": [
+        "/soc/apps-smmu@15000000",
+        "/soc/apps-smmu@15000000/anoc_1_tbu@15185000",
+        "/soc/apps-smmu@15000000/anoc_2_tbu@15189000"
+      ],
+      "properties": [
+        "clocks",
+        "clock-names"
+      ],
+      "result": "properties absent in live tree"
+    },
+    {
+      "path": "/soc/apps-smmu@15000000/qcom,skip-init",
+      "result": "zero-length boolean property present"
+    }
+  ],
+  "upstream_facts": [
+    {
+      "source": "stable_dt",
+      "fact": "SM8250 UFS iommus contains apps_smmu SID 0x0e0 and 0x4e0 with zero masks. This is upstream DT evidence; the native sampled UFS node does not contain iommus."
+    },
+    {
+      "source": "stable_ice",
+      "fact": "ICE VERSION register offset 0x8 is accepted only for major 3 or 4; unsupported version returns EOPNOTSUPP. SCM service availability and clocks are checked before version access."
+    },
+    {
+      "source": "stable_ufs",
+      "fact": "The UFS Qualcomm driver converts EOPNOTSUPP from ICE acquisition to absent ICE and continues initialization."
+    },
+    {
+      "source": "vendor_ice",
+      "fact": "Vendor ICE version validation only rejects major greater than CURRENT_MAJOR; version zero is not a reliable rejection sentinel for this driver. Secure restore is attempted before version verification."
+    },
+    {
+      "source": "vendor_smmu",
+      "fact": "Native-style TBU probe maps base/status-reg, reads stream-id-range, allocates optional IRQs and power resources. TBU halt and ECATS MMIO is used in hardware translation/debug paths, not a standalone clock-gating register."
+    },
+    {
+      "source": "stable_smmu",
+      "fact": "Upstream qcom SMMU normal translation uses architectural SMMUv2 with Qualcomm implementation hooks; this version does not enumerate native qcom,qsmmuv500-tbu children for SM8250 normal DMA."
+    }
+  ],
+  "inferences": [
+    {
+      "premises": [
+        "stable_dt",
+        "native ANOC1/ANOC2 qcom,stream-id-range"
+      ],
+      "conclusion": "Under a reference mapping that applies native ranges to upstream UFS SIDs, SID 0xe0 belongs to ANOC1 and 0x4e0 to ANOC2. This was not observed in native DMA transactions."
+    }
+  ],
+  "limits": [
+    "No native ICE VERSION/FUSE register read; no native revision claimed.",
+    "Mapping an ICE read-only probe window does not implement SCM, QTEE, keyslots, inline encryption or successful native-Linux/Android probe; enabling a DT ICE consumer can still defer on unavailable SCM.",
+    "No physical UFS or TBU clock/power changes performed.",
+    "No native DMA stream transaction trace collected.",
+    "The auto_hibern8 value is a driver configuration sample, not a timing or suspend/resume acceptance test.",
+    "The OnePlus vendor source is an official SM8250 reference, not asserted to be the binary-exact Lenovo kernel source."
+  ],
+  "sources": [
+    {
+      "id": "stable_ice",
+      "repository": "gregkh/linux",
+      "ref": "v6.12.114",
+      "path": "drivers/soc/qcom/ice.c",
+      "git_blob": "0aa83175fbda10d76c4e0487850777fb81fc1f36",
+      "url": "https://github.com/gregkh/linux/blob/v6.12.114/drivers/soc/qcom/ice.c"
+    },
+    {
+      "id": "stable_ufs",
+      "repository": "gregkh/linux",
+      "ref": "v6.12.114",
+      "path": "drivers/ufs/host/ufs-qcom.c",
+      "git_blob": "ba760aab3a7d7035f3c56af22c06eec96be5263a",
+      "url": "https://github.com/gregkh/linux/blob/v6.12.114/drivers/ufs/host/ufs-qcom.c"
+    },
+    {
+      "id": "stable_dt",
+      "repository": "gregkh/linux",
+      "ref": "v6.12.114",
+      "path": "arch/arm64/boot/dts/qcom/sm8250.dtsi",
+      "git_blob": "d6607c38eb35c681d8f1ac6cb1107307eccb51ca",
+      "url": "https://github.com/gregkh/linux/blob/v6.12.114/arch/arm64/boot/dts/qcom/sm8250.dtsi"
+    },
+    {
+      "id": "stable_smmu",
+      "repository": "gregkh/linux",
+      "ref": "v6.12.114",
+      "path": "drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c",
+      "git_blob": "22586e986d8b3901a78dc85116de5cff9e56198f",
+      "url": "https://github.com/gregkh/linux/blob/v6.12.114/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c"
+    },
+    {
+      "id": "vendor_smmu",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "ref": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "path": "drivers/iommu/arm-smmu.c",
+      "git_blob": "fbdbdaeb9ee2dcb694cb1968863b21c861272483",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/iommu/arm-smmu.c"
+    },
+    {
+      "id": "vendor_ice",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "ref": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "path": "drivers/crypto/msm/ice.c",
+      "git_blob": "097e871c960301a7bd0fad85041361c4332c7f34",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/crypto/msm/ice.c"
+    }
+  ]
+}

@@ -39,7 +39,19 @@ void arm_smmuv2_stream_permissions_changed(DeviceState *dev);
  * halt filter is bypassed, so a halted TBU can perform an ECATS request.
  * This does not replace architectural context-bank ATS operations.
  */
-IOMMUTLBEntry arm_smmuv2_debug_translate(DeviceState *dev, uint16_t sid,
-                                        hwaddr addr, bool write);
+IOMMUTLBEntry arm_smmuv2_debug_translate_entry(DeviceState *dev, uint16_t sid,
+                                              hwaddr addr, bool write);
+
+/*
+ * Opt-in reference debug adapter. Each bit gates one 0x400-SID group for
+ * ordinary emulated DMA; a gated access fails rather than being queued.
+ * The caller owns and migrates the gate mask, and must restore it before CPUs
+ * resume. Queries bypass this debug gate but require an enabled TRANS context
+ * and a real page-table translation: architectural bypass is not a success.
+ */
+void arm_smmuv2_set_debug_halt_groups(DeviceState *dev, uint32_t groups);
+bool arm_smmuv2_debug_translate(DeviceState *dev, uint16_t sid, uint64_t va,
+                                IOMMUAccessFlags access, MemTxAttrs attrs,
+                                uint64_t *pa);
 
 #endif

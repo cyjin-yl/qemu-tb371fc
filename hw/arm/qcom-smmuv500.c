@@ -195,7 +195,7 @@ static void smmuv500_timer(void *opaque)
 
             t->ecats_pending = false;
             t->ecats_deadline_ns = 0;
-            entry = arm_smmuv2_debug_translate(s->smmu, t->captured_sid,
+            entry = arm_smmuv2_debug_translate_entry(s->smmu, t->captured_sid,
                                                t->captured_va,
                                                t->captured_write);
             pa = entry.translated_addr | (t->captured_va & entry.addr_mask);

@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "kind": "sm8250-contract-isolated-final-acceptance",
+  "completed_utc": "2026-11-24T03:12:10.745554+00:00",
+  "passed": true,
+  "source_commit": "ad81a9ecf33958725797e5a71a78f4128401572a",
+  "source_tree": "c3ea357f376b923656e6dd0e2b80194d303ea31d",
+  "source_binding": "source-binding.json",
+  "board_qemu_sha256": "ee1fa5c90a908936093f30c4687cfdd5b872a448ccb26648a17c6b5f49b76530",
+  "pci_qemu_sha256": "aece56b0633ec371b01b5146e2547622a40799dbee0c1f2723fa1c5cca7608b1",
+  "kernel_sha256": "48bc7593651ea0410ef4745554ec455670d4bc125a41743c63baabfa0cdf58f3",
+  "separate_invocations": {
+    "components": {
+      "passed": 59,
+      "expected": 59,
+      "receipt": "components.json"
+    },
+    "linux": {
+      "passed": 4,
+      "expected": 4,
+      "guest_checks_per_gate": [
+        8,
+        8,
+        19,
+        23
+      ],
+      "receipt": "linux.json"
+    },
+    "linux_ufs_checkpoint": {
+      "source_guest_checks": 21,
+      "target_guest_checks": 18,
+      "failed_guest_checks": 0,
+      "source_exited_before_target_started": true,
+      "target_input_only_continue": true,
+      "source_and_target_disk_bytes_compared_each": 67108864,
+      "receipt": "linux-ufs-migration.json"
+    },
+    "quiescent_ufs_checkpoint": {
+      "checks": 21,
+      "process_transfers": 3,
+      "rejections": 7,
+      "receipt": "ufs-migration.json"
+    },
+    "power_with_legacy_v2": {
+      "checks": 8,
+      "process_transfers": 2,
+      "receipt": "power-legacy.json"
+    },
+    "pci_ufs": {
+      "checks": 17,
+      "receipt": "pci.json"
+    },
+    "a77": {
+      "guest_checks": 852,
+      "configurations": 9,
+      "invalid_configurations_rejected": 2,
+      "receipt": "a77.json"
+    }
+  },
+  "component_detail": {
+    "ufs_crypto_checks": 14,
+    "ufs_auto_hibern8_checks": 18,
+    "tbu_checks": 16,
+    "combined_power_checks": 7
+  },
+  "limits": [
+    "Doesvm isolated build; GitHub Actions results are separate evidence.",
+    "The remote HEAD is baseline plus patches; a complete temporary-index tree comparison binds source contents to the local commit.",
+    "UFS checkpoint queues remain quiescent; no unfinished SCSI/MCQ serialization.",
+    "Reference TBU HALT fails new DMA, not physical stall/drain; TCU identity and delay are model choices.",
+    "No inline encryption, SCM/QTEE/keyslots, full native-DT boot, Android or whole-board physical power-collapse acceptance.",
+    "All new storage tests use synthetic media. Native sampling was read-only and allowlisted."
+  ],
+  "published_source_commit": "df588eba3dbde6188d6e61a2c893c6a071407bf9",
+  "published_source_tree": "c3ea357f376b923656e6dd0e2b80194d303ea31d",
+  "publication_note": "GitHub Git Data API returned the same complete tree SHA as the local tested source. The published commit has a different envelope/parent history but byte-identical source contents."
+}

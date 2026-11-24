@@ -37,7 +37,7 @@ TCS_BASE, TCS_STRIDE = 0xd00, 0x2a0
 MASK, LATENCY = 0xffff, 1000
 NO_RESPONSE, WITH_RESPONSE = 0x10008, 0x10108
 PERIOD_UNIT = 1_000_000_000 << 32
-MAIN_BYTES, SUB_BYTES, EXPECTED_CHECKS = 19420, 24, 17
+MAIN_VERSION, MAIN_BYTES, SUB_BYTES, EXPECTED_CHECKS = 3, 19424, 24, 17
 DIAGNOSTICS = (
     "wait-command-mask", "wait-reserved-masked-writes",
     "wait-reserved-last-voter", "wait-reserved-last-tcs",
@@ -491,7 +491,7 @@ def paused_tcg_exposes_the_same_pure_readonly_diagnostics(args, out):
 
 
 def literal_main_payload(scenario, xo_input_period):
-    """Independent fixed v2 wire oracle for the three deliberately bounded sources.
+    """Independent fixed v3 wire oracle for the three deliberately bounded sources.
 
     All typed resource votes remain zero: the only in-flight command has not
     reached its deadline. No per-resource public aggregate is used to guess a
@@ -516,6 +516,8 @@ def literal_main_payload(scenario, xo_input_period):
                                        1000 if active else -1, int(active), 0))
     payload.extend(bytes(98 * (4 * 4 * 4 + 4 * 4 + 4)))
     payload.extend(struct.pack(">Q", xo_input_period))
+    # These bounded sources never assert a sleep input; v3 retains all four.
+    payload.extend(bytes(4))
     assert len(payload) == MAIN_BYTES
     return bytes(payload)
 
@@ -529,7 +531,7 @@ def literal_subsection(snapshot):
 
 def unique_main_section(data):
     name = TYPE.encode()
-    needle = bytes([len(name)]) + name + struct.pack(">II", 0, 2)
+    needle = bytes([len(name)]) + name + struct.pack(">II", 0, MAIN_VERSION)
     found, pos = [], 0
     while True:
         offset = data.find(needle, pos)
@@ -549,17 +551,19 @@ def inspect_actual_stream(path, source_state, scenario):
     expected = literal_main_payload(scenario, source_state["xo_input_period"])
     actual = data[payload:payload + MAIN_BYTES]
     assert actual == expected, (
-        "v2 main payload differs", len(actual),
+        "v3 main payload differs", len(actual),
         [i for i, pair in enumerate(zip(actual, expected)) if pair[0] != pair[1]][:32])
-    main_file = path.with_name(path.name + ".main-v2.payload.bin")
+    main_file = path.with_name(path.name + ".main-v3.payload.bin")
     main_file.write_bytes(actual)
     main = {
-        "name": TYPE, "instance_id": 0, "version": 2,
+        "name": TYPE, "instance_id": 0, "version": MAIN_VERSION,
         "header_offset": header, "payload_offset": payload, "payload_bytes": MAIN_BYTES,
         "section_id": int.from_bytes(data[header + 1:header + 5], "big"),
         "payload_file": main_file.name, "payload_sha256": digest(main_file),
         "complete_payload_verified_against_fixed_source_scenario": True,
         "scenario": scenario,
+        "sleep_request_offset": MAIN_BYTES - 4,
+        "serialized_sleep_requests": list(actual[-4:]),
         "serialized_waits": [
             {"voter": drv, "tcs": tcs,
              "offset": 40 + drv * 2785 + 17 + tcs * 346,
@@ -570,8 +574,8 @@ def inspect_actual_stream(path, source_state, scenario):
     }
     name = SUBSECTION.encode()
     sub_header = bytes([5, len(name)]) + name + struct.pack(">I", 1)
-    # The old main's final VMSTATE_CLOCK has its default multiplier/divider,
-    # hence no nested clock subsection. Confirm the actual boundary, not just
+    # The VMSTATE_CLOCK has its default multiplier/divider, hence no nested
+    # clock subsection; v3 then appends four sleep requests. Check the boundary,
     # an unstructured byte-string occurrence elsewhere in RAM or JSON metadata.
     boundary = payload + MAIN_BYTES
     matches, pos = [], 0
@@ -901,7 +905,7 @@ def main():
         "test_sha256": digest(Path(__file__)),
         "expected_checks": EXPECTED_CHECKS, "expected_completed_migrations": 1,
         "expected_rejected_migrations": 2, "expected_corrupted_stream_rejections": 2,
-        "vmstate_version": 2, "vmstate_minimum_version": 2,
+        "vmstate_version": MAIN_VERSION, "vmstate_minimum_version": 2,
         "subsection_version": 1, "subsection_payload_bytes": SUB_BYTES,
         "main_payload_bytes_with_default_clock": MAIN_BYTES,
         "commands_per_tcs": 16, "voter_count": 4, "apps_tcs_per_drv": 8,

@@ -1,6 +1,8 @@
 # QEMU TB371FC
 
-[![TB371FC public functional gates](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml/badge.svg?branch=tb371fc-verified-wholeboard-20261123-a47)](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml)
+主线 Linux、QEMU 与 UniXNU 路线 A 的分工、实机基线和共用验收约定见[跨仓库硬件契约](tb371fc/docs/cross-project-hardware-contract.md)。
+
+[![TB371FC public functional gates](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml/badge.svg?branch=tb371fc-verified-stockboot-20261124-e1a9)](https://github.com/cyjin-yl/qemu-tb371fc/actions/workflows/tb371fc.yml)
 
 面向 **Lenovo TB371FC / SM8250（Kona）** 的整机模拟开发分支，基于 QEMU **11.1.3**，提供独立的 `-M tb371fc`。目标是实现真实来宾驱动可使用的软件可见硬件接口，并用平板的只读证据和实际运行的测试逐项核对。
 
@@ -9,6 +11,35 @@
 
 **完整 Android 启动和整台平板等价仍是未通过的目标。**
 生产内核加测试 initramfs 的成功不等于原厂 Android 系统启动。小核仍用 A55 代替 Qualcomm Kryo；显示、Adreno 650、触控、无线、音频、摄像头以及完整电源/固件契约仍有大量实现工作。缓存容量、功耗、射频、电气行为和真实芯片时序不由这些功能测试证明。
+
+## 当前整合：原厂 Android 启动开发基线
+
+本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。当前公开计划为 **83 项：78 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
+
+两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
+
+## 默认分支既有验收：2026-11-24 存储与电源修复
+
+本轮 [行为审计](tb371fc/docs/sm8250-behavior-audit.md) 已补入源码并在 doesvm 隔离构建实际验收：
+**59/59 组件门禁、4/4 无补丁 Linux 启动、39/39 Linux UFS 检查点前后检查全部通过**。
+[完整回执与二进制绑定](tb371fc/evidence/sm8250-contract-20261124/README.md) 同时保留旧版缺陷复现、失败尝试和新版本结果。
+随后独立 [GitHub Actions 运行 45318637466](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45318637466) 的板级及 A77/PCI 两路任务均通过；其 59＋4 范围保留不变。
+新增真实 Linux runtime PM 的冻结实验和参数化入口又分别通过 **40/40**：host、LUN、device WLUN 确实睡眠，由原 fd 的普通读操作唤醒，宿主逐字节核对完整 64 MiB。
+[当前 CI 计划](tb371fc/docs/ci.md) 已将该检查注册为第五个 Linux gate；各新提交以自身实际 CI 回执为准。
+
+| 修改 | 已验证的行为 |
+| --- | --- |
+| UFS ICE / crypto | `0x1d90000` 映射明确不支持加密的只读探测窗口；crypto-enable 请求返回 OCS 9，禁止作为明文执行。板级 14 组，独立 PCI/MCQ 17/17。 |
+| Auto-Hibern8 | AHIT 空闲计时、自动唤醒、显式 UIC 区分、时钟/PHY 保留与待完成状态迁移；18 组、两次迁移、三个拒绝场景。 |
+| Linux runtime PM | host/LUN/device WLUN suspended，core/iface/unipro 时钟门控，普通直接读唤醒，原/新数据与完整 64 MiB 盘内容一致；冻结和参数化入口各 40/40。 |
+| ANOC TBU reference | 可选 `tbu-profile=reference-ecats`：两个 SID 区间的 HALT/ACK、真实页表查询和迁移校验；16 组、一次迁移、六个拒绝场景。默认关闭，门控使 DMA 返回失败，不模拟物理 stall/drain。 |
+| RPMh / PDC | 保留忙碌期间的 sleep/wake 请求，跨进程恢复 pending PDC/GIC 中断和剩余期限；7 组，另次含旧版 v2 输入的 8 组均通过。 |
+| Linux UFS 续传 | 源进程退出后，新进程恢复同一 PID 1、boot ID 和 nonce；继续真实块读写，宿主两次逐字节核对完整 64 MiB 合成盘。 |
+
+本地受测 `ad81a9ec` 与[已提交源码 `df588eba`](https://github.com/cyjin-yl/qemu-tb371fc/commit/df588eba3dbde6188d6e61a2c893c6a071407bf9) 的完整 Git tree 一致；最终板级 QEMU SHA-256 为
+`ee1fa5c90a908936093f30c4687cfdd5b872a448ccb26648a17c6b5f49b76530`。
+独立 A77 构建也通过 852 项 guest 检查及两项非法配置拒绝。
+ICE/SCM/QTEE 密钥服务、未完成 SCSI/MCQ 请求迁移、完整原生电源协调和 Android 整板等价仍未实现；TCU 版本和延时明确为参考值。
 
 
 ## 正在验收：六个相机 GDSC 与 AHB retention 字段

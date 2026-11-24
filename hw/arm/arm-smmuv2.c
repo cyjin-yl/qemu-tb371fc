@@ -94,6 +94,8 @@ struct ArmSMMUv2State {
     QemuMutex lock;
     ArmSMMUv2StreamBlocked stream_blocked;
     void *stream_blocked_opaque;
+    /* Reconstructed by the legacy ANOC1/2 companion, not architectural state. */
+    uint32_t debug_halt_groups;
     GPtrArray *streams;
     uint32_t mmio_size;
     uint32_t num_context_banks;
@@ -392,13 +394,16 @@ static void smmuv2_invalidate(ArmSMMUv2State *s)
     }
 }
 
-/* Caller holds s->lock. Debug transactions bypass only the external halt
- * filter; stream matching, bypass configuration, walks and faults are shared.
+/*
+ * Caller holds s->lock. Debug transactions bypass the companion halt filters.
+ * Legacy ANOC1/2 ECATS additionally requires a real translation; the SMMUv500
+ * reference profile preserves architectural bypass semantics.
  */
 static IOMMUTLBEntry smmuv2_translate_sid_locked(ArmSMMUv2State *s,
                                                 uint16_t sid, hwaddr addr,
                                                 IOMMUAccessFlags access,
-                                                int index, bool debug)
+                                                int index, bool debug,
+                                                bool require_translation)
 {
     bool user = index & 1, write = access & IOMMU_WO;
     IOMMUTLBEntry entry = {
@@ -409,17 +414,15 @@ static IOMMUTLBEntry smmuv2_translate_sid_locked(ArmSMMUv2State *s,
     unsigned i, matches = 0, selected = 0, cb, type, priv;
     WalkResult result;
 
-    if (!debug && s->stream_blocked &&
-        s->stream_blocked(s->stream_blocked_opaque, sid)) {
-        /*
-         * The synchronous emulated DMA interface has no stall queue.
-         * A halted TBU denies access without creating a translation fault.
-         */
-        goto done;
-    }
     cr0 = s->gr0[CR0 / 4];
     if ((index & 2) || sid >= 0x8000) {
         smmuv2_global_fault(s, GFSR_UUT, sid, addr, write, user);
+        goto done;
+    }
+    if (!debug && ((s->debug_halt_groups & BIT32(sid >> 10)) ||
+                   (s->stream_blocked &&
+                    s->stream_blocked(s->stream_blocked_opaque, sid)))) {
+        /* Functional admission barrier; no hardware stall/drain queue. */
         goto done;
     }
     if (cr0 & CR0_CLIENTPD) {
@@ -473,6 +476,9 @@ static IOMMUTLBEntry smmuv2_translate_sid_locked(ArmSMMUv2State *s,
     } else if (priv == 3) {
         user = false;
     }
+    if (require_translation && !(s->cb[cb][SCTLR / 4] & SCTLR_M)) {
+        goto done;
+    }
     result = smmuv2_walk(s, cb, addr, access, user, false);
     if (result.global_fault) {
         smmuv2_global_fault(s, result.global_fault, sid, addr, write, user);
@@ -486,8 +492,10 @@ static IOMMUTLBEntry smmuv2_translate_sid_locked(ArmSMMUv2State *s,
     }
     goto done;
 bypass:
-    entry.translated_addr = entry.iova;
-    entry.perm = IOMMU_RW;
+    if (!require_translation) {
+        entry.translated_addr = entry.iova;
+        entry.perm = IOMMU_RW;
+    }
 done:
     return entry;
 }
@@ -501,20 +509,21 @@ static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
 
     qemu_mutex_lock(&s->lock);
     entry = smmuv2_translate_sid_locked(s, stream->sid, addr, access, index,
-                                       false);
+                                       false, false);
     qemu_mutex_unlock(&s->lock);
     return entry;
 }
 
-IOMMUTLBEntry arm_smmuv2_debug_translate(DeviceState *dev, uint16_t sid,
-                                        hwaddr addr, bool write)
+IOMMUTLBEntry arm_smmuv2_debug_translate_entry(DeviceState *dev, uint16_t sid,
+                                              hwaddr addr, bool write)
 {
     ArmSMMUv2State *s = ARM_SMMUV2(dev);
     IOMMUTLBEntry entry;
 
     qemu_mutex_lock(&s->lock);
     entry = smmuv2_translate_sid_locked(s, sid, addr,
-                                       write ? IOMMU_WO : IOMMU_RO, 0, true);
+                                       write ? IOMMU_WO : IOMMU_RO, 0,
+                                       true, false);
     qemu_mutex_unlock(&s->lock);
     return entry;
 }
@@ -541,6 +550,37 @@ void arm_smmuv2_stream_permissions_changed(DeviceState *dev)
 {
     /* A TBU halt must revoke entries already cached by emulated clients. */
     smmuv2_invalidate(ARM_SMMUV2(dev));
+}
+
+void arm_smmuv2_set_debug_halt_groups(DeviceState *dev, uint32_t groups)
+{
+    ArmSMMUv2State *s = ARM_SMMUV2(dev);
+
+    qemu_mutex_lock(&s->lock);
+    s->debug_halt_groups = groups;
+    qemu_mutex_unlock(&s->lock);
+    smmuv2_invalidate(s);
+}
+
+bool arm_smmuv2_debug_translate(DeviceState *dev, uint16_t sid, uint64_t va,
+                                IOMMUAccessFlags access, MemTxAttrs attrs,
+                                uint64_t *pa)
+{
+    ArmSMMUv2State *s = ARM_SMMUV2(dev);
+    IOMMUTLBEntry entry;
+    int index = (attrs.user ? 1 : 0) | (attrs.secure ? 2 : 0);
+
+    if (access != IOMMU_RO && access != IOMMU_WO) {
+        return false;
+    }
+    qemu_mutex_lock(&s->lock);
+    entry = smmuv2_translate_sid_locked(s, sid, va, access, index, true, true);
+    qemu_mutex_unlock(&s->lock);
+    if (!(entry.perm & access)) {
+        return false;
+    }
+    *pa = entry.translated_addr | (va & entry.addr_mask);
+    return true;
 }
 
 static int smmuv2_attrs_to_index(IOMMUMemoryRegion *mr, MemTxAttrs attrs)

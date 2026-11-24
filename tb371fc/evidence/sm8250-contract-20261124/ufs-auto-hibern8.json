@@ -1,0 +1,457 @@
+{
+  "schema_version": 1,
+  "kind": "sm8250-ufs-auto-hibern8",
+  "started_utc": "2026-11-24T03:06:30.868294+00:00",
+  "all_passed": true,
+  "checks": [
+    {
+      "name": "capability-and-exact-scaled-idle-deadline-without-uic-interrupt",
+      "passed": true
+    },
+    {
+      "name": "three-automatic-wake-dma-read-and-idle-reentry-cycles-with-ie-zero",
+      "passed": true
+    },
+    {
+      "name": "disabling-ahit-stops-reentry-and-keeps-automatic-wake",
+      "passed": true
+    },
+    {
+      "name": "synchronous-task-management-restarts-full-idle-interval",
+      "passed": true
+    },
+    {
+      "name": "ahit-disable-cancels-pending-timer-and-invalid-encodings-reject",
+      "passed": true
+    },
+    {
+      "name": "pending-uic-blocks-idle-and-completion-restarts-full-delay",
+      "passed": true
+    },
+    {
+      "name": "explicit-hibern8-requires-explicit-exit-even-with-ahit-enabled",
+      "passed": true
+    },
+    {
+      "name": "core-clock-gating-cancels-idle-until-clock-restored",
+      "passed": true
+    },
+    {
+      "name": "unfinished-dma-blocks-automatic-and-explicit-sleep-until-reset-recovery",
+      "passed": true
+    },
+    {
+      "name": "ahit-pending-new-process-restored-paused",
+      "passed": true
+    },
+    {
+      "name": "restored-ahit-keeps-original-remaining-deadline",
+      "passed": true
+    },
+    {
+      "name": "auto-hibern8-phy-off-new-process-restored-paused",
+      "passed": true
+    },
+    {
+      "name": "sleeping-checkpoint-retains-media-and-auto-wakes-after-phy-clock-restore",
+      "passed": true
+    },
+    {
+      "name": "device-reset-cancels-uic-and-recovery-keeps-media",
+      "passed": true
+    },
+    {
+      "name": "reject-auto-state-no-resume-or-media-change",
+      "passed": true
+    },
+    {
+      "name": "reject-auto-timer-no-resume-or-media-change",
+      "passed": true
+    },
+    {
+      "name": "legacy-capability-profile-remains-explicit-hibern8-only",
+      "passed": true
+    },
+    {
+      "name": "reject-auto-capability-profile-no-resume-or-media-change",
+      "passed": true
+    }
+  ],
+  "migrations": [
+    {
+      "name": "ahit-pending",
+      "source": {
+        "status": "completed",
+        "setup-time": 0,
+        "downtime": 38,
+        "total-time": 51,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 331910,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 356.6539607843137,
+          "transferred": 2273669,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32767,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 36864,
+          "normal": 9
+        }
+      },
+      "target": {
+        "status": "completed"
+      },
+      "qtest_clock_ns": 3332000,
+      "stream_sha256": "8a421fbb2f10a2cf927270cfb9172dcbf39e630dbab52c13448e0903f547af91",
+      "stream_bytes": 2273669
+    },
+    {
+      "name": "auto-hibern8-phy-off",
+      "source": {
+        "status": "completed",
+        "setup-time": 0,
+        "downtime": 23,
+        "total-time": 33,
+        "ram": {
+          "total": 134250496,
+          "postcopy-requests": 0,
+          "dirty-sync-count": 2,
+          "multifd-bytes": 0,
+          "pages-per-second": 0,
+          "downtime-bytes": 331910,
+          "page-size": 4096,
+          "remaining": 0,
+          "postcopy-bytes": 0,
+          "mbps": 551.1924848484848,
+          "transferred": 2273669,
+          "dirty-sync-missed-zero-copy": 0,
+          "precopy-bytes": 0,
+          "duplicate": 32767,
+          "dirty-pages-rate": 0,
+          "normal-bytes": 36864,
+          "normal": 9
+        }
+      },
+      "target": {
+        "status": "completed"
+      },
+      "qtest_clock_ns": 3402000,
+      "stream_sha256": "8e0c1239f16e44708b7e31d8bbf06757df9713d970e42198e86dad1b84d62af4",
+      "stream_bytes": 2273669
+    }
+  ],
+  "rejections": [
+    {
+      "name": "reject-auto-state",
+      "expected_diagnostic": "inconsistent Auto-Hibern8 state",
+      "qmp_error": null,
+      "qmp_events": [],
+      "qmp_drained_to_eof": true,
+      "stream_sha256": "631e7ca23bee496663ac835ddf0c5744dbd00576d3aea9d1bee60361775c2549",
+      "media_sha256": "8e8a13ef1d9ea09d2b02913bbdb26499577de3282d8226f3689c94a8cc2eae5d"
+    },
+    {
+      "name": "reject-auto-timer",
+      "expected_diagnostic": "inconsistent Auto-Hibern8 state",
+      "qmp_error": null,
+      "qmp_events": [],
+      "qmp_drained_to_eof": true,
+      "stream_sha256": "5433299f0c410be0247cd3fcee0cf9f36665ae885206c9dc92783737e00af796",
+      "media_sha256": "8e8a13ef1d9ea09d2b02913bbdb26499577de3282d8226f3689c94a8cc2eae5d"
+    },
+    {
+      "name": "reject-auto-capability-profile",
+      "expected_diagnostic": "107021f != 187021f",
+      "qmp_error": null,
+      "qmp_events": [],
+      "qmp_drained_to_eof": true,
+      "stream_sha256": "8a421fbb2f10a2cf927270cfb9172dcbf39e630dbab52c13448e0903f547af91",
+      "media_sha256": "8e8a13ef1d9ea09d2b02913bbdb26499577de3282d8226f3689c94a8cc2eae5d"
+    }
+  ],
+  "processes": [
+    {
+      "name": "source",
+      "command": [
+        "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "qtest",
+        "-m",
+        "128M",
+        "-display",
+        "none",
+        "-serial",
+        "null",
+        "-monitor",
+        "none",
+        "-qtest",
+        "unix:/tmp/tbci-t277v69b/46/data/source/qtest,server=on,wait=off",
+        "-qtest-log",
+        "/dev/null",
+        "-qmp",
+        "unix:/tmp/tbci-t277v69b/46/data/source/qmp,server=on,wait=off",
+        "-blockdev",
+        "driver=file,node-name=file0,filename=/tmp/tbci-t277v69b/46/data/disk.raw",
+        "-blockdev",
+        "driver=raw,node-name=disk0,file=file0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-S"
+      ],
+      "exit_code": 0,
+      "stderr_sha256": "53d39e8d58353dff233265c01797fce83ee04456c68262d1b89c364591d07c60"
+    },
+    {
+      "name": "ahit-pending-receiver",
+      "command": [
+        "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "qtest",
+        "-m",
+        "128M",
+        "-display",
+        "none",
+        "-serial",
+        "null",
+        "-monitor",
+        "none",
+        "-qtest",
+        "unix:/tmp/tbci-t277v69b/46/data/ahit-pending-receiver/qtest,server=on,wait=off",
+        "-qtest-log",
+        "/dev/null",
+        "-qmp",
+        "unix:/tmp/tbci-t277v69b/46/data/ahit-pending-receiver/qmp,server=on,wait=off",
+        "-blockdev",
+        "driver=file,node-name=file0,filename=/tmp/tbci-t277v69b/46/data/disk.raw",
+        "-blockdev",
+        "driver=raw,node-name=disk0,file=file0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-S",
+        "-incoming",
+        "defer"
+      ],
+      "exit_code": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "auto-hibern8-phy-off-receiver",
+      "command": [
+        "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "qtest",
+        "-m",
+        "128M",
+        "-display",
+        "none",
+        "-serial",
+        "null",
+        "-monitor",
+        "none",
+        "-qtest",
+        "unix:/tmp/tbci-t277v69b/46/data/auto-hibern8-phy-off-receiver/qtest,server=on,wait=off",
+        "-qtest-log",
+        "/dev/null",
+        "-qmp",
+        "unix:/tmp/tbci-t277v69b/46/data/auto-hibern8-phy-off-receiver/qmp,server=on,wait=off",
+        "-blockdev",
+        "driver=file,node-name=file0,filename=/tmp/tbci-t277v69b/46/data/disk.raw",
+        "-blockdev",
+        "driver=raw,node-name=disk0,file=file0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-S",
+        "-incoming",
+        "defer"
+      ],
+      "exit_code": 0,
+      "stderr_sha256": "734d3d3f0a68b574af00a1ccb655512c9aaa53ea14b38d993e9606a17d866bd5"
+    },
+    {
+      "name": "reject-auto-state",
+      "command": [
+        "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "qtest",
+        "-m",
+        "128M",
+        "-display",
+        "none",
+        "-serial",
+        "null",
+        "-monitor",
+        "none",
+        "-qtest",
+        "unix:/tmp/tbci-t277v69b/46/data/reject-auto-state/qtest,server=on,wait=off",
+        "-qtest-log",
+        "/dev/null",
+        "-qmp",
+        "unix:/tmp/tbci-t277v69b/46/data/reject-auto-state/qmp,server=on,wait=off",
+        "-blockdev",
+        "driver=file,node-name=file0,filename=/tmp/tbci-t277v69b/46/data/disk.raw",
+        "-blockdev",
+        "driver=raw,node-name=disk0,file=file0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-S",
+        "-incoming",
+        "defer"
+      ],
+      "exit_code": 1,
+      "stderr_sha256": "48751ddeafa21d01b26d790d65260ac3131366c057b20b9ee3f2aa919222551c"
+    },
+    {
+      "name": "reject-auto-timer",
+      "command": [
+        "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "qtest",
+        "-m",
+        "128M",
+        "-display",
+        "none",
+        "-serial",
+        "null",
+        "-monitor",
+        "none",
+        "-qtest",
+        "unix:/tmp/tbci-t277v69b/46/data/reject-auto-timer/qtest,server=on,wait=off",
+        "-qtest-log",
+        "/dev/null",
+        "-qmp",
+        "unix:/tmp/tbci-t277v69b/46/data/reject-auto-timer/qmp,server=on,wait=off",
+        "-blockdev",
+        "driver=file,node-name=file0,filename=/tmp/tbci-t277v69b/46/data/disk.raw",
+        "-blockdev",
+        "driver=raw,node-name=disk0,file=file0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-S",
+        "-incoming",
+        "defer"
+      ],
+      "exit_code": 1,
+      "stderr_sha256": "48751ddeafa21d01b26d790d65260ac3131366c057b20b9ee3f2aa919222551c"
+    },
+    {
+      "name": "legacy-profile",
+      "command": [
+        "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "qtest",
+        "-m",
+        "128M",
+        "-display",
+        "none",
+        "-serial",
+        "null",
+        "-monitor",
+        "none",
+        "-qtest",
+        "unix:/tmp/tbci-t277v69b/46/data/legacy-profile/qtest,server=on,wait=off",
+        "-qtest-log",
+        "/dev/null",
+        "-qmp",
+        "unix:/tmp/tbci-t277v69b/46/data/legacy-profile/qmp,server=on,wait=off",
+        "-blockdev",
+        "driver=file,node-name=file0,filename=/tmp/tbci-t277v69b/46/data/disk.raw",
+        "-blockdev",
+        "driver=raw,node-name=disk0,file=file0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-global",
+        "qcom-sm8250-ufs.auto-hibern8=off",
+        "-S"
+      ],
+      "exit_code": 0,
+      "stderr_sha256": "511c568363d35c1cdb670996d8e3a5a321d514a1c4e12f91c6c4d840f18bcbbe"
+    },
+    {
+      "name": "reject-auto-capability-profile",
+      "command": [
+        "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+        "-M",
+        "tb371fc",
+        "-accel",
+        "qtest",
+        "-m",
+        "128M",
+        "-display",
+        "none",
+        "-serial",
+        "null",
+        "-monitor",
+        "none",
+        "-qtest",
+        "unix:/tmp/tbci-t277v69b/46/data/reject-auto-capability-profile/qtest,server=on,wait=off",
+        "-qtest-log",
+        "/dev/null",
+        "-qmp",
+        "unix:/tmp/tbci-t277v69b/46/data/reject-auto-capability-profile/qmp,server=on,wait=off",
+        "-blockdev",
+        "driver=file,node-name=file0,filename=/tmp/tbci-t277v69b/46/data/disk.raw",
+        "-blockdev",
+        "driver=raw,node-name=disk0,file=file0",
+        "-device",
+        "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+        "-d",
+        "unimp,guest_errors",
+        "-global",
+        "qcom-sm8250-ufs.auto-hibern8=off",
+        "-S",
+        "-incoming",
+        "defer"
+      ],
+      "exit_code": 1,
+      "stderr_sha256": "8c53cdd8a0bd5fa980400ccf2df85b9b42032b5004673b150e1704872a08387a"
+    }
+  ],
+  "qemu_sha256": "ee1fa5c90a908936093f30c4687cfdd5b872a448ccb26648a17c6b5f49b76530",
+  "test_sha256": "79f81280b89c72a922750e3d52f4dd01edcf752fd8568a75aa6e4d2c411a2dd2",
+  "helpers_sha256": {
+    "test_ufs_migration.py": "f8b9e2d708ebeeac9fe3f12fde22b157a22e848634e208344777fca3fa9a59f2",
+    "test_ufs_sm8250.py": "ff55615ebcb5c60271dec2187fe959c52cb48a601fe1bf201a4273f2a62687c2",
+    "test_geni_migration.py": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8"
+  },
+  "scope": "AHIT with real SID e0 nonidentity DMA, PHY/clock sleep and quiescent file checkpoints.",
+  "limits": [
+    "Digital idle timing; automatic exit has no analog latency model.",
+    "Storage queues must be quiescent for migration.",
+    "The external medium is reused, not copied by the stream.",
+    "QTest external clocks are aligned after load.",
+    "No Android, native-DT or physical device attestation."
+  ],
+  "elapsed_seconds": 2.661,
+  "passed_checks": 18
+}

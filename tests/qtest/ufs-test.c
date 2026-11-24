@@ -154,6 +154,12 @@ __ufs_send_transfer_request_mcq(QUfs *ufs, uint8_t lun,
     uint32_t cqhp;
     uint64_t cqentry_addr;
     UfsCqEntry cqentry;
+    UtpUpiuHeader request_header;
+
+    qtest_memread(ufs->dev.bus->qts,
+                  (uint64_t)le32_to_cpu(utrd->command_desc_base_addr_hi) << 32 |
+                  le32_to_cpu(utrd->command_desc_base_addr_lo),
+                  &request_header, sizeof(request_header));
 
     qtest_memwrite(ufs->dev.bus->qts, utrd_addr, utrd, sizeof(*utrd));
 
@@ -169,6 +175,8 @@ __ufs_send_transfer_request_mcq(QUfs *ufs, uint8_t lun,
     cqhp = ufs_rreg(ufs, ufs->cqdao[TEST_QID]);
     cqentry_addr = ufs->cqlba[TEST_QID] + cqhp;
     qtest_memread(ufs->dev.bus->qts, cqentry_addr, &cqentry, sizeof(cqentry));
+    g_assert_cmpuint(cqentry.task_tag, ==, request_header.task_tag);
+    g_assert_cmpuint(cqentry.lun, ==, request_header.lun);
     cqhp = (cqhp + sizeof(UfsCqEntry)) % (QUEUE_SIZE * sizeof(UfsCqEntry));
     ufs_wreg(ufs, ufs->cqdao[TEST_QID], cqhp);
 
@@ -329,10 +337,10 @@ static enum UtpOcsCodes ufs_send_query(QUfs *ufs, uint8_t query_function,
 }
 
 static enum UtpOcsCodes
-ufs_send_scsi_command(QUfs *ufs, uint8_t lun, const uint8_t *cdb,
+ufs_send_scsi_command_flags(QUfs *ufs, uint8_t lun, const uint8_t *cdb,
                       const uint8_t *data_in, size_t data_in_len,
                       uint8_t *data_out, size_t data_out_len,
-                      UtpUpiuRsp *rsp_out)
+                      UtpUpiuRsp *rsp_out, uint32_t request_flags)
 
 {
     /* Build up PRDT */
@@ -393,7 +401,7 @@ ufs_send_scsi_command(QUfs *ufs, uint8_t lun, const uint8_t *cdb,
     req_upiu.header.trans_type = UFS_UPIU_TRANSACTION_COMMAND;
     req_upiu.header.flags = flags;
     req_upiu.header.lun = lun;
-    req_upiu.header.task_tag = cmd_desc_slot;
+    req_upiu.header.task_tag = request_flags ? 0x5a : cmd_desc_slot;
     req_upiu.sc.exp_data_transfer_len = cpu_to_be32(data_len);
     memcpy(req_upiu.sc.cdb, cdb, UFS_CDB_SIZE);
     qtest_memwrite(ufs->dev.bus->qts, req_upiu_addr, &req_upiu,
@@ -402,6 +410,7 @@ ufs_send_scsi_command(QUfs *ufs, uint8_t lun, const uint8_t *cdb,
     /* Build up utp transfer request descriptor */
     UtpTransferReqDesc utrd =
         ufs_build_req_utrd(req_upiu_addr, data_direction, prd_table_length);
+    utrd.header.dword_0 |= cpu_to_le32(request_flags);
 
     /* Send Transfer Request */
     enum UtpOcsCodes ret = ufs_send_transfer_request_sync(ufs, lun, &utrd);
@@ -413,6 +422,16 @@ ufs_send_scsi_command(QUfs *ufs, uint8_t lun, const uint8_t *cdb,
     }
     release_cmd_desc_slot(ufs, cmd_desc_slot);
     return ret;
+}
+
+static enum UtpOcsCodes
+ufs_send_scsi_command(QUfs *ufs, uint8_t lun, const uint8_t *cdb,
+                      const uint8_t *data_in, size_t data_in_len,
+                      uint8_t *data_out, size_t data_out_len,
+                      UtpUpiuRsp *rsp_out)
+{
+    return ufs_send_scsi_command_flags(ufs, lun, cdb, data_in, data_in_len,
+                                       data_out, data_out_len, rsp_out, 0);
 }
 
 /**
@@ -767,6 +786,72 @@ static void ufstest_read_write(void *obj, void *data, QGuestAllocator *alloc)
                      UFS_COMMAND_RESULT_SUCCESS);
     g_assert_cmpint(memcmp(read_buf, write_buf, block_size), ==, 0);
 
+    ufs_exit(ufs, alloc);
+}
+
+static void ufstest_crypto_rejected(void *obj, void *data,
+                                    QGuestAllocator *alloc)
+{
+    QUfs *ufs = obj;
+    uint8_t original[4096], changed[4096], actual[4096], zero[4096] = { 0 };
+    const uint8_t sense[UFS_CDB_SIZE] = { REQUEST_SENSE };
+    const uint8_t read_cdb[UFS_CDB_SIZE] = { READ_10, 0, 0, 0, 0, 0, 0, 0, 1 };
+    const uint8_t write_cdb[UFS_CDB_SIZE] = { WRITE_10, 0, 0, 0, 0, 0, 0, 0, 1 };
+    UtpUpiuRsp response;
+    enum UtpOcsCodes ocs;
+    uint32_t crypto = UFS_UTP_REQ_DESC_CRYPTO_ENABLE_CMD;
+
+    memset(original, 0x5a, sizeof(original));
+    memset(changed, 0xa5, sizeof(changed));
+    ufs_init(ufs, alloc);
+    g_assert_false(FIELD_EX32(ufs_rreg(ufs, A_CAP), CAP, CS));
+    ocs = ufs_send_scsi_command(ufs, 1, sense, NULL, 0,
+                               actual, sizeof(actual), &response);
+    g_assert_cmpuint(ocs, ==, UFS_OCS_SUCCESS);
+    ocs = ufs_send_scsi_command(ufs, 1, write_cdb,
+                               original, sizeof(original), NULL, 0, &response);
+    g_assert_cmpuint(ocs, ==, UFS_OCS_SUCCESS);
+    g_assert_cmpuint(response.header.scsi_status, ==, GOOD);
+
+    ocs = ufs_send_scsi_command_flags(ufs, 1, write_cdb,
+                                     changed, sizeof(changed), NULL, 0,
+                                     &response, crypto);
+    g_assert_cmpuint(ocs, ==, UFS_OCS_INVALID_CRYPTO_CONFIG);
+    ocs = ufs_send_scsi_command(ufs, 1, read_cdb, NULL, 0,
+                               actual, sizeof(actual), &response);
+    g_assert_cmpuint(ocs, ==, UFS_OCS_SUCCESS);
+    g_assert_cmpmem(actual, sizeof(actual), original, sizeof(original));
+    ocs = ufs_send_scsi_command_flags(ufs, 1, read_cdb, NULL, 0,
+                                     actual, sizeof(actual), &response, crypto);
+    g_assert_cmpuint(ocs, ==, UFS_OCS_INVALID_CRYPTO_CONFIG);
+    /* The helper initialized the guest buffer to zero; no read DMA occurred. */
+    g_assert_cmpmem(actual, sizeof(actual), zero, sizeof(zero));
+
+    /* Invalid PRDT/response locations cannot block a transport error. */
+    UtpTransferReqDesc bad = ufs_build_req_utrd(ufs->cmd_desc_addr,
+                                              UFS_UTP_HOST_TO_DEVICE, 1);
+    UtpUpiuHeader header = { .trans_type = UFS_UPIU_TRANSACTION_COMMAND,
+                            .lun = 1, .task_tag = 0x67 };
+    qtest_memwrite(ufs->dev.bus->qts, ufs->cmd_desc_addr,
+                   &header, sizeof(header));
+    bad.header.dword_0 |= cpu_to_le32(crypto);
+    bad.prd_table_offset = cpu_to_le16(UINT16_MAX);
+    bad.response_upiu_offset = cpu_to_le16(UINT16_MAX);
+    /* Legacy does not need a UPIU header to complete its UTRD. */
+    if (!ufs->support_mcq) {
+        bad.command_desc_base_addr_hi = cpu_to_le32(0xdeadbeef);
+    }
+    ocs = ufs_send_transfer_request_sync(ufs, 1, &bad);
+    g_assert_cmpuint(ocs, ==, UFS_OCS_INVALID_CRYPTO_CONFIG);
+
+    /* The same queue remains usable for ordinary I/O after every rejection. */
+    ocs = ufs_send_scsi_command(ufs, 1, write_cdb,
+                               changed, sizeof(changed), NULL, 0, &response);
+    g_assert_cmpuint(ocs, ==, UFS_OCS_SUCCESS);
+    ocs = ufs_send_scsi_command(ufs, 1, read_cdb, NULL, 0,
+                               actual, sizeof(actual), &response);
+    g_assert_cmpuint(ocs, ==, UFS_OCS_SUCCESS);
+    g_assert_cmpmem(actual, sizeof(actual), changed, sizeof(changed));
     ufs_exit(ufs, alloc);
 }
 
@@ -1947,6 +2032,10 @@ static void ufs_register_nodes(void)
     qos_add_test("init", "ufs", ufstest_init, NULL);
     qos_add_test("legacy-read-write", "ufs", ufstest_read_write, &io_test_opts);
     qos_add_test("mcq-read-write", "ufs", ufstest_read_write, &mcq_test_opts);
+    qos_add_test("legacy-crypto-rejected", "ufs", ufstest_crypto_rejected,
+                 &io_test_opts);
+    qos_add_test("mcq-crypto-rejected", "ufs", ufstest_crypto_rejected,
+                 &mcq_test_opts);
     qos_add_test("no-prdt", "ufs", ufstest_no_prdt, &io_test_opts);
     qos_add_test("sync-cache", "ufs", ufstest_sync_cache, &io_test_opts);
     qos_add_test("long-prdt", "ufs", ufstest_long_prdt, &io_test_opts);

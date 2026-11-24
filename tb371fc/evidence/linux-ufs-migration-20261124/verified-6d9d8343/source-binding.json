@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "collected_utc": "2026-11-24T02:53:11.534776+00:00",
+  "repository": "cyjin-yl/qemu-tb371fc",
+  "pull_request": "https://github.com/cyjin-yl/qemu-tb371fc/pull/7",
+  "code_head": "6d9d834397720318a51f070977df985d9beb7443",
+  "code_tree": "6ecdc692d4dc49b8008d3a07bdf7f8f314c69c09",
+  "actual_ci_checkout": "9d69a45f18ecac42c65a3aad2fa11da431a61cd7",
+  "actual_ci_tree": "d4406944c4bbc77b4c647a7921d79df1519652d7",
+  "actual_ci_parents": [
+    "8babe85b1cd7990a1a113b223d51ec8a7732fed5",
+    "6d9d834397720318a51f070977df985d9beb7443"
+  ],
+  "runtime_git_blobs": {
+    "tb371fc/tests/ufs-migration-guest.c": "62f79d632069e089b3911fbfa381f4ea0e7ec185",
+    "tb371fc/scripts/boot_ufs_migration.py": "1b9a9ec27e1c4cedd7760f148a0208d24024c6c9",
+    ".github/workflows/tb371fc.yml": "5fbfb02e22ae5d5851ff9e0eef7f9b75c5629c00",
+    "tb371fc/configs/linux-smoke.config": "30fe196e2a17d12f3425b05b1ef2da8ad71bee13",
+    "tb371fc/scripts/build_smoke_kernel.sh": "e468546eea8fe9cdc1e005f26a109f32e32ce9bd"
+  },
+  "runtime_file_sha256": {
+    "tb371fc/tests/ufs-migration-guest.c": "cb1420514b2ce205b8f6f7bf5e0b147f1c9dcad2d71a7fe141061d557e4ae200",
+    "tb371fc/scripts/boot_ufs_migration.py": "cf41cf2f7259f968e8bfea47add415ffe06610e61305d7b9418b9d0a02e7694a",
+    ".github/workflows/tb371fc.yml": "2ed1b64a665ee167ee78b65056ed123895b59c769f894d4e3d8bfd2402008423",
+    "tb371fc/configs/linux-smoke.config": "d2b1a838adff1aef57c3db5f3d425c140bada50464ee6a4757fbb7ef41e5c43d",
+    "tb371fc/scripts/build_smoke_kernel.sh": "e7be2ac39dcdc2115c1b2dacd5346d18f11dbeef0ee268dc4214d9e90040d222"
+  },
+  "ci": {
+    "url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45312366652",
+    "run_id": 45312366652,
+    "status": "completed",
+    "conclusion": "success",
+    "completed_utc": "2026-11-24T02:44:38Z",
+    "jobs": {
+      "board": {
+        "id": 138171154013,
+        "conclusion": "success"
+      },
+      "a77": {
+        "id": 138171154454,
+        "conclusion": "success"
+      }
+    }
+  },
+  "artifacts": {
+    "board": {
+      "id": 14884298544,
+      "name": "tb371fc-public-gates-9d69a45f18ecac42c65a3aad2fa11da431a61cd7",
+      "zip_sha256": "8e158d8cc089bfbcbf34ede6c9b5658bf5fb1c35ba950a1b9bf82128cfee9228",
+      "zip_size_bytes": 34592525,
+      "expires_utc": "2026-12-08T02:44:28Z"
+    },
+    "a77": {
+      "id": 14885085840,
+      "name": "tb371fc-a77-gates-9d69a45f18ecac42c65a3aad2fa11da431a61cd7",
+      "zip_sha256": "0a43e81023dd32778af8da1028766e020d0f1457d8304baba3429ccd138d9858",
+      "zip_size_bytes": 28320863,
+      "expires_utc": "2026-12-08T02:39:01Z"
+    }
+  },
+  "measured_results": {
+    "new_linux_ufs_continuation": {
+      "passed": true,
+      "source_guest_checks": 21,
+      "target_guest_checks": 18,
+      "total_guest_checks": 39,
+      "completed_source_receiver_pairs": 1,
+      "source_exited_before_target_started": true,
+      "whole_disk_bytes_compared_per_phase": 67108864,
+      "phases_compared": 2,
+      "inputs_unchanged": true
+    },
+    "existing_components": {
+      "passed": 55,
+      "expected": 55
+    },
+    "existing_linux_boots": {
+      "passed": 4,
+      "expected": 4
+    },
+    "ufs_qtest": {
+      "passed_groups": 21,
+      "completed_migrations": 3,
+      "rejection_scenarios": 7,
+      "source_profile_captures": 3
+    },
+    "a77": {
+      "variants": 9,
+      "passed_guest_checks": 852,
+      "invalid_configuration_rejections": 2
+    },
+    "pci_ufs": {
+      "passed": 15,
+      "expected": 15,
+      "skipped": 0
+    }
+  },
+  "qemu_sha256": {
+    "board": "f4b02d882acb0e83a90ea258ac61689a77690728e03bfd22b5f37ab35f108a3b",
+    "a77": "53ef9919457c08731d0b370c67fe6aa6a904dbb7f3d8f4b33a1a054a61804f5b"
+  },
+  "kernel_sha256": "f4e00305947da98b7ed38d66ab46411b35fc3f317cf462233f0be17d10257299",
+  "kernel_config_sha256": "da11e8b874ec5e9a4a23a117eb09a4e3faeb2c0b38086fa1adec9fe4abdc5554",
+  "excluded_temporary_artifacts": {
+    "checkpoint": {
+      "bytes": 190152799,
+      "sha256": "e4d5f2215fd79c36ae7c0ad2a90be2f97a0b64001805072cbca9ee8de62e19c5"
+    },
+    "disk": {
+      "bytes": 67108864,
+      "final_sha256": "ffa6c370e3673bc23fe97c8f1c54be181d9bacb54999a44317cd5cd7f47376b4"
+    },
+    "verified_absent_from_downloaded_zip": true
+  },
+  "superseded_runs": [
+    {
+      "id": 45309763636,
+      "head": "a19da16df748bd8503ebcca8d1d71efccd94994d",
+      "reason": "Review: exclude checkpoint/media artifacts, preserve immutable input hashes and complete serial-line parsing; cancelled before board build/runtime"
+    },
+    {
+      "id": 45311029764,
+      "head": "e2e05df252acd4d136bb35cfb23a7b1649942e77",
+      "reason": "Actual old kernel config lacks required PROC_SYSCTL/boot_id; necessary prerequisite fixed; cancelled before new Linux runtime"
+    }
+  ],
+  "review": {
+    "kind": "independent assistant static review, not a GitHub human approval",
+    "reviewer": "/root/review_changes",
+    "passed": true,
+    "includes": [
+      "guest/host continuity and quiescent boundaries",
+      "artifact exclusion and immutable runtime input checks",
+      "PROC_SYSCTL prerequisite follow-up"
+    ]
+  },
+  "limits": [
+    "One quiescent source/receiver pair using a generated DT and a synthetic LUN; no in-flight UFS migration.",
+    "The external disk is shared by path; its bytes are not in VMState.",
+    "No stock Android, native-DT boot, guest shutdown, power-cycle persistence or complete hardware equivalence is claimed.",
+    "The historical superseded runs were canceled before the new Linux continuation gate, not counted as runtime passes or runtime failures.",
+    "This archive adds only docs/evidence; the five runtime/config/workflow blobs above remain the tested code."
+  ],
+  "files": {
+    "a77-artifact-verification.json": {
+      "sha256": "7dbcfa4aaac4ab305acc93b83f45aeedf6c5afc65464179ab4c1faa461feb4e7",
+      "size_bytes": 409
+    },
+    "a77-result.json": {
+      "sha256": "c96a62688c57a15fa12405fd52799ed1f00aa7e7b5e927402002d87702eb8500",
+      "size_bytes": 43294
+    },
+    "board-artifact-verification.json": {
+      "sha256": "9f2c3431322f8d915186402f933aba02afc815d7a7becad75c7c89a5e9f7d7b9",
+      "size_bytes": 683
+    },
+    "components-result.json": {
+      "sha256": "074c3326a976ae9608c931df1edd9a7f47bf3b0ade7f7cb9894f3d56507e0aba",
+      "size_bytes": 62720
+    },
+    "kernel-build.json": {
+      "sha256": "6ccc9c5e509dadc60dadf57cd021edba566125fc271f736ac3521169110de960",
+      "size_bytes": 2611
+    },
+    "kernel-dependency-audit.json": {
+      "sha256": "8983263381a556fbd81faf17546d458386a46e7f30527cc1abb181c474c36461",
+      "size_bytes": 2791
+    },
+    "kernel.config": {
+      "sha256": "da11e8b874ec5e9a4a23a117eb09a4e3faeb2c0b38086fa1adec9fe4abdc5554",
+      "size_bytes": 56323
+    },
+    "linux-result.json": {
+      "sha256": "4dc65d076efd5bd1290c9bb20024b3d5d89f8e4a85c679277bcc8e8792524dc8",
+      "size_bytes": 8946
+    },
+    "linux-ufs-migration-result.json": {
+      "sha256": "48be3d37970969bcde59989c32c5444d79ad6a20cddc66970969a67e45ea4c76",
+      "size_bytes": 53650
+    },
+    "local-validation.json": {
+      "sha256": "9b9c13ace280e32cf1b5ebf2508a3efede178eb9b3ea6fabc66a7fae82ef7d0d",
+      "size_bytes": 1576
+    },
+    "logs/source-qemu-debug.log": {
+      "sha256": "1068099ff15a38dd0e0e83f3f1c5e18c33b9d4c2d052243767db3a2a14e3ae90",
+      "size_bytes": 170
+    },
+    "logs/source-serial.log": {
+      "sha256": "adf63a3adc055e89cb5a98e12ef898504830f8b9ffef30d7aa18741a6810f29e",
+      "size_bytes": 13144
+    },
+    "logs/target-qemu-debug.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "logs/target-serial.log": {
+      "sha256": "8225cd9b684a8fc379cf7eafc10254fe650b563a80422116143e3968f95e4d9b",
+      "size_bytes": 1178
+    },
+    "source-receipt.json": {
+      "sha256": "366306a83c86070f6a552b8b3e865cc5960d35af0e6f0ef397b238d596e97f61",
+      "size_bytes": 32090
+    },
+    "target-receipt.json": {
+      "sha256": "55d70c0cc11ff55d744df2cd06f58b561ee2600296984ba302325a81445bb915",
+      "size_bytes": 6777
+    },
+    "ufs-pci-result.json": {
+      "sha256": "1d3ff9f285a9e59052e78d49f1ab50d8760adbbd127a73cb7221ae977341a689",
+      "size_bytes": 8332
+    },
+    "ufs-qtest-result.json": {
+      "sha256": "5c71f3bcf9ff5c73a17c21242b55eecef5add4556e80c93df268ee6e58439fb9",
+      "size_bytes": 29181
+    }
+  },
+  "archive_parent": "9d69a45f18ecac42c65a3aad2fa11da431a61cd7",
+  "archive_parent_note": "The actual successful CI merge already includes current default 8babe85. Only docs/evidence are added on top; branch update remains a fast-forward from tested code head 6d9d834."
+}

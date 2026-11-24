@@ -20,7 +20,10 @@ if not __debug__:
     raise SystemExit('Acceptance checks require assertions; do not use -O.')
 
 FIELDS = ('magic', 'before', 'offset', 'physical_compare', 'virtual_compare',
-          'resumed', 'physical_expired', 'virtual_expired', 'passed')
+          'resumed', 'physical_expired', 'virtual_expired', 'passed',
+          'hyp_compare', 'hyp_pending_before', 'hyp_expired',
+          'hyp_pending_after', 'hyp_pending_disabled')
+RECORD = struct.Struct('<' + 'Q' * len(FIELDS))
 
 
 def sha(path):
@@ -94,12 +97,16 @@ def main():
     finish = table['finish']
     record = table['timer_migration_result']
     report = {
-        'schema_version': 1, 'suite': 'Real CPU physical/virtual timer migration',
+        'schema_version': 2, 'suite': 'Real CPU physical/virtual/hypervisor timer migration',
         'qemu_sha256': sha(args.qemu), 'elf_sha256': sha(elf),
         'machine': args.machine, 'ram_per_process': '128 MiB',
         'compile_command': compile_command, 'passed': False,
         'provided_elf': str(elf) if args.elf else None,
         'scope': 'Read-only GDB checkpoint, actual QMP migration and guest timer expiry',
+        'hyp_timer_intid': 28,
+        'hyp_timer_observation': ('GICR pending before and after expiry, then '
+                                  'clear after disable; no CNTHP CTL read '
+                                  'or CNTHP write between restore and expiry'),
         'symbols': {k: table[k] for k in
                     ('timer_migration_checkpoint', 'timer_migration_done',
                      'timer_migration_result')},
@@ -164,7 +171,7 @@ def main():
         assert sg.request(f'Z0,{checkpoint:x},4') == 'OK'
         sg.send('c')
         report['source_stop'] = stopped(sg, checkpoint, time.monotonic() + 10)
-        before = struct.unpack('<9Q', sg.memory(record, 72))
+        before = RECORD.unpack(sg.memory(record, RECORD.size))
         report['source_result'] = dict(zip(FIELDS, before))
         assert before[0] == 0x54494d45524d4947 and before[8] == 0
         assert sg.request(f'z0,{checkpoint:x},4') == 'OK'
@@ -178,9 +185,10 @@ def main():
         reply = sg.receive(time.monotonic() + 5)
         assert reply.startswith(('T02', 'S02', 'T05', 'S05')), reply
         report['source_pause_reply'] = reply
-        before = struct.unpack('<9Q', sg.memory(record, 72))
+        before = RECORD.unpack(sg.memory(record, RECORD.size))
         report['source_result'] = dict(zip(FIELDS, before))
-        assert before[5:] == (0, 0, 0, 0), before
+        assert before[5:9] == (0, 0, 0, 0), before
+        assert before[9] == before[1] + 3840000 and before[10:] == (0, 0, 0, 0)
         assert tg.request(f'Z0,{done:x},4') == 'OK'
         assert tg.request(f'Z0,{finish:x},4') == 'OK'
         uri = 'unix:' + str(out / 'migration.sock')
@@ -190,7 +198,7 @@ def main():
         report['target_migration'] = wait_migration(tq, processes[1])
         tg.send('c')
         report['target_stop'] = stopped(tg, (done, finish), time.monotonic() + 15)
-        after = struct.unpack('<9Q', tg.memory(record, 72))
+        after = RECORD.unpack(tg.memory(record, RECORD.size))
         report['target_result'] = dict(zip(FIELDS, after))
         if report['target_stop']['pc'] == finish:
             report['guest_failure_code'] = int.from_bytes(
@@ -203,6 +211,9 @@ def main():
         assert before[1] <= after[5] < before[3]
         assert after[6] >= before[3] and after[7] >= before[4]
         assert after[8] == 1
+        assert after[9:11] == before[9:11]
+        assert after[9] <= after[11] < after[9] + 1920000
+        assert after[12:] == (1, 0)
         assert tg.request(f'z0,{done:x},4') == 'OK'
         assert tg.request(f'z0,{finish:x},4') == 'OK'
         tg.send('c')

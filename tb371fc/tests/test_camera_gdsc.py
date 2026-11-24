@@ -882,7 +882,7 @@ def decode_camera_payload(raw):
 
 
 def literal_rpmh_payload(scenario, input_period):
-    """Exact old-v2 wire for the three deliberately bounded source command sets."""
+    """Exact v3 wire for the three deliberately bounded source command sets."""
     assert scenario in ("state", "parent-pending", "unknown")
     assert input_period == (1_000_000_000 << 32) // 38_400_000
     assert len(RESOURCES) == 98 and RESOURCES["mmcx.lvl"]["address"] == 0x3e030
@@ -914,7 +914,9 @@ def literal_rpmh_payload(scenario, input_period):
             values[2 * 4] = 1
         payload.extend(struct.pack(">21I", *values))
     payload.extend(struct.pack(">Q", input_period))
-    assert len(payload) == 19420
+    # No source scenario drives a sleep input; all four retained levels are low.
+    payload.extend(bytes(4))
+    assert len(payload) == 19424
     return bytes(payload)
 
 
@@ -957,17 +959,18 @@ def inspect_actual_stream(path, snapshot, provider, scenario, gcc_value):
     camera.update(payload_file=camera_file.name, payload_sha256=digest(camera_file),
                   payload_hex=raw.hex(), decoded=decode_camera_payload(raw),
                   all_bytes_match_stopped_source_qom=True)
-    rpmh = unique_section(data, "qcom-sm8250-rpmh", 2, 19420)
+    rpmh = unique_section(data, "qcom-sm8250-rpmh", 3, 19424)
     offset = rpmh["payload_offset"]
-    actual_rpmh = data[offset:offset + 19420]
+    actual_rpmh = data[offset:offset + 19424]
     expected_rpmh = literal_rpmh_payload(scenario, provider["xo_input_period"])
     assert actual_rpmh == expected_rpmh, (
         "RPMh source scenario mismatch",
         [i for i, pair in enumerate(zip(actual_rpmh, expected_rpmh)) if pair[0] != pair[1]][:32])
-    rpmh_file = path.with_name(path.name + ".rpmh-v2.payload.bin")
+    rpmh_file = path.with_name(path.name + ".rpmh-v3.payload.bin")
     rpmh_file.write_bytes(actual_rpmh)
     rpmh.update(payload_file=rpmh_file.name, payload_sha256=digest(rpmh_file),
                 all_bytes_match_literal_source_scenario=True, scenario=scenario,
+                serialized_sleep_requests=list(actual_rpmh[-4:]),
                 wait_reference_subsection_present=False)
     gcc = unique_section(data, "qcom-sm8250-gcc", 3, GCC_VMSTATE_BYTES)
     offset = gcc["payload_offset"]

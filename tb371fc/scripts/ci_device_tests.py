@@ -38,6 +38,7 @@ class Case:
     tap_count: int | None = None
     timeout: int = 180
     expected_lengths: dict = field(default_factory=dict)
+    guest_errno: bool = False
 
 
 def sha(path):
@@ -62,7 +63,7 @@ def plan(args, runtime):
 
     def add(name, script, flags=(), output=None, verdict="passed", count=None,
             result="stdout", expected=None, count_field="checks", timeout=180,
-            expected_lengths=None):
+            expected_lengths=None, guest_errno=False):
         fixture = runtime / f"{len(cases):02d}"
         data = fixture / "data"
         argv = [sys.executable, str(script)]
@@ -73,7 +74,8 @@ def plan(args, runtime):
             result = str(data / "result.json")
         cases.append(Case(name, argv, fixture, result, verdict, count,
                           count_field, expected or {}, timeout=timeout,
-                          expected_lengths=expected_lengths or {}))
+                          expected_lengths=expected_lengths or {},
+                          guest_errno=guest_errno))
         return data
 
     def device(name, script, *flags, **kwargs):
@@ -191,6 +193,9 @@ def plan(args, runtime):
             fixture = runtime / f"{len(cases):02d}"
             cases.append(Case(name, [str(build / "tests/qtest" / binary), "--tap"],
                               fixture, result="tap", tap_count=count))
+        device("tbu-reference-ecats", "test_tbu_sm8250.py",
+               output="--out", result="file", verdict="all_passed", count=17,
+               expected_lengths={"migrations": 1, "rejections": 6})
         device("rpmh-reference", "test_rpmh_sm8250.py",
                output="--work-dir", verdict="success", count=22)
         device("rpmh-reference-migration", "test_rpmh_sm8250.py",
@@ -207,11 +212,11 @@ def plan(args, runtime):
                          'expected_completed_migrations': 1,
                          'expected_rejected_migrations': 2,
                          'expected_corrupted_stream_rejections': 2,
-                         'vmstate_version': 2,
+                         'vmstate_version': 3,
                          'vmstate_minimum_version': 2,
                          'subsection_version': 1,
                          'subsection_payload_bytes': 24,
-                         'main_payload_bytes_with_default_clock': 19420,
+                         'main_payload_bytes_with_default_clock': 19424,
                          'commands_per_tcs': 16,
                          'voter_count': 4,
                          'apps_tcs_per_drv': 8,
@@ -501,6 +506,15 @@ def plan(args, runtime):
                output="--out", result="file", count=16)
         device("ufs-register-dma", "test_ufs_sm8250.py",
                output="--out", result="file", count=56)
+        device("ufs-crypto-rejection", "test_ufs_crypto.py",
+               output="--out", result="file", count=14,
+               expected={"qemu_unchanged": True, "private_inputs_used": False})
+        device("ufs-auto-hibern8", "test_ufs_autohibern8.py",
+               output="--out", result="file", verdict="all_passed", count=18,
+               expected_lengths={"migrations": 2, "rejections": 3})
+        device("power-checkpoint", "test_power_checkpoint.py",
+               output="--out", result="file", verdict="all_passed", count=7,
+               expected={"expected_checks": 7, "qemu_unchanged": True})
         device("watchdog-registers", "test_watchdog_kpss.py",
                output="--out", result="file", count=16)
         device("watchdog-migration", "test_watchdog_kpss.py",
@@ -561,6 +575,22 @@ def plan(args, runtime):
             count_field="guest_checks",
             expected={"host_verified_disk_payload": True, "require_rpmh": True,
                       "expected_guest_checks": 23})
+        add("linux-ufs-runtime-pm", scripts / "boot_ufs_runtime_pm.py",
+            ("--qemu", qemu, "--kernel", kernel, "--timeout", "120"),
+            output="--out", result="file", count=40,
+            count_field="guest_checks", guest_errno=True,
+            expected={"inputs_unchanged": True, "qemu_exit_code": 0,
+                      "kernel_failure_lines": [],
+                      "guest_verdicts": [["PASS", "40", "0"]],
+                      "host_sleep_checks": {
+                          "vm_remains_running": True,
+                          "ufs_link_hibern8": True,
+                          "core_clock_gated": True,
+                          "iface_clock_gated": True,
+                          "unipro_clock_gated": True},
+                      "system_suspend_tested": False,
+                      "inflight_checkpoint_tested": False},
+            expected_lengths={"host_observations": 3})
     return cases
 
 
@@ -606,7 +636,7 @@ def checked_verdict_fields(record, location):
     return present
 
 
-def check_identity(check, location, guest=False):
+def check_identity(check, location, guest=False, guest_errno=False):
     """Validate the three receipt formats produced by component/guest tests."""
     if guest and isinstance(check, str):
         match = re.fullmatch(r"TB371FC_CHECK PASS ([A-Za-z0-9_]+)", check)
@@ -614,7 +644,11 @@ def check_identity(check, location, guest=False):
             return match[1]
         raise ValueError(f"Unsuccessful or malformed {location}")
     if guest and isinstance(check, list):
-        if (len(check) == 2 and check[0] == "PASS" and
+        # Only the runtime-PM fixture emits an explicit errno observation.
+        # errno is diagnostic (a successful syscall need not clear it).
+        valid_shape = (len(check) == 3 and isinstance(check[2], str) and
+                       re.fullmatch(r"[0-9]+", check[2])) if guest_errno else len(check) == 2
+        if (valid_shape and check[0] == "PASS" and
                 isinstance(check[1], str) and
                 re.fullmatch(r"[A-Za-z0-9_]+", check[1])):
             return check[1]
@@ -670,7 +704,8 @@ def judge(case, stdout):
             raise ValueError(
                 f"{case.count_field} must contain {case.expected_count} entries")
         identities = [check_identity(check, f"{case.count_field}[{index}]",
-                                     guest=case.count_field == "guest_checks")
+                                     guest=case.count_field == "guest_checks",
+                                     guest_errno=case.guest_errno)
                       for index, check in enumerate(checks)]
         if len(set(identities)) != len(identities):
             raise ValueError(f"Duplicate check identities in {case.count_field}")

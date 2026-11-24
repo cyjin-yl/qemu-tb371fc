@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-11-24T02:29:00.233710+00:00",
+  "source_branch_head": "6d9d834397720318a51f070977df985d9beb7443",
+  "local_runtime_tested": false,
+  "runtime_boundary": "QEMU Unix-socket execution is unavailable in this workspace; ordinary GitHub Actions executes runtime gates.",
+  "checks": [
+    "Native gcc -std=gnu11 -Os -Wall -Wextra -Werror -fsyntax-only passed",
+    "Python byte compilation passed",
+    "git diff --check passed",
+    "Guest check order equals 21 source plus 18 target expectations",
+    "Whole-media validator passed source and target positive fixtures",
+    "Whole-media validator rejected missing target write, untouched-region corruption with exact offset, and truncated disk",
+    "CI upload excludes temporary checkpoint.migration and disk.raw; metadata retained",
+    "bash -n passed for required PROC_SYSCTL prerequisite update"
+  ],
+  "files": {
+    "tb371fc/tests/ufs-migration-guest.c": "cb1420514b2ce205b8f6f7bf5e0b147f1c9dcad2d71a7fe141061d557e4ae200",
+    "tb371fc/scripts/boot_ufs_migration.py": "cf41cf2f7259f968e8bfea47add415ffe06610e61305d7b9418b9d0a02e7694a",
+    ".github/workflows/tb371fc.yml": "2ed1b64a665ee167ee78b65056ed123895b59c769f894d4e3d8bfd2402008423",
+    "tb371fc/docs/ufs-migration.md": "c81d6bbf40f18f6f25f3a02d7600a0768278771245f38ee3c235e4d5bf3f6199",
+    "tb371fc/configs/linux-smoke.config": "d2b1a838adff1aef57c3db5f3d425c140bada50464ee6a4757fbb7ef41e5c43d",
+    "tb371fc/scripts/build_smoke_kernel.sh": "e7be2ac39dcdc2115c1b2dacd5346d18f11dbeef0ee268dc4214d9e90040d222"
+  }
+}

@@ -13,6 +13,27 @@ test binary, failed check, skipped C QTest, timeout or changed QEMU executable
 fails the aggregate result and exits nonzero. Later component gates still run
 after an earlier component failure so their independent results remain visible.
 
+## Integrated storage, power and TBU contracts
+
+The `tbu-reference-ecats` gate now requires 17 checks: its previous 16-check
+contract plus startup rejection when both MMIO providers are explicitly enabled.
+The ten-TBU `smmuv500-reference` gate keeps its distinct architectural-bypass,
+external-cache invalidation and 36-check contract. The obsolete combined
+`gpu-gdsc` gate is replaced by the separate wholeboard CX/GX gates.
+
+RPMh uses main VMState v3 (minimum v2), including four retained sleep-request
+bytes, and the independent v1 WAIT-policy subsection. The WAIT and camera tests
+compare the complete 19424-byte main payload to fixed source scenarios; the
+WAIT subsection remains 24 bytes. The power-checkpoint gate retains malformed
+pending-request rejection and the optional actual-v2 compatibility transfer.
+
+The fifth Linux gate requires 40 ordered runtime-PM guest checks, real suspended
+host/LUN/device-WLUN state, ordinary block-I/O wake, read-only host observations
+and full 64 MiB media comparison. Only this gate accepts status/name/errno
+triples; all other guest receipt formats and unique-check requirements remain
+strict. The separate Linux checkpoint runs require 39 active-state or 61
+runtime-suspended checks; public PCI UFS retains all 17 cases.
+
 ## GPUCC increment
 
 The `gpucc-sm8250` gate runs `test_gpucc_sm8250.py` against the compiled binary. It requires 30 unique successful checks, two completed process migrations, two explicit profile rejections, VMState 1, 36 registers, seven sparse windows, 15 branches, five reset outputs and 15 input Clocks. The binary must remain unchanged. Its paused TCG check verifies that QTest fixture setters are absent; its original-kernel/GPU-execution/Android claims remain false. [The model contract](gpucc-sm8250.md) distinguishes the explicit reference profile from tablet handoff and analog timing. Commit `df667a3e8dbb31368ebbd6af1a7569a2b4c785d0` has now actually passed the complete 62 + 4 plan and the independent A77/UFS job; [its receipt](../evidence/wholeboard-20261123-a47/public-ci-df667.json) records its own source and binary. The earlier a813 result below remains frozen separately.
@@ -165,8 +186,12 @@ still apply to any future authorized consumer execution.
 
 ## Gates
 
-The current public plan has **77 gates: 73 component/parser gates and four
-Linux boots**, plus the separate A77 and PCI UFS compatibility job. The archived
+The current integration plan registers **83 gates: 78 component/parser gates
+and five Linux integration gates**, plus separate active and runtime-suspended
+real-Linux UFS checkpoints and the A77/PCI UFS compatibility job. This union
+preserves the wholeboard reference peripherals and default-branch storage,
+power and timer regressions. Each new source revision needs its own receipts.
+The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
 The [same-boundary A77 and PCI results](../evidence/verified-20261123-0820/final-verification.json)
@@ -207,8 +232,12 @@ pass does not attest newly added devices.
 | CPU timer output wires | 16 GIC input-line observations in each of real-time exact, icount exact and icount legacy mode |
 | SMMUv2 | 23 C QTests with no skips |
 | RPMh | 22 reference-profile tests, including the synthetic command-db parser cases, and 5 migration checks |
+| Combined power checkpoint | 7 groups covering retained sleep/wake levels, pending PDC/GIC interrupts, remaining deadlines and a rejected invalid state; optional old-binary v2 transfer adds an eighth group |
 | Display RSC | 11 shared-service and real SPI 129 checks, plus 6 actual component migration checks |
 | UFS | 56 MMIO/PHY/clock/DMA/SCSI/WriteBooster/hibernation checks against a synthetic disk, including absent-LUN responses and DMA bounds |
+| UFS ICE and crypto rejection | 14 board checks; the separate shared PCI suite requires 17 unskipped legacy/MCQ cases |
+| UFS Auto-Hibern8 | 18 groups, two actual process transfers and three rejected capability/state mismatches |
+| Reference ANOC1/ANOC2 TBU | 16 groups with real nonidentity DMA/walker checks, one actual process transfer and six rejections; default profile off |
 | Watchdog | 16 register/timing/action/negative groups and actual pending-bite migration |
 | IMEM and PS_HOLD | 7 groups covering SRAM boundaries, byte order, guest-owned handoff fields, reset retention, digital output, invalid widths and an actual two-process migration |
 | TLMM | 25 C QTests, including the explicit UFS reset boot handoff, and 15 checks across four actual migrations |
@@ -222,9 +251,10 @@ pass does not attest newly added devices.
 | Clean Linux empty UFS bus | The same 8 PID 1 checks and shutdown with UFS enabled and no logical unit attached; missing-LUN recovery is an independent required gate |
 | Clean Linux UFS and SMMU | 19 guest checks plus a host check of the bytes written to the synthetic disk |
 | Clean Linux UFS, SMMU and RPMh | 23 guest checks, three host RPMh observations and the host disk payload comparison; real RSC/clock drivers and completion interrupt with an explicit synthetic reference command database |
+| Clean Linux UFS runtime PM | 40 ordered guest checks; host, LUN and device-WLUN suspend; core/iface/unipro clocks gated; same-fd direct read wakes the host; complete 64 MiB media comparison and unchanged input hashes |
 | Isolated Cortex-A77 | 852 guest checks across 9 feature/cache-ID configurations, plus 2 invalid-configuration rejections |
 
-Component tests generally use 128 MiB to keep their fixtures small. The four
+Component tests generally use 128 MiB to keep their fixtures small. The five
 Linux integration gates explicitly use 8 GiB and eight CPUs. Timer and other
 unrelated-device component tests disable UFS; the UFS and Linux I/O gates
 exercise the implemented controller and its GCC/SMMU connections.
@@ -249,7 +279,7 @@ python3 tb371fc/scripts/ci_device_tests.py \
   --suite components --out /work/ci-components
 ```
 
-Build the public kernel independently and run all four Linux gates:
+Build the public kernel independently and run all five Linux gates:
 
 ```sh
 SMOKE_JOBS=2 bash tb371fc/scripts/build_smoke_kernel.sh /work/ci-linux
@@ -331,6 +361,17 @@ Commit `a8136d1b1871d5a90aced67cc269dfb312be5c65` actually passed 61 component/p
 ## Frozen NPUCC-inclusive d790 result
 
 [The 67-gate receipt](../evidence/wholeboard-20261123-a47/public-ci-d790.json) records 63/63 component gates, 4/4 Linux boots and independent A77/UFS success. Actual board ZIP member SHA256 is `5e508e06b6ed66b264c1559a3e29a7ea9e9d6574950db5a81e5cf022252b29ba`. Both aggregate source-clean receipts and six selected component receipts were read from that ZIP. [The matching production-Image/full-DT run](../evidence/wholeboard-20261123-a47/native-d790.json) registers GCC, GPUCC and NPUCC, retains SMEM 23/23 and the AOP reference exchange, then faults in `boot_stats_init+0x14c`. Pinned public source and the actual DT identify the MPM counter candidate at `0x0c221000`, 32768 Hz; the recorded fault VA was not independently translated. VIDEOCC was deferred for an unavailable bandwidth-voting bus driver. Full native-DT userspace, Android and GPU/NPU command execution remain unpassed.
+
+Both runners use `ufs-enabled=off` for their component migrations. The five
+public Linux gates retain their own recorded configurations; their success
+does not automatically exercise the optional SMEM reference profile. The
+[SMEM driver observation](smem-driver-observer.md) is a separate native-kernel
+diagnostic requiring exact-image symbol and instruction verification, bounded
+live-state checks, explicit profiles and its own outcome. The
+[408d82a native result](../evidence/gdsc-smem-20261123/native-ci-408.json)
+now records that successful probe and 23 consistency checks, followed by a
+GCC external abort. Firmware-populated items, later guest allocations,
+remote services and full Android operation still require their own evidence.
 
 ## Frozen MPM/SMMU-inclusive 0508 result
 

@@ -1,0 +1,360 @@
+{
+  "command": [
+    "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+    "-M",
+    "tb371fc",
+    "-accel",
+    "tcg,thread=multi",
+    "-m",
+    "8G",
+    "-smp",
+    "8",
+    "-display",
+    "none",
+    "-monitor",
+    "none",
+    "-serial",
+    "stdio",
+    "-no-reboot",
+    "-qmp",
+    "unix:/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/target/qmp.sock,server=on,wait=off",
+    "-kernel",
+    "/home/runner/work/_temp/clean-linux/artifacts/Image",
+    "-initrd",
+    "/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/initramfs.cpio.gz",
+    "-append",
+    "earlycon=qcom_geni,0xa90000 console=ttyMSM0,115200n8 rdinit=/init loglevel=7 panic=-1 nokaslr",
+    "-blockdev",
+    "{\"driver\": \"file\", \"node-name\": \"f0\", \"filename\": \"/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/disk.raw\"}",
+    "-blockdev",
+    "driver=raw,node-name=d0,file=f0",
+    "-device",
+    "ufs-lu,bus=ufs0,drive=d0,lun=0",
+    "-d",
+    "unimp,guest_errors",
+    "-D",
+    "/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/target/qemu-debug.log",
+    "-incoming",
+    "defer",
+    "-S"
+  ],
+  "qmp": [
+    {
+      "direction": "receive",
+      "message": {
+        "QMP": {
+          "version": {
+            "qemu": {
+              "micro": 3,
+              "minor": 1,
+              "major": 11
+            },
+            "package": ""
+          },
+          "capabilities": [
+            "oob"
+          ]
+        }
+      }
+    },
+    {
+      "direction": "send",
+      "command": "qmp_capabilities",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {},
+        "id": 1
+      }
+    },
+    {
+      "direction": "send",
+      "command": "migrate-incoming",
+      "arguments": {
+        "uri": "file:/home/runner/work/_temp/tb371fc-results/linux-ufs-migration/checkpoint.migration"
+      }
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {},
+        "id": 2
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-migrate",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "active"
+        },
+        "id": 3
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-migrate",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "active"
+        },
+        "id": 4
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-migrate",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "active"
+        },
+        "id": 5
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-migrate",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "active"
+        },
+        "id": 6
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-migrate",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "completed"
+        },
+        "id": 7
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-status",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "paused",
+          "running": false
+        },
+        "id": 8
+      }
+    },
+    {
+      "direction": "send",
+      "command": "cont",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "timestamp": {
+          "seconds": 1795488267,
+          "microseconds": 48551
+        },
+        "event": "RESUME"
+      }
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {},
+        "id": 9
+      }
+    },
+    {
+      "direction": "send",
+      "command": "stop",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "timestamp": {
+          "seconds": 1795488267,
+          "microseconds": 149856
+        },
+        "event": "STOP"
+      }
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {},
+        "id": 10
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-status",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "paused",
+          "running": false
+        },
+        "id": 11
+      }
+    },
+    {
+      "direction": "send",
+      "command": "quit",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "timestamp": {
+          "seconds": 1795488267,
+          "microseconds": 263026
+        },
+        "event": "SHUTDOWN",
+        "data": {
+          "guest": false,
+          "reason": "host-qmp-quit"
+        }
+      }
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {},
+        "id": 12
+      }
+    }
+  ],
+  "pid": 23444,
+  "started_monotonic": 1155.258088143,
+  "migration": {
+    "status": "completed"
+  },
+  "loaded_status": {
+    "status": "paused",
+    "running": false
+  },
+  "serial_input": [
+    "CONTINUE"
+  ],
+  "stopped_status": {
+    "status": "paused",
+    "running": false
+  },
+  "exited_monotonic": 1155.777812958,
+  "exit_code": 0,
+  "guest_checks": [
+    [
+      "PASS",
+      "resume_control_received"
+    ],
+    [
+      "PASS",
+      "preserved_pid1"
+    ],
+    [
+      "PASS",
+      "preserved_boot_id"
+    ],
+    [
+      "PASS",
+      "preserved_monotonic"
+    ],
+    [
+      "PASS",
+      "eight_online_cpus_after"
+    ],
+    [
+      "PASS",
+      "ufs_translated_dma_domain_after"
+    ],
+    [
+      "PASS",
+      "target_open"
+    ],
+    [
+      "PASS",
+      "logical_sector_4096_after"
+    ],
+    [
+      "PASS",
+      "capacity_64_mib_after"
+    ],
+    [
+      "PASS",
+      "target_reads_source_payload"
+    ],
+    [
+      "PASS",
+      "target_direct_write"
+    ],
+    [
+      "PASS",
+      "target_flush"
+    ],
+    [
+      "PASS",
+      "target_direct_readback"
+    ],
+    [
+      "PASS",
+      "target_close"
+    ],
+    [
+      "PASS",
+      "target_reopen"
+    ],
+    [
+      "PASS",
+      "target_reopen_source_payload"
+    ],
+    [
+      "PASS",
+      "target_reopen_target_payload"
+    ],
+    [
+      "PASS",
+      "target_final_close"
+    ]
+  ],
+  "guest_verdicts": [
+    [
+      "PASS",
+      "4cf9a75f2e6daff6ce8082985afbbdff",
+      "6271ec7f-6034-4892-bd71-fcd09602ac8d",
+      "39",
+      "0"
+    ]
+  ],
+  "serial.log_sha256": "8225cd9b684a8fc379cf7eafc10254fe650b563a80422116143e3968f95e4d9b",
+  "qemu-debug.log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

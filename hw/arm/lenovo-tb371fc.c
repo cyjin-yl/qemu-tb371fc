@@ -32,6 +32,7 @@
 #include "hw/arm/boot.h"
 #include "hw/arm/arm-smmuv2.h"
 #include "hw/arm/qcom-smmuv500.h"
+#include "hw/arm/qcom-sm8250-tbu.h"
 #include "hw/arm/machines-qom.h"
 #include "hw/char/qcom-geni-uart.h"
 #include "hw/core/boards.h"
@@ -101,6 +102,8 @@ OBJECT_DECLARE_SIMPLE_TYPE(TB371FCMachineState, TB371FC_MACHINE)
 #define TB371FC_SLEEP_HZ         32000
 #define TB371FC_UFS_BASE         UINT64_C(0x01d84000)
 #define TB371FC_UFS_PHY_BASE     UINT64_C(0x01d87000)
+#define TB371FC_UFS_ICE_BASE     UINT64_C(0x01d90000)
+#define TB371FC_UFS_ICE_SIZE     UINT64_C(0x8000)
 #define TB371FC_UFS_SPI          265
 #define TB371FC_WATCHDOG_BASE    UINT64_C(0x17c10000)
 #define TB371FC_MMIO_TIMER_BASE  UINT64_C(0x17c20000)
@@ -171,8 +174,10 @@ struct TB371FCMachineState {
     char *spmi_profile;
     char *smem_profile;
     char *aop_profile;
+    char *tbu_profile;
     bool rpmh_boot_configured;
     MemoryRegion qtest_dma_alias;
+    MemoryRegion qtest_tbu_dma_alias[QCOM_SM8250_TBU_COUNT];
     bool enable_ufs;
     bool counter_exact;
     uint64_t kernel_load_base;
@@ -180,6 +185,7 @@ struct TB371FCMachineState {
     bool gcc_boot_configured;
     uint64_t bootstrap_fabric_hz;
     MemoryRegion qup_version;
+    MemoryRegion ufs_ice_probe;
     struct arm_boot_info bootinfo;
     int fdt_size;
 };
@@ -223,6 +229,55 @@ static const MemoryRegionOps tb371fc_qup_ops = {
     .valid.min_access_size = 4,
     .valid.max_access_size = 4,
     .valid.unaligned = false,
+};
+
+/*
+ * Safe, immutable ICE probe profile, not an encryption engine. The native
+ * DT establishes this window, but no native ICE register value was sampled.
+ * VERSION major 255 is an unsupported sentinel, rejected by upstream and
+ * downstream driver version checks. It does not identify the tablet's ICE.
+ * FUSE and BIST cannot accidentally suggest usable keys or a successful BIST.
+ * Keep UFS CAP.CS clear and reject encrypted descriptors in the UFS core.
+ */
+static MemTxResult tb371fc_ice_read(void *opaque, hwaddr offset,
+                                  uint64_t *value, unsigned int size,
+                                  MemTxAttrs attrs)
+{
+    *value = 0;
+    if (size == 4 && !(offset & 3)) {
+        switch (offset) {
+        case 0x8: /* VERSION: unsupported reference major 255. */
+            *value = 0xff000000;
+            return MEMTX_OK;
+        case 0x10: /* FUSE_SETTING: unavailable, not a native fuse reading. */
+            *value = 1;
+            return MEMTX_OK;
+        case 0x70: /* BIST_STATUS: never claim a completed crypto self-test. */
+            *value = 0xf0000000;
+            return MEMTX_OK;
+        }
+    }
+    qemu_log_mask(LOG_UNIMP, "tb371fc-ice: unsupported read offset=0x%"
+                  HWADDR_PRIx " size=%u\n", offset, size);
+    return MEMTX_ERROR;
+}
+
+static MemTxResult tb371fc_ice_write(void *opaque, hwaddr offset,
+                                   uint64_t value, unsigned int size,
+                                   MemTxAttrs attrs)
+{
+    qemu_log_mask(LOG_GUEST_ERROR, "tb371fc-ice: read-only unsupported "
+                  "crypto profile, write offset=0x%" HWADDR_PRIx " size=%u\n",
+                  offset, size);
+    return MEMTX_ERROR;
+}
+
+static const MemoryRegionOps tb371fc_ice_ops = {
+    .read_with_attrs = tb371fc_ice_read,
+    .write_with_attrs = tb371fc_ice_write,
+    .endianness = DEVICE_LITTLE_ENDIAN,
+    .valid = { .min_access_size = 1, .max_access_size = 4, .unaligned = true },
+    .impl = { .min_access_size = 1, .max_access_size = 4, .unaligned = true },
 };
 
 /*
@@ -397,7 +452,8 @@ static void tb371fc_add_ufs_fdt(TB371FCMachineState *s, void *fdt,
     qemu_fdt_setprop_string(fdt, TB371FC_UFS_NODE, "qemu,model-note",
                             "Digital UFS host/PHY profile; unknown native HCI "
                             "revision uses configurable reference default; "
-                            "no ICE, RPMB or analog calibration");
+                            "ICE probe reports unsupported; no inline "
+                            "encryption, RPMB or analog calibration");
 
     qemu_fdt_add_subnode(fdt, TB371FC_UFS_PHY_NODE);
     qemu_fdt_setprop_string(fdt, TB371FC_UFS_PHY_NODE, "compatible",
@@ -1232,12 +1288,25 @@ static DeviceState *tb371fc_create_smmu(TB371FCMachineState *s,
 static void tb371fc_create_smmuv500(TB371FCMachineState *s)
 {
     DeviceState *dev = qdev_new(TYPE_QCOM_SMMUV500);
+    bool legacy_tbu = !strcmp(s->tbu_profile, "reference-ecats");
 
+    /* Global properties have been applied by qdev's instance_post_init. */
+    if (legacy_tbu && object_property_get_bool(OBJECT(dev),
+                                               "enabled-reference",
+                                               &error_fatal)) {
+        error_report("tbu-profile=reference-ecats and "
+                     "qcom-smmuv500.enabled-reference=on are mutually "
+                     "exclusive: both own the APPS TCU/TBU MMIO windows");
+        exit(EXIT_FAILURE);
+    }
     object_property_add_child(OBJECT(s), "apps-smmu-v500", OBJECT(dev));
     object_property_set_link(OBJECT(dev), "smmu", OBJECT(s->apps_smmu),
                              &error_fatal);
     sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
-    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, QCOM_SMMUV500_TCU_BASE);
+    /* Both profile identities migrate, but exactly one provider owns MMIO. */
+    if (!legacy_tbu) {
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, QCOM_SMMUV500_TCU_BASE);
+    }
     if (qtest_enabled()) {
         /* A real external IOMMU cache client, absent from normal TCG. */
         sysbus_mmio_map(SYS_BUS_DEVICE(dev), 1,
@@ -1262,6 +1331,42 @@ static void tb371fc_create_smmus(TB371FCMachineState *s)
                                      &s->qtest_dma_alias);
     }
     tb371fc_create_smmuv500(s);
+}
+
+static void tb371fc_create_tbu(TB371FCMachineState *s)
+{
+    DeviceState *dev = qdev_new(TYPE_QCOM_SM8250_TBU);
+    bool enabled = !strcmp(s->tbu_profile, "reference-ecats");
+    static const hwaddr base[] = { 0x15185000, 0x15189000 };
+    static const hwaddr status[] = { 0x15182200, 0x15182208 };
+    unsigned i;
+
+    /* Keep a VMState section in both profiles to reject incompatible loads. */
+    object_property_add_child(OBJECT(s), "tbu-debug", OBJECT(dev));
+    object_property_set_link(OBJECT(dev), "smmu", OBJECT(s->apps_smmu),
+                             &error_fatal);
+    qdev_prop_set_uint32(dev, "reference-profile", enabled);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    if (!enabled) {
+        return;
+    }
+
+    /* Live DT addresses; the register protocol and timings are a reference. */
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, 0x15182000);
+    for (i = 0; i < QCOM_SM8250_TBU_COUNT; i++) {
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 1 + i * 2, base[i]);
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 2 + i * 2, status[i]);
+        if (qtest_enabled()) {
+            g_autofree char *name = g_strdup_printf("qtest-tbu%u-dma", i);
+
+            /* Upstream UFS SID fixtures, not a measured native DMA trace. */
+            memory_region_init_alias(&s->qtest_tbu_dma_alias[i], OBJECT(s),
+                name, arm_smmuv2_get_dma_mr(s->apps_smmu, 0xe0 + i * 0x400),
+                0, 16 * MiB);
+            memory_region_add_subregion(get_system_memory(),
+                0x52000000 + i * 0x01000000, &s->qtest_tbu_dma_alias[i]);
+        }
+    }
 }
 
 
@@ -1533,7 +1638,7 @@ static void tb371fc_realize_ufs(TB371FCMachineState *s)
     unsigned i;
 
     qdev_prop_set_string(s->ufs, "serial", "QEMU-TB371FC-TEST");
-    /* One modeled data port uses SID e0; the native second class is 4e0. */
+    /* Mainline DT assigns e0/4e0; the native traffic-class split is unknown. */
     object_property_set_link(OBJECT(s->ufs), "dma-memory",
         OBJECT(arm_smmuv2_get_dma_mr(s->apps_smmu, 0xe0)), &error_fatal);
     for (i = 0; i < ARRAY_SIZE(clocks); i++) {
@@ -1551,6 +1656,10 @@ static void tb371fc_realize_ufs(TB371FCMachineState *s)
     sysbus_realize_and_unref(SYS_BUS_DEVICE(s->ufs), &error_fatal);
     sysbus_mmio_map(SYS_BUS_DEVICE(s->ufs), 0, TB371FC_UFS_BASE);
     sysbus_mmio_map(SYS_BUS_DEVICE(s->ufs), 1, TB371FC_UFS_PHY_BASE);
+    memory_region_init_io(&s->ufs_ice_probe, OBJECT(s), &tb371fc_ice_ops, s,
+                          "tb371fc-ufs-ice-unsupported", TB371FC_UFS_ICE_SIZE);
+    memory_region_add_subregion(get_system_memory(), TB371FC_UFS_ICE_BASE,
+                               &s->ufs_ice_probe);
     sysbus_connect_irq(SYS_BUS_DEVICE(s->ufs), 0,
                        qdev_get_gpio_in(s->gic, TB371FC_UFS_SPI));
 }
@@ -1595,6 +1704,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_watchdog(s);
     tb371fc_create_boot_resources(s);
     tb371fc_create_smmus(s);
+    tb371fc_create_tbu(s);
     if (s->enable_ufs) {
         s->ufs = qdev_new(TYPE_QCOM_SM8250_UFS);
         object_property_add_child(OBJECT(s), "ufs", OBJECT(s->ufs));
@@ -1761,6 +1871,27 @@ static void tb371fc_set_kernel_load_base(Object *obj, Visitor *v,
 }
 
 
+static char *tb371fc_get_tbu_profile(Object *obj, Error **errp)
+{
+    return g_strdup(TB371FC_MACHINE(obj)->tbu_profile);
+}
+
+static void tb371fc_set_tbu_profile(Object *obj, const char *value,
+                                    Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "tbu-profile is fixed after machine creation");
+        return;
+    }
+    if (!value || (strcmp(value, "off") && strcmp(value, "reference-ecats"))) {
+        error_setg(errp, "tbu-profile must be off or reference-ecats");
+        return;
+    }
+    g_free(s->tbu_profile);
+    s->tbu_profile = g_strdup(value);
+}
 
 static char *tb371fc_get_aop_profile(Object *obj, Error **errp)
 {
@@ -1890,6 +2021,7 @@ static void tb371fc_instance_init(Object *obj)
     s->spmi_profile = g_strdup("off");
     s->smem_profile = g_strdup("off");
     s->aop_profile = g_strdup("none");
+    s->tbu_profile = g_strdup("off");
     s->rpmh_boot_configured = true;
     s->counter_exact = true;
     s->gcc_boot_configured = true;
@@ -1905,6 +2037,7 @@ static void tb371fc_instance_finalize(Object *obj)
     g_free(s->spmi_profile);
     g_free(s->smem_profile);
     g_free(s->aop_profile);
+    g_free(s->tbu_profile);
 }
 
 static void tb371fc_class_init(ObjectClass *oc, const void *data)
@@ -1931,6 +2064,11 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
     object_class_property_set_description(oc, "aop-profile",
         "none (default) or explicit reference QMP peer for QDSS off/dynamic "
         "votes; no AOP firmware or physical clock-frequency model");
+    object_class_property_add_str(oc, "tbu-profile",
+        tb371fc_get_tbu_profile, tb371fc_set_tbu_profile);
+    object_class_property_set_description(oc, "tbu-profile",
+        "off (default) or reference-ecats ANOC1/2 HALT and debug translation; "
+        "no silicon identity, physical transaction stall or clock-gate model");
     object_class_property_add_str(oc, "smem-profile",
         tb371fc_get_smem_profile, tb371fc_set_smem_profile);
     object_class_property_set_description(oc, "smem-profile",

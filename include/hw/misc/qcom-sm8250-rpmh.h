@@ -85,6 +85,8 @@ struct QcomSm8250RpmhState {
     char *cmd_db_file;
     char *cmd_db_sha256;
     uint64_t command_latency_ns;
+    /* Latest external levels, including requests deferred by an active TCS. */
+    bool sleep_request[RPMH_VOTERS];
     bool reference_cmd_db;
     bool boot_configured;
     bool reference_wait_mask_reserved;
