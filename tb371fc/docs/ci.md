@@ -15,8 +15,15 @@ after an earlier component failure so their independent results remain visible.
 
 ## Gates
 
-The current public plan registers **59 gates: 55 component/parser gates and
-four Linux boots**, plus the separate A77 and PCI UFS compatibility job.
+The current public plan registers **64 gates: 59 component/parser gates and
+five Linux integration gates**, plus the separate real-Linux UFS process checkpoint and
+the A77/PCI UFS compatibility job. The four new component gates cover crypto
+rejection, Auto-Hibern8, retained RPMh wake requests and opt-in TBU debug.
+The fifth Linux gate performs actual UFS runtime suspend followed by ordinary
+block-I/O wake, with 40 ordered guest checks, read-only host observations and
+a complete 64 MiB media comparison. The independent frozen and portable
+[runtime-PM receipts](../evidence/sm8250-contract-20261124/README.md#linux-runtime-pm-extension)
+passed separately; CI must execute the registered gate for each new revision.
 The [b5f4415 run](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45219017052)
 passed all 55 component gates and four Linux gates, including the new explicit
 SMMUv2 granule gate. Its separate A77/shared-PCI job also passed. Retained
@@ -81,8 +88,12 @@ pass does not attest newly added devices.
 | CPU timer output wires | 16 GIC input-line observations in each of real-time exact, icount exact and icount legacy mode |
 | SMMUv2 | 23 C QTests with no skips, 18 default-profile process migration checks, and 26 explicit-granule ATS/DMA/fault/migration groups |
 | RPMh | 22 reference-profile tests, including the synthetic command-db parser cases, and 5 migration checks |
+| Combined power checkpoint | 7 groups covering retained sleep/wake levels, pending PDC/GIC interrupts, remaining deadlines and a rejected invalid state; optional old-binary v2 transfer adds an eighth group |
 | Display RSC | 11 shared-service and real SPI 129 checks, plus 6 actual component migration checks |
 | UFS | 56 MMIO/PHY/clock/DMA/SCSI/WriteBooster/hibernation checks against a synthetic disk, including absent-LUN responses and DMA bounds |
+| UFS ICE and crypto rejection | 14 board checks; the separate shared PCI suite requires 17 unskipped legacy/MCQ cases |
+| UFS Auto-Hibern8 | 18 groups, two actual process transfers and three rejected capability/state mismatches |
+| Reference ANOC1/ANOC2 TBU | 16 groups with real nonidentity DMA/walker checks, one actual process transfer and six rejections; default profile off |
 | Watchdog | 16 register/timing/action/negative groups and actual pending-bite migration |
 | IMEM and PS_HOLD | 7 groups covering SRAM boundaries, byte order, guest-owned handoff fields, reset retention, digital output, invalid widths and an actual two-process migration |
 | TLMM | 25 C QTests, including the explicit UFS reset boot handoff, and 15 checks across four actual migrations |
@@ -98,9 +109,10 @@ pass does not attest newly added devices.
 | Clean Linux empty UFS bus | The same 8 PID 1 checks and shutdown with UFS enabled and no logical unit attached; missing-LUN recovery is an independent required gate |
 | Clean Linux UFS and SMMU | 19 guest checks plus a host check of the bytes written to the synthetic disk |
 | Clean Linux UFS, SMMU and RPMh | 23 guest checks, three host RPMh observations and the host disk payload comparison; real RSC/clock drivers and completion interrupt with an explicit synthetic reference command database |
+| Clean Linux UFS runtime PM | 40 ordered guest checks; host, LUN and device-WLUN suspend; core/iface/unipro clocks gated; same-fd direct read wakes the host; complete 64 MiB media comparison and unchanged input hashes |
 | Isolated Cortex-A77 | 852 guest checks across 9 feature/cache-ID configurations, plus 2 invalid-configuration rejections |
 
-Component tests generally use 128 MiB to keep their fixtures small. The four
+Component tests generally use 128 MiB to keep their fixtures small. The five
 Linux integration gates explicitly use 8 GiB and eight CPUs. Timer and other
 unrelated-device component tests disable UFS; the UFS and Linux I/O gates
 exercise the implemented controller and its GCC/SMMU connections.
@@ -125,7 +137,7 @@ python3 tb371fc/scripts/ci_device_tests.py \
   --suite components --out /work/ci-components
 ```
 
-Build the public kernel independently and run all four Linux gates:
+Build the public kernel independently and run all five Linux gates:
 
 ```sh
 SMOKE_JOBS=2 bash tb371fc/scripts/build_smoke_kernel.sh /work/ci-linux
@@ -148,8 +160,9 @@ covers the retained files. No private device asset is uploaded by this plan.
 The verdict reader requires a true boolean aggregate, the exact check count,
 no contradictory individual verdict, and strictly typed required metadata.
 C TAP output must contain exactly one matching plan and unique consecutive
-test numbers; SKIP and TODO do not satisfy a gate. Twenty-two local unit tests
-cover these rejection paths and the registered plan contracts.
+test numbers; SKIP and TODO do not satisfy a gate. Twenty-three local unit tests
+cover these rejection paths and the registered plan contracts, including
+missing or false runtime-PM evidence and a truncated guest check list.
 
 ## What a pass means
 
@@ -174,7 +187,7 @@ device-tree boot, Adreno graphics, modem, camera, audio, sensors, or full-tablet
 equivalence. Those claims require their own implemented devices and actual
 end-to-end evidence.
 
-The route receipt must contain literal true aggregate verdicts, eight checks, an explicit false output-interception flag, and exactly one migration record. Missing or incorrectly typed secondary evidence lists are rejected. The 22 local verdict and plan tests include these failure cases.
+The route receipt must contain literal true aggregate verdicts, eight checks, an explicit false output-interception flag, and exactly one migration record. Missing or incorrectly typed secondary evidence lists are rejected. The 23 local verdict and plan tests include these failure cases.
 
 ## Display RSC integration
 
@@ -233,7 +246,7 @@ for `guest_cpu_executed`, `native_sbl_captured` and
 and loader/reset/migration contract; they do not execute Linux's allocator or
 establish that `qcom_smem_probe` succeeded.
 
-Both runners use `ufs-enabled=off` for their component migrations. The four
+Both runners use `ufs-enabled=off` for their component migrations. The five
 public Linux gates retain their own recorded configurations; their success
 does not automatically exercise the optional SMEM reference profile. The
 [SMEM driver observation](smem-driver-observer.md) is a separate native-kernel

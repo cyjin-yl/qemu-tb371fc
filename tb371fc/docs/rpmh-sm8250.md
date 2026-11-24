@@ -99,6 +99,13 @@ then restores the explicitly chosen firmware handoff state.
 
 Sleep and wake banks execute only after the corresponding explicit input
 transition. They do not run merely because software programmed their buffers.
+The input is a held level: a request arriving while that voter's TCS is busy
+is retained and consumed once all of its TCS slots are idle. The latest level
+replaces an earlier unstarted request. In particular, a wake arriving during
+sleep-bank execution is not lost, and a second low level does not replay the
+wake bank. A stalled unsupported command remains stalled; only its explicit
+cancellation can release a deferred request. Reset clears deferred requests
+together with the accepted sleep state and command execution.
 CPU WFI, PDC wake routing, power collapse, retention and autonomous solver
 behavior are not inferred from this input. The architectural-counter wake
 VALID bit is currently unsupported and diagnosed. `RSC_DRV_STATUS` has no
@@ -177,6 +184,32 @@ The destination must have the same effective command-db digest and latency
 configuration. The file path itself is not a replacement for that content
 check. This is a component capability: the board's UFS controller currently
 prevents a claim of complete board migration with in-flight storage I/O.
+
+RPMh migration version 3 appends all four held sleep-request levels. It still
+accepts version 2 streams, which represent only accepted sleep state; for
+those streams each input request starts at that accepted state. Incoming
+version 3 state with a deferred request but no running TCS is rejected as an
+unreachable state. Loading reconstructs outputs and timer deadlines without
+executing a new sleep/wake transition at load time.
+
+The additional combined checkpoint gate keeps PDC and RPMh connected to the
+real GIC while transferring pending level/edge interrupts, an acknowledged
+edge, an unfinished sleep TCS, and its deferred wake request:
+
+```sh
+python3 tb371fc/tests/test_power_checkpoint.py \
+  --qemu /absolute/path/qemu-system-aarch64 --out /work/power-checkpoint-new
+```
+
+The suite also checks runtime request retention, latest-level replacement,
+stall/cancellation, reset, and rejection of a corrupted deferred-request
+checkpoint. `--legacy-qemu /path/to/v2-qemu` adds a transfer from an actual
+older executable to the new one. Reports retain the exact executable and
+helper hashes, individual checks, and migration results. These are test
+definitions until a particular execution receipt is retained. The combined
+gate uses an explicit sleep input and disables UFS; it does not add automatic
+PDC-to-RPMh or CPU WFI coordination or establish physical power-collapse
+equivalence.
 
 ## External-file ABI compatibility checks
 

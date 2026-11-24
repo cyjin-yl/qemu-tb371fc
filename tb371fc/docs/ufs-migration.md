@@ -26,6 +26,11 @@ Hibern8 may retain the link with the PHY powered off, as the existing model
 already permits. Symbol clocks and the UFS output interrupt are reconstructed
 after validated state is loaded.
 
+[Automatic Hibern8](ufs-auto-hibern8.md) additionally saves its idle deadline
+and automatic-sleep ownership in a versioned subsection, while retaining this
+v1 main layout. CAP.AUTOH8 profile mismatches remain rejected; the explicit-only
+`auto-hibern8=off` profile is available for older v1 streams.
+
 The medium is external. Source and receiver must use the same contents, LUN
 numbers, capacities and read/write permissions. This implementation does not
 copy, hash or attest disk contents. The process test completes the source

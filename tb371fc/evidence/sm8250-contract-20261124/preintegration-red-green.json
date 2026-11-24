@@ -1,0 +1,2638 @@
+{
+  "schema_version": 1,
+  "kind": "tb371fc-preintegration-red-green-evidence",
+  "collected_utc": "2026-11-24T03:03:55.800111+00:00",
+  "device": "doesvm",
+  "container": "CT102/qemu-tb371fc-dev",
+  "remote_root": "/work/sm8250-contract-c538",
+  "markers": {
+    "base-commit": "8babe85b1cd7990a1a113b223d51ec8a7732fed5",
+    "local-integration-head": "ad81a9ecf33958725797e5a71a78f4128401572a",
+    "stage": "completed",
+    "build-initial.exit": "0",
+    "build-fixes.exit": "0",
+    "build-pci-final.exit": "0",
+    "build-tbu.exit": "1"
+  },
+  "binaries": {
+    "baseline": {
+      "path": "/work/sm8250-contract-c538/baseline/qemu-system-aarch64",
+      "sha256": "9fc5281827139ac51811d7912ed3c7fb307c83bc8b3c61d025921ee242386508",
+      "bytes": 64081976,
+      "mtime_ns": 1795488527886308630,
+      "stable_during_hash": true
+    },
+    "current_board": {
+      "path": "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+      "sha256": "ee1fa5c90a908936093f30c4687cfdd5b872a448ccb26648a17c6b5f49b76530",
+      "bytes": 64149232,
+      "mtime_ns": 1795489407555025147,
+      "stable_during_hash": true
+    },
+    "current_pci": {
+      "path": "/work/sm8250-contract-c538/build-pci/qemu-system-aarch64",
+      "sha256": "aece56b0633ec371b01b5146e2547622a40799dbee0c1f2723fa1c5cca7608b1",
+      "bytes": 67307536,
+      "mtime_ns": 1795488787871397737,
+      "stable_during_hash": true
+    }
+  },
+  "receipts": {
+    "red-power": {
+      "path": "/work/sm8250-contract-c538/red-power/result.json",
+      "sha256": "d5b26a3fca7a62539a6c6175c7e8de8cac5a9eecb9dd3805e1b33d306635d3b7",
+      "bytes": 2169,
+      "mtime_ns": 1795488552743659707,
+      "exit_code": 1,
+      "receipt": {
+        "schema_version": 1,
+        "kind": "tb371fc-held-wake-and-pdc-gic-process-checkpoint",
+        "started_utc": "2026-11-24T02:49:11.430802+00:00",
+        "all_passed": false,
+        "machine": "tb371fc,rpmh-profile=reference,rpmh-boot-configured=off,ufs-enabled=off",
+        "qemu_sha256": "9fc5281827139ac51811d7912ed3c7fb307c83bc8b3c61d025921ee242386508",
+        "test_sha256": "c0c55a193826034e511f106de9dd0b1901e20f4db78cc5b43572f62f0d5e6bcc",
+        "helpers_sha256": {
+          "test_rpmh_sm8250.py": "aa8250a4799da7e6db8cd871d3115d6c3b747baa99cd6aee0c99e3bca1c24baf",
+          "test_pdc_migration.py": "36b911bc0f7a466b7b5a29da45d7a642374cae3c6c77575fbec502c0c60cce5a",
+          "test_gcc_sm8250.py": "b14cee244dcb53b69578b163aefdd2495214d7a9748bcacf1a762e5f996765f6",
+          "test_geni_uart.py": "4ab5857e40f3d320656677812abb86d2683c310764d35baa7a32b4aa53572fbd",
+          "test_geni_migration.py": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8"
+        },
+        "checks": [
+          {
+            "name": "busy_wake_level_is_retained",
+            "passed": false,
+            "directory": "/work/sm8250-contract-c538/red-power/00",
+            "error": "Traceback (most recent call last):\n  File \"/work/sm8250-contract-c538/source/tb371fc/tests/test_power_checkpoint.py\", line 386, in main\n    function(rig)\n    ~~~~~~~~^^^^^\n  File \"/work/sm8250-contract-c538/source/tb371fc/tests/test_power_checkpoint.py\", line 95, in busy_wake_level_is_retained\n    check(r.status(tcs=5) == ISSUED, \"held wake level was lost during sleep TCS\")\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/sm8250-contract-c538/source/tb371fc/tests/test_rpmh_sm8250.py\", line 38, in check\n    raise AssertionError(detail)\nAssertionError: held wake level was lost during sleep TCS\n",
+            "seconds": 0.9394
+          }
+        ],
+        "limits": [
+          "Explicit sleep/wake GPIO only; no automatic CPU WFI/PDC power solver.",
+          "PDC and RPMh share one migrated board; they are not implicitly coupled.",
+          "Synthetic command database and virtual command latency; no silicon/AOP equivalence.",
+          "UFS disabled for this component suite; no claim of in-flight storage migration."
+        ],
+        "expected_checks": 1
+      }
+    },
+    "red-ahit": {
+      "path": "/work/sm8250-contract-c538/red-ahit/result.json",
+      "sha256": "0ccf62227ef371bf5334573db71dc192ae4b55a47ed6e188ba1a8d516a3b2e18",
+      "bytes": 2465,
+      "mtime_ns": 1795488553425696778,
+      "exit_code": 1,
+      "receipt": {
+        "schema_version": 1,
+        "kind": "sm8250-ufs-auto-hibern8",
+        "started_utc": "2026-11-24T02:49:12.888342+00:00",
+        "all_passed": false,
+        "checks": [],
+        "migrations": [],
+        "rejections": [],
+        "processes": [
+          {
+            "name": "source",
+            "command": [
+              "/work/sm8250-contract-c538/baseline/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/red-ahit/source/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/red-ahit/source/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/red-ahit/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S"
+            ],
+            "exit_code": 0,
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "qemu_sha256": "9fc5281827139ac51811d7912ed3c7fb307c83bc8b3c61d025921ee242386508",
+        "test_sha256": "73f1fa0c44d4ad95239cba996c0dedaba26aa209dcc1452ccfedd3d019a44d15",
+        "helpers_sha256": {
+          "test_ufs_migration.py": "f8b9e2d708ebeeac9fe3f12fde22b157a22e848634e208344777fca3fa9a59f2",
+          "test_ufs_sm8250.py": "ff55615ebcb5c60271dec2187fe959c52cb48a601fe1bf201a4273f2a62687c2",
+          "test_geni_migration.py": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8"
+        },
+        "scope": "AHIT with real SID e0 nonidentity DMA, PHY/clock sleep and quiescent file checkpoints.",
+        "limits": [
+          "Digital idle timing; automatic exit has no analog latency model.",
+          "Storage queues must be quiescent for migration.",
+          "The external medium is reused, not copied by the stream.",
+          "QTest external clocks are aligned after load.",
+          "No Android, native-DT or physical device attestation."
+        ],
+        "error": "AssertionError: ",
+        "traceback": "Traceback (most recent call last):\n  File \"/work/sm8250-contract-c538/source/tb371fc/tests/test_ufs_autohibern8.py\", line 167, in main\n    assert cap & AUTOH8 and r.r(AHIT) == 0\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "elapsed_seconds": 0.168,
+        "passed_checks": 0
+      }
+    },
+    "red-crypto": {
+      "path": "/work/sm8250-contract-c538/red-crypto/result.json",
+      "sha256": "975610db9e28a6ce0a2841b81c900e4a63357b246ec05a195b54c2b6ac6be95e",
+      "bytes": 1265,
+      "mtime_ns": 1795488555174791847,
+      "exit_code": 0,
+      "receipt": {
+        "scope": "new synthetic raw disk only; no native device storage",
+        "qemu_sha256": "9fc5281827139ac51811d7912ed3c7fb307c83bc8b3c61d025921ee242386508",
+        "source_rig": "/work/sm8250-contract-c538/source/tb371fc/tests/test_ufs_sm8250.py",
+        "command": [
+          "/work/sm8250-contract-c538/baseline/qemu-system-aarch64",
+          "-M",
+          "tb371fc",
+          "-accel",
+          "qtest",
+          "-m",
+          "128M",
+          "-display",
+          "none",
+          "-serial",
+          "null",
+          "-monitor",
+          "none",
+          "-qtest",
+          "unix:/work/sm8250-contract-c538/red-crypto/qtest,server=on,wait=off",
+          "-qtest-log",
+          "/dev/null",
+          "-qmp",
+          "unix:/work/sm8250-contract-c538/red-crypto/qmp,server=on,wait=off",
+          "-blockdev",
+          "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/red-crypto/disk.raw",
+          "-blockdev",
+          "driver=raw,node-name=disk0,file=file0",
+          "-device",
+          "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+          "-d",
+          "unimp,guest_errors"
+        ],
+        "capabilities": "0x107021f",
+        "crypto_advertised": false,
+        "crypto_write_ocs": 0,
+        "crypto_write_scsi_status": 0,
+        "flush_ocs": 0,
+        "backing_plaintext_matches_crypto_payload": true,
+        "backing_changed": true,
+        "crypto_read_ocs": 0,
+        "crypto_read_scsi_status": 0,
+        "crypto_read_returns_plaintext": true
+      }
+    },
+    "green-ufs_crypto": {
+      "path": "/work/sm8250-contract-c538/green-ufs_crypto/result.json",
+      "sha256": "acfc69c67e5892b4ce47bcfc27b1aa4d61b94f29d56b348d4c8d1ee2144cacaa",
+      "bytes": 2710,
+      "mtime_ns": 1795488612661916457,
+      "exit_code": 0,
+      "receipt": {
+        "schema_version": 1,
+        "started_utc": "2026-11-24T02:50:11.619317+00:00",
+        "scope": "Unsupported ICE probe and rejected encrypted UFS DMA",
+        "private_inputs_used": false,
+        "qemu_sha256": "ce9153c91150f34f1bc1fd59fa9631300a8811dda38e06469318da588812bb99",
+        "test_sha256": "723977e5c42fac06eeb9a0e8b160bc64f0af1e6601bd7f07c8aa5e5285889d97",
+        "checks": [
+          {
+            "name": "unsupported-version-sentinel",
+            "passed": true
+          },
+          {
+            "name": "unavailable-fuse-profile",
+            "passed": true
+          },
+          {
+            "name": "bist-does-not-claim-success",
+            "passed": true
+          },
+          {
+            "name": "probe-values-are-immutable",
+            "passed": true
+          },
+          {
+            "name": "crypto-capability-remains-clear",
+            "passed": true
+          },
+          {
+            "name": "ordinary-translated-io",
+            "passed": true
+          },
+          {
+            "name": "encrypted-write-has-defined-error",
+            "passed": true,
+            "observed": 9
+          },
+          {
+            "name": "encrypted-write-preserves-entire-media",
+            "passed": true
+          },
+          {
+            "name": "encrypted-read-does-not-transfer-plaintext",
+            "passed": true,
+            "observed": {
+              "ocs": 9,
+              "buffer_unchanged": true
+            }
+          },
+          {
+            "name": "invalid-upiu-and-prdt-still-complete",
+            "passed": true,
+            "observed": {
+              "ocs": 9
+            }
+          },
+          {
+            "name": "rejection-skips-prdt-and-response-dma",
+            "passed": true
+          },
+          {
+            "name": "queue-recovers-for-ordinary-io",
+            "passed": true
+          },
+          {
+            "name": "reset-keeps-unsupported-ice",
+            "passed": true
+          },
+          {
+            "name": "unsupported-accesses-reported",
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "command": [
+          "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+          "-M",
+          "tb371fc",
+          "-accel",
+          "qtest",
+          "-m",
+          "128M",
+          "-display",
+          "none",
+          "-serial",
+          "null",
+          "-monitor",
+          "none",
+          "-qtest",
+          "unix:/work/sm8250-contract-c538/green-ufs_crypto/run/qtest,server=on,wait=off",
+          "-qtest-log",
+          "/dev/null",
+          "-qmp",
+          "unix:/work/sm8250-contract-c538/green-ufs_crypto/run/qmp,server=on,wait=off",
+          "-blockdev",
+          "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_crypto/run/disk.raw",
+          "-blockdev",
+          "driver=raw,node-name=disk0,file=file0",
+          "-device",
+          "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+          "-d",
+          "unimp,guest_errors"
+        ],
+        "media_before_sha256": "4c1d120e43d3b8bf2765b77e11ccac63aad154199d645d0530f11e84cd50039c",
+        "exit_code": 0,
+        "media_after_sha256": "8dd37f344c70350dcb07a97a053f965785897563b887dda62de0e060fd2746c4",
+        "qemu_unchanged": true,
+        "completed_utc": "2026-11-24T02:50:12.662438+00:00"
+      }
+    },
+    "green-ufs_autohibern8": {
+      "path": "/work/sm8250-contract-c538/green-ufs_autohibern8/result.json",
+      "sha256": "6c1ca13e342f4143aa1d6665e5fa597472e393e68a2d44640a05b05749708886",
+      "bytes": 13987,
+      "mtime_ns": 1795488615104049195,
+      "exit_code": 0,
+      "receipt": {
+        "schema_version": 1,
+        "kind": "sm8250-ufs-auto-hibern8",
+        "started_utc": "2026-11-24T02:50:12.728025+00:00",
+        "all_passed": true,
+        "checks": [
+          {
+            "name": "capability-and-exact-scaled-idle-deadline-without-uic-interrupt",
+            "passed": true
+          },
+          {
+            "name": "three-automatic-wake-dma-read-and-idle-reentry-cycles-with-ie-zero",
+            "passed": true
+          },
+          {
+            "name": "disabling-ahit-stops-reentry-and-keeps-automatic-wake",
+            "passed": true
+          },
+          {
+            "name": "synchronous-task-management-restarts-full-idle-interval",
+            "passed": true
+          },
+          {
+            "name": "ahit-disable-cancels-pending-timer-and-invalid-encodings-reject",
+            "passed": true
+          },
+          {
+            "name": "pending-uic-blocks-idle-and-completion-restarts-full-delay",
+            "passed": true
+          },
+          {
+            "name": "explicit-hibern8-requires-explicit-exit-even-with-ahit-enabled",
+            "passed": true
+          },
+          {
+            "name": "core-clock-gating-cancels-idle-until-clock-restored",
+            "passed": true
+          },
+          {
+            "name": "unfinished-dma-blocks-automatic-and-explicit-sleep-until-reset-recovery",
+            "passed": true
+          },
+          {
+            "name": "ahit-pending-new-process-restored-paused",
+            "passed": true
+          },
+          {
+            "name": "restored-ahit-keeps-original-remaining-deadline",
+            "passed": true
+          },
+          {
+            "name": "auto-hibern8-phy-off-new-process-restored-paused",
+            "passed": true
+          },
+          {
+            "name": "sleeping-checkpoint-retains-media-and-auto-wakes-after-phy-clock-restore",
+            "passed": true
+          },
+          {
+            "name": "device-reset-cancels-uic-and-recovery-keeps-media",
+            "passed": true
+          },
+          {
+            "name": "reject-auto-state-no-resume-or-media-change",
+            "passed": true
+          },
+          {
+            "name": "reject-auto-timer-no-resume-or-media-change",
+            "passed": true
+          },
+          {
+            "name": "legacy-capability-profile-remains-explicit-hibern8-only",
+            "passed": true
+          },
+          {
+            "name": "reject-auto-capability-profile-no-resume-or-media-change",
+            "passed": true
+          }
+        ],
+        "migrations": [
+          {
+            "name": "ahit-pending",
+            "source": {
+              "status": "completed",
+              "setup-time": 5,
+              "downtime": 57,
+              "total-time": 74,
+              "ram": {
+                "total": 134250496,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 2,
+                "multifd-bytes": 0,
+                "pages-per-second": 0,
+                "downtime-bytes": 331910,
+                "page-size": 4096,
+                "remaining": 0,
+                "postcopy-bytes": 0,
+                "mbps": 263.49228985507244,
+                "transferred": 2272621,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 32767,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 36864,
+                "normal": 9
+              }
+            },
+            "target": {
+              "status": "completed"
+            },
+            "qtest_clock_ns": 3332000,
+            "stream_sha256": "a83bb17696efa05fa4f9f1348802a38ba4b5e8342fc3e07cef3431d19ca53db8",
+            "stream_bytes": 2272621
+          },
+          {
+            "name": "auto-hibern8-phy-off",
+            "source": {
+              "status": "completed",
+              "setup-time": 0,
+              "downtime": 31,
+              "total-time": 44,
+              "ram": {
+                "total": 134250496,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 2,
+                "multifd-bytes": 0,
+                "pages-per-second": 0,
+                "downtime-bytes": 331910,
+                "page-size": 4096,
+                "remaining": 0,
+                "postcopy-bytes": 0,
+                "mbps": 413.2038181818182,
+                "transferred": 2272621,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 32767,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 36864,
+                "normal": 9
+              }
+            },
+            "target": {
+              "status": "completed"
+            },
+            "qtest_clock_ns": 3402000,
+            "stream_sha256": "1343aaf19f96b71833060f1eb3372ae4c67c7e8cd036923522d8b4d598454636",
+            "stream_bytes": 2272621
+          }
+        ],
+        "rejections": [
+          {
+            "name": "reject-auto-state",
+            "expected_diagnostic": "inconsistent Auto-Hibern8 state",
+            "qmp_error": null,
+            "qmp_events": [],
+            "qmp_drained_to_eof": true,
+            "stream_sha256": "6d84149e939f70415a4ef661e4745cbdb10da466e95255c729bb88d7529f154a",
+            "media_sha256": "8e8a13ef1d9ea09d2b02913bbdb26499577de3282d8226f3689c94a8cc2eae5d"
+          },
+          {
+            "name": "reject-auto-timer",
+            "expected_diagnostic": "inconsistent Auto-Hibern8 state",
+            "qmp_error": null,
+            "qmp_events": [],
+            "qmp_drained_to_eof": true,
+            "stream_sha256": "e8eeb023829d9d8a228abb78bfab7b230cd7f0adcc1648e6fc29488c653f5f46",
+            "media_sha256": "8e8a13ef1d9ea09d2b02913bbdb26499577de3282d8226f3689c94a8cc2eae5d"
+          },
+          {
+            "name": "reject-auto-capability-profile",
+            "expected_diagnostic": "107021f != 187021f",
+            "qmp_error": null,
+            "qmp_events": [],
+            "qmp_drained_to_eof": true,
+            "stream_sha256": "a83bb17696efa05fa4f9f1348802a38ba4b5e8342fc3e07cef3431d19ca53db8",
+            "media_sha256": "8e8a13ef1d9ea09d2b02913bbdb26499577de3282d8226f3689c94a8cc2eae5d"
+          }
+        ],
+        "processes": [
+          {
+            "name": "source",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_autohibern8/source/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_autohibern8/source/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_autohibern8/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S"
+            ],
+            "exit_code": 0,
+            "stderr_sha256": "53d39e8d58353dff233265c01797fce83ee04456c68262d1b89c364591d07c60"
+          },
+          {
+            "name": "ahit-pending-receiver",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_autohibern8/ahit-pending-receiver/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_autohibern8/ahit-pending-receiver/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_autohibern8/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S",
+              "-incoming",
+              "defer"
+            ],
+            "exit_code": 0,
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "name": "auto-hibern8-phy-off-receiver",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_autohibern8/auto-hibern8-phy-off-receiver/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_autohibern8/auto-hibern8-phy-off-receiver/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_autohibern8/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S",
+              "-incoming",
+              "defer"
+            ],
+            "exit_code": 0,
+            "stderr_sha256": "734d3d3f0a68b574af00a1ccb655512c9aaa53ea14b38d993e9606a17d866bd5"
+          },
+          {
+            "name": "reject-auto-state",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_autohibern8/reject-auto-state/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_autohibern8/reject-auto-state/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_autohibern8/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S",
+              "-incoming",
+              "defer"
+            ],
+            "exit_code": 1,
+            "stderr_sha256": "48751ddeafa21d01b26d790d65260ac3131366c057b20b9ee3f2aa919222551c"
+          },
+          {
+            "name": "reject-auto-timer",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_autohibern8/reject-auto-timer/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_autohibern8/reject-auto-timer/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_autohibern8/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S",
+              "-incoming",
+              "defer"
+            ],
+            "exit_code": 1,
+            "stderr_sha256": "48751ddeafa21d01b26d790d65260ac3131366c057b20b9ee3f2aa919222551c"
+          },
+          {
+            "name": "legacy-profile",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_autohibern8/legacy-profile/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_autohibern8/legacy-profile/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_autohibern8/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-global",
+              "qcom-sm8250-ufs.auto-hibern8=off",
+              "-S"
+            ],
+            "exit_code": 0,
+            "stderr_sha256": "511c568363d35c1cdb670996d8e3a5a321d514a1c4e12f91c6c4d840f18bcbbe"
+          },
+          {
+            "name": "reject-auto-capability-profile",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_autohibern8/reject-auto-capability-profile/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_autohibern8/reject-auto-capability-profile/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_autohibern8/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-global",
+              "qcom-sm8250-ufs.auto-hibern8=off",
+              "-S",
+              "-incoming",
+              "defer"
+            ],
+            "exit_code": 1,
+            "stderr_sha256": "8c53cdd8a0bd5fa980400ccf2df85b9b42032b5004673b150e1704872a08387a"
+          }
+        ],
+        "qemu_sha256": "ce9153c91150f34f1bc1fd59fa9631300a8811dda38e06469318da588812bb99",
+        "test_sha256": "73f1fa0c44d4ad95239cba996c0dedaba26aa209dcc1452ccfedd3d019a44d15",
+        "helpers_sha256": {
+          "test_ufs_migration.py": "f8b9e2d708ebeeac9fe3f12fde22b157a22e848634e208344777fca3fa9a59f2",
+          "test_ufs_sm8250.py": "ff55615ebcb5c60271dec2187fe959c52cb48a601fe1bf201a4273f2a62687c2",
+          "test_geni_migration.py": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8"
+        },
+        "scope": "AHIT with real SID e0 nonidentity DMA, PHY/clock sleep and quiescent file checkpoints.",
+        "limits": [
+          "Digital idle timing; automatic exit has no analog latency model.",
+          "Storage queues must be quiescent for migration.",
+          "The external medium is reused, not copied by the stream.",
+          "QTest external clocks are aligned after load.",
+          "No Android, native-DT or physical device attestation."
+        ],
+        "elapsed_seconds": 2.231,
+        "passed_checks": 18
+      }
+    },
+    "green-ufs_sm8250": {
+      "path": "/work/sm8250-contract-c538/green-ufs_sm8250/result.json",
+      "sha256": "76fe8908af6a6620459100f584616f9e837d136a7bb532eff65dc7b02cad3283",
+      "bytes": 7629,
+      "mtime_ns": 1795488616587129805,
+      "exit_code": 0,
+      "receipt": {
+        "schema_version": 1,
+        "started_utc": "2026-11-24T02:50:15.196096+00:00",
+        "scope": "Actual QTest GCC/UFS/PHY, UIC, DMA and SCSI behavior; not Android or full hardware equivalence",
+        "qemu_sha256": "ce9153c91150f34f1bc1fd59fa9631300a8811dda38e06469318da588812bb99",
+        "test_sha256": "ff55615ebcb5c60271dec2187fe959c52cb48a601fe1bf201a4273f2a62687c2",
+        "checks": [
+          {
+            "name": "gcc_ufs_power_on",
+            "passed": true
+          },
+          {
+            "name": "hci_reference_version",
+            "passed": true
+          },
+          {
+            "name": "phy_starts_reset",
+            "passed": true
+          },
+          {
+            "name": "link_startup_without_phy_fails",
+            "passed": true
+          },
+          {
+            "name": "unprogrammed_phy_not_ready",
+            "passed": true
+          },
+          {
+            "name": "programmed_phy_ready",
+            "passed": true
+          },
+          {
+            "name": "phy_symbols_propagate",
+            "passed": true
+          },
+          {
+            "name": "tx_fsm_hibern8",
+            "passed": true
+          },
+          {
+            "name": "link_without_symbol_clocks_fails",
+            "passed": true
+          },
+          {
+            "name": "link_startup",
+            "passed": true
+          },
+          {
+            "name": "two_connected_lanes",
+            "passed": true
+          },
+          {
+            "name": "unknown_dme_rejected",
+            "passed": true
+          },
+          {
+            "name": "readonly_dme_rejected",
+            "passed": true
+          },
+          {
+            "name": "invalid_lane_count_rejected",
+            "passed": true
+          },
+          {
+            "name": "dme_write_read_retained",
+            "passed": true
+          },
+          {
+            "name": "local_timeout_d041_programming",
+            "passed": true
+          },
+          {
+            "name": "local_timeout_d042_programming",
+            "passed": true
+          },
+          {
+            "name": "local_timeout_d043_programming",
+            "passed": true
+          },
+          {
+            "name": "power_mode_change",
+            "passed": true
+          },
+          {
+            "name": "nop_dma_and_response",
+            "passed": true,
+            "detail": {
+              "ocs": 0,
+              "response": "200000000000000000000000"
+            }
+          },
+          {
+            "name": "device_descriptor",
+            "passed": true,
+            "detail": {
+              "ocs": 0,
+              "header": "360000000001000000000059",
+              "descriptor": "59000000010001040000017f00000000031000000001020301ce161a02000000"
+            }
+          },
+          {
+            "name": "scsi_lun_ready",
+            "passed": true,
+            "detail": {
+              "ocs": 0,
+              "status": 0
+            }
+          },
+          {
+            "name": "absent_lun_standard_inquiry",
+            "passed": true,
+            "detail": {
+              "ocs": 0,
+              "status": 0,
+              "payload": "7f0000000000000000000000000000000000000000000000000000000000000000000000"
+            }
+          },
+          {
+            "name": "absent_lun_request_sense",
+            "passed": true,
+            "detail": {
+              "ocs": 0,
+              "status": 0,
+              "payload": "700005000000000a00000000250000000000"
+            }
+          },
+          {
+            "name": "absent_lun_scsi_error_not_transport_failure",
+            "passed": true,
+            "detail": {
+              "ocs": 0,
+              "response": "21200100000001020000001400000008000000000000000000000000000000000012700005000000000a00000000250000000000"
+            }
+          },
+          {
+            "name": "absent_high_and_unknown_wlun_rejected",
+            "passed": true,
+            "detail": [
+              {
+                "lun": 32,
+                "ocs": 0,
+                "status": 2,
+                "sense": "700005000000000a00000000250000000000"
+              },
+              {
+                "lun": 127,
+                "ocs": 0,
+                "status": 2,
+                "sense": "700005000000000a00000000250000000000"
+              },
+              {
+                "lun": 255,
+                "ocs": 0,
+                "status": 2,
+                "sense": "700005000000000a00000000250000000000"
+              }
+            ]
+          },
+          {
+            "name": "absent_lun_invalid_inquiry_field",
+            "passed": true,
+            "detail": [
+              {
+                "flags": 1,
+                "passed": true
+              },
+              {
+                "flags": 2,
+                "passed": true
+              }
+            ]
+          },
+          {
+            "name": "absent_lun_short_prdt_rejected",
+            "passed": true,
+            "detail": {
+              "ocs": 3,
+              "payload": "cccccccccccccccccccccccccccccccc"
+            }
+          },
+          {
+            "name": "absent_lun_inquiry_dma_bounds",
+            "passed": true
+          },
+          {
+            "name": "absent_lun_inquiry_allocation_bounds",
+            "passed": true
+          },
+          {
+            "name": "read_capacity",
+            "passed": true,
+            "detail": {
+              "ocs": 0,
+              "data": "00003fff00001000"
+            }
+          },
+          {
+            "name": "enable_write_booster",
+            "passed": true
+          },
+          {
+            "name": "wb_hibern8_flush_flag_set",
+            "passed": true
+          },
+          {
+            "name": "wb_hibern8_flush_flag_read",
+            "passed": true
+          },
+          {
+            "name": "wb_hibern8_flush_flag_clear",
+            "passed": true
+          },
+          {
+            "name": "wb_hibern8_flush_flag_toggle",
+            "passed": true
+          },
+          {
+            "name": "write10",
+            "passed": true,
+            "detail": {
+              "ocs": 0,
+              "status": 0
+            }
+          },
+          {
+            "name": "read10_exact_payload",
+            "passed": true,
+            "detail": {
+              "sha256": "4e441a3533bb2c10cd5649981d395744213e09a336746b5a3458fee4057205ec"
+            }
+          },
+          {
+            "name": "host_backing_file_contains_write",
+            "passed": true
+          },
+          {
+            "name": "short_prdt_rejected",
+            "passed": true,
+            "detail": {
+              "ocs": 3
+            }
+          },
+          {
+            "name": "long_prdt_reports_underflow",
+            "passed": true,
+            "detail": {
+              "ocs": 0,
+              "response": "2120000000000000000000020000100000000000000000000000000000000000"
+            }
+          },
+          {
+            "name": "long_prdt_did_not_write_adjacent_lba",
+            "passed": true
+          },
+          {
+            "name": "short_prdt_did_not_write_any_lba",
+            "passed": true
+          },
+          {
+            "name": "unsupported_scsi_check_condition",
+            "passed": true
+          },
+          {
+            "name": "hibern8_only_flush_stays_pending_while_active",
+            "passed": true
+          },
+          {
+            "name": "gated_tx_sync_clock_blocks_dma",
+            "passed": true
+          },
+          {
+            "name": "restored_tx_sync_clock_allows_dma",
+            "passed": true
+          },
+          {
+            "name": "enter_hibern8",
+            "passed": true
+          },
+          {
+            "name": "hibern8_retains_link_across_phy_power_down",
+            "passed": true
+          },
+          {
+            "name": "hibern8_phy_restored",
+            "passed": true
+          },
+          {
+            "name": "transfer_in_hibern8_rejected",
+            "passed": true
+          },
+          {
+            "name": "exit_hibern8",
+            "passed": true
+          },
+          {
+            "name": "hibern8_flushed_write_booster",
+            "passed": true,
+            "detail": [
+              0,
+              0,
+              10
+            ]
+          },
+          {
+            "name": "gated_qref_stops_phy_and_link",
+            "passed": true
+          },
+          {
+            "name": "restored_qref_restarts_phy",
+            "passed": true
+          },
+          {
+            "name": "gcc_bcr_resets_hci_and_phy",
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "command": [
+          "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+          "-M",
+          "tb371fc",
+          "-accel",
+          "qtest",
+          "-m",
+          "128M",
+          "-display",
+          "none",
+          "-serial",
+          "null",
+          "-monitor",
+          "none",
+          "-qtest",
+          "unix:/work/sm8250-contract-c538/green-ufs_sm8250/qtest,server=on,wait=off",
+          "-qtest-log",
+          "/dev/null",
+          "-qmp",
+          "unix:/work/sm8250-contract-c538/green-ufs_sm8250/qmp,server=on,wait=off",
+          "-blockdev",
+          "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_sm8250/disk.raw",
+          "-blockdev",
+          "driver=raw,node-name=disk0,file=file0",
+          "-device",
+          "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+          "-d",
+          "unimp,guest_errors"
+        ],
+        "qemu_exit_code": 0,
+        "stderr_sha256": "0e3271b722c91c5bb51554d7737f296941dc47f9707034f9ccb1519e79cfebae",
+        "elapsed_seconds": 1.242,
+        "passed_checks": 56,
+        "total_checks": 56
+      }
+    },
+    "green-ufs_migration": {
+      "path": "/work/sm8250-contract-c538/green-ufs_migration/result.json",
+      "sha256": "431c2b6f0481c8befad06513326467385d9da7c5f27869cfb79e8ce0122f8a43",
+      "bytes": 28853,
+      "mtime_ns": 1795488621571400716,
+      "exit_code": 0,
+      "receipt": {
+        "schema_version": 1,
+        "kind": "sm8250-ufs-quiescent-migration",
+        "started_utc": "2026-11-24T02:50:16.673074+00:00",
+        "all_passed": true,
+        "checks": [
+          {
+            "name": "source-translated-write-read-flush-and-host-media-match",
+            "passed": true
+          },
+          {
+            "name": "active-uic-qmp-completed-and-receiver-paused",
+            "passed": true
+          },
+          {
+            "name": "hci-ram-and-pending-transfer-irq-preserved",
+            "passed": true
+          },
+          {
+            "name": "pending-uic-finishes-on-original-deadline-and-irq-clears",
+            "passed": true
+          },
+          {
+            "name": "query-wire-endian-attribute-and-wb-flags-accounting-preserved",
+            "passed": true
+          },
+          {
+            "name": "scsi-child-sense-state-preserved",
+            "passed": true
+          },
+          {
+            "name": "receiver-smmu-translation-dma-write-read-and-host-media-match",
+            "passed": true
+          },
+          {
+            "name": "hibern8-phy-off-qmp-completed-and-receiver-paused",
+            "passed": true
+          },
+          {
+            "name": "hibern8-phy-off-retains-link-and-rejects-data-doorbell",
+            "passed": true
+          },
+          {
+            "name": "phy-timer-qmp-completed-and-receiver-paused",
+            "passed": true
+          },
+          {
+            "name": "phy-ready-deadline-and-symbol-clock-propagation-preserved",
+            "passed": true
+          },
+          {
+            "name": "second-and-third-receivers-continue-real-media-io",
+            "passed": true
+          },
+          {
+            "name": "restored-virtual-rt-idle-timer-flushes-wb-in-hibern8",
+            "passed": true
+          },
+          {
+            "name": "reject-hw-version-rejected-without-resume-or-media-change",
+            "passed": true
+          },
+          {
+            "name": "reject-nutrs-rejected-without-resume-or-media-change",
+            "passed": true
+          },
+          {
+            "name": "reject-lun-capacity-rejected-without-resume-or-media-change",
+            "passed": true
+          },
+          {
+            "name": "reject-nonempty-wire-doorbell-rejected-without-resume-or-media-change",
+            "passed": true
+          },
+          {
+            "name": "reject-wb-overflow-rejected-without-resume-or-media-change",
+            "passed": true
+          },
+          {
+            "name": "reject-incoming-scsi-request-rejected-without-resume-or-media-change",
+            "passed": true
+          },
+          {
+            "name": "actual-uncompleted-source-dma-request-rejects-checkpoint",
+            "passed": true
+          },
+          {
+            "name": "failed-source-checkpoint-keeps-controller-recoverable-by-hce-reset",
+            "passed": true
+          }
+        ],
+        "migrations": [
+          {
+            "name": "active-uic",
+            "source": {
+              "status": "completed",
+              "setup-time": 1,
+              "downtime": 55,
+              "total-time": 65,
+              "ram": {
+                "total": 134250496,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 2,
+                "multifd-bytes": 0,
+                "pages-per-second": 0,
+                "downtime-bytes": 331910,
+                "page-size": 4096,
+                "remaining": 0,
+                "postcopy-bytes": 0,
+                "mbps": 284.077625,
+                "transferred": 2272621,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 32767,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 36864,
+                "normal": 9
+              }
+            },
+            "target": {
+              "status": "completed"
+            },
+            "external_qtest_clock_ns": 380333,
+            "stream_sha256": "1a36929f7210a37d9a778729e9721587bba695f9d120f640354ddf33e90f7bbe",
+            "stream_bytes": 2272621
+          },
+          {
+            "name": "hibern8-phy-off",
+            "source": {
+              "status": "completed",
+              "setup-time": 0,
+              "downtime": 38,
+              "total-time": 49,
+              "ram": {
+                "total": 134250496,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 2,
+                "multifd-bytes": 0,
+                "pages-per-second": 0,
+                "downtime-bytes": 331910,
+                "page-size": 4096,
+                "remaining": 0,
+                "postcopy-bytes": 0,
+                "mbps": 371.0401632653061,
+                "transferred": 2272621,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 32767,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 36864,
+                "normal": 9
+              }
+            },
+            "target": {
+              "status": "completed"
+            },
+            "external_qtest_clock_ns": 621000,
+            "stream_sha256": "c0f887da9d81d163c77ba13bfbbb8fab6497e857ac2eed0f18e50875f66920ab",
+            "stream_bytes": 2272621
+          },
+          {
+            "name": "phy-timer",
+            "source": {
+              "status": "completed",
+              "setup-time": 0,
+              "downtime": 25,
+              "total-time": 35,
+              "ram": {
+                "total": 134250496,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 2,
+                "multifd-bytes": 0,
+                "pages-per-second": 0,
+                "downtime-bytes": 331910,
+                "page-size": 4096,
+                "remaining": 0,
+                "postcopy-bytes": 0,
+                "mbps": 519.4562285714286,
+                "transferred": 2272621,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 32767,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 36864,
+                "normal": 9
+              }
+            },
+            "target": {
+              "status": "completed"
+            },
+            "external_qtest_clock_ns": 624000,
+            "stream_sha256": "bb724e2cc954b9decf3d7d3adcc1e926b5e828c121f7cf3607c71c7d2f187aaf",
+            "stream_bytes": 2272621
+          }
+        ],
+        "rejections": [
+          {
+            "name": "reject-hw-version",
+            "exit_code": 1,
+            "expected_diagnostic": "of device 'qcom-sm8250-ufs': 30000000 != 40000000\n",
+            "qmp_error": null,
+            "stream_sha256": "1a36929f7210a37d9a778729e9721587bba695f9d120f640354ddf33e90f7bbe",
+            "media_sha256": "9ddf17da8f82cb5743a5a367566a5b2f6de3a9fe95b2e61a01d940109e741e63",
+            "profile_mismatch": {
+              "field": "hw_version",
+              "wire_offset": 0,
+              "source_prefix": "400000000000030008f0d180c2a3ad4cded9804233a8e60f92446ee6a5c180f45261148962c5dec11eff3b19",
+              "receiver_prefix": "300000000000030008f0d180c2a3ad4cded9804233a8e60f92446ee6a5c180f45261148962c5dec11eff3b19",
+              "diagnostic": "of device 'qcom-sm8250-ufs': 30000000 != 40000000\n"
+            },
+            "qmp_drained_to_eof": true,
+            "qmp_events": []
+          },
+          {
+            "name": "reject-nutrs",
+            "exit_code": 1,
+            "expected_diagnostic": "of device 'qcom-sm8250-ufs': SM8250 UFS migration: configuration mismatch\n",
+            "qmp_error": null,
+            "stream_sha256": "1a36929f7210a37d9a778729e9721587bba695f9d120f640354ddf33e90f7bbe",
+            "media_sha256": "9ddf17da8f82cb5743a5a367566a5b2f6de3a9fe95b2e61a01d940109e741e63",
+            "profile_mismatch": {
+              "field": "migration_config",
+              "wire_offset": 12,
+              "source_prefix": "400000000000030008f0d180c2a3ad4cded9804233a8e60f92446ee6a5c180f45261148962c5dec11eff3b19",
+              "receiver_prefix": "400000000000030008f0d180da98036dfe2ef0df4266ba624d8e126d8de98f42e37dbc6fe960f74001b51db2",
+              "diagnostic": "of device 'qcom-sm8250-ufs': SM8250 UFS migration: configuration mismatch\n"
+            },
+            "qmp_drained_to_eof": true,
+            "qmp_events": []
+          },
+          {
+            "name": "reject-lun-capacity",
+            "exit_code": 1,
+            "expected_diagnostic": "of device 'qcom-sm8250-ufs': SM8250 UFS migration: configuration mismatch\n",
+            "qmp_error": null,
+            "stream_sha256": "1a36929f7210a37d9a778729e9721587bba695f9d120f640354ddf33e90f7bbe",
+            "media_sha256": "83ee47245398adee79bd9c0a8bc57b821e92aba10f5f9ade8a5d1fae4d8c4302",
+            "profile_mismatch": {
+              "field": "migration_config",
+              "wire_offset": 12,
+              "source_prefix": "400000000000030008f0d180c2a3ad4cded9804233a8e60f92446ee6a5c180f45261148962c5dec11eff3b19",
+              "receiver_prefix": "400000000000030008f0d18079e0f8f7b80a7681578b35fdfa420ef0d711765e01c096618d85524a9eff4de7",
+              "diagnostic": "of device 'qcom-sm8250-ufs': SM8250 UFS migration: configuration mismatch\n"
+            },
+            "qmp_drained_to_eof": true,
+            "qmp_events": []
+          },
+          {
+            "name": "reject-nonempty-wire-doorbell",
+            "exit_code": 1,
+            "expected_diagnostic": "quiescent legacy queues",
+            "qmp_error": null,
+            "stream_sha256": "39afb6e538956c1514b34ae1ee7a98dfbb66e4724ed996463c859b45547d3d9e",
+            "media_sha256": "9ddf17da8f82cb5743a5a367566a5b2f6de3a9fe95b2e61a01d940109e741e63",
+            "profile_mismatch": null,
+            "qmp_drained_to_eof": true,
+            "qmp_events": []
+          },
+          {
+            "name": "reject-wb-overflow",
+            "exit_code": 1,
+            "expected_diagnostic": "invalid WB or HID state",
+            "qmp_error": null,
+            "stream_sha256": "e42d7e21fb233272392b3a0b7febb385a83ffca797fe743bbed7c16b7613fade",
+            "media_sha256": "9ddf17da8f82cb5743a5a367566a5b2f6de3a9fe95b2e61a01d940109e741e63",
+            "profile_mismatch": null,
+            "qmp_drained_to_eof": true,
+            "qmp_events": []
+          },
+          {
+            "name": "reject-incoming-scsi-request",
+            "exit_code": 1,
+            "expected_diagnostic": "UFS migration rejects an incoming SCSI request",
+            "qmp_error": null,
+            "stream_sha256": "326b45b869c49f6e05cd17216f2472436a3cceda2581616545f5be8d585291e5",
+            "media_sha256": "9ddf17da8f82cb5743a5a367566a5b2f6de3a9fe95b2e61a01d940109e741e63",
+            "profile_mismatch": null,
+            "qmp_drained_to_eof": true,
+            "qmp_events": []
+          },
+          {
+            "name": "reject-source-busy",
+            "source": {
+              "status": "failed",
+              "error-desc": "pre-save for qcom-sm8250-ufs failed: SM8250 UFS migration requires quiescent legacy queues (UTRLDBR=0x1 UTMRLDBR=0x0)"
+            }
+          }
+        ],
+        "processes": [
+          {
+            "name": "source",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/source/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/source/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_migration/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S"
+            ],
+            "exit_code": 0,
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "name": "active-uic-receiver",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/active-uic-receiver/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/active-uic-receiver/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_migration/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S",
+              "-incoming",
+              "defer"
+            ],
+            "exit_code": 0,
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "name": "hibern8-phy-off-receiver",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/hibern8-phy-off-receiver/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/hibern8-phy-off-receiver/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_migration/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S",
+              "-incoming",
+              "defer"
+            ],
+            "exit_code": 0,
+            "stderr_sha256": "734d3d3f0a68b574af00a1ccb655512c9aaa53ea14b38d993e9606a17d866bd5"
+          },
+          {
+            "name": "phy-timer-receiver",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/phy-timer-receiver/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/phy-timer-receiver/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_migration/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S",
+              "-incoming",
+              "defer"
+            ],
+            "exit_code": 0,
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "name": "reject-hw-version-profile",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-hw-version-profile/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-hw-version-profile/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_migration/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-global",
+              "qcom-sm8250-ufs.hw-version=0x30000000",
+              "-S"
+            ],
+            "exit_code": 0,
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "name": "reject-hw-version",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-hw-version/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-hw-version/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_migration/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-global",
+              "qcom-sm8250-ufs.hw-version=0x30000000",
+              "-S",
+              "-incoming",
+              "defer"
+            ],
+            "exit_code": 1,
+            "stderr_sha256": "686e39b14492fcf078d71587e41e42924c488025ce2592cd426e2644567f3b70"
+          },
+          {
+            "name": "reject-nutrs-profile",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-nutrs-profile/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-nutrs-profile/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_migration/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-global",
+              "qcom-sm8250-ufs.nutrs=16",
+              "-S"
+            ],
+            "exit_code": 0,
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "name": "reject-nutrs",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-nutrs/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-nutrs/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_migration/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-global",
+              "qcom-sm8250-ufs.nutrs=16",
+              "-S",
+              "-incoming",
+              "defer"
+            ],
+            "exit_code": 1,
+            "stderr_sha256": "316bed9b7f385a13debc811777f53c6f5cedbcb7628742b4def4d7fe04479d98"
+          },
+          {
+            "name": "reject-lun-capacity-profile",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-lun-capacity-profile/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-lun-capacity-profile/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_migration/different-capacity.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S"
+            ],
+            "exit_code": 0,
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "name": "reject-lun-capacity",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-lun-capacity/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-lun-capacity/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_migration/different-capacity.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S",
+              "-incoming",
+              "defer"
+            ],
+            "exit_code": 1,
+            "stderr_sha256": "316bed9b7f385a13debc811777f53c6f5cedbcb7628742b4def4d7fe04479d98"
+          },
+          {
+            "name": "reject-nonempty-wire-doorbell",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-nonempty-wire-doorbell/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-nonempty-wire-doorbell/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_migration/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S",
+              "-incoming",
+              "defer"
+            ],
+            "exit_code": 1,
+            "stderr_sha256": "1658eb05a8fb9e65bf6c6eed72f92015af642e4f2521344915bc5cbc5223fa2a"
+          },
+          {
+            "name": "reject-wb-overflow",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-wb-overflow/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-wb-overflow/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_migration/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S",
+              "-incoming",
+              "defer"
+            ],
+            "exit_code": 1,
+            "stderr_sha256": "59c3b5358f56df8d79762e6274c7e2700c883e6ac767b0ea131e62647e097199"
+          },
+          {
+            "name": "reject-incoming-scsi-request",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-incoming-scsi-request/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-incoming-scsi-request/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_migration/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S",
+              "-incoming",
+              "defer"
+            ],
+            "exit_code": 1,
+            "stderr_sha256": "16596faeac559eff519c3b41c2b506b43099e2716c67f8a8412bc1bf6b973efe"
+          },
+          {
+            "name": "reject-source-busy",
+            "command": [
+              "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+              "-M",
+              "tb371fc",
+              "-accel",
+              "qtest",
+              "-m",
+              "128M",
+              "-display",
+              "none",
+              "-serial",
+              "null",
+              "-monitor",
+              "none",
+              "-qtest",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-source-busy/qtest,server=on,wait=off",
+              "-qtest-log",
+              "/dev/null",
+              "-qmp",
+              "unix:/work/sm8250-contract-c538/green-ufs_migration/reject-source-busy/qmp,server=on,wait=off",
+              "-blockdev",
+              "driver=file,node-name=file0,filename=/work/sm8250-contract-c538/green-ufs_migration/disk.raw",
+              "-blockdev",
+              "driver=raw,node-name=disk0,file=file0",
+              "-device",
+              "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+              "-d",
+              "unimp,guest_errors",
+              "-S"
+            ],
+            "exit_code": 0,
+            "stderr_sha256": "3071424b8e26683bad8d085de137f5394e8ce14e0a81a867a9ad02a36cea8d6a"
+          }
+        ],
+        "profile_fixtures": [
+          {
+            "name": "reject-hw-version",
+            "source": {
+              "status": "completed",
+              "setup-time": 0,
+              "downtime": 29,
+              "total-time": 38,
+              "ram": {
+                "total": 134250496,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 2,
+                "multifd-bytes": 0,
+                "pages-per-second": 0,
+                "downtime-bytes": 331910,
+                "page-size": 4096,
+                "remaining": 0,
+                "postcopy-bytes": 0,
+                "mbps": 478.44652631578947,
+                "transferred": 2272621,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 32767,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 36864,
+                "normal": 9
+              }
+            },
+            "stream_sha256": "1c46556c4275b506f7b52d98685b6ddc8751ed8d6aa6d230492df17151047702",
+            "media_sha256": "9ddf17da8f82cb5743a5a367566a5b2f6de3a9fe95b2e61a01d940109e741e63"
+          },
+          {
+            "name": "reject-nutrs",
+            "source": {
+              "status": "completed",
+              "setup-time": 1,
+              "downtime": 46,
+              "total-time": 56,
+              "ram": {
+                "total": 134250496,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 2,
+                "multifd-bytes": 0,
+                "pages-per-second": 0,
+                "downtime-bytes": 331910,
+                "page-size": 4096,
+                "remaining": 0,
+                "postcopy-bytes": 0,
+                "mbps": 330.5630545454546,
+                "transferred": 2272621,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 32767,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 36864,
+                "normal": 9
+              }
+            },
+            "stream_sha256": "1eff79ba9edb9ef21ebd22b6a5082f318155154ae4452f3fcefe87d8cfac4ed4",
+            "media_sha256": "9ddf17da8f82cb5743a5a367566a5b2f6de3a9fe95b2e61a01d940109e741e63"
+          },
+          {
+            "name": "reject-lun-capacity",
+            "source": {
+              "status": "completed",
+              "setup-time": 0,
+              "downtime": 24,
+              "total-time": 34,
+              "ram": {
+                "total": 134250496,
+                "postcopy-requests": 0,
+                "dirty-sync-count": 2,
+                "multifd-bytes": 0,
+                "pages-per-second": 0,
+                "downtime-bytes": 331910,
+                "page-size": 4096,
+                "remaining": 0,
+                "postcopy-bytes": 0,
+                "mbps": 534.7343529411766,
+                "transferred": 2272621,
+                "dirty-sync-missed-zero-copy": 0,
+                "precopy-bytes": 0,
+                "duplicate": 32767,
+                "dirty-pages-rate": 0,
+                "normal-bytes": 36864,
+                "normal": 9
+              }
+            },
+            "stream_sha256": "81c0631c667690266091822f8b4b2f8f29bc532bbe5394ac711996cd61c47047",
+            "media_sha256": "83ee47245398adee79bd9c0a8bc57b821e92aba10f5f9ade8a5d1fae4d8c4302"
+          }
+        ],
+        "qemu_sha256": "ce9153c91150f34f1bc1fd59fa9631300a8811dda38e06469318da588812bb99",
+        "test_sha256": "f8b9e2d708ebeeac9fe3f12fde22b157a22e848634e208344777fca3fa9a59f2",
+        "helpers_sha256": {
+          "test_ufs_sm8250.py": "ff55615ebcb5c60271dec2187fe959c52cb48a601fe1bf201a4273f2a62687c2",
+          "test_geni_migration.py": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8"
+        },
+        "scope": "Paused file checkpoints with UFS enabled and SID e0 stage-1 nonidentity DMA.",
+        "limits": [
+          "Only quiescent legacy storage queues; no in-flight SCSI or MCQ migration.",
+          "One QEMU process at a time, each with 128 MiB RAM.",
+          "QTest's external clock is explicitly aligned after load; it is not migrated device state.",
+          "The same external disk file is reused with locking enabled; media bytes are not migrated.",
+          "No native-DT boot, Android, silicon or complete-board compatibility claim."
+        ],
+        "elapsed_seconds": 4.743,
+        "passed_checks": 21
+      }
+    },
+    "green-power": {
+      "path": "/work/sm8250-contract-c538/green-power/result.json",
+      "sha256": "57040de8c59ba90f35f3c34cafec3cc89242e075ade39545c9c727c4d221428b",
+      "bytes": 6091,
+      "mtime_ns": 1795488623411500732,
+      "exit_code": 0,
+      "receipt": {
+        "schema_version": 1,
+        "kind": "tb371fc-held-wake-and-pdc-gic-process-checkpoint",
+        "started_utc": "2026-11-24T02:50:21.676142+00:00",
+        "all_passed": true,
+        "machine": "tb371fc,rpmh-profile=reference,rpmh-boot-configured=off,ufs-enabled=off",
+        "qemu_sha256": "ce9153c91150f34f1bc1fd59fa9631300a8811dda38e06469318da588812bb99",
+        "test_sha256": "c0c55a193826034e511f106de9dd0b1901e20f4db78cc5b43572f62f0d5e6bcc",
+        "helpers_sha256": {
+          "test_rpmh_sm8250.py": "aa8250a4799da7e6db8cd871d3115d6c3b747baa99cd6aee0c99e3bca1c24baf",
+          "test_pdc_migration.py": "36b911bc0f7a466b7b5a29da45d7a642374cae3c6c77575fbec502c0c60cce5a",
+          "test_gcc_sm8250.py": "b14cee244dcb53b69578b163aefdd2495214d7a9748bcacf1a762e5f996765f6",
+          "test_geni_uart.py": "4ab5857e40f3d320656677812abb86d2683c310764d35baa7a32b4aa53572fbd",
+          "test_geni_migration.py": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8"
+        },
+        "checks": [
+          {
+            "name": "busy_sleep_level_is_retained",
+            "passed": true,
+            "directory": "/work/sm8250-contract-c538/green-power/00",
+            "seconds": 0.048
+          },
+          {
+            "name": "busy_wake_level_is_retained",
+            "passed": true,
+            "directory": "/work/sm8250-contract-c538/green-power/01",
+            "seconds": 0.0669
+          },
+          {
+            "name": "latest_level_replaces_unstarted_transition",
+            "passed": true,
+            "directory": "/work/sm8250-contract-c538/green-power/02",
+            "seconds": 0.0466
+          },
+          {
+            "name": "cancellation_releases_held_request_without_acknowledging_stall",
+            "passed": true,
+            "directory": "/work/sm8250-contract-c538/green-power/03",
+            "seconds": 0.0776
+          },
+          {
+            "name": "reset_discards_deferred_request",
+            "passed": true,
+            "directory": "/work/sm8250-contract-c538/green-power/04",
+            "seconds": 0.0724
+          },
+          {
+            "name": "combined_pdc_pending_and_deferred_wake",
+            "passed": true,
+            "directory": "/work/sm8250-contract-c538/green-power/05",
+            "receipt": {
+              "source": {
+                "status": "completed",
+                "setup-time": 0,
+                "downtime": 25,
+                "total-time": 34,
+                "ram": {
+                  "total": 134250496,
+                  "postcopy-requests": 0,
+                  "dirty-sync-count": 2,
+                  "multifd-bytes": 0,
+                  "pages-per-second": 0,
+                  "downtime-bytes": 303245,
+                  "page-size": 4096,
+                  "remaining": 0,
+                  "postcopy-bytes": 0,
+                  "mbps": 525.1004705882353,
+                  "transferred": 2231677,
+                  "dirty-sync-missed-zero-copy": 0,
+                  "precopy-bytes": 0,
+                  "duplicate": 32774,
+                  "dirty-pages-rate": 0,
+                  "normal-bytes": 8192,
+                  "normal": 2
+                }
+              },
+              "destination": {
+                "status": "completed"
+              },
+              "qtest_virtual_ns_at_transfer": 1400,
+              "observations": [
+                "PDC level, unacknowledged edge and acknowledged edge migrate together",
+                "unfinished sleep and held wake resume in order at remaining deadlines",
+                "RPMh sleep/wake completion reaches real GIC and W1C drains it",
+                "unchanged levels do not replay edge or wake completions"
+              ]
+            },
+            "seconds": 0.1983
+          },
+          {
+            "name": "reject_idle_deferred_request",
+            "passed": true,
+            "directory": "/work/sm8250-contract-c538/green-power/06",
+            "receipt": {
+              "source_migration": {
+                "status": "completed",
+                "setup-time": 1,
+                "downtime": 50,
+                "total-time": 67,
+                "ram": {
+                  "total": 134250496,
+                  "postcopy-requests": 0,
+                  "dirty-sync-count": 2,
+                  "multifd-bytes": 0,
+                  "pages-per-second": 0,
+                  "downtime-bytes": 303245,
+                  "page-size": 4096,
+                  "remaining": 0,
+                  "postcopy-bytes": 0,
+                  "mbps": 270.50630303030306,
+                  "transferred": 2231677,
+                  "dirty-sync-missed-zero-copy": 0,
+                  "precopy-bytes": 0,
+                  "duplicate": 32774,
+                  "dirty-pages-rate": 0,
+                  "normal-bytes": 8192,
+                  "normal": 2
+                }
+              },
+              "destination_exit": 1,
+              "wire_offset": 1488470,
+              "diagnostic": "RPMh migration: idle voter 2 has an unconsumed sleep request",
+              "original_sha256": "841417250db81eb92f59e94fa9429468da2713fd2c406333524a6ec48c512749",
+              "mutated_sha256": "6bcabda51c4ad182194a4ad090e17ad17ad84df22fa15d92ffb139130c62a783"
+            },
+            "seconds": 0.2426
+          },
+          {
+            "name": "legacy_v2_sleep_to_current",
+            "passed": true,
+            "directory": "/work/sm8250-contract-c538/green-power/07",
+            "receipt": {
+              "source": {
+                "status": "completed",
+                "setup-time": 0,
+                "downtime": 27,
+                "total-time": 38,
+                "ram": {
+                  "total": 134250496,
+                  "postcopy-requests": 0,
+                  "dirty-sync-count": 2,
+                  "multifd-bytes": 0,
+                  "pages-per-second": 0,
+                  "downtime-bytes": 303245,
+                  "page-size": 4096,
+                  "remaining": 0,
+                  "postcopy-bytes": 0,
+                  "mbps": 469.8111578947369,
+                  "transferred": 2231603,
+                  "dirty-sync-missed-zero-copy": 0,
+                  "precopy-bytes": 0,
+                  "duplicate": 32774,
+                  "dirty-pages-rate": 0,
+                  "normal-bytes": 8192,
+                  "normal": 2
+                }
+              },
+              "destination": {
+                "status": "completed"
+              },
+              "qtest_virtual_ns_at_transfer": 2000,
+              "legacy_qemu_sha256": "9fc5281827139ac51811d7912ed3c7fb307c83bc8b3c61d025921ee242386508"
+            },
+            "seconds": 0.7847
+          }
+        ],
+        "limits": [
+          "Explicit sleep/wake GPIO only; no automatic CPU WFI/PDC power solver.",
+          "PDC and RPMh share one migrated board; they are not implicitly coupled.",
+          "Synthetic command database and virtual command latency; no silicon/AOP equivalence.",
+          "UFS disabled for this component suite; no claim of in-flight storage migration."
+        ],
+        "expected_checks": 8
+      }
+    },
+    "pci-initial": {
+      "path": "/work/sm8250-contract-c538/pci-initial/result.json",
+      "sha256": "7657d197543bf6d970146cd99ec1f399c1c8cbf3ccbd55b7d63f221310901990",
+      "bytes": 9488,
+      "mtime_ns": 1795488873044882268,
+      "exit_code": 0,
+      "receipt": {
+        "schema_version": 1,
+        "started_utc": "2026-11-24T02:54:22.975707+00:00",
+        "scope": "Shared UFS core and PCI transport on generic ARM virt; no full TB371FC attestation",
+        "private_inputs_used": false,
+        "qemu_sha256": "aece56b0633ec371b01b5146e2547622a40799dbee0c1f2723fa1c5cca7608b1",
+        "qos_test_sha256": "7c3f164260a9483be8ba79f808094dc3bf44d57cdc0d2857617c7121203e8d2f",
+        "runner_sha256": "4be8b5fbc9f9a7bd21cf19c317f261eae2fb7a3919ffe80e5adb6faade1061c2",
+        "expected_tests": [
+          "hid",
+          "init",
+          "legacy-crypto-rejected",
+          "legacy-read-write",
+          "long-prdt",
+          "mcq-cq-wraparound",
+          "mcq-crypto-rejected",
+          "mcq-read-write",
+          "no-prdt",
+          "query-attribute",
+          "query-desciptor",
+          "query-flag",
+          "reg-read",
+          "short-prdt",
+          "sync-cache",
+          "wb-init",
+          "wb-read-write"
+        ],
+        "checks": [
+          {
+            "name": "reg-read",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/reg-read",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/reg-read"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "init",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/init",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/init"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "legacy-read-write",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-read-write",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-read-write"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "mcq-read-write",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-read-write",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-read-write"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "legacy-crypto-rejected",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-crypto-rejected",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-crypto-rejected"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "mcq-crypto-rejected",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-crypto-rejected",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-crypto-rejected"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "no-prdt",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/no-prdt",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/no-prdt"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "sync-cache",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/sync-cache",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/sync-cache"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "long-prdt",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/long-prdt",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/long-prdt"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "short-prdt",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/short-prdt",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/short-prdt"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "mcq-cq-wraparound",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-cq-wraparound",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-cq-wraparound"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "query-flag",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-flag",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-flag"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "query-attribute",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-attribute",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-attribute"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "query-desciptor",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-desciptor",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-desciptor"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "wb-init",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-init",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-init"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "wb-read-write",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-read-write",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-read-write"
+            ],
+            "passed": true,
+            "exit_code": 0
+          },
+          {
+            "name": "hid",
+            "path": "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/hid",
+            "command": [
+              "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+              "--tap",
+              "-p",
+              "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/hid"
+            ],
+            "passed": true,
+            "exit_code": 0
+          }
+        ],
+        "passed": true,
+        "list_command": [
+          "/work/sm8250-contract-c538/build-pci/tests/qtest/qos-test",
+          "-l"
+        ],
+        "list_exit_code": 0,
+        "discovered_tests": [
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/reg-read",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/init",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-read-write",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-read-write",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-crypto-rejected",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-crypto-rejected",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/no-prdt",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/sync-cache",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/long-prdt",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/short-prdt",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-cq-wraparound",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-flag",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-attribute",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-desciptor",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-init",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-read-write",
+          "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/hid"
+        ],
+        "qemu_unchanged": true,
+        "qos_test_unchanged": true,
+        "elapsed_seconds": 10.055,
+        "completed_utc": "2026-11-24T02:54:33.041736+00:00"
+      }
+    }
+  },
+  "source_head_current": "8babe85b1cd7990a1a113b223d51ec8a7732fed5",
+  "interpretation": {
+    "role": "Pre-final-TBU-integration causal evidence only. This is not final integrated acceptance.",
+    "baseline_binding": {
+      "base_commit_marker": "8babe85b1cd7990a1a113b223d51ec8a7732fed5",
+      "qemu_sha256": "9fc5281827139ac51811d7912ed3c7fb307c83bc8b3c61d025921ee242386508",
+      "all_three_red_receipts_match_rehashed_baseline": true
+    },
+    "fixed_board_binding": {
+      "qemu_sha256_from_five_green_receipts": "ce9153c91150f34f1bc1fd59fa9631300a8811dda38e06469318da588812bb99",
+      "all_five_green_receipts_agree": true,
+      "current_board_sha256_at_collection": "ee1fa5c90a908936093f30c4687cfdd5b872a448ccb26648a17c6b5f49b76530",
+      "current_path_still_matches_tested_binary": false,
+      "note": "The board executable at build/qemu-system-aarch64 was already replaced by subsequent integration work when collected. ce9153... is the tested preintegration hash retained in the original green receipts, not the newly rehashed ee1fa5... binary. Final integrated acceptance must rerun and bind results to its final binary."
+    },
+    "pci_binding": {
+      "qemu_sha256": "aece56b0633ec371b01b5146e2547622a40799dbee0c1f2723fa1c5cca7608b1",
+      "matches_rehashed_current_pci": true
+    },
+    "source_binding_limit": "source git HEAD is the baseline with patch-applied working files; local-integration-head is a recorded label, not proof that source HEAD equals the tested tree. Original receipt test/helper hashes and binary hashes are retained; no claim of a clean source checkout is inferred.",
+    "red_results": [
+      {
+        "name": "red-power",
+        "meaning": "Expected baseline failure reproduces a held wake level lost during an unfinished sleep TCS. Only busy_wake_level_is_retained was selected for this red run.",
+        "exit_code": 1,
+        "failed_check": "busy_wake_level_is_retained",
+        "same_test_sha256_as_green": true
+      },
+      {
+        "name": "red-ahit",
+        "meaning": "Expected baseline failure at CAP.AUTOH8/default-AHIT precondition, before any check group or migration; this demonstrates absent advertised support, not execution of the rest of the baseline scenarios.",
+        "exit_code": 1,
+        "passed_check_groups": 0,
+        "same_test_sha256_as_green": true
+      },
+      {
+        "name": "red-crypto",
+        "meaning": "Exit 0 means the dedicated reproducer successfully observed the OLD BUG. With crypto capability clear, crypto-marked read/write requests returned success and transferred plaintext; it is not a passing correctness gate and not a fixed binary.",
+        "exit_code": 0,
+        "crypto_advertised": false,
+        "crypto_write_ocs": 0,
+        "crypto_read_ocs": 0,
+        "plaintext_backing_write_observed": true,
+        "plaintext_read_observed": true
+      }
+    ],
+    "green_summary": [
+      {
+        "name": "green-ufs_crypto",
+        "exit_code": 0,
+        "passed_checks": 14,
+        "total_checks": 14,
+        "qemu_sha256": "ce9153c91150f34f1bc1fd59fa9631300a8811dda38e06469318da588812bb99",
+        "receipt_sha256": "acfc69c67e5892b4ce47bcfc27b1aa4d61b94f29d56b348d4c8d1ee2144cacaa"
+      },
+      {
+        "name": "green-ufs_autohibern8",
+        "exit_code": 0,
+        "passed_checks": 18,
+        "total_checks": 18,
+        "qemu_sha256": "ce9153c91150f34f1bc1fd59fa9631300a8811dda38e06469318da588812bb99",
+        "receipt_sha256": "6c1ca13e342f4143aa1d6665e5fa597472e393e68a2d44640a05b05749708886",
+        "completed_process_transfers": 2,
+        "rejection_scenarios": 3,
+        "extra_profile_source_captures": 0
+      },
+      {
+        "name": "green-ufs_sm8250",
+        "exit_code": 0,
+        "passed_checks": 56,
+        "total_checks": 56,
+        "qemu_sha256": "ce9153c91150f34f1bc1fd59fa9631300a8811dda38e06469318da588812bb99",
+        "receipt_sha256": "76fe8908af6a6620459100f584616f9e837d136a7bb532eff65dc7b02cad3283"
+      },
+      {
+        "name": "green-ufs_migration",
+        "exit_code": 0,
+        "passed_checks": 21,
+        "total_checks": 21,
+        "qemu_sha256": "ce9153c91150f34f1bc1fd59fa9631300a8811dda38e06469318da588812bb99",
+        "receipt_sha256": "431c2b6f0481c8befad06513326467385d9da7c5f27869cfb79e8ce0122f8a43",
+        "completed_process_transfers": 3,
+        "rejection_scenarios": 7,
+        "extra_profile_source_captures": 3
+      },
+      {
+        "name": "green-power",
+        "exit_code": 0,
+        "passed_checks": 8,
+        "total_checks": 8,
+        "qemu_sha256": "ce9153c91150f34f1bc1fd59fa9631300a8811dda38e06469318da588812bb99",
+        "receipt_sha256": "57040de8c59ba90f35f3c34cafec3cc89242e075ade39545c9c727c4d221428b",
+        "completed_process_transfers": 2,
+        "rejection_scenarios": 1,
+        "legacy_to_current_transfers": 1
+      },
+      {
+        "name": "pci-initial",
+        "exit_code": 0,
+        "passed_checks": 17,
+        "total_checks": 17,
+        "qemu_sha256": "aece56b0633ec371b01b5146e2547622a40799dbee0c1f2723fa1c5cca7608b1",
+        "receipt_sha256": "7657d197543bf6d970146cd99ec1f399c1c8cbf3ccbd55b7d63f221310901990"
+      }
+    ],
+    "counts": {
+      "board_check_groups": 117,
+      "pci_cases": 17,
+      "board_completed_process_transfers": 7,
+      "board_rejection_scenarios": 11,
+      "note": "Check groups, completed source/receiver transfers, rejected loads and source-only profile captures are different units. No full-suite gate count is inferred."
+    },
+    "crypto_green_media_scope": "The encrypted-write-preserves-entire-media check passed, and the encrypted-read buffer remained unchanged with OCS=9. Overall before/after media hashes differ because this suite also performs ordinary I/O and recovery I/O; do not report whole-suite media immutability.",
+    "capability_boundaries": [
+      "ICE registers provide explicit unsupported/read-only probe behavior; no encryption/keyslot/TEE execution is implemented.",
+      "Auto-Hibern8 is a digital driver-state and virtual-deadline model, without silicon/analog timing equivalence.",
+      "UFS process checkpoints require quiescent legacy storage queues and externally reused media; no in-flight SCSI or copied media claim.",
+      "PDC/RPMh receipt covers held sleep/wake transitions, actual GIC pending state, W1C and process restoration; it does not establish whole-board or Android suspend/resume.",
+      "The PCI 17-case regression includes legacy and MCQ crypto-rejection coverage; it is a separate generic PCI binary.",
+      "This collection contains no tablet access, native media, raw disks or migration blobs, and no final TBU-integrated acceptance."
+    ]
+  }
+}

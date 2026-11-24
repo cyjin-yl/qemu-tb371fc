@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "started_utc": "2026-11-24T03:06:28.740518+00:00",
+  "scope": "Unsupported ICE probe and rejected encrypted UFS DMA",
+  "private_inputs_used": false,
+  "qemu_sha256": "ee1fa5c90a908936093f30c4687cfdd5b872a448ccb26648a17c6b5f49b76530",
+  "test_sha256": "723977e5c42fac06eeb9a0e8b160bc64f0af1e6601bd7f07c8aa5e5285889d97",
+  "checks": [
+    {
+      "name": "unsupported-version-sentinel",
+      "passed": true
+    },
+    {
+      "name": "unavailable-fuse-profile",
+      "passed": true
+    },
+    {
+      "name": "bist-does-not-claim-success",
+      "passed": true
+    },
+    {
+      "name": "probe-values-are-immutable",
+      "passed": true
+    },
+    {
+      "name": "crypto-capability-remains-clear",
+      "passed": true
+    },
+    {
+      "name": "ordinary-translated-io",
+      "passed": true
+    },
+    {
+      "name": "encrypted-write-has-defined-error",
+      "passed": true,
+      "observed": 9
+    },
+    {
+      "name": "encrypted-write-preserves-entire-media",
+      "passed": true
+    },
+    {
+      "name": "encrypted-read-does-not-transfer-plaintext",
+      "passed": true,
+      "observed": {
+        "ocs": 9,
+        "buffer_unchanged": true
+      }
+    },
+    {
+      "name": "invalid-upiu-and-prdt-still-complete",
+      "passed": true,
+      "observed": {
+        "ocs": 9
+      }
+    },
+    {
+      "name": "rejection-skips-prdt-and-response-dma",
+      "passed": true
+    },
+    {
+      "name": "queue-recovers-for-ordinary-io",
+      "passed": true
+    },
+    {
+      "name": "reset-keeps-unsupported-ice",
+      "passed": true
+    },
+    {
+      "name": "unsupported-accesses-reported",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "command": [
+    "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+    "-M",
+    "tb371fc",
+    "-accel",
+    "qtest",
+    "-m",
+    "128M",
+    "-display",
+    "none",
+    "-serial",
+    "null",
+    "-monitor",
+    "none",
+    "-qtest",
+    "unix:/tmp/tbci-t277v69b/45/data/run/qtest,server=on,wait=off",
+    "-qtest-log",
+    "/dev/null",
+    "-qmp",
+    "unix:/tmp/tbci-t277v69b/45/data/run/qmp,server=on,wait=off",
+    "-blockdev",
+    "driver=file,node-name=file0,filename=/tmp/tbci-t277v69b/45/data/run/disk.raw",
+    "-blockdev",
+    "driver=raw,node-name=disk0,file=file0",
+    "-device",
+    "ufs-lu,bus=ufs0,drive=disk0,lun=0",
+    "-d",
+    "unimp,guest_errors"
+  ],
+  "media_before_sha256": "4c1d120e43d3b8bf2765b77e11ccac63aad154199d645d0530f11e84cd50039c",
+  "exit_code": 0,
+  "media_after_sha256": "8dd37f344c70350dcb07a97a053f965785897563b887dda62de0e060fd2746c4",
+  "qemu_unchanged": true,
+  "completed_utc": "2026-11-24T03:06:30.144635+00:00"
+}

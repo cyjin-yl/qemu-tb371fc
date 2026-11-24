@@ -1,0 +1,28 @@
+{
+  "scope": "Read-only configuration and serial-diagnostic comparison for the retained failed input-selection attempt",
+  "initial_kernel_sha256": "0d5bb19ab2104c8352acb1fbaa2c66d76716ec2303bbceaa764c1b9715f628ee",
+  "final_kernel_sha256": "48bc7593651ea0410ef4745554ec455670d4bc125a41743c63baabfa0cdf58f3",
+  "config_observations": {
+    "cached": [
+      "CONFIG_PM=y",
+      "# CONFIG_PROC_SYSCTL is not set"
+    ],
+    "fresh": [
+      "CONFIG_PM=y",
+      "CONFIG_QCOM_CLK_RPMH=y",
+      "CONFIG_SM_GCC_8250=y",
+      "CONFIG_ARM_SMMU=y",
+      "# CONFIG_ARM_SMMU_LEGACY_DT_BINDINGS is not set",
+      "# CONFIG_ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT is not set",
+      "CONFIG_ARM_SMMU_QCOM=y",
+      "# CONFIG_ARM_SMMU_QCOM_DEBUG is not set",
+      "# CONFIG_ARM_SMMU_V3 is not set",
+      "CONFIG_PROC_SYSCTL=y"
+    ]
+  },
+  "config_paths": {
+    "cached": "/work/clean-linux/artifacts/kernel.config",
+    "fresh": "/work/sm8250-contract-c538/linux/artifacts/kernel.config"
+  },
+  "diagnostic": "All four initial serial logs contained geni_se_qup ac0000.geniqup: Err getting clks -517; these were real failed guest runs, not skipped checks."
+}

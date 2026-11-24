@@ -1,0 +1,189 @@
+{
+  "all_passed": true,
+  "checks": [
+    {
+      "name": "default-advertises-only-4k-and-keeps-real-4k-dma",
+      "passed": true
+    },
+    {
+      "name": "default-rejects-unadvertised-16k-and-64k-without-translated-writes",
+      "passed": true
+    },
+    {
+      "name": "16k-partial-root-alignment-page-offsets-and-cross-page-dma",
+      "passed": true
+    },
+    {
+      "name": "16k-ttbr1-encoding-independent-table-and-gpu-ats",
+      "passed": true
+    },
+    {
+      "name": "16k-leaf-read-only-ats-and-client-fault-preserve-ram",
+      "passed": true
+    },
+    {
+      "name": "16k-access-flag-and-hierarchical-privilege-restrictions",
+      "passed": true
+    },
+    {
+      "name": "16k-output-size-and-external-table-walk-faults",
+      "passed": true
+    },
+    {
+      "name": "16k-l2-block-dma-and-reserved-l1-block-rejection",
+      "passed": true
+    },
+    {
+      "name": "16k-reserved-and-disabled-tg-fail-closed-policy",
+      "passed": true
+    },
+    {
+      "name": "16k-reset-retains-profile-and-reconfigured-dma",
+      "passed": true
+    },
+    {
+      "name": "64k-partial-root-alignment-page-offsets-and-cross-page-dma",
+      "passed": true
+    },
+    {
+      "name": "64k-ttbr1-encoding-independent-table-and-gpu-ats",
+      "passed": true
+    },
+    {
+      "name": "64k-leaf-read-only-ats-and-client-fault-preserve-ram",
+      "passed": true
+    },
+    {
+      "name": "64k-access-flag-and-hierarchical-privilege-restrictions",
+      "passed": true
+    },
+    {
+      "name": "64k-output-size-and-external-table-walk-faults",
+      "passed": true
+    },
+    {
+      "name": "64k-l2-block-dma-and-reserved-l1-block-rejection",
+      "passed": true
+    },
+    {
+      "name": "64k-reserved-and-disabled-tg-fail-closed-policy",
+      "passed": true
+    },
+    {
+      "name": "64k-reset-retains-profile-and-reconfigured-dma",
+      "passed": true
+    },
+    {
+      "name": "16k-48bit-l0-partial-table-and-11bit-leaf-index",
+      "passed": true
+    },
+    {
+      "name": "64k-48bit-l1-partial-table-and-13bit-leaf-index",
+      "passed": true
+    },
+    {
+      "name": "64k-25bit-input-starts-at-l3-with-4k-root-alignment",
+      "passed": true
+    },
+    {
+      "name": "mixed-16k-ttbr0-and-64k-ttbr1-in-one-context",
+      "passed": true
+    },
+    {
+      "name": "invalid-profiles-rejected-at-realization",
+      "passed": true
+    },
+    {
+      "name": "matching-profile-migration-restores-16k-and-64k-dma",
+      "passed": true
+    },
+    {
+      "name": "reject-profile-1-to-7",
+      "passed": true
+    },
+    {
+      "name": "reject-profile-7-to-1",
+      "passed": true
+    }
+  ],
+  "completed_utc": "2026-11-24T03:06:49.041572+00:00",
+  "elapsed_seconds": 1.059413,
+  "expected_checks": 26,
+  "kind": "tb371fc-smmuv2-granules",
+  "legacy_v2_transfer_tested": false,
+  "limits": [
+    "Default IDR2 still advertises only 4 KiB; no measured native large-granule support.",
+    "Reserved/unsupported TG rejection is a deliberate model deviation from architectural fallback.",
+    "48-bit PA/VA, stage 1 only; no LPA/LPA2, hardware AF/DBM, GPU execution or timing evidence.",
+    "UFS disabled; no whole-board migration or external DMA-client IOTLB cache tested."
+  ],
+  "migrations": [
+    {
+      "destination": {
+        "status": "completed"
+      },
+      "mode": "matching-7",
+      "source": {
+        "downtime": 23,
+        "ram": {
+          "dirty-pages-rate": 0,
+          "dirty-sync-count": 2,
+          "dirty-sync-missed-zero-copy": 0,
+          "downtime-bytes": 336005,
+          "duplicate": 32766,
+          "mbps": 560.991,
+          "multifd-bytes": 0,
+          "normal": 10,
+          "normal-bytes": 40960,
+          "page-size": 4096,
+          "pages-per-second": 0,
+          "postcopy-bytes": 0,
+          "postcopy-requests": 0,
+          "precopy-bytes": 0,
+          "remaining": 0,
+          "total": 134250496,
+          "transferred": 2243964
+        },
+        "setup-time": 1,
+        "status": "completed",
+        "total-time": 33
+      }
+    },
+    {
+      "destination_error": "qemu-system-aarch64: load of migration failed: Invalid argument: error while loading state for instance 0x0 of device 'arm-smmuv2': 7 != 1\n",
+      "destination_exit": 1,
+      "mode": "reject-profile-1-to-7",
+      "source": {
+        "error-desc": "Failed to flush QEMUFile: Unable to write to socket: Broken pipe",
+        "status": "failed"
+      }
+    },
+    {
+      "destination_error": "qemu-system-aarch64: load of migration failed: Invalid argument: error while loading state for instance 0x0 of device 'arm-smmuv2': 1 != 7\n",
+      "destination_exit": 1,
+      "mode": "reject-profile-7-to-1",
+      "source": {
+        "error-desc": "Failed to flush QEMUFile: Unable to write to socket: Broken pipe",
+        "status": "failed"
+      }
+    }
+  ],
+  "qemu_version": {
+    "package": "",
+    "qemu": {
+      "major": 11,
+      "micro": 3,
+      "minor": 1
+    }
+  },
+  "schema_version": 1,
+  "scope": "Explicit architectural granule profiles, hand-written tables, ATS, real apps SID 0x42 DMA and paused process migration.",
+  "sha256": {
+    "migration_helper": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8",
+    "qemu": "ee1fa5c90a908936093f30c4687cfdd5b872a448ccb26648a17c6b5f49b76530",
+    "smmu_helper": "3b11bab007060d80dfc24ac577d02d51b8320fac7e4e151a707c21bea245721c",
+    "test": "9a83189384fb9f1f07bfc7d2a744b579a08bc459c231c2639ac7cefa0759111a",
+    "transport": "4ab5857e40f3d320656677812abb86d2683c310764d35baa7a32b4aa53572fbd"
+  },
+  "started_utc": "2026-11-24T03:06:47.663477+00:00"
+}

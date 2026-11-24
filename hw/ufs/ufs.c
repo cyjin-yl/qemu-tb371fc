@@ -266,16 +266,7 @@ static MemTxResult ufs_dma_read_upiu(UfsRequest *req)
 {
     MemTxResult ret;
 
-    /*
-     * In case of MCQ, UTRD has already been read from a SQ, so skip it.
-     */
-    if (!ufs_mcq_req(req)) {
-        ret = ufs_dma_read_utrd(req);
-        if (ret) {
-            return ret;
-        }
-    }
-
+    /* The caller has already fetched and validated the UTRD. */
     ret = ufs_dma_read_req_upiu(req);
     if (ret) {
         return ret;
@@ -334,9 +325,13 @@ static MemTxResult ufs_dma_write_upiu(UfsRequest *req)
 {
     MemTxResult ret;
 
-    ret = ufs_dma_write_rsp_upiu(req);
-    if (ret) {
-        return ret;
+    /* A rejected crypto descriptor was never submitted to the device. */
+    if (le32_to_cpu(req->utrd.header.dword_2) !=
+        UFS_OCS_INVALID_CRYPTO_CONFIG) {
+        ret = ufs_dma_write_rsp_upiu(req);
+        if (ret) {
+            return ret;
+        }
     }
 
     return ufs_dma_write_utrd(req);
@@ -539,7 +534,9 @@ static void ufs_mcq_process_cq(void *opaque)
         }
 
         if ((le32_to_cpu(req->utrd.header.dword_0) >> 28) !=
-            UFS_UTP_CMD_TYPE_NULL) {
+            UFS_UTP_CMD_TYPE_NULL &&
+            le32_to_cpu(req->utrd.header.dword_2) !=
+            UFS_OCS_INVALID_CRYPTO_CONFIG) {
             ufs_dma_write_rsp_upiu(req);
         }
 
@@ -2450,6 +2447,33 @@ static void ufs_exec_req(UfsRequest *req)
 {
     UfsReqResult req_result;
 
+    /* MCQ already fetched the UTRD from its submission queue. */
+    if (!ufs_mcq_req(req) && ufs_dma_read_utrd(req)) {
+        return;
+    }
+
+    /*
+     * CAP.CS is clear: there are no crypto configuration slots or keys.
+     * Reject before parsing the PRDT or submitting any SCSI operation.
+     * Silently treating an encrypted request as plaintext can corrupt media
+     * and disclose data. Use the normal legacy/MCQ completion machinery.
+     */
+    if (le32_to_cpu(req->utrd.header.dword_0) &
+        UFS_UTP_REQ_DESC_CRYPTO_ENABLE_CMD) {
+        if (ufs_mcq_req(req)) {
+            hwaddr addr = ufs_get_req_upiu_base_addr(&req->utrd);
+
+            /* UFSHCI 4.1 CQEs still need the original tag and LUN. */
+            if (ufs_addr_read(req->hc, addr, &req->req_upiu.header,
+                              sizeof(UtpUpiuHeader))) {
+                trace_ufs_err_dma_read_req_upiu(req->slot, addr);
+                return;
+            }
+        }
+        ufs_complete_req(req, UFS_REQUEST_INVALID_CRYPTO);
+        return;
+    }
+
     if (ufs_dma_read_upiu(req)) {
         return;
     }
@@ -2514,6 +2538,9 @@ void ufs_complete_req(UfsRequest *req, UfsReqResult req_result)
         break;
     case UFS_REQUEST_MISMATCH_DATA_BUF:
         req->utrd.header.dword_2 = cpu_to_le32(UFS_OCS_MISMATCH_DATA_BUF_SIZE);
+        break;
+    case UFS_REQUEST_INVALID_CRYPTO:
+        req->utrd.header.dword_2 = cpu_to_le32(UFS_OCS_INVALID_CRYPTO_CONFIG);
         break;
     default:
         req->utrd.header.dword_2 = cpu_to_le32(UFS_OCS_INVALID_CMD_TABLE_ATTR);

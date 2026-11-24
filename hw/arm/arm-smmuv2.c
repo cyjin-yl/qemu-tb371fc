@@ -96,6 +96,8 @@ struct ArmSMMUv2State {
     uint32_t num_context_banks;
     uint32_t num_smrs;
     uint32_t aarch64_granules;
+    /* Reconstructed by the optional TBU adapter, not architectural state. */
+    uint32_t debug_halt_groups;
     uint32_t gr0[WORDS];
     uint32_t gr1[WORDS];
     uint32_t cb[MAX_CB][WORDS];
@@ -389,11 +391,10 @@ static void smmuv2_invalidate(ArmSMMUv2State *s)
     }
 }
 
-static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
-                                      IOMMUAccessFlags access, int index)
+static IOMMUTLBEntry smmuv2_translate_sid(ArmSMMUv2State *s, uint16_t sid,
+                                         hwaddr addr, IOMMUAccessFlags access,
+                                         int index, bool debug_query)
 {
-    SMMUv2Stream *stream = container_of(mr, SMMUv2Stream, iommu);
-    ArmSMMUv2State *s = stream->s;
     bool user = index & 1, write = access & IOMMU_WO;
     IOMMUTLBEntry entry = {
         .target_as = &s->memory_as, .iova = addr & ~UINT64_C(0xfff),
@@ -405,8 +406,12 @@ static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
 
     qemu_mutex_lock(&s->lock);
     cr0 = s->gr0[CR0 / 4];
-    if ((index & 2) || stream->sid >= 0x8000) {
-        smmuv2_global_fault(s, GFSR_UUT, stream->sid, addr, write, user);
+    if ((index & 2) || sid >= 0x8000) {
+        smmuv2_global_fault(s, GFSR_UUT, sid, addr, write, user);
+        goto done;
+    }
+    if (!debug_query && (s->debug_halt_groups & BIT32(sid >> 10))) {
+        /* Functional admission barrier; not a silicon stall/drain model. */
         goto done;
     }
     if (cr0 & CR0_CLIENTPD) {
@@ -417,7 +422,7 @@ static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
         uint16_t mask = (smr >> 16) & 0x7fff;
 
         if ((smr & BIT32(31)) &&
-            ((stream->sid & ~mask) == ((smr & 0x7fff) & ~mask))) {
+            ((sid & ~mask) == ((smr & 0x7fff) & ~mask))) {
             selected = i;
             matches++;
         }
@@ -426,14 +431,14 @@ static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
         if (!(cr0 & CR0_USFCFG)) {
             goto bypass;
         }
-        smmuv2_global_fault(s, GFSR_USF, stream->sid, addr, write, user);
+        smmuv2_global_fault(s, GFSR_USF, sid, addr, write, user);
         goto done;
     }
     if (matches > 1) {
         if (!(cr0 & CR0_SMCFCFG)) {
             goto bypass;
         }
-        smmuv2_global_fault(s, GFSR_SMCF, stream->sid, addr, write, user);
+        smmuv2_global_fault(s, GFSR_SMCF, sid, addr, write, user);
         goto done;
     }
     mapping = s->gr0[S2CR_BASE / 4 + selected];
@@ -442,17 +447,17 @@ static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
         goto bypass;
     }
     if (type != 0) {
-        smmuv2_global_fault(s, GFSR_ICF, stream->sid, addr, write, user);
+        smmuv2_global_fault(s, GFSR_ICF, sid, addr, write, user);
         goto done;
     }
     cb = mapping & 0xff;
     if (cb >= s->num_context_banks) {
-        smmuv2_global_fault(s, GFSR_UCBF, stream->sid, addr, write, user);
+        smmuv2_global_fault(s, GFSR_UCBF, sid, addr, write, user);
         goto done;
     }
     priv = (mapping >> 24) & 3;
     if (priv == 1) {
-        smmuv2_global_fault(s, GFSR_UUT, stream->sid, addr, write, user);
+        smmuv2_global_fault(s, GFSR_UUT, sid, addr, write, user);
         goto done;
     }
     if (priv == 2) {
@@ -460,11 +465,14 @@ static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
     } else if (priv == 3) {
         user = false;
     }
+    if (debug_query && !(s->cb[cb][SCTLR / 4] & SCTLR_M)) {
+        goto done;
+    }
     result = smmuv2_walk(s, cb, addr, access, user, false);
     if (result.global_fault) {
-        smmuv2_global_fault(s, result.global_fault, stream->sid, addr, write, user);
+        smmuv2_global_fault(s, result.global_fault, sid, addr, write, user);
     } else if (result.fsr && !result.blocked) {
-        smmuv2_context_fault(s, cb, stream->sid, addr, write, user, &result);
+        smmuv2_context_fault(s, cb, sid, addr, write, user, &result);
     } else if (result.perm) {
         entry.iova = addr & ~result.mask;
         entry.translated_addr = result.pa;
@@ -473,11 +481,50 @@ static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
     }
     goto done;
 bypass:
-    entry.translated_addr = entry.iova;
-    entry.perm = IOMMU_RW;
+    if (!debug_query) {
+        entry.translated_addr = entry.iova;
+        entry.perm = IOMMU_RW;
+    }
 done:
     qemu_mutex_unlock(&s->lock);
     return entry;
+}
+
+static IOMMUTLBEntry smmuv2_translate(IOMMUMemoryRegion *mr, hwaddr addr,
+                                      IOMMUAccessFlags access, int index)
+{
+    SMMUv2Stream *stream = container_of(mr, SMMUv2Stream, iommu);
+
+    return smmuv2_translate_sid(stream->s, stream->sid, addr, access, index,
+                                false);
+}
+
+void arm_smmuv2_set_debug_halt_groups(DeviceState *dev, uint32_t groups)
+{
+    ArmSMMUv2State *s = ARM_SMMUV2(dev);
+
+    qemu_mutex_lock(&s->lock);
+    s->debug_halt_groups = groups;
+    qemu_mutex_unlock(&s->lock);
+    smmuv2_invalidate(s);
+}
+
+bool arm_smmuv2_debug_translate(DeviceState *dev, uint16_t sid, uint64_t va,
+                                IOMMUAccessFlags access, MemTxAttrs attrs,
+                                uint64_t *pa)
+{
+    IOMMUTLBEntry entry;
+    int index = (attrs.user ? 1 : 0) | (attrs.secure ? 2 : 0);
+
+    if (access != IOMMU_RO && access != IOMMU_WO) {
+        return false;
+    }
+    entry = smmuv2_translate_sid(ARM_SMMUV2(dev), sid, va, access, index, true);
+    if (!(entry.perm & access)) {
+        return false;
+    }
+    *pa = entry.translated_addr | (va & entry.addr_mask);
+    return true;
 }
 
 static int smmuv2_attrs_to_index(IOMMUMemoryRegion *mr, MemTxAttrs attrs)

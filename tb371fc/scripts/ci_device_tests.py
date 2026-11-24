@@ -153,6 +153,9 @@ def plan(args, runtime):
             fixture = runtime / f"{len(cases):02d}"
             cases.append(Case(name, [str(build / "tests/qtest" / binary), "--tap"],
                               fixture, result="tap", tap_count=count))
+        device("tbu-reference-ecats", "test_tbu_sm8250.py",
+               output="--out", result="file", verdict="all_passed", count=16,
+               expected_lengths={"migrations": 1, "rejections": 6})
         device("rpmh-reference", "test_rpmh_sm8250.py",
                output="--work-dir", verdict="success", count=22)
         device("rpmh-reference-migration", "test_rpmh_sm8250.py",
@@ -199,6 +202,15 @@ def plan(args, runtime):
                output="--out", result="file", count=16)
         device("ufs-register-dma", "test_ufs_sm8250.py",
                output="--out", result="file", count=56)
+        device("ufs-crypto-rejection", "test_ufs_crypto.py",
+               output="--out", result="file", count=14,
+               expected={"qemu_unchanged": True, "private_inputs_used": False})
+        device("ufs-auto-hibern8", "test_ufs_autohibern8.py",
+               output="--out", result="file", verdict="all_passed", count=18,
+               expected_lengths={"migrations": 2, "rejections": 3})
+        device("power-checkpoint", "test_power_checkpoint.py",
+               output="--out", result="file", verdict="all_passed", count=7,
+               expected={"expected_checks": 7, "qemu_unchanged": True})
         device("watchdog-registers", "test_watchdog_kpss.py",
                output="--out", result="file", count=16)
         device("watchdog-migration", "test_watchdog_kpss.py",
@@ -253,6 +265,22 @@ def plan(args, runtime):
             count_field="guest_checks",
             expected={"host_verified_disk_payload": True, "require_rpmh": True,
                       "expected_guest_checks": 23})
+        add("linux-ufs-runtime-pm", scripts / "boot_ufs_runtime_pm.py",
+            ("--qemu", qemu, "--kernel", kernel, "--timeout", "120"),
+            output="--out", result="file", count=40,
+            count_field="guest_checks",
+            expected={"inputs_unchanged": True, "qemu_exit_code": 0,
+                      "kernel_failure_lines": [],
+                      "guest_verdicts": [["PASS", "40", "0"]],
+                      "host_sleep_checks": {
+                          "vm_remains_running": True,
+                          "ufs_link_hibern8": True,
+                          "core_clock_gated": True,
+                          "iface_clock_gated": True,
+                          "unipro_clock_gated": True},
+                      "system_suspend_tested": False,
+                      "inflight_checkpoint_tested": False},
+            expected_lengths={"host_observations": 3})
     return cases
 
 

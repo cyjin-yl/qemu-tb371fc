@@ -19,6 +19,7 @@
 #include "qapi/visitor.h"
 #include "qemu/bitops.h"
 #include "qemu/bswap.h"
+#include "qemu/error-report.h"
 #include "qemu/log.h"
 #include "qemu/module.h"
 
@@ -290,6 +291,8 @@ static void rpmh_next_command(QcomSm8250RpmhState *s, unsigned d,
     s->drv[d].irq_status |= BIT(t);
 }
 
+static void rpmh_reconcile_sleep(QcomSm8250RpmhState *s, unsigned drv);
+
 static void rpmh_timer(void *opaque)
 {
     QcomSm8250RpmhState *s = opaque;
@@ -318,6 +321,7 @@ static void rpmh_timer(void *opaque)
                 rpmh_next_command(s, d, t, completed);
             }
         }
+        rpmh_reconcile_sleep(s, d);
     }
     rpmh_outputs(s);
     rpmh_schedule(s);
@@ -344,28 +348,35 @@ static void rpmh_start(QcomSm8250RpmhState *s, unsigned d, unsigned t)
     rpmh_schedule(s);
 }
 
-static void rpmh_sleep(void *opaque, int drv, int level)
+static void rpmh_reconcile_sleep(QcomSm8250RpmhState *s, unsigned drv)
 {
-    QcomSm8250RpmhState *s = opaque;
     const RpmhDrvLayout *layout = rpmh_layout(drv);
+    bool level = s->sleep_request[drv];
     unsigned t, first = level ? layout->sleep_first : layout->wake_first;
 
-    if (!s->ready || s->drv[drv].sleeping == !!level) {
+    if (!s->ready || s->drv[drv].sleeping == level) {
         return;
     }
     for (t = 0; t < layout->tcs_count; t++) {
         if (s->drv[drv].tcs[t].running) {
-            qemu_log_mask(LOG_GUEST_ERROR, TYPE_QCOM_SM8250_RPMH
-                          ": voter%d sleep/wake transition while busy\n", drv);
+            /* A level request remains pending until this voter is idle. */
             return;
         }
     }
-    s->drv[drv].sleeping = !!level;
+    s->drv[drv].sleeping = level;
     for (t = first; t < first + layout->low_power_count; t++) {
         if (s->drv[drv].tcs[t].enable) {
             rpmh_start(s, drv, t);
         }
     }
+}
+
+static void rpmh_sleep(void *opaque, int drv, int level)
+{
+    QcomSm8250RpmhState *s = opaque;
+
+    s->sleep_request[drv] = !!level;
+    rpmh_reconcile_sleep(s, drv);
 }
 
 static MemTxResult rpmh_bad_access(QcomRpmhDrv *drv, hwaddr addr,
@@ -525,6 +536,7 @@ static MemTxResult rpmh_write(void *opaque, hwaddr addr, uint64_t value,
             tcs->running = false;
             tcs->stalled = false;
             tcs->deadline = -1;
+            rpmh_reconcile_sleep(s, voter);
             rpmh_schedule(s);
         } else if (trigger) {
             /* Display active requests legitimately borrow its wake TCS. */
@@ -829,6 +841,7 @@ static void rpmh_reset(DeviceState *dev)
         drv->irq_status = drv->irq_enable = 0;
         drv->wake_hi = drv->wake_lo = 0;
         drv->sleeping = false;
+        s->sleep_request[d] = false;
         memset(drv->tcs, 0, sizeof(drv->tcs));
         for (t = 0; t < RPMH_TCS_PER_DRV; t++) {
             drv->tcs[t].deadline = -1;
@@ -904,6 +917,12 @@ static int rpmh_post_load(void *opaque, int version_id)
     }
     for (d = 0; d < RPMH_VOTERS; d++) {
         QcomRpmhDrv *drv = &s->drv[d];
+        bool busy = false;
+
+        if (version_id < 3) {
+            /* v2 only represented the last accepted transition. */
+            s->sleep_request[d] = drv->sleeping;
+        }
         if ((drv->irq_enable | drv->irq_status) & ~rpmh_irq_mask(d) ||
             drv->wake_hi & ~0xffffffU) {
             return -EINVAL;
@@ -922,6 +941,7 @@ static int rpmh_post_load(void *opaque, int version_id)
                 return -EINVAL;
             }
             if (tcs->running) {
+                busy = true;
                 if (tcs->cursor < 0 || tcs->cursor >= RPMH_COMMANDS ||
                     !(tcs->enable & BIT(tcs->cursor)) ||
                     tcs->commands[tcs->cursor].status != CMD_ISSUED ||
@@ -939,6 +959,12 @@ static int rpmh_post_load(void *opaque, int version_id)
                     return -EINVAL;
                 }
             }
+        }
+        if (!busy && s->sleep_request[d] != drv->sleeping) {
+            /* An idle source must already have consumed its input level. */
+            error_report("RPMh migration: idle voter %u has an unconsumed "
+                         "sleep request", d);
+            return -EINVAL;
         }
     }
     s->ready = true;
@@ -1009,7 +1035,7 @@ static const VMStateDescription vmstate_rpmh_resource = {
 
 static const VMStateDescription vmstate_rpmh = {
     .name = TYPE_QCOM_SM8250_RPMH,
-    .version_id = 2,
+    .version_id = 3,
     .minimum_version_id = 2,
     .post_load = rpmh_post_load,
     .fields = (const VMStateField[]) {
@@ -1020,6 +1046,8 @@ static const VMStateDescription vmstate_rpmh = {
         VMSTATE_STRUCT_ARRAY(resources, QcomSm8250RpmhState, RPMH_RESOURCES, 1,
                              vmstate_rpmh_resource, QcomRpmhResource),
         VMSTATE_CLOCK(xo_board, QcomSm8250RpmhState),
+        VMSTATE_BOOL_ARRAY_V(sleep_request, QcomSm8250RpmhState,
+                             RPMH_VOTERS, 3),
         VMSTATE_END_OF_LIST()
     },
 };

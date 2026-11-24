@@ -68,7 +68,7 @@ jobs:
           set -euo pipefail
           SMOKE_JOBS=2 bash tb371fc/scripts/build_smoke_kernel.sh "$RUNNER_TEMP/clean-linux" \
             2>&1 | tee "$RUNNER_TEMP/tb371fc-results/linux-build.log"
-      - name: Run eight-CPU user-space and UFS, SMMU and RPMh driver gates
+      - name: Run five Linux user-space, UFS, SMMU, RPMh and runtime-PM gates
         run: |
           set -euo pipefail
           python3 tb371fc/scripts/ci_device_tests.py \
@@ -105,12 +105,14 @@ jobs:
         if: always()
         run: |
           printf '%s\n' \
-            'This workflow requires public component gates, four clean-Linux boots and one real Linux UFS checkpoint/continuation; read each result.json for its actual verdict.' \
+            'This workflow requires public component gates, five clean-Linux gates including UFS runtime suspend/read-wake and one real Linux UFS checkpoint/continuation; read each result.json for its actual verdict.' \
             'Missing binaries, skipped C QTests, failed checks, timeouts or changed QEMU binaries fail the job.' \
             'The board uses an architectural Cortex-A77 model and A55 small-core substitutes; exact counter rate is measured in QEMU virtual time.' \
             'GENI, GCC, timers, SMMUv2, reference RPMh, UFS, watchdog, TLMM, PDC, IMEM, PS_HOLD, DCC, IPCC and reference SPMI gates test their implemented digital contracts.' \
-            'Linux checks use eight CPUs, 8 GiB RAM, a generated device tree and a synthetic disk. The UFS I/O gates end with host QMP quit after 19 ordinary or 23 RPMh-enabled guest checks.' \
+            'Linux checks use eight CPUs, 8 GiB RAM, a generated device tree and a synthetic disk. The UFS I/O gates end with host QMP quit after 19 ordinary, 23 RPMh-enabled or 40 runtime-PM guest checks.' \
+            'The runtime-PM gate requires host/LUN/device-WLUN suspend, ordinary direct-I/O wake, gated core/iface/unipro clocks and complete 64 MiB media comparison; it does not test system suspend.' \
             'The separate UFS checkpoint gate resumes the same PID 1, nonce and boot ID in a new process, then performs direct block I/O; only quiescent UFS queues are supported.' \
+            'Additional component gates require crypto rejection, Auto-Hibern8, retained RPMh wake requests and opt-in TBU HALT/ECATS with process checkpoint rejection tests.' \
             'No private production Image or AOP input is used. Stock Android, full native-DT boot, analog behavior, Adreno and complete-device equivalence are not attested.' \
             >> "$GITHUB_STEP_SUMMARY"
 
@@ -184,6 +186,6 @@ jobs:
         run: |
           printf '%s\n' \
             'The isolated A77 job requires 852 guest instruction/ID/PMU checks across nine configurations and two invalid-configuration rejections.' \
-            'A separate 15-case PCI UFS regression covers the shared controller core and legacy PCI transport without skips.' \
+            'A separate 17-case PCI UFS regression covers the shared controller core, legacy and MCQ crypto rejection without skips.' \
             'These architectural checks do not validate silicon cache capacities, cache timing, DSU behavior or performance.' \
             >> "$GITHUB_STEP_SUMMARY"

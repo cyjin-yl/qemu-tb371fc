@@ -10,7 +10,8 @@ clock, Hibern8 and IOMMU coverage without changing the guest driver.
 | Item | Source and treatment |
 | --- | --- |
 | Host / PHY address, interrupt | Native DT: `0x01d84000/0x3000`, `0x01d87000/0x1000`, GIC SPI 265. |
-| DMA stream IDs | Native DT: `0xe0` and `0x4e0`. The modeled single transport port uses `0xe0`; both IDs are described to Linux. Their native traffic-class split is unknown. |
+| DMA stream IDs | Upstream Linux v6.12.114 `sm8250.dtsi`: `0xe0` and `0x4e0`. The native 4.19 UFS DT node has no `iommus` property. The modeled single transport port uses `0xe0`; both IDs are described to Linux. Their native traffic-class split is unknown. |
+| ICE window | Native DT: `0x01d90000/0x8000`. Read-only unsupported reference probe; VERSION major 255 is an explicit sentinel, not a native register measurement. See [the behavioral audit](sm8250-behavior-audit.md). |
 | Device revision / vendor | Safe UFS sysfs: device specification `0x0310`, manufacturer `0x01ce`. These are not the host HCI revision. |
 | Clock ranges | Native DT and upstream SM8250: core/UniPro 37.5–300 MHz. They are retained. |
 | Qualcomm host revision | Configurable **reference 4.0.0**, inferred from the 300 MHz driver contract. Minor/step and the native register were not measured. See [the diagnosis](ufs-clock-diagnosis.md). |
@@ -62,6 +63,10 @@ SCSI commands and block backends. The Qualcomm wrapper calls the transport
 register helpers directly inside its outer MMIO guard; it does not disable
 QEMU's reentrancy guard to bypass a self-dispatch error. HCE/BCR reset cancels
 pending work and resets controller/PHY state while preserving media contents.
+
+The [automatic Hibern8 contract](ufs-auto-hibern8.md) adds CAP.AUTOH8, AHIT idle
+timing, automatic request wake, runtime clock/PHY retention and a versioned
+checkpoint subsection. Explicit UIC Hibern8 remains separately controlled.
 
 WriteBooster's Hibern8 flush flag is readable and writable. Background buffer
 occupancy is flushed when explicit flush is enabled, or when the link is in

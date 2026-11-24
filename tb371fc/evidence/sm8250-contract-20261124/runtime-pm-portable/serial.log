@@ -1,0 +1,253 @@
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x412fd050]
+[    0.000000] Linux version 6.12.114-tb371fc-qemu-smoke (tb371fc-qemu@isolated-builder) (aarch64-linux-gnu-gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44) #1 SMP 2026-11-22 00:00:00 +0000
+[    0.000000] Machine model: QEMU experimental Lenovo TB371FC functional subset
+[    0.000000] earlycon: qcom_geni0 at MMIO 0x0000000000a90000 (options '')
+[    0.000000] printk: legacy bootconsole [qcom_geni0] enabled
+[    0.000000] OF: reserved mem: 0x00000000bbb00000..0x00000000bfffffff (70656 KiB) nomap non-reusable firmware-hole@bbb00000
+[    0.000000] Zone ranges:
+[    0.000000]   Normal   [mem 0x0000000080000000-0x000000027fffffff]
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000080000000-0x00000000bbafffff]
+[    0.000000]   node   0: [mem 0x00000000c0000000-0x000000027fffffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000080000000-0x000000027fffffff]
+[    0.000000] On node 0, zone Normal: 17664 pages in unavailable ranges
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.1 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: Trusted OS migration not required
+[    0.000000] psci: SMC Calling Convention v1.0
+[    0.000000] percpu: Embedded 17 pages/cpu s37344 r0 d32288 u69632
+[    0.000000] Detected VIPT I-cache on CPU0
+[    0.000000] CPU features: detected: GIC system register CPU interface
+[    0.000000] CPU features: detected: Virtualization Host Extensions
+[    0.000000] alternatives: applying boot alternatives
+[    0.000000] Kernel command line: earlycon=qcom_geni,0xa90000 console=ttyMSM0,115200n8 rdinit=/init loglevel=7 panic=-1 nokaslr
+[    0.000000] Unknown kernel command line parameters "nokaslr", will be passed to user space.
+[    0.000000] Dentry cache hash table entries: 1048576 (order: 11, 8388608 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 524288 (order: 10, 4194304 bytes, linear)
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 2079488
+[    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+[    0.000000] software IO TLB: SWIOTLB bounce buffer size adjusted to 7MB
+[    0.000000] software IO TLB: area num 8.
+[    0.000000] software IO TLB: mapped [mem 0x0000000275a00000-0x0000000276200000] (8MB)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=8, Nodes=1
+[    0.000000] rcu: Hierarchical RCU implementation.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[    0.000000] GICv3: GIC: Using split EOI/Deactivate mode
+[    0.000000] GICv3: 960 SPIs implemented
+[    0.000000] GICv3: 0 Extended SPIs implemented
+[    0.000000] Root IRQ handler: 0xffff800080010088
+[    0.000000] GICv3: GICv3 features: 16 PPIs
+[    0.000000] GICv3: GICD_CTRL.DS=1, SCR_EL3.FIQ=0
+[    0.000000] GICv3: CPU0: found redistributor 0 region 0:0x0000000017a60000
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.000000] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.000000] arch_timer: cp15 and mmio timer(s) running at 19.20MHz (phys/virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x46d987e47, max_idle_ns: 440795202767 ns
+[    0.000072] sched_clock: 56 bits at 19MHz, resolution 52ns, wraps every 4398046511078ns
+[    0.007323] Calibrating delay loop (skipped), value calculated using timer frequency.. 38.40 BogoMIPS (lpj=76800)
+[    0.007814] pid_max: default: 32768 minimum: 301
+[    0.009775] Mount-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.010150] Mountpoint-cache hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.055805] rcu: Hierarchical SRCU implementation.
+[    0.056258] rcu: 	Max phase no-delay instances is 1000.
+[    0.062202] smp: Bringing up secondary CPUs ...
+[    0.071759] CPU features: detected: Spectre-v4
+[    0.071925] CPU features: detected: Spectre-BHB
+[    0.071995] Detected VIPT I-cache on CPU1
+[    0.073182] GICv3: CPU1: found redistributor 700 region 0:0x0000000017b40000
+[    0.073571] CPU1: Booted secondary processor 0x0000000700 [0x411fd0d0]
+[    0.079546] Detected VIPT I-cache on CPU2
+[    0.079919] GICv3: CPU2: found redistributor 600 region 0:0x0000000017b20000
+[    0.080152] CPU2: Booted secondary processor 0x0000000600 [0x411fd0d0]
+[    0.082312] Detected VIPT I-cache on CPU3
+[    0.082518] GICv3: CPU3: found redistributor 500 region 0:0x0000000017b00000
+[    0.082678] CPU3: Booted secondary processor 0x0000000500 [0x411fd0d0]
+[    0.085470] Detected VIPT I-cache on CPU4
+[    0.085766] GICv3: CPU4: found redistributor 400 region 0:0x0000000017ae0000
+[    0.085992] CPU4: Booted secondary processor 0x0000000400 [0x411fd0d0]
+[    0.088897] Detected VIPT I-cache on CPU5
+[    0.089344] GICv3: CPU5: found redistributor 300 region 0:0x0000000017ac0000
+[    0.089641] CPU5: Booted secondary processor 0x0000000300 [0x412fd050]
+[    0.091846] Detected VIPT I-cache on CPU6
+[    0.092147] GICv3: CPU6: found redistributor 200 region 0:0x0000000017aa0000
+[    0.092434] CPU6: Booted secondary processor 0x0000000200 [0x412fd050]
+[    0.094241] Detected VIPT I-cache on CPU7
+[    0.094420] GICv3: CPU7: found redistributor 100 region 0:0x0000000017a80000
+[    0.094550] CPU7: Booted secondary processor 0x0000000100 [0x412fd050]
+[    0.095178] smp: Brought up 1 node, 8 CPUs
+[    0.100215] SMP: Total of 8 processors activated.
+[    0.100391] CPU: All CPU(s) started at EL2
+[    0.100585] CPU features: detected: 32-bit EL0 Support
+[    0.100894] CPU features: detected: Data cache clean to the PoU not required for I/D coherence
+[    0.101271] CPU features: detected: CRC32 instructions
+[    0.101480] CPU features: detected: RCpc load-acquire (LDAPR)
+[    0.101743] CPU features: detected: Speculative Store Bypassing Safe (SSBS)
+[    0.106796] spectre-bhb mitigation disabled by compile time option
+[    0.106801] spectre-bhb mitigation disabled by compile time option
+[    0.124170] alternatives: applying system-wide alternatives
+[    0.174129] Memory: 8138072K/8317952K available (2240K kernel code, 1090K rwdata, 496K rodata, 384K init, 341K bss, 174740K reserved, 0K cma-reserved)
+[    0.195060] devtmpfs: initialized
+[    0.215960] futex hash table entries: 2048 (order: 5, 131072 bytes, linear)
+[    0.216679] pinctrl core: initialized pinctrl subsystem
+[    0.236871] DMA: preallocated 1024 KiB GFP_KERNEL pool for atomic allocations
+[    0.240412] ASID allocator initialised with 65536 entries
+[    0.252647] /soc/phy@1d87000: Fixed dependency cycle(s) with /soc/ufshc@1d84000
+[    0.253172] /soc/ufshc@1d84000: Fixed dependency cycle(s) with /soc/phy@1d87000
+[    0.253502] /soc/interrupt-controller@17a00000: Fixed dependency cycle(s) with /soc/interrupt-controller@17a00000
+[    0.255381] /soc/phy@1d87000: Fixed dependency cycle(s) with /soc/ufshc@1d84000
+[    0.256065] /soc/phy@1d87000: Fixed dependency cycle(s) with /soc/ufshc@1d84000
+[    0.257202] /soc/ufshc@1d84000: Fixed dependency cycle(s) with /soc/phy@1d87000
+[    0.303570] iommu: Default domain type: Translated
+[    0.303931] iommu: DMA domain TLB invalidation policy: strict mode
+[    0.308756] SCSI subsystem initialized
+[    0.316281] clocksource: Switched to clocksource arch_sys_counter
+[    0.334946] Unpacking initramfs...
+[    0.337061] workingset: timestamp_bits=62 max_order=21 bucket_order=0
+[    0.353869] qcom-qmp-ufs-phy 1d87000.phy: supply vdda-phy not found, using dummy regulator
+[    0.355699] qcom-qmp-ufs-phy 1d87000.phy: supply vdda-pll not found, using dummy regulator
+[    0.368817] Freeing initrd memory: 324K
+[    0.373231] a90000.serial: ttyMSM0 at MMIO 0xa90000 (irq = 17, base_baud = 0) is a MSM
+[    0.378937] printk: legacy console [ttyMSM0] enabled
+[    0.378937] printk: legacy console [ttyMSM0] enabled
+[    0.380191] printk: legacy bootconsole [qcom_geni0] disabled
+[    0.380191] printk: legacy bootconsole [qcom_geni0] disabled
+[    0.394228] arm-smmu 3da0000.iommu: probing hardware configuration...
+[    0.394585] arm-smmu 3da0000.iommu: SMMUv2 with:
+[    0.394936] arm-smmu 3da0000.iommu: 	stage 1 translation
+[    0.395173] arm-smmu 3da0000.iommu: 	address translation ops
+[    0.395755] arm-smmu 3da0000.iommu: 	coherent table walk
+[    0.396057] arm-smmu 3da0000.iommu: 	stream matching with 128 register groups
+[    0.396453] arm-smmu 3da0000.iommu: 	8 context banks (0 stage-2 only)
+[    0.397090] arm-smmu 3da0000.iommu: 	Supported page sizes: 0x40201000
+[    0.397319] arm-smmu 3da0000.iommu: 	Stage-1: 48-bit VA -> 48-bit IPA
+[    0.399091] arm-smmu 3da0000.iommu: 	preserved 0 boot mappings
+[    0.417844] arm-smmu 15000000.iommu: probing hardware configuration...
+[    0.418122] arm-smmu 15000000.iommu: SMMUv2 with:
+[    0.418284] arm-smmu 15000000.iommu: 	stage 1 translation
+[    0.418454] arm-smmu 15000000.iommu: 	address translation ops
+[    0.418647] arm-smmu 15000000.iommu: 	coherent table walk
+[    0.418819] arm-smmu 15000000.iommu: 	stream matching with 128 register groups
+[    0.419050] arm-smmu 15000000.iommu: 	96 context banks (0 stage-2 only)
+[    0.419275] arm-smmu 15000000.iommu: 	Supported page sizes: 0x40201000
+[    0.419906] arm-smmu 15000000.iommu: 	Stage-1: 48-bit VA -> 48-bit IPA
+[    0.420578] arm-smmu 15000000.iommu: 	preserved 0 boot mappings
+[    0.438572] ufshcd-qcom 1d84000.ufshc: Adding to iommu group 0
+[    0.445831] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vdd-hba-supply regulator, assuming enabled
+[    0.446216] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vcc-supply regulator, assuming enabled
+[    0.446533] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vccq-supply regulator, assuming enabled
+[    0.446842] ufshcd-qcom 1d84000.ufshc: ufshcd_populate_vreg: Unable to find vccq2-supply regulator, assuming enabled
+[    0.468501] scsi host0: ufshcd
+[    0.512037] ufshcd-qcom 1d84000.ufshc: Undefined ref clk gating wait time, use default 255us
+[    0.538852] scsi 0:0:0:49488: Well-known LUN    QEMU     QEMU UFS              PQ: 0 ANSI: 6
+[    0.552666] scsi 0:0:0:49476: Well-known LUN    QEMU     QEMU UFS              PQ: 0 ANSI: 6
+[    0.558086] scsi 0:0:0:49456: Well-known LUN    QEMU     QEMU UFS              PQ: 0 ANSI: 6
+[    0.573914] scsi 0:0:0:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
+[    0.593870] sd 0:0:0:0: [sda] 16384 4096-byte logical blocks: (67.1 MB/64.0 MiB)
+[    0.595816] sd 0:0:0:0: [sda] Write Protect is off
+[    0.597644] sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, supports DPO and FUA
+[    0.602089] clk: Disabling unused clocks
+[    0.609054] PM: genpd: Disabling unused power domains
+[    0.676658] sd 0:0:0:0: [sda] Attached SCSI disk
+[    0.747190] Freeing unused kernel memory: 384K
+[    0.761879] Run /init as init process
+TB371FC_RPM_CHECK PASS procfs errno=0
+TB371FC_RPM_CHECK PASS sysfs errno=0
+TB371FC_RPM_CHECK PASS devtmpfs errno=0
+TB371FC_RPM_CHECK PASS ufs_disk_open errno=0
+TB371FC_RPM_CHECK PASS qcom_ufs_bound errno=0
+TB371FC_RPM_CHECK PASS block_identity_before errno=0
+TB371FC_RPM_CHECK PASS capacity_64mib_before errno=0
+TB371FC_RPM_CHECK PASS sector_4096_before errno=0
+TB371FC_RPM_SYSFS_WRITE /sys/bus/platform/devices/1d84000.ufshc/power/control value=on bytes=2 errno=0
+TB371FC_RPM_CHECK PASS host_control_on errno=0
+TB371FC_RPM_SYSFS_WRITE /sys/block/sda/device/power/control value=on bytes=2 errno=0
+TB371FC_RPM_CHECK PASS lun_control_on errno=0
+TB371FC_RPM_CHECK PASS host_active_before errno=0
+TB371FC_RPM_CHECK PASS lun_active_before errno=0
+TB371FC_RPM_CHECK PASS runtime_target_hibern8 errno=0
+TB371FC_RPM_CHECK PASS aligned_buffers errno=0
+TB371FC_RPM_CHECK PASS write_before_suspend errno=0
+TB371FC_RPM_CHECK PASS flush_before_suspend errno=0
+TB371FC_RPM_CHECK PASS read_before_suspend errno=0
+TB371FC_RPM_CHECK PASS control_tty errno=0
+TB371FC_RPM_OBSERVE before /sys/bus/platform/devices/1d84000.ufshc/power/control value=on readable=1
+TB371FC_RPM_OBSERVE before /sys/bus/platform/devices/1d84000.ufshc/power/runtime_status value=active readable=1
+TB371FC_RPM_OBSERVE before /sys/bus/platform/devices/1d84000.ufshc/power/runtime_active_time value=421 readable=1
+TB371FC_RPM_OBSERVE before /sys/bus/platform/devices/1d84000.ufshc/power/runtime_suspended_time value=0 readable=1
+TB371FC_RPM_OBSERVE before /sys/block/sda/device/power/control value=on readable=1
+TB371FC_RPM_OBSERVE before /sys/block/sda/device/power/runtime_status value=active readable=1
+TB371FC_RPM_OBSERVE before /sys/block/sda/device/power/runtime_active_time value=345 readable=1
+TB371FC_RPM_OBSERVE before /sys/block/sda/device/power/runtime_suspended_time value=0 readable=1
+TB371FC_RPM_STAGE BASELINE
+TB371FC_RPM_CHECK PASS baseline_ack errno=0
+TB371FC_RPM_SCSI /sys/bus/scsi/devices/0:0:0:49476 resolved=/sys/devices/platform/soc/1d84000.ufshc/host0/target0:0:0/0:0:0:49476 before=active
+TB371FC_RPM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:49476/power/autosuspend_delay_ms value=500 bytes=3 errno=0
+TB371FC_RPM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:49476/power/control value=auto bytes=4 errno=0
+TB371FC_RPM_SCSI /sys/bus/scsi/devices/target0:0:0 resolved=/sys/devices/platform/soc/1d84000.ufshc/host0/target0:0:0 before=active
+TB371FC_RPM_SYSFS_WRITE /sys/bus/scsi/devices/target0:0:0/power/control value=auto bytes=4 errno=0
+TB371FC_RPM_SCSI /sys/bus/scsi/devices/0:0:0:49456 resolved=/sys/devices/platform/soc/1d84000.ufshc/host0/target0:0:0/0:0:0:49456 before=active
+TB371FC_RPM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:49456/power/autosuspend_delay_ms value=500 bytes=3 errno=0
+TB371FC_RPM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:49456/power/control value=auto bytes=4 errno=0
+TB371FC_RPM_SCSI /sys/bus/scsi/devices/0:0:0:49488 resolved=/sys/devices/platform/soc/1d84000.ufshc/host0/target0:0:0/0:0:0:49488 before=active
+TB371FC_RPM_DEVICE_WLUN /sys/bus/scsi/devices/0:0:0:49488 driver=../../../../../../../bus/scsi/drivers/ufs_device_wlun
+TB371FC_RPM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:49488/power/autosuspend_delay_ms value=500 bytes=3 errno=0
+TB371FC_RPM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:49488/power/control value=auto bytes=4 errno=0
+TB371FC_RPM_SCSI /sys/bus/scsi/devices/0:0:0:0 resolved=/sys/devices/platform/soc/1d84000.ufshc/host0/target0:0:0/0:0:0:0 before=active
+TB371FC_RPM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:0/power/autosuspend_delay_ms value=500 bytes=3 errno=0
+TB371FC_RPM_SYSFS_WRITE /sys/bus/scsi/devices/0:0:0:0/power/control value=auto bytes=4 errno=0
+TB371FC_RPM_SCSI /sys/bus/scsi/devices/host0 resolved=/sys/devices/platform/soc/1d84000.ufshc/host0 before=active
+TB371FC_RPM_SYSFS_WRITE /sys/bus/scsi/devices/host0/power/control value=auto bytes=4 errno=0
+TB371FC_RPM_SCSI_CONFIGURED 4
+TB371FC_RPM_CHECK PASS scsi_autosuspend_enabled errno=22
+TB371FC_RPM_SYSFS_WRITE /sys/bus/platform/devices/1d84000.ufshc/power/control value=auto bytes=4 errno=0
+TB371FC_RPM_CHECK PASS host_control_auto errno=22
+TB371FC_RPM_OBSERVE suspended /sys/bus/platform/devices/1d84000.ufshc/power/control value=auto readable=1
+TB371FC_RPM_OBSERVE suspended /sys/bus/platform/devices/1d84000.ufshc/power/runtime_status value=suspended readable=1
+TB371FC_RPM_OBSERVE suspended /sys/bus/platform/devices/1d84000.ufshc/power/runtime_active_time value=1799 readable=1
+TB371FC_RPM_OBSERVE suspended /sys/bus/platform/devices/1d84000.ufshc/power/runtime_suspended_time value=20 readable=1
+TB371FC_RPM_OBSERVE suspended /sys/block/sda/device/power/control value=auto readable=1
+TB371FC_RPM_OBSERVE suspended /sys/block/sda/device/power/runtime_status value=suspended readable=1
+TB371FC_RPM_OBSERVE suspended /sys/block/sda/device/power/runtime_active_time value=1086 readable=1
+TB371FC_RPM_OBSERVE suspended /sys/block/sda/device/power/runtime_suspended_time value=657 readable=1
+TB371FC_RPM_OBSERVE suspended /sys/bus/scsi/devices/0:0:0:49488/power/control value=auto readable=1
+TB371FC_RPM_OBSERVE suspended /sys/bus/scsi/devices/0:0:0:49488/power/runtime_status value=suspended readable=1
+TB371FC_RPM_OBSERVE suspended /sys/bus/scsi/devices/0:0:0:49488/power/runtime_active_time value=1749 readable=1
+TB371FC_RPM_OBSERVE suspended /sys/bus/scsi/devices/0:0:0:49488/power/runtime_suspended_time value=31 readable=1
+TB371FC_RPM_IDLE_WAIT_MS 1260
+TB371FC_RPM_CHECK PASS controller_runtime_suspended errno=22
+TB371FC_RPM_CHECK PASS lun_runtime_suspended errno=22
+TB371FC_RPM_CHECK PASS device_wlun_runtime_suspended errno=22
+TB371FC_RPM_SUSPENDED_TIME before=29 after=150
+TB371FC_RPM_CHECK PASS controller_stays_suspended errno=22
+TB371FC_RPM_STAGE SUSPENDED
+TB371FC_RPM_CHECK PASS wake_ack errno=22
+TB371FC_RPM_CHECK PASS suspended_immediately_before_io errno=22
+TB371FC_RPM_CHECK PASS direct_read_wakes_and_preserves_payload errno=22
+TB371FC_RPM_CHECK PASS controller_runtime_active_after_io errno=22
+TB371FC_RPM_CHECK PASS lun_runtime_active_after_io errno=22
+TB371FC_RPM_OBSERVE resumed /sys/bus/platform/devices/1d84000.ufshc/power/control value=auto readable=1
+TB371FC_RPM_OBSERVE resumed /sys/bus/platform/devices/1d84000.ufshc/power/runtime_status value=active readable=1
+TB371FC_RPM_OBSERVE resumed /sys/bus/platform/devices/1d84000.ufshc/power/runtime_active_time value=1810 readable=1
+TB371FC_RPM_OBSERVE resumed /sys/bus/platform/devices/1d84000.ufshc/power/runtime_suspended_time value=219 readable=1
+TB371FC_RPM_OBSERVE resumed /sys/block/sda/device/power/control value=auto readable=1
+TB371FC_RPM_OBSERVE resumed /sys/block/sda/device/power/runtime_status value=active readable=1
+TB371FC_RPM_OBSERVE resumed /sys/block/sda/device/power/runtime_active_time value=1096 readable=1
+TB371FC_RPM_OBSERVE resumed /sys/block/sda/device/power/runtime_suspended_time value=856 readable=1
+TB371FC_RPM_OBSERVE resumed /sys/bus/scsi/devices/0:0:0:49488/power/control value=auto readable=1
+TB371FC_RPM_OBSERVE resumed /sys/bus/scsi/devices/0:0:0:49488/power/runtime_status value=active readable=1
+TB371FC_RPM_OBSERVE resumed /sys/bus/scsi/devices/0:0:0:49488/power/runtime_active_time value=1760 readable=1
+TB371FC_RPM_OBSERVE resumed /sys/bus/scsi/devices/0:0:0:49488/power/runtime_suspended_time value=226 readable=1
+TB371FC_RPM_CHECK PASS write_after_resume errno=22
+TB371FC_RPM_CHECK PASS flush_after_resume errno=22
+TB371FC_RPM_CHECK PASS read_after_resume errno=22
+TB371FC_RPM_CHECK PASS close_after_resume errno=22
+TB371FC_RPM_CHECK PASS reopen_after_resume errno=22
+TB371FC_RPM_CHECK PASS same_block_identity errno=22
+TB371FC_RPM_CHECK PASS capacity_64mib_after errno=22
+TB371FC_RPM_CHECK PASS reopened_original_payload errno=22
+TB371FC_RPM_CHECK PASS reopened_new_payload errno=22
+TB371FC_RPM_CHECK PASS final_close errno=22
+TB371FC_RPM_RESULT PASS checks=40 failures=0

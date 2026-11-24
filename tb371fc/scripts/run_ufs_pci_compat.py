@@ -18,6 +18,7 @@ EXPECTED = {
     "sync-cache", "long-prdt", "short-prdt", "mcq-cq-wraparound",
     "query-flag", "query-attribute", "query-desciptor", "wb-init",
     "wb-read-write", "hid",
+    "legacy-crypto-rejected", "mcq-crypto-rejected",
 }
 
 
@@ -72,7 +73,7 @@ def main():
         names = [path.rsplit("/", 1)[1] for path in paths]
         report["discovered_tests"] = paths
         if len(names) != len(EXPECTED) or set(names) != EXPECTED:
-            raise RuntimeError(f"Expected all 15 unique UFS PCI tests; found {names!r}")
+            raise RuntimeError(f"Expected all {len(EXPECTED)} unique UFS PCI tests; found {names!r}")
         for index, path in enumerate(paths):
             case_dir = args.out / f"{index:02d}-{names[index]}"
             case_dir.mkdir()
