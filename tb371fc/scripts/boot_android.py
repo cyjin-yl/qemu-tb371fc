@@ -326,12 +326,12 @@ def quit_response(messages, request_id):
 
 
 def normal_qmp_shutdown(report):
-    """Qualify only a fully observed host-requested close after a paused guest."""
+    """Qualify a host-requested close after a paused or already shutdown guest."""
     final, quit_info, drain = (report.get(key, {}) for key in
                               ("final_status", "qmp_quit", "qmp_drain"))
     if any(type(value) is not dict for value in (final, quit_info, drain)):
         return False
-    if (final.get("status") != "paused" or final.get("running") is not False or
+    if (final.get("status") not in ("paused", "shutdown") or final.get("running") is not False or
             type(report.get("qemu_returncode")) is not int or report["qemu_returncode"] != 0 or
             report.get("error") or report.get("host_terminated_qemu") or
             report.get("qmp_drain_error") or quit_info.get("acknowledged") is not True or
@@ -481,8 +481,8 @@ def observe(plan, *, seconds, max_log_bytes, symbols=None, snapshot_interval=15,
                 pause_start = len(qmp.messages)
                 result["final_status"] = qmp.command("query-status")
                 if (result["final_status"].get("running") is not False or
-                        result["final_status"].get("status") != "paused"):
-                    raise RuntimeError("QEMU did not pause before quit")
+                        result["final_status"].get("status") not in ("paused", "shutdown")):
+                    raise RuntimeError("QEMU was not stopped before quit")
                 if any(message.get("event") in
                        ("RESUME", "RESET", "GUEST_PANICKED", "WATCHDOG", "SHUTDOWN")
                        for message in qmp.messages[pause_start:]):
@@ -632,6 +632,7 @@ def stock_boot_passed(report, plan):
         report.get("qemu_unchanged") is True and
         report["stop_reason"] == "time-bound" and
         report.get("final_status", {}).get("running") is False and
+        report.get("final_status", {}).get("status") == "paused" and
         not report.get("qmp_drain_error") and not report.get("host_terminated_qemu") and
         normal_qmp_shutdown(report) and
         not any(x["analysis_truncated"] for x in report["logs"]))
