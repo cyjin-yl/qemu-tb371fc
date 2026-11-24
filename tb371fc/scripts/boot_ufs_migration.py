@@ -253,6 +253,10 @@ def main():
     source = Path(__file__).resolve().parents[1] / "tests/ufs-migration-guest.c"
     init, initrd, disk, stream = (args.out / name for name in
         ("init", "initramfs.cpio.gz", "disk.raw", "checkpoint.migration"))
+    input_paths = {"qemu": args.qemu, "kernel": args.kernel,
+                   "kernel_build_receipt": args.kernel.parent / "build.json",
+                   "guest_source": source, "harness": Path(__file__).resolve(),
+                   "init": init, "initramfs": initrd}
     started = time.monotonic()
     guests = []
     report = {
@@ -292,6 +296,8 @@ def main():
         archive += cpio_entry("dev/console", b"", 0o020600, 5, 5, 1)
         archive += cpio_entry("TRAILER!!!", b"", 0, 6)
         initrd.write_bytes(gzip.compress(archive, mtime=0))
+        report["input_sha256_before"] = {
+            name: sha256(path) for name, path in input_paths.items()}
         with disk.open("xb") as output:
             output.truncate(DISK_BYTES)
         nonce = secrets.token_hex(16)
@@ -299,7 +305,7 @@ def main():
         sender = Guest("source", args, initrd, disk)
         guests.append(sender)
         sender.start()
-        sender.wait_serial("TB371FC_UFS_MIGRATION_READY\n", args.timeout)
+        sender.wait_serial("TB371FC_UFS_MIGRATION_READY", args.timeout)
         sender.send("STORE:" + nonce)
         text = sender.wait_serial("TB371FC_UFS_MIGRATION_CHECKPOINT ", args.timeout)
         checkpoint = CHECKPOINT_RE.findall(text)
@@ -372,12 +378,17 @@ def main():
                 report.setdefault("cleanup_errors", []).append(traceback.format_exc())
                 report["passed"] = False
         report["guests"] = {guest.name: guest.receipt for guest in guests}
-        for name, path in (("qemu", args.qemu), ("kernel", args.kernel),
-                           ("guest_source", source), ("harness", Path(__file__)),
-                           ("init", init), ("initramfs", initrd),
-                           ("disk", disk), ("migration", stream)):
+        for name, path in {**input_paths, "disk": disk, "migration": stream}.items():
             if path.is_file():
                 report[name + "_sha256"] = sha256(path)
+                report[name + "_size_bytes"] = path.stat().st_size
+        if "input_sha256_before" in report:
+            report["inputs_unchanged"] = all(
+                report.get(name + "_sha256") == digest
+                for name, digest in report["input_sha256_before"].items())
+            if not report["inputs_unchanged"]:
+                report["passed"] = False
+                report["input_change_error"] = "Immutable runtime input changed during the test"
         report["elapsed_seconds"] = round(time.monotonic() - started, 3)
         report["finished_utc"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
         (args.out / "result.json").write_text(json.dumps(report, indent=2) + "\n")

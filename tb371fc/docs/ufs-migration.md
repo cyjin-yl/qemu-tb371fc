@@ -132,13 +132,18 @@ payloads again after close/reopen. The host requires exactly **21 source and
 18 continuation checks**, all passing in the expected order. Separate serial
 logs must contain one source boot and no target boot or replayed source phase.
 It then checks the entire 64 MiB image against the two payloads and zeros
-everywhere else. The migration stream hash must be unchanged across loading.
+everywhere else. The migration stream hash must be unchanged across loading,
+and the QEMU, kernel, receipt, guest source, harness, init and initramfs hashes
+must remain unchanged from before source startup through receiver completion.
 
 The workflow runs this gate in addition to all existing component, four Linux,
 21-group QTest migration, PCI and CPU gates. `result.json`, per-process receipts,
 commands, QMP messages, serial/debug logs, public kernel receipt and hashes of
 the runnable inputs are retained even on failure. Read the receipt for the
 actual verdict; adding this gate alone is not a passing runtime result.
+The CI upload excludes the temporary migration stream and synthetic disk;
+their exact sizes, SHA-256 values and whole-media comparison results remain
+in the receipt. The public kernel, QEMU binary, init and initramfs are retained.
 
 This is one quiescent Linux UFS continuation on a generated device tree.
 In-flight UFS requests, a changed external disk, a native device-tree boot,

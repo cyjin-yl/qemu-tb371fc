@@ -94,6 +94,8 @@ jobs:
           if-no-files-found: warn
           path: |
             ${{ runner.temp }}/tb371fc-results/
+            !${{ runner.temp }}/tb371fc-results/linux-ufs-migration/checkpoint.migration
+            !${{ runner.temp }}/tb371fc-results/linux-ufs-migration/disk.raw
             ${{ runner.temp }}/clean-linux/artifacts/
             ${{ runner.temp }}/qemu-build/qemu-system-aarch64
             ${{ runner.temp }}/qemu-build/tests/qtest/tb371fc-smmuv2-test
