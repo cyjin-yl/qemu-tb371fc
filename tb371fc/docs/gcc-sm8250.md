@@ -260,8 +260,7 @@ The same pinned branch driver stores PERIPH/MEM requests in bits 13/14 at
 The clock descriptor, unknown parent, GPIO behavior and GCC v3 layout remain
 unchanged. The vendor's separate HWCG bit 1 remains outside the currently
 implemented mask; retention support does not imply that mode is implemented.
-VIDEO_AHB `0xb004` keeps its existing permissions. The later NPU increment
-below changes only its own AHB word.
+The later NPU and VIDEO increments below change only their own AHB words.
 The MDSS gate requires real retention round trips, rejected reserved writes
 and restoration of a nonzero DISP_AHB word without inventing a clock rate.
 
@@ -280,6 +279,21 @@ Its selected external input stays unknown, so votes, HWCG and retention
 requests cannot create a frequency. The NPU gate requires nonzero retention
 state in an actual GCC v3 transfer, reserved-bit rejection and unchanged
 clock period. No retained contents or NPU processing are simulated.
+
+## VIDEO AHB retention request fields
+
+The [four-domain VIDEO GDSC](video-gdsc-reference.md) uses vendor binding
+`GCC_VIDEO_AHB_CLK = 205`, existing QEMU descriptor 196 and external input 79.
+The generator verifies the pinned `gcc_video_ahb_clk` declaration at line
+3987 and the same branch driver's PERIPH/MEM flags. It adds only bits 13/14
+at `0xb004`, changing mask `0x1` to `0x6001`.
+
+The existing descriptor remains a mainline-derived probe-only CBCR with
+`reg=0xffffffff`, no HWCG permission and no generated status field. The
+fixed vendor source's HWCG bit 1 is not enabled by the retention increment.
+External input 79 remains unknown, so enable or retention requests cannot
+create a frequency. GCC clock geometry and v3 migration remain unchanged;
+the VIDEO gate requires actual retention transfer and strict negative cases.
 
 ## Actual tablet observations and frequency assumptions
 

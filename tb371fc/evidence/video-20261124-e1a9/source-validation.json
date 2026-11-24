@@ -1,0 +1,335 @@
+{
+  "schema": "tb371fc-video-source-validation-v1",
+  "base_commit": "ce945f8dd74a704f0a0b0973a41c3a95e407f8d3",
+  "kind": "source_generation_and_metadata_contract_only",
+  "compiled_qemu_executed": false,
+  "ci_component_plan_count": 81,
+  "ci_all_plan_count": 86,
+  "prior_80_component_names_order_and_verdict_contracts_preserved": true,
+  "ci_metadata_requirements_match_producer": [
+    {
+      "name": "schema",
+      "value": "tb371fc-video-gdsc-v1"
+    },
+    {
+      "name": "expected_checks",
+      "value": 22
+    },
+    {
+      "name": "expected_completed_migrations",
+      "value": 3
+    },
+    {
+      "name": "expected_rejected_migrations",
+      "value": 2
+    },
+    {
+      "name": "expected_corrupted_stream_rejections",
+      "value": 2
+    },
+    {
+      "name": "expected_unmodified_streams",
+      "value": 4
+    },
+    {
+      "name": "expected_stream_files",
+      "value": 6
+    },
+    {
+      "name": "vmstate_version",
+      "value": 1
+    },
+    {
+      "name": "vmstate_payload_bytes",
+      "value": 142
+    },
+    {
+      "name": "domain_count",
+      "value": 4
+    },
+    {
+      "name": "register_count",
+      "value": 4
+    },
+    {
+      "name": "sparse_window_count",
+      "value": 4
+    },
+    {
+      "name": "mapped_bytes",
+      "value": 16
+    },
+    {
+      "name": "gpio_output_count",
+      "value": 8
+    },
+    {
+      "name": "parent_resource_index",
+      "value": 3
+    },
+    {
+      "name": "parent_supply_declared",
+      "value": true
+    },
+    {
+      "name": "parent_power_connected",
+      "value": true
+    },
+    {
+      "name": "fanout_consumer_count",
+      "value": 3
+    },
+    {
+      "name": "npu_parent_power_connected",
+      "value": false
+    },
+    {
+      "name": "hardware_mode_domain_mask",
+      "value": 12
+    },
+    {
+      "name": "domain_dt_flags",
+      "value": [
+        1,
+        1,
+        3,
+        3
+      ]
+    },
+    {
+      "name": "reference_identity",
+      "value": 1447315249
+    },
+    {
+      "name": "camera_vmstate_version",
+      "value": 1
+    },
+    {
+      "name": "camera_vmstate_payload_bytes",
+      "value": 194
+    },
+    {
+      "name": "mdss_vmstate_version",
+      "value": 1
+    },
+    {
+      "name": "mdss_vmstate_payload_bytes",
+      "value": 64
+    },
+    {
+      "name": "npu_vmstate_version",
+      "value": 1
+    },
+    {
+      "name": "npu_vmstate_payload_bytes",
+      "value": 64
+    },
+    {
+      "name": "modeled_timer_count",
+      "value": 0
+    },
+    {
+      "name": "modeled_clock_count",
+      "value": 0
+    },
+    {
+      "name": "gcc_vmstate_version",
+      "value": 3
+    },
+    {
+      "name": "gcc_video_ahb_clock_id",
+      "value": 196
+    },
+    {
+      "name": "gcc_video_ahb_write_mask",
+      "value": 24577
+    },
+    {
+      "name": "gcc_video_ahb_external_parent_index",
+      "value": 79
+    },
+    {
+      "name": "gcc_video_ahb_status_mask",
+      "value": 0
+    },
+    {
+      "name": "guest_cpu_executed",
+      "value": false
+    },
+    {
+      "name": "native_kernel_probe_observed",
+      "value": false
+    },
+    {
+      "name": "video_execution_observed",
+      "value": false
+    },
+    {
+      "name": "analog_power_modeled",
+      "value": false
+    },
+    {
+      "name": "retention_effect_modeled",
+      "value": false
+    },
+    {
+      "name": "android_boot_passed",
+      "value": false
+    },
+    {
+      "name": "parent_output_intercepted",
+      "value": false
+    },
+    {
+      "name": "binary_unchanged",
+      "initial": false,
+      "required": true,
+      "only_dynamic_requirement": true
+    }
+  ],
+  "new_gate_migration_lengths": {
+    "migrations": 3,
+    "rejected_migrations": 2,
+    "corrupted_stream_rejections": 2,
+    "migration_sources": 4,
+    "actual_stream_files": 6
+  },
+  "generated_files": [
+    {
+      "path": "hw/misc/qcom-sm8250-gcc-data.inc",
+      "sha256": "98e779ab6a57a72c88ee62ba22a5a52289a7873aac457fa0c378f86c6048f004",
+      "regenerated_identically": true
+    },
+    {
+      "path": "tb371fc/docs/gcc-sm8250-registers.json",
+      "sha256": "6961f3b2f00cc7ad1547d50cc3fa9ff98b22cca4501a59c03be5408a60333ac6",
+      "regenerated_identically": true
+    }
+  ],
+  "generator_counts": {
+    "clock_descriptors": 200,
+    "external_parents": 83,
+    "registers": 462,
+    "resets": 45,
+    "power_domains": 11
+  },
+  "gcc_clock_descriptors_unchanged": true,
+  "only_gcc_register_permission_change": [
+    {
+      "old": {
+        "offset": 45060,
+        "write_mask": 1,
+        "status_mask": 0
+      },
+      "new": {
+        "offset": 45060,
+        "write_mask": 24577,
+        "status_mask": 0
+      }
+    }
+  ],
+  "preserved_existing_implementations": [
+    {
+      "path": "hw/misc/qcom-camera-gdsc.c",
+      "sha256": "c683bb924fcd7adc254a4f8dcb694e37961c91c19f9657f683f2d223f4422009",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "include/hw/misc/qcom-camera-gdsc.h",
+      "sha256": "443a57604158e762c9c39b9330375b519e234f38efe1fb3d631c37fbb5379231",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "hw/misc/qcom-mdss-gdsc.c",
+      "sha256": "513ddbd651021decbdc85e2b58a31e661025b361a9183de9360fe18879e607d9",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "include/hw/misc/qcom-mdss-gdsc.h",
+      "sha256": "06b621bc61b5314c122b0834651d76804d9826ec5e7ee7cda110aefde5d270f2",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "hw/misc/qcom-npu-gdsc.c",
+      "sha256": "868f2c32dd4b21c447ff1611db30f8d519bcac3f73687b0bae21f90462b3a7b0",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "include/hw/misc/qcom-npu-gdsc.h",
+      "sha256": "d647e21a77befe9e594c7cfbb96e7bd0256ddeec6f4fb484f4a892c21c5a2073",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "hw/misc/qcom-sm8250-npucc.c",
+      "sha256": "15565e894632ec0eeacd262c1ebfe0ac11fcfbf6cd7d175f165d18898b5214ba",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "include/hw/misc/qcom-sm8250-npucc.h",
+      "sha256": "9dc1ec63566ba44cf915bb22bfc91e52968fec77e4207b6cac9530e187bc78a2",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "hw/misc/qcom-sm8250-rpmh.c",
+      "sha256": "a7b25741793e1b35713cf5e86e71ad3b3079097aecc170b5759b4458210720f2",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "include/hw/misc/qcom-sm8250-rpmh.h",
+      "sha256": "9a9bcccba2adfd6f5e4e9c98ff533845783e7692b7952e18430f4e2df320757e",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "hw/misc/qcom-sm8250-gcc.c",
+      "sha256": "f9f0dc291e6a183298a0114082df1f5ea65a369dc4f1685dfc330996121da95a",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "include/hw/misc/qcom-sm8250-gcc.h",
+      "sha256": "d1c18e0f20bbd792fa27de71ea34a13c31f3c023ef4952b8adce8d4c099f1667",
+      "unchanged_from_base": true
+    }
+  ],
+  "pinned_generator_and_driver_inputs": {
+    "linux/drivers/clk/qcom/gcc-sm8250.c": "b3b3865de3a297f906d5562a720d8d304538cef3c8d3703dee026cfd6dba06c8",
+    "linux/include/dt-bindings/clock/qcom,gcc-sm8250.h": "34682c01e5b21bb13db125afa3504c73606c294c23cfb3a96f6ea52cdffd2ff7",
+    "vendor/clk-branch.c": "375830dc9cd0ecbc12ea018eee1d260d8ba724dc52f1ac8b3589a07bc75d08aa",
+    "vendor/gcc-kona.c": "ed208678508c983d0989f1f135fac898c5a9a91c14af1fa42cd7ea2f24cd14cd",
+    "vendor/gdsc-regulator.c": "41acd7aa326c656db5b9dbe57c5fe05f1783abf8a299aaf9f8d4c58b9ecea3d2"
+  },
+  "python_compile_passed": true,
+  "ci_unit_tests": {
+    "total": 31,
+    "passed": 30,
+    "errors": 1,
+    "error_test": "test_fixture_copy_ignores_sockets_and_symlinks",
+    "error_reason": "local sandbox rejects AF_UNIX socket creation with EPERM",
+    "tests_weakened_or_skipped": false
+  },
+  "c_style_check": {
+    "errors": 0,
+    "warnings": 2,
+    "warnings_explained": [
+      "Generated table retains existing GPL-2.0-only derived-source license; new model/header use GPL-2.0-or-later.",
+      "New files: consider MAINTAINERS ownership; existing TB371FC models have no dedicated entry."
+    ]
+  },
+  "actual_compiled_tests_required": [
+    "video-gdsc-reference",
+    "npu-gdsc-reference",
+    "mdss-gdsc-reference",
+    "camera-gdsc-reference",
+    "npucc-sm8250",
+    "gcc-source-generation",
+    "gcc-registers",
+    "gcc-migration",
+    "rpmh-reference-migration",
+    "rpmh-display-migration",
+    "rpmh-wait-mask-reference",
+    "complete_81_components_plus_5_linux",
+    "active_linux_ufs_migration",
+    "runtime_suspended_linux_ufs_migration",
+    "independent_a77_and_pci_ufs"
+  ],
+  "source_test_script_sha256": "d87303a7eb7797366bb83e29ba12b98f6a4cee0a4dc7472486837f078cbeb8ae"
+}

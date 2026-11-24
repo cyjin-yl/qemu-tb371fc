@@ -237,6 +237,22 @@ Bind it with `--symbols-kernel-sha256`, and supply symbols with the actual runti
 virtual addresses. The runner does not add `nokaslr`; an address mismatch is a
 capture error, not proof that the kernel has no failures.
 
+For faster repeated diagnostics, add `--stop-on-kernel-failure` together with
+`--legacy-printk-symbols /private/runtime-symbols.txt` and
+`--symbols-kernel-sha256 "$KERNEL_SHA256"`. This option is off by default; without
+it the observation time remains `--seconds 120` unless explicitly changed.
+After a successful scheduled stopped-guest printk capture (every 15 seconds by
+default, controlled by `--snapshot-interval`), the existing log classifier can
+end observation when it identifies an Internal error/Oops/panic or another
+recognized kernel failure. WARN messages, hardware diagnostics alone, and failed
+captures do not trigger this early stop. The guest stays paused while the runner
+takes its normal final capture, quits QEMU, drains QMP, collects logs, and checks
+the original inputs and backing files. A normally finalized early stop records
+`stop_reason` and `outcome` as `kernel-failure`; preservation and runner errors
+retain their existing failure handling. An early stop never claims a successful
+boot. This changes feedback speed only; it preserves boot arguments, read-only
+backing protection, and the existing success criteria.
+
 ## Read the result conservatively
 
 Exit 0 from a dry-run means that input planning succeeded. A real run requires

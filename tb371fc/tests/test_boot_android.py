@@ -10,6 +10,7 @@ import sys
 import tempfile
 from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 sys.path.insert(0, str(SCRIPTS))
@@ -269,6 +270,8 @@ class AndroidRunnerTests(unittest.TestCase):
             self.assertFalse(boot.stock_boot_passed(bad, plan))
         for field, value in (("qemu_unchanged", False), ("qemu_returncode", -9),
                              ("stop_reason", "log-size-bound"),
+                             ("stop_reason", "kernel-failure"),
+                             ("early_kernel_failure", {"text": "Oops: retained snapshot evidence"}),
                              ("stop_reason", "qmp-closed"), ("stop_reason", "process-exit"),
                              ("qmp_drain_error", "malformed final event"),
                              ("host_terminated_qemu", True),
@@ -307,6 +310,110 @@ class AndroidRunnerTests(unittest.TestCase):
         self.assertEqual(monitor.commands[-1], "quit")
         self.assertFalse(process.terminated)
         self.assertFalse(observed.get("stock_android_boot_passed", False))
+
+    def run_main_with_printk(self, text, *, early_stop):
+        """Exercise the CLI and real observation/finalization flow with fake I/O."""
+        self.add_lun(0)
+        process, clock = Process(), Clock()
+        monitor = Monitor(process, clock, self.plan()["overlays"])
+        captures, cleanup = [], []
+        final_event = {"event": "SHUTDOWN", "data": {"guest": False, "reason": "host-qmp-quit"}}
+
+        def drain():
+            cleanup.append("drain")
+            monitor.messages.append(final_event)
+
+        monitor.drain = drain
+        monitor.sock = SimpleNamespace(close=lambda: cleanup.append("close"))
+
+        def capture(command, symbols, out):
+            self.assertFalse(monitor.running)
+            captures.append(out)
+            (out / "kernel-printk.log").write_text(text)
+            return {"records": len(text.splitlines())}
+
+        observe = boot.observe
+
+        def run_observation(plan, **kwargs):
+            return observe(plan, **kwargs, popen=lambda *a, **k: process,
+                           qmp_open=lambda *a: monitor, clock=clock, capture=capture)
+
+        manifest = self.root / "prepared-manifest.json"
+        manifest.write_text(json.dumps(self.manifest))
+        symbols = self.root / "runtime-symbols"
+        symbols.write_text("fixture: capture is supplied by the test\n")
+        out = self.root / "observed-run"
+        argv = ["--manifest", str(manifest), "--qemu", sys.executable,
+                "--qemu-img", sys.executable, "--out", str(out),
+                "--machine", "tb371fc,rpmh-profile=off",
+                "--legacy-printk-symbols", str(symbols),
+                "--symbols-kernel-sha256", self.manifest["kernel"]["sha256"]]
+        if early_stop:
+            argv.append("--stop-on-kernel-failure")
+        with (patch("android_boot_inputs.load_prepared_manifest", return_value=self.manifest),
+              patch.object(boot, "prepare_overlays", return_value=[]) as overlays,
+              patch.object(boot, "observe", side_effect=run_observation),
+              patch.object(boot, "verify_preserved", wraps=boot.verify_preserved) as preserved,
+              patch("builtins.print")):
+            status = boot.main(argv)
+        report = json.loads((out / "result.json").read_text())
+        self.assertEqual(status, 2)
+        overlays.assert_called_once()
+        preserved.assert_called_once()
+        self.assertTrue(report["preservation"]["preserved"])
+        self.assertEqual(set(report["preservation"]["core_input_digests_unchanged"]),
+                         {"kernel", "initrd", "dtb", "bootargs"})
+        self.assertTrue(report["preservation"]["original_luns"][0]["stat_unchanged"])
+        self.assertTrue(report["base_files_opened_read_only"])
+        self.assertLess(monitor.commands.index("query-named-block-nodes"), monitor.commands.index("cont"))
+        self.assertTrue(report["qemu_unchanged"])
+        self.assertFalse(report["final_status"]["running"])
+        self.assertEqual(monitor.commands[-1], "quit")
+        self.assertEqual(cleanup, ["drain", "close"])
+        self.assertEqual(json.loads((out / "qmp-messages.json").read_text()), [final_event])
+        self.assertIn(final_event, report["qmp_events"])
+        self.assertEqual(report["qemu_returncode"], 0)
+        self.assertFalse(process.terminated)
+        self.assertFalse(process.killed)
+        self.assertFalse(report["stock_android_boot_passed"])
+        self.assertEqual(report["stop_on_kernel_failure"], early_stop)
+        self.assertTrue(any(row["path"].startswith("printk-") for row in report["logs"]))
+        return report, monitor, captures
+
+    def test_opt_in_kernel_failure_runs_complete_finalization(self):
+        report, monitor, captures = self.run_main_with_printk(
+            "[ 3.5] Internal error: synchronous external abort: 96000210 [#1]\n"
+            "[ 4.0] init: init second stage started!\n"
+            "[ 5.0] init: processing action (sys.boot_completed=1) from (/system/etc/init/hw/init.rc:1)\n",
+            early_stop=True)
+        self.assertLess(report["elapsed_seconds"], 120)
+        self.assertEqual(report["stop_reason"], "kernel-failure")
+        self.assertEqual(report["outcome"], "kernel-failure")
+        self.assertEqual(report["early_kernel_failure"]["guest_time_seconds"], 3.5)
+        self.assertTrue(report["observation"]["android_boot_completed_observed"])
+        self.assertEqual(len(captures), 2)  # Scheduled capture, then normal final capture.
+        self.assertEqual(monitor.commands.count("cont"), 1)
+
+    def test_opt_in_warning_continues_for_default_observation_time(self):
+        report, monitor, captures = self.run_main_with_printk(
+            "[ 2.0] WARNING: CPU: 0 PID: 1 at drivers/clk/clk-branch.c:123\n"
+            "[ 3.0] device: unsupported read at 0x09981004\n", early_stop=True)
+        self.assertEqual(report["elapsed_seconds"], 120)
+        self.assertEqual(report["stop_reason"], "time-bound")
+        self.assertNotIn("early_kernel_failure", report)
+        self.assertEqual(report["observation"]["kernel_failures"], [])
+        self.assertGreater(len(captures), 2)
+        self.assertGreater(monitor.commands.count("cont"), 1)
+
+    def test_kernel_failure_does_not_stop_early_by_default(self):
+        report, monitor, captures = self.run_main_with_printk(
+            "[ 3.5] Oops: synchronous external abort [#1]\n", early_stop=False)
+        self.assertEqual(report["elapsed_seconds"], 120)
+        self.assertEqual(report["stop_reason"], "time-bound")
+        self.assertEqual(report["outcome"], "kernel-failure")
+        self.assertNotIn("early_kernel_failure", report)
+        self.assertGreater(len(captures), 2)
+        self.assertGreater(monitor.commands.count("cont"), 1)
 
     def test_writable_factory_node_is_rejected_before_guest_runs(self):
         self.add_lun(0)

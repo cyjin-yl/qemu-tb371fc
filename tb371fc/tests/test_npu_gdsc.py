@@ -367,7 +367,9 @@ def access_shapes_and_unowned_controller_holes_are_exact(r):
     assert r.pure_snapshot() == before
     holes = (ADDRESS + 4, ADDRESS + 8, NPUCC_BASE + 0x1040,
              NPUCC_BASE + 0x11a8, NPUCC_BASE + 0x1500,
-             MDSS_ADDRESS + 4, 0x0abf0bf8, 0x0abf0c98)
+             MDSS_ADDRESS + 4,
+             0x0abf0bf4, 0x0abf0bfc, 0x0abf0c94, 0x0abf0c9c,
+             0x0abf0d14, 0x0abf0d1c, 0x0abf0d94, 0x0abf0d9c)
     previous = core_diagnostics(r.log_path.read_text(errors="replace"))
     expected = []
     for address in holes:
@@ -375,6 +377,20 @@ def access_shapes_and_unowned_controller_holes_are_exact(r):
         r.raw_write(address, 0xffffffff)
         expected.extend((op, address, 4, "(null)", "rejected") for op in ("read", "write"))
     assert core_diagnostics(r.log_path.read_text(errors="replace"))[len(previous):] == expected
+    # The new VIDEO owner is independent and remains disabled in this fixture.
+    for domain, address in enumerate((0x0abf0bf8, 0x0abf0c98,
+                                      0x0abf0d18, 0x0abf0d98)):
+        for operation in ("read", "write"):
+            diagnostic = ("qcom-video-gdsc: rejected " + operation +
+                          f" domain={domain} offset=0x0 size=4 value=0x" +
+                          ("0" if operation == "read" else "ffffffff") +
+                          " reason=reference-disabled")
+            count = r.diagnostic_count(diagnostic)
+            if operation == "read":
+                r.raw_read(address)
+            else:
+                r.raw_write(address, 0xffffffff)
+            assert r.diagnostic_count(diagnostic) == count + 1
     assert r.pure_snapshot() == before
     # A spanning bus write commits its supported low word, then rejects the
     # adjacent hole; this is not falsely described as an atomic 64-bit write.
@@ -524,7 +540,7 @@ def npu_cfg_ahb_retention_preserves_hwcg_status_and_unknown_frequency(r):
         assert r.cfg_period() == r.cfg_period(True) == 0
         assert r.pure_snapshot() == before
     for address, bad in ((NPU_CFG_AHB, 0x7003), (NPU_CFG_AHB, 0x8003),
-                         (GCC + 0xb004, 0x6001), (DISP_AHB, 0x6003),
+                         (GCC + 0xb004, 0x7001), (DISP_AHB, 0x6003),
                          (CAMERA_AHB, 0x6003)):
         text = f"qcom-sm8250-gcc: unsupported write 0x{bad:08x} at 0x{address-GCC:x}"
         previous, old = r.diagnostic_count(text), r.raw_read(address)

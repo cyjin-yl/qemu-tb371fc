@@ -262,10 +262,12 @@ def capture_stopped_printk(qmp, symbols, out, number, capture=capture_kernel_log
 
 
 def observe(plan, *, seconds, max_log_bytes, symbols=None, snapshot_interval=15,
+            stop_on_kernel_failure=False,
             popen=subprocess.Popen, qmp_open=open_qmp, clock=time.monotonic,
             capture=capture_kernel_log):
     out, process, qmp = Path(plan["out"]), None, None
     result = {"executed": False, "printk": [], "stop_reason": None,
+              "stop_on_kernel_failure": stop_on_kernel_failure,
               "qmp_events": [], "base_files_opened_read_only": False}
     start = clock()
     try:
@@ -298,8 +300,20 @@ def observe(plan, *, seconds, max_log_bytes, symbols=None, snapshot_interval=15,
                     result["stop_reason"] = "log-size-bound"
                     break
                 if symbols and clock() >= next_snapshot:
-                    result["printk"].append(capture_stopped_printk(
-                        qmp, symbols, out, len(result["printk"]), capture))
+                    snapshot = capture_stopped_printk(
+                        qmp, symbols, out, len(result["printk"]), capture)
+                    result["printk"].append(snapshot)
+                    if stop_on_kernel_failure and "capture" in snapshot and "error" not in snapshot:
+                        path = out / snapshot["directory"] / "kernel-printk.log"
+                        with path.open("rb") as stream:
+                            text = stream.read(max_log_bytes).decode("utf-8", errors="replace")
+                        failure = analyze_logs([(str(path.relative_to(out)), text)])["first_kernel_failure"]
+                        if failure:
+                            result["early_kernel_failure"] = failure
+                            result["stop_reason"] = "kernel-failure"
+                            # Stay paused and take the normal final snapshot,
+                            # QMP drain and post-run preservation checks.
+                            break
                     qmp.command("cont")
                     next_snapshot = clock() + snapshot_interval
             if result["stop_reason"] is None:
@@ -423,7 +437,7 @@ def stock_boot_passed(report, plan):
     obs = report["observation"]
     return bool(
         plan["overlays"] and obs["android_boot_completed_observed"] and
-        not obs["kernel_failures"] and not adverse_event and
+        not obs["kernel_failures"] and not report.get("early_kernel_failure") and not adverse_event and
         report["preservation"]["preserved"] and not report.get("error") and
         report["base_files_opened_read_only"] and report.get("qemu_returncode") == 0 and
         report.get("qemu_unchanged") is True and
@@ -448,6 +462,8 @@ def main(argv=None):
                         help="Exact runtime symbol addresses for this boot, including any KASLR relocation; capture errors are diagnostic failures")
     parser.add_argument("--symbols-kernel-sha256", help="SHA-256 of the kernel to which supplied runtime addresses belong")
     parser.add_argument("--snapshot-interval", type=float, default=15)
+    parser.add_argument("--stop-on-kernel-failure", action="store_true",
+                        help="End observation after a successful stopped printk snapshot identifies a kernel failure; requires --legacy-printk-symbols")
     parser.add_argument("--trace-interrupts", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
@@ -455,6 +471,8 @@ def main(argv=None):
         parser.error("seconds must be in (0,3600] and max-log-mib in [1,1024]")
     if not 1 <= args.snapshot_interval <= 300 or args.seconds / args.snapshot_interval > 240:
         parser.error("invalid snapshot interval or more than 240 requested snapshots")
+    if args.stop_on_kernel_failure and not args.legacy_printk_symbols:
+        parser.error("--stop-on-kernel-failure requires --legacy-printk-symbols")
     from android_boot_inputs import load_prepared_manifest
     manifest = load_prepared_manifest(args.manifest, verify_hashes=True)
     qemu, qemu_img = executable(args.qemu), executable(args.qemu_img)
@@ -471,6 +489,7 @@ def main(argv=None):
               "manifest_sha256": digest(args.manifest), "qemu_sha256": digest(qemu),
               "qemu_img_sha256": digest(qemu_img), "runner_sha256": digest(__file__),
               "dry_run": args.dry_run, "executed": False,
+              "stop_on_kernel_failure": args.stop_on_kernel_failure,
               "stock_android_boot_passed": False,
               "input_provenance": {"factory_provenance_verified": False, "avb_verified": False,
                   "luns": [{"lun": lun["lun"], "expected_sha256_supplied": bool(lun.get("sha256")),
@@ -499,7 +518,8 @@ def main(argv=None):
                 report.update(observe(plan, seconds=args.seconds,
                                       max_log_bytes=args.max_log_mib * 1024 * 1024,
                                       symbols=args.legacy_printk_symbols,
-                                      snapshot_interval=args.snapshot_interval))
+                                      snapshot_interval=args.snapshot_interval,
+                                      stop_on_kernel_failure=args.stop_on_kernel_failure))
                 logs, report["logs"] = collect_logs(out, args.max_log_mib * 1024 * 1024)
                 report["observation"] = analyze_logs(logs)
                 report["preservation"] = verify_preserved(plan)
@@ -510,7 +530,7 @@ def main(argv=None):
                 report["stock_android_boot_passed"] = bool(passed)
                 report["outcome"] = ("android-boot-complete-observed" if passed else
                                      "input-preservation-failure" if not report["preservation"]["preserved"] else
-                                     "kernel-failure" if obs["kernel_failures"] else
+                                     "kernel-failure" if obs["kernel_failures"] or report.get("early_kernel_failure") else
                                      "runner-error" if report.get("error") else
                                      "android-userspace-incomplete" if obs["android_userspace_observed"] else
                                      "no-android-userspace-evidence")

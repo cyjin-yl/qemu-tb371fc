@@ -129,7 +129,9 @@ QEMU descriptor 42, external-parent index 21, the 200-clock geometry and
 GCC v3 wire layout remain unchanged. The vendor node has no declared clock
 parent, so its unknown external input still yields zero clock period.
 Setting enable, HWCG or either retention request cannot synthesize a rate.
-Camera and display AHB masks remain `0x6001`; VIDEO_AHB remains unchanged.
+Camera and display AHB masks remain `0x6001`. The later
+[VIDEO increment](video-gdsc-reference.md) independently adds the same two
+retention requests to VIDEO_AHB; it does not connect NPU to mmcx.
 
 ## Independent migration identity
 
