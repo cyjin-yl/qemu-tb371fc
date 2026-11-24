@@ -265,6 +265,22 @@ def plan(args, runtime):
             count_field="guest_checks",
             expected={"host_verified_disk_payload": True, "require_rpmh": True,
                       "expected_guest_checks": 23})
+        add("linux-ufs-runtime-pm", scripts / "boot_ufs_runtime_pm.py",
+            ("--qemu", qemu, "--kernel", kernel, "--timeout", "120"),
+            output="--out", result="file", count=40,
+            count_field="guest_checks",
+            expected={"inputs_unchanged": True, "qemu_exit_code": 0,
+                      "kernel_failure_lines": [],
+                      "guest_verdicts": [["PASS", "40", "0"]],
+                      "host_sleep_checks": {
+                          "vm_remains_running": True,
+                          "ufs_link_hibern8": True,
+                          "core_clock_gated": True,
+                          "iface_clock_gated": True,
+                          "unipro_clock_gated": True},
+                      "system_suspend_tested": False,
+                      "inflight_checkpoint_tested": False},
+            expected_lengths={"host_observations": 3})
     return cases
 
 

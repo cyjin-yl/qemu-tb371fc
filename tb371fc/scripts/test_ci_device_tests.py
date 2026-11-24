@@ -132,7 +132,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 63)
+        self.assertEqual(len(cases), 64)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]
@@ -203,6 +203,51 @@ class PlanTests(unittest.TestCase):
                 self.assertEqual(case.expected_values,
                                  {"host_verified_disk_payload": True,
                                   "require_rpmh": True, "expected_guest_checks": 23})
+
+    def test_linux_runtime_pm_rejects_incomplete_wake_evidence(self):
+        args = SimpleNamespace(suite="linux", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        cases = ci.plan(args, Path("/test/runtime"))
+        self.assertEqual(len(cases), 5)
+        case = next(case for case in cases
+                    if case.name == "linux-ufs-runtime-pm")
+        self.assertEqual(case.expected_count, 40)
+        self.assertEqual(case.count_field, "guest_checks")
+        with tempfile.TemporaryDirectory(prefix="tbci-rpm-", dir="/tmp") as d:
+            receipt = Path(d) / "result.json"
+            case.result = str(receipt)
+            valid = {
+                "passed": True,
+                "guest_checks": [["PASS", "synthetic", "0"]] * 40,
+                "inputs_unchanged": True, "qemu_exit_code": 0,
+                "kernel_failure_lines": [],
+                "guest_verdicts": [["PASS", "40", "0"]],
+                "host_sleep_checks": {
+                    "vm_remains_running": True,
+                    "ufs_link_hibern8": True,
+                    "core_clock_gated": True,
+                    "iface_clock_gated": True,
+                    "unipro_clock_gated": True},
+                "host_observations": [{}, {}, {}],
+                "system_suspend_tested": False,
+                "inflight_checkpoint_tested": False,
+            }
+            receipt.write_text(json.dumps(valid))
+            ci.judge(case, receipt)
+            for key, invalid in (
+                    ("inputs_unchanged", False),
+                    ("qemu_exit_code", 1),
+                    ("kernel_failure_lines", ["I/O error"]),
+                    ("guest_verdicts", [["PASS", "39", "0"]]),
+                    ("host_sleep_checks", {}),
+                    ("host_sleep_checks",
+                     dict(valid["host_sleep_checks"], core_clock_gated=False)),
+                    ("host_observations", [{}, {}]),
+                    ("guest_checks", valid["guest_checks"][:-1])):
+                with self.subTest(field=key, invalid=invalid):
+                    receipt.write_text(json.dumps(dict(valid, **{key: invalid})))
+                    with self.assertRaises(ValueError):
+                        ci.judge(case, receipt)
 
     def test_counter_plan_accepts_empty_error_list_and_rejects_errors(self):
         args = SimpleNamespace(suite="components", qemu=Path("/test/qemu"),
