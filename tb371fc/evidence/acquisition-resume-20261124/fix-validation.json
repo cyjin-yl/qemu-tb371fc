@@ -1,0 +1,24 @@
+{
+  "scope": "scratch-only manifest-resume fix; no owner-worktree, device, SSH or VM operations",
+  "base_commit": "288c49d314fe60e5294705c811e5447509e44b23",
+  "base_sha256": {
+    "tb371fc/scripts/acquire_block_ranges.py": "277cde69bcd1f96786f6f2702cdce7f64f1a8e8add04e94a0e971f4bcbf877bf",
+    "tb371fc/tests/test_acquire_block_ranges.py": "956181e9e8fd69321ab21b764c0065e1d28e41793a63a5e9b7306956a81fb5ac"
+  },
+  "patched_sha256": {
+    "tb371fc/scripts/acquire_block_ranges.py": "eb1258cb2604cfd99540b2320b28bde0a14284d940258b4f95bff3980c0595be",
+    "tb371fc/tests/test_acquire_block_ranges.py": "fd92eb60cda7444041f19a41065f500541d2415b46077e2e7459f1d9552a6a65"
+  },
+  "patch_sha256": "c146e33ebb1509a6ef9aa9b4d9512b58af5fe044ea4568247b798b780ecc6510",
+  "preserved_counterexample_sha256": "c8811f05a2733fd623f3edf34c273fe6c5ca16e51478ad673b643b7e5db79766",
+  "tests": {
+    "command": "python3 tb371fc/tests/test_acquire_block_ranges.py CaptureTests.test_resume_rejects_changed_completion_qualifications CaptureTests.test_resume_revalidates_existing_files_and_current_source -v",
+    "returncode": 0,
+    "ran": 2,
+    "skipped": 0,
+    "qualification_mutations": 13,
+    "note": "Only the requested new qualification regression and existing normal resume test were run."
+  },
+  "patch_applies_to_frozen_base_and_matches_patched_hashes": true,
+  "recorded_utc": "2026-11-24T13:20:31.664790+00:00"
+}
