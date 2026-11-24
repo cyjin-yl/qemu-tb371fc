@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/f99a6599321f/qemu-camcc-regressions/tb371fc/tests/test_camcc_sm8250.py", line 23, in <module>
+    from test_camera_gdsc import CameraRig, core_diagnostics, unique_section, camera_payload, write_json
+  File "/workspace/scratch/f99a6599321f/qemu-camcc-regressions/tb371fc/tests/test_camera_gdsc.py", line 26, in <module>
+    from test_rpmh_display import DisplayRig
+  File "/workspace/scratch/f99a6599321f/qemu-camcc-regressions/tb371fc/tests/test_rpmh_display.py", line 17, in <module>
+    from test_rpmh_sm8250 import (
+  File "/workspace/scratch/f99a6599321f/qemu-camcc-regressions/tb371fc/tests/test_rpmh_sm8250.py", line 32, in <module>
+    PROFILE = json.loads(FIXTURE.read_text())
+                         ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/scratch/f99a6599321f/qemu-camcc-regressions/tb371fc/fixtures/rpmh-reference.json'

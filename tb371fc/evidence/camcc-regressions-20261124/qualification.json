@@ -1,0 +1,62 @@
+{
+  "schema": "tb371fc-camcc-regression-validation-pending-v1",
+  "qualification": "pending-required-ci",
+  "test_path": "tb371fc/tests/test_camcc_sm8250.py",
+  "test_sha256": "f5ac3859e1ddf48746464ca8d0bd884deef967533d5822f049194d6c7bf67050",
+  "base_commit": "8798465b1b70f9c86f5cd5e1e38ce595bd6088ce",
+  "merged_base_commit": "57b6b16eb861bfea49395d1e2c3497aab06d2e89",
+  "common_base_tree": "73034a7c75ed1fe6ebee125e954f8add4d9bba19",
+  "base_trees_equal_observed": true,
+  "prior_ci_run_id": 45426713919,
+  "prior_ci_artifact_id": 14938651765,
+  "prior_ci_result_scope": "Unmodified baseline test only; not acceptance of these regressions",
+  "static_reviews": {
+    "scope": "Frozen test and patch; not execution",
+    "reviewers": [
+      "parent integration reviewer",
+      "independent ufs_gpt_inventory reviewer"
+    ],
+    "blocking_findings_reported": 0
+  },
+  "candidate_local_attempts": [
+    {
+      "attempt": "001",
+      "exit_code": 1,
+      "completed_checks": 0,
+      "completed_migrations": 0,
+      "failure_stage": "Python module import before test main or QEMU startup",
+      "failure": "Missing exact-base sparse-checkout fixture tb371fc/fixtures/rpmh-reference.json",
+      "raw_receipt": "attempt-001/receipt.json"
+    },
+    {
+      "attempt": "002",
+      "exit_code": 1,
+      "completed_checks": 0,
+      "completed_migrations": 0,
+      "failure_stage": "Initial QMP connection setup before first case completed",
+      "failure": "socket(AF_UNIX, SOCK_STREAM) returned EPERM",
+      "raw_receipt": "attempt-002/receipt.json",
+      "raw_result": "attempt-002/gate/result.json"
+    }
+  ],
+  "dependency_correction": {
+    "path": "tb371fc/fixtures/rpmh-reference.json",
+    "sha256": "3643c21533d446ae42e0f84f71a1b8604cba0da500baf539b10d5c9aa578ddfc",
+    "matched_exact_base_bytes": true,
+    "import_help_preflight_exit_code": 0,
+    "acceptance_gate": false
+  },
+  "post_attempt_process_observation": {
+    "matching_local_qemu_processes_observed": 0,
+    "scope": "One read-only ps observation after attempt-002; not an acceptance gate"
+  },
+  "raw_source_files_copied_byte_exact": 16,
+  "new_regression_checks_validated_by_execution": false,
+  "candidate_ci_result_included": false,
+  "native_android_executed": false,
+  "physical_device_accessed": false,
+  "model_modified": false,
+  "ci_scripts_modified": false,
+  "migration_streams_included": false,
+  "binary_or_runtime_library_included": false
+}
