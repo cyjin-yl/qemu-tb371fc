@@ -1,0 +1,244 @@
+{
+  "additional_optional_tests_run": false,
+  "all_three_independent_audits_passed": true,
+  "android_boot_established": false,
+  "artifact": {
+    "api_url": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/artifacts/14956272809",
+    "archive_bytes": 51762977,
+    "archive_sha256": "ef6f842c1bd25411cd31e197819c1682548ffd79e14f82b444420e84fbeb6b44",
+    "artifact_name": "tb371fc-public-gates-8e8e19a97efc23c215b35ed4dd40120ffab0e40d",
+    "id": 14956272809,
+    "qemu_bytes": 63490704,
+    "qemu_member": "qemu-build/qemu-system-aarch64",
+    "qemu_sha256": "f04e3250977c3ac8852bf1aa7692771835a657dc6a3af84c1fafe58c6c5dac2c",
+    "run_id": 45467596293
+  },
+  "audits": [
+    {
+      "auditor": {
+        "bytes": 98540,
+        "path": "/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/audit_dsi_integration_artifact.py",
+        "sha256": "7d5f9ec28679237ab3890493857b1ca3b4bc8e020c27e8d96be3fcc585db3d62"
+      },
+      "name": "integration",
+      "passed": true,
+      "receipt": {
+        "bytes": 122114,
+        "path": "/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/dsi-8e8-final-integration-audit.json",
+        "sha256": "6c0c87f13631493c71cdc3e72a98f8c87c91c5737c6483883411357b2604e38f"
+      },
+      "scope": {
+        "actual_archive_and_elf_bytes_hashed": true,
+        "ci_harness_unittests": 31,
+        "component_gates": 89,
+        "description": "All 94 gate contracts and real aggregate/individual receipts, actual QEMU/clean-Linux bytes, VIDEOCC complete streams, VIDEOCC and DSI source regeneration",
+        "dsi_and_dispcc_wire_checks_delegated_to_other_two_receipts": true,
+        "dsi_generation_inputs": 13,
+        "dsi_generation_outputs": 2,
+        "linux_gates": 5,
+        "total_gates": 94,
+        "video_gdsc_wire_bytes_per_source": 142,
+        "videocc": {
+          "checks": 41,
+          "completed": 3,
+          "original_files": 4,
+          "profile_rejections": 2,
+          "single_bit_rejections": 2,
+          "total_stream_files": 6
+        },
+        "videocc_generation_inputs": 10,
+        "videocc_generation_outputs": 2,
+        "videocc_wire_bytes_per_source": 474
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 91462,
+        "path": "/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/audit_dsi_pll_artifact.py",
+        "sha256": "0e0b7e6ebe3a9486383c2946669629a97d4d037414be9d6e5ea28970462954fe"
+      },
+      "name": "dsi",
+      "passed": true,
+      "receipt": {
+        "bytes": 42450,
+        "path": "/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/dsi-8e8-final-independent-audit.json",
+        "sha256": "9f48dd41289042a9a5c968392e38e3ccf1ac28e14accae26d5879e4a002e8b0c"
+      },
+      "scope": {
+        "actual_rpmh_xo_evidence": {
+          "actual_connected_period_sequence": [
+            0,
+            223696213333,
+            0,
+            223696213333
+          ],
+          "actual_rpmh_drv2_writes": 40,
+          "both_banks_observed_locked_and_unlocked": true,
+          "no_connected_provider_override": true
+        },
+        "archive_and_elf_bytes_validation_covered_by_integration_receipt": true,
+        "checks": 36,
+        "clock_views_per_source_and_first_target": 52,
+        "completed_migrations": 3,
+        "description": "Full DSI and MDSS serialized fields, all 52 clock views, source/first-target protocol records, profile and single-bit rejection, connected RPMh XO loss.",
+        "dsi_bytes_per_original": 2926,
+        "first_observation_evidence_boundary": "Exact reviewed harness order plus raw QMP in-file order, actual QTest command counts, saved before/after counters and complete state equality. Separate logs contain no shared timestamps, so this audit does not infer a cross-file total event order.",
+        "first_target_actual_cont_count_each": 0,
+        "first_target_actual_mmio_delta_each": 0,
+        "first_target_qom_getters_each": 1163,
+        "mdss_bytes_per_original": 64,
+        "profile_rejections": 2,
+        "single_bit_rejections": 4,
+        "stream_files": 8,
+        "unmodified_streams": 4
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 52957,
+        "path": "/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/audit_dispcc_wide_artifact_rootpath.py",
+        "sha256": "62837675b808db7ed5671e9cff7653f7b76d4c295d668919ffff10a4134fc4c8"
+      },
+      "name": "dispcc",
+      "passed": true,
+      "receipt": {
+        "bytes": 20599,
+        "path": "/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/dispcc-8e8-final-independent-audit-attempt2.json",
+        "sha256": "7efe675017a29e2c4588153865165b73a5cebb75bd400cbab459d3dfd120f88d"
+      },
+      "scope": {
+        "checks": 42,
+        "clock_outputs_per_source_and_target": 61,
+        "completed_migrations": 3,
+        "description": "Full DISPCC and MDSS serialized fields, all 61 clock periods, three source/first-target protocol records, wide pixel inputs, profiles and single-bit rejection.",
+        "dispcc_wire_bytes_per_source": 1676,
+        "first_target_cont_each": 0,
+        "first_target_device_mmio_each": 0,
+        "first_target_qom_getters_each": 556,
+        "mdss_wire_bytes_per_source": 64,
+        "no_shared_cross_channel_timestamp_assumed": true,
+        "original_streams": 4,
+        "profile_rejections": 2,
+        "single_bit_rejections": 3,
+        "total_streams": 7,
+        "wide_pixel_evidence": [
+          {
+            "clock": "disp_cc_mdss_pclk0_clk_src",
+            "clock_hz": 4500000004,
+            "clock_period": 954437176,
+            "input": "dsi0_phy_pll_out_dsiclk",
+            "input_period": 954437176
+          },
+          {
+            "clock": "disp_cc_mdss_pclk1_clk_src",
+            "clock_hz": 5000000001,
+            "clock_period": 858993459,
+            "input": "dsi1_phy_pll_out_dsiclk",
+            "input_period": 858993459
+          }
+        ]
+      }
+    }
+  ],
+  "commit": "8e8e19a97efc23c215b35ed4dd40120ffab0e40d",
+  "coordinator_deployed": false,
+  "device_rpc_used_for_qualification": false,
+  "github_evidence": {
+    "bytes": 13955,
+    "path": "/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/dsi-8e8-qualification-github-evidence.json",
+    "sha256": "416cb347c8665c39dbe39d073db05e745ffe9afa7fe0caa279c60101fa6bc996"
+  },
+  "host_boot_guard_bound": false,
+  "host_recovery_guard_status": "pending root verification and separate binding",
+  "native_executed": false,
+  "native_execution_scope": "Original stock Android firmware on the later host run; public CI Linux test guests are covered separately above.",
+  "native_started": false,
+  "passed": true,
+  "qualification": "exact-head compiled CI artifact and three independent ZIP audits passed",
+  "qualification_evidence_observed_utc": "2026-11-24 19:34:25 UTC",
+  "read_only_qualification_assembly": true,
+  "repository": "cyjin-yl/qemu-tb371fc",
+  "retained_prior_attempt": {
+    "auditor": {
+      "bytes": 52955,
+      "path": "/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/audit_dispcc_wide_artifact.py",
+      "sha256": "6e8c09c3c6c7c3690f62aac9282b31bd9756208411939e9b57030299ad4fc376"
+    },
+    "bounded_correction": "Only select exact tb371fc-results/source-commit.txt; all other audit criteria preserved.",
+    "classification": "audit metadata path ambiguity; no component failure established",
+    "error": "Expected unique source-commit.txt: ['tb371fc-results/full-dtb-user-fixture/source-commit.txt', 'tb371fc-results/source-commit.txt']",
+    "one_call_expression_change_verified": true,
+    "passed": false,
+    "receipt": {
+      "bytes": 1947,
+      "path": "/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/dispcc-8e8-final-independent-audit.json",
+      "sha256": "6586769426a20f814219d420b23908819e922cc9509b6fc4f7fe7eff7e498296"
+    },
+    "successful_replacement_receipt": {
+      "bytes": 20599,
+      "path": "/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/dispcc-8e8-final-independent-audit-attempt2.json",
+      "sha256": "7efe675017a29e2c4588153865165b73a5cebb75bd400cbab459d3dfd120f88d"
+    }
+  },
+  "schema": "tb371fc-dsi-8e8-qualified-artifact-v1",
+  "scope": "Artifact qualification for a later original-firmware native attempt; this receipt does not establish an Android boot or authorize a host launch.",
+  "tree": "1516df2c2b640688f2966b88ea8de4395a3b3f8f",
+  "workflow_runs": [
+    {
+      "api_url": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/runs/45467596293",
+      "conclusion": "success",
+      "event": "push",
+      "head_branch": "tb371fc-verified-dsi-pll-20261124-6a5",
+      "head_sha": "8e8e19a97efc23c215b35ed4dd40120ffab0e40d",
+      "id": 45467596293,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 138706563503,
+          "name": "board-components-and-linux",
+          "run_id": 45467596293,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 138706564596,
+          "name": "cortex-a77-architecture",
+          "run_id": 45467596293,
+          "status": "completed"
+        }
+      ],
+      "run_attempt": 1,
+      "status": "completed",
+      "updated_at": "2026-11-24T19:25:28Z",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45467596293"
+    },
+    {
+      "api_url": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/runs/45467533338",
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_branch": "tb371fc-dsi-pll-20261124-6a5",
+      "head_sha": "8e8e19a97efc23c215b35ed4dd40120ffab0e40d",
+      "id": 45467533338,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 138706330872,
+          "name": "board-components-and-linux",
+          "run_id": 45467533338,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 138706331355,
+          "name": "cortex-a77-architecture",
+          "run_id": 45467533338,
+          "status": "completed"
+        }
+      ],
+      "run_attempt": 1,
+      "status": "completed",
+      "updated_at": "2026-11-24T19:24:20Z",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45467533338"
+    }
+  ]
+}

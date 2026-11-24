@@ -1,0 +1,25 @@
+{
+  "schema": "tb371fc-dispcc-wide-independent-zip-audit-v1",
+  "passed": false,
+  "expected_head": "8e8e19a97efc23c215b35ed4dd40120ffab0e40d",
+  "auditor_sha256": "6e8c09c3c6c7c3690f62aac9282b31bd9756208411939e9b57030299ad4fc376",
+  "reviewed_source_sha256": {
+    "hw/misc/qcom-sm8250-dispcc.c": "cf10f13e3cf47b750896704c045bc3ed17cd0887ee2ddf708f9e4f3ae7e70c79",
+    "tb371fc/tests/test_dispcc_sm8250.py": "c626ec6135958a43b81bca435bf8ddb1532dc4323f07dee1c9afb6e682d9217e",
+    "hw/misc/qcom-sm8250-dispcc-data.inc": "a910182ea5c2957e918b02764f910ca61ac58aa8c24b3b259606192e9bac8732"
+  },
+  "read_only_zip": true,
+  "extracted_members": 0,
+  "qemu_executed": false,
+  "guest_executed": false,
+  "native_android_boot_claimed": false,
+  "zip": {
+    "path": "/dev/shm/tb371fc-dsi-8e8e19a-14956272809.zip",
+    "bytes": 51762977,
+    "sha256": "ef6f842c1bd25411cd31e197819c1682548ffd79e14f82b444420e84fbeb6b44",
+    "members": 4357
+  },
+  "error": "Expected unique source-commit.txt: ['tb371fc-results/full-dtb-user-fixture/source-commit.txt', 'tb371fc-results/source-commit.txt']",
+  "traceback": "Traceback (most recent call last):\n  File \"/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/audit_dispcc_wide_artifact.py\", line 742, in main\n    eq(archive.text(archive.find(\"source-commit.txt\")).strip(), args.expected_head, \"Retained source commit\")\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/audit_dispcc_wide_artifact.py\", line 137, in find\n    need(len(matches) == 1, f\"Expected unique {suffix}: {matches}\")\n  File \"/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/audit_dispcc_wide_artifact.py\", line 68, in need\n    raise AuditError(message)\nAuditError: Expected unique source-commit.txt: ['tb371fc-results/full-dtb-user-fixture/source-commit.txt', 'tb371fc-results/source-commit.txt']\n",
+  "verified_members_before_failure": {}
+}

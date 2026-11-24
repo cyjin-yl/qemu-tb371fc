@@ -1,0 +1,11 @@
+--- a/audit_dispcc_wide_artifact.py
++++ b/audit_dispcc_wide_artifact_rootpath.py
+@@ -739,7 +739,7 @@
+         archive = Archive(args.zip)
+         result["zip"] = {"path": str(args.zip.resolve()), "bytes": args.zip.stat().st_size,
+                          "sha256": args.expected_zip_sha256, "members": len(archive.members)}
+-        eq(archive.text(archive.find("source-commit.txt")).strip(), args.expected_head, "Retained source commit")
++        eq(archive.text("tb371fc-results/source-commit.txt").strip(), args.expected_head, "Retained source commit")
+         binary = archive.find("qemu-system-aarch64")
+         eq(archive.hash(binary), args.expected_qemu_sha256, "Actual ZIP QEMU binary digest")
+         with archive.zip.open(archive.members[binary]) as stream:
