@@ -1,0 +1,416 @@
+{
+  "schema": "tb371fc-run007-independent-observation-v1",
+  "source_commit": "be708c3cc6c2b5ed2fde28dba0dca39ab6c4864c",
+  "ci_run": 45445501200,
+  "artifact_id": 14946258315,
+  "zip_sha256": "1cf58467d22fa279f49f3ba2c70670049777c148fc79062d2ac89e794478a31b",
+  "result_path": "/work/stockboot-e1a9/videocc-be708c3-run007/original-android-007/result.json",
+  "result_identity": {
+    "result_sha256": "dcbb8acb4b73a6979ae97d553e4343c6f798b524fee085515c2dac1ddf01dd63",
+    "result_keys": [
+      "schema",
+      "started_utc",
+      "manifest_sha256",
+      "qemu_sha256",
+      "qemu_img_sha256",
+      "runner_sha256",
+      "dry_run",
+      "executed",
+      "stop_on_kernel_failure",
+      "stock_android_boot_passed",
+      "input_provenance",
+      "scope",
+      "printk_symbols_sha256",
+      "configuration_evidence",
+      "overlay_creation",
+      "printk",
+      "stop_reason",
+      "qmp_events",
+      "base_files_opened_read_only",
+      "pid",
+      "initial_status",
+      "block_nodes",
+      "final_status",
+      "error",
+      "host_terminated_qemu",
+      "qemu_returncode",
+      "qmp_drain",
+      "qmp_shutdown_normal",
+      "qmp_drain_error",
+      "elapsed_seconds",
+      "logs",
+      "observation",
+      "preservation",
+      "qemu_sha256_after",
+      "qemu_unchanged",
+      "outcome"
+    ],
+    "files": [
+      "qemu.log",
+      "serial.log",
+      "result.json",
+      "qmp-messages.json",
+      "stderr.log",
+      "plan.json",
+      "printk-0000"
+    ]
+  },
+  "result": {
+    "schema": "tb371fc-android-boot-result-v1",
+    "started_utc": "2026-11-24T17:29:16.077014+00:00",
+    "manifest_sha256": "1a4e7fbdb34062ee815a445a065d6b7b3edffb1ea7a9e9ae38d5b9737fa2680f",
+    "qemu_sha256": "95dde8deba27b05a4cf28a961898725d466e4fb52671ab240376a2e59b25b878",
+    "qemu_img_sha256": "77a92b0ca43516403064a4d0939f91c38b9ab2447b32e8f66709dcf29432d626",
+    "runner_sha256": "bececc39ae2c640762be3b59e04ab2401f9dd41209c07ba4a68d0e83d4e6bc07",
+    "dry_run": false,
+    "executed": true,
+    "stop_on_kernel_failure": true,
+    "stock_android_boot_passed": false,
+    "input_provenance": {
+      "factory_provenance_verified": false,
+      "avb_verified": false,
+      "luns": []
+    },
+    "scope": "Original Android direct-kernel boot; OEM PBL/XBL/ABL chain is not executed",
+    "printk_symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+    "configuration_evidence": {
+      "path": "/work/stockboot-e1a9/videocc-be708c3-run007/native-command-plan.json",
+      "sha256": "042121995f792a7a4492f2efd6e65031b21fe36c2f75f1533d3319b430666692"
+    },
+    "overlay_creation": [],
+    "printk": [
+      {
+        "directory": "printk-0000",
+        "before": {
+          "status": "shutdown",
+          "running": false
+        },
+        "guest_memory_written": false,
+        "capture": {
+          "scope": "Stopped guest Linux 4.x printk ring; private diagnostic, not an Android boot verdict",
+          "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+          "banner": "Linux version 4.19.157-perf+ (buildslave@hqsl009) (clang version 10.0.7 for Android NDK, GNU ld (binutils-2.27-bd24d23f) 2.27.0.20170315) #1 SMP PREEMPT Fri Nov 29 19:47:27 CST 2024\n",
+          "buffer_address": "0xffffffc17fa2e7c0",
+          "buffer_bytes": 1048576,
+          "first_index": 0,
+          "next_index": 72756,
+          "records": 932,
+          "ring_sha256": "27211a7f0974475b4fa7ad97525da81c790c2699c7cd0ba21a79a1266b34afa2",
+          "log_sha256": "6b267e91ecdb98010cf5ba6db6469ddbc080c445952d5593b32401eec3d6ba5d"
+        },
+        "after": {
+          "status": "shutdown",
+          "running": false
+        }
+      }
+    ],
+    "stop_reason": "runner-error",
+    "qmp_events": [
+      {
+        "timestamp": {
+          "seconds": 1795541358,
+          "microseconds": 760663
+        },
+        "event": "RESUME"
+      },
+      {
+        "timestamp": {
+          "seconds": 1795541362,
+          "microseconds": 628489
+        },
+        "event": "WATCHDOG",
+        "data": {
+          "action": "reset"
+        }
+      },
+      {
+        "timestamp": {
+          "seconds": 1795541362,
+          "microseconds": 628597
+        },
+        "event": "SHUTDOWN",
+        "data": {
+          "guest": true,
+          "reason": "guest-reset"
+        }
+      },
+      {
+        "timestamp": {
+          "seconds": 1795541362,
+          "microseconds": 629113
+        },
+        "event": "STOP"
+      },
+      {
+        "timestamp": {
+          "seconds": 1795541365,
+          "microseconds": 720761
+        },
+        "event": "SHUTDOWN",
+        "data": {
+          "guest": false,
+          "reason": "host-signal"
+        }
+      }
+    ],
+    "base_files_opened_read_only": true,
+    "pid": 927,
+    "initial_status": {
+      "status": "prelaunch",
+      "running": false
+    },
+    "block_nodes": [],
+    "final_status": {
+      "status": "shutdown",
+      "running": false
+    },
+    "error": "RuntimeError: QEMU did not pause before quit",
+    "host_terminated_qemu": true,
+    "qemu_returncode": 0,
+    "qmp_drain": {
+      "terminal": "eof",
+      "errno": null,
+      "error": null,
+      "prior_command_error": null,
+      "closed": true,
+      "residual_bytes": 0,
+      "message_count": 21
+    },
+    "qmp_shutdown_normal": false,
+    "qmp_drain_error": "QMP shutdown was not fully confirmed",
+    "elapsed_seconds": 8.54,
+    "logs": [
+      {
+        "path": "serial.log",
+        "size": 0,
+        "read_bytes": 0,
+        "analysis_truncated": false,
+        "analyzed_bytes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "printk-0000/kernel-printk.log",
+        "size": 62488,
+        "read_bytes": 62488,
+        "analysis_truncated": false,
+        "analyzed_bytes_sha256": "6b267e91ecdb98010cf5ba6db6469ddbc080c445952d5593b32401eec3d6ba5d"
+      },
+      {
+        "path": "stderr.log",
+        "size": 69,
+        "read_bytes": 69,
+        "analysis_truncated": false,
+        "analyzed_bytes_sha256": "c25d72675bc08835efb7be1750cecb6b2ac9ba510625277077d23145c969bf77"
+      },
+      {
+        "path": "qemu.log",
+        "size": 522281,
+        "read_bytes": 522281,
+        "analysis_truncated": false,
+        "analyzed_bytes_sha256": "b6a8fc179747da21ad4308a1f2a830c25c297a30e16b813c10a4ba35f83bffb5"
+      }
+    ],
+    "observation": {
+      "stages": {
+        "kernel_entry": {
+          "source": "printk-0000/kernel-printk.log",
+          "line": 1,
+          "text": "[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x412fd050]",
+          "guest_time_seconds": 0
+        }
+      },
+      "android_userspace_observed": false,
+      "android_boot_completed_observed": false,
+      "first_kernel_failure": {
+        "source": "printk-0000/kernel-printk.log",
+        "line": 883,
+        "text": "[    2.974308] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP",
+        "guest_time_seconds": 2.974308
+      },
+      "kernel_failures": [
+        {
+          "source": "printk-0000/kernel-printk.log",
+          "line": 883,
+          "text": "[    2.974308] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP",
+          "guest_time_seconds": 2.974308
+        },
+        {
+          "source": "printk-0000/kernel-printk.log",
+          "line": 929,
+          "text": "[    2.978989] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b",
+          "guest_time_seconds": 2.978989
+        }
+      ],
+      "hardware_diagnostics": [
+        {
+          "source": "printk-0000/kernel-printk.log",
+          "line": 883,
+          "text": "[    2.974308] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP",
+          "guest_time_seconds": 2.974308
+        },
+        {
+          "source": "qemu.log",
+          "line": 14194,
+          "text": "Invalid read at addr 0xAE94418, size 4, region '(null)', reason: rejected"
+        }
+      ],
+      "interactive_display_verified": false
+    },
+    "preservation": {
+      "core_input_digests_unchanged": {
+        "kernel": true,
+        "initrd": true,
+        "dtb": true,
+        "bootargs": true
+      },
+      "original_luns": [],
+      "preserved": true
+    },
+    "qemu_sha256_after": "95dde8deba27b05a4cf28a961898725d466e4fb52671ab240376a2e59b25b878",
+    "qemu_unchanged": true,
+    "outcome": "kernel-failure"
+  },
+  "qemu_evidence": {
+    "qemu_log_sha256": "b6a8fc179747da21ad4308a1f2a830c25c297a30e16b813c10a4ba35f83bffb5",
+    "qemu_log_tail": "03c5\nException return from AArch64 EL1 to AArch64 EL1 PC 0xffffff800865b620\nTaking exception 5 [IRQ] on CPU 5\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x80800005\n...with ELR 0xffffff800937232c\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nException return from AArch64 EL1 to AArch64 EL1 PC 0xffffff800937232c\nTaking exception 5 [IRQ] on CPU 5\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0xa0800005\n...with ELR 0xffffff800937232c\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nTaking exception 5 [IRQ] on CPU 5\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x60400005\n...with ELR 0xffffff80080814a4\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nException return from AArch64 EL1 to AArch64 EL1 PC 0xffffff80080814a4\nException return from AArch64 EL1 to AArch64 EL1 PC 0xffffff800937232c\nTaking exception 5 [IRQ] on CPU 5\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x60800005\n...with ELR 0xffffff80086f8c60\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nException return from AArch64 EL1 to AArch64 EL1 PC 0xffffff80086f8c60\nTaking exception 5 [IRQ] on CPU 5\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x60800005\n...with ELR 0xffffff80093947d4\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nException return from AArch64 EL1 to AArch64 EL1 PC 0xffffff80093947d4\nTaking exception 5 [IRQ] on CPU 5\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x20800005\n...with ELR 0xffffff800937f518\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nException return from AArch64 EL1 to AArch64 EL1 PC 0xffffff800937f518\nTaking exception 5 [IRQ] on CPU 5\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x60800005\n...with ELR 0xffffff800939478c\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nTaking exception 5 [IRQ] on CPU 4\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x80800005\n...with ELR 0xffffff800808a39c\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nException return from AArch64 EL1 to AArch64 EL1 PC 0xffffff800939478c\nException return from AArch64 EL1 to AArch64 EL1 PC 0xffffff800808a39c\nTaking exception 5 [IRQ] on CPU 5\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x80800005\n...with ELR 0xffffff8008283f80\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nTaking exception 5 [IRQ] on CPU 5\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x60400005\n...with ELR 0xffffff80080814a4\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nException return from AArch64 EL1 to AArch64 EL1 PC 0xffffff80080814a4\nException return from AArch64 EL1 to AArch64 EL1 PC 0xffffff8008283f80\nTaking exception 5 [IRQ] on CPU 5\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x80800005\n...with ELR 0xffffff8008283f80\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nException return from AArch64 EL1 to AArch64 EL1 PC 0xffffff8008283f80\nInvalid read at addr 0xAE94418, size 4, region '(null)', reason: rejected\nTaking exception 4 [Data Abort] on CPU 5\n...from EL1 to EL1\n...with ESR 0x25/0x96000010\n...with FAR 0xffffff800aedd418\n...with SPSR 0x60800005\n...with ELR 0xffffff8008fc0c8c\n...to EL1 PC 0xffffff8008084200 PSTATE 0x4003c5\nTaking exception 5 [IRQ] on CPU 5\n...from EL1 to EL1\n...with ESR 0x25/0x96000010\n...with SPSR 0x60400005\n...with ELR 0xffffff80080aaa00\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nException return from AArch64 EL1 to AArch64 EL1 PC 0xffffff80080aaa00\nTaking exception 5 [IRQ] on CPU 5\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x400005\n...with ELR 0xffffff80080d63b8\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nException return from AArch64 EL1 to AArch64 EL1 PC 0xffffff80080d63b8\nTaking exception 5 [IRQ] on CPU 1\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x80c00005\n...with ELR 0xffffff800808a39c\n...to EL1 PC 0xffffff8008081a80 PSTATE 0x4003c5\nTaking exception 5 [IRQ] on CPU 0\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x80c00005\n...with ELR 0xffffff800808a39c\n...to EL1 PC 0xffffff8008081a80 PSTATE 0x4003c5\nTaking exception 5 [IRQ] on CPU 3\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x80800005\n...with ELR 0xffffff800808a39c\n...to EL1 PC 0xffffff8008081a80 PSTATE 0x4003c5\nTaking exception 5 [IRQ] on CPU 2\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x80800005\n...with ELR 0xffffff800808a39c\n...to EL1 PC 0xffffff8008081a80 PSTATE 0x4003c5\nTaking exception 5 [IRQ] on CPU 6\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x80c00005\n...with ELR 0xffffff800808a39c\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nTaking exception 5 [IRQ] on CPU 7\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x80800005\n...with ELR 0xffffff800808a39c\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nTaking exception 5 [IRQ] on CPU 4\n...from EL1 to EL1\n...with ESR 0x0/0x3880000\n...with SPSR 0x80800005\n...with ELR 0xffffff800808a39c\n...to EL1 PC 0xffffff8008084280 PSTATE 0x4003c5\nqcom-aop-qmp-reference: request not consumed (reason=5, phase=3)\n"
+  },
+  "printk_evidence": {
+    "sha256": "6b267e91ecdb98010cf5ba6db6469ddbc080c445952d5593b32401eec3d6ba5d",
+    "registrations": [
+      "[    0.632436] Registered cp15_barrier emulation handler",
+      "[    0.635119] Registered setend emulation handler",
+      "[    0.735325] NET: Registered protocol family 16",
+      "[    0.779028] NET: Registered protocol family 42",
+      "[    1.401852] qmp-aop-clk soc:qcom,aopclk: Registered clocks with AOP",
+      "[    1.600212] gcc-kona 100000.qcom,gcc: Registered GCC clocks",
+      "[    1.635270] gpu_cc-kona 3d90000.qcom,gpucc: Registered GPU CC clocks",
+      "[    1.768346] npu_cc-kona 9980000.qcom,npucc: Registered NPU_CC clocks",
+      "[    1.771678] video_cc-kona abf0000.qcom,videocc: Linked as a consumer to regulator.1",
+      "[    1.771824] video_cc-kona abf0000.qcom,videocc: Linked as a consumer to regulator.10",
+      "[    1.772173] video_cc-kona abf0000.qcom,videocc: Unable to register for bw voting",
+      "[    1.772454] video_cc-kona abf0000.qcom,videocc: Dropping the link to regulator.10",
+      "[    1.774611] video_cc-kona abf0000.qcom,videocc: Dropping the link to regulator.1",
+      "[    2.363242] NET: Registered protocol family 31",
+      "[    2.628873] cam_cc-kona ad00000.qcom,camcc: Registered CAM CC clocks",
+      "[    2.662139] disp_cc-kona af00000.qcom,dispcc: Registered Display CC clocks",
+      "[    2.662769] video_cc-kona abf0000.qcom,videocc: Linked as a consumer to regulator.1",
+      "[    2.662882] video_cc-kona abf0000.qcom,videocc: Linked as a consumer to regulator.10",
+      "[    2.664318] register_client_adhoc:Client handle 28 clk_videocc_debugfs",
+      "[    2.673751] video_cc-kona abf0000.qcom,videocc: Registered Video CC clocks"
+    ],
+    "last_lines": [
+      "[    2.661396]  clk_branch2_enable+0x18/0x20",
+      "[    2.661431]  clk_core_enable+0x144/0x308",
+      "[    2.661444]  clk_register+0xa84/0xf18",
+      "[    2.661458]  devm_clk_hw_register+0x48/0x98",
+      "[    2.661471]  devm_clk_register_regmap+0x50/0x60",
+      "[    2.661484]  qcom_cc_really_probe+0x184/0x1c8",
+      "[    2.661498]  disp_cc_kona_probe+0x168/0x1e0",
+      "[    2.661511]  platform_drv_probe+0x7c/0xb8",
+      "[    2.661523]  really_probe+0x43c/0x4c8",
+      "[    2.661536]  driver_probe_device+0x60/0xf8",
+      "[    2.661549]  __device_attach_driver+0xfc/0x120",
+      "[    2.661562]  bus_for_each_drv+0x7c/0xc8",
+      "[    2.661575]  __device_attach+0x104/0x170",
+      "[    2.661587]  device_initial_probe+0x10/0x18",
+      "[    2.661601]  bus_probe_device+0x30/0x90",
+      "[    2.661614]  deferred_probe_work_func+0x64/0xc0",
+      "[    2.661629]  process_one_work+0x278/0x440",
+      "[    2.661642]  worker_thread+0x30c/0x4a8",
+      "[    2.661655]  kthread+0x140/0x150",
+      "[    2.661667]  ret_from_fork+0x10/0x18",
+      "[    2.661679] ---[ end trace 202ff6c167a56889 ]---",
+      "[    2.662139] disp_cc-kona af00000.qcom,dispcc: Registered Display CC clocks",
+      "[    2.662769] video_cc-kona abf0000.qcom,videocc: Linked as a consumer to regulator.1",
+      "[    2.662882] video_cc-kona abf0000.qcom,videocc: Linked as a consumer to regulator.10",
+      "[    2.663021] register_client_adhoc:find path.src 1 dest 596",
+      "[    2.664318] register_client_adhoc:Client handle 28 clk_videocc_debugfs",
+      "[    2.673751] video_cc-kona abf0000.qcom,videocc: Registered Video CC clocks",
+      "[    2.683402] register_client_adhoc:find path.src 45 dest 512",
+      "[    2.684691] register_client_adhoc:Client handle 29 pcie0",
+      "[    2.686583] pci-msm 1c00000.qcom,pcie: 1c00000.qcom,pcie supply vreg-3p3 not found, using dummy regulator",
+      "[    2.686706] pci-msm 1c00000.qcom,pcie: Linked as a consumer to regulator.0",
+      "[    2.687081] msm_pcie_probe: PCIe: RC0: Driver probe failed. ret: -517",
+      "[    2.687192] pci-msm 1c00000.qcom,pcie: Dropping the link to regulator.0",
+      "[    2.689664] register_client_adhoc:find path.src 100 dest 512",
+      "[    2.690852] register_client_adhoc:Client handle 30 pcie1",
+      "[    2.691412] pci-msm 1c08000.qcom,pcie: 1c08000.qcom,pcie supply vreg-3p3 not found, using dummy regulator",
+      "[    2.691475] pci-msm 1c08000.qcom,pcie: Linked as a consumer to regulator.0",
+      "[    2.691573] msm_pcie_probe: PCIe: RC1: Driver probe failed. ret: -517",
+      "[    2.691604] pci-msm 1c08000.qcom,pcie: Dropping the link to regulator.0",
+      "[    2.694065] clocksource: Switched to clocksource arch_sys_counter",
+      "[    2.926630] VFS: Disk quotas dquot_6.6.0",
+      "[    2.926916] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)",
+      "[    2.928621] register_client_adhoc:find path.src 1 dest 589",
+      "[    2.929960] register_client_adhoc:find path.src 1 dest 596",
+      "[    2.931403] register_client_adhoc:find path.src 1 dest 590",
+      "[    2.932676] register_client_adhoc:Client handle 31 clk_measure",
+      "[    2.958226] mdss_pll_probe: MDSS pll label = MDSS DSI 0 PLL",
+      "[    2.958332] mdss_pll_probe: mdss_pll_probe: label=MDSS DSI 0 PLL PLL SSC enabled",
+      "[    2.974308] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP",
+      "[    2.974505] Modules linked in:",
+      "[    2.974614] Process swapper/0 (pid: 1, stack limit = 0x(____ptrval____))",
+      "[    2.974645] CPU: 5 PID: 1 Comm: swapper/0 Tainted: G S      W         4.19.157-perf+ #1",
+      "[    2.974658] Hardware name: Qualcomm Technologies, Inc. kona QRD (DT)",
+      "[    2.974676] pstate: 60800005 (nZCv daif -PAN +UAO)",
+      "[    2.974708] pc : vco_7nm_recalc_rate+0x4c/0xc8",
+      "[    2.974721] lr : vco_7nm_recalc_rate+0x34/0xc8",
+      "[    2.974741] sp : ffffff800805b9d0",
+      "[    2.974753] x29: ffffff800805b9d0 x28: ffffff8009f080a0 ",
+      "[    2.974770] x27: ffffff800a43a000 x26: 0000000000000001 ",
+      "[    2.974784] x25: ffffff800a4ca000 x24: 0000000000000000 ",
+      "[    2.974798] x23: ffffffc15afefc00 x22: ffffffc00089e200 ",
+      "[    2.974812] x21: ffffffc15afd2a28 x20: 0000000000000001 ",
+      "[    2.974825] x19: ffffffc15afd3480 x18: 0000000000000054 ",
+      "[    2.974839] x17: ffffff800a460000 x16: 0000000000000000 ",
+      "[    2.974853] x15: 0000000000000000 x14: 0000000000080800 ",
+      "[    2.974867] x13: 0000000000004b00 x12: 0000000000103700 ",
+      "[    2.974880] x11: ffffffffffffffff x10: 0000000000000001 ",
+      "[    2.974894] x9 : ffffff800a51b690 x8 : ffffff800aedd418 ",
+      "[    2.974908] x7 : 0000000000000000 x6 : 0000000000000000 ",
+      "[    2.974922] x5 : 0000000000000000 x4 : 0000000000000000 ",
+      "[    2.974935] x3 : 0000000000000001 x2 : ffffff800805b824 ",
+      "[    2.974949] x1 : 0000000000000000 x0 : ffffffc15afd3480 ",
+      "[    2.974967] Call trace:",
+      "[    2.974982]  vco_7nm_recalc_rate+0x4c/0xc8",
+      "[    2.975001]  clk_register+0x760/0xf18",
+      "[    2.975014]  devm_clk_register+0x48/0x98",
+      "[    2.975026]  dsi_pll_clock_register_7nm+0x4c0/0x568",
+      "[    2.975037]  mdss_pll_probe+0x614/0x7c0",
+      "[    2.975054]  platform_drv_probe+0x7c/0xb8",
+      "[    2.975067]  really_probe+0x43c/0x4c8",
+      "[    2.975079]  driver_probe_device+0x60/0xf8",
+      "[    2.975090]  __driver_attach+0xe8/0x128",
+      "[    2.975104]  bus_for_each_dev+0x78/0xc0",
+      "[    2.975116]  driver_attach+0x20/0x28",
+      "[    2.975129]  bus_add_driver+0x120/0x200",
+      "[    2.975140]  driver_register+0x74/0x108",
+      "[    2.975153]  __platform_driver_register+0x40/0x48",
+      "[    2.975171]  mdss_pll_driver_init+0x1c/0x4c",
+      "[    2.975187]  do_one_initcall+0x11c/0x280",
+      "[    2.975204]  kernel_init_freeable+0x2dc/0x390",
+      "[    2.975220]  kernel_init+0x14/0x290",
+      "[    2.975233]  ret_from_fork+0x10/0x18",
+      "[    2.975455] Code: aa1303e0 f940aa69 39034a74 91006108 (b9400108) ",
+      "[    2.975872] ---[ end trace 202ff6c167a5688a ]---",
+      "[    2.978989] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b",
+      "",
+      "[    2.979317] SMP: stopping secondary CPUs",
+      "[    2.989088] SMP: stopping secondary CPUs",
+      "[    2.989219] Going down for restart now",
+      "[    2.989543] Failed to set secure DLOAD mode: -19"
+    ]
+  },
+  "shutdown_evidence": [
+    {
+      "name": "stderr.log",
+      "sha256": "c25d72675bc08835efb7be1750cecb6b2ac9ba510625277077d23145c969bf77",
+      "content": "qemu-system-aarch64: terminating on signal 15 from pid 926 (python3)\n"
+    },
+    {
+      "name": "qmp-messages.json",
+      "sha256": "77174758721e1e147ad95f2b3dc1cdce9ee29ff0865d38c156203dc8ef71fcab",
+      "content": "[\n  {\n    \"QMP\": {\n      \"version\": {\n        \"qemu\": {\n          \"micro\": 3,\n          \"minor\": 1,\n          \"major\": 11\n        },\n        \"package\": \"\"\n      },\n      \"capabilities\": [\n        \"oob\"\n      ]\n    }\n  },\n  {\n    \"return\": {},\n    \"id\": 1\n  },\n  {\n    \"return\": {\n      \"status\": \"prelaunch\",\n      \"running\": false\n    },\n    \"id\": 2\n  },\n  {\n    \"return\": [],\n    \"id\": 3\n  },\n  {\n    \"timestamp\": {\n      \"seconds\": 1795541358,\n      \"microseconds\": 760663\n    },\n    \"event\": \"RESUME\"\n  },\n  {\n    \"return\": {},\n    \"id\": 4\n  },\n  {\n    \"timestamp\": {\n      \"seconds\": 1795541362,\n      \"microseconds\": 628489\n    },\n    \"event\": \"WATCHDOG\",\n    \"data\": {\n      \"action\": \"reset\"\n    }\n  },\n  {\n    \"timestamp\": {\n      \"seconds\": 1795541362,\n      \"microseconds\": 628597\n    },\n    \"event\": \"SHUTDOWN\",\n    \"data\": {\n      \"guest\": true,\n      \"reason\": \"guest-reset\"\n    }\n  },\n  {\n    \"timestamp\": {\n      \"seconds\": 1795541362,\n      \"microseconds\": 629113\n    },\n    \"event\": \"STOP\"\n  },\n  {\n    \"return\": {},\n    \"id\": 5\n  },\n  {\n    \"return\": {},\n    \"id\": 6\n  },\n  {\n    \"return\": {\n      \"status\": \"shutdown\",\n      \"running\": false\n    },\n    \"id\": 7\n  },\n  {\n    \"return\": \"\",\n    \"id\": 8\n  },\n  {\n    \"return\": \"ffffff800a235340: 0xffffffc17fa2e7c0\\r\\n\",\n    \"id\": 9\n  },\n  {\n    \"return\": \"ffffff800a235348: 0x00100000\\r\\n\",\n    \"id\": 10\n  },\n  {\n    \"return\": \"ffffff800a4601b8: 0x00000000\\r\\n\",\n    \"id\": 11\n  },\n  {\n    \"return\": \"ffffff800a46019c: 0x00011c34\\r\\n\",\n    \"id\": 12\n  },\n  {\n    \"return\": \"\",\n    \"id\": 13\n  },\n  {\n    \"return\": {\n      \"status\": \"shutdown\",\n      \"running\": false\n    },\n    \"id\": 14\n  },\n  {\n    \"return\": {\n      \"status\": \"shutdown\",\n      \"running\": false\n    },\n    \"id\": 15\n  },\n  {\n    \"timestamp\": {\n      \"seconds\": 1795541365,\n      \"microseconds\": 720761\n    },\n    \"event\": \"SHUTDOWN\",\n    \"data\": {\n      \"guest\": false,\n      \"reason\": \"host-signal\"\n    }\n  }\n]\n"
+    }
+  ],
+  "scope": "Read-only observation of the existing owner run; no second invocation; actual binary independently checked in downloaded ZIP."
+}

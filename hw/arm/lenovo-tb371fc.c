@@ -51,6 +51,7 @@
 #include "hw/misc/qcom-sm8250-camcc.h"
 #include "hw/misc/qcom-sm8250-dispcc.h"
 #include "hw/misc/qcom-sm8250-videocc.h"
+#include "hw/misc/qcom-sm8250-dsi-pll.h"
 #include "hw/misc/qcom-noc-qos.h"
 #include "hw/misc/qcom-pshold.h"
 #include "hw/misc/qcom-dcc.h"
@@ -172,6 +173,7 @@ struct TB371FCMachineState {
     QcomGeniUartState uart;
     QcomSm8250GccState gcc;
     DeviceState *ufs;
+    DeviceState *dsi_pll;
     DeviceState *apps_smmu, *kgsl_smmu, *mmio_timer, *rpmh, *watchdog;
     DeviceState *tlmm;
     DeviceState *pdc;
@@ -1070,8 +1072,8 @@ static DeviceState *tb371fc_create_video_gdsc(TB371FCMachineState *s)
     return gdsc;
 }
 
-static void tb371fc_create_mdss_and_video_gdsc(TB371FCMachineState *s,
-                                             DeviceState *camera)
+static DeviceState *tb371fc_create_mdss_and_video_gdsc(TB371FCMachineState *s,
+                                                      DeviceState *camera)
 {
     DeviceState *mdss = qdev_new(TYPE_QCOM_MDSS_GDSC);
     DeviceState *video;
@@ -1114,6 +1116,30 @@ static void tb371fc_create_mdss_and_video_gdsc(TB371FCMachineState *s,
                      present);
         qemu_set_irq(qdev_get_gpio_in_named(mdss, "parent-known", 0), present);
         qemu_set_irq(qdev_get_gpio_in_named(video, "parent-known", 0), present);
+    }
+    return mdss;
+}
+
+static void tb371fc_connect_dsi_power(TB371FCMachineState *s, DeviceState *mdss)
+{
+    qemu_irq known = qdev_get_gpio_in_named(s->dsi_pll, "power-known", 0);
+    qemu_irq power = qdev_get_gpio_in_named(s->dsi_pll, "power-on", 0);
+    bool state_known = object_property_get_bool(OBJECT(mdss),
+                                               "domain0.state-known",
+                                               &error_fatal);
+    bool state_on = object_property_get_bool(OBJECT(mdss),
+                                            "domain0.powered", &error_fatal);
+
+    /* Both DSI PLL banks share this existing MDSS supply, not a new GDSCR. */
+    qdev_connect_gpio_out_named(mdss, "state-known", 0, known);
+    qdev_connect_gpio_out_named(mdss, "power", 0, power);
+    /* Seed from pure supplier observations in mdss_publish() order. */
+    if (state_known) {
+        qemu_set_irq(power, state_on);
+        qemu_set_irq(known, 1);
+    } else {
+        qemu_set_irq(known, 0);
+        qemu_set_irq(power, 0);
     }
 }
 
@@ -1251,16 +1277,42 @@ static void tb371fc_create_camcc(TB371FCMachineState *s)
     sysbus_mmio_map(SYS_BUS_DEVICE(camcc), 0, CAMCC_PHYSICAL_BASE);
 }
 
+static void tb371fc_create_dsi_pll(TB371FCMachineState *s)
+{
+    DeviceState *pll = qdev_new(TYPE_QCOM_SM8250_DSI_PLL);
+
+    s->dsi_pll = pll;
+    object_property_add_child(OBJECT(s), "dsi-pll", OBJECT(pll));
+    qdev_connect_clock_in(pll, "bi_tcxo", s->xo);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(pll), &error_fatal);
+    for (unsigned bank = 0; bank < DSI_PLL_BANKS; bank++) {
+        /* Each PHY container has only source-bound sparse PLL/PHY leaves. */
+        sysbus_mmio_map(SYS_BUS_DEVICE(pll), bank,
+                       DSI_PLL_PHYSICAL_BASE + bank * DSI_PLL_BANK_STRIDE);
+    }
+}
+
 static void tb371fc_create_dispcc(TB371FCMachineState *s)
 {
     DeviceState *dispcc = qdev_new(TYPE_QCOM_SM8250_DISPCC);
+    static const char *const dsi_clocks[] = {
+        "dsi0_phy_pll_out_byteclk", "dsi1_phy_pll_out_byteclk",
+        "dsi0_phy_pll_out_dsiclk", "dsi1_phy_pll_out_dsiclk",
+    };
 
     object_property_add_child(OBJECT(s), "dispcc", OBJECT(dispcc));
     /*
-     * Fixed clk-rpmh.c proves bi_tcxo. The 16 other carriers, including
-     * DSI/DP PHYs, unregistered PLL1 even and parentless XO, stay unknown.
+     * Fixed clk-rpmh.c proves bi_tcxo. The explicit DSI reference supplies
+     * its four same-name taps; other absent carriers remain unknown.
      */
     qdev_connect_clock_in(dispcc, "bi_tcxo", s->xo);
+    if (object_property_get_bool(OBJECT(s->dsi_pll), "enabled-reference",
+                                 &error_fatal)) {
+        for (unsigned i = 0; i < ARRAY_SIZE(dsi_clocks); i++) {
+            qdev_connect_clock_in(dispcc, dsi_clocks[i],
+                qdev_get_clock_out(s->dsi_pll, dsi_clocks[i]));
+        }
+    }
     sysbus_realize_and_unref(SYS_BUS_DEVICE(dispcc), &error_fatal);
     /* 39 exact leaves; the existing MDSS GDSCR at +0x3000 remains separate. */
     sysbus_mmio_map(SYS_BUS_DEVICE(dispcc), 0, DISPCC_PHYSICAL_BASE);
@@ -1781,6 +1833,7 @@ static void tb371fc_init(MachineState *ms)
 {
     TB371FCMachineState *s = TB371FC_MACHINE(ms);
     MemoryRegion *sysmem = get_system_memory();
+    DeviceState *mdss;
     SysBusDevice *uart;
     uint64_t load_base;
 
@@ -1830,13 +1883,21 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_gpucc(s);
     tb371fc_create_npucc(s);
     tb371fc_create_camcc(s);
-    tb371fc_create_dispcc(s);
     tb371fc_create_videocc(s);
     tb371fc_create_npu_gdsc(s);
     tb371fc_create_noc_qos(s);
     tb371fc_create_gpu_cx_gdsc(s);
     tb371fc_create_gpu_gx_gdsc(s);
-    tb371fc_create_mdss_and_video_gdsc(s, tb371fc_create_camera_gdsc(s));
+    mdss = tb371fc_create_mdss_and_video_gdsc(s,
+                                            tb371fc_create_camera_gdsc(s));
+    /*
+     * Register provider VMState before its consumers. MDSS pre_load retracts
+     * stale GPIO outputs; it must finish before incoming DSI qualification is
+     * restored. DISPCC then restores its saved physical DSI input periods.
+     */
+    tb371fc_create_dsi_pll(s);
+    tb371fc_connect_dsi_power(s, mdss);
+    tb371fc_create_dispcc(s);
     if (s->ufs) {
         tb371fc_realize_ufs(s);
         /* Native pinctrl states: output-low asserts the dedicated pad. */

@@ -301,7 +301,51 @@ Generation preserves PLL1's base-then-v2 fixup, the final `0x329a699c`
 CONFIG_CTL_U1 value and both shared ARES/branch words. Four dividers use
 the source-defined read-only `field + 1` encoding; neither `DIV2` names nor
 the sleep frequency table establish additional input rates. Four VIDEO GDSC
-owners remain separate. The [36-group compiled fixture](tests/test_videocc_sm8250.py)
-and the two-output generation gate enter the new 87-component plus five-Linux
-CI plan. Compiled acceptance of this increment still requires its own exact
-source/binary receipt; no video engine, firmware or Android success is inferred.
+owners remain separate. The original 36-group fixture passed at c232d14e. The expanded
+[41-group compiled fixture](tests/test_videocc_sm8250.py) retains main VIC2
+and the complete 474-byte wire contract. Together with the new DSI gates it
+requires a new exact-source 89-component plus five-Linux receipt; no video
+engine, firmware or Android success is inferred.
+
+
+## DSI 7 nm v4.1 increment after native run007
+
+The [DSI reference contract](docs/dsi-pll-7nm.md),
+[register/clock manifest](docs/dsi-pll-7nm-registers.json),
+[generator](scripts/generate_dsi_pll_7nm.py) and
+[regeneration verifier](scripts/verify_dsi_pll_generation.py) pin thirteen
+complete primary files at OnePlusOSS/android_kernel_oneplus_sm8250 commit
+`98719830b0de5584f5588bbe9f4c8304d97a64c6`. The clock-controller pin
+`94304e12...` lacks the required display directory and is not reused as DSI
+provenance. The main PLL source SHA-256 is
+`a286700822a0fb2fa1e9bff39cc6720295254c6137f29de65a37bcb819a8dd64`.
+
+The [actual full-DT extraction](evidence/dsi-pll-20261124-6a5/actual-dt-dsi-pll-nodes.json)
+identifies both `qcom,mdss_dsi_pll_7nm_v4_1` banks, their overlapping PHY/PLL
+resources, shared MDSS GDSC and explicit downspread SSC properties.
+The [hash-bound actual Image comparison](evidence/dsi-pll-20261124-6a5/actual-kernel-dsi-probe-instructions.json)
+confirms only the bounded cold probe correspondence: PHY +0x18 bit6 and the
+7 nm PLL +0x1b0 LOCK helper. It does not prove complete Lenovo/OnePlus kernel
+source identity. Historical [run007](evidence/dsi-pll-20261124-6a5/native-run007-observation.json)
+registered Video CC before this read fault and PID1 panic; its VID2 binary
+is preserved separately from main VIC2 and is not reclassified as successful.
+
+Two physical banks supply 52 normal/shadow CCF views. The eight exact leaves
+per bank include the source-accessed PLL +0x260 once inside the unchanged PHY
+aperture. Existing MDSS power state is the only shared supply observation.
+The 250 ns bias interval is source-evidenced; the 64-XO-cycle lock deadline
+is a declared digital reference choice. The sole source SPARE4 enable pulse
+follows successful LOCK, which bounds output qualification. Unsupported
+REFGEN readiness, dynamic sequencing, analog behavior and lane/panel activity
+remain outside the implementation.
+
+Three separately hash-verified [divider semantic sources](evidence/dsi-pll-20261124-6a5/divider-semantics-sources.json) establish generic-divider ceiling and fixed-factor floor behavior. These supplement the thirteen table-generator inputs; they are not represented as additional inputs to that two-output generation gate.
+
+The same pinned graph permits DPHY pixel taps above 32-bit Hz, up to a 5 GHz
+requested VCO. Only those two DISPCC inputs receive the wider period bound;
+all other inputs retain their prior limit. Period quantization is preserved
+through input reads, actual output Clocks and the unchanged DIS1 payload.
+This does not establish whole-machine migration to an older receiver that
+rejects these high-frequency inputs. [The source validation](evidence/dsi-pll-20261124-6a5/source-validation.json)
+records thirteen exact pins, two reproduced outputs and deliberate input/output
+negative checks; it is not a compiled-QEMU or native-boot receipt.

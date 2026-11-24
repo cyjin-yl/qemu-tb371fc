@@ -186,7 +186,7 @@ still apply to any future authorized consumer execution.
 
 ## Gates
 
-The current integration plan registers **92 gates: 87 component/parser gates
+The current integration plan registers **94 gates: 89 component/parser gates
 and five Linux integration gates**, plus separate active and runtime-suspended
 real-Linux UFS checkpoints and the A77/PCI UFS compatibility job. This union
 preserves the wholeboard reference peripherals and default-branch storage,
@@ -213,14 +213,15 @@ rejections and two single-bit corrupted streams. Its four Lucid PLLs and one
 Zonda PLL retain different protocols; 74 precise leaf windows exclude all
 camera GDSCs and unmodeled words. A separate two-check generation gate verifies
 eight fixed primary inputs and reproduces both register tables byte for byte.
-The [VIDEOCC protocol gate](videocc-sm8250.md) adds 36 required compiled
+The [VIDEOCC protocol gate](videocc-sm8250.md) now requires 41 compiled
 groups, three completed transfers, two profile rejections and two single-bit
 corrupted streams. Its full 474-byte v1 payload and the independent 142-byte
 VIDEO GDSC section are checked together. The separate
 [source-generation gate](../scripts/verify_videocc_generation.py) verifies ten
 pinned primary inputs and reproduces both VIDEOCC data outputs byte for byte.
-The VIDEOCC increment and the resulting 87+5 combination await their own
-formal CI receipts; registration in this plan is not a completed result.
+The original VIDEOCC 36-group/87+5 combination passed at c232d14e. The
+expanded 41-group VIDEOCC suite and DSI addition require their own formal
+89+5 CI receipt; registration in this plan is not a completed result.
 The preceding 4cc source passed 81+5, but this new combination still needs its
 own actual compiled receipt and native original-input run.
 The archived
@@ -253,8 +254,8 @@ pass does not attest newly added devices.
 | Config NoC SBM reference | 28 checks; eight independent logical deadlines, three words, pure stopped state, two completed transfers, two profile mismatches and two corrupted-field rejections; no real traffic drain |
 | NPUCC | 37 checks across three physical banks, actual Clock outputs, source-bound CRC/dividers, two completed migrations and two profile rejections; full NPU/DSP execution remains outside scope |
 | CAMCC | 41 checks; four Lucid/one Zonda PLL, 111 actual Clock outputs, 236 words/74 windows, full 2579-byte migration oracle, three completed transfers and 2/2 profile/corruption rejections; separate eight-source regeneration of both data files |
-| DISPCC | 41 checks; two Lucid PLLs, 8/16-bit MND, two explicit remote votes, five dividers, 61 actual Clock outputs, 130 words/39 windows, full 1676-byte migration oracle plus MDSS64, three completed transfers and 2/2 rejections; separate nine-source regeneration |
-| [VIDEOCC](videocc-sm8250.md) | [36 required compiled groups](../tests/test_videocc_sm8250.py); two Lucid PLLs with the base-then-v2 fixup, five zero-MND RCGs, four read-only dividers, four remote votes, 19 Clock outputs, 55 words/26 windows, full 474-byte migration oracle plus independent VIDEO GDSC142; three completed transfers and 2/2 profile/corruption rejections; separate ten-source/two-output regeneration |
+| DISPCC | 42 checks; two Lucid PLLs, 8/16-bit MND, two explicit remote votes, five dividers, 61 actual Clock outputs, 130 words/39 windows, full 1676-byte migration oracle plus MDSS64, two 64-bit DSI pixel inputs through 5 GHz, three completed transfers / two profile / three single-bit corruption rejections; separate nine-source regeneration |
+| [VIDEOCC](videocc-sm8250.md) | [41 required compiled groups](../tests/test_videocc_sm8250.py); two Lucid PLLs with the base-then-v2 fixup, five zero-MND RCGs, four read-only dividers, four remote votes, 19 Clock outputs, 55 words/26 windows, full 474-byte migration oracle plus independent VIDEO GDSC142; three completed transfers and 2/2 profile/corruption rejections; separate ten-source/two-output regeneration |
 | NPU GDSC | 21 checks; independent 4-byte word and 64-byte v1 state, unknown parent preserved, hardware mode rejected, NPU_CFG_AHB retention only, three completed transfers, two profile and two corruption rejections |
 | VIDEO GDSC | 22 checks; four sparse words and 142-byte v1 state, HW mode only on two DT-declared domains, real three-consumer mmcx fanout, VIDEO_AHB retention, three completed transfers and 2/2 profile/corruption rejections |
 | GPUCC | 30 actual digital PLL/RCG/branch/reset checks, two completed migrations and two profile rejections; actual Clock providers and sparse ownership boundaries |
@@ -527,7 +528,7 @@ were not observed.
 The new `videocc-source-generation` gate requires ten matching input hashes
 and two byte-identical generated outputs. `videocc-sm8250-reference` runs
 the [independent literal fixture](../tests/test_videocc_sm8250.py) against the
-compiled model and requires 36 unique successful groups. Its three completed
+compiled model and now requires 41 unique successful groups. Its three completed
 migrations, two opposite-profile rejections and two single-bit corruptions
 produce four original streams and six files overall; file count is not a
 successful-transfer count.
@@ -537,9 +538,51 @@ The gate verifies the entire 474-byte VIDEOCC payload and independent
 ARES/branch words, fixed-source PLL1 v2 sequencing, unavailable carriers,
 four read-only divider encodings and all four remote votes. Destination
 observations and remaining virtual deadlines must be checked before a
-device MMIO read or `cont` can alter the restored state. The earlier 85
-component contracts keep their order and counts. These two additions form
-the planned **87-component plus five-Linux** combination, which still
-requires its own formal compiled CI. Source reproducibility and the earlier
-failed native run are not substitutes for that receipt or for a later
-original Android boot verdict.
+device MMIO read or `cont` can alter the restored state. The original
+36-group VIDEOCC addition passed its exact c232d14e 87+5 run. Five added
+compiled groups cover cold AHB enable order, shared divider child demand,
+all integer HID encodings, all seven v2 rate points and already-running
+configuration preservation. The DSI combination below needs a new exact
+compiled receipt; source reproducibility and earlier failed native runs
+are not substitutes for original Android acceptance.
+
+
+### DSI 7 nm v4.1 and 64-bit pixel carriers
+
+The `dsi-pll-source-generation` gate checks all thirteen complete fixed inputs
+and reproduces both the C table and JSON manifest byte for byte. The separate
+`dsi-pll-7nm-reference` gate exercises the compiled bounded model against
+literal source scenarios: 36 required groups, three completed migrations,
+two profile rejections and four single-bit rejected streams. Four original
+streams and four changed copies give eight retained files. Its explicit
+profile, identity DSI4, two physical
+banks, 308 exact words, 16 leaves, 52 clock views and 2926-byte v1 state are
+fixed acceptance properties. The full contract is [documented separately](dsi-pll-7nm.md).
+
+The board connects the existing known XO and MDSS power outputs, and only
+when DSI is explicitly enabled connects its four final taps to DISPCC before
+DISPCC realization. No second GDSCR, broad RAM aperture, synthetic carrier,
+REFGEN-ready ACK or dynamic-refresh implementation is added. Power, reference,
+full source recipe, finite bias/LOCK timing, post-LOCK pulse, divider/mux state
+and final gates jointly determine whether an actual Clock runs. The real
+RPMh XO vote test revokes one running and one pending bank while retaining
+MDSS supply, then requires fresh start edges after source restoration.
+
+The related DISPCC gate increases from 41 to 42 checks. Both pixel inputs
+cover 2^32, 4.5 GHz and 5 GHz through exact Clock periods, M/N/D bypass and
+branch demand. Its 1676-byte payload is unchanged; the steady migration now
+carries two real high-frequency periods, and a third single-bit mutation
+rejects a period just beyond the 5 GHz boundary. Three completed transfers,
+two profile rejections, three corruption rejections, four original streams
+and seven files are distinct counts. Other fifteen input bounds remain
+unchanged; this is not a mixed-version whole-machine compatibility claim.
+
+The CI plan preserves all existing component names and relative order,
+changes only the explicitly documented DISPCC/VIDEOCC contracts, and adds
+these two DSI gates for 89 components plus five Linux gates. Every component
+result still requires the unchanged binary and exact expected receipt fields.
+First destination observations must precede device MMIO and `cont`, with
+saved deadlines still pending; metadata alone is not an accepted migration.
+The separate original-Image run is still required after exact artifact review.
+The historical run007 kernel failure remains unchanged and does not provide
+DSI, Android userspace, boot-complete or display acceptance.

@@ -14,7 +14,7 @@
 
 ## 当前整合：原厂 Android 启动开发基线
 
-本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。在已合入的 DISPCC 之后加入 VIDEOCC 协议及固定源码再生两个 gate，当前公开计划为 **92 项：87 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
+本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。在已合入的 VIDEOCC 之后加入 DSI 7 nm v4.1 协议及固定源码再生两个 gate，当前公开计划为 **94 项：89 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
 
 两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
 
@@ -56,7 +56,7 @@ Lucid UPDATE/ACK 与 Zonda BYPASS/直接重调频分开；M/N/D、HID 和 SBI �
 
 run005 的首个显示异常发生于 guest 3.697772 秒，CPU4、PID84 `kworker/4:1` 经 `disp_cc_kona_probe` → `clk_lucid_pll_configure` 读取 `0x0af00000`。新的 [DISPCC 有界协议](tb371fc/docs/dispcc-sm8250.md)按实际 `qcom,kona-dispcc` 复核两 Lucid PLL、22 个 RCG、32 个 branch、五个 divider、两条 reset 和 MISC bit4；130 个字分为 39 个窗口，共 520 B。MDSS GDSC `0x0af03000` 保持原 owner 和独立迁移。
 
-需显式 `qcom-sm8250-dispcc.enabled-reference=on`。只有 `bi_tcxo` 接现有 XO；16 个其它 carrier 保持未知，包括 DSI／DP／eDP PHY、未导出的 PLL1 even 和源中没有父声明的 critical XO branch。8／16 位 M/N/D、两路显式 remote vote、两可写／三只读 divider 与独立 1676 B v1 迁移按源码分开处理。其 85+5 计划要求 41 组及 3/2/2 迁移、九源两文件再生。固定源码 `f209f65` 的[正式 push CI 45434451557](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45434451557)已实际完成，board-components-and-linux 和 cortex-a77-architecture 两项 job 均成功；后续 run006 已观察到 Display CC 注册。显示执行和 Android 仍未通过。
+需显式 `qcom-sm8250-dispcc.enabled-reference=on`。独立 DISPCC 默认只有 `bi_tcxo` 接现有 XO，16 个其它 carrier 保持未知；另行启用下面的 DSI 参考设备时，才把其四路实际输出接入同名 DISPCC 输入。DP／eDP PHY、未导出的 PLL1 even 和源中没有父声明的 critical XO branch 仍无已知输入。8／16 位 M/N/D、两路显式 remote vote、两可写／三只读 divider 与独立 1676 B v1 迁移按源码分开处理。其 85+5 计划要求 41 组及 3/2/2 迁移、九源两文件再生。固定源码 `f209f65` 的[正式 push CI 45434451557](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45434451557)已实际完成，board-components-and-linux 和 cortex-a77-architecture 两项 job 均成功；后续 run006 已观察到 Display CC 注册。显示执行和 Android 仍未通过。
 
 ### VIDEOCC：Display CC 注册后的实际下一异常
 
@@ -66,7 +66,17 @@ run005 的首个显示异常发生于 guest 3.697772 秒，CPU4、PID84 `kworker
 
 需显式 `qcom-sm8250-videocc.enabled-reference=on`。PLL1 按源码先接收 base 配置，再应用 v2 `CONFIG_CTL_U1=0x329a699c`；两个有来源依据的 XO 输入接现有 carrier，sleep／test 输入仍未知。divider 的 `DIV2` 名称不额外生成除数，sleep 频表也不生成 32 kHz 输入。独立 v1 迁移默认负载为 474 B，VIDEO GDSC 的 142 B 状态保持独立。
 
-[固定源码生成及逐字节核验](tb371fc/scripts/verify_videocc_generation.py)检查十个输入和两个输出。[36 组 compiled gate](tb371fc/tests/test_videocc_sm8250.py)要求真实 MMIO、三次完成迁移、两次 profile 拒绝、两次单 bit 损坏拒绝，以及四个 VIDEO GDSC 的独立状态。该 VIDEOCC 增量及新的 **87+5** 组合仍待正式 CI；run006 是引出本次实现的失败诊断，不是这份模型的原厂启动通过证据。
+[固定源码生成及逐字节核验](tb371fc/scripts/verify_videocc_generation.py)检查十个输入和两个输出。原 36 组 gate 的 c232d14e 已通过[精确源码 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45440459756)及实际 ZIP 核验。本组合把[compiled gate](tb371fc/tests/test_videocc_sm8250.py)增至 41 组，加入冷态 AHB 顺序、共享 divider 子请求交接、全部 HID 编码、七个频表点和已运行配置保持；保留 VIC2、474 B 完整迁移 oracle、三次完成迁移及 2/2 负例。新增测试与 DSI 组合仍需要自己的正式 CI，不沿用旧产物的通过结论。
+
+### DSI PLL：Video CC 注册后的实际下一异常
+
+[原始 run007](tb371fc/evidence/dsi-pll-20261124-6a5/native-run007-observation.json)使用历史 be708c3 / VID2 候选，在 guest 2.673751 秒注册 Video CC，随后于 2.974308 秒在 `vco_7nm_recalc_rate+0x4c` 读取物理 `0x0ae94418` 失败，PID1 panic。原始四项输入、AOP、符号及二进制保持不变；该次没有挂载原始 LUN。实际 Image 的指令核验确认 PHY `+0x18` bit6 与 7 nm PLL `+0x1b0` bit0 的探测路径，不能据此宣称完整厂商源码相同。
+
+新的 [DSI v4.1 有界数字模型](tb371fc/docs/dsi-pll-7nm.md)表生成固定十三份公开源码，另核对三份分频计算源码，严格对应实际双 bank DT。每个 bank 的 154 个字分为八个确切窗口，共计 308 字／16 窗口／1232 B。PLL 是 PHY `+0x500` 的同一物理状态，源码访问的 PLL `+0x260` 通过 PHY 内的唯一地址持有；现有 MDSS GDSC owner 不变。需显式 `qcom-sm8250-dsi-pll.enabled-reference=on`；默认无寄存器应答。52 个 normal／shadow 时钟视图来自两个物理 PLL，并不增加四个独立振荡器。
+
+只有实际 MDSS 供电已知且开启、19.2 MHz XO 已知、完整 v4.1 配置有效并收到启动沿，才开始有限的锁定事务。250 ns bias 间隔有源码依据，64 个 XO 周期是明确的参考锁定策略；输出还要求锁定后的数字复位脉冲及实际分频／门控。源丢失或配置改变会撤销资格。动态刷新、REFGEN_READY、模拟 PHY、lane、panel 和画面仍未实现。
+
+四个最终 DSI byte／pixel 输出在显式启用时接入 DISPCC。两个 pixel 输入按源码允许至 5 GHz，频率和 Clock 周期使用 64 位换算；其余十五个输入保留原边界。DIS1 的 1676 B wire 不变，新增高频迁移状态不声称可由旧版接收。DSI 自身使用 DSI4 / v1 的 2926 B 完整状态，并保留尚未完成的 bias／LOCK 截止时间。所有新设备测试通过后仍需实际原始输入启动；这里未声明 Android 用户态、启动完成或显示成功。
 
 ## 默认分支既有验收：2026-11-24 存储与电源修复
 

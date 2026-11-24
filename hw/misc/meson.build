@@ -175,6 +175,7 @@ system_ss.add(when: 'CONFIG_QCOM_SM8250_NPUCC', if_true: files('qcom-sm8250-npuc
 system_ss.add(when: 'CONFIG_QCOM_SM8250_CAMCC', if_true: files('qcom-sm8250-camcc.c'))
 system_ss.add(when: 'CONFIG_QCOM_SM8250_DISPCC', if_true: files('qcom-sm8250-dispcc.c'))
 system_ss.add(when: 'CONFIG_QCOM_SM8250_VIDEOCC', if_true: files('qcom-sm8250-videocc.c'))
+system_ss.add(when: 'CONFIG_QCOM_SM8250_DSI_PLL', if_true: files('qcom-sm8250-dsi-pll.c'))
 system_ss.add(when: 'CONFIG_QCOM_SM8250_RPMH', if_true: files('qcom-sm8250-rpmh.c'))
 system_ss.add(when: 'CONFIG_QCOM_PSHOLD', if_true: files('qcom-pshold.c'))
 system_ss.add(when: 'CONFIG_QCOM_DCC', if_true: files('qcom-dcc.c'))
