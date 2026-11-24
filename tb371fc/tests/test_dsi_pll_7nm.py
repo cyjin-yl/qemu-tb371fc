@@ -1246,8 +1246,8 @@ def migration_checks(args, out, report):
         saved_off = save_source(disabled, off_path, 0x44534930)
         report["migration_sources"].append(saved_off)
         for name, path, saved, reference, diagnostic in (
-                ("on_to_off", steady_path, saved_steady, False, "1 != 0"),
-                ("off_to_on", off_path, saved_off, True, "0 != 1")):
+                ("on_to_off", steady_path, saved_steady, False, "0 != 1"),
+                ("off_to_on", off_path, saved_off, True, "1 != 0")):
             rejected = new("reject-profile-"+name, reference=reference, incoming=True)
             rejected.set_clock(saved["source_virtual_ns"])
             details = load_failure(rejected, path, diagnostic)
