@@ -59,6 +59,14 @@ the new default capability cannot be silently substituted for the old one.
 Storage queues must still be quiescent for a supported checkpoint. External
 media is shared with normal file locking and is not embedded in VMState.
 
+The public Linux runtime-PM gate independently uses the real qcom UFS driver:
+platform host, LUN and device WLUN suspend, core/iface/UniPro clocks gate,
+and an ordinary read on the original direct-I/O descriptor wakes the host.
+Forty ordered checks and the host's complete 64 MiB comparison passed in
+both the [frozen and portable runs](../evidence/sm8250-contract-20261124/README.md#linux-runtime-pm-extension).
+The reference clock remains running. This is not system suspend or a
+checkpoint taken while Linux is runtime-suspended.
+
 ### SID and TBU evidence
 
 The earlier UFS document incorrectly called `0xe0/0x4e0` a native-DT

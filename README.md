@@ -16,12 +16,16 @@
 
 本轮 [行为审计](tb371fc/docs/sm8250-behavior-audit.md) 已补入源码并在 doesvm 隔离构建实际验收：
 **59/59 组件门禁、4/4 无补丁 Linux 启动、39/39 Linux UFS 检查点前后检查全部通过**。
-[完整回执与二进制绑定](tb371fc/evidence/sm8250-contract-20261124/README.md) 同时保留旧版缺陷复现、失败尝试和新版本结果；这不是对尚未运行的 GitHub CI 的通过声明。
+[完整回执与二进制绑定](tb371fc/evidence/sm8250-contract-20261124/README.md) 同时保留旧版缺陷复现、失败尝试和新版本结果。
+随后独立 [GitHub Actions 运行 45318637466](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45318637466) 的板级及 A77/PCI 两路任务均通过；其 59＋4 范围保留不变。
+新增真实 Linux runtime PM 的冻结实验和参数化入口又分别通过 **40/40**：host、LUN、device WLUN 确实睡眠，由原 fd 的普通读操作唤醒，宿主逐字节核对完整 64 MiB。
+[当前 CI 计划](tb371fc/docs/ci.md) 已将该检查注册为第五个 Linux gate；各新提交以自身实际 CI 回执为准。
 
 | 修改 | 已验证的行为 |
 | --- | --- |
 | UFS ICE / crypto | `0x1d90000` 映射明确不支持加密的只读探测窗口；crypto-enable 请求返回 OCS 9，禁止作为明文执行。板级 14 组，独立 PCI/MCQ 17/17。 |
 | Auto-Hibern8 | AHIT 空闲计时、自动唤醒、显式 UIC 区分、时钟/PHY 保留与待完成状态迁移；18 组、两次迁移、三个拒绝场景。 |
+| Linux runtime PM | host/LUN/device WLUN suspended，core/iface/unipro 时钟门控，普通直接读唤醒，原/新数据与完整 64 MiB 盘内容一致；冻结和参数化入口各 40/40。 |
 | ANOC TBU reference | 可选 `tbu-profile=reference-ecats`：两个 SID 区间的 HALT/ACK、真实页表查询和迁移校验；16 组、一次迁移、六个拒绝场景。默认关闭，门控使 DMA 返回失败，不模拟物理 stall/drain。 |
 | RPMh / PDC | 保留忙碌期间的 sleep/wake 请求，跨进程恢复 pending PDC/GIC 中断和剩余期限；7 组，另次含旧版 v2 输入的 8 组均通过。 |
 | Linux UFS 续传 | 源进程退出后，新进程恢复同一 PID 1、boot ID 和 nonce；继续真实块读写，宿主两次逐字节核对完整 64 MiB 合成盘。 |

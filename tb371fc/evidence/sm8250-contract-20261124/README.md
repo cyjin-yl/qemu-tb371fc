@@ -1,7 +1,8 @@
 # SM8250 behavior-contract acceptance, 2026-11-24
 
 The isolated doesvm build passed the complete final run below. These are
-actual execution receipts, not a claim of GitHub Actions completion.
+actual execution receipts. The independent original GitHub Actions run is
+recorded below with its own binary and four-Linux-gate scope.
 The [summary](acceptance.json) and [full source binding](source-binding.json)
 identify source commit `ad81a9ecf33958725797e5a71a78f4128401572a` and tree
 `c3ea357f376b923656e6dd0e2b80194d303ea31d`.
@@ -42,6 +43,68 @@ bytes at both boundaries, including the expected untouched zero regions.
 The migration stream hash remained unchanged. Both [source serial](linux-migration-source.log)
 and [target serial](linux-migration-target.log) retain their exact bytes and
 match the hashes in the checkpoint receipt; the source log contains CRLF.
+
+## Linux runtime PM extension
+
+These are two independent executions, not additional checks retroactively
+inserted into the original four-gate Linux receipt.
+
+| Run | Result | Raw receipt and serial |
+| --- | --- | --- |
+| Frozen exploratory fixture | 40/40, QEMU exit 0, 8.358 seconds | [result](runtime-pm-frozen/result.json), [serial](runtime-pm-frozen/serial.log), [debug](runtime-pm-frozen/qemu-debug.log) |
+| Portable public gate | 40/40, QEMU exit 0, 6.322 seconds | [result](runtime-pm-portable/result.json), [serial](runtime-pm-portable/serial.log), [debug](runtime-pm-portable/qemu-debug.log) |
+
+The [original guest](runtime-pm-fixture/guest.c) and [original harness](runtime-pm-fixture/run.py)
+were frozen before the first run. The public [guest](../../tests/ufs-runtime-pm-guest.c)
+preserves those C source bytes. The public [harness](../../scripts/boot_ufs_runtime_pm.py)
+adds explicit input/output arguments and validates the pinned public kernel
+receipt/configuration; its different hash has a separate actual execution
+receipt. Both runs use board binary `ee1fa5c9...`, public Image `48bc7593...`
+and effective configuration `e088dcae...`, unchanged before and after.
+
+The actual Linux qcom UFS driver suspends the platform host, ordinary LUN
+and device WLUN. The original run waited 1,260 ms for all three states and
+then observed host suspended time increase from 43 to 169 ms. The original
+direct-I/O fd stays open: the next ordinary `pread`, issued while the host is
+still suspended, wakes the controller and returns the original payload.
+Both runs also write and flush a second payload, close/reopen the same device
+and independently compare every one of the 67,108,864 media bytes.
+
+Read-only QMP/qtree observations show active -> Hibern8 -> active and
+core/iface/UniPro clock rates of 300/100/300 MHz -> 0/0/0 Hz -> 300/100/300 MHz.
+The reference clock remains at 19.2 MHz. No post-suspend `control=on`,
+QMP device-state mutation, QTest clock forcing, replacement kernel or native
+tablet access is involved. Each run covers one runtime-PM cycle, not system
+suspend, physical-media energy state or migration while Linux is suspended.
+
+The current public CI plan contains 59 component gates and five Linux gates.
+Its new runtime-PM gate requires 40 ordered checks, the five host sleep checks,
+zero kernel failure lines, complete media integrity and unchanged inputs.
+Each CI revision must independently execute that expanded plan.
+
+## Original independent GitHub Actions run
+
+[Run 45318637466](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45318637466)
+completed both jobs successfully on PR merge checkout
+`b8adfc7aa557e6cec4bfa3fe5986b9d9fa91c6a1`, whose parents are base
+`7bc8c66286112573ed940066a246cf8215459aff` and PR head
+`6c4a433eb740bc5e4709ff73741ae2058549562d`. Its tree is exactly
+`4dd0026fb58a352fe85b5151168d5059bbabc776`, matching that PR head.
+
+The actual job logs and board artifact were independently reviewed: 59/59
+component gates, 4/4 Linux gates, 21 quiescent UFS checks, 39 Linux process
+checkpoint checks, 17 unskipped PCI cases, and 852 A77 checks plus two rejected
+configurations. This run predates the fifth Linux runtime-PM gate.
+Its board executable is
+`add626bc7b58000730df5afa86f53efd01f6bc3e511b181be7d4b3b9119b83e7`,
+distinct from the doesvm build. The [board artifact](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45318637466/artifacts/14886948410)
+and [CPU artifact](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45318637466/artifacts/14885614013)
+retain their original CI inputs and receipts. Required board files were
+fully read and matched to the recorded source/binary/Image hashes.
+
+The automatic PR review service reported a usage-limit failure; it is not
+counted as a passed review. Independent source/evidence review and the actual
+functional CI results are separate observations.
 
 ## Binary and input hashes
 

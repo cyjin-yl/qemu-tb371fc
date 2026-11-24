@@ -84,6 +84,44 @@ RESUME event or media modification. QMP is drained to EOF for that check.
 Runtime results belong to the invoked binary and report hashes. This document
 does not by itself assert that those tests have passed.
 
+## Real Linux runtime suspend and read wake
+
+```sh
+python3 tb371fc/scripts/boot_ufs_runtime_pm.py \
+  --qemu /absolute/path/qemu-system-aarch64 \
+  --kernel /absolute/path/clean-linux/artifacts/Image \
+  --out /absolute/path/new-runtime-pm-result
+```
+
+The Image must have adjacent `build.json` and `kernel.config` files from
+`build_smoke_kernel.sh`. The runner verifies the pinned unpatched Linux
+6.12.114 source identity, completed build, Image size/hash, configuration hash
+and required built-in PM/UFS/sysfs options. It compiles the public C PID 1 and
+uses a new, synthetic 64 MiB LUN with eight CPUs and 8 GiB RAM.
+
+This gate uses normal Linux sysfs policy to enable autosuspend for the SCSI
+devices and platform host. It requires the host, ordinary LUN and device WLUN
+to report `suspended`, and the host suspended-time counter to keep advancing.
+Read-only QMP/qtree observations require Hibern8 and zero core, interface and
+UniPro clock rates while the VM remains running. The reference clock is not
+required to turn off. The original `O_DIRECT` descriptor remains open; its
+ordinary `pread` must wake the controller and preserve the first payload.
+The guest then writes, flushes, reads, closes and reopens the same block device.
+The host compares every byte of the medium, including the untouched regions.
+
+Acceptance requires all 40 named checks exactly once in order, one terminal
+40/0 PASS, no detected kernel I/O/PM failure, all five host sleep observations,
+successful QEMU exit, matching full-media contents and unchanged input hashes.
+QMP permits only negotiation, state queries, the exact read-only `info qtree`
+command and final quit. The harness rejects Python assertion-disabled mode.
+
+The [frozen experiment and portable gate](../evidence/sm8250-contract-20261124/README.md#linux-runtime-pm-extension)
+have separate successful receipts on the same unchanged QEMU and Image.
+These establish one Linux device runtime suspend/read-wake cycle per run.
+They do not establish system suspend, physical energy behavior, or migration
+while Linux is runtime-suspended. Component checkpoint tests above have their
+own explicitly controlled state and scope.
+
 ## Sources
 
 - [Linux v6.12 UFSHCI definitions](https://github.com/torvalds/linux/blob/v6.12/include/ufs/ufshci.h):

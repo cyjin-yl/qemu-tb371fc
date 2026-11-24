@@ -78,6 +78,8 @@ GCC bootstrap 状态、部分 fabric 输入、QUP version 和设备排序延时�
 - [x] UFS 56 项控制器/DMA/错误/Hibern8/WriteBooster/无 LUN 检查；原先 48 项及修复前失败继续保留。
 - [x] [UFS ICE 探测与 crypto 拒绝](docs/sm8250-behavior-audit.md)：显式 unsupported 只读窗口，crypto-enable 描述符在 PRDT/SCSI 前以 OCS 9 完成；板级 14 组及共享 PCI/MCQ 17 组通过，不提供实际加密。
 - [x] [Auto-Hibern8](docs/ufs-auto-hibern8.md)：AHIT、自动唤醒、UIC/时钟/复位约束及真实进程迁移；18 组、两次迁移、三个拒绝场景通过。
+- [x] [真实 Linux UFS runtime PM](evidence/sm8250-contract-20261124/README.md#linux-runtime-pm-extension)：host/LUN/device WLUN 真实 suspended，原 fd 的普通读唤醒，完整 64 MiB 数据核对；冻结实验与参数化公开入口各 40/40，当前 CI 注册为第五个 Linux gate。
+- [ ] 整机 system suspend、Linux 已 runtime-suspended 时跨进程迁移，以及原生平板电源/固件等价验收。
 - [x] [可选 ANOC1/ANOC2 TBU reference](docs/tbu-reference-ecats.md)：HALT/ACK、真实 ECATS walker、两个 SID 的合成 DMA 和状态迁移；16 组、一次迁移、六个拒绝场景通过。默认关闭，不能替代完整 QSMMUv500、物理时钟或原生 DMA 拓扑。
 - [x] [共享 UFS core/PCI 的冻结构建 12 配套通用构建检查](evidence/compat-final-20261123/ufs-pci/result.json)和 [08:20 独立通用构建检查](evidence/verified-20261123-0820/pci-ufs/result.json)均为 15/15，无跳过；各自二进制与板级验收分开记录。
 - [x] 无 LU 的 upstream Linux 完成八项 PID 1 检查及 guest shutdown；普通 console、空 UFS、UFS/SMMU、RPMh 四个 Linux gate 均在 [冻结构建 12](evidence/resume-final-20261123/result.json)复验，后续公共套件分别保留自己的回执。
