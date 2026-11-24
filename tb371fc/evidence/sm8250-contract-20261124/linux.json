@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "suite": "linux",
+  "started_utc": "2026-11-24T03:06:50.373849+00:00",
+  "scope": "Public digital component and clean-Linux gates; no stock Android attestation",
+  "private_inputs_used": false,
+  "source_commit": "8babe85b1cd7990a1a113b223d51ec8a7732fed5",
+  "source_dirty": true,
+  "runner_sha256": "73cc0c3fb05c4678ca5599c88d56da2841ff30c712eacbda8b1e10cdbaccd93e",
+  "qemu_sha256": "ee1fa5c90a908936093f30c4687cfdd5b872a448ccb26648a17c6b5f49b76530",
+  "qemu_version": "QEMU emulator version 11.1.3\nCopyright (c) 2003-2026 Fabrice Bellard and the QEMU Project developers",
+  "python": "3.13.5 (main, Aug 10 2026, 12:06:59) [GCC 14.2.0]",
+  "platform": "Linux-7.0.14-26-pve-x86_64-with-glibc2.41",
+  "runtime_fixtures_retained": "/tmp/tbci-ax5nubn8",
+  "expected_gates": 4,
+  "gates": [
+    {
+      "name": "linux-console-userspace",
+      "command": [
+        "/usr/bin/python3",
+        "/work/sm8250-contract-c538/source/tb371fc/scripts/boot_smoke.py",
+        "--qemu",
+        "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+        "--kernel",
+        "/work/sm8250-contract-c538/linux/artifacts/Image",
+        "--timeout",
+        "120",
+        "--out",
+        "/tmp/tbci-ax5nubn8/00/data"
+      ],
+      "started_utc": "2026-11-24T03:06:51.076697+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-ax5nubn8/00",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-ax5nubn8/00/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 8
+      },
+      "elapsed_seconds": 5.952,
+      "completed_utc": "2026-11-24T03:06:57.043564+00:00",
+      "log_sha256": {
+        "stdout.log": "2cc7e5e6a5869cba49352ce80db926086e5df5a98f29faeacc82769442a50f83",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "linux-console-empty-ufs",
+      "command": [
+        "/usr/bin/python3",
+        "/work/sm8250-contract-c538/source/tb371fc/scripts/boot_smoke.py",
+        "--qemu",
+        "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+        "--kernel",
+        "/work/sm8250-contract-c538/linux/artifacts/Image",
+        "--timeout",
+        "120",
+        "--without-ufs-lu",
+        "--debug-mmio",
+        "--out",
+        "/tmp/tbci-ax5nubn8/01/data"
+      ],
+      "started_utc": "2026-11-24T03:06:57.060665+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-ax5nubn8/01",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-ax5nubn8/01/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 8
+      },
+      "elapsed_seconds": 3.747,
+      "completed_utc": "2026-11-24T03:07:00.807578+00:00",
+      "log_sha256": {
+        "stdout.log": "5b399423b2cf274172a7e4b5f093100c2530dc7b7d18968b2da1a6e432b22757",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "linux-ufs-smmu",
+      "command": [
+        "/usr/bin/python3",
+        "/work/sm8250-contract-c538/source/tb371fc/scripts/boot_ufs.py",
+        "--qemu",
+        "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+        "--kernel",
+        "/work/sm8250-contract-c538/linux/artifacts/Image",
+        "--timeout",
+        "120",
+        "--out",
+        "/tmp/tbci-ax5nubn8/02/data"
+      ],
+      "started_utc": "2026-11-24T03:07:00.808577+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-ax5nubn8/02",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-ax5nubn8/02/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 19
+      },
+      "elapsed_seconds": 5.237,
+      "completed_utc": "2026-11-24T03:07:06.045367+00:00",
+      "log_sha256": {
+        "stdout.log": "872906a3a6be2ae2aa142aae085e94d09265e74988c6a082db544844d421c9d5",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "linux-ufs-rpmh",
+      "command": [
+        "/usr/bin/python3",
+        "/work/sm8250-contract-c538/source/tb371fc/scripts/boot_ufs.py",
+        "--qemu",
+        "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+        "--kernel",
+        "/work/sm8250-contract-c538/linux/artifacts/Image",
+        "--timeout",
+        "120",
+        "--machine",
+        "tb371fc,rpmh-profile=reference",
+        "--require-rpmh",
+        "--out",
+        "/tmp/tbci-ax5nubn8/03/data"
+      ],
+      "started_utc": "2026-11-24T03:07:06.059533+00:00",
+      "timeout_seconds": 180,
+      "fixture": "/tmp/tbci-ax5nubn8/03",
+      "environment": {
+        "QTEST_QEMU_BINARY": "/work/sm8250-contract-c538/build/qemu-system-aarch64",
+        "TMPDIR": "/tmp/tbci-ax5nubn8/03/tmp",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "verified": {
+        "verdict_field": "passed",
+        "verdict": true,
+        "check_count": 23
+      },
+      "elapsed_seconds": 4.449,
+      "completed_utc": "2026-11-24T03:07:10.513204+00:00",
+      "log_sha256": {
+        "stdout.log": "79d97ebd3d18b56d0c85b90082164f7b124a1b1ede33f69dbb906b85caa77d09",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "passed": true,
+  "kernel_sha256": "48bc7593651ea0410ef4745554ec455670d4bc125a41743c63baabfa0cdf58f3",
+  "kernel_build_receipt": {
+    "schema_version": 1,
+    "completed_utc": "2026-11-24T02:58:11.925572+00:00",
+    "scope": "Independent upstream Linux input for QEMU tb371fc smoke; no tablet flash or boot",
+    "source_version": "6.12.114",
+    "source_url": "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.114.tar.xz",
+    "source_tar_sha256": "7a8589912bd7a8adb07fed074283652cf482a35facef8954554654f0154b4af3",
+    "patches_applied_by_script": [],
+    "config_fragment_path": "/work/sm8250-contract-c538/source/tb371fc/configs/linux-smoke.config",
+    "config_fragment_sha256": "d2b1a838adff1aef57c3db5f3d425c140bada50464ee6a4757fbb7ef41e5c43d",
+    "effective_config_sha256": "e088dcae4a06258b953c65cdd1c31b7e896e5757139ffb4514f7c3dd61f87335",
+    "image_path": "/work/sm8250-contract-c538/linux/artifacts/Image",
+    "image_bytes": 4458504,
+    "image_sha256": "48bc7593651ea0410ef4745554ec455670d4bc125a41743c63baabfa0cdf58f3",
+    "cross_compiler": {
+      "command": "aarch64-linux-gnu-gcc",
+      "path": "/usr/bin/aarch64-linux-gnu-gcc-14",
+      "sha256": "fb743ca27a77466c91da66047eec879a615993feaabd860aaf3750e7b222b131",
+      "version": "aarch64-linux-gnu-gcc (Debian 14.2.0-19) 14.2.0"
+    },
+    "cross_linker": {
+      "command": "aarch64-linux-gnu-ld",
+      "path": "/usr/bin/aarch64-linux-gnu-ld.bfd",
+      "sha256": "bdb57a3334f460af5921b65de134f128642325a2087ff716dafd0adbfcc0778a",
+      "version": "GNU ld (GNU Binutils for Debian) 2.44"
+    },
+    "host_compiler": {
+      "command": "gcc",
+      "path": "/usr/bin/x86_64-linux-gnu-gcc-14",
+      "sha256": "a23ecab8ff08f09ad8c80602c2c5df7f49e09c25905cb8975902e101bf72635f",
+      "version": "gcc (Debian 14.2.0-19) 14.2.0"
+    },
+    "config_command": [
+      "make",
+      "-C",
+      "/work/sm8250-contract-c538/linux/source/linux-6.12.114",
+      "O=/work/sm8250-contract-c538/linux/build",
+      "ARCH=arm64",
+      "CROSS_COMPILE=aarch64-linux-gnu-",
+      "allnoconfig"
+    ],
+    "config_environment": {
+      "KCONFIG_ALLCONFIG": "/work/sm8250-contract-c538/source/tb371fc/configs/linux-smoke.config"
+    },
+    "build_command": [
+      "make",
+      "-C",
+      "/work/sm8250-contract-c538/linux/source/linux-6.12.114",
+      "O=/work/sm8250-contract-c538/linux/build",
+      "ARCH=arm64",
+      "CROSS_COMPILE=aarch64-linux-gnu-",
+      "-j6",
+      "Image"
+    ],
+    "build_environment": {
+      "KBUILD_BUILD_TIMESTAMP": "2026-11-22 00:00:00 +0000",
+      "KBUILD_BUILD_USER": "tb371fc-qemu",
+      "KBUILD_BUILD_HOST": "isolated-builder",
+      "KBUILD_BUILD_VERSION": "1",
+      "SOURCE_DATE_EPOCH": "1795305600"
+    },
+    "build_completed": true,
+    "guest_boot_tested_by_this_script": false
+  },
+  "c_test_binary_sha256": {},
+  "passed_gates": 4,
+  "completed_utc": "2026-11-24T03:07:10.523376+00:00",
+  "elapsed_seconds": 19.447,
+  "qemu_unchanged": true
+}

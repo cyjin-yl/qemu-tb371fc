@@ -111,6 +111,7 @@ jobs:
             'GENI, GCC, timers, SMMUv2, reference RPMh, UFS, watchdog, TLMM, PDC, IMEM, PS_HOLD, DCC, IPCC and reference SPMI gates test their implemented digital contracts.' \
             'Linux checks use eight CPUs, 8 GiB RAM, a generated device tree and a synthetic disk. The UFS I/O gates end with host QMP quit after 19 ordinary or 23 RPMh-enabled guest checks.' \
             'The separate UFS checkpoint gate resumes the same PID 1, nonce and boot ID in a new process, then performs direct block I/O; only quiescent UFS queues are supported.' \
+            'Additional component gates require crypto rejection, Auto-Hibern8, retained RPMh wake requests and opt-in TBU HALT/ECATS with process checkpoint rejection tests.' \
             'No private production Image or AOP input is used. Stock Android, full native-DT boot, analog behavior, Adreno and complete-device equivalence are not attested.' \
             >> "$GITHUB_STEP_SUMMARY"
 

@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "kind": "tb371fc-held-wake-and-pdc-gic-process-checkpoint",
+  "started_utc": "2026-11-24T03:06:35.138575+00:00",
+  "all_passed": true,
+  "machine": "tb371fc,rpmh-profile=reference,rpmh-boot-configured=off,ufs-enabled=off",
+  "qemu_sha256": "ee1fa5c90a908936093f30c4687cfdd5b872a448ccb26648a17c6b5f49b76530",
+  "test_sha256": "16d06df4e2a950f704b1e95476c21e254130a0c72400ff629b20710d6e40f3c2",
+  "helpers_sha256": {
+    "test_rpmh_sm8250.py": "aa8250a4799da7e6db8cd871d3115d6c3b747baa99cd6aee0c99e3bca1c24baf",
+    "test_pdc_migration.py": "36b911bc0f7a466b7b5a29da45d7a642374cae3c6c77575fbec502c0c60cce5a",
+    "test_gcc_sm8250.py": "b14cee244dcb53b69578b163aefdd2495214d7a9748bcacf1a762e5f996765f6",
+    "test_geni_uart.py": "4ab5857e40f3d320656677812abb86d2683c310764d35baa7a32b4aa53572fbd",
+    "test_geni_migration.py": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8"
+  },
+  "checks": [
+    {
+      "name": "busy_sleep_level_is_retained",
+      "passed": true,
+      "directory": "/tmp/tbci-t277v69b/47/data/00",
+      "seconds": 0.1615
+    },
+    {
+      "name": "busy_wake_level_is_retained",
+      "passed": true,
+      "directory": "/tmp/tbci-t277v69b/47/data/01",
+      "seconds": 0.0442
+    },
+    {
+      "name": "latest_level_replaces_unstarted_transition",
+      "passed": true,
+      "directory": "/tmp/tbci-t277v69b/47/data/02",
+      "seconds": 0.0457
+    },
+    {
+      "name": "cancellation_releases_held_request_without_acknowledging_stall",
+      "passed": true,
+      "directory": "/tmp/tbci-t277v69b/47/data/03",
+      "seconds": 0.0414
+    },
+    {
+      "name": "reset_discards_deferred_request",
+      "passed": true,
+      "directory": "/tmp/tbci-t277v69b/47/data/04",
+      "seconds": 0.0508
+    },
+    {
+      "name": "combined_pdc_pending_and_deferred_wake",
+      "passed": true,
+      "directory": "/tmp/tbci-t277v69b/47/data/05",
+      "receipt": {
+        "source": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 30,
+          "total-time": 49,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 364.5265306122449,
+            "transferred": 2232725,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "destination": {
+          "status": "completed"
+        },
+        "qtest_virtual_ns_at_transfer": 1400,
+        "observations": [
+          "PDC level, unacknowledged edge and acknowledged edge migrate together",
+          "unfinished sleep and held wake resume in order at remaining deadlines",
+          "RPMh sleep/wake completion reaches real GIC and W1C drains it",
+          "unchanged levels do not replay edge or wake completions"
+        ]
+      },
+      "seconds": 0.1775
+    },
+    {
+      "name": "reject_idle_deferred_request",
+      "passed": true,
+      "directory": "/tmp/tbci-t277v69b/47/data/06",
+      "receipt": {
+        "source_migration": {
+          "status": "completed",
+          "setup-time": 0,
+          "downtime": 29,
+          "total-time": 75,
+          "ram": {
+            "total": 134250496,
+            "postcopy-requests": 0,
+            "dirty-sync-count": 2,
+            "multifd-bytes": 0,
+            "pages-per-second": 0,
+            "downtime-bytes": 303245,
+            "page-size": 4096,
+            "remaining": 0,
+            "postcopy-bytes": 0,
+            "mbps": 238.15733333333336,
+            "transferred": 2232725,
+            "dirty-sync-missed-zero-copy": 0,
+            "precopy-bytes": 0,
+            "duplicate": 32774,
+            "dirty-pages-rate": 0,
+            "normal-bytes": 8192,
+            "normal": 2
+          }
+        },
+        "destination_exit": 1,
+        "wire_offset": 1488634,
+        "diagnostic": "RPMh migration: idle voter 2 has an unconsumed sleep request",
+        "original_sha256": "6de4aa2a1d47899ab7e3f15c3280fd861d5d9ed455acb3069199621ddb4cca65",
+        "mutated_sha256": "89111a72f11768cd07fbb3f036e2bf6e8c5d77e7ce1a399db03fd5b74c6644d4"
+      },
+      "seconds": 0.2228
+    }
+  ],
+  "limits": [
+    "Explicit sleep/wake GPIO only; no automatic CPU WFI/PDC power solver.",
+    "PDC and RPMh share one migrated board; they are not implicitly coupled.",
+    "Synthetic command database and virtual command latency; no silicon/AOP equivalence.",
+    "UFS disabled for this component suite; no claim of in-flight storage migration."
+  ],
+  "expected_checks": 7,
+  "qemu_unchanged": true
+}

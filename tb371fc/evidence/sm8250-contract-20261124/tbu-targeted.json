@@ -1,0 +1,185 @@
+{
+  "all_passed": true,
+  "checks": [
+    {
+      "name": "default-profile-maps-no-reference-windows",
+      "observed": null,
+      "passed": true
+    },
+    {
+      "name": "reference-version-is-readonly-and-both-SIDs-translate",
+      "observed": null,
+      "passed": true
+    },
+    {
+      "name": "both-SIDs-delayed-ACK-gate-isolation-real-ECATS-and-reopen",
+      "observed": null,
+      "passed": true
+    },
+    {
+      "name": "ECATS-write-user-and-unmapped-page-faults-are-not-success",
+      "observed": null,
+      "passed": true
+    },
+    {
+      "name": "architectural-bypass-and-disabled-context-cannot-fake-ECATS",
+      "observed": null,
+      "passed": true
+    },
+    {
+      "name": "unsupported-MMIO-and-request-encodings-do-not-acknowledge",
+      "observed": null,
+      "passed": true
+    },
+    {
+      "name": "trigger-cancel-and-HALT-release-cancel-pending-query",
+      "observed": null,
+      "passed": true
+    },
+    {
+      "name": "reset-clears-gates-and-cancels-pending-ACK",
+      "observed": null,
+      "passed": true
+    },
+    {
+      "name": "process-load-restores-both-gates-and-lock-before-cont",
+      "observed": null,
+      "passed": true
+    },
+    {
+      "name": "actual-process-checkpoint-rebases-pending-query-and-HALT",
+      "observed": null,
+      "passed": true
+    },
+    {
+      "name": "profile-on-to-off-rejected-before-resume",
+      "observed": null,
+      "passed": true
+    },
+    {
+      "name": "profile-off-to-on-rejected-before-resume",
+      "observed": null,
+      "passed": true
+    },
+    {
+      "name": "mismatched-reference-version-rejected-before-resume",
+      "observed": null,
+      "passed": true
+    },
+    {
+      "name": "mismatched-operation-latency-ns-rejected-before-resume",
+      "observed": null,
+      "passed": true
+    },
+    {
+      "name": "invalid-query-PAR-rejected-before-resume",
+      "observed": null,
+      "passed": true
+    },
+    {
+      "name": "invalid-idle-HALT-rejected-before-resume",
+      "observed": null,
+      "passed": true
+    }
+  ],
+  "completed_utc": "2026-11-24T03:03:59.434819+00:00",
+  "elapsed_seconds": 1.03755,
+  "kind": "sm8250-tbu-reference-qtest",
+  "limits": [
+    "HALT returns DMA transaction failure, not hardware stall or drain.",
+    "UFS disabled; two QTest DMA aliases are synthetic clients.",
+    "No native identity, timing, clock gate, or complete TBU topology.",
+    "Default profile stays architectural SMMUv2; reference DT binding is not advertised."
+  ],
+  "machine": "tb371fc,ufs-enabled=off,tbu-profile=reference-ecats",
+  "migrations": [
+    {
+      "destination": {
+        "status": "completed"
+      },
+      "source": {
+        "downtime": 23,
+        "ram": {
+          "dirty-pages-rate": 0,
+          "dirty-sync-count": 2,
+          "dirty-sync-missed-zero-copy": 0,
+          "downtime-bytes": 336005,
+          "duplicate": 32766,
+          "mbps": 560.991,
+          "multifd-bytes": 0,
+          "normal": 10,
+          "normal-bytes": 40960,
+          "page-size": 4096,
+          "pages-per-second": 0,
+          "postcopy-bytes": 0,
+          "postcopy-requests": 0,
+          "precopy-bytes": 0,
+          "remaining": 0,
+          "total": 134250496,
+          "transferred": 2243964
+        },
+        "setup-time": 1,
+        "status": "completed",
+        "total-time": 33
+      },
+      "source_remaining_ns": [
+        650,
+        900
+      ],
+      "stream_bytes": 2243964,
+      "stream_sha256": "ad3bff85dbbe9819dc9ba9b68f912c5190e4574175969dded92b3b77bf15935f",
+      "target_clock_origin_ns": 50000
+    }
+  ],
+  "rejections": [
+    {
+      "diagnostic": "0 != 1",
+      "events": [],
+      "exit": 1,
+      "name": "profile-on-to-off",
+      "stream_sha256": "ad3bff85dbbe9819dc9ba9b68f912c5190e4574175969dded92b3b77bf15935f"
+    },
+    {
+      "diagnostic": "1 != 0",
+      "events": [],
+      "exit": 1,
+      "name": "profile-off-to-on",
+      "stream_sha256": "3182e15c066c50af01f66a455cef487b2be4ec88c0bc73687e861b63ee747e37"
+    },
+    {
+      "diagnostic": "2000001 != 2000000",
+      "events": [],
+      "exit": 1,
+      "name": "mismatched-reference-version",
+      "stream_sha256": "ad3bff85dbbe9819dc9ba9b68f912c5190e4574175969dded92b3b77bf15935f"
+    },
+    {
+      "diagnostic": "7d0 != 3e8",
+      "events": [],
+      "exit": 1,
+      "name": "mismatched-operation-latency-ns",
+      "stream_sha256": "ad3bff85dbbe9819dc9ba9b68f912c5190e4574175969dded92b3b77bf15935f"
+    },
+    {
+      "diagnostic": "invalid incoming bank 0",
+      "events": [],
+      "exit": 1,
+      "name": "invalid-query-PAR",
+      "stream_sha256": "5ce666312fde222e0dd4816bc3d60dea4e5bf4c6e27cebb03d7e19cbcd19b594"
+    },
+    {
+      "diagnostic": "invalid incoming bank 1",
+      "events": [],
+      "exit": 1,
+      "name": "invalid-idle-HALT",
+      "stream_sha256": "b2e70d1ee62fa4ce7c2838bd93b42c7624a2a12331f942ba0cd83c49d02dc789"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Reference HALT admission, ECATS with real stage-1 walks, and actual process checkpoints.",
+  "sha256": {
+    "qemu": "ee1fa5c90a908936093f30c4687cfdd5b872a448ccb26648a17c6b5f49b76530",
+    "test": "f487167b89367c109747d828c766a91645d769aee8bf18d265564c3af83c46cf"
+  },
+  "started_utc": "2026-11-24T03:03:58.077720+00:00"
+}

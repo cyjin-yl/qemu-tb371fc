@@ -60,6 +60,7 @@ Linux 板级补齐与 UniXNU 路线 A 并行推进，按[跨仓库硬件契约](
 - [x] DCC 单字 WRITE、平坦 LOOP、单寄存器 RMW：16 项新增操作与迁移检查，原有 17 项保持通过。
 - [ ] DCC CRC/ATB/CTI、嵌套循环、多字 RMW 及原生三列表完整执行。
 - [x] PDC 原生四段 pin→SPI 路由、level/edge 转换：18 项 C QTest 与 10 项检查/两次实际迁移通过；VERSION 仅有显式 reference 选项，实机值仍未知。
+- [x] [2026-11-24 RPMh/PDC 联合检查点](evidence/sm8250-contract-20261124/README.md)：保留忙碌期间的最新 sleep/wake 电平，迁移 pending PDC/GIC 状态和剩余期限；普通 7 组及包含实际旧 v2 输入的 8 组通过。仍由显式输入驱动，未实现自主整板睡眠协调。
 - [x] IPCC APPS 消息 latch、self-send、实际 SPI 229、mask/clear/clear-on-read 与真实迁移：16 项检查；不伪造缺失远端的回复。
 - [x] SPMI v5 显式 reference profile：25 项字节事务、ownership、错误、IRQ 和迁移检查；真实 SPMI → PDC → GIC 连线另有 8 项检查与一次迁移。
 - [ ] 实测 SPMI VERSION/APID/ownership、完整 PMIC 身份/寄存器、PON/charger/regulator 和真实电源行为；合成 IRQ fixture 不替代 PMIC 外设。
@@ -75,6 +76,9 @@ GCC bootstrap 状态、部分 fabric 输入、QUP version 和设备排序延时�
 - [x] apps/GPU SMMUv2 的非安全 AArch64 stage-1、4 KiB 页表、stream/context、权限、fault、ATS、TLB invalidate：23 项 C QTest。
 - [x] UFS Sysbus HCI、Qualcomm wrapper/QMP PHY、GCC 依赖和实际 guest-memory DMA/SCSI 后端。
 - [x] UFS 56 项控制器/DMA/错误/Hibern8/WriteBooster/无 LUN 检查；原先 48 项及修复前失败继续保留。
+- [x] [UFS ICE 探测与 crypto 拒绝](docs/sm8250-behavior-audit.md)：显式 unsupported 只读窗口，crypto-enable 描述符在 PRDT/SCSI 前以 OCS 9 完成；板级 14 组及共享 PCI/MCQ 17 组通过，不提供实际加密。
+- [x] [Auto-Hibern8](docs/ufs-auto-hibern8.md)：AHIT、自动唤醒、UIC/时钟/复位约束及真实进程迁移；18 组、两次迁移、三个拒绝场景通过。
+- [x] [可选 ANOC1/ANOC2 TBU reference](docs/tbu-reference-ecats.md)：HALT/ACK、真实 ECATS walker、两个 SID 的合成 DMA 和状态迁移；16 组、一次迁移、六个拒绝场景通过。默认关闭，不能替代完整 QSMMUv500、物理时钟或原生 DMA 拓扑。
 - [x] [共享 UFS core/PCI 的冻结构建 12 配套通用构建检查](evidence/compat-final-20261123/ufs-pci/result.json)和 [08:20 独立通用构建检查](evidence/verified-20261123-0820/pci-ufs/result.json)均为 15/15，无跳过；各自二进制与板级验收分开记录。
 - [x] 无 LU 的 upstream Linux 完成八项 PID 1 检查及 guest shutdown；普通 console、空 UFS、UFS/SMMU、RPMh 四个 Linux gate 均在 [冻结构建 12](evidence/resume-final-20261123/result.json)复验，后续公共套件分别保留自己的回执。
 - [x] 主线 Qualcomm UFS/QMP/GCC/SMMU 驱动运行：19 项 guest 检查，strict translated DMA domain，宿主独立核对写入数据。
@@ -82,7 +86,7 @@ GCC bootstrap 状态、部分 fabric 输入、QUP version 和设备排序延时�
 - [x] 16/64 KiB 架构页表模型通过显式 granule profile 实现，b5f4415 CI 的 [26 组真实 QEMU 验收](evidence/smmuv2-granules-20261123/ci-granules.json)及独立 55 组件/4 Linux 套件均通过；[实现与边界](docs/smmuv2-granules.md)。默认仍只广告 4 KiB，未测量原生 SMMU 大页能力。
 - [x] SMMUv2 独立迁移验收：18 项双进程恢复／拒绝检查通过，覆盖页表、DMA、fault IRQ 与 reset；[证据](evidence/smmuv2-migration-20261123/publication.json)。该轮显式关闭 UFS，未验收整板迁移。
 - [x] VMState v3 绑定 granule profile；[CT102 扩展验收](evidence/smmuv2-granules-20261123/ct102-with-glib.json)28/28、5 次转移，包含实际旧 v2→新 v3 默认 profile 的 ATS/DMA 延续与旧 v2→扩展 profile 的拒绝。两个 CI 二进制摘要固定，未全局安装依赖。
-- [ ] UFS ICE、RPMB 认证、原生 LU 启动选择/保护、完整 task management/reset/error 模式及物理链路行为。
+- [ ] 完整 UFS ICE/密钥与 SCM 服务、RPMB 认证、原生 LU 启动选择/保护、完整 task management/reset/error 模式及物理链路行为。
 - [x] `qcom-sm8250-ufs` wrapper 的空 legacy 队列检查点：[03cd8843 原始验收](evidence/ufs-migration-20261123/accepted-03cd8843/ufs-migration/result.json)通过 21 组检查、3 次真实进程迁移、7 个拒绝场景，含非恒等 SID `0xe0` DMA 与外部共享磁盘 I/O；[格式与边界](docs/ufs-migration.md)。
 - [x] [839ae467 后续验收](evidence/ufs-migration-20261123/verified-839ae467/ufs-migration-result.json)保留同样的 21/3/7 范围；另取 3 份真实 profile 流作不匹配依据，不计为迁移。6 个被拒 receiver 退出后均将 QMP 读至 EOF，再确认无 RESUME；该完整事件审计仅属于后续回执。
 - [ ] 通用 `ufs` PCI 与 `ufs-sysbus` 迁移、未完成 SCSI/MCQ 存储请求的序列化，以及完整原生整板迁移；此前关闭 UFS 的组件回执仍保留各自原范围。

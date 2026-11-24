@@ -11,7 +11,7 @@ It does not certify stock Android, complete native-DT boot or silicon equality.
 | --- | --- | --- |
 | ICE | Crypto capability clear; no ICE MMIO window | Map an explicitly unsupported read-only probe at `0x1d90000/0x8000`; reject crypto descriptors instead of processing plaintext. |
 | UFS power | Explicit UIC Hibern8 entry/exit, PHY clock dependencies and quiescent migration | Implement AHIT idle timing, automatic wake and migration of the remaining idle interval; cancel pending UIC on device reset. |
-| SMMU | Real UFS DMA through SID `0xe0`, stage-1 walks, permissions, faults and migration; DT also lists `0x4e0` | Correct the SID evidence attribution and separately bound Qualcomm TBU debug behavior. |
+| SMMU | Real UFS DMA through SID `0xe0`, stage-1 walks, permissions, faults and migration; DT also lists `0x4e0` | Correct the SID evidence attribution; add opt-in ANOC1/ANOC2 HALT/ACK and ECATS using the real SMMU walker. |
 | PDC/RPMh | PDC pin-to-GIC routes, edge/level state, RPMh TCS/resources/timers and component migration | Retain sleep/wake input levels received while a voter is busy; verify PDC/GIC pending interrupts and delayed wake in the same process checkpoint. |
 
 ### ICE is an unsupported probe, not an encryption engine
@@ -79,6 +79,17 @@ in [the TBU review](tbu-contract-review.md), not a fabricated always-ready
 clock bit. Architectural SMMUv2 and Qualcomm implementation identity must
 remain separate profiles.
 
+The new `tbu-profile=reference-ecats` profile maps the evidenced TCU/ANOC1/
+ANOC2 debug windows. HALT immediately closes the selected SID group's DMA
+admission gate; a virtual timer later reports ACK. A gated DMA transaction
+fails instead of physically stalling. ECATS requires ACK and its lock, and
+uses the existing SMMU page-table walker, permissions and faults. Bypass,
+disabled contexts and invalid mappings cannot manufacture success. Remaining
+query/ACK durations and admission gates survive a real process checkpoint;
+profile/version/latency mismatches and impossible states reject before resume.
+The reference TCU version and 1 us default delay are not native measurements.
+See the [implemented TBU contract](tbu-reference-ecats.md).
+
 ### Retained wake requests and real PDC/GIC continuation
 
 RPMh previously discarded a sleep/wake input transition whenever any TCS
@@ -104,6 +115,7 @@ and physical power collapse remain outside that contract.
 ```sh
 python3 tb371fc/tests/test_ufs_crypto.py --qemu "$QEMU" --out /tmp/ice-new
 python3 tb371fc/tests/test_ufs_autohibern8.py --qemu "$QEMU" --out /tmp/ahit-new
+python3 tb371fc/tests/test_tbu_sm8250.py --qemu "$QEMU" --out /tmp/tbu-new
 python3 tb371fc/tests/test_power_checkpoint.py --qemu "$QEMU" \
   --legacy-qemu "$BASELINE_QEMU" --out /tmp/power-new
 python3 tb371fc/scripts/run_ufs_pci_compat.py --qemu "$PCI_QEMU" \

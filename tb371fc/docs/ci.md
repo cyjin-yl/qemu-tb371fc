@@ -15,8 +15,10 @@ after an earlier component failure so their independent results remain visible.
 
 ## Gates
 
-The current public plan registers **59 gates: 55 component/parser gates and
-four Linux boots**, plus the separate A77 and PCI UFS compatibility job.
+The current public plan registers **63 gates: 59 component/parser gates and
+four Linux boots**, plus the separate real-Linux UFS process checkpoint and
+the A77/PCI UFS compatibility job. The four new component gates cover crypto
+rejection, Auto-Hibern8, retained RPMh wake requests and opt-in TBU debug.
 The [b5f4415 run](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45219017052)
 passed all 55 component gates and four Linux gates, including the new explicit
 SMMUv2 granule gate. Its separate A77/shared-PCI job also passed. Retained
@@ -81,8 +83,12 @@ pass does not attest newly added devices.
 | CPU timer output wires | 16 GIC input-line observations in each of real-time exact, icount exact and icount legacy mode |
 | SMMUv2 | 23 C QTests with no skips, 18 default-profile process migration checks, and 26 explicit-granule ATS/DMA/fault/migration groups |
 | RPMh | 22 reference-profile tests, including the synthetic command-db parser cases, and 5 migration checks |
+| Combined power checkpoint | 7 groups covering retained sleep/wake levels, pending PDC/GIC interrupts, remaining deadlines and a rejected invalid state; optional old-binary v2 transfer adds an eighth group |
 | Display RSC | 11 shared-service and real SPI 129 checks, plus 6 actual component migration checks |
 | UFS | 56 MMIO/PHY/clock/DMA/SCSI/WriteBooster/hibernation checks against a synthetic disk, including absent-LUN responses and DMA bounds |
+| UFS ICE and crypto rejection | 14 board checks; the separate shared PCI suite requires 17 unskipped legacy/MCQ cases |
+| UFS Auto-Hibern8 | 18 groups, two actual process transfers and three rejected capability/state mismatches |
+| Reference ANOC1/ANOC2 TBU | 16 groups with real nonidentity DMA/walker checks, one actual process transfer and six rejections; default profile off |
 | Watchdog | 16 register/timing/action/negative groups and actual pending-bite migration |
 | IMEM and PS_HOLD | 7 groups covering SRAM boundaries, byte order, guest-owned handoff fields, reset retention, digital output, invalid widths and an actual two-process migration |
 | TLMM | 25 C QTests, including the explicit UFS reset boot handoff, and 15 checks across four actual migrations |
