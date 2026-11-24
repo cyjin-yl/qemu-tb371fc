@@ -303,6 +303,7 @@ class AndroidRunnerTests(unittest.TestCase):
                              ("stop_reason", "qmp-closed"), ("stop_reason", "process-exit"),
                              ("qmp_drain_error", "malformed final event"),
                              ("host_terminated_qemu", True),
+                             ("final_status", {"running": False, "status": "shutdown"}),
                              ("final_status", {"running": True}), ("final_status", {})):
             bad = copy.deepcopy(report)
             bad[field] = value
@@ -348,6 +349,9 @@ class AndroidRunnerTests(unittest.TestCase):
         monitor.quit_event = False  # This fixture delivers SHUTDOWN during final drain.
         captures, cleanup = [], []
         final_event = {"event": "SHUTDOWN", "data": {"guest": False, "reason": "host-qmp-quit"}}
+        guest_events = ([{"event": "WATCHDOG", "data": {"action": "reset"}},
+                         {"event": "SHUTDOWN", "data": {"guest": True, "reason": "guest-reset"}},
+                         {"event": "STOP"}] if guest_shutdown else [])
 
         def drain():
             cleanup.append("drain")
@@ -411,11 +415,12 @@ class AndroidRunnerTests(unittest.TestCase):
         self.assertTrue(report["base_files_opened_read_only"])
         self.assertLess(monitor.commands.index("query-named-block-nodes"), monitor.commands.index("cont"))
         self.assertTrue(report["qemu_unchanged"])
-        self.assertFalse(report["final_status"]["running"])
+        self.assertEqual(report["final_status"],
+                         {"running": False, "status": "shutdown" if guest_shutdown else "paused"})
         self.assertEqual(monitor.commands[-1], "quit")
         self.assertEqual(cleanup, ["drain", "close"])
         saved = json.loads((out / "qmp-messages.json").read_text())
-        self.assertEqual(saved[-2:] if guest_shutdown else saved,
+        self.assertEqual(saved, guest_events +
                          [{"return": {}, "id": monitor.identifier}, final_event])
         self.assertIn(final_event, report["qmp_events"])
         self.assertTrue(report["qmp_shutdown_normal"])
@@ -486,7 +491,8 @@ class AndroidRunnerTests(unittest.TestCase):
     def test_guest_reset_shutdown_keeps_kernel_failure_after_clean_host_quit(self):
         report, monitor, captures = self.run_main_with_printk(
             "[ 3.5] Internal error: synchronous external abort: 96000210 [#1]\n"
-            "[ 3.6] Kernel panic - not syncing: Attempted to kill init!\n"
+            "[ 3.6] CPU: 0 PID: 1 Comm: init\n"
+            "[ 3.7] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b\n"
             "[ 3.9] init: init second stage started!\n"
             "[ 4.0] init: processing action (sys.boot_completed=1) from (/system/etc/init/hw/init.rc:1)\n",
             early_stop=True, guest_shutdown=True, expected_status=2)
@@ -501,6 +507,24 @@ class AndroidRunnerTests(unittest.TestCase):
         self.assertEqual(len(captures), 1)
         self.assertTrue(report["observation"]["android_boot_completed_observed"])
         self.assertEqual(len(report["observation"]["kernel_failures"]), 2)
+        self.assertTrue(any("Attempted to kill init!" in row["text"]
+                            for row in report["observation"]["kernel_failures"]))
+        guest_reset = {"event": "SHUTDOWN", "data": {"guest": True, "reason": "guest-reset"}}
+        self.assertIn(guest_reset, report["qmp_events"])
+        self.assertNotIn(guest_reset, report["qmp_quit"]["messages"])
+
+    def test_shutdown_does_not_hide_printk_symbol_failure(self):
+        report, monitor, captures = self.run_main_with_printk(
+            "", early_stop=True, parse_failure="all", guest_shutdown=True,
+            serial_text="[ 4.0] init: init second stage started!\n"
+                        "[ 5.0] init: processing action (sys.boot_completed=1) from (fixture:1)\n",
+            expected_status=1)
+        self.assertTrue(report["qmp_shutdown_normal"])
+        self.assertTrue(boot.printk_capture_failed(report))
+        self.assertEqual(report["outcome"], "diagnostic-failure")
+        self.assertFalse(report["stock_android_boot_passed"])
+        self.assertEqual(len(captures), 1)
+        self.assertEqual(monitor.commands.count("cont"), 1)
 
     def test_opt_in_warning_continues_for_default_observation_time(self):
         report, monitor, captures = self.run_main_with_printk(
@@ -580,6 +604,7 @@ class QMPShutdownTests(unittest.TestCase):
     """Real local AF_UNIX transport, synthetic process/Android evidence; no VM."""
 
     HOST_QUIT = {"event": "SHUTDOWN", "data": {"guest": False, "reason": "host-qmp-quit"}}
+    GUEST_RESET = {"event": "SHUTDOWN", "data": {"guest": True, "reason": "guest-reset"}}
 
     @staticmethod
     def wire(message):
@@ -588,7 +613,7 @@ class QMPShutdownTests(unittest.TestCase):
     def observe_peer(self, *, reset=False, ack="valid", tail=None, event_before_ack=False,
                      early_reset=False, exit_code=0, forced=False, old_host_event=False,
                      pause_tail=b"", capture_failure=False, guest_shutdown=False,
-                     guest_events=None, shutdown_running=False):
+                     guest_events=None, shutdown_running=False, final_status=None):
         client, peer = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
         finish = threading.Event()
         quit_received = threading.Event()
@@ -646,7 +671,9 @@ class QMPShutdownTests(unittest.TestCase):
                         status_queries += 1
                         if old_host_event and status_queries == 1:
                             peer.sendall(self.wire(self.HOST_QUIT))
-                        returned = ({"running": shutdown_running, "status": "shutdown"} if shutdown else
+                        returned = (copy.deepcopy(final_status)
+                                    if status_queries > 1 and final_status is not None else
+                                    {"running": shutdown_running, "status": "shutdown"} if shutdown else
                                     {"running": running, "status": "running" if running else "paused"})
                     elif name == "query-named-block-nodes":
                         returned = [{"node-name": "ufs-base-file-0", "ro": True},
@@ -695,7 +722,7 @@ class QMPShutdownTests(unittest.TestCase):
                     if name == "cont" and guest_shutdown:
                         events = guest_events if guest_events is not None else [
                             {"event": "WATCHDOG", "data": {"action": "reset"}},
-                            {"event": "SHUTDOWN", "data": {"guest": True, "reason": "guest-reset"}},
+                            self.GUEST_RESET,
                             {"event": "STOP"}]
                         reply += b"".join(self.wire(event) for event in events)
                     if name == "query-status" and status_queries == 2:
@@ -754,22 +781,40 @@ class QMPShutdownTests(unittest.TestCase):
     def test_guest_shutdown_stop_noop_still_requires_complete_host_quit(self):
         for reset in (False, True):
             with self.subTest(reset=reset):
-                report, plan = self.observe_peer(guest_shutdown=True, reset=reset)
+                report, plan = self.observe_peer(guest_shutdown=True, reset=reset,
+                                                  event_before_ack=not reset)
                 self.assertEqual(report["final_status"], {"running": False, "status": "shutdown"})
                 self.assertTrue(report["qmp_quit"]["acknowledged"])
                 self.assertIn(self.HOST_QUIT, report["qmp_quit"]["messages"])
                 self.assertEqual(report["qmp_drain"]["terminal"], "reset" if reset else "eof")
+                self.assertEqual(report["qmp_drain"]["residual_bytes"], 0)
+                self.assertIsNone(report["qmp_drain"]["prior_command_error"])
+                self.assertEqual(report["qemu_returncode"], 0)
+                self.assertIn(self.GUEST_RESET, report["qmp_events"])
+                self.assertNotIn(self.GUEST_RESET, report["qmp_quit"]["messages"])
                 self.assertNotIn("error", report)
                 self.assertNotIn("host_terminated_qemu", report)
                 self.assertNotIn("qmp_drain_error", report)
                 self.assertTrue(report["qmp_shutdown_normal"])
                 self.assertFalse(boot.stock_boot_passed(report, plan))
 
+    def test_shutdown_cannot_reuse_old_guest_event_as_quit_confirmation(self):
+        report, plan = self.observe_peer(guest_shutdown=True, tail=b"")
+        self.assertEqual(report["final_status"]["status"], "shutdown")
+        self.assertTrue(report["qmp_quit"]["acknowledged"])
+        self.assertEqual(report["qmp_drain"]["terminal"], "eof")
+        self.assertIn(self.GUEST_RESET, report["qmp_events"])
+        self.assertNotIn(self.GUEST_RESET, report["qmp_quit"]["messages"])
+        self.assertNotIn(self.HOST_QUIT, report["qmp_quit"]["messages"])
+        self.assertFalse(report["qmp_shutdown_normal"])
+        self.assertFalse(boot.stock_boot_passed(report, plan))
+
     def test_shutdown_without_current_guest_evidence_is_rejected(self):
         guest = {"event": "SHUTDOWN", "data": {"guest": True, "reason": "guest-reset"}}
         sequences = [[], [self.HOST_QUIT],
                      [{"event": "SHUTDOWN", "data": {"guest": True, "reason": "host-signal"}}],
                      [guest, {"event": "RESUME"}], [guest, {"event": "RESET"}],
+                     [guest, {"event": "GUEST_PANICKED", "data": {"action": "pause"}}],
                      [guest, {"event": "WATCHDOG", "data": {"action": "reset"}}]]
         for events in sequences:
             with self.subTest(events=events):
@@ -779,20 +824,34 @@ class QMPShutdownTests(unittest.TestCase):
                 self.assertFalse(report["qmp_shutdown_normal"])
                 self.assertFalse(boot.stock_boot_passed(report, plan))
 
-    def test_shutdown_status_with_running_cpus_is_rejected(self):
-        report, plan = self.observe_peer(guest_shutdown=True, shutdown_running=True)
-        self.assertNotIn("qmp_quit", report)
-        self.assertFalse(report["qmp_shutdown_normal"])
-        self.assertFalse(boot.stock_boot_passed(report, plan))
-
-    def test_guest_shutdown_does_not_excuse_missing_ack_or_host_signal_tail(self):
-        for options in ({"ack": "absent"},
-                        {"tail": self.wire({"event": "SHUTDOWN",
-                                            "data": {"guest": False, "reason": "host-signal"}})}):
-            with self.subTest(options=options):
-                report, plan = self.observe_peer(guest_shutdown=True, **options)
+    def test_running_or_inconsistent_final_status_never_sends_quit(self):
+        for status in ({"status": "shutdown", "running": True},
+                       {"status": "running", "running": False},
+                       {"status": "paused", "running": True},
+                       {"status": "shutdown", "running": 0}, {"status": "shutdown"}):
+            with self.subTest(status=status):
+                report, plan = self.observe_peer(guest_shutdown=True, final_status=status)
+                self.assertEqual(report["final_status"], status)
+                self.assertIn("confirmed stopped state", report["error"])
+                self.assertNotIn("qmp_quit", report)
                 self.assertFalse(report["qmp_shutdown_normal"])
                 self.assertFalse(boot.stock_boot_passed(report, plan))
+
+    def test_guest_shutdown_does_not_excuse_incomplete_or_failed_cleanup(self):
+        for options in ({"ack": "absent"},
+                        {"tail": self.wire({"event": "SHUTDOWN",
+                                            "data": {"guest": False, "reason": "host-signal"}})},
+                        {"tail": self.wire(self.HOST_QUIT) + b'{"event":"STOP"'},
+                        {"capture_failure": True}):
+            with self.subTest(options=options):
+                report, plan = self.observe_peer(guest_shutdown=True, **options)
+                self.assertEqual(report["final_status"]["status"], "shutdown")
+                self.assertFalse(report["qmp_shutdown_normal"])
+                self.assertFalse(boot.stock_boot_passed(report, plan))
+                self.assertTrue(report.get("error") or report.get("qmp_drain_error"))
+                if options.get("capture_failure"):
+                    self.assertIn("not an object", report["printk"][0]["error"])
+                    self.assertIsNotNone(report["qmp_drain"]["prior_command_error"])
 
     def test_partial_event_after_ack_rejected_at_eof_and_reset(self):
         tail = self.wire(self.HOST_QUIT) + b'{"event":"GUEST_PANICKED"'

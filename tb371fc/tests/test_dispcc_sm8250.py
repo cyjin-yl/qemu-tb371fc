@@ -1166,12 +1166,25 @@ def pure_observers_fixture_types_and_quantized_input_limits_are_protected(r):
         response = r.raw_monitor("qom-set", {"path": DEVICE, "property": prop, "value": value})
         assert "error" in response and "not writable" in response["error"]["desc"]
     for name in INPUTS:
-        for value in (-1, 1 << 32, "19200000", True):
+        maximum = 5_000_000_000 if name in INPUTS[10:14] else (1 << 32) - 1
+        for value in (-1, maximum + 1, "19200000", True):
             response = r.raw_monitor("qom-set", {"path": DEVICE, "property": "qtest-"+name+"-hz", "value": value})
             assert "error" in response
     response = r.raw_monitor("qom-set", {"path": DEVICE, "property": "qtest-bi_tcxo-hz", "value": 1})
     assert "error" in response and "connected" in response["error"]["desc"]
     for name in INPUTS[1:]:
+        if name in INPUTS[10:14]:
+            # This isolated profile leaves the DSI provider disabled. Only its
+            # four documented parents may express the v4.1 5-GHz VCO range.
+            for value in (1 << 32, 4_500_000_000, 5_000_000_000):
+                r.fixture(name, value)
+                expected_period = (1_000_000_000 << 32) // value
+                assert r.period(name) == expected_period
+                assert r.qom("qtest-"+name+"-hz") == (1_000_000_000 << 32) // expected_period
+            response = r.raw_monitor("qom-set", {"path": DEVICE, "property": "qtest-"+name+"-hz", "value": 5_000_000_001})
+            assert "error" in response and r.period(name) == 858_993_459
+            r.fixture(name, 0)
+            continue
         for value in range(4_294_967_292, 4_294_967_296):
             response = r.raw_monitor("qom-set", {"path": DEVICE, "property": "qtest-"+name+"-hz", "value": value})
             assert "error" in response and r.period(name) == 0

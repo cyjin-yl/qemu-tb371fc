@@ -50,6 +50,7 @@
 #include "hw/misc/qcom-sm8250-npucc.h"
 #include "hw/misc/qcom-sm8250-camcc.h"
 #include "hw/misc/qcom-sm8250-dispcc.h"
+#include "hw/misc/qcom-sm8250-dsi-pll7nm.h"
 #include "hw/misc/qcom-sm8250-videocc.h"
 #include "hw/misc/qcom-noc-qos.h"
 #include "hw/misc/qcom-pshold.h"
@@ -1253,14 +1254,49 @@ static void tb371fc_create_camcc(TB371FCMachineState *s)
 
 static void tb371fc_create_dispcc(TB371FCMachineState *s)
 {
+    DeviceState *dsi = qdev_new(TYPE_QCOM_SM8250_DSI_PLL7NM);
     DeviceState *dispcc = qdev_new(TYPE_QCOM_SM8250_DISPCC);
+    DeviceState *mdss = DEVICE(object_resolve_path_component(OBJECT(s),
+                                                            "mdss-gdsc"));
+    static const char *const carriers[] = {
+        "dsi0_phy_pll_out_byteclk", "dsi1_phy_pll_out_byteclk",
+        "dsi0_phy_pll_out_dsiclk", "dsi1_phy_pll_out_dsiclk",
+    };
+    QcomSm8250DsiPll7nmState *pll = QCOM_SM8250_DSI_PLL7NM(dsi);
+    unsigned i;
 
+    /* Provider ordering is also the migration ordering: MDSS -> DSI -> DISP. */
+    assert(mdss);
+    object_property_add_child(OBJECT(s), "dsi-pll7nm", OBJECT(dsi));
+    object_property_set_link(OBJECT(dsi), "mdss-provider", OBJECT(mdss),
+                             &error_fatal);
+    qdev_connect_clock_in(dsi, "bi_tcxo", s->xo);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dsi), &error_fatal);
+    for (i = 0; i < DSI_PLL7NM_BANKS; i++) {
+        sysbus_mmio_map(SYS_BUS_DEVICE(dsi), 2 * i, pll->physical_base[i]);
+        sysbus_mmio_map(SYS_BUS_DEVICE(dsi), 2 * i + 1, pll->dynamic_base[i]);
+    }
+    qdev_connect_gpio_out_named(mdss, "state-known", 0,
+        qdev_get_gpio_in_named(dsi, "power-known", 0));
+    qdev_connect_gpio_out_named(mdss, "power", 0,
+        qdev_get_gpio_in_named(dsi, "power-on", 0));
+    qemu_set_irq(qdev_get_gpio_in_named(dsi, "power-known", 0),
+        object_property_get_bool(OBJECT(mdss), "domain0.state-known", &error_fatal));
+    qemu_set_irq(qdev_get_gpio_in_named(dsi, "power-on", 0),
+        object_property_get_bool(OBJECT(mdss), "domain0.powered", &error_fatal));
     object_property_add_child(OBJECT(s), "dispcc", OBJECT(dispcc));
     /*
-     * Fixed clk-rpmh.c proves bi_tcxo. The 16 other carriers, including
-     * DSI/DP PHYs, unregistered PLL1 even and parentless XO, stay unknown.
+     * DSI source connections exist only with the explicit DSI reference.
+     * Otherwise the old unknown-input/isolated-test contract is preserved.
+     * DP PHYs, unregistered PLL1 even and parentless XO remain unknown.
      */
     qdev_connect_clock_in(dispcc, "bi_tcxo", s->xo);
+    if (pll->enabled_reference) {
+        for (i = 0; i < ARRAY_SIZE(carriers); i++) {
+            qdev_connect_clock_in(dispcc, carriers[i],
+                                   qdev_get_clock_out(dsi, carriers[i]));
+        }
+    }
     sysbus_realize_and_unref(SYS_BUS_DEVICE(dispcc), &error_fatal);
     /* 39 exact leaves; the existing MDSS GDSCR at +0x3000 remains separate. */
     sysbus_mmio_map(SYS_BUS_DEVICE(dispcc), 0, DISPCC_PHYSICAL_BASE);
@@ -1830,13 +1866,13 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_gpucc(s);
     tb371fc_create_npucc(s);
     tb371fc_create_camcc(s);
+    tb371fc_create_mdss_and_video_gdsc(s, tb371fc_create_camera_gdsc(s));
     tb371fc_create_dispcc(s);
     tb371fc_create_videocc(s);
     tb371fc_create_npu_gdsc(s);
     tb371fc_create_noc_qos(s);
     tb371fc_create_gpu_cx_gdsc(s);
     tb371fc_create_gpu_gx_gdsc(s);
-    tb371fc_create_mdss_and_video_gdsc(s, tb371fc_create_camera_gdsc(s));
     if (s->ufs) {
         tb371fc_realize_ufs(s);
         /* Native pinctrl states: output-low asserts the dedicated pad. */

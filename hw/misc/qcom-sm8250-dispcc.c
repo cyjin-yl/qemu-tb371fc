@@ -117,7 +117,7 @@ static bool dispcc_recipe(QcomSm8250DispccState *s, unsigned p)
 static uint64_t dispcc_pll_frequency(QcomSm8250DispccState *s, unsigned p,
                                     uint32_t l, uint32_t alpha)
 {
-    uint64_t xo = clock_get_hz(s->input[I_XO]);
+    uint64_t xo = CLOCK_PERIOD_TO_HZ(clock_get(s->input[I_XO]));
     uint64_t maximum = 2000000000ULL;
     uint64_t numerator, factor, max_factor, hz;
 
@@ -176,7 +176,7 @@ static uint64_t dispcc_parent_rate(QcomSm8250DispccState *s, int parent,
                                   const uint64_t *rates)
 {
     return parent == NO_PARENT ? 0 : parent < 0 ?
-           clock_get_hz(s->input[-parent - 1]) : rates[parent];
+           CLOCK_PERIOD_TO_HZ(clock_get(s->input[-parent - 1])) : rates[parent];
 }
 
 static bool dispcc_branch_requested(QcomSm8250DispccState *s, unsigned index)
@@ -274,7 +274,7 @@ static void dispcc_publish(QcomSm8250DispccState *s, bool propagate)
 
     dispcc_rates(s, rates);
     for (i = 0; i < DISPCC_CLOCKS; i++) {
-        bool changed = clock_set_hz(s->clocks[i], rates[i]);
+        bool changed = clock_set(s->clocks[i], CLOCK_PERIOD_FROM_HZ(rates[i]));
 
         if (changed && propagate) {
             clock_propagate(s->clocks[i]);
@@ -333,7 +333,7 @@ static void dispcc_update(QcomSm8250DispccState *s)
     }
     s->updating = true;
     now = qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL);
-    xo = clock_get_hz(s->input[I_XO]);
+    xo = CLOCK_PERIOD_TO_HZ(clock_get(s->input[I_XO]));
     xo_changed = xo != s->last_xo_hz;
     s->last_xo_hz = xo;
     for (i = 0; i < DISPCC_PLLS; i++) {
@@ -580,7 +580,7 @@ static void dispcc_reset_enter(Object *obj, ResetType type)
         s->pending_n[i] = s->pending_d[i] = 0;
         s->rcg_deadline[i] = -1;
     }
-    s->last_xo_hz = clock_get_hz(s->input[I_XO]);
+    s->last_xo_hz = CLOCK_PERIOD_TO_HZ(clock_get(s->input[I_XO]));
     /* Input carriers and remote votes are provider-owned and survive reset. */
 }
 
@@ -600,7 +600,7 @@ static int dispcc_pre_load(void *opaque)
     s->ready = false;
     timer_del(s->timer);
     for (i = 0; i < DISPCC_CLOCKS; i++) {
-        clock_set_hz(s->clocks[i], 0);
+        clock_set(s->clocks[i], 0);
     }
     for (i = 0; i < DISPCC_RESETS; i++) {
         qemu_set_irq(s->reset_out[i], 0);
@@ -622,6 +622,22 @@ static bool dispcc_deadline_valid(int64_t deadline, int64_t now,
            (deadline <= now || (uint64_t)(deadline - now) <= maximum_remaining);
 }
 
+static bool dispcc_dsi_input(unsigned index)
+{
+    /* Exact four source-declared DSI PHY parents, not DP or opaque inputs. */
+    return index >= 10 && index <= 13;
+}
+
+static bool dispcc_input_period_valid(unsigned index, uint64_t period)
+{
+    if (!period) {
+        return true;
+    }
+    return dispcc_dsi_input(index) ?
+           period >= CLOCK_PERIOD_FROM_HZ(UINT64_C(5000000000)) :
+           CLOCK_PERIOD_TO_HZ(period) <= UINT32_MAX;
+}
+
 static int dispcc_post_load(void *opaque, int version_id)
 {
     QcomSm8250DispccState *s = opaque;
@@ -634,11 +650,16 @@ static int dispcc_post_load(void *opaque, int version_id)
     for (i = 0; i < DISPCC_INPUTS; i++) {
         /* Read the incoming Clock ratio; never alter a provider's state. */
         if (s->input[i]->multiplier != 1 || s->input[i]->divider != 1 ||
-            CLOCK_PERIOD_TO_HZ(clock_get(s->input[i])) > UINT32_MAX) {
+            !dispcc_input_period_valid(i, clock_get(s->input[i]))) {
             return dispcc_bad_state("input clock", i);
         }
+        /* DSI is restored before DISP. Do not repair an inconsistent stream. */
+        if (dispcc_dsi_input(i) && clock_has_source(s->input[i]) &&
+            clock_get(s->input[i]) != clock_get(s->input[i]->source)) {
+            return dispcc_bad_state("DSI provider period", i);
+        }
     }
-    if (s->last_xo_hz != clock_get_hz(s->input[I_XO])) {
+    if (s->last_xo_hz != CLOCK_PERIOD_TO_HZ(clock_get(s->input[I_XO]))) {
         return dispcc_bad_state("XO observation", 0);
     }
     for (i = 0; i < DISPCC_REGISTERS; i++) {
@@ -756,9 +777,9 @@ static const VMStateDescription vmstate_dispcc = {
 static void dispcc_fixture_get(Object *obj, Visitor *v, const char *name,
                               void *opaque, Error **errp)
 {
-    uint32_t hz = clock_get_hz(opaque);
+    uint64_t hz = CLOCK_PERIOD_TO_HZ(clock_get(opaque));
 
-    visit_type_uint32(v, name, &hz, errp);
+    visit_type_uint64(v, name, &hz, errp);
 }
 
 static void dispcc_fixture_set(Object *obj, Visitor *v, const char *name,
@@ -766,22 +787,30 @@ static void dispcc_fixture_set(Object *obj, Visitor *v, const char *name,
 {
     QcomSm8250DispccState *s = QCOM_SM8250_DISPCC(obj);
     Clock *input = opaque;
-    uint32_t hz;
+    uint64_t hz, period;
+    unsigned index;
 
-    if (!visit_type_uint32(v, name, &hz, errp)) {
+    if (!visit_type_uint64(v, name, &hz, errp)) {
         return;
     }
     if (clock_has_source(input)) {
         error_setg(errp, "%s cannot override a connected clock source", name);
         return;
     }
-    /* clock_get_hz returns unsigned; reject a quantized period that wraps. */
-    if (CLOCK_PERIOD_TO_HZ(CLOCK_PERIOD_FROM_HZ(hz)) > UINT32_MAX) {
+    for (index = 0; index < DISPCC_INPUTS && s->input[index] != input;
+         index++) {
+        /* Find the immutable source-declared parent slot. */
+    }
+    assert(index < DISPCC_INPUTS);
+    period = CLOCK_PERIOD_FROM_HZ(hz);
+    /* Preserve old input limits except for the four documented 5-GHz PHYs. */
+    if (hz > (dispcc_dsi_input(index) ? UINT64_C(5000000000) : UINT32_MAX) ||
+        !dispcc_input_period_valid(index, period)) {
         error_setg(errp, "%s exceeds the representable input clock range",
                    name);
         return;
     }
-    clock_set_hz(input, hz);
+    clock_set(input, period);
     dispcc_update(s);
 }
 
@@ -874,7 +903,7 @@ static void dispcc_realize(DeviceState *dev, Error **errp)
 
     s->reference_profile = s->enabled_reference ? 1 : 0;
     s->ready = true;
-    s->last_xo_hz = clock_get_hz(s->input[I_XO]);
+    s->last_xo_hz = CLOCK_PERIOD_TO_HZ(clock_get(s->input[I_XO]));
 }
 
 static void dispcc_init(Object *obj)
@@ -971,7 +1000,7 @@ static void dispcc_init(Object *obj)
             g_autofree char *name =
                 g_strdup_printf("qtest-%s-hz", dispcc_input_names[i]);
 
-            object_property_add(obj, name, "uint32", dispcc_fixture_get,
+            object_property_add(obj, name, "uint64", dispcc_fixture_get,
                                 dispcc_fixture_set, NULL, s->input[i]);
         }
     }

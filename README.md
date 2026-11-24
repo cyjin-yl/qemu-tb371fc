@@ -14,7 +14,9 @@
 
 ## 当前整合：原厂 Android 启动开发基线
 
-本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。加入 VIDEOCC 协议及固定源码再生两个 gate 后，当前公开计划为 **92 项：87 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。精确候选 `be708c3` 已实际通过 87+5，原厂 run007 已注册 Video CC 并推进到 DSI PHY `0x0ae94418`。该运行仍发生 PID1 panic 和退出清理失败，未进入 Android 用户态；下述并行分支整合需要自己对应的 CI 回执。
+下一候选增量是 [DSI 7nm v4.1 PLL／共享 PHY](tb371fc/docs/dsi-pll7nm-sm8250.md)：原厂 run007 已越过 VIDEOCC，首个新异常为 PHY0 `0x0ae94418`。该模型按匹配实际 52-ID 接口的 13 份固定源码限定两组共享窗口，提供 16 路状态派生时钟与 1356 B 独立迁移，只有四路 DSI 父时钟接入 DISPCC。REFGEN、lane/ULPS、动态刷新和外部 route 仍保持未知边界。两个新增 gate 将计划扩展为 **94 项：89 项组件 + 5 项 Linux**；此 DSI 源码增量仍需自身正式编译与原厂运行回执。
+
+本组合并 `42144e8` 的 wholeboard/相机门禁修正、存储／电源／HYP timer 修复，并保留默认分支 `cf64fe8` 已接纳的 shutdown 清理目标及更严格的 guest-event 证明。此前 VIDEOCC 候选 `fc8c308` 的 [CI 45457710430](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45457710430) 已实际通过 **87 项组件 + 5 项 Linux**，并实际执行通过 31 项 CI harness、28 项输入、39 项 runner、16 项 collector、15 项 assembler 测试。该证据只绑定 `fc8c308`；新的 DSI 候选仍需自己的回执。原厂 `be708c3` run007 已注册 Video CC，随后在 DSI PHY 读取处发生 PID1 panic 和退出清理失败，未进入 Android 用户态。
 
 两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
 

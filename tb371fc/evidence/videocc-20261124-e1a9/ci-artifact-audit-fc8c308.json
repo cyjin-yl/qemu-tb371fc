@@ -1,0 +1,327 @@
+{
+  "schema": "tb371fc-videocc-ci-artifact-audit-v1",
+  "source_commit": "fc8c3080c6aed10c0599b0dbf7093ab382796cb4",
+  "run_id": 45457710430,
+  "artifact_id": 14951343831,
+  "artifact_zip_sha256": "731fd10d88a6ee7d0521576626c66a719f316995e45fb7654fb83910af9cd6d0",
+  "compiled_artifact_read": true,
+  "private_original_inputs_used": false,
+  "stock_android_boot_passed": false,
+  "independent_cpu_job": {
+    "source_commit": "fc8c3080c6aed10c0599b0dbf7093ab382796cb4",
+    "run_id": 45457710430,
+    "job_id": 138671526577,
+    "job_conclusion": "success",
+    "cpu_guest_checks": 852,
+    "configuration_rejections": 2,
+    "pci_ufs_checks": 17,
+    "variants": [
+      {
+        "name": "default",
+        "guest_checks": 94
+      },
+      {
+        "name": "observed-revidr",
+        "guest_checks": 94
+      },
+      {
+        "name": "l2-128k",
+        "guest_checks": 94
+      },
+      {
+        "name": "l2-256k",
+        "guest_checks": 94
+      },
+      {
+        "name": "l3-512k",
+        "guest_checks": 95
+      },
+      {
+        "name": "l3-1m",
+        "guest_checks": 95
+      },
+      {
+        "name": "l3-2m",
+        "guest_checks": 95
+      },
+      {
+        "name": "l3-4m",
+        "guest_checks": 95
+      },
+      {
+        "name": "crypto-off",
+        "guest_checks": 96
+      }
+    ],
+    "pci_checks": [
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/reg-read",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/init",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-read-write",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-read-write",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-crypto-rejected",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-crypto-rejected",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/no-prdt",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/sync-cache",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/long-prdt",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/short-prdt",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-cq-wraparound",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-flag",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-attribute",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-desciptor",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-init",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-read-write",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/hid"
+    ],
+    "rejected_configurations": [
+      ",l2-cache-size=1M",
+      ",l3-cache-size=128K"
+    ],
+    "actual_job_log_read": true,
+    "guest_architecture_only": true,
+    "stock_android_boot_passed": false
+  },
+  "binary_sha256": "aba79a871fc72e5785b77faa53391588938caf25ea2d670d55431e6c5316d9a9",
+  "binary_member": "qemu-build/qemu-system-aarch64",
+  "binary_hash_verified_from_zip": true,
+  "aggregates": {
+    "components": {
+      "count": 87,
+      "passed": true,
+      "source_dirty": false,
+      "qemu_unchanged": true
+    },
+    "linux": {
+      "count": 5,
+      "passed": true,
+      "source_dirty": false,
+      "qemu_unchanged": true
+    }
+  },
+  "ufs_quiescent": {
+    "checks": 21,
+    "migrations": 3,
+    "rejections": 7,
+    "passed": true
+  },
+  "linux_ufs_checkpoints": {
+    "linux-ufs-migration": {
+      "passed": true,
+      "source_checks": 21,
+      "target_checks": 18,
+      "inputs_unchanged": true,
+      "source_exited_before_target_started": true,
+      "runtime_pm_state_preserved": false,
+      "bytes_compared_at_each_checkpoint": 67108864
+    },
+    "linux-ufs-pm-migration": {
+      "passed": true,
+      "source_checks": 34,
+      "target_checks": 27,
+      "inputs_unchanged": true,
+      "source_exited_before_target_started": true,
+      "runtime_pm_state_preserved": true,
+      "bytes_compared_at_each_checkpoint": 67108864
+    }
+  },
+  "source_generation": {
+    "verified_primary_inputs": 10,
+    "exact_file_comparisons": 2,
+    "manifest_sha256": "f33ef08e32452788047a287058da6ee3578cb6240cc89704a2e51982dd4a2d1c"
+  },
+  "videocc_checks": 41,
+  "videocc_test_seconds": 16.656868,
+  "sibling_gates": {
+    "camera-gdsc-reference": {
+      "passed": true,
+      "checks": 29
+    },
+    "mdss-gdsc-reference": {
+      "passed": true,
+      "checks": 20
+    },
+    "npu-gdsc-reference": {
+      "passed": true,
+      "checks": 21
+    },
+    "video-gdsc-reference": {
+      "passed": true,
+      "checks": 22
+    },
+    "npucc-sm8250": {
+      "passed": true,
+      "checks": 37
+    },
+    "gpucc-sm8250": {
+      "passed": true,
+      "checks": 30
+    },
+    "camcc-sm8250-reference": {
+      "passed": true,
+      "checks": 41
+    },
+    "dispcc-sm8250-reference": {
+      "passed": true,
+      "checks": 41
+    }
+  },
+  "actual_files": [
+    {
+      "name": "videocc-corrupt-physical_base.migration",
+      "bytes": 2275409,
+      "sha256": "5089675d58bab35e21fa3e1fa6bd8a4796da39f6efd96bbae044ecb4a92c527e",
+      "zip_member_verified": true
+    },
+    {
+      "name": "videocc-corrupt-shared_ares_reserved_control.migration",
+      "bytes": 2275409,
+      "sha256": "004eb8ec8e861c6da059724404299cd15eeac1a4f8135d4451292491666fb855",
+      "zip_member_verified": true
+    },
+    {
+      "name": "videocc-v1-default.migration",
+      "bytes": 2275409,
+      "sha256": "78ea4b0d4efbc485b00f0e41f1274d60cb3ea94a764693b95350af537c89190a",
+      "zip_member_verified": true
+    },
+    {
+      "name": "videocc-v1-steady.migration",
+      "bytes": 2275409,
+      "sha256": "49b7a546839d46bdb46d88b7af496132c0726d79b0a3165904e5cfd98c241f79",
+      "zip_member_verified": true
+    },
+    {
+      "name": "videocc-v1-two-latches-five-configs.migration",
+      "bytes": 2275409,
+      "sha256": "0e11d0266d232c29ea6a73ec81b3de4d8efa42a82bee2d8d6977cd2128f61ca7",
+      "zip_member_verified": true
+    },
+    {
+      "name": "videocc-v1-two-locks-five-rcgs.migration",
+      "bytes": 2275409,
+      "sha256": "58445d44c0d378f0415e191177d8ebbe6281b6468daa0c1196d41db739255510",
+      "zip_member_verified": true
+    }
+  ],
+  "source_wire_checks": [
+    {
+      "file": "videocc-v1-steady.migration",
+      "videocc": {
+        "version": 1,
+        "bytes": 474,
+        "sha256": "88f5c05abfa4fe73efff07d54f4e53370a5a990c9db1231429ae5cd155b6d480",
+        "complete_payload_verified": true
+      },
+      "video": {
+        "version": 1,
+        "bytes": 142,
+        "sha256": "0e38ddc9e3846618e1e549094391b7fc68eb6890bcbe1a831346d41d24aa6069",
+        "complete_payload_verified": true
+      },
+      "all_19_output_hz_and_periods_independently_recomputed": true
+    },
+    {
+      "file": "videocc-v1-two-locks-five-rcgs.migration",
+      "videocc": {
+        "version": 1,
+        "bytes": 474,
+        "sha256": "688c48a6aeb2c625d214de0a5ef7eafa4f03a27700e16b5d49e02bd39b5501bf",
+        "complete_payload_verified": true
+      },
+      "video": {
+        "version": 1,
+        "bytes": 142,
+        "sha256": "f325f2778598806e042b40b486e5d5516605a20d10ffe5d879ba0fac7bc4f820",
+        "complete_payload_verified": true
+      },
+      "all_19_output_hz_and_periods_independently_recomputed": true
+    },
+    {
+      "file": "videocc-v1-two-latches-five-configs.migration",
+      "videocc": {
+        "version": 1,
+        "bytes": 474,
+        "sha256": "d7b1c21dcc9d97e5c831b72fd2b4e1791f363d8d399fbe1d47107e1ce42d7362",
+        "complete_payload_verified": true
+      },
+      "video": {
+        "version": 1,
+        "bytes": 142,
+        "sha256": "f7e79d1a407a712cd3f9e9ce8030d293ba55864810c776f98106d40f6157e9c7",
+        "complete_payload_verified": true
+      },
+      "all_19_output_hz_and_periods_independently_recomputed": true
+    },
+    {
+      "file": "videocc-v1-default.migration",
+      "videocc": {
+        "version": 1,
+        "bytes": 474,
+        "sha256": "226b20b73a7a8e92efe521627a5961129a69c1cc8dbd76f16c968bb8ce469d8b",
+        "complete_payload_verified": true
+      },
+      "video": {
+        "version": 1,
+        "bytes": 142,
+        "sha256": "f325f2778598806e042b40b486e5d5516605a20d10ffe5d879ba0fac7bc4f820",
+        "complete_payload_verified": true
+      },
+      "all_19_output_hz_and_periods_independently_recomputed": true
+    }
+  ],
+  "migrations": [
+    {
+      "name": "v1_steady_clocks_ro_dividers_votes_ares_and_video_replace_stale_target",
+      "source_status": "completed",
+      "target_status": "completed",
+      "continued_after_restore": true,
+      "first_destination_state_verified": true,
+      "actual_qmp_pre_cont_getters": 218
+    },
+    {
+      "name": "v1_two_locks_five_rcg_deadlines_and_shared_ares_resume_without_mmio_repair",
+      "source_status": "completed",
+      "target_status": "completed",
+      "continued_after_restore": true,
+      "first_destination_state_verified": true,
+      "actual_qmp_pre_cont_getters": 218
+    },
+    {
+      "name": "v1_two_latches_five_captured_configs_and_unknown_sources_replace_prewarm",
+      "source_status": "completed",
+      "target_status": "completed",
+      "continued_after_restore": true,
+      "first_destination_state_verified": true,
+      "actual_qmp_pre_cont_getters": 275
+    }
+  ],
+  "rejections": [
+    {
+      "name": "enabled_to_disabled",
+      "exit_code": 1,
+      "expected_diagnostic": "0 != 1",
+      "actual_stderr_verified": true
+    },
+    {
+      "name": "disabled_to_enabled",
+      "exit_code": 1,
+      "expected_diagnostic": "1 != 0",
+      "actual_stderr_verified": true
+    },
+    {
+      "name": "physical_base",
+      "exit_code": 1,
+      "expected_diagnostic": "abf0000 != abf0004",
+      "actual_stderr_verified": true,
+      "actual_single_bit_difference_verified": true,
+      "field_offset": 52
+    },
+    {
+      "name": "shared_ares_reserved_control",
+      "exit_code": 1,
+      "expected_diagnostic": "qcom-sm8250-videocc: invalid migrated register 35",
+      "actual_stderr_verified": true,
+      "actual_single_bit_difference_verified": true,
+      "field_offset": 200
+    }
+  ]
+}

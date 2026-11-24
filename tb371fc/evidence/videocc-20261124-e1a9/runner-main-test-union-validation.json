@@ -1,0 +1,50 @@
+{
+  "schema": "tb371fc-runner-main-test-union-validation-v1",
+  "base_commit": "80bce6028de1566aba2291b752487191f24f7d6f",
+  "source_main": "cf64fe890e8b68f8af3056fe829c2a92bfa011bf",
+  "source_main_test_commit": "7686e313512544fd188dd5c09cf919f1b50be15f",
+  "branch": "tb371fc-runner-shutdown-test-union-e1a9",
+  "runner_sha256_before": "61093aab7176842ef14f592e90456c0c0b91206d594447474d0a02cbf3fb10d1",
+  "runner_sha256_after": "61093aab7176842ef14f592e90456c0c0b91206d594447474d0a02cbf3fb10d1",
+  "test_script_sha256": "87a3ec7593052778a3ef0576dff9ea8ed0a1719b80a17356fe63c30dfdf58de4",
+  "returncode": 0,
+  "test_count": 41,
+  "elapsed_seconds": 1.319215,
+  "stderr_sha256": "97ead67ad82dad820d4b73fb5637c9041586a88cd1a42fd3a428806e87318ea1",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "real_af_unix_transport": true,
+  "qemu_started": false,
+  "device_rpc": false,
+  "native_boot_claim": false,
+  "runtime_semantics_changed": false,
+  "passed": true,
+  "commit": "a9718f09988f3fb0d503cdd0cb79dc13e4fe61de",
+  "tree": "1e0624a2c68cc083e9f46771d0ade6751046d0a6",
+  "changed_files": [
+    "tb371fc/tests/test_boot_android.py"
+  ],
+  "test_coverage_from_main": {
+    "test_pid1_panic_shutdown_cleans_up_but_remains_kernel_failure": "test_guest_reset_shutdown_keeps_kernel_failure_after_clean_host_quit",
+    "test_shutdown_does_not_hide_printk_symbol_failure": "test_shutdown_does_not_hide_printk_symbol_failure",
+    "test_shutdown_cleanup_drains_new_host_quit_and_preserves_guest_reset": "test_guest_shutdown_stop_noop_still_requires_complete_host_quit",
+    "test_shutdown_cannot_reuse_old_guest_event_as_quit_confirmation": "test_shutdown_cannot_reuse_old_guest_event_as_quit_confirmation",
+    "test_running_or_inconsistent_final_status_never_sends_quit": "test_running_or_inconsistent_final_status_never_sends_quit",
+    "test_shutdown_errors_and_incomplete_confirmation_remain_failures": "test_guest_shutdown_does_not_excuse_incomplete_or_failed_cleanup"
+  },
+  "strict_guest_shutdown_proof_retained": true,
+  "contradictory_pre_quit_transitions_rejected": [
+    "RESUME",
+    "RESET",
+    "GUEST_PANICKED",
+    "WATCHDOG"
+  ],
+  "test_count_before": 39,
+  "test_count_after": 41,
+  "worktree_clean": true,
+  "validation_command": "python3 tb371fc/tests/test_boot_android.py",
+  "root_integrated_recheck": {
+    "tests": 41,
+    "passed": true,
+    "runner_sha256": "61093aab7176842ef14f592e90456c0c0b91206d594447474d0a02cbf3fb10d1"
+  }
+}

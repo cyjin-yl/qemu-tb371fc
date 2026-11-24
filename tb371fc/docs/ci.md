@@ -186,11 +186,19 @@ still apply to any future authorized consumer execution.
 
 ## Gates
 
-The current integration plan registers **92 gates: 87 component/parser gates
+The current integration plan registers **94 gates: 89 component/parser gates
 and five Linux integration gates**, plus separate active and runtime-suspended
 real-Linux UFS checkpoints and the A77/PCI UFS compatibility job. This union
 preserves the wholeboard reference peripherals and default-branch storage,
 power and timer regressions. Each new source revision needs its own receipts.
+The [DSI PLL/shared-PHY gate](dsi-pll7nm-sm8250.md) adds 41 required groups,
+three completed migrations, two profile rejections and two single-bit stream
+corruption rejections. Its independent 1356-byte section is checked alongside
+the existing MDSS64 and DISPCC1676 payloads and all16 DSI carrier periods. The
+separate source-generation gate verifies13 byte/hash/blob pins and reproduces
+two tables. These two new gates require their own compiled receipts; reference
+REFGEN fixtures, virtual lock timing and no-callback migration checks do not
+attest a complete PHY, display execution, or Android boot.
 The [MDSS reference gate](mdss-gdsc-reference.md) adds 20 required checks,
 three completed process migrations, two profile rejections and two single-bit
 corruption rejections. Its 64-byte section is independent of the unchanged
