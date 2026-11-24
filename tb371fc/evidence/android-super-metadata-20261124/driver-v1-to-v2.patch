@@ -1,0 +1,36 @@
+--- a/tb371fc/scripts/inspect_android_super.py
++++ b/tb371fc/scripts/inspect_android_super.py
+@@ -79,7 +79,10 @@
+ def name_field(raw: bytes, kind: str, suffix: bool, slot: int) -> str:
+     name, sep, padding = raw.partition(b"\0")
+     require(not sep or not any(padding), f"{kind} has nonzero name padding")
+-    require(re.fullmatch(rb"[A-Za-z0-9_]{1,36}", name) is not None,
++    # libsnapshot::GetCowName appends "-cow" to real LP partition names.
++    # This supported form is narrower than accepting arbitrary punctuation.
++    pattern = rb"[A-Za-z0-9_]+(?:-cow)?" if kind == "partition" else rb"[A-Za-z0-9_]+"
++    require(1 <= len(name) <= 36 and re.fullmatch(pattern, name) is not None,
+             f"invalid {kind} name")
+     result = name.decode("ascii")
+     if suffix:
+@@ -207,6 +210,12 @@
+                            "size": size, "group": groups[group_index]["name"],
+                            "extent_indices": list(indices), "empty": count == 0})
+     unique_names(partitions, "partition")
++    partition_names = {item["name"] for item in partitions}
++    for item in partitions:
++        item["snapshot_cow_partition"] = item["name"].endswith("-cow")
++        if item["snapshot_cow_partition"]:
++            require(item["group"] == "cow" and item["name"][:-4] in partition_names,
++                    "COW partition lacks its base partition or cow group")
+     require(owners == set(range(len(extents))), "unowned extent records")
+     for group in groups:
+         require(not group["maximum_size"] or group["used_bytes"] <= group["maximum_size"],
+@@ -215,6 +224,8 @@
+     return {"version": f"{major}.{minor}", "header_size": header_size,
+             "tables_size": table_size, "header_flags": flags,
+             "unknown_informational_header_flags": flags & ~1,
++            "snapshot_related_metadata_present": bool(flags & 1 or any(
++                item["snapshot_cow_partition"] or item["attributes"] & 4 for item in partitions)),
+             "metadata_sha256": digest(raw[:header_size + table_size]),
+             "header_sha256": digest(header), "tables_sha256": digest(tables),
+             "block_devices": devices, "groups": groups,

@@ -1,0 +1,74 @@
+diff --git a/tb371fc/scripts/inspect_ufs_gpt.py b/tb371fc/scripts/inspect_ufs_gpt.py
+index 37fd97e7bdaaf00beff0e52a8940879f88ae1163..d72b2ea42f98a465dd06641fc8eadc5333701f5c 100644
+--- a/tb371fc/scripts/inspect_ufs_gpt.py
++++ b/tb371fc/scripts/inspect_ufs_gpt.py
+@@ -80,7 +80,9 @@ def read_region(fd, regions, name, offset, length, disk_bytes):
+     return raw
+ 
+ 
+-def check_pmbr(raw, total_lbas):
++def check_pmbr(raw, total_lbas, extent_policy='strict'):
++    require(extent_policy in ('strict', 'allow-saturated-size'), 'pmbr_policy',
++            'Unknown protective MBR extent policy')
+     require(raw[:4] != b'\x3a\xff\x26\xed', 'android_sparse',
+             'Android sparse input must be independently expanded and verified')
+     require(raw[:4] != b'QFI\xfb', 'qcow2',
+@@ -93,12 +95,19 @@ def check_pmbr(raw, total_lbas):
+             'pmbr_records', 'Require exactly one protective record and no hybrid MBR')
+     item = present[0]
+     start, size = struct.unpack_from('<II', item, 8)
+-    require(start == 1 and size == min(total_lbas - 1, 0xffffffff),
++    expected_size = min(total_lbas - 1, 0xffffffff)
++    standard_extent = start == 1 and size == expected_size
++    saturated_exception = (extent_policy == 'allow-saturated-size' and start == 1
++                           and size == 0xffffffff and size != expected_size)
++    require(standard_extent or saturated_exception,
+             'pmbr_extent', 'Protective MBR does not cover this LUN geometry')
+     require(not any(raw[440:446]) and not any(raw[512:]),
+             'pmbr_reserved', 'Protective MBR reserved bytes must be zero')
+     # CHS and BootIndicator are not interpreted as partition addresses.
+     return {'partition_type': 0xee, 'start_lba': start, 'size_lbas': size,
++            'actual_size_lbas': size, 'expected_size_lbas': expected_size,
++            'extent_policy': extent_policy, 'pmbr_standard_extent': standard_extent,
++            'sentinel_compatibility': saturated_exception,
+             'boot_indicator': item[0], 'hybrid_mbr': False}
+ 
+ 
+@@ -209,7 +218,8 @@ def metadata_digest(regions, disk_bytes, block_bytes):
+     return digest.hexdigest()
+ 
+ 
+-def inspect(path, logical_block_bytes=None, allow_block_device=False, required_names=()):
++def inspect(path, logical_block_bytes=None, allow_block_device=False, required_names=(),
++            pmbr_policy='strict'):
+     """Return a qualified metadata-only report, or raise without changing input."""
+     path = Path(path)
+     before_path = path.lstat()
+@@ -238,7 +248,7 @@ def inspect(path, logical_block_bytes=None, allow_block_device=False, required_n
+         total_lbas = disk_bytes // block_bytes
+         regions = []
+         pmbr = check_pmbr(read_region(fd, regions, 'protective_mbr', 0,
+-                                     block_bytes, disk_bytes), total_lbas)
++                                     block_bytes, disk_bytes), total_lbas, pmbr_policy)
+         primary = read_header(fd, regions, 'primary', 1, total_lbas-1, block_bytes, disk_bytes)
+         backup = read_header(fd, regions, 'backup', total_lbas-1, 1, block_bytes, disk_bytes)
+         for field in ('revision', 'header_size', 'first_usable_lba', 'last_usable_lba',
+@@ -301,6 +311,9 @@ def main(argv=None):
+     parser.add_argument('--logical-block-size', type=int, choices=(512, 4096),
+                         help='Required for raw files; block devices use their ioctl value and must match if supplied')
+     parser.add_argument('--allow-block-device', action='store_true')
++    parser.add_argument('--pmbr-policy', choices=('strict', 'allow-saturated-size'),
++                        default='strict',
++                        help='Strict by default; opt in only to the observed 0xffffffff size sentinel')
+     parser.add_argument('--require-partition', action='append', default=[],
+                         help='Require this exact label in this LUN; repeat for more labels')
+     parser.add_argument('--output', type=Path, help='New JSON receipt; existing paths are never overwritten')
+@@ -309,7 +322,7 @@ def main(argv=None):
+         parser.error('Output already exists; choose a new receipt path')
+     try:
+         report = inspect(args.input, args.logical_block_size,
+-                         args.allow_block_device, args.require_partition)
++                         args.allow_block_device, args.require_partition, args.pmbr_policy)
+         exit_code = 0
+     except (InvalidGPT, OSError) as exc:
+         report = {'schema_version': 1, 'kind': 'ufs-gpt-metadata-inventory',
