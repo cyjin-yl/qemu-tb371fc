@@ -1,0 +1,19 @@
+--- a/tb371fc/scripts/inspect_android_super.py
++++ b/tb371fc/scripts/inspect_android_super.py
+@@ -86,6 +86,7 @@
+             f"invalid {kind} name")
+     result = name.decode("ascii")
+     if suffix:
++        require(not result.endswith("-cow"), "slot-suffixed COW names are unsupported")
+         require(slot in (0, 1), "slot-suffixed names support only slots 0 and 1")
+         result += "_a" if slot == 0 else "_b"
+         require(len(result) <= 36, f"{kind} name overflows after slot suffix")
+@@ -273,7 +274,7 @@
+     if expected_sha256 is not None:
+         require(re.fullmatch(r"[0-9a-f]{64}", expected_sha256) is not None,
+                 "expected SHA-256 must be lowercase hexadecimal")
+-    flags = os.O_RDONLY | getattr(os, "O_CLOEXEC", 0) | os.O_NOFOLLOW
++    flags = os.O_RDONLY | os.O_NONBLOCK | getattr(os, "O_CLOEXEC", 0) | os.O_NOFOLLOW
+     fd = os.open(path, flags)
+     try:
+         before = os.fstat(fd)

@@ -430,8 +430,27 @@ def receive(incoming, outgoing, output_dir, resume=False):
             write_json_exclusive(manifest_path, result)
         else:
             previous = load_json_file(manifest_path)
-            require(previous.get("plan") == plan and previous.get("chunks") == result["chunks"] and
-                    previous.get("status") == "verified-range-copies" and previous.get("snapshot_consistent") is False,
+            # Schema v1 is closed: no unknown or missing completion fields.
+            require(isinstance(previous, dict) and set(previous) == set(result),
+                    "existing completion manifest fields disagree")
+            # Keep the original run's annotations, not this resume's timestamp
+            # and skip list. Every qualification is rederived above from the
+            # validated plan and verified records, including full coverage.
+            require(isinstance(previous["completed_utc"], str),
+                    "existing completion manifest has invalid completion time")
+            completed = datetime.datetime.fromisoformat(previous["completed_utc"])
+            require(completed.utcoffset() == datetime.timedelta(0),
+                    "existing completion manifest completion time must be UTC")
+            previous_resumed = previous["resume_source_revalidated_chunks"]
+            require(isinstance(previous_resumed, list) and
+                    all(type(index) is int and 0 <= index < len(rows) for index in previous_resumed),
+                    "existing completion manifest has invalid resume indices")
+            require(previous_resumed == sorted(set(previous_resumed)),
+                    "existing completion manifest has duplicate or unordered resume indices")
+            expected = {**result, "completed_utc": previous["completed_utc"],
+                        "resume_source_revalidated_chunks": previous_resumed}
+            # Canonical JSON also distinguishes booleans from equal integers.
+            require(json.dumps(previous, sort_keys=True) == json.dumps(expected, sort_keys=True),
                     "existing completion manifest disagrees")
         sync_directory(out)
         send_json(outgoing, {"complete": True, "chunks": len(rows), "manifest": str(manifest_path),

@@ -1,0 +1,803 @@
+{
+  "android_boot_verified": false,
+  "atomic_snapshot_verified": false,
+  "complete_backup_verified": false,
+  "disk_guid_sha256": "31dedb80fc4485714af1e440e42ffee2f92d987d5480370be3066301aba6acda",
+  "full_lun_content_hashed": false,
+  "geometry_source": "BLKSSZGET+BLKGETSIZE64",
+  "gpt_metadata_verified": true,
+  "headers": {
+    "backup": {
+      "alternate_lba": 1,
+      "array_bytes": 8192,
+      "array_crc32": 2873588665,
+      "array_lba": 524283,
+      "current_lba": 524287,
+      "entry_bytes": 128,
+      "entry_count": 64,
+      "first_usable_lba": 6,
+      "header_crc32": 1524414096,
+      "header_size": 92,
+      "last_usable_lba": 524282,
+      "revision": 65536
+    },
+    "primary": {
+      "alternate_lba": 524287,
+      "array_bytes": 8192,
+      "array_crc32": 2873588665,
+      "array_lba": 2,
+      "current_lba": 1,
+      "entry_bytes": 128,
+      "entry_count": 64,
+      "first_usable_lba": 6,
+      "header_crc32": 2220536490,
+      "header_size": 92,
+      "last_usable_lba": 524282,
+      "revision": 65536
+    }
+  },
+  "input_bytes": 2147483648,
+  "input_kind": "block_device",
+  "input_name": "sde",
+  "kind": "ufs-gpt-metadata-inventory",
+  "limitations": [
+    "Only the five listed GPT metadata regions were read, twice.",
+    "No partition content, super metadata, AVB signature or encrypted data was read.",
+    "Stable metadata during these reads does not prove a coherent full-LUN backup.",
+    "This bounded profile requires both GPT copies; it does not repair or recover either."
+  ],
+  "logical_block_bytes": 4096,
+  "metadata_bytes_per_pass": 28672,
+  "metadata_observed_unchanged": true,
+  "metadata_read_passes": 2,
+  "metadata_sha256": "ad58c48b4faa9b834a79b7b46467910637b686ea78356b9c4bd2069b3c932708",
+  "observed_regions": [
+    {
+      "name": "protective_mbr",
+      "offset_bytes": 0,
+      "sha256": "e53182c76db6385b5bb8e9235f35c193fa0dd2fd2941a0fd86a641dec8db9920",
+      "size_bytes": 4096
+    },
+    {
+      "name": "primary_header",
+      "offset_bytes": 4096,
+      "sha256": "93c6c1f82b0597d4753cdac63856185cd4e8cbfb4c54f3d113a0cc849d22eec2",
+      "size_bytes": 4096
+    },
+    {
+      "name": "backup_header",
+      "offset_bytes": 2147479552,
+      "sha256": "7d7a7a7ab4f9d1b140097cf725ba9fb1e0e7ab4490e67fcedd81c2bcbc7725fd",
+      "size_bytes": 4096
+    },
+    {
+      "name": "primary_entries",
+      "offset_bytes": 8192,
+      "sha256": "072ec037739dd72eec5bca89c6046e42802a0c0f2a1082ce81f8ccc4556bb8fd",
+      "size_bytes": 8192
+    },
+    {
+      "name": "backup_entries",
+      "offset_bytes": 2147463168,
+      "sha256": "072ec037739dd72eec5bca89c6046e42802a0c0f2a1082ce81f8ccc4556bb8fd",
+      "size_bytes": 8192
+    }
+  ],
+  "partition_contents_verified": false,
+  "partition_count": 59,
+  "partitions": [
+    {
+      "attributes": "0x107f000000000000",
+      "entry_index": 1,
+      "first_lba": 6,
+      "last_lba": 133,
+      "name": "aop_a",
+      "offset_bytes": 24576,
+      "size_bytes": 524288,
+      "type_guid": "d69e90a5-4cab-0071-f6df-ab977f141a7f",
+      "unique_guid_sha256": "a255c35d6a181d4a6ba45ccae6a2b94b91fe4fc33671a432ded7506743cba07e"
+    },
+    {
+      "attributes": "0x107f000000000000",
+      "entry_index": 2,
+      "first_lba": 134,
+      "last_lba": 1157,
+      "name": "tz_a",
+      "offset_bytes": 548864,
+      "size_bytes": 4194304,
+      "type_guid": "a053aa7f-40b8-4b1c-ba08-2f68ac71a4f4",
+      "unique_guid_sha256": "c39d98bf4f19f0c11092a9d592c7d7d5a5fa60b976ea2b450b2441a0d3eb06a8"
+    },
+    {
+      "attributes": "0x007f000000000000",
+      "entry_index": 3,
+      "first_lba": 1158,
+      "last_lba": 3205,
+      "name": "hyp_a",
+      "offset_bytes": 4743168,
+      "size_bytes": 8388608,
+      "type_guid": "e1a6a689-0c8d-4cc6-b4e8-55a4320fbd8a",
+      "unique_guid_sha256": "f4ec1897fc60f18d0c52a3e2890ece4622d609e231bdcb50c5adf11927c46993"
+    },
+    {
+      "attributes": "0x107f000000000000",
+      "entry_index": 4,
+      "first_lba": 3206,
+      "last_lba": 104325,
+      "name": "modem_a",
+      "offset_bytes": 13131776,
+      "size_bytes": 414187520,
+      "type_guid": "ebd0a0a2-b9e5-4433-87c0-68b6b72699c7",
+      "unique_guid_sha256": "31fc8ec2013a151987876c804deea5c0abe6d0804afa1f4b536328dae77cab92"
+    },
+    {
+      "attributes": "0x107f000000000000",
+      "entry_index": 5,
+      "first_lba": 104326,
+      "last_lba": 104581,
+      "name": "bluetooth_a",
+      "offset_bytes": 427319296,
+      "size_bytes": 1048576,
+      "type_guid": "6cb747f1-c2ef-4092-add0-ca39f79c7af4",
+      "unique_guid_sha256": "840d703bc99694ba9e2f638bcf138708e02d692a1ef3671a5070c6c9c254eb39"
+    },
+    {
+      "attributes": "0x107f000000000000",
+      "entry_index": 6,
+      "first_lba": 104582,
+      "last_lba": 105605,
+      "name": "mdtpsecapp_a",
+      "offset_bytes": 428367872,
+      "size_bytes": 4194304,
+      "type_guid": "ea02d680-8712-4552-a3be-e6087829c1e6",
+      "unique_guid_sha256": "c4723c2b8c2a9ed9816cc40dcde8b9d5cb9e51a0b348933c59e94fbf52ce7e35"
+    },
+    {
+      "attributes": "0x107f000000000000",
+      "entry_index": 7,
+      "first_lba": 105606,
+      "last_lba": 113797,
+      "name": "mdtp_a",
+      "offset_bytes": 432562176,
+      "size_bytes": 33554432,
+      "type_guid": "3878408a-e263-4b67-b878-6340b35b11e3",
+      "unique_guid_sha256": "db9dfa10c68b2c20bd3dc651cb5d63a316d56721178616c6a353075665d4f450"
+    },
+    {
+      "attributes": "0x107f000000000000",
+      "entry_index": 8,
+      "first_lba": 113798,
+      "last_lba": 114053,
+      "name": "abl_a",
+      "offset_bytes": 466116608,
+      "size_bytes": 1048576,
+      "type_guid": "bd6928a1-4ce0-a038-4f3a-1495e3eddffb",
+      "unique_guid_sha256": "0744be1deb5c8c89ed1c10fb3f5933482268489704bff7b71b1a90ac32706136"
+    },
+    {
+      "attributes": "0x107f000000000000",
+      "entry_index": 9,
+      "first_lba": 114054,
+      "last_lba": 130437,
+      "name": "dsp_a",
+      "offset_bytes": 467165184,
+      "size_bytes": 67108864,
+      "type_guid": "7efe5010-2a1a-4a1a-b8bc-990257813512",
+      "unique_guid_sha256": "b2b310a9adb5b1d864aa75a32f0807290991c1cd9eac90bfa5479f9d75c46c33"
+    },
+    {
+      "attributes": "0x107f000000000000",
+      "entry_index": 10,
+      "first_lba": 130438,
+      "last_lba": 130565,
+      "name": "keymaster_a",
+      "offset_bytes": 534274048,
+      "size_bytes": 524288,
+      "type_guid": "a11d2a7c-d82a-4c2f-8a01-1805240e6626",
+      "unique_guid_sha256": "2ff3055c1cb3330b126807358ca20f7a9dfd7969d8f4aeb88782d142543701c0"
+    },
+    {
+      "attributes": "0x0077000000000000",
+      "entry_index": 11,
+      "first_lba": 130566,
+      "last_lba": 155141,
+      "name": "boot_a",
+      "offset_bytes": 534798336,
+      "size_bytes": 100663296,
+      "type_guid": "20117f86-e985-4357-b9ee-374bc1d8487d",
+      "unique_guid_sha256": "dd65a6fd099b9f4a225e1dae460e5d4cdbcab5c5632ca1b1b48919ca9a29c658"
+    },
+    {
+      "attributes": "0x107f000000000000",
+      "entry_index": 12,
+      "first_lba": 155142,
+      "last_lba": 155269,
+      "name": "cmnlib_a",
+      "offset_bytes": 635461632,
+      "size_bytes": 524288,
+      "type_guid": "73471795-ab54-43f9-a847-4f72ea5cbef5",
+      "unique_guid_sha256": "8ee3d45672528c938f58092143fa628a4cab58e8c511ccc64a0844da392b1a7b"
+    },
+    {
+      "attributes": "0x107f000000000000",
+      "entry_index": 13,
+      "first_lba": 155270,
+      "last_lba": 155397,
+      "name": "cmnlib64_a",
+      "offset_bytes": 635985920,
+      "size_bytes": 524288,
+      "type_guid": "8ea64893-1267-4a1b-947c-7c362acaad2c",
+      "unique_guid_sha256": "a70843f7bb05b51099c12847e95feaa27106b67a99706811ac96d75c8a436b09"
+    },
+    {
+      "attributes": "0x007f000000000000",
+      "entry_index": 14,
+      "first_lba": 155398,
+      "last_lba": 155429,
+      "name": "devcfg_a",
+      "offset_bytes": 636510208,
+      "size_bytes": 131072,
+      "type_guid": "f65d4b16-343d-4e25-aafc-be99b6556a6d",
+      "unique_guid_sha256": "89a695130745362dd11596e7761f0a8a9dd00991df39ab2f19bb34b244a1e148"
+    },
+    {
+      "attributes": "0x007f000000000000",
+      "entry_index": 15,
+      "first_lba": 155430,
+      "last_lba": 155449,
+      "name": "qupfw_a",
+      "offset_bytes": 636641280,
+      "size_bytes": 81920,
+      "type_guid": "21d1219f-2ed1-4ab4-930a-41a16ae75f7f",
+      "unique_guid_sha256": "7c52c12c84072b4833fd98608990f9c80b3b338879d6e60a51fdd3429b887383"
+    },
+    {
+      "attributes": "0x107f000000000000",
+      "entry_index": 16,
+      "first_lba": 155450,
+      "last_lba": 155465,
+      "name": "vbmeta_a",
+      "offset_bytes": 636723200,
+      "size_bytes": 65536,
+      "type_guid": "4b7a15d6-322c-42ac-8110-88b7da0c5d77",
+      "unique_guid_sha256": "61860a843252575d827cc8a9c16d290e8a39d1e1a334886d7be1f0c52d4b48b7"
+    },
+    {
+      "attributes": "0x007f000000000000",
+      "entry_index": 17,
+      "first_lba": 155466,
+      "last_lba": 161609,
+      "name": "dtbo_a",
+      "offset_bytes": 636788736,
+      "size_bytes": 25165824,
+      "type_guid": "24d0d418-d31d-4d8d-ac2c-4d4305188450",
+      "unique_guid_sha256": "7823b53659b30d61ba91ebea64e72bf20dc6fa65afe9833c1a2298417d5f4215"
+    },
+    {
+      "attributes": "0x0004000000000000",
+      "entry_index": 18,
+      "first_lba": 161610,
+      "last_lba": 162121,
+      "name": "uefisecapp_a",
+      "offset_bytes": 661954560,
+      "size_bytes": 2097152,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "9029998c6ebfa24c3bf28c265b93183f4bfd2a9b4fe2391f1da4c8c8c5adaaee"
+    },
+    {
+      "attributes": "0x107f000000000000",
+      "entry_index": 19,
+      "first_lba": 162122,
+      "last_lba": 162129,
+      "name": "multiimgoem_a",
+      "offset_bytes": 664051712,
+      "size_bytes": 32768,
+      "type_guid": "e126a436-757e-42d0-8d19-0f362f7a62b8",
+      "unique_guid_sha256": "e74eefc65a934e8c7c700c0bc39cd9ac6ddb7a215016b863ed0b46bded160fba"
+    },
+    {
+      "attributes": "0x107f000000000000",
+      "entry_index": 20,
+      "first_lba": 162130,
+      "last_lba": 162137,
+      "name": "multiimgqti_a",
+      "offset_bytes": 664084480,
+      "size_bytes": 32768,
+      "type_guid": "846c6f05-eb46-4c0a-a1a3-3648ef3f9d0e",
+      "unique_guid_sha256": "674d36d94d7183295b9654824de57c8c7bd6638b49c85b7ee5017b6eea972d13"
+    },
+    {
+      "attributes": "0x0004000000000000",
+      "entry_index": 21,
+      "first_lba": 162138,
+      "last_lba": 170329,
+      "name": "vm-linux_a",
+      "offset_bytes": 664117248,
+      "size_bytes": 33554432,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "3df8e874ab56dd359c035c2cf7d7db1dd137583715a6b4ecb2adbad58e401ec9"
+    },
+    {
+      "attributes": "0x0004000000000000",
+      "entry_index": 22,
+      "first_lba": 170330,
+      "last_lba": 170361,
+      "name": "featenabler_a",
+      "offset_bytes": 697671680,
+      "size_bytes": 131072,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "83dfeb3876e04eaacf5a046c3e5e1530c2bade8e3ee5044e06768a944b1b8e41"
+    },
+    {
+      "attributes": "0x007f000000000001",
+      "entry_index": 23,
+      "first_lba": 170362,
+      "last_lba": 170873,
+      "name": "imagefv_a",
+      "offset_bytes": 697802752,
+      "size_bytes": 2097152,
+      "type_guid": "17911177-c9e6-4372-933c-804b678e666f",
+      "unique_guid_sha256": "de417de2fe9126e4488b67ee824f44302f204a27b978b56f11d9915b38c69708"
+    },
+    {
+      "attributes": "0x00fb000000000000",
+      "entry_index": 24,
+      "first_lba": 170874,
+      "last_lba": 171001,
+      "name": "aop_b",
+      "offset_bytes": 699899904,
+      "size_bytes": 524288,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "ca6db125df5f397f4c844996a4dfb7c8b3bf0f5a0eac57c061eaec5220dc98c0"
+    },
+    {
+      "attributes": "0x00fb000000000000",
+      "entry_index": 25,
+      "first_lba": 171002,
+      "last_lba": 172025,
+      "name": "tz_b",
+      "offset_bytes": 700424192,
+      "size_bytes": 4194304,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "96d0ef89163de9dc7ee4295f6717f625f1f090b410eedaee82dc6085669c7a11"
+    },
+    {
+      "attributes": "0x00fb000000000000",
+      "entry_index": 26,
+      "first_lba": 172026,
+      "last_lba": 174073,
+      "name": "hyp_b",
+      "offset_bytes": 704618496,
+      "size_bytes": 8388608,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "f33295e51f490d5aa3c5548d8ae299e5aae9e6ff490e902244ed8c3598302913"
+    },
+    {
+      "attributes": "0x10fb000000000000",
+      "entry_index": 27,
+      "first_lba": 174074,
+      "last_lba": 275193,
+      "name": "modem_b",
+      "offset_bytes": 713007104,
+      "size_bytes": 414187520,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "37ccb041247e468fab6b7aca72b3aaf31810ebbc81b8a29bb39c2bb85e26a80d"
+    },
+    {
+      "attributes": "0x10fb000000000000",
+      "entry_index": 28,
+      "first_lba": 275194,
+      "last_lba": 275449,
+      "name": "bluetooth_b",
+      "offset_bytes": 1127194624,
+      "size_bytes": 1048576,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "1d25e8d814c254d5ed442d9db23476aceb0c091b279fa9ff1a45ec8d9ce3632f"
+    },
+    {
+      "attributes": "0x10fb000000000000",
+      "entry_index": 29,
+      "first_lba": 275450,
+      "last_lba": 276473,
+      "name": "mdtpsecapp_b",
+      "offset_bytes": 1128243200,
+      "size_bytes": 4194304,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "2dcf88c22d45a9928615f81ced35a24974259ade6197b194ecbda74c1c107795"
+    },
+    {
+      "attributes": "0x10fb000000000000",
+      "entry_index": 30,
+      "first_lba": 276474,
+      "last_lba": 284665,
+      "name": "mdtp_b",
+      "offset_bytes": 1132437504,
+      "size_bytes": 33554432,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "e27a398f664c69b628bb9e45b48fd3d63d53924154276255601a8cc13ee34420"
+    },
+    {
+      "attributes": "0x10fb000000000000",
+      "entry_index": 31,
+      "first_lba": 284666,
+      "last_lba": 284921,
+      "name": "abl_b",
+      "offset_bytes": 1165991936,
+      "size_bytes": 1048576,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "1ba70d5407d788ac9849d275f11e914732932f39d4baea9fea02476920d1ba1f"
+    },
+    {
+      "attributes": "0x10fb000000000000",
+      "entry_index": 32,
+      "first_lba": 284922,
+      "last_lba": 301305,
+      "name": "dsp_b",
+      "offset_bytes": 1167040512,
+      "size_bytes": 67108864,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "635db6c47e67da1acfaa6b5534503c95c8c2cfca68aa9b924d9072a08eb414ac"
+    },
+    {
+      "attributes": "0x10fb000000000000",
+      "entry_index": 33,
+      "first_lba": 301306,
+      "last_lba": 301433,
+      "name": "keymaster_b",
+      "offset_bytes": 1234149376,
+      "size_bytes": 524288,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "7928763faec36fb48ebfe90af35ddbcace530bc662ec9f3dd7e95009b1bce554"
+    },
+    {
+      "attributes": "0x00eb000000000000",
+      "entry_index": 34,
+      "first_lba": 301434,
+      "last_lba": 326009,
+      "name": "boot_b",
+      "offset_bytes": 1234673664,
+      "size_bytes": 100663296,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "345229af277142de6965b1bbed1466dbf80da6e80a8d7ac19f21ac9a2a1e7fe9"
+    },
+    {
+      "attributes": "0x10fb000000000000",
+      "entry_index": 35,
+      "first_lba": 326010,
+      "last_lba": 326137,
+      "name": "cmnlib_b",
+      "offset_bytes": 1335336960,
+      "size_bytes": 524288,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "fe0d0488d7efd052b63f6840407271ed3230f5714fbc2b6bc8034a8e207dded4"
+    },
+    {
+      "attributes": "0x10fb000000000000",
+      "entry_index": 36,
+      "first_lba": 326138,
+      "last_lba": 326265,
+      "name": "cmnlib64_b",
+      "offset_bytes": 1335861248,
+      "size_bytes": 524288,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "200c93500cd21b568e3efc2783cab0870fcf66dbaabbb3df34884af9b74b7f36"
+    },
+    {
+      "attributes": "0x00fb000000000000",
+      "entry_index": 37,
+      "first_lba": 326266,
+      "last_lba": 326297,
+      "name": "devcfg_b",
+      "offset_bytes": 1336385536,
+      "size_bytes": 131072,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "f3f624226f865156d1512361309ee33ef33d37d1822cc415469eeb882ed2947b"
+    },
+    {
+      "attributes": "0x00fb000000000000",
+      "entry_index": 38,
+      "first_lba": 326298,
+      "last_lba": 326317,
+      "name": "qupfw_b",
+      "offset_bytes": 1336516608,
+      "size_bytes": 81920,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "7512fe8b59f54300b1e882f05121550934fa3863f6b73621f4be8699e7b0e080"
+    },
+    {
+      "attributes": "0x10fb000000000000",
+      "entry_index": 39,
+      "first_lba": 326318,
+      "last_lba": 326333,
+      "name": "vbmeta_b",
+      "offset_bytes": 1336598528,
+      "size_bytes": 65536,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "851b7a2968a1aa4ff8ab4c13426c8600e60abbe4466fd1ca8752545a664d0142"
+    },
+    {
+      "attributes": "0x00fb000000000000",
+      "entry_index": 40,
+      "first_lba": 326334,
+      "last_lba": 332477,
+      "name": "dtbo_b",
+      "offset_bytes": 1336664064,
+      "size_bytes": 25165824,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "930a08ff1252930b388ab4fc902d440db9d0c3aee2fb072682f55921b672d501"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 41,
+      "first_lba": 332478,
+      "last_lba": 332989,
+      "name": "uefisecapp_b",
+      "offset_bytes": 1361829888,
+      "size_bytes": 2097152,
+      "type_guid": "be8a7e08-1b7a-4cae-993a-d5b7fb55b3c2",
+      "unique_guid_sha256": "bfb932fed442ce0609086621eabc2a46cf6509c339780aacb9a531a7cd48b66c"
+    },
+    {
+      "attributes": "0x10fb000000000000",
+      "entry_index": 42,
+      "first_lba": 332990,
+      "last_lba": 332997,
+      "name": "multiimgoem_b",
+      "offset_bytes": 1363927040,
+      "size_bytes": 32768,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "45909385c270bc81d1a9a435f6f9adfb659d29655f7342e91ae5e7ec5ee92914"
+    },
+    {
+      "attributes": "0x10fb000000000000",
+      "entry_index": 43,
+      "first_lba": 332998,
+      "last_lba": 333005,
+      "name": "multiimgqti_b",
+      "offset_bytes": 1363959808,
+      "size_bytes": 32768,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "c72b9740ae1493ba66e9eb7de26fad178f0032a6bf6f3528ffafd1b328c3e4ae"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 44,
+      "first_lba": 333006,
+      "last_lba": 341197,
+      "name": "vm-linux_b",
+      "offset_bytes": 1363992576,
+      "size_bytes": 33554432,
+      "type_guid": "cb67e78c-d427-451b-8fef-9449fb3ccf27",
+      "unique_guid_sha256": "669a8cfd47a6505561f3d99ea2280625e86661ba4a8a5d27ab6c28b5bba5e164"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 45,
+      "first_lba": 341198,
+      "last_lba": 341229,
+      "name": "featenabler_b",
+      "offset_bytes": 1397547008,
+      "size_bytes": 131072,
+      "type_guid": "741813d2-8c87-4465-8c69-032c771ccce7",
+      "unique_guid_sha256": "4e52182c912f706cbe66dc2a9636ce816d2d1a590f8c6b5c4d0d6c20e94fa78d"
+    },
+    {
+      "attributes": "0x00fb000000000001",
+      "entry_index": 46,
+      "first_lba": 341230,
+      "last_lba": 341741,
+      "name": "imagefv_b",
+      "offset_bytes": 1397678080,
+      "size_bytes": 2097152,
+      "type_guid": "77036cd4-03d5-42bb-8ed1-37e5a88baa34",
+      "unique_guid_sha256": "04efd149865cf9afff56b5e15f47f4c3e24b808f9943a45b084acdfe810fcd17"
+    },
+    {
+      "attributes": "0x1000000000000000",
+      "entry_index": 47,
+      "first_lba": 341742,
+      "last_lba": 341742,
+      "name": "devinfo",
+      "offset_bytes": 1399775232,
+      "size_bytes": 4096,
+      "type_guid": "65addcf4-0c5c-4d9a-ac2d-d90b5cbfcd03",
+      "unique_guid_sha256": "8e2a2c3282b76897298d3ab2c6adfdc9f6ef75d261f5de51e0aec495972b5c69"
+    },
+    {
+      "attributes": "0x1000000000000000",
+      "entry_index": 48,
+      "first_lba": 341743,
+      "last_lba": 341998,
+      "name": "dip",
+      "offset_bytes": 1399779328,
+      "size_bytes": 1048576,
+      "type_guid": "4114b077-005d-4e12-ac8c-b493bda684fb",
+      "unique_guid_sha256": "0f8d37420283d0229b949c4a3581cfd1163576ac4a431258182298d431d5c144"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 49,
+      "first_lba": 341999,
+      "last_lba": 342062,
+      "name": "apdp",
+      "offset_bytes": 1400827904,
+      "size_bytes": 262144,
+      "type_guid": "e6e98da2-e22a-4d12-ab33-169e7deaa507",
+      "unique_guid_sha256": "80ba6e3fd9e22660b93c0da8289b503fa4af9799b714210fccd22cfb39e086ee"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 50,
+      "first_lba": 342063,
+      "last_lba": 342126,
+      "name": "msadp",
+      "offset_bytes": 1401090048,
+      "size_bytes": 262144,
+      "type_guid": "ed9e8101-05fa-46b7-82aa-8d58770d200b",
+      "unique_guid_sha256": "45b8e41de02cdf2856857e105e1e42afc7a8f97e4cd4da2e4d35780a7fe01761"
+    },
+    {
+      "attributes": "0x1000000000000000",
+      "entry_index": 51,
+      "first_lba": 342127,
+      "last_lba": 342127,
+      "name": "limits",
+      "offset_bytes": 1401352192,
+      "size_bytes": 4096,
+      "type_guid": "10a0c19c-516a-5444-5ce3-664c3226a794",
+      "unique_guid_sha256": "621839fdc05c38aff470a856c4cc4c28b51bf08a137e809590e87952137d755c"
+    },
+    {
+      "attributes": "0x1000000000000000",
+      "entry_index": 52,
+      "first_lba": 342128,
+      "last_lba": 342128,
+      "name": "limits-cdsp",
+      "offset_bytes": 1401356288,
+      "size_bytes": 4096,
+      "type_guid": "545d3707-8329-40e8-8b5e-3e554cbdc786",
+      "unique_guid_sha256": "39827db21664d06e274a34c60e47189c1e300ee7daca2152fb68376dd3b1970a"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 53,
+      "first_lba": 342129,
+      "last_lba": 344176,
+      "name": "logfs",
+      "offset_bytes": 1401360384,
+      "size_bytes": 8388608,
+      "type_guid": "bc0330eb-3410-4951-a617-03898dbe3372",
+      "unique_guid_sha256": "ae16ce444f15cd5a30a029dc231f81a77a7706d90c02eaef94778751cbe567f0"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 54,
+      "first_lba": 344177,
+      "last_lba": 360560,
+      "name": "logdump",
+      "offset_bytes": 1409748992,
+      "size_bytes": 67108864,
+      "type_guid": "5af80809-aabb-4943-9168-cdfc38742598",
+      "unique_guid_sha256": "b189d0e517cc04a9b98ee41d7b56db989006b8ddaa29681899cb9567a0516d8a"
+    },
+    {
+      "attributes": "0x1000000000000000",
+      "entry_index": 55,
+      "first_lba": 360561,
+      "last_lba": 360592,
+      "name": "storsec",
+      "offset_bytes": 1476857856,
+      "size_bytes": 131072,
+      "type_guid": "02db45fe-ad1b-4cb6-aecc-0042c637defa",
+      "unique_guid_sha256": "c12cd7e3b871df2860d2a0ccdedcedc01982d77a9e1917bc42f6d67850b2ef91"
+    },
+    {
+      "attributes": "0x1000000000000000",
+      "entry_index": 56,
+      "first_lba": 360593,
+      "last_lba": 360720,
+      "name": "uefivarstore",
+      "offset_bytes": 1476988928,
+      "size_bytes": 524288,
+      "type_guid": "165bd6bc-9250-4ac8-95a7-a93f4a440066",
+      "unique_guid_sha256": "53e539f2ad34bc6c01e713f3436e340dc1b0433abd9df15feba060f9266fe310"
+    },
+    {
+      "attributes": "0x1000000000000000",
+      "entry_index": 57,
+      "first_lba": 360721,
+      "last_lba": 360727,
+      "name": "secdata",
+      "offset_bytes": 1477513216,
+      "size_bytes": 28672,
+      "type_guid": "76cfc7ef-039d-4e2c-b81e-4dd8c2cb2a93",
+      "unique_guid_sha256": "f84f15c1c5c0516085b54a0c8ca957f33ee77015afc292bafbb8e2ee9033407c"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 58,
+      "first_lba": 360728,
+      "last_lba": 360759,
+      "name": "vm-keystore",
+      "offset_bytes": 1477541888,
+      "size_bytes": 131072,
+      "type_guid": "665fe2a8-2f28-44b7-b12d-e89eec9ee9f7",
+      "unique_guid_sha256": "e5ed384afc4576f4b2694520b2fcfca5a5714cfd4dbbfbe42faf704779d40d9d"
+    },
+    {
+      "attributes": "0x0000000000000000",
+      "entry_index": 59,
+      "first_lba": 360760,
+      "last_lba": 361783,
+      "name": "vm-data",
+      "offset_bytes": 1477672960,
+      "size_bytes": 4194304,
+      "type_guid": "c9bb2aa8-af8f-49b3-b723-a890a2c8e6d3",
+      "unique_guid_sha256": "a3065b7ac6495425285da0d70c98a6fdb806fa5b59eeb2078148a635d7c079d0"
+    }
+  ],
+  "protective_mbr": {
+    "actual_size_lbas": 4294967295,
+    "boot_indicator": 0,
+    "expected_size_lbas": 524287,
+    "extent_policy": "allow-saturated-size",
+    "hybrid_mbr": false,
+    "partition_type": 238,
+    "pmbr_standard_extent": false,
+    "sentinel_compatibility": true,
+    "size_lbas": 4294967295,
+    "start_lba": 1
+  },
+  "required_partition_labels": [
+    "boot_a"
+  ],
+  "required_partition_labels_verified": true,
+  "schema_version": 1,
+  "sources": [
+    "https://uefi.org/specs/UEFI/2.11/05_GUID_Partition_Table_Format.html",
+    "https://github.com/gregkh/linux/blob/v6.12.114/block/partitions/efi.c"
+  ],
+  "status": "gpt_metadata_verified",
+  "total_lbas": 524288,
+  "unused_entry_count": 5,
+  "unused_entry_policy": "allow-type-zero-residue",
+  "unused_type_zero_residue_count": 1,
+  "unused_type_zero_residues": [
+    {
+      "classification": "unused_type_zero_residue",
+      "entry_bytes": 128,
+      "entry_index": 60,
+      "included_in_partitions": false,
+      "nonzero_fields": {
+        "attributes": {
+          "offset_bytes": 48,
+          "sha256": "998e907bfbb34f71c66b6dc6c40fe98ca6d2d5a29755bc5a04824c36082a61d1",
+          "size_bytes": 8
+        },
+        "first_lba": {
+          "offset_bytes": 32,
+          "sha256": "08d46ff9756da747a68cb73da13565f1df2f38113ae4607eaf8ee3f529d615aa",
+          "size_bytes": 8
+        },
+        "last_lba": {
+          "offset_bytes": 40,
+          "sha256": "7019a067333ebfd7302f9d2e58194b3c2939192711dc6d6f0733344536ac0a9e",
+          "size_bytes": 8
+        },
+        "name_utf16": {
+          "offset_bytes": 56,
+          "sha256": "53ea152f12396db5d00ca16753e83ac6074307d355464ba2fe4e4737aa8dd9c2",
+          "size_bytes": 72
+        },
+        "unique_guid": {
+          "offset_bytes": 16,
+          "sha256": "86600249bde355c23df9bb63001927968246f63dfaff97d8887a626b5e89d530",
+          "size_bytes": 16
+        }
+      },
+      "record_sha256": "a0338f8ebdc5ce186aa37e12940ffc0265c4e3866584253ac56630c4b9726110",
+      "stale_fields_interpreted": false
+    }
+  ],
+  "unused_zero_entry_count": 4
+}

@@ -1,0 +1,605 @@
+{
+  "schema": "tb371fc-first-stage-storage-metadata-map-v1",
+  "created_utc": "2026-11-24T13:25:31.239211+00:00",
+  "status": "configuration_to_metadata_mapping_only",
+  "scope": "Private scratch coordination; existing sanitized fstab capture + six GPT reports + selected super metadata slot. No device, partition payload, key path, raw fstab or raw boot image was opened.",
+  "sources": {
+    "fstab_capture": {
+      "path": "/workspace/scratch/e1a9b5ac750a/qemu-integration-work/tb371fc/evidence/wholeboard-20261123-a47/boot-fstab-and-sbm-symbols-b95f97.json",
+      "bytes": 15552,
+      "sha256": "35d5058109f340dbec4cbaa7b31dcc57475e3335af410641c381300064d4e3b5",
+      "captured_utc": "2026-11-23T19:54:20.524879+00:00",
+      "fstab_basename": "fstab.qcom",
+      "fstab_bytes": 5171,
+      "fstab_sha256_recorded_in_capture": "ef90833a01ebb5ca8d1c03d047a6f957f14e51ff4278bd06cd653dc29cf1960e",
+      "raw_fstab_rehashed_by_this_review": false,
+      "matching_archive_entries": 1,
+      "active_entry_count": 15,
+      "first_stage_entry_count": 6,
+      "first_stage_logical_entry_count": 5,
+      "flag_parameter_values_redacted_except_vbmeta_labels": true,
+      "ramdisk_slice_sha256": "563f4b334f8470155c6a451395342f7044b70e79b480a886c7641960f534f596",
+      "decompressed_cpio_sha256": "db7f63f0ccefd8d2320142b806d42ade4c6a2edaa3dc9f1ca6295d78e0f8e542",
+      "boot_image_sha256_from_prior_root_receipt": "78ba0f4f75bec85a80155a9e9ea8fa19546bbd88598a7923a16b069404899a9a",
+      "full_boot_rehashed_by_fstab_collector": false,
+      "full_boot_rehashed_by_this_review": false,
+      "boot_image_size_from_old_stat": 100663296
+    },
+    "gpt_attempt_003": [
+      {
+        "lun": 0,
+        "block_name": "sda",
+        "path": "/workspace/scratch/f99a6599321f/qemu-ufs-gpt-work/tb371fc/evidence/ufs-gpt-inventory-20261124/attempt-003/sda.json",
+        "bytes": 9353,
+        "sha256": "24259401b247d351ae2265d7f0c6f77468ae354fccaa1ce213b159be252f828c"
+      },
+      {
+        "lun": 1,
+        "block_name": "sdb",
+        "path": "/workspace/scratch/f99a6599321f/qemu-ufs-gpt-work/tb371fc/evidence/ufs-gpt-inventory-20261124/attempt-003/sdb.json",
+        "bytes": 5573,
+        "sha256": "482ac6c04b467dc5bf71c15c704a8b39b40c65a5e2a0df6e0cfa2e143399245e"
+      },
+      {
+        "lun": 2,
+        "block_name": "sdc",
+        "path": "/workspace/scratch/f99a6599321f/qemu-ufs-gpt-work/tb371fc/evidence/ufs-gpt-inventory-20261124/attempt-003/sdc.json",
+        "bytes": 5572,
+        "sha256": "382a043dd12958c313c11262ab0ded8ca36fb0d097955fac54eea2afc92536d9"
+      },
+      {
+        "lun": 3,
+        "block_name": "sdd",
+        "path": "/workspace/scratch/f99a6599321f/qemu-ufs-gpt-work/tb371fc/evidence/ufs-gpt-inventory-20261124/attempt-003/sdd.json",
+        "bytes": 6295,
+        "sha256": "20f0614bc88e172ac92f5d3fd0e515026bda960fced2c45cae9e16aa2bbee5ac"
+      },
+      {
+        "lun": 4,
+        "block_name": "sde",
+        "path": "/workspace/scratch/f99a6599321f/qemu-ufs-gpt-work/tb371fc/evidence/ufs-gpt-inventory-20261124/attempt-003/sde.json",
+        "bytes": 26983,
+        "sha256": "1499f3c9cbb0fa60d4a4577a2e4f50abed38ba61bb209ab571c41f21c6efa7b2"
+      },
+      {
+        "lun": 5,
+        "block_name": "sdf",
+        "path": "/workspace/scratch/f99a6599321f/qemu-ufs-gpt-work/tb371fc/evidence/ufs-gpt-inventory-20261124/attempt-003/sdf.json",
+        "bytes": 8154,
+        "sha256": "ad411203856b339fabd0509b646d0aeb66cda8581aa47a27936348674e6b1c29"
+      }
+    ],
+    "super_attempt_003": {
+      "path": "/workspace/scratch/f99a6599321f/qemu-android-super-metadata/tb371fc/evidence/android-super-metadata-20261124/attempt-003.json",
+      "bytes": 9092,
+      "sha256": "b299ff0af1885e66759785534d91c5df296b3cd2ac1409e0b07b0485d5f65ada",
+      "capture_prefix_sha256": "6bf1fbcdb6e63a6208aebd088cbe11ad0c6040fab6c3ec45fc15e547623e551c",
+      "metadata_slot": 0,
+      "metadata_slot_count": 3,
+      "partition_records": 8,
+      "extent_records": 20,
+      "lp_sector_bytes": 512,
+      "logical_block_bytes": 4096
+    }
+  },
+  "assumptions": {
+    "run_slot_suffix": "_a",
+    "basis": "Coordinator-selected original boot_a run and explicit super metadata slot 0; not inferred from GPT attributes or metadata_slot_count. Current device active-slot/bootargs not re-read.",
+    "selected_slot_from_runtime_verified": false,
+    "metadata_slot_count_does_not_verify_other_slots": true,
+    "cross_capture_atomic_consistency_verified": false,
+    "old_boot_content_identity_to_current_partition_verified": false,
+    "old_boot_stat_size_matches_gpt_boot_a_size": true
+  },
+  "first_stage_logical": [
+    {
+      "fstab_line": 38,
+      "mountpoint": "/system",
+      "fstab_label": "system",
+      "selected_slot_label": "system_a",
+      "filesystem_configured": "ext4",
+      "configured_readonly": true,
+      "slot_suffix_assumption": "_a",
+      "lp_size_bytes": 6160855040,
+      "lp_group": "qti_dynamic_partitions_a",
+      "lp_attributes": 5,
+      "lp_extent_indices": [
+        5,
+        6,
+        7
+      ],
+      "lp_extent_count": 3,
+      "backing_gpt_label": "super",
+      "backing_lun": 0,
+      "backing_gpt_entry": 6,
+      "explicit_avb_fstab_bindings": [
+        {
+          "fstab_label": "vbmeta_system",
+          "selected_slot_label": "vbmeta_system_a",
+          "gpt_binding": {
+            "lun": 0,
+            "block_name": "sda",
+            "gpt_entry_index": 9,
+            "label": "vbmeta_system_a",
+            "first_lba_4096": 3205640,
+            "last_lba_4096": 3205655,
+            "offset_bytes_in_lun": 13130301440,
+            "size_bytes": 65536,
+            "kernel_node_derived_from_block_and_entry": "/dev/block/sda9",
+            "derived_kernel_node_observed_by_this_review": false
+          }
+        }
+      ],
+      "avb_flag_present": true,
+      "root_vbmeta_candidate_label_under_selected_slot": "vbmeta_a",
+      "root_avb_chain_inferred_or_verified": false,
+      "snapshot_cow_record": "system_a-cow",
+      "effective_runtime_mapping_verified": false
+    },
+    {
+      "fstab_line": 39,
+      "mountpoint": "/system_ext",
+      "fstab_label": "system_ext",
+      "selected_slot_label": "system_ext_a",
+      "filesystem_configured": "ext4",
+      "configured_readonly": true,
+      "slot_suffix_assumption": "_a",
+      "lp_size_bytes": 516452352,
+      "lp_group": "qti_dynamic_partitions_a",
+      "lp_attributes": 5,
+      "lp_extent_indices": [
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "lp_extent_count": 5,
+      "backing_gpt_label": "super",
+      "backing_lun": 0,
+      "backing_gpt_entry": 6,
+      "explicit_avb_fstab_bindings": [
+        {
+          "fstab_label": "vbmeta_system",
+          "selected_slot_label": "vbmeta_system_a",
+          "gpt_binding": {
+            "lun": 0,
+            "block_name": "sda",
+            "gpt_entry_index": 9,
+            "label": "vbmeta_system_a",
+            "first_lba_4096": 3205640,
+            "last_lba_4096": 3205655,
+            "offset_bytes_in_lun": 13130301440,
+            "size_bytes": 65536,
+            "kernel_node_derived_from_block_and_entry": "/dev/block/sda9",
+            "derived_kernel_node_observed_by_this_review": false
+          }
+        }
+      ],
+      "avb_flag_present": true,
+      "root_vbmeta_candidate_label_under_selected_slot": "vbmeta_a",
+      "root_avb_chain_inferred_or_verified": false,
+      "snapshot_cow_record": null,
+      "effective_runtime_mapping_verified": false
+    },
+    {
+      "fstab_line": 40,
+      "mountpoint": "/product",
+      "fstab_label": "product",
+      "selected_slot_label": "product_a",
+      "filesystem_configured": "ext4",
+      "configured_readonly": true,
+      "slot_suffix_assumption": "_a",
+      "lp_size_bytes": 608817152,
+      "lp_group": "qti_dynamic_partitions_a",
+      "lp_attributes": 5,
+      "lp_extent_indices": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "lp_extent_count": 4,
+      "backing_gpt_label": "super",
+      "backing_lun": 0,
+      "backing_gpt_entry": 6,
+      "explicit_avb_fstab_bindings": [
+        {
+          "fstab_label": "vbmeta_system",
+          "selected_slot_label": "vbmeta_system_a",
+          "gpt_binding": {
+            "lun": 0,
+            "block_name": "sda",
+            "gpt_entry_index": 9,
+            "label": "vbmeta_system_a",
+            "first_lba_4096": 3205640,
+            "last_lba_4096": 3205655,
+            "offset_bytes_in_lun": 13130301440,
+            "size_bytes": 65536,
+            "kernel_node_derived_from_block_and_entry": "/dev/block/sda9",
+            "derived_kernel_node_observed_by_this_review": false
+          }
+        }
+      ],
+      "avb_flag_present": true,
+      "root_vbmeta_candidate_label_under_selected_slot": "vbmeta_a",
+      "root_avb_chain_inferred_or_verified": false,
+      "snapshot_cow_record": "product_a-cow",
+      "effective_runtime_mapping_verified": false
+    },
+    {
+      "fstab_line": 41,
+      "mountpoint": "/vendor",
+      "fstab_label": "vendor",
+      "selected_slot_label": "vendor_a",
+      "filesystem_configured": "ext4",
+      "configured_readonly": true,
+      "slot_suffix_assumption": "_a",
+      "lp_size_bytes": 804339712,
+      "lp_group": "qti_dynamic_partitions_a",
+      "lp_attributes": 5,
+      "lp_extent_indices": [
+        13,
+        14,
+        15,
+        16
+      ],
+      "lp_extent_count": 4,
+      "backing_gpt_label": "super",
+      "backing_lun": 0,
+      "backing_gpt_entry": 6,
+      "explicit_avb_fstab_bindings": [],
+      "avb_flag_present": true,
+      "root_vbmeta_candidate_label_under_selected_slot": "vbmeta_a",
+      "root_avb_chain_inferred_or_verified": false,
+      "snapshot_cow_record": null,
+      "effective_runtime_mapping_verified": false
+    },
+    {
+      "fstab_line": 42,
+      "mountpoint": "/odm",
+      "fstab_label": "odm",
+      "selected_slot_label": "odm_a",
+      "filesystem_configured": "ext4",
+      "configured_readonly": true,
+      "slot_suffix_assumption": "_a",
+      "lp_size_bytes": 1097728,
+      "lp_group": "qti_dynamic_partitions_a",
+      "lp_attributes": 5,
+      "lp_extent_indices": [
+        0
+      ],
+      "lp_extent_count": 1,
+      "backing_gpt_label": "super",
+      "backing_lun": 0,
+      "backing_gpt_entry": 6,
+      "explicit_avb_fstab_bindings": [],
+      "avb_flag_present": true,
+      "root_vbmeta_candidate_label_under_selected_slot": "vbmeta_a",
+      "root_avb_chain_inferred_or_verified": false,
+      "snapshot_cow_record": "odm_a-cow",
+      "effective_runtime_mapping_verified": false
+    }
+  ],
+  "physical_gpt_bindings": {
+    "super": {
+      "lun": 0,
+      "block_name": "sda",
+      "gpt_entry_index": 6,
+      "label": "super",
+      "first_lba_4096": 8712,
+      "last_lba_4096": 3154439,
+      "offset_bytes_in_lun": 35684352,
+      "size_bytes": 12884901888,
+      "kernel_node_derived_from_block_and_entry": "/dev/block/sda6",
+      "derived_kernel_node_observed_by_this_review": false
+    },
+    "metadata": {
+      "lun": 0,
+      "block_name": "sda",
+      "gpt_entry_index": 11,
+      "label": "metadata",
+      "first_lba_4096": 3205672,
+      "last_lba_4096": 3209767,
+      "offset_bytes_in_lun": 13130432512,
+      "size_bytes": 16777216,
+      "kernel_node_derived_from_block_and_entry": "/dev/block/sda11",
+      "derived_kernel_node_observed_by_this_review": false
+    },
+    "vbmeta_system_a": {
+      "lun": 0,
+      "block_name": "sda",
+      "gpt_entry_index": 9,
+      "label": "vbmeta_system_a",
+      "first_lba_4096": 3205640,
+      "last_lba_4096": 3205655,
+      "offset_bytes_in_lun": 13130301440,
+      "size_bytes": 65536,
+      "kernel_node_derived_from_block_and_entry": "/dev/block/sda9",
+      "derived_kernel_node_observed_by_this_review": false
+    },
+    "vbmeta_system_b": {
+      "lun": 0,
+      "block_name": "sda",
+      "gpt_entry_index": 10,
+      "label": "vbmeta_system_b",
+      "first_lba_4096": 3205656,
+      "last_lba_4096": 3205671,
+      "offset_bytes_in_lun": 13130366976,
+      "size_bytes": 65536,
+      "kernel_node_derived_from_block_and_entry": "/dev/block/sda10",
+      "derived_kernel_node_observed_by_this_review": false
+    },
+    "vbmeta_a": {
+      "lun": 4,
+      "block_name": "sde",
+      "gpt_entry_index": 16,
+      "label": "vbmeta_a",
+      "first_lba_4096": 155450,
+      "last_lba_4096": 155465,
+      "offset_bytes_in_lun": 636723200,
+      "size_bytes": 65536,
+      "kernel_node_derived_from_block_and_entry": "/dev/block/sde16",
+      "derived_kernel_node_observed_by_this_review": false
+    },
+    "vbmeta_b": {
+      "lun": 4,
+      "block_name": "sde",
+      "gpt_entry_index": 39,
+      "label": "vbmeta_b",
+      "first_lba_4096": 326318,
+      "last_lba_4096": 326333,
+      "offset_bytes_in_lun": 1336598528,
+      "size_bytes": 65536,
+      "kernel_node_derived_from_block_and_entry": "/dev/block/sde39",
+      "derived_kernel_node_observed_by_this_review": false
+    },
+    "userdata": {
+      "lun": 0,
+      "block_name": "sda",
+      "gpt_entry_index": 15,
+      "label": "userdata",
+      "first_lba_4096": 3308072,
+      "last_lba_4096": 30693370,
+      "offset_bytes_in_lun": 13549862912,
+      "size_bytes": 112170184704,
+      "kernel_node_derived_from_block_and_entry": "/dev/block/sda15",
+      "derived_kernel_node_observed_by_this_review": false
+    },
+    "boot_a": {
+      "lun": 4,
+      "block_name": "sde",
+      "gpt_entry_index": 11,
+      "label": "boot_a",
+      "first_lba_4096": 130566,
+      "last_lba_4096": 155141,
+      "offset_bytes_in_lun": 534798336,
+      "size_bytes": 100663296,
+      "kernel_node_derived_from_block_and_entry": "/dev/block/sde11",
+      "derived_kernel_node_observed_by_this_review": false
+    }
+  },
+  "metadata_mount": {
+    "fstab_line": 43,
+    "mountpoint": "/metadata",
+    "configured_filesystem": "ext4",
+    "fs_mgr_flag_names": [
+      "wait",
+      "check",
+      "formattable",
+      "first_stage_mount"
+    ],
+    "gpt_label": "metadata",
+    "slotselect": false,
+    "first_stage_mount": true,
+    "filesystem_read_or_mounted": false,
+    "snapshot_state_files_observed": false,
+    "formattable_is_configuration_not_permission_to_format": true
+  },
+  "avb_boundary": {
+    "explicit_vbmeta_system_users": [
+      "system_a",
+      "system_ext_a",
+      "product_a"
+    ],
+    "vendor_a_and_odm_a_have_avb_flag_but_no_explicit_vbmeta_label": true,
+    "same_slot_root_candidate": "vbmeta_a",
+    "root_candidate_is_not_verified_chain_assignment": true,
+    "vbmeta_payload_or_descriptors_read": false,
+    "avb_keys_flag_on_system": true,
+    "avb_key_parameter_values_available": false,
+    "avb_key_paths_opened": false,
+    "avb_authentication_verified": false
+  },
+  "snapshot_boundary": {
+    "cow_records": [
+      {
+        "name": "odm_a-cow",
+        "base_logical_name": "odm_a",
+        "size_bytes": 135168,
+        "group": "cow",
+        "extent_indices": [
+          17
+        ]
+      },
+      {
+        "name": "product_a-cow",
+        "base_logical_name": "product_a",
+        "size_bytes": 12013568,
+        "group": "cow",
+        "extent_indices": [
+          18
+        ]
+      },
+      {
+        "name": "system_a-cow",
+        "base_logical_name": "system_a",
+        "size_bytes": 4753719296,
+        "group": "cow",
+        "extent_indices": [
+          19
+        ]
+      }
+    ],
+    "cow_total_bytes": 4765868032,
+    "five_base_attributes": 5,
+    "five_base_attributes_meaning": "READONLY | UPDATED",
+    "snapshot_related_metadata_present": true,
+    "active_ota_state_inferred": false,
+    "merge_state_known": false,
+    "cow_payload_verified": false,
+    "effective_dm_mapping_verified": false,
+    "absence_of_cow_record_proves_no_snapshot": false,
+    "other_metadata_slots_verified": false,
+    "note": "COW records and UPDATED flags require snapshot-aware input assessment. This join does not read /metadata/ota, snapuserd state, dm tables or COW contents, and does not prescribe flattening or dropping COW records."
+  },
+  "userdata_configuration": {
+    "fstab_line": 44,
+    "mountpoint": "/data",
+    "gpt_label": "userdata",
+    "filesystem_configured": "f2fs",
+    "first_stage_mount": false,
+    "slotselect": false,
+    "mount_flag_names": [
+      "noatime",
+      "nosuid",
+      "nodev",
+      "discard",
+      "reserve_root",
+      "resgid",
+      "fsync_mode",
+      "inlinecrypt"
+    ],
+    "fs_mgr_flag_names": [
+      "latemount",
+      "wait",
+      "check",
+      "formattable",
+      "fileencryption",
+      "metadata_encryption",
+      "keydirectory",
+      "quota",
+      "reservedsize",
+      "sysfs_path",
+      "checkpoint"
+    ],
+    "encryption_parameter_values_available": false,
+    "keydirectory_value_available": false,
+    "payload_or_key_material_read": false,
+    "key_portability": "unknown_not_assessed",
+    "decryption_capability": "unknown_not_assessed",
+    "mountability": "unknown_not_assessed"
+  },
+  "other_fstab_partition_bindings_not_first_stage": [
+    {
+      "fstab_line": 45,
+      "mountpoint": "/mnt/vendor/persist",
+      "label_under_selected_slot": "persist",
+      "gpt_binding": {
+        "lun": 0,
+        "block_name": "sda",
+        "gpt_entry_index": 2,
+        "label": "persist",
+        "first_lba_4096": 8,
+        "last_lba_4096": 8199,
+        "offset_bytes_in_lun": 32768,
+        "size_bytes": 33554432,
+        "kernel_node_derived_from_block_and_entry": "/dev/block/sda2",
+        "derived_kernel_node_observed_by_this_review": false
+      },
+      "first_stage_mount": false,
+      "payload_verified": false
+    },
+    {
+      "fstab_line": 46,
+      "mountpoint": "/misc",
+      "label_under_selected_slot": "misc",
+      "gpt_binding": {
+        "lun": 0,
+        "block_name": "sda",
+        "gpt_entry_index": 3,
+        "label": "misc",
+        "first_lba_4096": 8200,
+        "last_lba_4096": 8455,
+        "offset_bytes_in_lun": 33587200,
+        "size_bytes": 1048576,
+        "kernel_node_derived_from_block_and_entry": "/dev/block/sda3",
+        "derived_kernel_node_observed_by_this_review": false
+      },
+      "first_stage_mount": false,
+      "payload_verified": false
+    },
+    {
+      "fstab_line": 50,
+      "mountpoint": "/vendor/firmware_mnt",
+      "label_under_selected_slot": "modem_a",
+      "gpt_binding": {
+        "lun": 4,
+        "block_name": "sde",
+        "gpt_entry_index": 4,
+        "label": "modem_a",
+        "first_lba_4096": 3206,
+        "last_lba_4096": 104325,
+        "offset_bytes_in_lun": 13131776,
+        "size_bytes": 414187520,
+        "kernel_node_derived_from_block_and_entry": "/dev/block/sde4",
+        "derived_kernel_node_observed_by_this_review": false
+      },
+      "first_stage_mount": false,
+      "payload_verified": false
+    },
+    {
+      "fstab_line": 51,
+      "mountpoint": "/vendor/dsp",
+      "label_under_selected_slot": "dsp_a",
+      "gpt_binding": {
+        "lun": 4,
+        "block_name": "sde",
+        "gpt_entry_index": 9,
+        "label": "dsp_a",
+        "first_lba_4096": 114054,
+        "last_lba_4096": 130437,
+        "offset_bytes_in_lun": 467165184,
+        "size_bytes": 67108864,
+        "kernel_node_derived_from_block_and_entry": "/dev/block/sde9",
+        "derived_kernel_node_observed_by_this_review": false
+      },
+      "first_stage_mount": false,
+      "payload_verified": false
+    },
+    {
+      "fstab_line": 52,
+      "mountpoint": "/vendor/bt_firmware",
+      "label_under_selected_slot": "bluetooth_a",
+      "gpt_binding": {
+        "lun": 4,
+        "block_name": "sde",
+        "gpt_entry_index": 5,
+        "label": "bluetooth_a",
+        "first_lba_4096": 104326,
+        "last_lba_4096": 104581,
+        "offset_bytes_in_lun": 427319296,
+        "size_bytes": 1048576,
+        "kernel_node_derived_from_block_and_entry": "/dev/block/sde5",
+        "derived_kernel_node_observed_by_this_review": false
+      },
+      "first_stage_mount": false,
+      "payload_verified": false
+    }
+  ],
+  "qualification": {
+    "gpt_labels_and_selected_lp_names_matched": true,
+    "super_size_matches_gpt_partition": true,
+    "partition_payloads_verified": false,
+    "filesystem_integrity_verified": false,
+    "avb_verified": false,
+    "snapshot_state_verified": false,
+    "decryption_verified": false,
+    "complete_raw_lun_backup_verified": false,
+    "atomic_snapshot_verified": false,
+    "android_first_stage_executed": false,
+    "android_boot_verified": false,
+    "storage_manifest_generated": false,
+    "unused_luns_may_be_omitted": false
+  }
+}
