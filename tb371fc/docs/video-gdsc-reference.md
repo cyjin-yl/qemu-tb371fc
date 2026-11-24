@@ -206,8 +206,13 @@ Restored target QOM and validity are checked before the first target device
 MMIO or `cont`. After `cont`, the remaining 599+1 ns of a real pending mmcx
 command are observed before any device MMIO can repair the state.
 
-The resulting plan has 81 component/parser gates and five Linux integrations,
-plus the existing UFS process checkpoints and A77/PCI UFS checks. The source
-change still needs its own compiled receipt and an unchanged-input native
-run. Neither the prior NPU CI pass nor this interface's POWER_ON feedback
-establishes video processing or completed Android boot.
+Source `4cc9dee07f542697c129b60d3ff5162aa0f71a53` actually passed the resulting
+81 component/parser gates, five Linux integrations, existing UFS process
+checkpoints and A77/PCI UFS checks in
+[run 45414535386](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45414535386).
+The actual ZIP and all six VIDEO streams were independently decoded. Its
+same-binary original-input run004 registered all four VIDEO GDSCs, then first
+aborted at CAMCC PLL0 MODE physical `0x0ad00000`; the
+[CAMCC increment](camcc-sm8250.md) records that next boundary separately.
+These component checks and POWER_ON feedback do not establish video
+processing or completed Android boot.

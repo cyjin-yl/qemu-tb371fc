@@ -1,0 +1,73 @@
+{
+  "schema": "tb371fc-original-input-frontier-v1",
+  "run": "original-android-004",
+  "attempt": "video-4cc9dee-run004-recovery1",
+  "finished_utc": "2026-11-24T14:50:10.398975Z",
+  "qemu_source_commit": "4cc9dee07f542697c129b60d3ff5162aa0f71a53",
+  "qemu_source_ci_run": 45414535386,
+  "qemu_sha256": "33da659249dab043671e0de0d04326ba9a52c6a53dedffcf7b1e6f42130d6808",
+  "scope": "Unchanged original direct-kernel inputs with explicit MDSS, NPU and VIDEO references; no original LUNs attached",
+  "original_inputs": {
+    "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "initrd_sha256": "563f4b334f8470155c6a451395342f7044b70e79b480a886c7641960f534f596",
+    "full_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "bootargs_preserved": true,
+    "core_input_digests_unchanged": {
+      "kernel": true,
+      "initrd": true,
+      "dtb": true,
+      "bootargs": true
+    },
+    "aop_unchanged": true
+  },
+  "observation": {
+    "requested_seconds": 120,
+    "stop_on_kernel_failure": true,
+    "stop_reason": "kernel-failure",
+    "elapsed_seconds": 18.821,
+    "qemu_returncode": 0,
+    "runner_exit_code": 2,
+    "qemu_unchanged": true,
+    "video_gdsc_supply_messages": [
+      "mvs0_gdsc",
+      "mvs0c_gdsc",
+      "mvs1_gdsc",
+      "mvs1c_gdsc"
+    ],
+    "first_kernel_failure": {
+      "guest_seconds": 2.090202,
+      "kind": "synchronous external abort",
+      "esr": "0x96000010",
+      "far": "0xffffff8015ca0000",
+      "elr": "0xffffff800884e968",
+      "cpu": 5,
+      "pid": 85,
+      "process": "kworker/5:1",
+      "workqueue": "events deferred_probe_work_func",
+      "pc": "regmap_mmio_read32le+0x8/0x20",
+      "callers": [
+        "clk_lucid_pll_configure+0x40/0x320",
+        "cam_cc_kona_probe+0x168/0x378"
+      ],
+      "physical_address": "0x0ad00000",
+      "access": "read",
+      "bytes": 4,
+      "controller": "CAMCC"
+    },
+    "original_luns_attached": 0,
+    "android_userspace_observed": false,
+    "android_boot_completed_observed": false,
+    "interactive_display_verified": false,
+    "stock_android_boot_passed": false
+  },
+  "private_logs": {
+    "first_printk_sha256": "45d568a6a523c2784b2eaf0f33bf6aaa92d1be8d20447c3246061aab1e10fe24",
+    "qemu_log_sha256": "66be2a53c66fbe9f1f85c46535248359323d1af34d7524c4df7a67fd4be3d855"
+  },
+  "next_boundary": "The first actual unmapped read is CAMCC PLL0 MODE during the unmodified camera clock driver's probe. VIDEO supply messages do not qualify VIDEOCC, video decoding, camera capture or Android boot.",
+  "interruption_recovery": {
+    "previous_waiter_interrupted_before_native_invocation": true,
+    "new_exclusive_attempt": true,
+    "original_inputs_preserved": true
+  }
+}

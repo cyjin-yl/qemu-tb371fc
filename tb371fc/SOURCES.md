@@ -67,6 +67,7 @@ Use their per-run hashes rather than treating a source table as execution proof.
 | GCC | [gcc-sm8250.md](docs/gcc-sm8250.md), pinned Linux-derived register manifest and clock-parent assumptions |
 | GPUCC | [gpucc-sm8250.md](docs/gpucc-sm8250.md), pinned Kona Lucid PLL1, GMU, branch/reset contracts, actual Clock outputs and explicit analog/rendering limits |
 | NPUCC | [npucc-sm8250.md](docs/npucc-sm8250.md), pinned Kona v2 three-bank PLL/RCG/branch/reset contracts, bounded CRC divider and unresolved-parent limits |
+| CAMCC | [camcc-sm8250.md](docs/camcc-sm8250.md), actual Kona v2 compatible and run004 read32 at 0x0ad00000; eight pinned primary sources, four Lucid plus one Zonda PLL, exact 236-word whitelist, independent GDSC ownership and explicit unknown input clocks |
 | SMMUv2 | [Architectural contract](docs/smmuv2.md), [migration geometry and v3 granule equality](docs/smmuv2-migration.md), and [explicit 16/64 KiB primary sources and vectors](docs/smmuv2-granules.md). Default remains 4 KiB; original default-branch [b5f4415/69ca28 receipts](evidence/smmuv2-granules-20261123/publication.json) retain their own binary scope. The merged core preserves apps companion hooks and requires a new combined run |
 | UFS | [ufs-sm8250.md](docs/ufs-sm8250.md), [clock diagnosis](docs/ufs-clock-diagnosis.md), [pinned upstream backports](docs/ufs-upstream-backports.json) |
 | RPMh | [rpmh-sm8250.md](docs/rpmh-sm8250.md), synthetic reference database versus optional external-file and AOP-derived partial metadata |

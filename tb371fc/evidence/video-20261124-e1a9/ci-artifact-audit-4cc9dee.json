@@ -1,0 +1,388 @@
+{
+  "schema": "tb371fc-video-ci-artifact-audit-v1",
+  "source_commit": "4cc9dee07f542697c129b60d3ff5162aa0f71a53",
+  "run_id": 45414535386,
+  "artifact_id": 14932755826,
+  "artifact_zip_sha256": "a403b4d48dd2c6c4d8f43cb455b4714913dd369c359041a0fd265b80cd3672bf",
+  "compiled_artifact_read": true,
+  "private_original_inputs_used": false,
+  "stock_android_boot_passed": false,
+  "independent_cpu_job": {
+    "schema": "tb371fc-video-a77-log-audit-v1",
+    "source_commit": "4cc9dee07f542697c129b60d3ff5162aa0f71a53",
+    "run_id": 45414535386,
+    "job_id": 138517051555,
+    "job_conclusion": "success",
+    "actual_pass_lines": {
+      "cpu_variants": [
+        "PASS default: 94 guest checks",
+        "PASS observed-revidr: 94 guest checks",
+        "PASS l2-128k: 94 guest checks",
+        "PASS l2-256k: 94 guest checks",
+        "PASS l3-512k: 95 guest checks",
+        "PASS l3-1m: 95 guest checks",
+        "PASS l3-2m: 95 guest checks",
+        "PASS l3-4m: 95 guest checks",
+        "PASS crypto-off: 96 guest checks"
+      ],
+      "rejected_configurations": [
+        "PASS rejected ,l2-cache-size=1M",
+        "PASS rejected ,l3-cache-size=128K"
+      ],
+      "pci_ufs": [
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/reg-read",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/init",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-read-write",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-read-write",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-crypto-rejected",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-crypto-rejected",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/no-prdt",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/sync-cache",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/long-prdt",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/short-prdt",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-cq-wraparound",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-flag",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-attribute",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-desciptor",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-init",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-read-write",
+        "PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/hid"
+      ]
+    },
+    "cpu_guest_checks": 852,
+    "configuration_rejections": 2,
+    "pci_ufs_checks": 17,
+    "source_checkouts_in_log": [
+      "[command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +4cc9dee07f542697c129b60d3ff5162aa0f71a53:refs/remotes/origin/tb371fc-verified-stockboot-video-20261124-e1a9",
+      "* [new ref]         4cc9dee07f542697c129b60d3ff5162aa0f71a53 -> origin/tb371fc-verified-stockboot-video-20261124-e1a9",
+      "4cc9dee07f542697c129b60d3ff5162aa0f71a53",
+      "name: tb371fc-a77-gates-4cc9dee07f542697c129b60d3ff5162aa0f71a53",
+      "Artifact tb371fc-a77-gates-4cc9dee07f542697c129b60d3ff5162aa0f71a53.zip successfully finalized. Artifact ID 14932581117",
+      "Artifact tb371fc-a77-gates-4cc9dee07f542697c129b60d3ff5162aa0f71a53 has been successfully uploaded! Final size is 28332472 bytes. Artifact ID is 14932581117"
+    ]
+  },
+  "binary_sha256": "33da659249dab043671e0de0d04326ba9a52c6a53dedffcf7b1e6f42130d6808",
+  "binary_member": "qemu-build/qemu-system-aarch64",
+  "binary_hash_verified_from_zip": true,
+  "aggregates": {
+    "components": {
+      "count": 81,
+      "passed": true,
+      "source_dirty": false,
+      "qemu_unchanged": true
+    },
+    "linux": {
+      "count": 5,
+      "passed": true,
+      "source_dirty": false,
+      "qemu_unchanged": true
+    }
+  },
+  "ufs_quiescent": {
+    "checks": 21,
+    "migrations": 3,
+    "rejections": 7,
+    "passed": true
+  },
+  "linux_ufs_checkpoints": {
+    "linux-ufs-migration": {
+      "passed": true,
+      "source_checks": 21,
+      "target_checks": 18,
+      "inputs_unchanged": true,
+      "source_exited_before_target_started": true,
+      "runtime_pm_state_preserved": false,
+      "bytes_compared_at_each_checkpoint": 67108864
+    },
+    "linux-ufs-pm-migration": {
+      "passed": true,
+      "source_checks": 34,
+      "target_checks": 27,
+      "inputs_unchanged": true,
+      "source_exited_before_target_started": true,
+      "runtime_pm_state_preserved": true,
+      "bytes_compared_at_each_checkpoint": 67108864
+    }
+  },
+  "video_checks": 22,
+  "video_test_seconds": 14.89276,
+  "sibling_gates": {
+    "npu-gdsc-reference": {
+      "passed": true,
+      "checks": 21
+    },
+    "mdss-gdsc-reference": {
+      "passed": true,
+      "checks": 20
+    },
+    "camera-gdsc-reference": {
+      "passed": true,
+      "checks": 29
+    },
+    "npucc-sm8250": {
+      "passed": true,
+      "checks": 37
+    }
+  },
+  "actual_files": [
+    {
+      "file": "video-four-domain-state.bin",
+      "bytes": 2281328,
+      "sha256": "aa58a7d1c3ad3f10764bc53fe9bdeb3ec5155233b0786580e73f24a818d8b423",
+      "zip_member_verified": true
+    },
+    {
+      "file": "video-mmcx-pending.bin",
+      "bytes": 2281328,
+      "sha256": "b6658c9b9d79fd300a0e1699b5d57f44671976723c54ce1671d5b78d961e6404",
+      "zip_member_verified": true
+    },
+    {
+      "file": "video-unknown-parent-and-request.bin",
+      "bytes": 2259807,
+      "sha256": "e40184cd5983a7f5da81867e3543e7ac18f665f16fbd2911d586518eadd705fa",
+      "zip_member_verified": true
+    },
+    {
+      "file": "video-disabled.bin",
+      "bytes": 2281328,
+      "sha256": "469cb52724967d6a88c3838339cd9cfe82a7f0c345e2809928032a444a64baa7",
+      "zip_member_verified": true
+    },
+    {
+      "file": "video-corrupt-mvs0_address.bin",
+      "bytes": 2281328,
+      "sha256": "d9440ebdedfe3bb1b8b2727c15451f06a9bb8d83dcd15ae4a8200d1293777d07",
+      "zip_member_verified": true
+    },
+    {
+      "file": "video-corrupt-mvs0c_undeclared_hw_control.bin",
+      "bytes": 2281328,
+      "sha256": "2e1ec91e638d2fc5fa4aa07927cbc37c0162a532a3db075929d9bd5ec6d0bc32",
+      "zip_member_verified": true
+    }
+  ],
+  "source_wire_checks": [
+    {
+      "file": "video-four-domain-state.bin",
+      "video": {
+        "version": 1,
+        "bytes": 142,
+        "sha256": "051e1f12fc9d92007d156187e0c279e00a5399d43ab6b92765105a6bfd6e263f",
+        "complete_payload_verified": true
+      },
+      "camera": {
+        "version": 1,
+        "bytes": 194,
+        "sha256": "01d360148e60b6f5b424f7a335186037dd1ea908aed7457ff9c20252a4633552",
+        "complete_payload_verified": true
+      },
+      "mdss": {
+        "version": 1,
+        "bytes": 64,
+        "sha256": "0aa337b965d66084a610b1f1ce5ed36d3db630657c5aa3c6dc99df2595ec929d",
+        "complete_payload_verified": true
+      },
+      "npu": {
+        "version": 1,
+        "bytes": 64,
+        "sha256": "d658ee6f0e1fe175b86ad8b9778ccbc63ca884a7ff9d100c77dded312ce11414",
+        "complete_payload_verified": true
+      },
+      "rpmh": {
+        "version": 3,
+        "bytes": 19424
+      },
+      "gcc": {
+        "version": 3,
+        "bytes": 645271,
+        "retention_words_verified": {
+          "0xb004": 24577,
+          "0xb008": 0,
+          "0xb00c": 0,
+          "0x4d004": 0
+        }
+      }
+    },
+    {
+      "file": "video-mmcx-pending.bin",
+      "video": {
+        "version": 1,
+        "bytes": 142,
+        "sha256": "c3c60ac9334110a2c6d5d88f7338086d1554f2be177438130affc6d3ca7c09e5",
+        "complete_payload_verified": true
+      },
+      "camera": {
+        "version": 1,
+        "bytes": 194,
+        "sha256": "6b3a8bdd0771ed71a012a2675823b51ab015ee67e670baeabdfd3da788b8989f",
+        "complete_payload_verified": true
+      },
+      "mdss": {
+        "version": 1,
+        "bytes": 64,
+        "sha256": "51d14e380ec96d90a42badf38561c4800ab68e5f9bf19de0d8f747af72d86162",
+        "complete_payload_verified": true
+      },
+      "npu": {
+        "version": 1,
+        "bytes": 64,
+        "sha256": "d658ee6f0e1fe175b86ad8b9778ccbc63ca884a7ff9d100c77dded312ce11414",
+        "complete_payload_verified": true
+      },
+      "rpmh": {
+        "version": 3,
+        "bytes": 19424
+      },
+      "gcc": {
+        "version": 3,
+        "bytes": 645271,
+        "retention_words_verified": {
+          "0xb004": 24577,
+          "0xb008": 0,
+          "0xb00c": 0,
+          "0x4d004": 0
+        }
+      }
+    },
+    {
+      "file": "video-unknown-parent-and-request.bin",
+      "video": {
+        "version": 1,
+        "bytes": 142,
+        "sha256": "76431f2abb0f079905038d91edc8fa9ea02cb12b98187778c36e617b7d0c28d0",
+        "complete_payload_verified": true
+      },
+      "camera": {
+        "version": 1,
+        "bytes": 194,
+        "sha256": "8ef46215cd3983fc12119ff69930a3870d8d0259fd1696879dc7a796f366a58b",
+        "complete_payload_verified": true
+      },
+      "mdss": {
+        "version": 1,
+        "bytes": 64,
+        "sha256": "1b440ef0fba9f19b743290da940074106556e288153f81e006ee1ca48866ad86",
+        "complete_payload_verified": true
+      },
+      "npu": {
+        "version": 1,
+        "bytes": 64,
+        "sha256": "d658ee6f0e1fe175b86ad8b9778ccbc63ca884a7ff9d100c77dded312ce11414",
+        "complete_payload_verified": true
+      },
+      "gcc": {
+        "version": 3,
+        "bytes": 645271,
+        "retention_words_verified": {
+          "0xb004": 0,
+          "0xb008": 0,
+          "0xb00c": 0,
+          "0x4d004": 0
+        }
+      }
+    },
+    {
+      "file": "video-disabled.bin",
+      "video": {
+        "version": 1,
+        "bytes": 142,
+        "sha256": "bd271deedf8d388150060d8a3b050dc6d7cfe3d8809b5ffde0accff154a84424",
+        "complete_payload_verified": true
+      },
+      "camera": {
+        "version": 1,
+        "bytes": 194,
+        "sha256": "ea219c9d246cb28a57663511c2e9253a12173c485cf27f6663fa6c2b331dcd6d",
+        "complete_payload_verified": true
+      },
+      "mdss": {
+        "version": 1,
+        "bytes": 64,
+        "sha256": "e05506f4a2971d2e2ba821d073e9486da2d8ee01f3df3b6eeb5d6c0b630b283b",
+        "complete_payload_verified": true
+      },
+      "npu": {
+        "version": 1,
+        "bytes": 64,
+        "sha256": "e90324ba0acff09039360e9a2056e4b99b1d910d37a6343efe7cdc3caf630e95",
+        "complete_payload_verified": true
+      },
+      "rpmh": {
+        "version": 3,
+        "bytes": 19424
+      },
+      "gcc": {
+        "version": 3,
+        "bytes": 645271,
+        "retention_words_verified": {
+          "0xb004": 0,
+          "0xb008": 0,
+          "0xb00c": 0,
+          "0x4d004": 0
+        }
+      }
+    }
+  ],
+  "migrations": [
+    {
+      "name": "independent_four_domain_state_and_all_gdsc_siblings",
+      "source_status": "completed",
+      "target_status": "completed",
+      "continued_after_restore": true,
+      "first_destination_state_verified": true
+    },
+    {
+      "name": "real_mmcx_pending_and_unknown_video_hardware_request",
+      "source_status": "completed",
+      "target_status": "completed",
+      "continued_after_restore": true,
+      "first_destination_state_verified": true
+    },
+    {
+      "name": "unknown_source_over_known_on_target",
+      "source_status": "completed",
+      "target_status": "completed",
+      "continued_after_restore": true,
+      "first_destination_state_verified": true
+    }
+  ],
+  "pending_deadline": {
+    "virtual_ns": 4000,
+    "remaining_ns_at_transfer": 600,
+    "first_observation_before_device_mmio": true,
+    "fanout_consumers": 3,
+    "npu_parent_known": false,
+    "unknown_video_hardware_request_preserved": true
+  },
+  "rejections": [
+    {
+      "name": "enabled_to_disabled",
+      "exit_code": 1,
+      "expected_diagnostic": "0 != 1",
+      "actual_stderr_verified": true
+    },
+    {
+      "name": "disabled_to_enabled",
+      "exit_code": 1,
+      "expected_diagnostic": "1 != 0",
+      "actual_stderr_verified": true
+    },
+    {
+      "name": "mvs0_address",
+      "exit_code": 1,
+      "expected_diagnostic": "abf0d18 != abf0d1c",
+      "actual_stderr_verified": true,
+      "actual_single_bit_difference_verified": true,
+      "field_offset": 94
+    },
+    {
+      "name": "mvs0c_undeclared_hw_control",
+      "exit_code": 1,
+      "expected_diagnostic": "qcom-video-gdsc: invalid migrated video domain 0",
+      "actual_stderr_verified": true,
+      "actual_single_bit_difference_verified": true,
+      "field_offset": 58
+    }
+  ]
+}

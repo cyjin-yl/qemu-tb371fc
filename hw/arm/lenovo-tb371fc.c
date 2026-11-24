@@ -48,6 +48,7 @@
 #include "hw/misc/qcom-sm8250-gcc.h"
 #include "hw/misc/qcom-sm8250-gpucc.h"
 #include "hw/misc/qcom-sm8250-npucc.h"
+#include "hw/misc/qcom-sm8250-camcc.h"
 #include "hw/misc/qcom-noc-qos.h"
 #include "hw/misc/qcom-pshold.h"
 #include "hw/misc/qcom-dcc.h"
@@ -1232,6 +1233,22 @@ static void tb371fc_create_npucc(TB371FCMachineState *s)
     /* cc + 0x1004 (the separate NPU GDSC) is intentionally not mapped. */
 }
 
+static void tb371fc_create_camcc(TB371FCMachineState *s)
+{
+    DeviceState *camcc = qdev_new(TYPE_QCOM_SM8250_CAMCC);
+
+    object_property_add_child(OBJECT(s), "camcc", OBJECT(camcc));
+    /*
+     * Fixed clk-rpmh.c names both bi_tcxo carriers as xo.lvl from xo_board.
+     * Test, sleep and the unregistered PLL2 aux2 parent remain unknown.
+     */
+    qdev_connect_clock_in(camcc, "bi_tcxo", s->xo);
+    qdev_connect_clock_in(camcc, "bi_tcxo_ao", s->xo);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(camcc), &error_fatal);
+    /* Transparent container: only its 74 exact leaves respond to accesses. */
+    sysbus_mmio_map(SYS_BUS_DEVICE(camcc), 0, CAMCC_PHYSICAL_BASE);
+}
+
 static void tb371fc_create_noc_qos(TB371FCMachineState *s)
 {
     /*
@@ -1781,6 +1798,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_sbm(s);
     tb371fc_create_gpucc(s);
     tb371fc_create_npucc(s);
+    tb371fc_create_camcc(s);
     tb371fc_create_npu_gdsc(s);
     tb371fc_create_noc_qos(s);
     tb371fc_create_gpu_cx_gdsc(s);
