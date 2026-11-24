@@ -1,0 +1,152 @@
+{
+  "controller": {
+    "path": "/soc/cache-controller@9200000",
+    "properties": {
+      "cap-based-alloc-and-pwr-collapse": {
+        "boolean": true
+      },
+      "compatible": {
+        "raw_hex": "71636f6d2c6c6c63632d763200",
+        "strings": [
+          "qcom,llcc-v2"
+        ]
+      },
+      "reg": {
+        "cells": [
+          "0x9200000",
+          "0x1d0000",
+          "0x9600000",
+          "0x50000"
+        ],
+        "raw_hex": "09200000001d00000960000000050000"
+      },
+      "reg-names": {
+        "raw_hex": "6c6c63635f62617365006c6c63635f62726f6164636173745f6261736500",
+        "strings": [
+          "llcc_base",
+          "llcc_broadcast_base"
+        ]
+      }
+    }
+  },
+  "dt_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "hardware_registers_read_from_physical_tablet": false,
+  "original_controller_declares_bank_count": false,
+  "original_controller_declares_clock": false,
+  "original_controller_declares_irq": false,
+  "parent_cells": {
+    "/": {
+      "#address-cells": {
+        "cells": [
+          "0x2"
+        ],
+        "raw_hex": "00000002"
+      },
+      "#size-cells": {
+        "cells": [
+          "0x2"
+        ],
+        "raw_hex": "00000002"
+      }
+    },
+    "/soc": {
+      "#address-cells": {
+        "cells": [
+          "0x1"
+        ],
+        "raw_hex": "00000001"
+      },
+      "#size-cells": {
+        "cells": [
+          "0x1"
+        ],
+        "raw_hex": "00000001"
+      },
+      "ranges": {
+        "cells": [
+          "0x0",
+          "0x0",
+          "0x0",
+          "0xffffffff"
+        ],
+        "raw_hex": "000000000000000000000000ffffffff"
+      }
+    }
+  },
+  "schema": "tb371fc-llcc-original-controller-v1",
+  "separate_pmu_not_part_of_controller_model": {
+    "path": "/soc/llcc-pmu@9095000",
+    "properties": {
+      "compatible": {
+        "raw_hex": "71636f6d2c6c6c63632d706d752d7665723200",
+        "strings": [
+          "qcom,llcc-pmu-ver2"
+        ]
+      },
+      "phandle": {
+        "cells": [
+          "0x35c"
+        ],
+        "raw_hex": "0000035c"
+      },
+      "reg": {
+        "cells": [
+          "0x9095000",
+          "0x300"
+        ],
+        "raw_hex": "0909500000000300"
+      },
+      "reg-names": {
+        "raw_hex": "6c6167672d6261736500",
+        "strings": [
+          "lagg-base"
+        ]
+      }
+    }
+  },
+  "symbols": [
+    {
+      "address": "0xffffff8008080000",
+      "bytes_to_next_address": 2048,
+      "kind": "T",
+      "name": "_text"
+    },
+    {
+      "address": "0xffffff8008678ac0",
+      "bytes_to_next_address": 200,
+      "kind": "T",
+      "name": "llcc_slice_activate"
+    },
+    {
+      "address": "0xffffff8008678b88",
+      "bytes_to_next_address": 264,
+      "kind": "t",
+      "name": "llcc_update_act_ctrl"
+    },
+    {
+      "address": "0xffffff8008678c90",
+      "bytes_to_next_address": 200,
+      "kind": "T",
+      "name": "llcc_slice_deactivate"
+    },
+    {
+      "address": "0xffffff8008678d68",
+      "bytes_to_next_address": 1616,
+      "kind": "T",
+      "name": "qcom_llcc_probe"
+    },
+    {
+      "address": "0xffffff80086793b8",
+      "bytes_to_next_address": 32,
+      "kind": "t",
+      "name": "kona_qcom_llcc_probe"
+    },
+    {
+      "address": "0xffffff8008d19690",
+      "bytes_to_next_address": 400,
+      "kind": "t",
+      "name": "qcom_llcc_pmu_probe"
+    }
+  ],
+  "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0"
+}

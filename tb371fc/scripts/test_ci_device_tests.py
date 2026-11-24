@@ -173,7 +173,7 @@ class PlanTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         plan = ci.plan(args, Path("/test/runtime"))
         cases = {case.name: case for case in plan}
-        self.assertEqual(len(plan), 91)
+        self.assertEqual(len(plan), 93)
         self.assertEqual(len(cases), len(plan))
         self.assertEqual(cases["tbu-reference-ecats"].expected_count, 17)
         self.assertEqual(cases["smmuv500-reference"].expected_count, 36)
@@ -188,7 +188,8 @@ class PlanTests(unittest.TestCase):
                      "dispcc-source-generation", "videocc-sm8250-reference",
                      "videocc-source-generation", "dsi-pll-source-generation",
                      "dsi-pll-7nm-reference", "dp-pll-source-generation",
-                     "dp-pll-7nm-reference"):
+                     "dp-pll-7nm-reference", "llcc-source-generation",
+                     "llcc-sm8250-reference"):
             self.assertIn(name, cases)
         npu = cases["npu-gdsc-reference"]
         self.assertEqual(npu.expected_count, 21)
@@ -308,6 +309,30 @@ class PlanTests(unittest.TestCase):
                          {"checks": 36, "migrations": 4, "rejected_migrations": 2,
                           "corrupted_stream_rejections": 4,
                           "migration_sources": 5, "actual_stream_files": 9})
+        self.assertEqual(cases["llcc-source-generation"].expected_lengths,
+                         {"inputs": 8})
+        llcc = cases["llcc-sm8250-reference"]
+        self.assertEqual(llcc.expected_count, 32)
+        self.assertEqual(llcc.expected_values["reference_identity"], 0x4c4c4332)
+        self.assertEqual(llcc.expected_values["vmstate_payload_bytes"], 783)
+        self.assertEqual(llcc.expected_values["bank_count"], 4)
+        self.assertEqual(llcc.expected_values["slice_count"], 16)
+        self.assertEqual(llcc.expected_values["register_count"], 71)
+        self.assertEqual(llcc.expected_values["mapped_word_count"], 349)
+        self.assertEqual(llcc.expected_values["sparse_window_count"], 139)
+        self.assertEqual(llcc.expected_values["mapped_bytes"], 1396)
+        self.assertEqual(llcc.expected_values["first_observation_qom_get_count"], 313)
+        self.assertEqual(llcc.expected_values["transition_delay_ns"], 1000)
+        self.assertEqual(llcc.expected_values["provider_count"], 0)
+        self.assertIs(llcc.expected_values["reference_enabled_by_default"], False)
+        self.assertIs(llcc.expected_values["physical_bank_count_measured"], False)
+        self.assertIs(llcc.expected_values["hardware_version_known"], False)
+        self.assertIs(llcc.expected_values["memory_controller_count_known"], False)
+        self.assertIs(llcc.expected_values["native_kernel_probe_observed"], False)
+        self.assertEqual(llcc.expected_lengths,
+                         {"checks": 32, "migrations": 4, "rejected_migrations": 2,
+                          "corrupted_stream_rejections": 4,
+                          "migration_sources": 5, "actual_stream_files": 9})
         rpmh = cases["rpmh-wait-mask-reference"].expected_values
         self.assertEqual(rpmh["vmstate_version"], 3)
         self.assertEqual(rpmh["vmstate_minimum_version"], 2)
@@ -318,7 +343,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 96)
+        self.assertEqual(len(cases), 98)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]

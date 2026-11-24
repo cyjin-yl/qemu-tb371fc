@@ -53,6 +53,7 @@
 #include "hw/misc/qcom-sm8250-videocc.h"
 #include "hw/misc/qcom-sm8250-dsi-pll.h"
 #include "hw/misc/qcom-sm8250-dp-pll.h"
+#include "hw/misc/qcom-sm8250-llcc.h"
 #include "hw/misc/qcom-noc-qos.h"
 #include "hw/misc/qcom-pshold.h"
 #include "hw/misc/qcom-dcc.h"
@@ -176,6 +177,7 @@ struct TB371FCMachineState {
     DeviceState *ufs;
     DeviceState *dsi_pll;
     DeviceState *dp_pll;
+    DeviceState *llcc;
     DeviceState *apps_smmu, *kgsl_smmu, *mmio_timer, *rpmh, *watchdog;
     DeviceState *tlmm;
     DeviceState *pdc;
@@ -1334,6 +1336,20 @@ static void tb371fc_create_dp_pll(TB371FCMachineState *s, DeviceState *mdss)
     }
 }
 
+static void tb371fc_create_llcc(TB371FCMachineState *s)
+{
+    DeviceState *llcc = qdev_new(TYPE_QCOM_SM8250_LLCC);
+
+    s->llcc = llcc;
+    object_property_add_child(OBJECT(s), "llcc", OBJECT(llcc));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(llcc), &error_fatal);
+    for (unsigned region = 0; region < LLCC_REGIONS; region++) {
+        /* Exact bank/broadcast leaves; the separate LLCC PMU stays unmapped. */
+        sysbus_mmio_map(SYS_BUS_DEVICE(llcc), region,
+                       qcom_sm8250_llcc_bases[region]);
+    }
+}
+
 static void tb371fc_create_dispcc(TB371FCMachineState *s)
 {
     DeviceState *dispcc = qdev_new(TYPE_QCOM_SM8250_DISPCC);
@@ -1951,6 +1967,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_dp_pll(s, mdss);
     tb371fc_connect_display_pll_power(s, mdss);
     tb371fc_create_dispcc(s);
+    tb371fc_create_llcc(s);
     if (s->ufs) {
         tb371fc_realize_ufs(s);
         /* Native pinctrl states: output-low asserts the dedicated pad. */
