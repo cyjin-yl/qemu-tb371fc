@@ -110,6 +110,46 @@ class CaptureTests(unittest.TestCase):
         self.assertEqual((self.out / "manifest.json").read_bytes(), before)
         self.assertEqual({p: p.stat().st_mtime_ns for p in files_before}, files_before)
 
+    def test_resume_rejects_changed_completion_qualifications(self):
+        self.run_send()
+        manifest_path = self.out / "manifest.json"
+        original = json.loads(manifest_path.read_bytes())
+        self.assertFalse(original["whole_source_bytes_captured"])
+        changes = [
+            ("whole_source_bytes_captured", True),
+            ("source_immutable_claim_verified", True),
+            ("pristine_factory_images", True),
+            ("restore_tested", True),
+            ("android_boot_tested", True),
+            ("live_mutable_ranges", ["invented"]),
+            ("qualification", "INVALID full-source qualification"),
+            ("whole_source_bytes_captured", 0),  # False and 0 must not be interchangeable.
+            ("unknown_qualification", True),
+            ("completed_utc", "invalid"),
+            ("resume_source_revalidated_chunks", [0, 0]),
+            ("resume_source_revalidated_chunks", [len(original["chunks"])]),
+        ]
+        for field, value in changes + [("missing_field", None)]:
+            with self.subTest(field=field, value=value):
+                changed = copy.deepcopy(original)
+                if field == "missing_field":
+                    del changed["whole_source_bytes_captured"]
+                else:
+                    changed[field] = value
+                saved = json.dumps(changed).encode()
+                manifest_path.write_bytes(saved)
+                incoming, outgoing = io.BytesIO(), io.BytesIO()
+                capture.send_json(incoming, original["plan"])
+                for row in original["chunks"]:
+                    capture.send_json(incoming, {"skip": row["index"],
+                                                 "source_reread_sha256": row["source_sha256"]})
+                capture.send_json(incoming, {"finish": True})
+                incoming.seek(0)
+                with self.assertRaises(ValueError):
+                    capture.receive(incoming, outgoing, self.out, resume=True)
+                self.assertNotIn(b'"complete":true', outgoing.getvalue())
+                self.assertEqual(manifest_path.read_bytes(), saved)
+
     def test_resume_rejects_changed_source_even_with_same_size(self):
         self.run_send()
         changed = bytearray(self.original)
