@@ -99,7 +99,7 @@ assert (len(REGISTERS), len(WINDOWS), len(OUTPUTS), len(RCGS), len(BRANCHES),
         len(DIVIDERS), len(HW_RCG), len(VOTED)) == (55, 26, 19, 5, 8, 4, 3, 4)
 assert not set(REGISTERS) & set(GDSC_OFFSETS)
 
-IDENTITY, VMSTATE_BYTES, EXPECTED_CHECKS = 0x56494332, 474, 36
+IDENTITY, VMSTATE_BYTES, EXPECTED_CHECKS = 0x56494332, 474, 41
 GLOBAL_FIELDS = ("reference-profile", "reference-identity", "register-count", "clock-count",
                  "input-count", "pll-count", "rcg-count", "branch-count", "divider-count",
                  "reset-count", "remote-vote-count", "window-count", "mapped-bytes", "physical-base")
@@ -705,7 +705,10 @@ def all_four_readonly_dividers_round_up_and_propagate_branch_demand(r):
 
 
 def all_eight_branches_keep_independent_local_requests(r):
-    run_defaults(r)
+    configure_all(r)
+    enable_all(r)
+    for index in range(5):
+        configure_rcg(r, index, root=False)
     r.fixture("chip_sleep_clk", 32_003)
     for index, (offset, name, parent, _voted) in enumerate(BRANCHES):
         r.write(offset, 1)
@@ -939,7 +942,103 @@ def real_rpmh_xo_votes_revoke_both_evidenced_carriers(r):
             "unknown_sleep_rate_invented": False}
 
 
+def cold_ahb_safe_enable_sequence_and_branch_demand_are_source_bound(r):
+    # Unlike the separate XO RCG, AHB declares enable_safe_config and HW control.
+    cmd, cfg, branch = 0xbd4, 0xbd8, 0xe58
+    assert r.reg(cmd) == r.reg(cfg) == r.reg(branch) == 0
+
+    def update_bits(offset, mask, value):
+        old = r.read(offset)
+        new = (old & ~mask) | (value & mask)
+        if new != old:
+            r.write(offset, new)
+
+    update_bits(cmd, ROOT, ROOT)
+    expect_root(r, 0, XO)
+    update_bits(cfg, 0x10371f, HW_CLK | 1)
+    update_bits(cmd, BUSY, BUSY)
+    r.step(999)
+    assert r.rcg(0, "pending")
+    r.step(1)
+    assert not r.read(cmd) & BUSY and r.rcg(0, "active-cfg") == HW_CLK | 1
+    update_bits(cmd, ROOT, 0)
+    expect_root(r, 0, 0)
+    update_bits(branch, 1, 1)
+    assert r.reg(cmd) == 0 and r.read(branch) == 1
+    r.expect_hz("video_cc_ahb_clk", XO)
+    expect_root(r, 0, XO)
+    update_bits(branch, 1, 0)
+    expect_root(r, 0, 0)
+    return {"literal_safe_enable_callback_order": True,
+            "ccf_orphan_registration_sequence_claimed": False}
+
+def shared_mvs1c_divider_fans_out_without_fixed_divide_two_assumption(r):
+    r.fixture("core_bi_pll_test_se", 101_000_003)
+    configure_rcg(r, 2, 7, 1, root=False)
+    r.divider(3, 2)
+    expected = (101_000_003+2)//3
+    r.write(0xdf4, 1)
+    r.expect_hz("video_cc_mvs1c_div2_div_clk_src", expected)
+    r.expect_hz("video_cc_mvs1_div2_clk", expected)
+    r.expect_hz("video_cc_mvs1c_clk", 0)
+    r.write(0xcd4, 1)
+    r.write(0xdf4, 0)
+    r.expect_hz("video_cc_mvs1_div2_clk", 0)
+    r.expect_hz("video_cc_mvs1c_clk", expected)
+    r.write(0xcd4, 0)
+    r.expect_hz("video_cc_mvs1c_div2_div_clk_src", 0)
+    expect_root(r, 2, 0)
+
+def every_hid_value_covers_bypass_integer_and_half_division(r):
+    r.fixture("core_bi_pll_test_se", 100_000_003)
+    for i in range(5):
+        for hid in range(32):
+            configure_rcg(r, i, 7, hid)
+            expect_root(r, i, divided(100_000_003, hid))
+
+def literal_v2_mvs_frequency_tables_route_the_correct_pll(r):
+    configure_all(r)
+    enable_all(r)
+    tables = ((1, 0, (720_000_000, 1_014_000_000, 1_098_000_000, 1_332_000_000)),
+              (2, 1, (840_000_000, 1_098_000_000, 1_332_000_000)))
+    for rcg, pll, rates in tables:
+        configure_rcg(r, rcg, 1)
+        for requested in rates:
+            factor = (requested*(1 << 16)+XO-1)//XO
+            l, alpha = factor >> 16, factor & 0xffff
+            base = PLLS[pll][0]
+            r.write(base+4, l)
+            r.write(base+64, alpha)
+            r.write(base, r.read(base) | UPDATE)
+            r.step(1000)
+            assert r.pll(pll, "ack")
+            r.write(base, r.read(base) & ~UPDATE)
+            r.step(5000)
+            actual = pll_rate(pll, l, alpha)
+            assert requested <= actual <= requested+500
+            expect_root(r, rcg, actual)
+    return {"literal_v2_mvs_table_entries": 7, "legacy_806mhz_not_substituted_for_v2_840mhz": True}
+
+def already_running_configuration_preserves_both_pll_banks(r):
+    configure_all(r)
+    enable_all(r)
+    before = r.pure_snapshot()
+    count = r.videocc_mmio_operations
+    # Three configure callbacks each read MODE/OPMODE and return while running.
+    configure_all(r)
+    assert r.videocc_mmio_operations == count + 6
+    assert r.pure_snapshot() == before
+    r.step(2 * LOCK_NS)
+    assert r.pure_snapshot() == before
+    return {"running_configure_callbacks_skipped": 3}
+
+
 ORDINARY = [(test, {}) for test in (
+    cold_ahb_safe_enable_sequence_and_branch_demand_are_source_bound,
+    shared_mvs1c_divider_fans_out_without_fixed_divide_two_assumption,
+    every_hid_value_covers_bypass_integer_and_half_division,
+    literal_v2_mvs_frequency_tables_route_the_correct_pll,
+    already_running_configuration_preserves_both_pll_banks,
     cold_inventory_has_only_two_evidenced_inputs,
     literal_v2_probe_overwrites_pll1_base_recipe_but_skips_zero_writes,
     cold_critical_ahb_and_xo_require_requests_and_the_ao_provider,
@@ -1449,7 +1548,7 @@ def main():
         "migration_sources": [], "actual_stream_files": [], "passed": False,
     }
     try:
-        assert len(ORDINARY) == 26
+        assert len(ORDINARY) == 31
         assert (len(REGISTERS), len(WINDOWS), len(OUTPUTS), len(INPUTS), len(PLLS),
                 len(RCGS), len(BRANCHES), len(DIVIDERS), len(RESETS)) == (
                     55, 26, 19, 4, 2, 5, 8, 4, 7)

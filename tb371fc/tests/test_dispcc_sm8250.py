@@ -46,6 +46,8 @@ INPUTS = ("bi_tcxo", "core_bi_pll_test_se", "chip_sleep_clk", "disp_cc_pll1_out_
           "dsi0_phy_pll_out_byteclk", "dsi1_phy_pll_out_byteclk",
           "dsi0_phy_pll_out_dsiclk", "dsi1_phy_pll_out_dsiclk",
           "edp_phy_pll_link_clk", "edp_phy_pll_vco_div_clk", "disp_cc_xo_clk_parent")
+DSI_PIXEL_INPUTS = ("dsi0_phy_pll_out_dsiclk", "dsi1_phy_pll_out_dsiclk")
+DSI_PIXEL_MAX_HZ = 5_000_000_000
 RESETS, MISC = (0x2000, 0x4000), 0x8000
 DEFAULT_MACHINE = "tb371fc,gcc-boot-configured=off,ufs-enabled=off,rpmh-profile=off,rpmh-boot-configured=off"
 SOURCE_SHA256 = "63eef01db44478e3be216025f672f73c652f9f3952f840bedf1791bc62d77061"
@@ -325,7 +327,7 @@ READ_ONLY_DIVIDERS = tuple(i for i, row in enumerate(DIVIDERS) if not row[4])
 assert (len(REGISTERS), len(WINDOWS), len(OUTPUTS), len(RCGS), len(BRANCHES),
         len(DIVIDERS), len(MND), len(HW_RCG), len(VOTED)) == (130, 39, 61, 22, 32, 5, 6, 3, 2)
 
-IDENTITY, VMSTATE_BYTES, EXPECTED_CHECKS = 0x44495331, 1676, 41
+IDENTITY, VMSTATE_BYTES, EXPECTED_CHECKS = 0x44495331, 1676, 42
 GLOBAL_FIELDS = ("reference-profile", "reference-identity", "register-count", "clock-count",
                  "input-count", "pll-count", "rcg-count", "branch-count", "divider-count",
                  "reset-count", "remote-vote-count", "window-count", "mapped-bytes", "physical-base")
@@ -901,14 +903,33 @@ def byte2_hid_round_up_selection_uses_only_the_explicit_phy_carrier(r):
 
 
 def pixel_eight_bit_source_fractions_include_bypass_one_to_one(r):
+    requests = (480_000_003, 1 << 32, 4_500_000_000, DSI_PIXEL_MAX_HZ)
     for n in (0, 1):
-        parent = 480_000_003
-        r.fixture(f"dsi{n}_phy_pll_out_dsiclk", parent)
+        carrier = DSI_PIXEL_INPUTS[n]
         index = RCG_INDEX[f"disp_cc_mdss_pclk{n}_clk_src"]
-        for m, d in ((3, 8), (2, 9), (4, 9), (1, 1)):
-            configure_rcg(r, index, n+1, 1, m=m, n=d)
-            expect_root(r, index, parent * m // d)
-            assert (r.rcg(index, "active-cfg") >> 12) & 3 == (0 if m == d else 2)
+        branch = next(row for row in BRANCHES if row[1] == f"disp_cc_mdss_pclk{n}_clk")
+        for requested in requests:
+            r.fixture(carrier, requested)
+            period = PERIOD_UNIT // requested
+            parent = PERIOD_UNIT // period
+            assert r.period(carrier) == period
+            assert r.qom("qtest-"+carrier+"-hz") == parent
+            if requested > 0xffffffff:
+                assert parent > 0xffffffff
+            r.write(branch[0], 1)
+            for m, d in ((3, 8), (2, 9), (4, 9), (1, 1)):
+                configure_rcg(r, index, n+1, 1, m=m, n=d)
+                expect_root(r, index, parent * m // d)
+                r.expect_hz(branch[1], parent * m // d)
+                assert (r.rcg(index, "active-cfg") >> 12) & 3 == (0 if m == d else 2)
+            r.fixture(carrier, 0)
+            expect_root(r, index, 0)
+            r.expect_hz(branch[1], 0)
+            assert r.read(branch[0]) & OFF
+            r.write(branch[0], 0)
+    return {"dsi_pixel_requests_hz": list(requests),
+            "wide_input_and_output_clock_periods_checked": True,
+            "unknown_carrier_retracts_pixel_root_and_branch": True}
 
 
 def four_dp_roots_preserve_fraction_bits_above_eight(r):
@@ -1166,12 +1187,23 @@ def pure_observers_fixture_types_and_quantized_input_limits_are_protected(r):
         response = r.raw_monitor("qom-set", {"path": DEVICE, "property": prop, "value": value})
         assert "error" in response and "not writable" in response["error"]["desc"]
     for name in INPUTS:
-        for value in (-1, 1 << 32, "19200000", True):
+        maximum = DSI_PIXEL_MAX_HZ if name in DSI_PIXEL_INPUTS else 0xffffffff
+        for value in (-1, maximum+1, 1 << 64, "19200000", True):
             response = r.raw_monitor("qom-set", {"path": DEVICE, "property": "qtest-"+name+"-hz", "value": value})
             assert "error" in response
     response = r.raw_monitor("qom-set", {"path": DEVICE, "property": "qtest-bi_tcxo-hz", "value": 1})
     assert "error" in response and "connected" in response["error"]["desc"]
     for name in INPUTS[1:]:
+        if name in DSI_PIXEL_INPUTS:
+            # 5 GHz is representable as period 0x33333333, observed as +1 Hz.
+            r.fixture(name, DSI_PIXEL_MAX_HZ)
+            assert r.period(name) == 858_993_459
+            assert r.qom("qtest-"+name+"-hz") == 5_000_000_001
+            for value in (DSI_PIXEL_MAX_HZ+1, 1 << 63):
+                response = r.raw_monitor("qom-set", {"path": DEVICE, "property": "qtest-"+name+"-hz", "value": value})
+                assert "error" in response and r.period(name) == 858_993_459
+            r.fixture(name, 0)
+            continue
         for value in range(4_294_967_292, 4_294_967_296):
             response = r.raw_monitor("qom-set", {"path": DEVICE, "property": "qtest-"+name+"-hz", "value": value})
             assert "error" in response and r.period(name) == 0
@@ -1429,6 +1461,10 @@ def receive_source(rig, path, saved):
     assert rig.raw_read(RAM) == saved["ram_witness"]
     rig.reset_lines([bool(first["registers"][f"{o:04x}"]) for o in RESETS])
     evidence = {"snapshot": first, "mdss": mdss, "device_mmio_since_incoming": False,
+                "device_mmio_count_before_incoming": mmio,
+                "device_mmio_count_after_first_observation": rig.device_mmio_operations,
+                "qmp_cont_count_before_incoming": cont,
+                "qmp_cont_count_after_first_observation": rig.cont_commands,
                 "qmp_cont_since_incoming": False, "guest_cpu_executed": False,
                 "ram_witness": saved["ram_witness"], "query_migrate": received}
     write_json(rig.directory/"destination-before-first-device-mmio.json", evidence)
@@ -1481,9 +1517,18 @@ def migration_checks(args, out, report):
         run_defaults(steady)
         for i, name in enumerate(INPUTS[1:], 1):
             steady.fixture(name, 111_111_113 if i == 1 else 30_000_000+i)
+        wide_roots = {}
+        for n, requested in enumerate((4_500_000_000, DSI_PIXEL_MAX_HZ)):
+            steady.fixture(DSI_PIXEL_INPUTS[n], requested)
+            index = RCG_INDEX[f"disp_cc_mdss_pclk{n}_clk_src"]
+            wide_roots[index] = PERIOD_UNIT // (PERIOD_UNIT // requested)
         for i in range(22):
             m, n = fraction_for(i)
             configure_rcg(steady, i, 7, 3+i%5, m=m, n=n)
+        for n in range(2):
+            index = RCG_INDEX[f"disp_cc_mdss_pclk{n}_clk_src"]
+            configure_rcg(steady, index, n+1, 1)
+            steady.expect_hz(RCGS[index][1], wide_roots[index])
         for i, (offset, *_rest) in enumerate(BRANCHES):
             steady.write(offset, i & 1)
         for i, (offset, *_rest) in enumerate(DIVIDERS):
@@ -1496,6 +1541,8 @@ def migration_checks(args, out, report):
         steady.write(0x3000, 0x5801)
         state_path = out/"dispcc-v1-steady.migration"
         saved_state = save_source(steady, state_path, 0x44495331)
+        assert saved_state["snapshot"]["inputs"][DSI_PIXEL_INPUTS[0]] == 954_437_176
+        assert saved_state["snapshot"]["inputs"][DSI_PIXEL_INPUTS[1]] == 858_993_459
         report["migration_sources"].append(saved_state)
         restored = new("migration-steady-target", incoming=True)
         prewarm_target(restored, saved_state)
@@ -1508,13 +1555,16 @@ def migration_checks(args, out, report):
         restored.fixture("core_bi_pll_test_se", 99_000_001)
         for i, row in enumerate(RCGS):
             m, n = fraction_for(i)
-            restored.expect_hz(row[1], divided(99_000_001, 3+i%5, m, n))
+            restored.expect_hz(row[1], wide_roots[i] if i in wide_roots else
+                               divided(99_000_001, 3+i%5, m, n))
         restored.vote(0, False)
         restored.expect_hz(BRANCHES[VOTED[0]][1], 0)
         assert restored.mdss_snapshot() == saved_state["mdss"]
         completed("v1_steady_clocks_dividers_votes_and_mdss_replace_stale_target",
                   state_path, steady, restored, first, stale_target_deadlines_discarded=True,
-                  clock_and_vote_changes_propagate_after_restore=True)
+                  clock_and_vote_changes_propagate_after_restore=True,
+                  wide_dsi_pixel_input_periods_restored=[954_437_176, 858_993_459],
+                  dsi_pixel_clocks_above_uint32_before_first_mmio=True)
 
         locking = new("migration-two-locks-22-rcgs-source")
         locking.step(100_000)
@@ -1650,10 +1700,15 @@ def migration_checks(args, out, report):
         original = state_path.read_bytes()
         section = saved_state["sections"]["dispcc"]
         misc_index = REGISTERS.index(MISC)
+        pixel_input_index = INPUTS.index(DSI_PIXEL_INPUTS[1])
+        pixel_period_offset = VMSTATE_BYTES - 8*len(INPUTS) + 8*pixel_input_index
+        assert pixel_period_offset == 1644
         for name, relative, width, old, xor, diagnostic in (
                 ("physical_base", 52, 8, CC, 4, f"{CC:x} != {CC ^ 4:x}"),
                 ("misc_reserved_control", 60+4*misc_index, 4, 0x10, 1,
-                 TYPE+f": invalid migrated register {misc_index}")):
+                 TYPE+f": invalid migrated register {misc_index}"),
+                ("dsi1_pixel_period_below_5ghz_boundary", pixel_period_offset, 8,
+                 858_993_459, 1, TYPE+f": invalid migrated input clock {pixel_input_index}")):
             absolute = section["payload_offset"]+relative
             assert int.from_bytes(original[absolute:absolute+width], "big") == old
             mutated = bytearray(original)
@@ -1694,8 +1749,8 @@ def main():
         "qemu_sha256_before": original_hash, "qemu_sha256_after": None,
         "test_script_sha256": digest(Path(__file__)), "expected_checks": EXPECTED_CHECKS,
         "expected_completed_migrations": 3, "expected_rejected_migrations": 2,
-        "expected_corrupted_stream_rejections": 2, "expected_unmodified_streams": 4,
-        "expected_stream_files": 6, "vmstate_version": 1, "vmstate_minimum_version": 1,
+        "expected_corrupted_stream_rejections": 3, "expected_unmodified_streams": 4,
+        "expected_stream_files": 7, "vmstate_version": 1, "vmstate_minimum_version": 1,
         "vmstate_payload_bytes": VMSTATE_BYTES, "reference_identity": IDENTITY,
         "physical_base": CC, "resource_bytes": 131072, "register_count": 130,
         "sparse_window_count": 39, "mapped_bytes": 520,
@@ -1766,11 +1821,12 @@ def main():
             all(item["source_status"] == item["target_status"] == "completed" and
                 item["continued_after_restore"] and item["all_1676_payload_bytes_verified"] and
                 item["mdss_64_bytes_verified"] for item in report["migrations"]) and
-            len(report["rejected_migrations"]) == len(report["corrupted_stream_rejections"]) == 2 and
+            len(report["rejected_migrations"]) == 2 and
+            len(report["corrupted_stream_rejections"]) == 3 and
             all(item["passed"] is True and item["specific_load_failure_observed"]
                 for item in report["rejected_migrations"]+report["corrupted_stream_rejections"]) and
-            len(report["migration_sources"]) == 4 and len(report["actual_stream_files"]) == 6 and
-            len({item["name"] for item in report["actual_stream_files"]}) == 6 and
+            len(report["migration_sources"]) == 4 and len(report["actual_stream_files"]) == 7 and
+            len({item["name"] for item in report["actual_stream_files"]}) == 7 and
             all(item["bytes"] > 0 for item in report["actual_stream_files"]) and report["binary_unchanged"])
     except BaseException as error:
         report["error"], report["traceback"] = str(error), traceback.format_exc()

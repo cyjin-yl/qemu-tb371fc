@@ -1,0 +1,541 @@
+{
+  "schema": "tb371fc-dsi-local-development-validation-v1",
+  "base_commit": "cf64fe890e8b68f8af3056fe829c2a92bfa011bf",
+  "scope": "Source, arithmetic, static integration review and host acceptance-plan checks only",
+  "compiled_qemu_executed": false,
+  "native_guest_executed": false,
+  "android_boot_passed": false,
+  "full_local_ci_harness_passed": false,
+  "final_plan_unit_tests": {
+    "command": "python3 tb371fc/scripts/test_ci_device_tests.py PlanTests -v",
+    "observed_run_count": 12,
+    "observed_failures": 0,
+    "observed_errors": 0,
+    "observed_skips": 0,
+    "passed": true,
+    "observation_source": "actual execution tool result; no separate raw log retained"
+  },
+  "checks": {
+    "source_semantics": {
+      "source_file": ".work/dsi-c-source-review.json",
+      "sha256": "8ff93d0b77d7767f7f8390be19fff82aaba84416900fb8b12a0d241a8c109382",
+      "report": {
+        "schema": "tb371fc-dsi-pll-c-source-review-v1",
+        "scope": "Independent static source/model review, no QEMU or guest execution; migration/deadline/power/board review delegated to root.",
+        "reviewed_files": [
+          {
+            "path": "hw/misc/qcom-sm8250-dsi-pll.c",
+            "bytes": 39566,
+            "sha256": "f7f623007b21147df5ef71ecb22885382ab715f181ea3bd2ed2fe3611302c0d4"
+          },
+          {
+            "path": "include/hw/misc/qcom-sm8250-dsi-pll.h",
+            "bytes": 2491,
+            "sha256": "50366e211059b825154dc60f22af304bd7233525a484e155247502d31d87c05f"
+          },
+          {
+            "path": "hw/misc/qcom-sm8250-dsi-pll-data.inc",
+            "bytes": 16807,
+            "sha256": "c193666bb41923063ca295cdb0f0327cea5f0e5b917c23d1b4b94d16bff23c16"
+          }
+        ],
+        "pinned_vendor_source_sha256": "a286700822a0fb2fa1e9bff39cc6720295254c6137f29de65a37bcb819a8dd64",
+        "required_words_in_actual_source_write_set": 128,
+        "required_words_missing_source_write": [],
+        "literal_source_pll_writes_rejected_by_masks": [],
+        "review_notes": [
+          "All 128 required configuration words are written by the reviewed init/commit/hz-independent/SSC paths; intermediate supported literals including repeat writes fit the modeled masks.",
+          "Requested-rate eligibility uses the exact integer inverse of factor=floor(requested*2^18/38.4MHz), intersected with range and all three v4.1 piecewise recipe intervals.",
+          "Default SSC 31500 Hz/4800 ppm/adjustment 2 and enabled/center choices match the pinned source and original DT does not supply alternative frequency/ppm.",
+          "Fifteen source-initialized observation words accept W0 before written/cancel mutation; nonzero writes reject. Only common status one reads computed LOCK.",
+          "Cold-probe PHY10/14/18/24 and PLL154/1b0 are readable without fabricating power or a running carrier; temporary CTRL0 bit5 read preparation fits its accepted domain.",
+          "Root-found pre-lock SPARE4 credit was corrected: both pulse edges and both migrated flags require dsi_locked. Unknown external slave remains without a claimed carrier.",
+          "Final generic-divider correction reviewed: dsi_divider_rate performs ceil and is used only for OUTDIV, bitclk, DPHY pixel and CPHY pixel division. Fixed factor /2,/4,/7,/8 and 2/7 remain floor. Generic zero remains unknown. Verified with three additional exact R11 support source blobs; no wire/data change."
+        ],
+        "found_additional_blockers": [],
+        "runtime_behavior_verified": false,
+        "reviewed_math_support_receipt": "tb371fc/evidence/dsi-pll-20261124-6a5/divider-semantics-sources.json"
+      }
+    },
+    "model": {
+      "source_file": ".work/dsi-c-model-independent-review.json",
+      "sha256": "5fd7b400af13a419ee4ff621467ab749b99072179463a9b2ad609a0626090de5",
+      "report": {
+        "schema": "tb371fc-dsi-model-static-review-v1",
+        "reviewer": "qemu_ci_review",
+        "files_sha256": {
+          "hw/misc/qcom-sm8250-dsi-pll.c": "f7f623007b21147df5ef71ecb22885382ab715f181ea3bd2ed2fe3611302c0d4",
+          "include/hw/misc/qcom-sm8250-dsi-pll.h": "50366e211059b825154dc60f22af304bd7233525a484e155247502d31d87c05f",
+          "hw/misc/qcom-sm8250-dsi-pll-data.inc": "c193666bb41923063ca295cdb0f0327cea5f0e5b917c23d1b4b94d16bff23c16"
+        },
+        "previous_c_sha256": "ef18fe83e2ac5325644e59b6e68fd607affcab0fbc01febdd4608d8d1c24fef9",
+        "latest_delta": "Generic OUTDIV, bitclk and pixel divider integer recalc uses ceil; fixed factors use floor; zero divisor remains unknown 0. No QOM/header/VMState change.",
+        "source_review": "R11 clk-regmap-divider.c delegates to divider_recalc_rate; generic recalc returns DIV_ROUND_UP_ULL; fixed factor recalc floors. Three math support pins maintained separately from 13 table-generation inputs.",
+        "retained_fixes": [
+          "SPARE4 1->0 digital qualification requires current LOCK on both edges and on migration validation",
+          "Bias and lock deadline additions have INT64_MAX guards"
+        ],
+        "wire_bytes": 2926,
+        "prior_host_math_harness": {
+          "recipe_cases": 126,
+          "negative_assertions": 378,
+          "result": "pass",
+          "scope": "Extracted pure recipe/factor functions compiled and executed; not full QEMU; latest divider correction not claimed covered by this previous harness."
+        },
+        "pending_gate": "Actual QEMU compile and complete DSI acceptance including real provider migration and all clocks",
+        "execution_boundary": {
+          "qemu_compiled": false,
+          "guest_invoked": false,
+          "device_accessed": false,
+          "remote_mutation": false,
+          "board_modified_by_reviewer": false
+        }
+      }
+    },
+    "board": {
+      "source_file": ".work/dsi-board-independent-review.json",
+      "sha256": "6e4499c33371ade5458dc0750b6ca2a5660ad90d66dd6c1adf51107d774615e3",
+      "report": {
+        "schema": "tb371fc-dsi-board-static-review-v1",
+        "reviewed_at_utc": "2026-11-24T18:39:01.401982+00:00",
+        "reviewer": "qemu_ci_review",
+        "files_sha256": {
+          "hw/arm/lenovo-tb371fc.c": "c35fe53a023dc6416ddad4805a1c7ba8e6a1bfa10628f7601159800269f45a43",
+          "hw/arm/Kconfig": "2f83796e59e2f8648abfc8338f72bb2572f5d208767eee0cd109b6eba431e917",
+          "hw/misc/Kconfig": "56cec892d424cb6e9365496df11d36ba26d4a24fb2e165290b9f827cdbbf93fb",
+          "hw/misc/meson.build": "8b477425023b303771e6d58470e9dfa7dd3923c43ce961bb68b6a1bb9757fc4f",
+          "hw/misc/qcom-sm8250-dsi-pll.c": "f7f623007b21147df5ef71ecb22885382ab715f181ea3bd2ed2fe3611302c0d4",
+          "include/hw/misc/qcom-sm8250-dsi-pll.h": "50366e211059b825154dc60f22af304bd7233525a484e155247502d31d87c05f",
+          "hw/misc/qcom-sm8250-dsi-pll-data.inc": "c193666bb41923063ca295cdb0f0327cea5f0e5b917c23d1b4b94d16bff23c16"
+        },
+        "result": "no remaining static blocker in reviewed integration",
+        "checks": [
+          {
+            "name": "receiver clocks connected before realize",
+            "result": "pass",
+            "locations": [
+              "board:1280-1292",
+              "board:1295-1316",
+              "qdev-clock.c:187-190"
+            ]
+          },
+          {
+            "name": "MDSS unique GDSCR ownership and two unique output connections",
+            "result": "pass",
+            "locations": [
+              "board:1075-1121",
+              "board:1123-1145"
+            ]
+          },
+          {
+            "name": "pure provider seed follows mdss_publish order",
+            "result": "pass",
+            "details": "known: power then known; unknown: known zero then power zero; no invented enabled state"
+          },
+          {
+            "name": "provider-first VMState registration",
+            "result": "pass",
+            "order": [
+              "MDSS",
+              "DSI PLL",
+              "DISPCC"
+            ],
+            "details": "Default-priority savevm entries preserve registration order. MDSS pre_load clears stale target only before incoming DSI fields restore."
+          },
+          {
+            "name": "default-off and sparse leaves",
+            "result": "pass",
+            "details": "DSI default enabled-reference=false; two 0x800 transparent containers with 16 exact leaves, no fallback RAM; four DISPCC carriers connected only when DSI enabled; MDSS base 0xaf03000 unchanged."
+          },
+          {
+            "name": "Kconfig and meson dependencies",
+            "result": "pass",
+            "details": "LENOVO_TB371FC selects QCOM_SM8250_DSI_PLL, bool exists, meson exact C path."
+          },
+          {
+            "name": "no pure observation timer consumption",
+            "result": "static pass",
+            "details": "DSI post_load validates then publishes without propagation and schedules existing deadlines. QOM getters do not execute timers. Complete paired-provider runtime migration pending acceptance test."
+          }
+        ],
+        "provider_consistency_limit": {
+          "runtime": "No demonstrated valid-stream mismatch remains after registration order correction. Source power inputs have a unique synchronous MDSS owner and paused save is ordered.",
+          "validation": "DSI VMState booleans are validated locally but not compared against a separate non-migrated supplier-level snapshot. This review does not claim rejection of every hand-crafted inconsistent cross-device stream.",
+          "decision": "No speculative extra C state or provider pre_load snapshot added; full MDSS64+DSI2926 first-observation acceptance remains required."
+        },
+        "primary_api_pins": {
+          "qemu_ref": "cf64fe890e8b68f8af3056fe829c2a92bfa011bf",
+          "migration/savevm.c": "e1b707dda635594cac03f8ec13e890ba7979c277",
+          "migration/vmstate.c": "9f49abda245eaf9053d7c1241f4a36e943cd54db"
+        },
+        "execution_boundary": {
+          "qemu_compiled": false,
+          "guest_invoked": false,
+          "device_accessed": false,
+          "remote_mutation": false,
+          "board_modified_by_reviewer": false
+        }
+      }
+    },
+    "video_test_union": {
+      "source_file": ".work/videocc-union-independent-review.json",
+      "sha256": "1be9afa52522773f4e1c03c3d069d664baaaf7a821e4bfcbef9f3af1a09acefc",
+      "report": {
+        "schema": "tb371fc-videocc-union-independent-review-v1",
+        "scope": "Independent static review of five added groups, one improved branch-demand fixture, and unchanged migration contract. No compiled model or guest execution.",
+        "base_test_sha256": "76276927066f57c4109fab7119feda67c4e3e7543bb827d2a0b0f7421f0132ef",
+        "union_before_count_fix_sha256": "399b69d18e5f43fa96456c8ca6a847c33000457923829759bf2c19affcbe2a5d",
+        "reviewed_test_sha256": "bd62eeb39964815a8b1bc921857992ea0a537eefb57ae536bb6d598dbcbff620",
+        "resolved_blocker": {
+          "original": "main asserted len(ORDINARY)==26 after five additional ordinary groups; it would fail before opening any new fixture.",
+          "fix": "root changed the exact ordinary assertion to 31; total checks stay 41.",
+          "fixed_count_verified": true
+        },
+        "ordinary_groups": 31,
+        "ordinary_no_options": 28,
+        "ordinary_with_options": 3,
+        "separate_groups": 3,
+        "migration_groups": 7,
+        "total_checks": 41,
+        "reference_identity": "0x56494332 VIC2",
+        "videocc_wire_bytes": 474,
+        "video_gdsc_wire_bytes": 142,
+        "migration_completed": 3,
+        "profile_rejections": 2,
+        "single_bit_rejections": 2,
+        "original_streams": 4,
+        "total_streams": 6,
+        "unchanged_migration_function_AST": {
+          "videocc_payload": true,
+          "inspect_stream": true,
+          "save_source": true,
+          "prewarm_target": true,
+          "receive_source": true,
+          "load_failure": true,
+          "migration_checks": true
+        },
+        "new_groups_reviewed": [
+          {
+            "name": "cold_ahb_safe_enable_sequence_and_branch_demand_are_source_bound",
+            "finding": "Safe/HW AHB callback order, 999+1 ns completion and ROOT-to-branch demand checked; does not claim native CCF orphan order."
+          },
+          {
+            "name": "shared_mvs1c_divider_fans_out_without_fixed_divide_two_assumption",
+            "finding": "Both actual child branches share source divider3; field2 yields ceil(parent/3); removing one demand retains the other, removing both retracts root."
+          },
+          {
+            "name": "every_hid_value_covers_bypass_integer_and_half_division",
+            "finding": "All five RCGs exercise all 32 HID values using an explicitly provided test carrier and unchanged source formula."
+          },
+          {
+            "name": "literal_v2_mvs_frequency_tables_route_the_correct_pll",
+            "finding": "Four PLL0 and three v2 PLL1 source table rates match the pinned driver; latch/ACK/relock sequence is explicit, with source Q16 rounding bound."
+          },
+          {
+            "name": "already_running_configuration_preserves_both_pll_banks",
+            "finding": "Three configure callbacks read MODE+OPMODE exactly six times and return without writes; pure snapshots stay identical before and after an extra wait."
+          }
+        ],
+        "existing_branch_group_change": "ROOT requests now disabled so local branch independence and parent demand are observable rather than hidden by permanently enabled RCGs.",
+        "additional_blockers": [],
+        "compiled_runtime_verified": false
+      }
+    },
+    "acceptance_plan": {
+      "source_file": ".work/ci-plan-regression.json",
+      "sha256": "fbdafb2d9fec75804aa9d3db41445fda1d0f3c2dbea9b887fc3043f36de59b0c",
+      "report": {
+        "scope": "Static exact acceptance-plan contract and test group inventory; not compiled-device execution",
+        "passed": true,
+        "old_case_count": 92,
+        "new_case_count": 94,
+        "old_relative_order_preserved": true,
+        "unchanged_old_contracts": 90,
+        "new_cases": [
+          "dsi-pll-7nm-reference",
+          "dsi-pll-source-generation"
+        ],
+        "changed_contracts": {
+          "dispcc-sm8250-reference": {
+            "expected_count": {
+              "old": 41,
+              "new": 42
+            },
+            "expected_lengths": {
+              "old": {
+                "actual_stream_files": 6,
+                "corrupted_stream_rejections": 2,
+                "migration_sources": 4,
+                "migrations": 3,
+                "rejected_migrations": 2
+              },
+              "new": {
+                "actual_stream_files": 7,
+                "corrupted_stream_rejections": 3,
+                "migration_sources": 4,
+                "migrations": 3,
+                "rejected_migrations": 2
+              }
+            },
+            "expected_values": {
+              "old": {
+                "analog_pll_behavior_modeled": false,
+                "android_boot_passed": false,
+                "binary_unchanged": true,
+                "branch_count": 32,
+                "connected_input_clock_count": 1,
+                "critical_xo_parent_assumed": false,
+                "display_execution_observed": false,
+                "divider_count": 5,
+                "expected_checks": 41,
+                "expected_completed_migrations": 3,
+                "expected_corrupted_stream_rejections": 2,
+                "expected_rejected_migrations": 2,
+                "expected_stream_files": 6,
+                "expected_unmodified_streams": 4,
+                "generic_dividers_round_up": true,
+                "guest_cpu_executed": false,
+                "hw_control_rcg_count": 3,
+                "input_clock_count": 17,
+                "lucid_pll_count": 2,
+                "mapped_bytes": 520,
+                "mdss_vmstate_payload_bytes": 64,
+                "mdss_vmstate_version": 1,
+                "misc_word_count": 1,
+                "mnd_rcg_count": 6,
+                "mnd_width16_count": 4,
+                "mnd_width8_count": 2,
+                "modeled_timer_count": 1,
+                "native_kernel_probe_observed": false,
+                "output_clock_count": 61,
+                "physical_base": 183500800,
+                "pll1_even_alias_assumed": false,
+                "pll_count": 2,
+                "postdivider_count": 0,
+                "rcg_count": 22,
+                "read_only_divider_count": 3,
+                "reference_enabled_by_default": false,
+                "reference_identity": 1145656113,
+                "register_count": 130,
+                "remote_vote_count": 2,
+                "reset_count": 2,
+                "resource_bytes": 131072,
+                "schema": "tb371fc-dispcc-sm8250-v1",
+                "sparse_window_count": 39,
+                "unknown_external_input_count": 16,
+                "vmstate_minimum_version": 1,
+                "vmstate_payload_bytes": 1676,
+                "vmstate_version": 1,
+                "writable_divider_count": 2
+              },
+              "new": {
+                "analog_pll_behavior_modeled": false,
+                "android_boot_passed": false,
+                "binary_unchanged": true,
+                "branch_count": 32,
+                "connected_input_clock_count": 1,
+                "critical_xo_parent_assumed": false,
+                "display_execution_observed": false,
+                "divider_count": 5,
+                "expected_checks": 42,
+                "expected_completed_migrations": 3,
+                "expected_corrupted_stream_rejections": 3,
+                "expected_rejected_migrations": 2,
+                "expected_stream_files": 7,
+                "expected_unmodified_streams": 4,
+                "generic_dividers_round_up": true,
+                "guest_cpu_executed": false,
+                "hw_control_rcg_count": 3,
+                "input_clock_count": 17,
+                "lucid_pll_count": 2,
+                "mapped_bytes": 520,
+                "mdss_vmstate_payload_bytes": 64,
+                "mdss_vmstate_version": 1,
+                "misc_word_count": 1,
+                "mnd_rcg_count": 6,
+                "mnd_width16_count": 4,
+                "mnd_width8_count": 2,
+                "modeled_timer_count": 1,
+                "native_kernel_probe_observed": false,
+                "output_clock_count": 61,
+                "physical_base": 183500800,
+                "pll1_even_alias_assumed": false,
+                "pll_count": 2,
+                "postdivider_count": 0,
+                "rcg_count": 22,
+                "read_only_divider_count": 3,
+                "reference_enabled_by_default": false,
+                "reference_identity": 1145656113,
+                "register_count": 130,
+                "remote_vote_count": 2,
+                "reset_count": 2,
+                "resource_bytes": 131072,
+                "schema": "tb371fc-dispcc-sm8250-v1",
+                "sparse_window_count": 39,
+                "unknown_external_input_count": 16,
+                "vmstate_minimum_version": 1,
+                "vmstate_payload_bytes": 1676,
+                "vmstate_version": 1,
+                "writable_divider_count": 2
+              }
+            }
+          },
+          "videocc-sm8250-reference": {
+            "expected_count": {
+              "old": 36,
+              "new": 41
+            },
+            "expected_values": {
+              "old": {
+                "actual_compatible": "qcom,videocc-kona-v2",
+                "analog_pll_behavior_modeled": false,
+                "android_boot_passed": false,
+                "ares_implies_clock_gating_assumed": false,
+                "binary_unchanged": true,
+                "branch_count": 8,
+                "connected_input_clock_count": 2,
+                "divider_count": 4,
+                "expected_checks": 36,
+                "expected_completed_migrations": 3,
+                "expected_corrupted_stream_rejections": 2,
+                "expected_rejected_migrations": 2,
+                "expected_stream_files": 6,
+                "expected_unmodified_streams": 4,
+                "generic_dividers_round_up": true,
+                "guest_cpu_executed": false,
+                "hw_control_rcg_count": 3,
+                "input_clock_count": 4,
+                "lucid_pll_count": 2,
+                "mapped_bytes": 220,
+                "mnd_rcg_count": 0,
+                "modeled_timer_count": 1,
+                "native_kernel_probe_observed": false,
+                "output_clock_count": 19,
+                "physical_base": 180289536,
+                "pll1_v2_fixup_replayed": true,
+                "pll_count": 2,
+                "postdivider_count": 0,
+                "rcg_count": 5,
+                "read_only_divider_count": 4,
+                "reference_enabled_by_default": false,
+                "reference_identity": 1447641906,
+                "register_count": 55,
+                "remote_vote_count": 4,
+                "reset_count": 7,
+                "resource_bytes": 65536,
+                "schema": "tb371fc-videocc-sm8250-v1",
+                "shared_branch_ares_word_count": 2,
+                "sparse_window_count": 26,
+                "unknown_external_input_count": 2,
+                "video_execution_observed": false,
+                "video_gdsc_domain_count": 4,
+                "video_gdsc_vmstate_payload_bytes": 142,
+                "video_gdsc_vmstate_version": 1,
+                "vmstate_minimum_version": 1,
+                "vmstate_payload_bytes": 474,
+                "vmstate_version": 1,
+                "writable_divider_count": 0
+              },
+              "new": {
+                "actual_compatible": "qcom,videocc-kona-v2",
+                "analog_pll_behavior_modeled": false,
+                "android_boot_passed": false,
+                "ares_implies_clock_gating_assumed": false,
+                "binary_unchanged": true,
+                "branch_count": 8,
+                "connected_input_clock_count": 2,
+                "divider_count": 4,
+                "expected_checks": 41,
+                "expected_completed_migrations": 3,
+                "expected_corrupted_stream_rejections": 2,
+                "expected_rejected_migrations": 2,
+                "expected_stream_files": 6,
+                "expected_unmodified_streams": 4,
+                "generic_dividers_round_up": true,
+                "guest_cpu_executed": false,
+                "hw_control_rcg_count": 3,
+                "input_clock_count": 4,
+                "lucid_pll_count": 2,
+                "mapped_bytes": 220,
+                "mnd_rcg_count": 0,
+                "modeled_timer_count": 1,
+                "native_kernel_probe_observed": false,
+                "output_clock_count": 19,
+                "physical_base": 180289536,
+                "pll1_v2_fixup_replayed": true,
+                "pll_count": 2,
+                "postdivider_count": 0,
+                "rcg_count": 5,
+                "read_only_divider_count": 4,
+                "reference_enabled_by_default": false,
+                "reference_identity": 1447641906,
+                "register_count": 55,
+                "remote_vote_count": 4,
+                "reset_count": 7,
+                "resource_bytes": 65536,
+                "schema": "tb371fc-videocc-sm8250-v1",
+                "shared_branch_ares_word_count": 2,
+                "sparse_window_count": 26,
+                "unknown_external_input_count": 2,
+                "video_execution_observed": false,
+                "video_gdsc_domain_count": 4,
+                "video_gdsc_vmstate_payload_bytes": 142,
+                "video_gdsc_vmstate_version": 1,
+                "vmstate_minimum_version": 1,
+                "vmstate_payload_bytes": 474,
+                "vmstate_version": 1,
+                "writable_divider_count": 0
+              }
+            }
+          }
+        },
+        "videocc_ordinary_groups": 31,
+        "videocc_total_groups": 41,
+        "videocc_sha256": "bd62eeb39964815a8b1bc921857992ea0a537eefb57ae536bb6d598dbcbff620",
+        "source_sha256": {
+          "tb371fc/scripts/ci_device_tests.py": "05dd957583c76a53648986661079aba9b92e9459182164b025203e672b432572",
+          "tb371fc/scripts/test_ci_device_tests.py": "341da19a4ba75a19b946bb696931b08a35f14b665a8479078d3ecbda88481f5c"
+        },
+        "compiled_qemu_executed": false,
+        "native_guest_executed": false,
+        "audit_development_failures": [
+          "Initial comparison did not normalize cross-case cpu-timer-control ELF fixture reference",
+          "Second attempt assumed ORDINARY was a tuple rather than listcomp+list; audit parser corrected, no test code changed"
+        ],
+        "dsi_checks": 36,
+        "changed_old_cases": [
+          "dispcc-sm8250-reference",
+          "videocc-sm8250-reference"
+        ]
+      }
+    },
+    "ci_local_full_attempt": {
+      "source_file": ".work/ci-unit-attempt1.json",
+      "sha256": "656d06a566fa6f204c2b05ade11e13760979415742cd56096f4b286a27fe564d",
+      "report": {
+        "scope": "Actual local 31-test CI harness execution; no QEMU or native guest",
+        "returncode": 1,
+        "tests_run": 31,
+        "passed_tests": 30,
+        "errors": 1,
+        "plan_tests_passed": 12,
+        "skips": 0,
+        "passed": false,
+        "environment_error": "AF_UNIX socket creation returned PermissionError: Operation not permitted",
+        "log_sha256": "95d6128bba956e7820832e99f44051fde04d0b20ad1b040e86ff47582ed2fa4a",
+        "required_formal_ci_rerun": true
+      }
+    }
+  },
+  "source_sha256": {
+    "hw/misc/qcom-sm8250-dsi-pll.c": "f7f623007b21147df5ef71ecb22885382ab715f181ea3bd2ed2fe3611302c0d4",
+    "include/hw/misc/qcom-sm8250-dsi-pll.h": "50366e211059b825154dc60f22af304bd7233525a484e155247502d31d87c05f",
+    "hw/arm/lenovo-tb371fc.c": "c35fe53a023dc6416ddad4805a1c7ba8e6a1bfa10628f7601159800269f45a43",
+    "hw/misc/qcom-sm8250-dispcc.c": "cf10f13e3cf47b750896704c045bc3ed17cd0887ee2ddf708f9e4f3ae7e70c79",
+    "tb371fc/tests/test_dsi_pll_7nm.py": "a2f3223b355b1c3ae138473f85c5a03ef4cda175caaefe6349b8fe67d5ce155a",
+    "tb371fc/tests/test_dispcc_sm8250.py": "c626ec6135958a43b81bca435bf8ddb1532dc4323f07dee1c9afb6e682d9217e",
+    "tb371fc/tests/test_videocc_sm8250.py": "bd62eeb39964815a8b1bc921857992ea0a537eefb57ae536bb6d598dbcbff620",
+    "tb371fc/scripts/ci_device_tests.py": "05dd957583c76a53648986661079aba9b92e9459182164b025203e672b432572",
+    "tb371fc/scripts/test_ci_device_tests.py": "341da19a4ba75a19b946bb696931b08a35f14b665a8479078d3ecbda88481f5c"
+  }
+}

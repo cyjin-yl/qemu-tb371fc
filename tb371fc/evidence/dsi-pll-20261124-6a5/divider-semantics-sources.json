@@ -1,0 +1,44 @@
+{
+  "schema": "tb371fc-dsi-divider-semantic-support-v1",
+  "scope": "Three semantic-support sources additional to the thirteen inputs needed to regenerate register and clock-name tables. These pins establish software CCF projection rules, not analog measurement or complete Lenovo source identity.",
+  "source_files": [
+    {
+      "path": "drivers/clk/clk-divider.c",
+      "bytes": 17259,
+      "sha256": "df5a4f90c2352429307b97c317010e7424a88c02a90a253fad27baf45fd045b2",
+      "git_blob_sha": "44baad024ec47c888a94eeee9b0958edaff79b86",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "commit": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/clk/clk-divider.c"
+    },
+    {
+      "path": "drivers/clk/qcom/clk-regmap-divider.c",
+      "bytes": 2413,
+      "sha256": "55b2484e485b897df3636db7944d29c1b4c01e0d8fd145f6075eff61c7bc1155",
+      "git_blob_sha": "a9f47534b495c2f68821d379a253d0039f986aa1",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "commit": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/clk/qcom/clk-regmap-divider.c"
+    },
+    {
+      "path": "drivers/clk/clk-fixed-factor.c",
+      "bytes": 6278,
+      "sha256": "2c30bcbf35d84141020db553f2de6d6298a2c355990d464ab5be659317cf3f22",
+      "git_blob_sha": "cc8019107fb3dae88372f78f5d554e2c5126a441",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "commit": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/clk/clk-fixed-factor.c"
+    }
+  ],
+  "source_git_blobs_verified": true,
+  "table_generation_source_count_unchanged": 13,
+  "semantic_support_source_count": 3,
+  "total_distinct_primary_files_for_tables_and_semantics": 16,
+  "rules": {
+    "generic_outdiv_bit_pixel": "Each CCF clk_regmap_div recalculation calls divider_recalc_rate; for a nonzero divisor it rounds upward independently at each level.",
+    "fixed_factor": "clk_factor_recalc_rate multiplies in 64 bits, then do_div truncates; fixed-factor views use floor.",
+    "zero_divider": "The CCF ALLOW_ZERO fallback returns parent rate; that fallback does not prove a physical zero-coded divisor. The bounded DSI reference keeps zero bit/pixel dividers without a known carrier.",
+    "period_projection": "Integer CCF projection rules are followed by QEMU Clock period quantization; comparison must distinguish mathematical integer Hz from a period-derived Hz observation."
+  },
+  "runtime_behavior_verified": false
+}

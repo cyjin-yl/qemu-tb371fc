@@ -122,8 +122,11 @@ Seventeen input Clock objects have a fixed migration order:
 16. `edp_phy_pll_vco_div_clk`
 17. `disp_cc_xo_clk_parent`
 
-Only `bi_tcxo` connects to the existing, sourced board XO. All other carriers
-remain zero until an explicit provider supplies a rate. `disp_cc_pll1_out_even`
+With the DSI reference disabled, only `bi_tcxo` connects to the existing,
+sourced board XO. All other carriers remain zero until an explicit provider
+supplies a rate. The optional DSI reference supplies only its four identically
+named byte/pixel inputs; its disabled profile leaves those inputs unconnected.
+`disp_cc_pll1_out_even`
 occurs in the parent-name table but has no provider/export in this file, so it
 is not aliased to PLL1 or divided speculatively. `disp_cc_xo_clk` is marked
 software-critical but declares no parent. Its separate unknown input preserves
@@ -137,6 +140,51 @@ The DP link table literally uses values 162000, 270000, 540000 and 810000,
 whereas eDP uses MHz-scale values. The model derives rates from actual input
 carriers and register fields; it does not multiply one table by an assumed
 unit conversion or execute the driver's software rate-selection policy.
+
+### DSI carrier wiring and 64-bit frequency boundary
+
+The additional carrier bound is taken from the published OnePlus R11 reference
+[`dsi_pll_7nm.c` at `98719830b0de5584f5588bbe9f4c8304d97a64c6`](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/98719830b0de5584f5588bbe9f4c8304d97a64c6/techpack/display/pll/dsi_pll_7nm.c).
+This is a fixed vendor reference, not a claim that its complete source matches
+the tablet's compiled kernel. Its v4_1 VCO range ends at 5 GHz. Its two exported
+byte names and two exported pixel names exactly match the existing DISPCC
+parent declarations:
+
+| Source output and DISPCC input | Input index | DISPCC selector and consumers |
+| --- | ---: | --- |
+| `dsi0_phy_pll_out_byteclk` | 10 | Selector 1 in BYTE0/BYTE1 and ESC0/ESC1 |
+| `dsi1_phy_pll_out_byteclk` | 11 | Selector 2 in BYTE0/BYTE1 and ESC0/ESC1 |
+| `dsi0_phy_pll_out_dsiclk` | 12 | Selector 1 in PCLK0/PCLK1 |
+| `dsi1_phy_pll_out_dsiclk` | 13 | Selector 2 in PCLK0/PCLK1 |
+
+The source permits a DPHY pixel path consisting of VCO, OUTDIV /1, bit divider
+/1, the pixel mux's direct bit-clock selection, then pixel divider /1. Thus the
+pixel carrier can reach 5 GHz before DISPCC's HID/MND division. An exactly
+programmable 4.5 GHz example uses DEC 117 and FRAC 49152 with the 38.4 MHz doubled
+reference and 18 fraction bits. The byte clock instead divides the bit clock by
+8 in DPHY or 7 in CPHY: its respective maxima are 625,000,000 Hz and
+714,285,714 Hz. The CPHY pixel path's fixed factor 2/7 bounds it at
+1,428,571,428 Hz before the pixel divider. These bounds follow the source's
+parents and divisors, not the clock names. The source's ONE_BASED/ALLOW_ZERO
+divider semantics also permit a zero field to return the parent rate;
+[`clk-divider.c` at the same revision](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/clk/clk-divider.c)
+defines that behavior.
+
+QEMU's `clock_set_hz()` argument and `clock_get_hz()` return type are unsigned
+32-bit values. DISPCC therefore reads and publishes through the 64-bit Clock
+period API, while rate arithmetic and output QOM values remain 64-bit. Only
+input indices 12 and 13 gain the 5 GHz carrier range. The other 15 inputs keep
+their previous quantized `UINT32_MAX` limit. Unknown/stopped periods remain zero,
+and QTest input fixtures still cannot overwrite a connected provider.
+
+Clock periods use units of 2^-32 ns. A nominal 5 GHz input maps to period
+858,993,459 (`0x33333333`), whose integer frequency observation is
+5,000,000,001 Hz. The allowed upper boundary is checked as a minimum nonzero
+period, so this valid quantization is retained. A smaller nonzero period is
+rejected. A QTest request above the nominal 5 GHz bound is also rejected even
+if it would round to the same period. QTest input properties use `uint64` to
+exercise this range; the existing `clk.<name>.hz` output properties already
+used `uint64`.
 
 ## Lucid capture, lock and UPDATE
 
@@ -237,18 +285,33 @@ locks/latches/RCG updates then continue on their original schedule. Output Clock
 state is derived, not separately serialized. MDSS retains its own section and
 parent-state semantics.
 
+The carrier-width fix keeps this per-device field order, field widths, payload
+length, version/minimum version and `DIS1` reference identity (`0x44495331`)
+unchanged. Clock periods were already serialized as 64-bit values. The older
+receiver's input-range validation rejects the newly supported high pixel
+periods; that follows from its validation code. No mixed-version whole-machine
+migration is claimed by this change.
+
 Pure QOM getters expose stored words, captured factors/configurations, deadlines,
 61 computed rates, divider fields and remote requests. QTest-only input-rate
-fixtures refuse to overwrite a connected provider and reject periods that
-would quantize a uint32 rate to2^32Hz. The three read-only-divider fixtures
+fixtures refuse to overwrite a connected provider. The two DSI pixel fixtures
+use the period boundary above; the other 15 inputs still reject periods that
+would quantize a uint32 rate to 2^32 Hz. The three read-only-divider fixtures
 are absent in normal TCG. Observation must not repair or advance pending work.
 
-The new formal gate requires41 compiled groups, three completed transfers, two
-profile mismatch rejections and two deliberate single-bit stream rejections.
-Four original streams plus two mutants must be present and hashed. Its literal
+The formal gate requires 42 compiled groups, three completed transfers, two
+profile mismatch rejections and three deliberate single-bit stream rejections.
+Four original streams plus three mutants must be present and hashed. The steady
+stream carries both 4.5 GHz and 5 GHz DSI pixel inputs; all 1676 bytes and the
+first restored output rates/Clock periods are checked before device MMIO or
+`cont`. The added mutant flips the low bit of the saved DSI1 pixel period at
+payload offset 1644, changing 858,993,459 to 858,993,458, and must fail with the
+specific input-clock validation diagnostic. Its literal
 oracle is independently derived from the fixed primary sources; it verifies the
 full1676-byte payload plus MDSS64 bytes, actual memory-region ownership with
 both devices enabled, and the first destination QOM state before device MMIO
-or `cont`. A separate gate requires two exact regeneration comparisons from
-nine pinned source files. This creates an85-component +5-Linux plan; this new
-combination still requires its own formal build and original-input run.
+or `cont`, including the actual before/after MMIO and `cont` counters. A separate
+gate requires two exact regeneration comparisons from nine pinned source files.
+The register inventory and its generated outputs are unchanged. Compiled
+qualification of the widened carriers is recorded by the exact build and test
+receipts for the resulting integration.
