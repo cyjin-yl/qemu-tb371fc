@@ -237,6 +237,14 @@ Bind it with `--symbols-kernel-sha256`, and supply symbols with the actual runti
 virtual addresses. The runner does not add `nokaslr`; an address mismatch is a
 capture error, not proof that the kernel has no failures.
 
+Every requested printk capture must succeed for a successful boot observation.
+Symbol parsing, virtual-memory reads, or ring decoding can fail while QMP stays
+healthy; those failures remain in the snapshot receipts even if a later capture
+succeeds. The runner continues its bounded observation and normal shutdown, but
+reports `diagnostic-failure` with exit 1 when no higher-priority input, kernel or
+runner failure applies. Serial boot-completion messages cannot override a failed
+capture.
+
 For faster repeated diagnostics, add `--stop-on-kernel-failure` together with
 `--legacy-printk-symbols /private/runtime-symbols.txt` and
 `--symbols-kernel-sha256 "$KERNEL_SHA256"`. This option is off by default; without
