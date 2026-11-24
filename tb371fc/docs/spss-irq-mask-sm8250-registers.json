@@ -1,0 +1,151 @@
+{
+  "schema": "tb371fc-spss-irq-mask-registers-v1",
+  "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+  "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+  "source_pins": [
+    {
+      "path": "primary-r11/drivers/soc/qcom/subsys-pil-tz.c",
+      "source_path": "drivers/soc/qcom/subsys-pil-tz.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 32203,
+      "git_blob_sha": "ed5e07c193b3841c60c94d92a4db259335d665c9",
+      "sha256": "c574017a8f4e5ad5a4215434029d73bdc2c9ee9736b006429aa30a30ac219608",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/soc/qcom/subsys-pil-tz.c"
+    },
+    {
+      "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+      "source_path": "arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 132499,
+      "git_blob_sha": "e9651f09bd579616787894dc8514429063623b2d",
+      "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/arch/arm64/boot/dts/vendor/qcom/kona.dtsi"
+    }
+  ],
+  "source_input_count": 2,
+  "register_count": 1,
+  "window_count": 1,
+  "physical_base": 25694248,
+  "mapped_bytes": 4,
+  "err_ready_bit": 24,
+  "pbl_done_bit": 25,
+  "driver_mask": 4244635647,
+  "register_name": "sp2soc_irq_mask",
+  "source_parser": {
+    "helper": "mask_scsr_irqs",
+    "target_field": "irq_mask",
+    "index_macros": {
+      "ERR_READY": 0,
+      "PBL_DONE": 1
+    },
+    "dt_bit_array": [
+      24,
+      25
+    ],
+    "initializer_ast": {
+      "not_u32": {
+        "integer": 0
+      }
+    },
+    "initializer_value_u32": 4294967295,
+    "mask_expression_ast": {
+      "and": [
+        {
+          "and": [
+            {
+              "variable": "mask_val"
+            },
+            {
+              "not_u32": {
+                "bit": {
+                  "index_macro": "ERR_READY",
+                  "bit_position": 24
+                }
+              }
+            }
+          ]
+        },
+        {
+          "not_u32": {
+            "bit": {
+              "index_macro": "PBL_DONE",
+              "bit_position": 25
+            }
+          }
+        }
+      ]
+    },
+    "probe_calls_helper_once": true,
+    "probe_other_resources_are_mappings": true
+  },
+  "source_resources": [
+    {
+      "name": "sp2soc_irq_status",
+      "base": 25694236,
+      "bytes": 4
+    },
+    {
+      "name": "sp2soc_irq_clr",
+      "base": 25694244,
+      "bytes": 4
+    },
+    {
+      "name": "sp2soc_irq_mask",
+      "base": 25694248,
+      "bytes": 4
+    },
+    {
+      "name": "rmb_err",
+      "base": 25694268,
+      "bytes": 4
+    },
+    {
+      "name": "rmb_err_spare2",
+      "base": 25698324,
+      "bytes": 4
+    }
+  ],
+  "out_of_scope_resources": [
+    {
+      "name": "sp2soc_irq_status",
+      "base": 25694236,
+      "bytes": 4
+    },
+    {
+      "name": "sp2soc_irq_clr",
+      "base": 25694244,
+      "bytes": 4
+    },
+    {
+      "name": "rmb_err",
+      "base": 25694268,
+      "bytes": 4
+    },
+    {
+      "name": "rmb_err_spare2",
+      "base": 25698324,
+      "bytes": 4
+    }
+  ],
+  "source_interrupt_cells": [
+    0,
+    352,
+    1
+  ],
+  "source_pas_id": 14,
+  "source_firmware_name": "spss",
+  "reference_scope": {
+    "aligned_guest_write32_storage": true,
+    "full_uint32_write_values_accepted": true,
+    "native_reset_value_known": false,
+    "guest_readback_implemented": false,
+    "status_clear_error_words_implemented": false,
+    "irq_output_implemented": false,
+    "remote_events_generated": false,
+    "pas_or_firmware_execution_implemented": false,
+    "source_memory_layout_imported": false,
+    "whole_production_kernel_source_identity_claimed": false
+  }
+}

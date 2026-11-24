@@ -186,7 +186,7 @@ still apply to any future authorized consumer execution.
 
 ## Gates
 
-The current integration plan registers **98 gates: 93 component/parser gates
+The current integration plan registers **100 gates: 95 component/parser gates
 and five Linux integration gates**, plus separate active and runtime-suspended
 real-Linux UFS checkpoints and the A77/PCI UFS compatibility job. This union
 preserves the wholeboard reference peripherals and default-branch storage,
@@ -223,9 +223,12 @@ The original VIDEOCC 36-group/87+5 combination passed at c232d14e. The
 expanded 41-group VIDEOCC suite and DSI addition passed their own exact
 89+5 CI at 8e8e19a; three independent actual-artifact audits and the
 original-input diagnostic are linked below. DP subsequently passed its own
-91+5 at ed43749, four independent artifact audits and original-kernel
-continuation to the LLCC frontier. The LLCC addition requires its own 93+5
-receipt; registration in this plan is not a completed result.
+91+5 at `ed43749`, four independent artifact audits and original-kernel
+continuation to the LLCC frontier. The LLCC source `c02f3d7` then passed
+93+5, five independent artifact audits and one unchanged-original-input
+diagnostic to the SPSS mask store; it is merged in `7372681f`. The new
+SPSS addition requires its own 95+5 receipt; registration in this plan
+is not a completed result.
 The preceding 4cc source passed 81+5, but this new combination still needs its
 own actual compiled receipt and native original-input run.
 The archived
@@ -666,5 +669,49 @@ directions and each specific corrupted field must produce actual receiver
 failure diagnostics. The finite 1000 ns transition delay is a reference policy
 within the driver's 100 us polling budget, not measured silicon timing.
 
-This newly registered LLCC combination still requires its own compiled CI
-artifact, complete artifact review and subsequent original-input diagnostic.
+The exact LLCC source `c02f3d7` passed push run 45501927279 and PR run
+45501932082 attempt 2, both at 93+5. The push artifact 14973051830 was
+independently reviewed by the aggregate, LLCC, DP, DSI and DISPCC auditors.
+Initial path-join and transient HTTP 429 failures remain in the evidence;
+only the failed PR board job was rerun on unchanged source. Its successful
+A77 execution was carried forward, not executed a second time.
+
+That exact push binary completed one zero-LUN original-input diagnostic.
+The previous LLCC rejected read was absent; the next and only rejected
+access was a 32-bit SPSS mask store at `0x01881028`. No explicit LLCC
+probe-completion message, Android userspace, UI or boot completion was
+observed. The [qualified artifact and native evidence](https://github.com/cyjin-yl/qemu-tb371fc/tree/253e3b630bc7a4d2250dec6efcb36f764a605446/tb371fc/evidence/llcc-c02f3d7-ci-20261124-6a5)
+records those separate outcomes.
+
+
+## SPSS interrupt-mask control
+
+The `spss-irq-mask-sm8250-reference` gate registers 21 check groups, three
+completed migrations (unknown, driver-programmed `0xfcffffff`, and programmed
+zero), two directional profile rejections, and six single-bit corrupted-stream
+rejections. Four original streams and six mutated copies preserve the complete
+25-byte `SPM1` / version-1 state. The corruptions cover identity, physical base,
+window size, noncanonical programmed flag, nonzero unknown state, and a
+programmed disabled state. The model is default-off and has only one mapped
+4-byte word at `0x01881028`.
+
+The first post-load observation uses 18 pure QOM getters before further device
+MMIO or `cont`. A real pre-incoming device write and a RAM witness distinguish
+restored state from an untouched destination; getters add zero MMIO operations
+and zero execution commands. Explicitly programmed zero remains distinct from
+unknown zero. All reads are rejected. No IRQ, clock, timer, READY, firmware or
+PAS behavior is implied by the mask word.
+
+The `spss-irq-mask-source-generation` gate verifies the complete size, SHA-256
+and Git blob identity of two fixed public inputs and byte-compares the generated
+C include and JSON manifest. Its bounded fetch retry applies only to HTTP 429,
+HTTP 5xx and transport timeouts, at most three attempts with 1 s and 2 s delays.
+Source identity failures are final; there is no alternate URL or substituted
+cache. Prior source-generation gates are unchanged.
+
+These two registrations extend the public plan to 95 component plus 5 Linux
+cases. This SPSS combination still requires its own actual compiled receipt,
+complete artifact review and subsequent original-input diagnostic. The
+[before-SPSS native observation](../evidence/spss-irq-mask-20261124-6a5/native-frontier-before-spss.json)
+comes from the preceding qualified LLCC binary and is not evidence that this
+new model has executed. Android acceptance remains unpassed.

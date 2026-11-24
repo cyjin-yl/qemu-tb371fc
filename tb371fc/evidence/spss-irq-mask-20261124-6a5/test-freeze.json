@@ -1,0 +1,131 @@
+{
+  "schema": "tb371fc-spss-test-freeze-v1",
+  "base_commit": "7372681f546a7ac1b816377480601ddd8e7c16f5",
+  "source_files_frozen": true,
+  "pins": {
+    "tb371fc/tests/test_spss_irq_mask_sm8250.py": {
+      "bytes": 33981,
+      "sha256": "c0a74b8ad19b621ebb748bcb388e5f02248c212912c1f19d9de0cbb8d546e180"
+    },
+    "tb371fc/scripts/ci_device_tests.py": {
+      "bytes": 75749,
+      "sha256": "22d0482115a1cb252161dce33d79355d93a435b4b8f4ca8df129e7bb3c721117"
+    },
+    "tb371fc/scripts/test_ci_device_tests.py": {
+      "bytes": 37215,
+      "sha256": "b907e6a6178148313424bc797944772be96aa94d8b8bba727e312aeaeb707799"
+    },
+    "spss-irq-mask-test-ci-contract.json": {
+      "bytes": 2957,
+      "sha256": "9201ab5c7450fd09abe838e03478d3268efa09a4f5acfc4aa363afbbd3f807af"
+    },
+    ".work/spss-ci-contract-preservation-001.json": {
+      "bytes": 1086,
+      "sha256": "6fbe62eacd7abdac08283bdae49ef573af0e1af1f06597017512b45b0292c4d4"
+    },
+    ".work/spss-ci-local-unit-001.json": {
+      "bytes": 1967,
+      "sha256": "6b1630730252f932102ea17413981e1c1d21ad33c53e460c2698b9473c8b5d64"
+    },
+    ".work/spss-ci-unit-plan-001.log": {
+      "bytes": 2209,
+      "sha256": "c033fc1a2386ec68160842722c126e0ad32a198b06d391fda650467f82f376f7"
+    },
+    ".work/spss-ci-unit-all-001.log": {
+      "bytes": 5426,
+      "sha256": "5eb576b52c277412b87cd2d078b287db331315c80c0e045cbf8bb1aafe46fafc"
+    },
+    ".work/prior98-ci-plan.normalized.json": {
+      "bytes": 82643,
+      "sha256": "73d2a838c16cf68eb1aeda4c2637a1c65e01bef2f8e03090d3688313be7134dd"
+    },
+    ".work/spss-ci-plan-all.normalized.json": {
+      "bytes": 85323,
+      "sha256": "086deffd21c2d38a5edd84677045371c8f3a61f74d93db02ae41a94bdca1b137"
+    },
+    ".work/spss-ci-plan-components.normalized.json": {
+      "bytes": 81054,
+      "sha256": "285cc9aaa0b2e4f699b0975dc690970d01b4325ff3ad4f2a4be1b26b84418ca6"
+    }
+  },
+  "syntax_passed": true,
+  "pure_python_25_byte_roundtrips": [
+    {
+      "name": "unknown",
+      "bytes": 25,
+      "hex": "0000000153504d310000000001881028000000040000000000",
+      "profile": 1,
+      "mask": 0,
+      "written": 0
+    },
+    {
+      "name": "driver",
+      "bytes": 25,
+      "hex": "0000000153504d31000000000188102800000004fcffffff01",
+      "profile": 1,
+      "mask": 4244635647,
+      "written": 1
+    },
+    {
+      "name": "known-zero",
+      "bytes": 25,
+      "hex": "0000000153504d310000000001881028000000040000000001",
+      "profile": 1,
+      "mask": 0,
+      "written": 1
+    },
+    {
+      "name": "disabled",
+      "bytes": 25,
+      "hex": "0000000053504d310000000001881028000000040000000000",
+      "profile": 0,
+      "mask": 0,
+      "written": 0
+    }
+  ],
+  "report_contract_exact_match": true,
+  "check_names": [
+    "cold_identity_unknown_and_pure_getters",
+    "literal_original_probe_mask",
+    "full_u32_writes_replace_entire_mask",
+    "zero_programming_provenance_and_reset",
+    "every_guest_read_is_rejected",
+    "invalid_width_and_alignment_never_program",
+    "exact_single_leaf_and_surrounding_holes",
+    "runtime_observers_are_readonly_and_time_has_no_effect",
+    "default_off_rejects_control_without_programming",
+    "paused_tcg_exposes_no_mutating_fixture_or_guest_execution",
+    "migration_unknown",
+    "migration_driver",
+    "migration_known_zero",
+    "profile_on_to_off_rejected",
+    "profile_off_to_on_rejected",
+    "single_bit_identity_rejected",
+    "single_bit_physical_base_rejected",
+    "single_bit_window_bytes_rejected",
+    "single_bit_programmed_flag_rejected",
+    "single_bit_unknown_mask_rejected",
+    "single_bit_disabled_programmed_rejected"
+  ],
+  "compiled_device_tests_executed": false,
+  "qemu_or_guest_executed": false,
+  "local_ci_plan_tests": {
+    "passed": 14,
+    "total": 14
+  },
+  "local_ci_full_suite": {
+    "passed": 32,
+    "errors": 1,
+    "total": 33,
+    "skipped": 0,
+    "overall_passed": false,
+    "error_test": "test_ci_device_tests.VerdictTests.test_fixture_copy_ignores_sockets_and_symlinks",
+    "error": "PermissionError: [Errno 1] Operation not permitted during socket(AF_UNIX, SOCK_STREAM)",
+    "raw_log": ".work/spss-ci-unit-all-001.log"
+  },
+  "prior_98_ci_contracts_preserved": true,
+  "new_component_count": 95,
+  "linux_count": 5,
+  "unit_required_on_ci": 33,
+  "scope": "Pure source/serializer/CI-unit checks only; no claim of compiled device acceptance or native Android success."
+}

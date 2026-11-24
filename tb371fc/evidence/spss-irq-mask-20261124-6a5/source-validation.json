@@ -1,0 +1,407 @@
+{
+  "schema": "tb371fc-spss-irq-mask-source-validation-v1",
+  "passed": true,
+  "validation_scope": "Local static source parsing, deterministic output reproduction, complete-input identity rejection and isolated mocked retry policy only",
+  "created_utc": "2026-11-24T23:45:15.932300+00:00",
+  "base_commit": "7372681f546a7ac1b816377480601ddd8e7c16f5",
+  "base_tree": "e16fa89f92cb997ca013415c8ced5adcc1db8659",
+  "source_input_count": 2,
+  "generated_output_count": 2,
+  "source_pins": [
+    {
+      "path": "primary-r11/drivers/soc/qcom/subsys-pil-tz.c",
+      "source_path": "drivers/soc/qcom/subsys-pil-tz.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 32203,
+      "git_blob_sha": "ed5e07c193b3841c60c94d92a4db259335d665c9",
+      "sha256": "c574017a8f4e5ad5a4215434029d73bdc2c9ee9736b006429aa30a30ac219608",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/soc/qcom/subsys-pil-tz.c"
+    },
+    {
+      "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+      "source_path": "arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 132499,
+      "git_blob_sha": "e9651f09bd579616787894dc8514429063623b2d",
+      "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/arch/arm64/boot/dts/vendor/qcom/kona.dtsi"
+    }
+  ],
+  "published_file_pins": [
+    {
+      "path": "tb371fc/scripts/gen_spss_irq_mask.py",
+      "bytes": 12397,
+      "sha256": "295914684423788ef4d6e01c197162708f3542f49d50c077381d4994aae61b13"
+    },
+    {
+      "path": "tb371fc/scripts/verify_spss_irq_mask_generation.py",
+      "bytes": 5936,
+      "sha256": "a27fcf4bc5a8a6b3f1baefc62d4fd0039594c57f82e769dc59877a5bb55a5a55"
+    },
+    {
+      "path": "hw/misc/qcom-sm8250-spss-irq-mask-data.inc",
+      "bytes": 410,
+      "sha256": "0bc4c9cbac7893f470ea1271274da41fa22b3fd0ea4b8e0fbd5ec1b4047c6cec"
+    },
+    {
+      "path": "tb371fc/docs/spss-irq-mask-sm8250-registers.json",
+      "bytes": 4019,
+      "sha256": "93cc367d15a60d82b8c765205791b16e3348c1a2b6e16e72d47c7d487b2627cb"
+    },
+    {
+      "path": "tb371fc/docs/spss-irq-mask-sm8250.md",
+      "bytes": 11030,
+      "sha256": "680ea9eee250781bc6955a1792ab57f44c79c2fb271b52f502938e54b9bc50ee"
+    }
+  ],
+  "reproduction": {
+    "command": "python3 -B tb371fc/scripts/verify_spss_irq_mask_generation.py --source-root /dev/shm/pil-tz-review-6a5 --out /dev/shm/pil-tz-candidate-6a5/.work/generation-001",
+    "report_sha256": "7dbe1c903f91d4b0bca64439c59a551ee9eb8823365eaf70aff2468c76f24f07",
+    "result": {
+      "schema": "tb371fc-spss-irq-mask-generation-v1",
+      "passed": true,
+      "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "source_pins_verified": true,
+      "inputs": [
+        {
+          "path": "primary-r11/drivers/soc/qcom/subsys-pil-tz.c",
+          "source_path": "drivers/soc/qcom/subsys-pil-tz.c",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/soc/qcom/subsys-pil-tz.c",
+          "expected_bytes": 32203,
+          "expected_sha256": "c574017a8f4e5ad5a4215434029d73bdc2c9ee9736b006429aa30a30ac219608",
+          "expected_git_blob_sha": "ed5e07c193b3841c60c94d92a4db259335d665c9",
+          "attempts": [
+            {
+              "attempt": 1,
+              "success": true,
+              "source": "local",
+              "bytes": 32203
+            }
+          ],
+          "bytes": 32203,
+          "sha256": "c574017a8f4e5ad5a4215434029d73bdc2c9ee9736b006429aa30a30ac219608",
+          "git_blob_sha": "ed5e07c193b3841c60c94d92a4db259335d665c9"
+        },
+        {
+          "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+          "source_path": "arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+          "expected_bytes": 132499,
+          "expected_sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+          "expected_git_blob_sha": "e9651f09bd579616787894dc8514429063623b2d",
+          "attempts": [
+            {
+              "attempt": 1,
+              "success": true,
+              "source": "local",
+              "bytes": 132499
+            }
+          ],
+          "bytes": 132499,
+          "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+          "git_blob_sha": "e9651f09bd579616787894dc8514429063623b2d"
+        }
+      ],
+      "checks": [
+        {
+          "name": "hw/misc/qcom-sm8250-spss-irq-mask-data.inc",
+          "passed": true,
+          "generated_bytes": 410,
+          "committed_bytes": 410,
+          "generated_sha256": "0bc4c9cbac7893f470ea1271274da41fa22b3fd0ea4b8e0fbd5ec1b4047c6cec",
+          "committed_sha256": "0bc4c9cbac7893f470ea1271274da41fa22b3fd0ea4b8e0fbd5ec1b4047c6cec"
+        },
+        {
+          "name": "tb371fc/docs/spss-irq-mask-sm8250-registers.json",
+          "passed": true,
+          "generated_bytes": 4019,
+          "committed_bytes": 4019,
+          "generated_sha256": "93cc367d15a60d82b8c765205791b16e3348c1a2b6e16e72d47c7d487b2627cb",
+          "committed_sha256": "93cc367d15a60d82b8c765205791b16e3348c1a2b6e16e72d47c7d487b2627cb"
+        }
+      ],
+      "generator_exit": 0,
+      "generated_contract": {
+        "source_input_count": 2,
+        "register_count": 1,
+        "window_count": 1,
+        "mapped_bytes": 4,
+        "physical_base": 25694248,
+        "err_ready_bit": 24,
+        "pbl_done_bit": 25,
+        "driver_mask": 4244635647
+      }
+    }
+  },
+  "source_tamper_rejections": [
+    {
+      "source_path": "primary-r11/drivers/soc/qcom/subsys-pil-tz.c",
+      "original_sha256": "c574017a8f4e5ad5a4215434029d73bdc2c9ee9736b006429aa30a30ac219608",
+      "mutant_sha256": "f96174973fec5f4c6c7160c926b33a45e6ea113683d88efc093560db0293c071",
+      "xor_bit_count": 1,
+      "exit_code": 1,
+      "report": "/dev/shm/pil-tz-candidate-6a5/.work/source-checks-001/tamper-0-verification/result.json",
+      "report_sha256": "007843dd69f3fd53d3cc5aa6eea0dc33830b69f4acc170bc65a040d0da8bbe55",
+      "rejected_before_generation": true,
+      "rejection_receipt": {
+        "schema": "tb371fc-spss-irq-mask-generation-v1",
+        "passed": false,
+        "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+        "source_pins_verified": false,
+        "inputs": [
+          {
+            "path": "primary-r11/drivers/soc/qcom/subsys-pil-tz.c",
+            "source_path": "drivers/soc/qcom/subsys-pil-tz.c",
+            "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+            "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+            "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/soc/qcom/subsys-pil-tz.c",
+            "expected_bytes": 32203,
+            "expected_sha256": "c574017a8f4e5ad5a4215434029d73bdc2c9ee9736b006429aa30a30ac219608",
+            "expected_git_blob_sha": "ed5e07c193b3841c60c94d92a4db259335d665c9",
+            "attempts": [
+              {
+                "attempt": 1,
+                "success": true,
+                "source": "local",
+                "bytes": 32203
+              }
+            ],
+            "bytes": 32203,
+            "sha256": "f96174973fec5f4c6c7160c926b33a45e6ea113683d88efc093560db0293c071",
+            "git_blob_sha": "31166e1288ce9eadfdb58af0bf0603dfb2ae4f81"
+          }
+        ],
+        "checks": [],
+        "error": "Traceback (most recent call last):\n  File \"/dev/shm/pil-tz-candidate-6a5/tb371fc/scripts/verify_spss_irq_mask_generation.py\", line 70, in run\n    raise ValueError(\"Complete public source identity differs: \" + local)\nValueError: Complete public source identity differs: primary-r11/drivers/soc/qcom/subsys-pil-tz.c\n"
+      }
+    },
+    {
+      "source_path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+      "original_sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+      "mutant_sha256": "14ecf14782a66aa2478bf588615527d3b1b1e7fec8744238cc5d44dab8c81b91",
+      "xor_bit_count": 1,
+      "exit_code": 1,
+      "report": "/dev/shm/pil-tz-candidate-6a5/.work/source-checks-001/tamper-1-verification/result.json",
+      "report_sha256": "4d371a5ff3f39b69a72f8cbc3463c1f30f782bf5d8b54ee7debdf878f27571fe",
+      "rejected_before_generation": true,
+      "rejection_receipt": {
+        "schema": "tb371fc-spss-irq-mask-generation-v1",
+        "passed": false,
+        "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+        "source_pins_verified": false,
+        "inputs": [
+          {
+            "path": "primary-r11/drivers/soc/qcom/subsys-pil-tz.c",
+            "source_path": "drivers/soc/qcom/subsys-pil-tz.c",
+            "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+            "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+            "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/soc/qcom/subsys-pil-tz.c",
+            "expected_bytes": 32203,
+            "expected_sha256": "c574017a8f4e5ad5a4215434029d73bdc2c9ee9736b006429aa30a30ac219608",
+            "expected_git_blob_sha": "ed5e07c193b3841c60c94d92a4db259335d665c9",
+            "attempts": [
+              {
+                "attempt": 1,
+                "success": true,
+                "source": "local",
+                "bytes": 32203
+              }
+            ],
+            "bytes": 32203,
+            "sha256": "c574017a8f4e5ad5a4215434029d73bdc2c9ee9736b006429aa30a30ac219608",
+            "git_blob_sha": "ed5e07c193b3841c60c94d92a4db259335d665c9"
+          },
+          {
+            "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+            "source_path": "arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+            "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+            "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+            "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+            "expected_bytes": 132499,
+            "expected_sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+            "expected_git_blob_sha": "e9651f09bd579616787894dc8514429063623b2d",
+            "attempts": [
+              {
+                "attempt": 1,
+                "success": true,
+                "source": "local",
+                "bytes": 132499
+              }
+            ],
+            "bytes": 132499,
+            "sha256": "14ecf14782a66aa2478bf588615527d3b1b1e7fec8744238cc5d44dab8c81b91",
+            "git_blob_sha": "3ef7ad5ab38165b8ddb308268fb2aa6a5c66cf0a"
+          }
+        ],
+        "checks": [],
+        "error": "Traceback (most recent call last):\n  File \"/dev/shm/pil-tz-candidate-6a5/tb371fc/scripts/verify_spss_irq_mask_generation.py\", line 70, in run\n    raise ValueError(\"Complete public source identity differs: \" + local)\nValueError: Complete public source identity differs: primary-r11/arch/arm64/boot/dts/vendor/qcom/kona.dtsi\n"
+      }
+    }
+  ],
+  "parser_checks": [
+    {
+      "name": "resource-is-derived-by-name",
+      "passed": true
+    },
+    {
+      "name": "indices-and-mask-expression-are-derived",
+      "passed": true
+    },
+    {
+      "name": "unreviewed-operator-fails-closed",
+      "passed": true
+    }
+  ],
+  "retry_policy_checks": {
+    "transport_mocked": true,
+    "online_request_performed": false,
+    "cases": [
+      {
+        "name": "429-503-success-same-url-three-attempts",
+        "passed": true,
+        "attempts": [
+          {
+            "attempt": 1,
+            "success": false,
+            "error_type": "HTTPError",
+            "error": "HTTP Error 429: synthetic throttling",
+            "http_status": 429,
+            "retryable": true,
+            "retry_delay_seconds": 1
+          },
+          {
+            "attempt": 2,
+            "success": false,
+            "error_type": "HTTPError",
+            "error": "HTTP Error 503: synthetic backend limit",
+            "http_status": 503,
+            "retryable": true,
+            "retry_delay_seconds": 2
+          },
+          {
+            "attempt": 3,
+            "success": true,
+            "bytes": 32203
+          }
+        ]
+      },
+      {
+        "name": "404-is-final",
+        "passed": true,
+        "attempts": [
+          {
+            "attempt": 1,
+            "success": false,
+            "error_type": "HTTPError",
+            "error": "HTTP Error 404: synthetic missing source",
+            "http_status": 404,
+            "retryable": false,
+            "retry_delay_seconds": 0
+          }
+        ]
+      },
+      {
+        "name": "timeout-stops-after-three",
+        "passed": true,
+        "attempts": [
+          {
+            "attempt": 1,
+            "success": false,
+            "error_type": "URLError",
+            "error": "<urlopen error synthetic transport timeout>",
+            "http_status": null,
+            "retryable": true,
+            "retry_delay_seconds": 1
+          },
+          {
+            "attempt": 2,
+            "success": false,
+            "error_type": "URLError",
+            "error": "<urlopen error synthetic transport timeout>",
+            "http_status": null,
+            "retryable": true,
+            "retry_delay_seconds": 2
+          },
+          {
+            "attempt": 3,
+            "success": false,
+            "error_type": "URLError",
+            "error": "<urlopen error synthetic transport timeout>",
+            "http_status": null,
+            "retryable": true,
+            "retry_delay_seconds": 0
+          }
+        ]
+      },
+      {
+        "name": "download-identity-mismatch-is-final",
+        "passed": true,
+        "report": "/dev/shm/pil-tz-candidate-6a5/.work/source-checks-001/bad-download-identity/result.json",
+        "report_sha256": "4e1ea50c4a044c7543bf604fc22fc6fe7729a6eb4230c2aced2ff4939498b27a",
+        "rejection_receipt": {
+          "schema": "tb371fc-spss-irq-mask-generation-v1",
+          "passed": false,
+          "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "source_pins_verified": false,
+          "inputs": [
+            {
+              "path": "primary-r11/drivers/soc/qcom/subsys-pil-tz.c",
+              "source_path": "drivers/soc/qcom/subsys-pil-tz.c",
+              "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+              "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+              "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/soc/qcom/subsys-pil-tz.c",
+              "expected_bytes": 32203,
+              "expected_sha256": "c574017a8f4e5ad5a4215434029d73bdc2c9ee9736b006429aa30a30ac219608",
+              "expected_git_blob_sha": "ed5e07c193b3841c60c94d92a4db259335d665c9",
+              "attempts": [
+                {
+                  "attempt": 1,
+                  "success": true,
+                  "bytes": 10
+                }
+              ],
+              "bytes": 10,
+              "sha256": "a519c961cd134c21ed0594767990d94ec85d38f674b9ee908ea6d5d948945bf7",
+              "git_blob_sha": "05ff67144ae7400aad4da0b8106ef92b7d3e6528"
+            }
+          ],
+          "checks": [],
+          "error": "Traceback (most recent call last):\n  File \"/dev/shm/pil-tz-candidate-6a5/tb371fc/scripts/verify_spss_irq_mask_generation.py\", line 70, in run\n    raise ValueError(\"Complete public source identity differs: \" + local)\nValueError: Complete public source identity differs: primary-r11/drivers/soc/qcom/subsys-pil-tz.c\n"
+        }
+      }
+    ]
+  },
+  "original_sources_unchanged": true,
+  "validation_driver": {
+    "path": ".work/validate_spss_source_pipeline.py",
+    "sha256": "b9fe7e4adbe90da55425cc6ad28fa88d48a5be5b688c29d5b30eb9f4a3c32a4a",
+    "receipt_sha256": "85b18aa5f8e25b01bc8b78ccedea44432c17ec3d2170fcbe1a4b440190257754"
+  },
+  "actual_preexisting_production_evidence": [
+    {
+      "path": "tb371fc/evidence/spss-irq-mask-20261124-6a5/actual-dt-and-pil-probe.json",
+      "bytes": 24334,
+      "sha256": "a3688a0791c6f69c58ca7d3dd81637bb749e1059e0481a7236fa5386957e7519"
+    },
+    {
+      "path": "tb371fc/evidence/spss-irq-mask-20261124-6a5/actual-source-boundary-comparison.json",
+      "bytes": 6299,
+      "sha256": "93b109ba42bd2de4050f07800b248d5137914a04c3b1d644249a9009c164c17e"
+    }
+  ],
+  "compiled_qemu_tested": false,
+  "new_original_kernel_run_executed": false,
+  "android_boot_claimed": false,
+  "source_identity_limits": [
+    "Only the local SPSS resource/value/probe sequence is corroborated; complete production kernel source identity is not established.",
+    "The actual SPSS remote memory base 0x8be00000 differs from R11 0x92300000. Neither is imported by this one-word model.",
+    "Native reset mask, readback, remote notifications, IRQ delivery and PAS/firmware services are not established by this source-generation gate.",
+    "The two primary URLs are immutable and exact identities are checked after retrieval; 429/5xx/timeout retries never admit a different payload."
+  ]
+}

@@ -14,7 +14,7 @@
 
 ## 当前整合：原厂 Android 启动开发基线
 
-本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。精确 DP 源码 `ed43749` 已通过自己的 91+5 CI、四个独立产物审计和原始输入诊断，并合入 `47083401`。本次在该基线上增加 LLCC slice 控制及固定源码再生两个 gate，当前公开计划为 **98 项：93 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。LLCC 组合的编译验收和原始输入运行仍须以新提交实际回执为准。
+本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。精确 LLCC 源码 `c02f3d7` 已通过自己的 93+5 CI、五个独立产物审计和一次原始输入诊断，并合入 `7372681f`。本次在该基线上增加 SPSS 中断屏蔽控制及固定源码再生两个 gate，当前公开计划为 **100 项：95 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。SPSS 组合的编译验收和原始输入运行仍须以新提交实际回执为准。
 
 两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
 
@@ -66,7 +66,7 @@ run005 的首个显示异常发生于 guest 3.697772 秒，CPU4、PID84 `kworker
 
 需显式 `qcom-sm8250-videocc.enabled-reference=on`。PLL1 按源码先接收 base 配置，再应用 v2 `CONFIG_CTL_U1=0x329a699c`；两个有来源依据的 XO 输入接现有 carrier，sleep／test 输入仍未知。divider 的 `DIV2` 名称不额外生成除数，sleep 频表也不生成 32 kHz 输入。独立 v1 迁移默认负载为 474 B，VIDEO GDSC 的 142 B 状态保持独立。
 
-[固定源码生成及逐字节核验](tb371fc/scripts/verify_videocc_generation.py)检查十个输入和两个输出。原 36 组 gate 的 c232d14e 已通过[精确源码 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45440459756)及实际 ZIP 核验。本组合把[compiled gate](tb371fc/tests/test_videocc_sm8250.py)增至 41 组，加入冷态 AHB 顺序、共享 divider 子请求交接、全部 HID 编码、七个频表点和已运行配置保持；保留 VIC2、474 B 完整迁移 oracle、三次完成迁移及 2/2 负例。新增测试与 DSI 组合仍需要自己的正式 CI，不沿用旧产物的通过结论。
+[固定源码生成及逐字节核验](tb371fc/scripts/verify_videocc_generation.py)检查十个输入和两个输出。原 36 组 gate 的 c232d14e 已通过[精确源码 CI](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45440459756)及实际 ZIP 核验。本组合把[compiled gate](tb371fc/tests/test_videocc_sm8250.py)增至 41 组，加入冷态 AHB 顺序、共享 divider 子请求交接、全部 HID 编码、七个频表点和已运行配置保持；保留 VIC2、474 B 完整迁移 oracle、三次完成迁移及 2/2 负例。新增测试与 DSI 组合已在精确源码 `8e8e19a` 的 89+5 CI 中实际通过，后续 LLCC 组合也重新核验了这些检查；各回执仍分别绑定自身源码与二进制。
 
 ### DSI PLL：Video CC 注册后的实际下一异常
 
@@ -92,7 +92,17 @@ run005 的首个显示异常发生于 guest 3.697772 秒，CPU4、PID84 `kworker
 
 [LLCC 数字控制模型](tb371fc/docs/llcc-sm8250.md)默认关闭，显式 `qcom-sm8250-llcc.enabled-reference=on` 后开放 139 个精确窗口、349 个 word，共 1396 B。16 个 slice 独立执行两次边沿写入的激活／停用事务；1000 ns 是参考完成延迟，源码的 100 μs 只作为轮询预算证据。配置或本 slice 的全局位变化撤销未完成事务；bank 只读视图镜像 broadcast 写入。硬件版本和内存控制器数量保持未知，模型范围限于数字控制，不证明缓存数据、性能、ECC 注入或物理电源行为。
 
-新 LLCC gate 要求 32 组、4 次完成迁移、2 次 profile 拒绝和 4 次单 bit 损坏拒绝；五个原流和四个修改副本保留完整 783 B 状态，恢复目标在 MMIO 或 `cont` 前执行 313 次纯 QOM 查询。另一个 gate 核对八份完整固定源码并再生两个输出。当前代码与计划检查不替代新组合的实际编译 CI、原始内核或 Android 验收。
+精确源码 `c02f3d7` 的 [push CI 45501927279](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45501927279) 与 [PR CI 45501932082 的第二次尝试](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45501932082/attempts/2) 已实际通过 93+5。LLCC 的 32 组、4 次完成迁移、2 次 profile 拒绝和 4 次单 bit 损坏拒绝均已从实际 ZIP 独立核验；五个原流和四个修改副本保留完整 783 B 状态，恢复目标在 MMIO 或 `cont` 前执行 313 次纯 QOM 查询。源码再生核对八份完整固定源码和两个输出。五个审计分别覆盖总计划／VIDEOCC、LLCC、DP、DSI 和 DISPCC；真实 Linux UFS 两项检查点为 39／61 项。初轮路径拼接缺陷与 PR 的 HTTP 429 失败均保留，后者只重试失败 job；成功的 A77 job 沿用原执行，未声称重新运行。
+
+同一已审计二进制 `10d21844…` 的一次原始输入诊断不再出现 LLCC `0x0923000c` 读取拒绝，随后在 guest 3.740434 秒对 SPSS `0x01881028` 的 32 位写入触发 PID1 panic。日志没有明确的 LLCC probe 完成消息，因此只确认执行推进到后续异常。原始 kernel／ramdisk／完整 DT／bootargs、AOP 和符号摘要保持不变；零原始 LUN，QMP 正常停止，Android 用户态、界面和启动完成仍未观察到。见[完整 CI 与原始运行证据](https://github.com/cyjin-yl/qemu-tb371fc/tree/253e3b630bc7a4d2250dec6efcb36f764a605446/tb371fc/evidence/llcc-c02f3d7-ci-20261124-6a5)。
+
+### SPSS：实际 PIL 冷探测的中断屏蔽写入
+
+[原始运行前沿](tb371fc/evidence/spss-irq-mask-20261124-6a5/native-frontier-before-spss.json)与[完整 DT／生产指令](tb371fc/evidence/spss-irq-mask-20261124-6a5/actual-dt-and-pil-probe.json)将异常定位为 `pil_tz_driver_probe+0x6bc/0x788` 的 `STR W8,[X10]`，实际 W8 为 `0xfcffffff`。实际 DT 的 `sp2soc_irq_mask` 资源恰为 `0x01881028/4`，事件位是 24、25；固定 `subsys-pil-tz.c` 的 `mask_scsr_irqs()` 公式与这条写入对应。
+
+[SPSS 屏蔽字模型](tb371fc/docs/spss-irq-mask-sm8250.md)仅拥有该 4 B 窗口，默认关闭，需显式 `qcom-sm8250-spss-irq-mask.enabled-reference=on`。它保留送达设备的合法 32 位写入与“已编程”标志；所有寄存器读取继续返回错误。内部未知占位零与来宾明确写入的零有不同状态，未声称物理复位值。其它 SPSS 资源、QSEE、IRQ、READY、固件启动和 PAS 认证均不因此获得实现。
+
+新 gate 要求 21 组、3 次完成迁移、双向 profile 拒绝及 6 次单 bit 损坏拒绝；四个原流和六个修改副本核对完整 25 B v1 状态，恢复后的首次观察为 18 次纯 QOM 查询。另一 gate 核对两份完整固定源码并再生两个输出。该计划仍需新组合自身的编译 CI、产物审计与原始输入运行。
 
 
 ## 默认分支既有验收：2026-11-24 存储与电源修复

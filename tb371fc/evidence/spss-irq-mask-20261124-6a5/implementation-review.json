@@ -1,0 +1,89 @@
+{
+  "schema": "tb371fc-spss-c-source-vmstate-bounded-review-v1",
+  "passed": true,
+  "created_utc": "2026-11-24T23:46:58.916229+00:00",
+  "review_scope": "Independent read-only review of another author's C/header/board; own generator/verifier checks are explicitly self-validation, with separate peer review requested.",
+  "base_commit": "7372681f546a7ac1b816377480601ddd8e7c16f5",
+  "c_file": {
+    "path": "/dev/shm/pil-tz-candidate-6a5/hw/misc/qcom-sm8250-spss-irq-mask.c",
+    "bytes": 9658,
+    "sha256": "9b8e0b32fa58b703726932f587db175e9ca511edacb46c7b3e86b667e83edc0f"
+  },
+  "board_sha256": "8852236c0184f07e8c3958880dc8924193a3ccf1f5aea538cec90e3109560702",
+  "generated_inc_sha256": "0bc4c9cbac7893f470ea1271274da41fa22b3fd0ea4b8e0fbd5ec1b4047c6cec",
+  "native_preceding_receipt_sha256": "9b31c74733b2f82339b48e1f8c1bda0184ed8a81e5631bfedf6a765397ab1e9f",
+  "source_validation_sha256": "1b08b60d3eafde4ac581fffb5bcd3120c878318196741d3b1fcbc7f4ead2d1d0",
+  "derived_driver_mask": "0xfcffffff",
+  "source_expression_does_not_restrict_accepted_guest_values": true,
+  "full_uint32_guest_control_retained": true,
+  "reads_always_error": true,
+  "reset_is_unknown_internal_placeholder": true,
+  "no_remote_signal_clock_timer_or_secure_callback": true,
+  "board_exact_four_byte_mask_owner": true,
+  "vmstate_version": 1,
+  "vmstate_identity": "0x53504d31",
+  "vmstate_bytes": 25,
+  "wire_field_order": [
+    {
+      "field": "reference_profile",
+      "offset": 0,
+      "bytes": 4
+    },
+    {
+      "field": "reference_identity",
+      "offset": 4,
+      "bytes": 4
+    },
+    {
+      "field": "physical_base",
+      "offset": 8,
+      "bytes": 8
+    },
+    {
+      "field": "window_bytes",
+      "offset": 16,
+      "bytes": 4
+    },
+    {
+      "field": "mask_value",
+      "offset": 20,
+      "bytes": 4
+    },
+    {
+      "field": "written",
+      "offset": 24,
+      "bytes": 1
+    }
+  ],
+  "migration_invariants_reviewed": [
+    "profile must match explicit enabled-reference",
+    "identity and geometry fixed",
+    "written byte restricted to0/1",
+    "disabled has no programmed state",
+    "unknown mask must have zero placeholder",
+    "known zero remains valid and distinct",
+    "reset clears value/written but keeps fixed identity and profile"
+  ],
+  "generated_bit_macros_not_runtime_irq_or_ready_logic": true,
+  "generation_identity_failure_precedes_outputs": true,
+  "network_retry_self_review": {
+    "only_transient_http_or_timeout": true,
+    "attempt_limit": 3,
+    "delays_seconds": [
+      1,
+      2
+    ],
+    "identity_validation_outside_fetch_retry": true,
+    "fixed_urls_no_fallback": true,
+    "mocked_policy_cases": 4,
+    "online_behavior_not_claimed": true
+  },
+  "compiled_qemu_executed": false,
+  "native_guest_executed": false,
+  "new_tests_added_by_this_review": false,
+  "limitations": [
+    "This is bounded static source/VMState review plus existing local source-pipeline receipts, not compiled QEMU or migration execution.",
+    "Cross-region QEMU dispatch is not claimed to reject wider bus operations atomically.",
+    "CI and native receipts must separately bind the final published source and binary."
+  ]
+}

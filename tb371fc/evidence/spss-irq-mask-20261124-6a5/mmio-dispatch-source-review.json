@@ -1,0 +1,74 @@
+{
+  "schema": "tb371fc-spss-mmio-dispatch-static-review-v1",
+  "reviewed_qemu_source": "7372681f546a7ac1b816377480601ddd8e7c16f5",
+  "pins": [
+    {
+      "path": "system/qtest.c",
+      "bytes": 30014,
+      "sha256": "b9278555cbea97cfb0e4a13cf5a65ddf1fe9d9df1e1ff939cb7424ff41adc5f6",
+      "git_blob": "cf301239177416bf0e4b9856dfaafda05f701f06",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/7372681f546a7ac1b816377480601ddd8e7c16f5/system/qtest.c"
+    },
+    {
+      "path": "system/physmem.c",
+      "bytes": 140872,
+      "sha256": "3210a543353b435a146f7ae4a33608ea849aad038cd9e889ddb3a30c104c063f",
+      "git_blob": "c21ea929153e5b67efa47432b1db0993e2690f9c",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/7372681f546a7ac1b816377480601ddd8e7c16f5/system/physmem.c"
+    },
+    {
+      "path": "system/memory.c",
+      "bytes": 118660,
+      "sha256": "09a3c9c186629f082f63b50b3ee7c54366c37a62584f6d9f897980cd276aca13",
+      "git_blob": "5fc36708ec349d94605f0503c647d7f9d1475a2d",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/7372681f546a7ac1b816377480601ddd8e7c16f5/system/memory.c"
+    }
+  ],
+  "model_sha256": "9b8e0b32fa58b703726932f587db175e9ca511edacb46c7b3e86b667e83edc0f",
+  "findings": [
+    {
+      "operation": "QTest writeq at 0x01881028",
+      "result": "One offset0,size8 callback; model rejects without changing mask or written. No second neighboring access is dispatched.",
+      "evidence": [
+        "system/qtest.c:534-540",
+        "system/physmem.c:382-396",
+        "system/physmem.c:3161-3185",
+        "system/physmem.c:3230-3267",
+        "system/memory.c:559-570"
+      ]
+    },
+    {
+      "operation": "QTest writel at 0x01881029",
+      "result": "One offset1,size4 callback; unaligned=true prevents size reduction; model rejects without state change.",
+      "evidence": [
+        "system/physmem.c:3171-3185",
+        "system/memory.c:1419-1443",
+        "system/memory.c:559-570"
+      ]
+    },
+    {
+      "operation": "Raw byte-buffer write at 0x01881028 with length5",
+      "result": "First four bytes form a legal write when enabled; remaining byte goes to adjacent unmapped address. Aggregate failure cannot roll back the first write.",
+      "evidence": [
+        "system/physmem.c:3179-3185",
+        "system/physmem.c:3281-3306"
+      ]
+    },
+    {
+      "operation": "QTest transport success text",
+      "result": "OK only acknowledges command processing; qtest ignores MemTxResult for both read and write commands. Reject tests need device/core diagnostics and pure QOM state.",
+      "evidence": [
+        "system/qtest.c:520-540",
+        "system/qtest.c:553-573"
+      ]
+    }
+  ],
+  "conclusion": "No C or mapping change required. Guarantee is rejection/state preservation per delivered invalid callback, not atomicity of arbitrary multi-step buffers. Keep exact4B leaf; neighboring holes remain unassigned.",
+  "execution": {
+    "qemu_started": false,
+    "guest_started": false,
+    "device_rpc": false,
+    "runtime_modified": false,
+    "source_analysis_only": true
+  }
+}
