@@ -222,7 +222,7 @@ def plan(args, runtime):
                          'apps_tcs_per_drv': 8,
                          'display_tcs_count': 2,
                          'wait_command_mask': 65535,
-                         'default_strict_main_vmstate_unchanged': True,
+                         'strict_and_wait_reference_main_v3_payload_identical': True,
                          'old_rpmh_tests_changed': False,
                          'old_rpmh_test_blobs_match': True,
                          'silicon_reserved_bit_semantics_proved': False,

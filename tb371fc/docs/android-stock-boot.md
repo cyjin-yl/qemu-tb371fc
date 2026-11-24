@@ -5,6 +5,38 @@ observing original Android boot inputs. They do not use the smoke-test initramfs
 The current machine enters a Linux kernel directly; it does not execute the
 Qualcomm PBL, XBL, ABL, AOP or secure-world firmware.
 
+## Capture missing original ranges
+
+`acquire_block_ranges.py` streams explicit read-only block-device ranges to the
+same script's `receive` command over an existing, verified SSH connection. Keep
+the SSH prefix and remote receiver argv in separate private JSON files. Preserve
+host-key verification and use the account's existing identity environment.
+
+The sender requires the observed device byte count, 4096-byte block geometry,
+explicit offsets/lengths and `immutable` or `live-mutable` classification. It
+does not write, freeze, unmount or repair the source. `--gpt` can capture both
+actual GPT copies with CRC and byte-identity checks. A partition range is not
+an entire LUN.
+
+Use 64 or 256 MiB chunks. Data flows through bounded memory directly to the
+receiver, without creating large intermediate files on the tablet. The receiver
+checks compressed and raw hashes and lengths, and the sender independently
+reads each source range before, during and after transmission. Each accepted
+chunk produces a progress line. Receipts and the final manifest are published
+only after verification and filesystem synchronization.
+
+For an interrupted run, add `--resume` to the receiver argv and preserve the
+same source, ranges and geometry. Both sides revalidate completed chunks before
+skipping them. Keep the SSH idle timeout long enough for that validation.
+Use an exclusively owned temporary directory for interrupted files; resume
+only removes files recognized as its own uncommitted output.
+
+The resulting manifest always records `snapshot_consistent=false` and does
+not authenticate factory origin. `metadata` and `userdata` are live mutable
+inputs. Stable per-chunk rereads do not make a running filesystem an atomic
+snapshot. Only a complete, nonoverlapping set of original ranges can supply a
+full LUN image for the Android runner.
+
 ## Prepare private inputs
 
 Keep device images and private reports outside the source repository. Use a new
