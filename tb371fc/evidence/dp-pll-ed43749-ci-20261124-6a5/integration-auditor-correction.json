@@ -1,0 +1,20 @@
+{
+  "schema": "tb371fc-dp-auditor-selector-correction-v1",
+  "old_auditor_sha256": "398998d0c4de2f08c2cb6f01ebd27948c85eb2191b34654f3e33c2a68a0684af",
+  "new_auditor_sha256": "35d228b554ff81f29a91fc5666fc904a20a7a67341c07a3aceff3e45fd7202f8",
+  "old_path": "dp-pll-candidate/.work/audit_dp_integration_artifact_ed43749.py",
+  "new_path": "dp-pll-candidate/.work/audit_dp_integration_artifact_ed43749_v2.py",
+  "only_text_change": {
+    "old": "if name.startswith((\"videocc-\", \"dispcc-\", \"dsi-pll-\")):",
+    "new": "if name.startswith((\"videocc-\", \"dispcc-\", \"dsi-pll-\", \"dp-pll-\")):"
+  },
+  "changed_function_ast": [
+    "audit_suite"
+  ],
+  "all_other_functions_classes_ast_unchanged": true,
+  "reason": "First actual final artifact audit verified aggregate gates then raised KeyError: dp-pll-source-generation. The supplementary-generation selection predicate omitted the newly registered DP prefix. Add it so the existing strict DP generation auditor is executed. No gate or assertion removed.",
+  "first_failed_receipt_sha256": "e7453406203c3a93af14c38e709513e2d059d002d2b6d5b907ef3c1a59c1539e",
+  "artifact_changed": false,
+  "runtime_code_changed": false,
+  "ci_tests_changed": false
+}

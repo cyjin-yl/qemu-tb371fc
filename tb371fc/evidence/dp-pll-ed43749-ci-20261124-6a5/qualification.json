@@ -1,0 +1,295 @@
+{
+  "a77_actual_log_observation": {
+    "bytes": 2528,
+    "path": "/workspace/scratch/6a5ea697094c/dp-pll-candidate/.work/dp-ed43749-a77-log-observation.json",
+    "sha256": "74915445879bc762d4f1c89916736a2fb3d73a075f518780564247ff07b9d448"
+  },
+  "additional_optional_tests_run": false,
+  "all_four_independent_audits_passed": true,
+  "android_boot_established": false,
+  "android_userspace_established": false,
+  "artifact": {
+    "api_url": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/artifacts/14965063970",
+    "archive_bytes": 53150327,
+    "archive_sha256": "43c0ac017612bfb56c86ed6e6c84cddc9f099ecb3354e786b53a2b56b268c7b1",
+    "artifact_name": "tb371fc-public-gates-ed43749ccea68fb082db3470f75c061b04ca09c0",
+    "id": 14965063970,
+    "qemu_bytes": 63578408,
+    "qemu_member": "qemu-build/qemu-system-aarch64",
+    "qemu_sha256": "681baabea7577ed011d4db1bd3f5f626b0237cd002c940d1fe3f391549c552bb",
+    "run_id": 45487380226
+  },
+  "audits": [
+    {
+      "auditor": {
+        "bytes": 105627,
+        "path": "/workspace/scratch/6a5ea697094c/dp-pll-candidate/.work/audit_dp_integration_artifact_ed43749_v2.py",
+        "sha256": "35d228b554ff81f29a91fc5666fc904a20a7a67341c07a3aceff3e45fd7202f8"
+      },
+      "name": "integration",
+      "passed": true,
+      "receipt": {
+        "bytes": 129625,
+        "path": "/workspace/scratch/6a5ea697094c/dp-pll-candidate/.work/dp-ed43749-final-integration-audit-002.json",
+        "sha256": "52939d3575fc1b9adad510ed04533fbd8c20d0ea246e1dc40d23ee79c67e3c24"
+      },
+      "scope": {
+        "actual_archive_and_elf_bytes_hashed": true,
+        "ci_harness_unittests": 31,
+        "component_gates": 91,
+        "description": "All 96 gate contracts and real aggregate/individual receipts, actual QEMU/clean-Linux bytes, VIDEOCC complete streams, VIDEOCC, DSI and DP source regeneration",
+        "linux_gates": 5,
+        "source_generation": {
+          "dp_generation": {
+            "committed_output_pins": {
+              "hw/misc/qcom-sm8250-dp-pll-data.inc": "36871a517d97b694252bfee383adf781878ac013215b98fd17089e7e73a5dd0d",
+              "tb371fc/docs/dp-pll-7nm-registers.json": "a9150fda61e16a0deb6acabe17f9e3b532963a61453fb98c125dab0cf08ec101"
+            },
+            "inputs_verified_from_actual_bytes": 17,
+            "outputs_verified_from_actual_bytes": 2,
+            "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6"
+          },
+          "dsi_generation": {
+            "committed_output_pins": {
+              "hw/misc/qcom-sm8250-dsi-pll-data.inc": "c193666bb41923063ca295cdb0f0327cea5f0e5b917c23d1b4b94d16bff23c16",
+              "tb371fc/docs/dsi-pll-7nm-registers.json": "c73a7e5ad6f36c008f2e9991c8d7a56d3b30cb2781b015a46fd3c13ca0d5b6df"
+            },
+            "inputs_verified_from_actual_bytes": 13,
+            "outputs_verified_from_actual_bytes": 2,
+            "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6"
+          },
+          "generation": {
+            "committed_output_pins": {
+              "hw/misc/qcom-sm8250-videocc-data.inc": "7e98e8885f0cca0781063890c7e0011dac370f60c4ebb8e885f31fa1fd84cbc8",
+              "tb371fc/docs/videocc-sm8250-registers.json": "ffbfd3bacb39d4fc22780b42a161b64142a784fda05b595bbb933c117ab44a14"
+            },
+            "inputs_verified_from_actual_bytes": 10,
+            "outputs_verified_from_actual_bytes": 2,
+            "source_revision": "94304e12a3509eac7b3716bf574ce0b1fcaacbae"
+          }
+        },
+        "supplementary_wire_audits": [
+          "DSI 2926 + MDSS 64",
+          "DISPCC 1676 + MDSS 64",
+          "DP 791 + MDSS 64"
+        ],
+        "videocc": {
+          "all_source_and_target_qom_replies_checked": true,
+          "checks": 41,
+          "completed": 3,
+          "original_files": 4,
+          "profile_rejections": 2,
+          "single_bit_rejections": 2,
+          "source_and_target_output_rates_recomputed": true,
+          "total_stream_files": 6
+        }
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 87087,
+        "path": "/workspace/scratch/6a5ea697094c/dp-pll-candidate/.work/audit_dp_pll_artifact.py",
+        "sha256": "477ef38c291b2bcd89bc525aecc40caab0e43b304a898cd67c7c9818fb9cda09"
+      },
+      "name": "dp",
+      "passed": true,
+      "receipt": {
+        "bytes": 48762,
+        "path": "/workspace/scratch/6a5ea697094c/dp-pll-candidate/.work/dp-ed43749-final-independent-audit-001.json",
+        "sha256": "33cb0263d4f70c114baa34efd38d110c5771d641657c8d64d8a0233f2f50ce76"
+      },
+      "scope": {
+        "checks": 36,
+        "clock_views_per_source_and_first_target": 6,
+        "completed_migrations": 4,
+        "dp_bytes_per_original": 791,
+        "first_target_actual_cont_count_each": 0,
+        "first_target_actual_mmio_delta_each": 0,
+        "first_target_qom_getters_each": 304,
+        "mdss_bytes_per_original": 64,
+        "power_loss_credit_invariant_checked_on_legal_states_and_actual_target_observation": true,
+        "power_loss_credit_invariant_claimed_as_isolated_corruption_case": false,
+        "profile_rejections": 2,
+        "single_bit_rejections": 4,
+        "stream_files": 9,
+        "unmodified_streams": 5
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 91462,
+        "path": "/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/audit_dsi_pll_artifact.py",
+        "sha256": "0e0b7e6ebe3a9486383c2946669629a97d4d037414be9d6e5ea28970462954fe"
+      },
+      "name": "dsi",
+      "passed": true,
+      "receipt": {
+        "bytes": 42449,
+        "path": "/workspace/scratch/6a5ea697094c/dp-pll-candidate/.work/dsi-ed43749-final-independent-audit-001.json",
+        "sha256": "0cf8860e1f82c9261b5ba10ae7cef4d24f1a8a57dbacb510dae5a1aa4eb688b0"
+      },
+      "scope": {
+        "checks": 36,
+        "clock_views_per_source_and_first_target": 52,
+        "completed_migrations": 3,
+        "dsi_bytes_per_original": 2926,
+        "first_target_actual_cont_count_each": 0,
+        "first_target_actual_mmio_delta_each": 0,
+        "first_target_qom_getters_each": 1163,
+        "mdss_bytes_per_original": 64,
+        "profile_rejections": 2,
+        "single_bit_rejections": 4,
+        "stream_files": 8,
+        "unmodified_streams": 4
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 52957,
+        "path": "/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/audit_dispcc_wide_artifact_rootpath.py",
+        "sha256": "62837675b808db7ed5671e9cff7653f7b76d4c295d668919ffff10a4134fc4c8"
+      },
+      "name": "dispcc",
+      "passed": true,
+      "receipt": {
+        "bytes": 20598,
+        "path": "/workspace/scratch/6a5ea697094c/dp-pll-candidate/.work/dispcc-ed43749-final-independent-audit-001.json",
+        "sha256": "6d547a0d561210c5dd15f56c72c2a5741528c8dbc4cce86f55d249413a87e6a0"
+      },
+      "scope": {
+        "all_1676_dispcc_and_64_mdss_bytes_independently_decoded": true,
+        "all_61_source_and_first_target_clocks_recomputed": true,
+        "checks": 42,
+        "completed_migrations": 3,
+        "original_streams": 4,
+        "profile_rejections": 2,
+        "single_bit_rejections": 3,
+        "total_streams": 7,
+        "wide_pixel_evidence": [
+          {
+            "clock": "disp_cc_mdss_pclk0_clk_src",
+            "clock_hz": 4500000004,
+            "clock_period": 954437176,
+            "input": "dsi0_phy_pll_out_dsiclk",
+            "input_period": 954437176
+          },
+          {
+            "clock": "disp_cc_mdss_pclk1_clk_src",
+            "clock_hz": 5000000001,
+            "clock_period": 858993459,
+            "input": "dsi1_phy_pll_out_dsiclk",
+            "input_period": 858993459
+          }
+        ]
+      }
+    }
+  ],
+  "commit": "ed43749ccea68fb082db3470f75c061b04ca09c0",
+  "coordinator_deployed": false,
+  "device_rpc_used_for_qualification": false,
+  "github_evidence": {
+    "bytes": 22370,
+    "path": "/workspace/scratch/6a5ea697094c/dp-pll-candidate/.work/dp-ed43749-qualification-github-evidence.json",
+    "sha256": "2f30238b4b92c835facb12a63cce83b1b756ee1679c73e49ae893e800316e834"
+  },
+  "host_boot_guard_bound": false,
+  "host_recovery_guard_status": "Host boot f093b2c8 re-observed; launch remains subject to exact coordinator boot, owner, process and shared lock checks.",
+  "native_executed": false,
+  "native_started": false,
+  "passed": true,
+  "qualification": "Exact-head compiled CI artifact and four independent ZIP audits passed",
+  "qualification_evidence_observed_utc": "2026-11-24T21:32:23.470952+00:00",
+  "read_only_qualification_assembly": true,
+  "repository": "cyjin-yl/qemu-tb371fc",
+  "retained_auditor_failure": {
+    "cause": "DP source-generation receipt omitted from the selector. One prefix added; existing strict generation checks now run, all other module AST unchanged.",
+    "correction": {
+      "bytes": 1206,
+      "path": "/workspace/scratch/6a5ea697094c/dp-pll-candidate/.work/dp-auditor-selector-correction.json",
+      "sha256": "5dfeb7fd67b9aa26d511f9c854718352fcdc81ec467d70502c89aa0579d2faf8"
+    },
+    "receipt": {
+      "bytes": 105021,
+      "path": "/workspace/scratch/6a5ea697094c/dp-pll-candidate/.work/dp-ed43749-final-integration-audit-001.json",
+      "sha256": "e7453406203c3a93af14c38e709513e2d059d002d2b6d5b907ef3c1a59c1539e"
+    }
+  },
+  "retained_initial_ci_failure": {
+    "commit": "7639c8706faa7c7a0dbc2740214e12564a4a78b9",
+    "correction_scope": "Only isolated eight-byte QTest access expectation; runtime C and all migration contracts unchanged.",
+    "deployed_for_native": false,
+    "failure_review": {
+      "bytes": 3294,
+      "path": "/workspace/scratch/6a5ea697094c/dp-pll-candidate/.work/dp-ci-initial-failure-reviewed.json",
+      "sha256": "0c75c96e4c71b8179cd1c8a25c52eb73ab427349d2072b247ca90a377153d80a"
+    },
+    "qualified": false,
+    "run_id": 45484446351
+  },
+  "schema": "tb371fc-dp-ed43749-qualified-artifact-v1",
+  "scope": "Artifact qualification for one later original-firmware native attempt. This receipt does not establish original Android userspace, UI or boot completion.",
+  "tree": "b6f31c767ef2d13f770eff60a373e60cd73d0542",
+  "ui_established": false,
+  "workflow_runs": [
+    {
+      "api_url": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/runs/45487380226",
+      "conclusion": "success",
+      "event": "push",
+      "head_branch": "tb371fc-verified-dp-pll-20261124-6a5",
+      "head_sha": "ed43749ccea68fb082db3470f75c061b04ca09c0",
+      "id": 45487380226,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "head_sha": "ed43749ccea68fb082db3470f75c061b04ca09c0",
+          "id": 138776266367,
+          "name": "cortex-a77-architecture",
+          "run_id": 45487380226,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "head_sha": "ed43749ccea68fb082db3470f75c061b04ca09c0",
+          "id": 138776267073,
+          "name": "board-components-and-linux",
+          "run_id": 45487380226,
+          "status": "completed"
+        }
+      ],
+      "run_attempt": 1,
+      "status": "completed",
+      "updated_at": "2026-11-24T21:23:32Z",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45487380226"
+    },
+    {
+      "api_url": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/runs/45487393635",
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_branch": "tb371fc-dp-pll-20261124-6a5",
+      "head_sha": "ed43749ccea68fb082db3470f75c061b04ca09c0",
+      "id": 45487393635,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "head_sha": "ed43749ccea68fb082db3470f75c061b04ca09c0",
+          "id": 138776316498,
+          "name": "board-components-and-linux",
+          "run_id": 45487393635,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "head_sha": "ed43749ccea68fb082db3470f75c061b04ca09c0",
+          "id": 138776317406,
+          "name": "cortex-a77-architecture",
+          "run_id": 45487393635,
+          "status": "completed"
+        }
+      ],
+      "run_attempt": 1,
+      "status": "completed",
+      "updated_at": "2026-11-24T21:25:28Z",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45487393635"
+    }
+  ]
+}
