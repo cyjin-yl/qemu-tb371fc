@@ -11,6 +11,10 @@
 和 [839ae467 后续验收](ufs-migration.md#profile-and-qmp-drain-follow-up)，
 各轮源码、二进制与输入范围保持独立；合并本身不构成新的运行回执。
 
+本机后续输入见 [DT 入口证据与 Novatek 错误路径](native-entry-evidence-20261124.md)：
+记录 Android 报告的 DTB/DTBO 索引、备份条目、内存保留区及 Linux 驱动修复的实际范围。
+这些资料用于后续模型实现，不增加 QEMU 或本机原生 Linux 验收通过数。
+
 ## 决策与分工
 
 主线 Linux 加主流发行版是 TB371FC 的长期通用系统方向。现有 Android/chroot
