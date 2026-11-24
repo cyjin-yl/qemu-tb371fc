@@ -1,0 +1,153 @@
+{
+  "schema": "tb371fc-mdss-ci-artifact-audit-v1",
+  "source_commit": "9d5e942d9fd5f481e831b89045af93150d2fc55b",
+  "run_id": 45402110062,
+  "artifact_id": 14925505333,
+  "artifact_zip_sha256": "bf354fe41b14807179c0307fd4fbd721ae7939ac175ec94a46514bddcba04654",
+  "binary_sha256": "33d27c37b0a9abd53630616fc803808702326ec3aab8a8d13dfeadccea47e94e",
+  "binary_member": "qemu-build/qemu-system-aarch64",
+  "binary_hash_verified_from_zip": true,
+  "aggregates": {
+    "components": {
+      "passed": true,
+      "count": 79,
+      "source_dirty": false,
+      "qemu_unchanged": true
+    },
+    "linux": {
+      "passed": true,
+      "count": 5,
+      "source_dirty": false,
+      "qemu_unchanged": true
+    }
+  },
+  "mdss_checks": 20,
+  "mdss_test_seconds": 8.815989,
+  "camera_checks": 29,
+  "camera_vmstate_bytes": 194,
+  "mdss_vmstate_bytes": 64,
+  "migrations": [
+    {
+      "name": "independent_mdss_camera_and_retention",
+      "source_status": "completed",
+      "target_status": "completed",
+      "continued_after_restore": true
+    },
+    {
+      "name": "pending_real_parent_and_unknown_hardware_request",
+      "source_status": "completed",
+      "target_status": "completed",
+      "continued_after_restore": true
+    },
+    {
+      "name": "unknown_parent_and_request_levels",
+      "source_status": "completed",
+      "target_status": "completed",
+      "continued_after_restore": true
+    }
+  ],
+  "rejections": [
+    {
+      "name": "enabled_to_disabled",
+      "exit_code": 1,
+      "expected_diagnostic": "0 != 1",
+      "actual_stderr_verified": true
+    },
+    {
+      "name": "disabled_to_enabled",
+      "exit_code": 1,
+      "expected_diagnostic": "1 != 0",
+      "actual_stderr_verified": true
+    },
+    {
+      "name": "domain_address",
+      "exit_code": 1,
+      "expected_diagnostic": "af03000 != af03004",
+      "actual_stderr_verified": true
+    },
+    {
+      "name": "control",
+      "exit_code": 1,
+      "expected_diagnostic": "qcom-mdss-gdsc: invalid migrated mdss domain 0",
+      "actual_stderr_verified": true
+    }
+  ],
+  "source_wire_checks": [
+    {
+      "file": "mdss-state.bin",
+      "mdss_bytes": 64,
+      "mdss_version": 1,
+      "mdss_payload_sha256": "98bc17311739108248aa4f639c424f42948f888ba7cb10736dd7aa683883276d",
+      "camera_bytes": 194,
+      "camera_version": 1,
+      "rpmh_version": 3
+    },
+    {
+      "file": "mdss-parent-pending.bin",
+      "mdss_bytes": 64,
+      "mdss_version": 1,
+      "mdss_payload_sha256": "bce0411fc9e5d63dad3acd679c2ab5de17469ef9a8a91e08f52dffda06d2c800",
+      "camera_bytes": 194,
+      "camera_version": 1,
+      "rpmh_version": 3
+    },
+    {
+      "file": "mdss-unknown-inputs.bin",
+      "mdss_bytes": 64,
+      "mdss_version": 1,
+      "mdss_payload_sha256": "65ad956c66e928552c35533cde35b6f483b23d42dc6722df12530b5342aaf16b",
+      "camera_bytes": 194,
+      "camera_version": 1,
+      "rpmh_version": null
+    },
+    {
+      "file": "mdss-disabled.bin",
+      "mdss_bytes": 64,
+      "mdss_version": 1,
+      "mdss_payload_sha256": "1307d4d7bfd387c0a3b783760ab4e87eda211176ee9b534a8da966bdca3d4a09",
+      "camera_bytes": 194,
+      "camera_version": 1,
+      "rpmh_version": 3
+    }
+  ],
+  "actual_files": [
+    {
+      "file": "mdss-state.bin",
+      "bytes": 2278448,
+      "sha256": "a7e0fa56d6c96d20882b8cb613a0104820eca4ac15b3202c3bf5b79c3d735d6f",
+      "zip_member_verified": true
+    },
+    {
+      "file": "mdss-parent-pending.bin",
+      "bytes": 2278448,
+      "sha256": "42a130395629d18b26d579249fba28817a5aaa445139ae170ec2fa7de1f5bdc0",
+      "zip_member_verified": true
+    },
+    {
+      "file": "mdss-unknown-inputs.bin",
+      "bytes": 2256927,
+      "sha256": "a39c56131ce500dec6395bc1a3ba4c6404e39a1b64db54ef7433709204b97959",
+      "zip_member_verified": true
+    },
+    {
+      "file": "mdss-disabled.bin",
+      "bytes": 2278448,
+      "sha256": "2165164635563b425928aa757a1fb542271f7fd2ba9543e1f1e027bdb0cb67be",
+      "zip_member_verified": true
+    },
+    {
+      "file": "mdss-corrupt-domain_address.bin",
+      "bytes": 2278448,
+      "sha256": "2d9bf597ad8f5246117aeb806105ed958eab7ed60ada6b6920aecd35806452af",
+      "zip_member_verified": true
+    },
+    {
+      "file": "mdss-corrupt-control.bin",
+      "bytes": 2278448,
+      "sha256": "14b87ee70628ec1f5bc77f95f9ffdcbde2295610afb9d4c50815d32558eab85a",
+      "zip_member_verified": true
+    }
+  ],
+  "private_original_inputs_used": false,
+  "stock_android_boot_passed": false
+}

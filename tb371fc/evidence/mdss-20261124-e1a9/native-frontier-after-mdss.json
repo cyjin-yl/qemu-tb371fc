@@ -1,0 +1,48 @@
+{
+  "schema": "tb371fc-original-input-frontier-v1",
+  "run": "original-android-002",
+  "finished_utc": "2026-11-24T13:36:28Z",
+  "qemu_source_commit": "9d5e942d9fd5f481e831b89045af93150d2fc55b",
+  "qemu_source_ci_run": 45402110062,
+  "qemu_sha256": "33d27c37b0a9abd53630616fc803808702326ec3aab8a8d13dfeadccea47e94e",
+  "scope": "Unchanged original direct-kernel inputs, with explicit MDSS reference enabled; no original LUNs attached",
+  "original_inputs": {
+    "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "initrd_sha256": "563f4b334f8470155c6a451395342f7044b70e79b480a886c7641960f534f596",
+    "full_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "bootargs_preserved": true,
+    "core_input_digests_unchanged": true
+  },
+  "observation": {
+    "requested_seconds": 120,
+    "elapsed_seconds": 124.747,
+    "final_qmp_status": "paused",
+    "qemu_returncode": 0,
+    "qemu_unchanged": true,
+    "mdss_gdsc_registration_observed": true,
+    "mdss_registration_guest_seconds": 3.546862,
+    "first_kernel_failure": {
+      "guest_seconds": 3.55533,
+      "kind": "synchronous external abort",
+      "esr": "0x96000010",
+      "cpu": 6,
+      "pid": 83,
+      "process": "kworker/6:1",
+      "workqueue": "events deferred_probe_work_func",
+      "pc": "regmap_mmio_read32le+0x8/0x20",
+      "caller": "gdsc_probe+0x770/0x9d0",
+      "physical_address": "0x09981004",
+      "access": "read",
+      "bytes": 4
+    },
+    "original_luns_attached": 0,
+    "android_userspace_observed": false,
+    "android_boot_completed_observed": false,
+    "stock_android_boot_passed": false
+  },
+  "private_logs": {
+    "first_printk_sha256": "0c35e6a0326ae6d4db2c4bfe5f54b7fe22c07b517f0e7d838c002f6d451a0f75",
+    "qemu_log_sha256": "ccaa6deceab4646099b853261fb1cc4d25f79577f554e2c5a634aac3028f34bc"
+  },
+  "next_boundary": "NPU GDSC's single four-byte word; absent DT parent is not evidence of an always-on parent or an MMCX connection"
+}
