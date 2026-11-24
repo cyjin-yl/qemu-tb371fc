@@ -1373,12 +1373,14 @@ def migration_checks(args, out, report):
             reject = new("reject-corrupt-" + kind, incoming=True)
             reject.set_clock(state_record["source_virtual_ns"])
             metadata = expect_load_failure(reject, path, mutation["expected_diagnostic"])
+            assert mutation["expected_diagnostic"] == metadata["expected_diagnostic"]
+            evidence = {**mutation, **metadata}
             result = {"name": kind, "passed": True, "source_status": "completed",
                       "source_directory": state_record["source_directory"],
-                      **mutation, **metadata}
+                      **evidence}
             report["corrupted_stream_rejections"].append(result)
             passed("single_bit_" + kind.replace("-", "_") + "_corruption_rejected",
-                   **mutation, **metadata)
+                   **evidence)
         assert all(digest(out / item["file"]) == item["sha256"]
                    for item in report["migration_sources"])
     finally:
