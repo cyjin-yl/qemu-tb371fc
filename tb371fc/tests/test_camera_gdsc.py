@@ -607,8 +607,7 @@ def camera_holes_and_unrelated_gdsc_addresses_stay_unmapped(r):
                    0x9014, 0xa000, 0xa014, 0xb000, 0xb014, 0xc154}
     holes = sorted({x + displacement for x in ADDRESSES for displacement in (-4, 4, 0x10)}
                    | {0x0ad00000, 0x0ad0fffc, 0x09981008, 0x0998100c,
-                      0x0abf0bf4, 0x0abf0bfc, 0x0abf0c94, 0x0abf0c9c,
-                      0x0abf0d14, 0x0abf0d1c, 0x0abf0d94, 0x0abf0d9c,
+                      0x0abf0bfc, 0x0abf0c9c, 0x0abf0d1c, 0x0abf0d9c,
                       0x0af02ffc, 0x0af03004})
     holes = [address for address in holes if address - 0x0ad00000 not in camcc_owned]
     assert not set(holes) & set(ADDRESSES)
@@ -630,6 +629,27 @@ def camera_holes_and_unrelated_gdsc_addresses_stay_unmapped(r):
             else:
                 r.write_absolute(0x0ad00000 + offset, 0xffffffff)
             assert r.diagnostic_count(line) == count + 1, line
+    # VIDEOCC owns the four exact BCR words preceding the independent VIDEO
+    # GDSCs. Its disabled reference must reject each access without mutation.
+    assert r.qom("enabled-reference", "/machine/videocc") is False
+    video_names = (("enabled-reference", "parent-known", "parent-on") + GLOBAL_FIELDS +
+                   tuple(f"domain{i}.{name}" for i in range(4) for name in DOMAIN_FIELDS))
+    video_before = {name: r.qom(name, "/machine/video-gdsc") for name in video_names}
+    for offset in (0xbf4, 0xc94, 0xd14, 0xd94):
+        stored = r.qom(f"reg.{offset:04x}", "/machine/videocc")
+        for operation in ("read", "write"):
+            diagnostic = (f"qcom-sm8250-videocc: unmodeled {operation} "
+                          f"+0x{offset:x} size 4")
+            count = r.diagnostic_count(diagnostic)
+            if operation == "read":
+                r.read_absolute(0x0abf0000 + offset)
+            else:
+                r.write_absolute(0x0abf0000 + offset, 0xffffffff)
+            assert r.diagnostic_count(diagnostic) == count + 1
+            assert r.qom(f"reg.{offset:04x}", "/machine/videocc") == stored
+            assert r.pure_snapshot() == before
+            assert {name: r.qom(name, "/machine/video-gdsc")
+                    for name in video_names} == video_before
     # Independent MDSS/NPU/VIDEO owners stay disabled in this camera fixture.
     for owner, domain, address in (("qcom-mdss-gdsc", 0, 0x0af03000),
                                    ("qcom-npu-gdsc", 0, 0x09981004),

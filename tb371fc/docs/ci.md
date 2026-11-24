@@ -186,7 +186,7 @@ still apply to any future authorized consumer execution.
 
 ## Gates
 
-The current integration plan registers **90 gates: 85 component/parser gates
+The current integration plan registers **92 gates: 87 component/parser gates
 and five Linux integration gates**, plus separate active and runtime-suspended
 real-Linux UFS checkpoints and the A77/PCI UFS compatibility job. This union
 preserves the wholeboard reference peripherals and default-branch storage,
@@ -213,6 +213,14 @@ rejections and two single-bit corrupted streams. Its four Lucid PLLs and one
 Zonda PLL retain different protocols; 74 precise leaf windows exclude all
 camera GDSCs and unmodeled words. A separate two-check generation gate verifies
 eight fixed primary inputs and reproduces both register tables byte for byte.
+The [VIDEOCC protocol gate](videocc-sm8250.md) adds 36 required compiled
+groups, three completed transfers, two profile rejections and two single-bit
+corrupted streams. Its full 474-byte v1 payload and the independent 142-byte
+VIDEO GDSC section are checked together. The separate
+[source-generation gate](../scripts/verify_videocc_generation.py) verifies ten
+pinned primary inputs and reproduces both VIDEOCC data outputs byte for byte.
+The VIDEOCC increment and the resulting 87+5 combination await their own
+formal CI receipts; registration in this plan is not a completed result.
 The preceding 4cc source passed 81+5, but this new combination still needs its
 own actual compiled receipt and native original-input run.
 The archived
@@ -246,6 +254,7 @@ pass does not attest newly added devices.
 | NPUCC | 37 checks across three physical banks, actual Clock outputs, source-bound CRC/dividers, two completed migrations and two profile rejections; full NPU/DSP execution remains outside scope |
 | CAMCC | 41 checks; four Lucid/one Zonda PLL, 111 actual Clock outputs, 236 words/74 windows, full 2579-byte migration oracle, three completed transfers and 2/2 profile/corruption rejections; separate eight-source regeneration of both data files |
 | DISPCC | 41 checks; two Lucid PLLs, 8/16-bit MND, two explicit remote votes, five dividers, 61 actual Clock outputs, 130 words/39 windows, full 1676-byte migration oracle plus MDSS64, three completed transfers and 2/2 rejections; separate nine-source regeneration |
+| [VIDEOCC](videocc-sm8250.md) | [36 required compiled groups](../tests/test_videocc_sm8250.py); two Lucid PLLs with the base-then-v2 fixup, five zero-MND RCGs, four read-only dividers, four remote votes, 19 Clock outputs, 55 words/26 windows, full 474-byte migration oracle plus independent VIDEO GDSC142; three completed transfers and 2/2 profile/corruption rejections; separate ten-source/two-output regeneration |
 | NPU GDSC | 21 checks; independent 4-byte word and 64-byte v1 state, unknown parent preserved, hardware mode rejected, NPU_CFG_AHB retention only, three completed transfers, two profile and two corruption rejections |
 | VIDEO GDSC | 22 checks; four sparse words and 142-byte v1 state, HW mode only on two DT-declared domains, real three-consumer mmcx fanout, VIDEO_AHB retention, three completed transfers and 2/2 profile/corruption rejections |
 | GPUCC | 30 actual digital PLL/RCG/branch/reset checks, two completed migrations and two profile rejections; actual Clock providers and sparse ownership boundaries |
@@ -474,7 +483,7 @@ a build-only step outside the four Linux gates until a same-binary primary
 run is fatal-free and the explicit userspace consumer is actually invoked.
 This section records planned acceptance, not completed CI or native results.
 
-### CAMCC qualification and next DISPCC gates
+### CAMCC and DISPCC qualification
 
 Exact source `8798465b1b70f9c86f5cd5e1e38ce595bd6088ce` passed
 [run45426713919](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45426713919):
@@ -488,12 +497,49 @@ then registered CAMCC and faulted at DISPCC0x0af00000; its
 retains the original-input hashes and normal QMP cleanup, with no LUN/Android
 userspace success.
 
-The new `dispcc-source-generation` gate requires nine exact primary-source
+The `dispcc-source-generation` gate requires nine exact primary-source
 digests and two byte-identical generated files. `dispcc-sm8250-reference`
 requires41 compiled groups,3 completed transfers,2 profile and2 single-bit
 stream rejections,4 originals and6 total files. It verifies the complete1676-byte
 DISPCC payload and independent MDSS64-byte section, actual simultaneous owners,
 unknown input behavior, deadline continuation and first destination observation
 without device-MMIO repair. All83 preceding component contracts retain their
-order and counts. This85+5 combination requires its own formal CI; 8798465's
-qualification is not reused as proof for the new binary.
+order and counts. Exact source `f209f658316ada5ddd5c245f0be6c2c0eca271bd`
+subsequently completed [push run 45434451557](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45434451557)
+with successful `board-components-and-linux` and `cortex-a77-architecture`
+jobs. These results belong to that 85+5 source revision and do not qualify
+the later VIDEOCC increment.
+
+### VIDEOCC gates after the observed run006 frontier
+
+The [actual run006 receipt](../evidence/videocc-20261124-6a5/native-frontier-after-dispcc.json)
+records Display CC registration at guest 3.503753 s and the next first
+synchronous external abort at 3.508680 s. QEMU independently records a
+four-byte read at physical `0x0abf042c`; the guest call trace contains
+`video_cc_kona_probe` and `clk_lucid_pll_configure`. The binary SHA-256 is
+`0738a1910ef86c8ccc403ba100ae2094de573d4f0c11fdff9877e1b9fa798d6c`.
+The original kernel, ramdisk, full DT, boot arguments and QEMU hashes were
+unchanged, with zero original LUNs attached. Normal QMP cleanup after
+16.449 seconds did not change the `kernel-failure` verdict. VIDEOCC
+registration, Android userspace, boot completion and an interactive display
+were not observed.
+
+The new `videocc-source-generation` gate requires ten matching input hashes
+and two byte-identical generated outputs. `videocc-sm8250-reference` runs
+the [independent literal fixture](../tests/test_videocc_sm8250.py) against the
+compiled model and requires 36 unique successful groups. Its three completed
+migrations, two opposite-profile rejections and two single-bit corruptions
+produce four original streams and six files overall; file count is not a
+successful-transfer count.
+
+The gate verifies the entire 474-byte VIDEOCC payload and independent
+142-byte VIDEO GDSC state, including all four GDSC siblings, the two shared
+ARES/branch words, fixed-source PLL1 v2 sequencing, unavailable carriers,
+four read-only divider encodings and all four remote votes. Destination
+observations and remaining virtual deadlines must be checked before a
+device MMIO read or `cont` can alter the restored state. The earlier 85
+component contracts keep their order and counts. These two additions form
+the planned **87-component plus five-Linux** combination, which still
+requires its own formal compiled CI. Source reproducibility and the earlier
+failed native run are not substitutes for that receipt or for a later
+original Android boot verdict.

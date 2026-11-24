@@ -1,0 +1,82 @@
+{
+  "schema": "tb371fc-actual-dt-videocc-v1",
+  "dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "dtb_bytes": 973052,
+  "node_path": "/soc/qcom,videocc@abf0000",
+  "properties": {
+    "compatible": [
+      "qcom,videocc-kona-v2",
+      "syscon"
+    ],
+    "reg": [
+      180289536,
+      65536
+    ],
+    "reg-names": [
+      "cc_base"
+    ],
+    "vdd_mx-supply": [
+      105
+    ],
+    "vdd_mm-supply": [
+      104
+    ],
+    "clock-names": [
+      "cfg_ahb_clk"
+    ],
+    "clocks": [
+      22,
+      205
+    ],
+    "#clock-cells": [
+      1
+    ],
+    "#reset-cells": [
+      1
+    ],
+    "phandle": [
+      106
+    ]
+  },
+  "referenced_nodes": {
+    "22": {
+      "path": "/soc/qcom,gcc@100000",
+      "properties": {
+        "compatible": [
+          "qcom,gcc-kona",
+          "syscon"
+        ],
+        "reg": [
+          1048576,
+          2031616
+        ],
+        "phandle": [
+          22
+        ]
+      }
+    },
+    "104": {
+      "path": "/soc/rsc@18200000/rpmh-regulator-mmcxlvl/regulator-pm8150a-s4-level",
+      "properties": {
+        "regulator-name": [
+          "pm8150a_s4_level"
+        ],
+        "phandle": [
+          104
+        ]
+      }
+    },
+    "105": {
+      "path": "/soc/rsc@18200000/rpmh-regulator-mxlvl/regulator-pm8150a-s3-level",
+      "properties": {
+        "regulator-name": [
+          "pm8150a_s3_level"
+        ],
+        "phandle": [
+          105
+        ]
+      }
+    }
+  },
+  "read_only": true
+}

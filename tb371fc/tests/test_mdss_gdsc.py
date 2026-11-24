@@ -336,8 +336,7 @@ def access_shapes_and_unowned_controller_holes_are_exact(r):
     assert r.pure_snapshot() == before
     holes = (ADDRESS - 4, ADDRESS + 4, ADDRESS + 0x10, 0x0af1fffc,
              0x09981008, 0x0998100c,
-             0x0abf0bf4, 0x0abf0bfc, 0x0abf0c94, 0x0abf0c9c,
-             0x0abf0d14, 0x0abf0d1c, 0x0abf0d94, 0x0abf0d9c)
+             0x0abf0bfc, 0x0abf0c9c, 0x0abf0d1c, 0x0abf0d9c)
     previous = core_diagnostics(r.log_path.read_text(errors="replace"))
     expected = []
     for address in holes:
@@ -345,6 +344,24 @@ def access_shapes_and_unowned_controller_holes_are_exact(r):
         r.raw_write(address, 0xffffffff)
         expected.extend((op, address, 4, "(null)", "rejected") for op in ("read", "write"))
     assert core_diagnostics(r.log_path.read_text(errors="replace"))[len(previous):] == expected
+    # Four former VIDEO holes are exact BCR words owned by VIDEOCC. Its
+    # default-off profile rejects them without altering any GDSC state.
+    assert r.qom("enabled-reference", "/machine/videocc") is False
+    video_before = r.snapshot_at("/machine/video-gdsc", 4)
+    for offset in (0xbf4, 0xc94, 0xd14, 0xd94):
+        stored = r.qom(f"reg.{offset:04x}", "/machine/videocc")
+        for operation in ("read", "write"):
+            diagnostic = (f"qcom-sm8250-videocc: unmodeled {operation} "
+                          f"+0x{offset:x} size 4")
+            count = r.diagnostic_count(diagnostic)
+            if operation == "read":
+                r.raw_read(0x0abf0000 + offset)
+            else:
+                r.raw_write(0x0abf0000 + offset, 0xffffffff)
+            assert r.diagnostic_count(diagnostic) == count + 1
+            assert r.qom(f"reg.{offset:04x}", "/machine/videocc") == stored
+            assert r.pure_snapshot() == before
+            assert r.snapshot_at("/machine/video-gdsc", 4) == video_before
     # The exact DISPCC PLL word now has its own disabled reference owner.
     # The adjacent MDSS holes above remain unassigned and must still reject.
     for operation in ("read", "write"):

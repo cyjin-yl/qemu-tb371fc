@@ -368,8 +368,7 @@ def access_shapes_and_unowned_controller_holes_are_exact(r):
     holes = (ADDRESS + 4, ADDRESS + 8, NPUCC_BASE + 0x1040,
              NPUCC_BASE + 0x11a8, NPUCC_BASE + 0x1500,
              MDSS_ADDRESS + 4,
-             0x0abf0bf4, 0x0abf0bfc, 0x0abf0c94, 0x0abf0c9c,
-             0x0abf0d14, 0x0abf0d1c, 0x0abf0d94, 0x0abf0d9c)
+             0x0abf0bfc, 0x0abf0c9c, 0x0abf0d1c, 0x0abf0d9c)
     previous = core_diagnostics(r.log_path.read_text(errors="replace"))
     expected = []
     for address in holes:
@@ -377,6 +376,26 @@ def access_shapes_and_unowned_controller_holes_are_exact(r):
         r.raw_write(address, 0xffffffff)
         expected.extend((op, address, 4, "(null)", "rejected") for op in ("read", "write"))
     assert core_diagnostics(r.log_path.read_text(errors="replace"))[len(previous):] == expected
+    assert r.pure_snapshot() == before
+    # These four BCR words now belong to the default-disabled VIDEOCC model.
+    # Require its own rejection and unchanged storage, not an unassigned hole.
+    videocc_path = "/machine/videocc"
+    assert r.qom("enabled-reference", videocc_path) is False
+    for address in (0x0abf0bf4, 0x0abf0c94, 0x0abf0d14, 0x0abf0d94):
+        offset = address - 0x0abf0000
+        register = f"reg.{offset:04x}"
+        original = r.qom(register, videocc_path)
+        for operation in ("read", "write"):
+            diagnostic = (f"qcom-sm8250-videocc: unmodeled {operation} "
+                          f"+0x{offset:x} size 4")
+            count = r.diagnostic_count(diagnostic)
+            if operation == "read":
+                r.raw_read(address)
+            else:
+                r.raw_write(address, 0xffffffff)
+            assert r.diagnostic_count(diagnostic) == count + 1
+            assert r.qom(register, videocc_path) == original
+            assert r.pure_snapshot() == before
     # The new VIDEO owner is independent and remains disabled in this fixture.
     for domain, address in enumerate((0x0abf0bf8, 0x0abf0c98,
                                       0x0abf0d18, 0x0abf0d98)):
@@ -399,6 +418,9 @@ def access_shapes_and_unowned_controller_holes_are_exact(r):
     assert r.read_control() == 0x2001
     assert core_diagnostics(r.log_path.read_text(errors="replace"))[len(previous):] == [
         ("write", ADDRESS + 4, 4, "(null)", "rejected")]
+    return {"unowned_controller_words_checked": len(holes),
+            "disabled_videocc_reset_words_checked": 4,
+            "wide_write_atomicity_claimed": False}
 
 
 def adjacent_npucc_words_keep_their_own_programming_and_geometry(r):
