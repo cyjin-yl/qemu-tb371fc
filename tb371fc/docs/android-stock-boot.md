@@ -205,6 +205,12 @@ receipts to preserve the non-snapshot/non-factory qualifications.
 
 ## Run and observe
 
+For a completed six-LUN generation, use the
+[bound ready handoff](android-full-lun-ready.md) to validate the assembly chain
+and call this runner once under the shared native-run lock. That entry point
+rejects earlier no-LUN diagnostic manifests and records the handoff separately
+from the Android observation.
+
 Pass the exact reviewed machine string and globals for the binary under test:
 
 ```sh
