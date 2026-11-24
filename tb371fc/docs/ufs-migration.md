@@ -160,6 +160,55 @@ stock Android, power-cycle persistence and full-device migration equivalence
 remain outside the result. The host ends the successful receiver with QMP;
 guest shutdown is not tested.
 
+### Runtime-suspended Linux continuation
+
+The same gate has an additional `--runtime-suspended` mode. It reuses the
+independent [runtime-PM fixture](../scripts/boot_ufs_runtime_pm.py)'s pinned
+Linux Image/config validation and read-only QMP observations. This mode tests
+an additional combination; the historical acceptance below covers the
+original active-controller mode only. A new run's `result.json` is authoritative
+for whether the suspended mode actually passed.
+
+```sh
+python3 tb371fc/scripts/boot_ufs_migration.py \
+  --runtime-suspended \
+  --qemu /absolute/path/qemu-system-aarch64 \
+  --kernel /absolute/path/clean-linux/artifacts/Image \
+  --out /absolute/path/new-suspended-migration-results
+```
+
+The source PID 1 completes the original payload/nonce preparation, opens the
+synthetic LUN and keeps its descriptor open. Linux enables SCSI autosuspend
+through the normal sysfs interfaces, waits for the host, LUN and device-WLUN
+to suspend, and requires the suspended-time counter to advance while idle.
+Before stopping the source, read-only host observations require Hibern8 and
+zero core/iface/unipro clocks while the VM itself is still running. The same
+sleep state is checked after the VM pauses.
+
+The source checkpoint is completed and its process exits before the receiver
+opens the ordinary locked disk file. After loading while paused, the receiver
+must retain all observed UFS input clocks and Hibern8. It must still be asleep
+after `cont`, before receiving the sole `CONTINUE` serial command. The resumed
+PID 1 checks its original boot ID, nonce, counters and descriptor's block-device
+identity, then checks host/LUN/device-WLUN runtime-suspended state and preserved
+suspended-time accounting. An `O_DIRECT` read on that retained descriptor must
+wake Linux's UFS controller and return the original payload. The receiver does
+not write `power/control=on`, reopen the block device or inject device state to
+perform this wake. It then completes the original write/read/reopen sequence.
+
+This adds **13 source and 9 receiver checks** to the existing 39: successful
+suspended-mode runs require **34 source plus 27 receiver checks** in exact
+order. The source/receiver logs remain separate; every byte of the 64 MiB
+medium is checked before and after migration. Source, harness, imported Python
+helpers, kernel/config/receipt, compiled init, initramfs and QEMU hashes are
+checked for changes. Raw QMP observations, commands, exit codes and failures
+are retained. CI runs both modes and excludes both temporary media and migration
+streams from its uploaded artifacts, retaining their size and hash receipts.
+
+The queues are still quiescent. These checks do not implement in-flight SCSI
+or MCQ serialization, system suspend, external-disk replication, ICE, physical
+power behavior or native tablet Linux acceptance. No physical tablet is used.
+
 ### Recorded Linux continuation acceptance
 
 [Run 45312366652](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45312366652)
@@ -293,3 +342,4 @@ The existing [UFS model notes](ufs-sm8250.md) retain the fixed Linux driver
 references and hardware-equivalence limits. This checkpoint gate does not
 cover ICE, RPMB, analog PHY behavior, stock Android, a native-DT boot, an XNU
 boot or arbitrary active storage queues.
+
