@@ -1,0 +1,100 @@
+{
+  "schema": "tb371fc-llcc-c02-source-fetch-failure-independent-observation-v1",
+  "failure_confirmed": true,
+  "qualification_passed": false,
+  "archive": {
+    "path": "/dev/shm/tb371fc-llcc-c02-pr-14971741877.zip",
+    "bytes": 47491540,
+    "sha256": "586d4e8d5fd5f512b00e6ae13084f92aa0c6a9ac083f022b7cef360ee9275e13"
+  },
+  "run_id": 45501932082,
+  "artifact_id": 14971741877,
+  "attempt": 1,
+  "requested_head": "c02f3d794e85cb5bc95d1aca62780542e806d4dc",
+  "actual_archived_source_commit": "17f4616f928dc0b0aeb815d7e09f4fec0e143be5",
+  "case_exit": 1,
+  "case_passed": false,
+  "result_passed": false,
+  "source_pins_verified": false,
+  "result_member": "tb371fc-results/components/16-llcc-source-generation/fixtures/data/result.json",
+  "result_bytes": 6780,
+  "result_sha256": "e3ab8d90ae7ce7f1333841f799fe8154ecdc5d87cafae9a7ee776c2aae821388",
+  "case_sha256": "41c6c373f83d2944ced5a7fb7added7128e917521f36cf0b482adb7871e72688",
+  "actual_input_count": 7,
+  "actual_generated_checks": 0,
+  "all_seven_received_source_bytes_match_frozen_size_sha256_and_git_blob": true,
+  "actual_inputs_verified": [
+    {
+      "member": "tb371fc-results/components/16-llcc-source-generation/fixtures/data/inputs/primary-r11/drivers/soc/qcom/llcc-slice.c",
+      "bytes": 10965,
+      "sha256": "5a49480bebfa84ca94240202abc3fc3bc8eaf6379df9f4b71a92640e140eb1c5",
+      "git_blob_sha": "a933f377db535f12f47942eff31fffe214af0912"
+    },
+    {
+      "member": "tb371fc-results/components/16-llcc-source-generation/fixtures/data/inputs/primary-r11/drivers/soc/qcom/llcc-kona.c",
+      "bytes": 3764,
+      "sha256": "140c5774139c0827003754bb083d0b6945fbd9982bc5538105084614eac1b2a9",
+      "git_blob_sha": "a155d6365246ceaf2e8bca5a289ed72772cac74e"
+    },
+    {
+      "member": "tb371fc-results/components/16-llcc-source-generation/fixtures/data/inputs/primary-r11/include/linux/soc/qcom/llcc-qcom.h",
+      "bytes": 5789,
+      "sha256": "1d348978460ba7a32087af7567c80ddeaa98399855c719e7c0c2b1fcc4d7f093",
+      "git_blob_sha": "f0e21085aec911e1f9d854fefd77418666e77d4d"
+    },
+    {
+      "member": "tb371fc-results/components/16-llcc-source-generation/fixtures/data/inputs/primary-r11/drivers/soc/qcom/llcc_perfmon.c",
+      "bytes": 37150,
+      "sha256": "38f1df996a946b0a6ce8f4cd71559367d1f4498d475605bc9089311d63defeeb",
+      "git_blob_sha": "99278c99cc311838d0b612bd5a96e908a5ec03ed"
+    },
+    {
+      "member": "tb371fc-results/components/16-llcc-source-generation/fixtures/data/inputs/primary-r11/drivers/soc/qcom/llcc_perfmon.h",
+      "bytes": 9820,
+      "sha256": "536de10d400093fa406b88f7a3ebfaf30966b43e15f88533be98c85ac5baebfd",
+      "git_blob_sha": "4a3accda43e9a2f681c118f43b502e13a52d2eba"
+    },
+    {
+      "member": "tb371fc-results/components/16-llcc-source-generation/fixtures/data/inputs/primary-r11/drivers/edac/qcom_edac.c",
+      "bytes": 11972,
+      "sha256": "ae3c0da558345d3c471fd35a5ae7f878a84c61d21093056d4ac66359f2486a24",
+      "git_blob_sha": "560c96c1e5b88dc8b9b622ce4d3d590370470d7a"
+    },
+    {
+      "member": "tb371fc-results/components/16-llcc-source-generation/fixtures/data/inputs/primary-r11/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+      "bytes": 132499,
+      "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+      "git_blob_sha": "e9651f09bd579616787894dc8514429063623b2d"
+    }
+  ],
+  "missing_eighth_source": {
+    "path": "primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+    "source_path": "arch/arm64/boot/dts/qcom/sm8250.dtsi",
+    "repository": "torvalds/linux",
+    "revision": "adc218676eef25575469234709c2d87185ca223a",
+    "bytes": 176883,
+    "git_blob_sha": "630f4eff20bf810e347685066dce74ab92a23b56",
+    "sha256": "8735b5d8bb61d6a3a579e5b088ff2a719132266cef57c91c319ec19e12770499"
+  },
+  "actual_error": "Traceback (most recent call last):\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/scripts/verify_llcc_generation.py\", line 36, in run\n    with urllib.request.urlopen(url, timeout=30) as response:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 521, in open\n    response = meth(req, response)\n               ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 630, in http_response\n    response = self.parent.error(\n               ^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 559, in error\n    return self._call_chain(*args)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 639, in http_error_default\n    raise HTTPError(req.full_url, code, msg, hdrs, fp)\nurllib.error.HTTPError: HTTP Error 429: Too Many Requests\n",
+  "actual_process_logs": [
+    {
+      "member": "tb371fc-results/components/16-llcc-source-generation/stdout.log",
+      "bytes": 81,
+      "sha256": "bd51522600429ed8d156fb7e79a99625af78b38ba308881027c997086fb58cad"
+    },
+    {
+      "member": "tb371fc-results/components/16-llcc-source-generation/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "classification": "HTTP 429 during eighth immutable source download, before complete-pin acceptance and before generator execution. No mismatch in the seven actual downloaded files.",
+  "boundaries": {
+    "eight_input_generation_pass_established": false,
+    "retry_result_observed": false,
+    "transient_resolution_assumed": false,
+    "model_or_verifier_modified": false,
+    "qemu_or_guest_executed": false
+  }
+}

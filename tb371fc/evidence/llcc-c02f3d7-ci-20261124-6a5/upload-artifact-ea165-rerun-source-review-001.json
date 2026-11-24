@@ -1,0 +1,124 @@
+{
+  "schema": "tb371fc-upload-artifact-rerun-source-review-v1",
+  "read_only": true,
+  "source_review_completed": true,
+  "artifact_upload_attempt2_completed_observed": false,
+  "upload_action_commit": "ea165f8d65b6e75b540449e92b4886f43607fa02",
+  "upload_action_version": "4.6.2",
+  "locked_sdk_version": "2.3.2",
+  "locked_sdk_version_evidence": {
+    "path": "/dev/shm/llcc-ci-evidence/upload-artifact-rerun-review/package-lock-lines-1-155.json.txt",
+    "source_git_blob": "75e253f2f531817d4f79b79653e5155d58c549ca",
+    "scope": "Only fetched lines 1-155; full lockfile bytes not independently hashed."
+  },
+  "pins": [
+    {
+      "path": "/dev/shm/llcc-ci-evidence/upload-artifact-rerun-review/src-upload-upload-artifact.ts",
+      "bytes": 2508,
+      "sha256": "3a8ccc15a820b4db83458cce1aa54de50702eb36c0e1f134d2a4718a089132ae",
+      "git_blob": "6c06d5355f583a8d22c281cb9bf2da0661dd5ceb",
+      "git_blob_verified": true
+    },
+    {
+      "path": "/dev/shm/llcc-ci-evidence/upload-artifact-rerun-review/src-upload-input-helper.ts",
+      "bytes": 1683,
+      "sha256": "967817045a70ef97130acc41e0c99b1c78becfcca636ba22ddced1cb418a5867",
+      "git_blob": "a867a210eb3152202706da38ea5cd547d39516df",
+      "git_blob_verified": true
+    },
+    {
+      "path": "/dev/shm/llcc-ci-evidence/upload-artifact-rerun-review/src-shared-upload-artifact.ts",
+      "bytes": 1000,
+      "sha256": "bfab1f3c0e5ada3dd46e64addb583730dd84e17a47f06e24f9bda3cd50b9153b",
+      "git_blob": "379a39ef72275e61c20b42db8ba331d00a09d1c3",
+      "git_blob_verified": true
+    },
+    {
+      "path": "/dev/shm/llcc-ci-evidence/upload-artifact-rerun-review/action.yml",
+      "bytes": 3159,
+      "sha256": "29b21270ff44638a165ea12abb4481796770c629e513217af7b4df1aa3821177",
+      "git_blob": "2a0ecf19e8d0087dd2e5d1785dcf764811e79fae",
+      "git_blob_verified": true
+    },
+    {
+      "path": "/dev/shm/llcc-ci-evidence/upload-artifact-rerun-review/package.json",
+      "bytes": 1589,
+      "sha256": "221abbd5b3bbff2d44a509a2ebd7b9e35ed772ee7ac464027e86527d928b95d1",
+      "git_blob": "ec05284932ee6727acedf9e89c8be41d5d89295e",
+      "git_blob_verified": true
+    },
+    {
+      "path": "/dev/shm/llcc-ci-evidence/upload-artifact-rerun-review/dist-upload-index.js",
+      "bytes": 5051718,
+      "sha256": "0165b8a75330f3228f2c7a234b4ff8a107b9139c2b519147f4c8e9fe99b262d8",
+      "git_blob": "89238fa3eb49937ea82c5d82006ee1fc6c6abaae",
+      "git_blob_verified": true
+    },
+    {
+      "path": "/dev/shm/llcc-ci-evidence/upload-artifact-rerun-review/sdk-package-2.3.2.json",
+      "bytes": 1782,
+      "sha256": "0452d4f819353b9b92bcdac189fc3221d5c16ddf4bacba2ad8e4c23d238212b7",
+      "git_blob": "5881366f9c999f684944c8ba3b70773876f5f8cd",
+      "git_blob_verified": true,
+      "repository": "actions/toolkit",
+      "commit": "c40bccc9c31c29df15c93abbea5b18bb474a4add"
+    },
+    {
+      "path": "/dev/shm/llcc-ci-evidence/upload-artifact-rerun-review/sdk-client-2.3.2.ts",
+      "bytes": 9161,
+      "sha256": "a3afe95a3bc50cf9cec82d3ba83ab56a57d84e45b0560f4b3258413992d53df0",
+      "git_blob": "255652702e255ef1a551b9389ab8c7972f0accd4",
+      "git_blob_verified": true,
+      "repository": "actions/toolkit",
+      "commit": "c40bccc9c31c29df15c93abbea5b18bb474a4add"
+    },
+    {
+      "path": "/dev/shm/llcc-ci-evidence/upload-artifact-rerun-review/sdk-get-artifact-2.3.2.ts",
+      "bytes": 4156,
+      "sha256": "648cf2ff0cb90c50cc827d581519a3aa3dec3450ea12ef4e77039f2b53454293",
+      "git_blob": "925635e70ca60d8d136f0a51cf38a8ec44165920",
+      "git_blob_verified": true,
+      "repository": "actions/toolkit",
+      "commit": "c40bccc9c31c29df15c93abbea5b18bb474a4add"
+    }
+  ],
+  "findings": [
+    "The fixed action defaults overwrite=false and calls its explicit artifact deletion helper only inside the overwrite=true conditional.",
+    "The 2.3.2 SDK source explicitly documents reruns as a case where one public workflow run can have several artifacts with the same name.",
+    "The exact pinned runtime bundle implements selection of the greatest artifact ID when several artifacts match the name; it sends backend workflow/job identifiers to CreateArtifact, not a local public-run-name uniqueness check.",
+    "These sources do not justify assuming that a same-name upload in a new attempt must fail with HTTP 409.",
+    "The failed attempt artifact was still listed with its original ID/digest and expired=false after the new attempt started."
+  ],
+  "old_artifact_observation": {
+    "id": 14971741877,
+    "name": "tb371fc-public-gates-17f4616f928dc0b0aeb815d7e09f4fec0e143be5",
+    "size_in_bytes": 47491540,
+    "url": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/artifacts/14971741877",
+    "archive_download_url": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/artifacts/14971741877/zip",
+    "expired": false,
+    "created_at": "2026-11-24T22:46:41Z",
+    "expires_at": "2026-12-08T22:46:32Z",
+    "updated_at": "2026-11-24T22:46:41Z",
+    "digest": "sha256:586d4e8d5fd5f512b00e6ae13084f92aa0c6a9ac083f022b7cef360ee9275e13",
+    "workflow_run": {
+      "id": 45501932082,
+      "repository_id": 1468024382,
+      "head_repository_id": 1468024382,
+      "head_branch": "tb371fc-llcc-20261124-6a5",
+      "head_sha": "c02f3d794e85cb5bc95d1aca62780542e806d4dc"
+    }
+  },
+  "source_locations": {
+    "sdk_rerun_note": "https://github.com/actions/toolkit/blob/c40bccc9c31c29df15c93abbea5b18bb474a4add/packages/artifact/src/internal/client.ts",
+    "sdk_latest_selection": "https://github.com/actions/toolkit/blob/c40bccc9c31c29df15c93abbea5b18bb474a4add/packages/artifact/src/internal/find/get-artifact.ts",
+    "exact_runtime": "https://github.com/actions/upload-artifact/blob/ea165f8d65b6e75b540449e92b4886f43607fa02/dist/upload/index.js"
+  },
+  "recommended_current_action": "Leave the current rerun and artifacts unchanged. After upload, bind the new artifact ID/size/digest and separately read back the retained old artifact. Keep the already downloaded failed ZIP.",
+  "conditional_if_actual_409": "After the present run ends, a separate workflow_dispatch run using an explicitly verified ref at the same commit gives a distinct public run identity without deleting artifacts or modifying source. Workflow concurrency uses github.ref with cancel-in-progress=true, so do not dispatch while the same ref is still running. This is a proposal only; no workflow was dispatched.",
+  "limitations": [
+    "The GitHub artifact service is not open source; client code cannot prove every server-side retention/UI policy.",
+    "The source documents same-name rerun support, but this receipt does not claim the current rerun upload succeeded.",
+    "No permanent simultaneous visibility of all earlier-attempt artifacts in the web UI is promised.",
+    "No runtime token, credential, or private token claim was inspected; only published source examples."
+  ]
+}

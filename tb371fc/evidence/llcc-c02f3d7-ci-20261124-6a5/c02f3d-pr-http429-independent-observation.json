@@ -1,0 +1,87 @@
+{
+  "schema": "tb371fc-llcc-c02f3d-pr-http429-independent-observation-v1",
+  "reviewer": "qemu_ci_review",
+  "observed_at_utc": "2026-11-24T22:49:49.707913+00:00",
+  "source_head": "c02f3d794e85cb5bc95d1aca62780542e806d4dc",
+  "checkout": "17f4616f928dc0b0aeb815d7e09f4fec0e143be5",
+  "run": 45501932082,
+  "attempt": 1,
+  "job": 138827169761,
+  "archive": {
+    "path": "/dev/shm/tb371fc-llcc-c02-pr-14971741877.zip",
+    "bytes": 47491540,
+    "sha256": "586d4e8d5fd5f512b00e6ae13084f92aa0c6a9ac083f022b7cef360ee9275e13",
+    "full_hash_recomputed": true
+  },
+  "source_generation": {
+    "passed": false,
+    "result_sha256": "e3ab8d90ae7ce7f1333841f799fe8154ecdc5d87cafae9a7ee776c2aae821388",
+    "verified_inputs": [
+      {
+        "path": "primary-r11/drivers/soc/qcom/llcc-slice.c",
+        "bytes": 10965,
+        "sha256": "5a49480bebfa84ca94240202abc3fc3bc8eaf6379df9f4b71a92640e140eb1c5",
+        "git_blob_sha1": "a933f377db535f12f47942eff31fffe214af0912"
+      },
+      {
+        "path": "primary-r11/drivers/soc/qcom/llcc-kona.c",
+        "bytes": 3764,
+        "sha256": "140c5774139c0827003754bb083d0b6945fbd9982bc5538105084614eac1b2a9",
+        "git_blob_sha1": "a155d6365246ceaf2e8bca5a289ed72772cac74e"
+      },
+      {
+        "path": "primary-r11/include/linux/soc/qcom/llcc-qcom.h",
+        "bytes": 5789,
+        "sha256": "1d348978460ba7a32087af7567c80ddeaa98399855c719e7c0c2b1fcc4d7f093",
+        "git_blob_sha1": "f0e21085aec911e1f9d854fefd77418666e77d4d"
+      },
+      {
+        "path": "primary-r11/drivers/soc/qcom/llcc_perfmon.c",
+        "bytes": 37150,
+        "sha256": "38f1df996a946b0a6ce8f4cd71559367d1f4498d475605bc9089311d63defeeb",
+        "git_blob_sha1": "99278c99cc311838d0b612bd5a96e908a5ec03ed"
+      },
+      {
+        "path": "primary-r11/drivers/soc/qcom/llcc_perfmon.h",
+        "bytes": 9820,
+        "sha256": "536de10d400093fa406b88f7a3ebfaf30966b43e15f88533be98c85ac5baebfd",
+        "git_blob_sha1": "4a3accda43e9a2f681c118f43b502e13a52d2eba"
+      },
+      {
+        "path": "primary-r11/drivers/edac/qcom_edac.c",
+        "bytes": 11972,
+        "sha256": "ae3c0da558345d3c471fd35a5ae7f878a84c61d21093056d4ac66359f2486a24",
+        "git_blob_sha1": "560c96c1e5b88dc8b9b622ce4d3d590370470d7a"
+      },
+      {
+        "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+        "bytes": 132499,
+        "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+        "git_blob_sha1": "e9651f09bd579616787894dc8514429063623b2d"
+      }
+    ],
+    "missing_eighth_input": "primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+    "error": "Traceback (most recent call last):\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/scripts/verify_llcc_generation.py\", line 36, in run\n    with urllib.request.urlopen(url, timeout=30) as response:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 521, in open\n    response = meth(req, response)\n               ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 630, in http_response\n    response = self.parent.error(\n               ^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 559, in error\n    return self._call_chain(*args)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 639, in http_error_default\n    raise HTTPError(req.full_url, code, msg, hdrs, fp)\nurllib.error.HTTPError: HTTP Error 429: Too Many Requests\n",
+    "generator_checks": [],
+    "source_pins_verified": false,
+    "source_pin_mismatch_observed": false
+  },
+  "device_gate": {
+    "producer_passed": true,
+    "result_sha256": "f2880fe1c48e806eb2b343df7625ce9a3b7cb1a1cfff13e552fef2a4894e35f3",
+    "test_sha256": "4472734a675049a4a0f18e4699617ceecde6b293e6b8ede7f4a0825f403d48e3",
+    "checks": 32,
+    "all_recorded_checks_true": true,
+    "migrations": 4,
+    "rejected_migrations": 2,
+    "corrupted_stream_rejections": 4,
+    "migration_sources": 5,
+    "actual_stream_files": 9,
+    "binary_unchanged": true
+  },
+  "whole_artifact_qualified": false,
+  "fullwire_auditor_executed": false,
+  "model_or_verifier_modified": false,
+  "remote_downloads_by_this_review": false,
+  "qemu_or_device_executed": false
+}

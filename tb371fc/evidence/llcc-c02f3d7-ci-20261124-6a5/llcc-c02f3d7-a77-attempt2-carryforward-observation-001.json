@@ -1,0 +1,291 @@
+{
+  "schema": "tb371fc-a77-rerun-carryforward-observation-v1",
+  "passed": true,
+  "source_head": "c02f3d794e85cb5bc95d1aca62780542e806d4dc",
+  "pr_merge_checkout": "17f4616f928dc0b0aeb815d7e09f4fec0e143be5",
+  "workflow_run": 45501932082,
+  "new_attempt": 2,
+  "new_job_id": 138835643987,
+  "original_job_id": 138827170296,
+  "new_execution_observed": false,
+  "conclusion": "The latest-attempt A77 job ID serves the exact retained successful original execution log. It must not be counted as an independent rerun.",
+  "raw_log": {
+    "path": "/dev/shm/llcc-ci-evidence/a77-138835643987.log",
+    "bytes": 252400,
+    "sha256": "ba75c6a5d825edb3ceeb86f5a2ae76994270668b97acdd93e583e7025c960412",
+    "identical_to_original_bytes": true,
+    "first_line": "\ufeff2026-11-24T22:32:52.8095185Z Current runner version: '2.338.2'",
+    "last_line": "2026-11-24T22:36:43.3534175Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/"
+  },
+  "current_job_metadata": {
+    "id": 138835643987,
+    "name": "cortex-a77-architecture",
+    "run_id": 45501932082,
+    "run_attempt": 2,
+    "head_sha": "c02f3d794e85cb5bc95d1aca62780542e806d4dc",
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-11-24T22:32:52Z",
+    "completed_at": "2026-11-24T22:36:44Z",
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1,
+        "started_at": "2026-11-24T22:32:52Z",
+        "completed_at": "2026-11-24T22:32:54Z"
+      },
+      {
+        "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2,
+        "started_at": "2026-11-24T22:32:54Z",
+        "completed_at": "2026-11-24T22:33:05Z"
+      },
+      {
+        "name": "Install CPU probe build dependencies",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3,
+        "started_at": "2026-11-24T22:33:05Z",
+        "completed_at": "2026-11-24T22:33:38Z"
+      },
+      {
+        "name": "Build the CPU test configuration with the generic loader",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4,
+        "started_at": "2026-11-24T22:33:38Z",
+        "completed_at": "2026-11-24T22:36:31Z"
+      },
+      {
+        "name": "Run every shared UFS PCI regression without skips",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 5,
+        "started_at": "2026-11-24T22:36:31Z",
+        "completed_at": "2026-11-24T22:36:39Z"
+      },
+      {
+        "name": "Execute A77 feature, instruction, cache-ID and PMU probes",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 6,
+        "started_at": "2026-11-24T22:36:39Z",
+        "completed_at": "2026-11-24T22:36:39Z"
+      },
+      {
+        "name": "Upload CPU evidence and the tested binary",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 7,
+        "started_at": "2026-11-24T22:36:39Z",
+        "completed_at": "2026-11-24T22:36:43Z"
+      },
+      {
+        "name": "State the CPU scope",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 8,
+        "started_at": "2026-11-24T22:36:43Z",
+        "completed_at": "2026-11-24T22:36:43Z"
+      },
+      {
+        "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 16,
+        "started_at": "2026-11-24T22:36:43Z",
+        "completed_at": "2026-11-24T22:36:43Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 17,
+        "started_at": "2026-11-24T22:36:43Z",
+        "completed_at": "2026-11-24T22:36:43Z"
+      }
+    ]
+  },
+  "metadata_file": {
+    "path": "/dev/shm/llcc-ci-evidence/llcc-c02-pr-attempt2-job-metadata.json",
+    "bytes": 7521,
+    "sha256": "742ccca707b8ae6ac4850b9b93676e272d4496bb0268f0770ea3e1fd0f0387a7"
+  },
+  "original_audit": {
+    "path": "/dev/shm/llcc-ci-evidence/llcc-c02f3d7-a77-rawlog-audit-001.json",
+    "bytes": 15630,
+    "sha256": "f94048bb892e1aa136127eb79727e43a499deb0dd2c61c0794c565b40dda5cf8",
+    "unaltered": true
+  },
+  "retained_measured_checks": {
+    "variants": [
+      {
+        "name": "default",
+        "guest_checks": 94,
+        "line_number": 2525,
+        "raw_line": "2026-11-24T22:36:39.1782913Z PASS default: 94 guest checks"
+      },
+      {
+        "name": "observed-revidr",
+        "guest_checks": 94,
+        "line_number": 2526,
+        "raw_line": "2026-11-24T22:36:39.2738387Z PASS observed-revidr: 94 guest checks"
+      },
+      {
+        "name": "l2-128k",
+        "guest_checks": 94,
+        "line_number": 2527,
+        "raw_line": "2026-11-24T22:36:39.3606836Z PASS l2-128k: 94 guest checks"
+      },
+      {
+        "name": "l2-256k",
+        "guest_checks": 94,
+        "line_number": 2528,
+        "raw_line": "2026-11-24T22:36:39.4567544Z PASS l2-256k: 94 guest checks"
+      },
+      {
+        "name": "l3-512k",
+        "guest_checks": 95,
+        "line_number": 2529,
+        "raw_line": "2026-11-24T22:36:39.5510514Z PASS l3-512k: 95 guest checks"
+      },
+      {
+        "name": "l3-1m",
+        "guest_checks": 95,
+        "line_number": 2530,
+        "raw_line": "2026-11-24T22:36:39.6461014Z PASS l3-1m: 95 guest checks"
+      },
+      {
+        "name": "l3-2m",
+        "guest_checks": 95,
+        "line_number": 2531,
+        "raw_line": "2026-11-24T22:36:39.7407475Z PASS l3-2m: 95 guest checks"
+      },
+      {
+        "name": "l3-4m",
+        "guest_checks": 95,
+        "line_number": 2532,
+        "raw_line": "2026-11-24T22:36:39.8360479Z PASS l3-4m: 95 guest checks"
+      },
+      {
+        "name": "crypto-off",
+        "guest_checks": 96,
+        "line_number": 2533,
+        "raw_line": "2026-11-24T22:36:39.9278577Z PASS crypto-off: 96 guest checks"
+      }
+    ],
+    "guest_checks": 852,
+    "invalid_configurations": [
+      {
+        "options": ",l2-cache-size=1M",
+        "line_number": 2534,
+        "raw_line": "2026-11-24T22:36:39.9311878Z PASS rejected ,l2-cache-size=1M"
+      },
+      {
+        "options": ",l3-cache-size=128K",
+        "line_number": 2535,
+        "raw_line": "2026-11-24T22:36:39.9356642Z PASS rejected ,l3-cache-size=128K"
+      }
+    ],
+    "pci_ufs_cases": [
+      {
+        "name": "reg-read",
+        "line_number": 2489,
+        "raw_line": "2026-11-24T22:36:31.9962416Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/reg-read"
+      },
+      {
+        "name": "init",
+        "line_number": 2490,
+        "raw_line": "2026-11-24T22:36:32.3286304Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/init"
+      },
+      {
+        "name": "legacy-read-write",
+        "line_number": 2491,
+        "raw_line": "2026-11-24T22:36:32.6617069Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-read-write"
+      },
+      {
+        "name": "mcq-read-write",
+        "line_number": 2492,
+        "raw_line": "2026-11-24T22:36:32.9946535Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-read-write"
+      },
+      {
+        "name": "legacy-crypto-rejected",
+        "line_number": 2493,
+        "raw_line": "2026-11-24T22:36:33.3291137Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-crypto-rejected"
+      },
+      {
+        "name": "mcq-crypto-rejected",
+        "line_number": 2494,
+        "raw_line": "2026-11-24T22:36:33.6653876Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-crypto-rejected"
+      },
+      {
+        "name": "no-prdt",
+        "line_number": 2495,
+        "raw_line": "2026-11-24T22:36:33.9975935Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/no-prdt"
+      },
+      {
+        "name": "sync-cache",
+        "line_number": 2496,
+        "raw_line": "2026-11-24T22:36:34.3299446Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/sync-cache"
+      },
+      {
+        "name": "long-prdt",
+        "line_number": 2497,
+        "raw_line": "2026-11-24T22:36:34.6647676Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/long-prdt"
+      },
+      {
+        "name": "short-prdt",
+        "line_number": 2498,
+        "raw_line": "2026-11-24T22:36:34.9995581Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/short-prdt"
+      },
+      {
+        "name": "mcq-cq-wraparound",
+        "line_number": 2499,
+        "raw_line": "2026-11-24T22:36:35.3345092Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-cq-wraparound"
+      },
+      {
+        "name": "query-flag",
+        "line_number": 2500,
+        "raw_line": "2026-11-24T22:36:35.6667143Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-flag"
+      },
+      {
+        "name": "query-attribute",
+        "line_number": 2501,
+        "raw_line": "2026-11-24T22:36:36.0003087Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-attribute"
+      },
+      {
+        "name": "query-desciptor",
+        "line_number": 2502,
+        "raw_line": "2026-11-24T22:36:36.3354251Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-desciptor"
+      },
+      {
+        "name": "wb-init",
+        "line_number": 2503,
+        "raw_line": "2026-11-24T22:36:36.6679881Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-init"
+      },
+      {
+        "name": "wb-read-write",
+        "line_number": 2504,
+        "raw_line": "2026-11-24T22:36:37.1117772Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-read-write"
+      },
+      {
+        "name": "hid",
+        "line_number": 2505,
+        "raw_line": "2026-11-24T22:36:38.9430309Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/hid"
+      }
+    ]
+  },
+  "retained_artifact": {
+    "id": 14971356474,
+    "bytes": 28325897
+  },
+  "limitations": [
+    "852 is independently summed from nine actual runner output lines; individual guest PASS labels reside in the separate CPU artifact and were not downloaded here.",
+    "Both invalid configurations have actual runner rejection lines; the job log does not include their complete captured stderr.",
+    "This does not qualify the board/Linux job, physical cache capacities, timing, DSU, performance or original Android boot."
+  ]
+}

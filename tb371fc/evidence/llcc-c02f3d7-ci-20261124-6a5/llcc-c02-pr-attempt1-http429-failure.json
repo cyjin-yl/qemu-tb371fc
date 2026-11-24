@@ -1,0 +1,126 @@
+{
+  "schema": "tb371fc-llcc-c02-pr-source-download-failure-v1",
+  "observed_utc": "2026-11-24T22:48:29.795721+00:00",
+  "source_head": "c02f3d794e85cb5bc95d1aca62780542e806d4dc",
+  "checkout_commit": "17f4616f928dc0b0aeb815d7e09f4fec0e143be5",
+  "checkout_tree": "e16fa89f92cb997ca013415c8ced5adcc1db8659",
+  "run_id": 45501932082,
+  "job_id": 138827169761,
+  "run_attempt": 1,
+  "artifact": {
+    "id": 14971741877,
+    "path": "/dev/shm/tb371fc-llcc-c02-pr-14971741877.zip",
+    "bytes": 47491540,
+    "sha256": "586d4e8d5fd5f512b00e6ae13084f92aa0c6a9ac083f022b7cef360ee9275e13"
+  },
+  "qemu": {
+    "bytes": 63644552,
+    "sha256": "7c5356a5596dc54c9cd187a70e9c8cd33665fd76706fe0b284b6adb852c5f526"
+  },
+  "aggregate": {
+    "passed": false,
+    "passed_gates": 92,
+    "expected_gates": 93,
+    "elapsed_seconds": 582.861
+  },
+  "failure": {
+    "name": "llcc-source-generation",
+    "command": [
+      "/usr/bin/python3",
+      "/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/scripts/verify_llcc_generation.py",
+      "--out",
+      "/tmp/tbci-7szjayml/16/data"
+    ],
+    "started_utc": "2026-11-24T22:36:59.336074+00:00",
+    "timeout_seconds": 180,
+    "fixture": "/tmp/tbci-7szjayml/16",
+    "environment": {
+      "QTEST_QEMU_BINARY": "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+      "TMPDIR": "/tmp/tbci-7szjayml/16/tmp",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "passed": false,
+    "exit_code": 1,
+    "error": "Traceback (most recent call last):\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/scripts/ci_device_tests.py\", line 1190, in run_case\n    raise RuntimeError(f\"Gate exited {proc.returncode}\")\nRuntimeError: Gate exited 1\n",
+    "elapsed_seconds": 3.576,
+    "completed_utc": "2026-11-24T22:37:02.911936+00:00",
+    "log_sha256": {
+      "stdout.log": "bd51522600429ed8d156fb7e79a99625af78b38ba308881027c997086fb58cad",
+      "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "source_generation": {
+    "member": "tb371fc-results/components/16-llcc-source-generation/fixtures/data/result.json",
+    "result_sha256": "e3ab8d90ae7ce7f1333841f799fe8154ecdc5d87cafae9a7ee776c2aae821388",
+    "passed": false,
+    "source_pins_verified": false,
+    "verified_existing_inputs": [
+      {
+        "path": "primary-r11/drivers/soc/qcom/llcc-slice.c",
+        "bytes": 10965,
+        "sha256": "5a49480bebfa84ca94240202abc3fc3bc8eaf6379df9f4b71a92640e140eb1c5",
+        "git_blob_sha": "a933f377db535f12f47942eff31fffe214af0912"
+      },
+      {
+        "path": "primary-r11/drivers/soc/qcom/llcc-kona.c",
+        "bytes": 3764,
+        "sha256": "140c5774139c0827003754bb083d0b6945fbd9982bc5538105084614eac1b2a9",
+        "git_blob_sha": "a155d6365246ceaf2e8bca5a289ed72772cac74e"
+      },
+      {
+        "path": "primary-r11/include/linux/soc/qcom/llcc-qcom.h",
+        "bytes": 5789,
+        "sha256": "1d348978460ba7a32087af7567c80ddeaa98399855c719e7c0c2b1fcc4d7f093",
+        "git_blob_sha": "f0e21085aec911e1f9d854fefd77418666e77d4d"
+      },
+      {
+        "path": "primary-r11/drivers/soc/qcom/llcc_perfmon.c",
+        "bytes": 37150,
+        "sha256": "38f1df996a946b0a6ce8f4cd71559367d1f4498d475605bc9089311d63defeeb",
+        "git_blob_sha": "99278c99cc311838d0b612bd5a96e908a5ec03ed"
+      },
+      {
+        "path": "primary-r11/drivers/soc/qcom/llcc_perfmon.h",
+        "bytes": 9820,
+        "sha256": "536de10d400093fa406b88f7a3ebfaf30966b43e15f88533be98c85ac5baebfd",
+        "git_blob_sha": "4a3accda43e9a2f681c118f43b502e13a52d2eba"
+      },
+      {
+        "path": "primary-r11/drivers/edac/qcom_edac.c",
+        "bytes": 11972,
+        "sha256": "ae3c0da558345d3c471fd35a5ae7f878a84c61d21093056d4ac66359f2486a24",
+        "git_blob_sha": "560c96c1e5b88dc8b9b622ce4d3d590370470d7a"
+      },
+      {
+        "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+        "bytes": 132499,
+        "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+        "git_blob_sha": "e9651f09bd579616787894dc8514429063623b2d"
+      }
+    ],
+    "missing_input": "primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+    "missing_input_revision": "adc218676eef25575469234709c2d87185ca223a",
+    "generator_executed": false,
+    "generated_output_checks": 0,
+    "error": "Traceback (most recent call last):\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/scripts/verify_llcc_generation.py\", line 36, in run\n    with urllib.request.urlopen(url, timeout=30) as response:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 521, in open\n    response = meth(req, response)\n               ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 630, in http_response\n    response = self.parent.error(\n               ^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 559, in error\n    return self._call_chain(*args)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 639, in http_error_default\n    raise HTTPError(req.full_url, code, msg, hdrs, fp)\nurllib.error.HTTPError: HTTP Error 429: Too Many Requests\n"
+  },
+  "llcc_device_actual_producer": {
+    "member": "tb371fc-results/components/61-llcc-sm8250-reference/fixtures/data/result.json",
+    "result_sha256": "f2880fe1c48e806eb2b343df7625ce9a3b7cb1a1cfff13e552fef2a4894e35f3",
+    "passed": true,
+    "counts": {
+      "checks": 32,
+      "migrations": 4,
+      "rejected_migrations": 2,
+      "corrupted_stream_rejections": 4,
+      "migration_sources": 5,
+      "actual_stream_files": 9
+    },
+    "full_independent_audit_performed": false
+  },
+  "linux_gates_executed": false,
+  "artifact_qualified": false,
+  "native_used": false,
+  "code_or_acceptance_changes_made": false,
+  "proposed_next_step": "Rerun only failed PR board job on the exact unchanged commit after the observed transient HTTP 429; preserve attempt-one failure."
+}
