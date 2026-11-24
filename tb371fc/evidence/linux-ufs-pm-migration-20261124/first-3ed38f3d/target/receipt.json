@@ -1,0 +1,405 @@
+{
+  "command": [
+    "/home/runner/work/_temp/qemu-build/qemu-system-aarch64",
+    "-M",
+    "tb371fc",
+    "-accel",
+    "tcg,thread=multi",
+    "-m",
+    "8G",
+    "-smp",
+    "8",
+    "-display",
+    "none",
+    "-monitor",
+    "none",
+    "-serial",
+    "stdio",
+    "-no-reboot",
+    "-qmp",
+    "unix:/home/runner/work/_temp/tb371fc-results/linux-ufs-pm-migration/target/qmp.sock,server=on,wait=off",
+    "-kernel",
+    "/home/runner/work/_temp/clean-linux/artifacts/Image",
+    "-initrd",
+    "/home/runner/work/_temp/tb371fc-results/linux-ufs-pm-migration/initramfs.cpio.gz",
+    "-append",
+    "earlycon=qcom_geni,0xa90000 console=ttyMSM0,115200n8 rdinit=/init loglevel=7 panic=-1 nokaslr",
+    "-blockdev",
+    "{\"driver\": \"file\", \"node-name\": \"f0\", \"filename\": \"/home/runner/work/_temp/tb371fc-results/linux-ufs-pm-migration/disk.raw\"}",
+    "-blockdev",
+    "driver=raw,node-name=d0,file=f0",
+    "-device",
+    "ufs-lu,bus=ufs0,drive=d0,lun=0",
+    "-d",
+    "unimp,guest_errors",
+    "-D",
+    "/home/runner/work/_temp/tb371fc-results/linux-ufs-pm-migration/target/qemu-debug.log",
+    "-incoming",
+    "defer",
+    "-S"
+  ],
+  "qmp": [
+    {
+      "direction": "receive",
+      "message": {
+        "QMP": {
+          "version": {
+            "qemu": {
+              "micro": 3,
+              "minor": 1,
+              "major": 11
+            },
+            "package": ""
+          },
+          "capabilities": [
+            "oob"
+          ]
+        }
+      }
+    },
+    {
+      "direction": "send",
+      "command": "qmp_capabilities",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {},
+        "id": 1
+      }
+    },
+    {
+      "direction": "send",
+      "command": "migrate-incoming",
+      "arguments": {
+        "uri": "file:/home/runner/work/_temp/tb371fc-results/linux-ufs-pm-migration/checkpoint.migration"
+      }
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {},
+        "id": 2
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-migrate",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "active"
+        },
+        "id": 3
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-migrate",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "active"
+        },
+        "id": 4
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-migrate",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "active"
+        },
+        "id": 5
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-migrate",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "active"
+        },
+        "id": 6
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-migrate",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "completed"
+        },
+        "id": 7
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-status",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "paused",
+          "running": false
+        },
+        "id": 8
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-status",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "paused",
+          "running": false
+        },
+        "id": 9
+      }
+    },
+    {
+      "direction": "send",
+      "command": "qom-get",
+      "arguments": {
+        "path": "/machine/ufs",
+        "property": "link-state"
+      }
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": "hibern8",
+        "id": 10
+      }
+    },
+    {
+      "direction": "send",
+      "command": "human-monitor-command",
+      "arguments": {
+        "command-line": "info qtree"
+      }
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": "bus: main-system-bus\r\n  type System\r\n  dev: qcom-geni-uart, id \"\"\r\n    gpio-in \"reset\" 1\r\n    gpio-out \"sysbus-irq\" 1\r\n    clock-in \"s-ahb\" freq_hz=100 MHz\r\n    clock-in \"m-ahb\" freq_hz=100 MHz\r\n    clock-in \"se-clk\" freq_hz=7.37 MHz\r\n    chardev = \"serial0\"\r\n    mmio 0000000000a90000/0000000000004000\r\n  dev: qcom-sm8250-ufs, id \"ufs0\"\r\n    gpio-in \"device-reset\" 1\r\n    gpio-in \"power\" 1\r\n    gpio-in \"reset\" 1\r\n    gpio-out \"sysbus-irq\" 1\r\n    clock-in \"rx1-sync-clk\" freq_hz=0 Hz\r\n    clock-out \"rx-lane1\" freq_hz=0 Hz\r\n    clock-in \"rx0-sync-clk\" freq_hz=0 Hz\r\n    clock-out \"rx-lane0\" freq_hz=0 Hz\r\n    clock-in \"tx-sync-clk\" freq_hz=0 Hz\r\n    clock-out \"tx-lane0\" freq_hz=0 Hz\r\n    clock-in \"qref-clk\" freq_hz=0 Hz\r\n    clock-in \"aggre-clk\" freq_hz=0 Hz\r\n    clock-in \"phy-aux-clk\" freq_hz=0 Hz\r\n    clock-in \"ref-clk\" freq_hz=19.2 MHz\r\n    clock-in \"unipro-clk\" freq_hz=0 Hz\r\n    clock-in \"iface-clk\" freq_hz=0 Hz\r\n    clock-in \"core-clk\" freq_hz=0 Hz\r\n    auto-hibern8 = true\r\n    serial = \"QEMU-TB371FC-TEST\"\r\n    nutrs = 32 (0x20)\r\n    nutmrs = 8 (0x8)\r\n    wb-max-size = 1024 (0x400)\r\n    wb-min-size = 256 (0x100)\r\n    hw-version = 1073741824 (0x40000000)\r\n    hci-version = 768 (0x300)\r\n    reference-symbol-hz = 150000000 (0x8f0d180)\r\n    dma-memory = \"/machine/apps-smmu/smmuv2-sid-00e0[0]\"\r\n    mmio 0000000001d84000/0000000000003000\r\n    mmio 0000000001d87000/0000000000001000\r\n    bus: ufs0\r\n      type ufs-bus\r\n      dev: ufs-lu, id \"\"\r\n        drive = \"\"\r\n        lun = 0 (0x0)\r\n        bus: scsi.0\r\n          type SCSI\r\n          dev: scsi-hd, id \"\"\r\n            drive = \"d0\"\r\n            backend_defaults = \"auto\"\r\n            logical_block_size = 4096 (4 KiB)\r\n            physical_block_size = 4096 (4 KiB)\r\n            min_io_size = 0 (0 B)\r\n            opt_io_size = 0 (0 B)\r\n            discard_granularity = 4096 (4 KiB)\r\n            write-cache = \"auto\"\r\n            share-rw = false\r\n            account-invalid = \"auto\"\r\n            account-failed = \"auto\"\r\n            stats-intervals = <null>\r\n            rerror = \"auto\"\r\n            werror = \"auto\"\r\n            ver = \"2.5+\"\r\n            serial = \"\"\r\n            vendor = \"QEMU\"\r\n            product = \"QEMU HARDDISK\"\r\n            device_id = \"\"\r\n            migrate-emulated-scsi-request = true\r\n            removable = false\r\n            dpofua = true\r\n            wwn = 0 (0x0)\r\n            port_wwn = 0 (0x0)\r\n            port_index = 0 (0x0)\r\n            max_unmap_size = 1073741824 (0x40000000)\r\n            max_io_size = 2147483647 (0x7fffffff)\r\n            rotation_rate = 0 (0x0)\r\n            scsi_version = 5 (0x5)\r\n            quirk_mode_page_vendor_specific_apple = false\r\n            quirk_mode_page_set_block_size = false\r\n            cyls = 130 (0x82)\r\n            heads = 16 (0x10)\r\n            secs = 63 (0x3f)\r\n            lcyls = 0 (0x0)\r\n            lheads = 0 (0x0)\r\n            lsecs = 0 (0x0)\r\n            channel = 0 (0x0)\r\n            scsi-id = 0 (0x0)\r\n            lun = 0 (0x0)\r\n  dev: qcom-sm8250-gcc, id \"\"\r\n    gpio-in \"hw-request\" 200\r\n    gpio-in \"remote-vote\" 200\r\n    gpio-out \"power\" 11\r\n    gpio-out \"reset\" 45\r\n    clock-in \"gcc_video_xo_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_video_xo_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_video_axi1_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_video_axi1_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_video_axi0_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_video_axi0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_video_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_video_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_usb3_sec_phy_pipe_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_phy_pipe_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_phy_com_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_phy_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_phy_aux_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_usb3_sec_clkref_en_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_clkref_en\" freq_hz=0 Hz\r\n    clock-in \"gcc_usb3_prim_phy_pipe_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_prim_phy_pipe_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_prim_phy_com_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_prim_phy_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_prim_phy_aux_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_usb30_sec_sleep_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_sleep_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_mock_utmi_postdiv_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_mock_utmi_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_mock_utmi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_master_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_master_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_usb30_prim_sleep_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_sleep_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_mock_utmi_postdiv_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_mock_utmi_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_mock_utmi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_master_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_master_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_unipro_core_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_unipro_core_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_phy_tx_symbol_0_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_tx_symbol_0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_phy_rx_symbol_1_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_rx_symbol_1_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_phy_rx_symbol_0_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_rx_symbol_0_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_phy_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_phy_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_ice_core_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_ice_core_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_axi_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_phy_ahb_clk_parent\" freq_hz=100 MHz\r\n    clock-out \"gcc_ufs_phy_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_unipro_core_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_unipro_core_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_card_tx_symbol_0_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_tx_symbol_0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_card_rx_symbol_1_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_rx_symbol_1_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_card_rx_symbol_0_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_rx_symbol_0_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_phy_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_phy_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_ice_core_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_ice_core_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_axi_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_card_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_1x_clkref_en_parent\" freq_hz=19.2 MHz\r\n    clock-out \"gcc_ufs_1x_clkref_en\" freq_hz=0 Hz\r\n    clock-out \"gcc_tsif_ref_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_tsif_ref_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_tsif_inactivity_timers_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_tsif_inactivity_timers_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_tsif_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_tsif_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_sys_noc_cpuss_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_sys_noc_cpuss_ahb_clk\" freq_hz=19.2 MHz\r\n    clock-out \"gcc_sdcc4_apps_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_sdcc4_apps_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_sdcc4_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_sdcc4_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_sdcc2_apps_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_sdcc2_apps_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_sdcc2_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_sdcc2_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap_2_s_ahb_clk_parent\" freq_hz=100 MHz\r\n    clock-out \"gcc_qupv3_wrap_2_s_ahb_clk\" freq_hz=100 MHz\r\n    clock-in \"gcc_qupv3_wrap_2_m_ahb_clk_parent\" freq_hz=100 MHz\r\n    clock-out \"gcc_qupv3_wrap_2_m_ahb_clk\" freq_hz=100 MHz\r\n    clock-in \"gcc_qupv3_wrap_1_s_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap_1_s_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap_1_m_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap_1_m_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap_0_s_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap_0_s_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap_0_m_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap_0_m_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s5_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s5_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s4_clk_src\" freq_hz=7.37 MHz\r\n    clock-out \"gcc_qupv3_wrap2_s4_clk\" freq_hz=7.37 MHz\r\n    clock-out \"gcc_qupv3_wrap2_s3_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s3_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s2_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s1_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap2_core_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_core_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap2_core_2x_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_core_2x_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s5_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s5_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s4_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s4_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s3_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s3_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s2_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s1_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap1_core_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_core_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap1_core_2x_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_core_2x_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s7_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s7_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s6_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s6_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s5_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s5_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s4_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s4_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s3_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s3_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s2_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s1_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap0_core_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_core_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap0_core_2x_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_core_2x_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qmip_video_vcodec_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qmip_video_vcodec_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qmip_video_cvp_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qmip_video_cvp_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qmip_disp_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qmip_disp_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qmip_camera_rt_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qmip_camera_rt_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qmip_camera_nrt_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qmip_camera_nrt_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_prng_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_prng_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pdm_xo4_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pdm_xo4_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pdm_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pdm_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pdm2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_pdm2_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_wigig_clkref_en_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_wigig_clkref_en\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_wifi_clkref_en_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_wifi_clkref_en\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_phy_refgen_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_phy_aux_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_mdm_clkref_en_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_mdm_clkref_en\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_2_slv_q2a_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_slv_q2a_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_2_slv_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_slv_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_2_pipe_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_pipe_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_2_mstr_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_mstr_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_2_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_aux_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_1_slv_q2a_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_slv_q2a_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_1_slv_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_slv_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_1_pipe_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_pipe_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_1_mstr_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_mstr_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_1_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_aux_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_0_slv_q2a_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_slv_q2a_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_0_slv_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_slv_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_0_pipe_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_pipe_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_0_mstr_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_mstr_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_0_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie2_phy_refgen_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie1_phy_refgen_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie0_phy_refgen_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_gpll0_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_gpll0_clk_src\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_dma_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_dma_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_bwmon_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_bwmon_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_bwmon_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_bwmon_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_gpu_snoc_dvm_gfx_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_snoc_dvm_gfx_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_gpu_memnoc_gfx_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_memnoc_gfx_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_gpu_iref_en_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_iref_en\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_gpll0_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_gpll0_clk_src\" freq_hz=0 Hz\r\n    clock-in \"gcc_gpu_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp3_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp3_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp2_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp1_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_disp_xo_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_disp_xo_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_disp_sf_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_disp_sf_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_disp_hf_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_disp_hf_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_disp_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_disp_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ddrss_pcie_sf_tbu_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ddrss_pcie_sf_tbu_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ddrss_gpu_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ddrss_gpu_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_cpuss_rbcpr_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_cpuss_rbcpr_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_cpuss_dvm_bus_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_cpuss_dvm_bus_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_cpuss_ahb_postdiv_clk_src\" freq_hz=19.2 MHz\r\n    clock-out \"gcc_cpuss_ahb_clk_src\" freq_hz=19.2 MHz\r\n    clock-out \"gcc_cpuss_ahb_clk\" freq_hz=19.2 MHz\r\n    clock-out \"gcc_cfg_noc_usb3_sec_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_cfg_noc_usb3_prim_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_camera_xo_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_camera_xo_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_camera_sf_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_camera_sf_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_camera_hf_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_camera_hf_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_camera_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_camera_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_boot_rom_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_boot_rom_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_aggre_usb3_sec_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_aggre_usb3_prim_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_aggre_ufs_phy_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_aggre_ufs_card_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_aggre_noc_pcie_tbu_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_aggre_noc_pcie_tbu_clk\" freq_hz=0 Hz\r\n    clock-out \"gpll9\" freq_hz=0 Hz\r\n    clock-out \"gpll4\" freq_hz=0 Hz\r\n    clock-out \"gpll0_out_even\" freq_hz=300 MHz\r\n    clock-out \"gpll0\" freq_hz=600 MHz\r\n    clock-in \"audio\" freq_hz=0 Hz\r\n    clock-in \"sleep\" freq_hz=32 KHz\r\n    clock-in \"xo\" freq_hz=19.2 MHz\r\n    boot-configured = true\r\n    mmio 0000000000100000/00000000001f0000\r\n  dev: qcom-sm8250-tbu-debug, id \"\"\r\n    smmu = \"/machine/apps-smmu\"\r\n    reference-profile = 0 (0x0)\r\n    reference-version = 33554432 (0x2000000)\r\n    operation-latency-ns = 1000 (0x3e8)\r\n    mmio ffffffffffffffff/0000000000000020\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio ffffffffffffffff/0000000000000008\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio ffffffffffffffff/0000000000000008\r\n  dev: arm-smmuv2, id \"\"\r\n    gpio-out \"sysbus-irq\" 10\r\n    mmio-size = 65536 (0x10000)\r\n    num-context-banks = 8 (0x8)\r\n    num-smrs = 128 (0x80)\r\n    aarch64-granules = 1 (0x1)\r\n    memory = \"/machine/unattached/system[0]\"\r\n    mmio 0000000003da0000/0000000000010000\r\n  dev: arm-smmuv2, id \"\"\r\n    gpio-out \"sysbus-irq\" 98\r\n    mmio-size = 1048576 (0x100000)\r\n    num-context-banks = 96 (0x60)\r\n    num-smrs = 128 (0x80)\r\n    aarch64-granules = 1 (0x1)\r\n    memory = \"/machine/unattached/system[0]\"\r\n    mmio 0000000015000000/0000000000100000\r\n  dev: qcom-gdsc, id \"\"\r\n    gpio-out \"reset-asserted\" 1\r\n    gpio-out \"clamp-io\" 1\r\n    gpio-out \"power-on\" 1\r\n    gpio-in \"external-vote\" 1\r\n    gpio-in \"hw-enable\" 1\r\n    enabled-reference = false\r\n    reference-on = false\r\n    mmio ffffffffffffffff/0000000000000004\r\n    mmio ffffffffffffffff/0000000000000004\r\n    mmio ffffffffffffffff/0000000000000004\r\n    mmio ffffffffffffffff/0000000000000004\r\n  dev: qcom-gdsc, id \"\"\r\n    gpio-out \"reset-asserted\" 1\r\n    gpio-out \"clamp-io\" 1\r\n    gpio-out \"power-on\" 1\r\n    gpio-in \"external-vote\" 1\r\n    gpio-in \"hw-enable\" 1\r\n    enabled-reference = false\r\n    reference-on = false\r\n    mmio ffffffffffffffff/0000000000000004\r\n    mmio ffffffffffffffff/0000000000000004\r\n    mmio ffffffffffffffff/0000000000000004\r\n    mmio ffffffffffffffff/0000000000000004\r\n  dev: qcom-tb371fc-tlmm, id \"\"\r\n    gpio-out \"ufs-reset\" 1\r\n    gpio-out \"gpio-oe\" 180\r\n    gpio-out \"gpio-out\" 180\r\n    gpio-in \"gpio-in\" 180\r\n    gpio-out \"sysbus-irq\" 1\r\n    boot-ufs-reset-high = true\r\n    mmio 000000000f000000/0000000001000000\r\n  dev: qcom-refgen, id \"\"\r\n    gpio-out \"state-known\" 1\r\n    gpio-out \"software-enable\" 1\r\n    boot-disabled-reference = false\r\n    mmio 00000000088e7080/0000000000000004\r\n  dev: qcom-aop-msgram, id \"\"\r\n    mmio 000000000c300000/0000000000001000\r\n  dev: qcom-smem-handoff, id \"\"\r\n    ram = \"/objects/tb371fc.ram/tb371fc.ram[0]\"\r\n    reference-empty = false\r\n  dev: qcom-tcsr-mutex, id \"\"\r\n    boot-unlocked-reference = false\r\n    mmio 0000000001f40000/0000000000020000\r\n  dev: qcom-qsee-irq, id \"\"\r\n    gpio-in \"notify\" 8\r\n    gpio-out \"sysbus-irq\" 2\r\n    mmio 0000000001886000/0000000000000020\r\n    mmio 0000000001888000/0000000000000020\r\n  dev: qcom-ipcc, id \"\"\r\n    gpio-out \"sysbus-irq\" 1\r\n    local-client-id = 8 (0x8)\r\n    mmio 0000000000408000/0000000000001000\r\n  dev: qcom-dcc-v2, id \"\"\r\n    memory = \"/machine/unattached/system[0]\"\r\n    capture-delay-ns = 1000 (0x3e8)\r\n    mmio 0000000001023000/0000000000001000\r\n    mmio 000000000103a000/0000000000006000\r\n  dev: qcom-pshold, id \"\"\r\n    gpio-out \"ps-hold\" 1\r\n    mmio 000000000c264000/0000000000000004\r\n  dev: qcom-kpss-watchdog, id \"\"\r\n    gpio-out \"wakeup\" 1\r\n    gpio-out \"sysbus-irq\" 2\r\n    frequency = 32765 (0x7ffd)\r\n    mmio 0000000017c10000/0000000000001000\r\n  dev: arm-arch-timer-mmio, id \"\"\r\n    gpio-out \"sysbus-irq\" 14\r\n    num-frames = 7 (0x7)\r\n    frequency = 19200000 (0x124f800)\r\n    exact-frequency = true\r\n    virtual-frame-mask = 1 (0x1)\r\n    el0-frame-mask = 1 (0x1)\r\n    reset-ns-access = 1 (0x1)\r\n    mmio 0000000017c20000/0000000000001000\r\n    mmio 0000000017c21000/0000000000001000\r\n    mmio 0000000017c22000/0000000000001000\r\n    mmio 0000000017c23000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio 0000000017c25000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio 0000000017c27000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio 0000000017c29000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio 0000000017c2b000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio 0000000017c2d000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n  dev: qcom-pdc, id \"\"\r\n    gpio-out \"sysbus-irq\" 138\r\n    gpio-in \"irq-in\" 138\r\n    num-pins = 138 (0x8a)\r\n    reference-version = 0 (0x0)\r\n    mmio 000000000b220000/0000000000030000\r\n    mmio 0000000017c000f0/0000000000000060\r\n  dev: arm-gicv3, id \"\"\r\n    gpio-out \"sysbus-irq\" 48\r\n    gpio-in \"\" 1216\r\n    num-cpu = 8 (0x8)\r\n    num-irq = 992 (0x3e0)\r\n    revision = 3 (0x3)\r\n    has-lpi = false\r\n    has-nmi = false\r\n    has-security-extensions = false\r\n    maintenance-interrupt-id = 0 (0x0)\r\n    force-8-bit-prio = false\r\n    redist-region-count = 8 (0x8)\r\n    sysmem = \"\"\r\n    first-cpu-index = 0 (0x0)\r\n    mmio 0000000017a00000/0000000000010000\r\n    mmio 0000000017a60000/0000000000100000\r\n",
+        "id": 11
+      }
+    },
+    {
+      "direction": "send",
+      "command": "cont",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "timestamp": {
+          "seconds": 1795514639,
+          "microseconds": 12074
+        },
+        "event": "RESUME"
+      }
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {},
+        "id": 12
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-status",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "running",
+          "running": true
+        },
+        "id": 13
+      }
+    },
+    {
+      "direction": "send",
+      "command": "qom-get",
+      "arguments": {
+        "path": "/machine/ufs",
+        "property": "link-state"
+      }
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": "hibern8",
+        "id": 14
+      }
+    },
+    {
+      "direction": "send",
+      "command": "human-monitor-command",
+      "arguments": {
+        "command-line": "info qtree"
+      }
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": "bus: main-system-bus\r\n  type System\r\n  dev: qcom-geni-uart, id \"\"\r\n    gpio-in \"reset\" 1\r\n    gpio-out \"sysbus-irq\" 1\r\n    clock-in \"s-ahb\" freq_hz=100 MHz\r\n    clock-in \"m-ahb\" freq_hz=100 MHz\r\n    clock-in \"se-clk\" freq_hz=7.37 MHz\r\n    chardev = \"serial0\"\r\n    mmio 0000000000a90000/0000000000004000\r\n  dev: qcom-sm8250-ufs, id \"ufs0\"\r\n    gpio-in \"device-reset\" 1\r\n    gpio-in \"power\" 1\r\n    gpio-in \"reset\" 1\r\n    gpio-out \"sysbus-irq\" 1\r\n    clock-in \"rx1-sync-clk\" freq_hz=0 Hz\r\n    clock-out \"rx-lane1\" freq_hz=0 Hz\r\n    clock-in \"rx0-sync-clk\" freq_hz=0 Hz\r\n    clock-out \"rx-lane0\" freq_hz=0 Hz\r\n    clock-in \"tx-sync-clk\" freq_hz=0 Hz\r\n    clock-out \"tx-lane0\" freq_hz=0 Hz\r\n    clock-in \"qref-clk\" freq_hz=0 Hz\r\n    clock-in \"aggre-clk\" freq_hz=0 Hz\r\n    clock-in \"phy-aux-clk\" freq_hz=0 Hz\r\n    clock-in \"ref-clk\" freq_hz=19.2 MHz\r\n    clock-in \"unipro-clk\" freq_hz=0 Hz\r\n    clock-in \"iface-clk\" freq_hz=0 Hz\r\n    clock-in \"core-clk\" freq_hz=0 Hz\r\n    auto-hibern8 = true\r\n    serial = \"QEMU-TB371FC-TEST\"\r\n    nutrs = 32 (0x20)\r\n    nutmrs = 8 (0x8)\r\n    wb-max-size = 1024 (0x400)\r\n    wb-min-size = 256 (0x100)\r\n    hw-version = 1073741824 (0x40000000)\r\n    hci-version = 768 (0x300)\r\n    reference-symbol-hz = 150000000 (0x8f0d180)\r\n    dma-memory = \"/machine/apps-smmu/smmuv2-sid-00e0[0]\"\r\n    mmio 0000000001d84000/0000000000003000\r\n    mmio 0000000001d87000/0000000000001000\r\n    bus: ufs0\r\n      type ufs-bus\r\n      dev: ufs-lu, id \"\"\r\n        drive = \"\"\r\n        lun = 0 (0x0)\r\n        bus: scsi.0\r\n          type SCSI\r\n          dev: scsi-hd, id \"\"\r\n            drive = \"d0\"\r\n            backend_defaults = \"auto\"\r\n            logical_block_size = 4096 (4 KiB)\r\n            physical_block_size = 4096 (4 KiB)\r\n            min_io_size = 0 (0 B)\r\n            opt_io_size = 0 (0 B)\r\n            discard_granularity = 4096 (4 KiB)\r\n            write-cache = \"auto\"\r\n            share-rw = false\r\n            account-invalid = \"auto\"\r\n            account-failed = \"auto\"\r\n            stats-intervals = <null>\r\n            rerror = \"auto\"\r\n            werror = \"auto\"\r\n            ver = \"2.5+\"\r\n            serial = \"\"\r\n            vendor = \"QEMU\"\r\n            product = \"QEMU HARDDISK\"\r\n            device_id = \"\"\r\n            migrate-emulated-scsi-request = true\r\n            removable = false\r\n            dpofua = true\r\n            wwn = 0 (0x0)\r\n            port_wwn = 0 (0x0)\r\n            port_index = 0 (0x0)\r\n            max_unmap_size = 1073741824 (0x40000000)\r\n            max_io_size = 2147483647 (0x7fffffff)\r\n            rotation_rate = 0 (0x0)\r\n            scsi_version = 5 (0x5)\r\n            quirk_mode_page_vendor_specific_apple = false\r\n            quirk_mode_page_set_block_size = false\r\n            cyls = 130 (0x82)\r\n            heads = 16 (0x10)\r\n            secs = 63 (0x3f)\r\n            lcyls = 0 (0x0)\r\n            lheads = 0 (0x0)\r\n            lsecs = 0 (0x0)\r\n            channel = 0 (0x0)\r\n            scsi-id = 0 (0x0)\r\n            lun = 0 (0x0)\r\n  dev: qcom-sm8250-gcc, id \"\"\r\n    gpio-in \"hw-request\" 200\r\n    gpio-in \"remote-vote\" 200\r\n    gpio-out \"power\" 11\r\n    gpio-out \"reset\" 45\r\n    clock-in \"gcc_video_xo_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_video_xo_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_video_axi1_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_video_axi1_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_video_axi0_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_video_axi0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_video_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_video_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_usb3_sec_phy_pipe_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_phy_pipe_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_phy_com_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_phy_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_phy_aux_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_usb3_sec_clkref_en_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_clkref_en\" freq_hz=0 Hz\r\n    clock-in \"gcc_usb3_prim_phy_pipe_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_prim_phy_pipe_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_prim_phy_com_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_prim_phy_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_prim_phy_aux_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_usb30_sec_sleep_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_sleep_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_mock_utmi_postdiv_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_mock_utmi_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_mock_utmi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_master_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_master_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_usb30_prim_sleep_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_sleep_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_mock_utmi_postdiv_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_mock_utmi_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_mock_utmi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_master_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_master_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_unipro_core_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_unipro_core_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_phy_tx_symbol_0_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_tx_symbol_0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_phy_rx_symbol_1_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_rx_symbol_1_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_phy_rx_symbol_0_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_rx_symbol_0_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_phy_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_phy_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_ice_core_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_ice_core_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_axi_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_phy_ahb_clk_parent\" freq_hz=100 MHz\r\n    clock-out \"gcc_ufs_phy_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_unipro_core_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_unipro_core_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_card_tx_symbol_0_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_tx_symbol_0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_card_rx_symbol_1_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_rx_symbol_1_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_card_rx_symbol_0_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_rx_symbol_0_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_phy_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_phy_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_ice_core_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_ice_core_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_axi_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_card_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_1x_clkref_en_parent\" freq_hz=19.2 MHz\r\n    clock-out \"gcc_ufs_1x_clkref_en\" freq_hz=0 Hz\r\n    clock-out \"gcc_tsif_ref_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_tsif_ref_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_tsif_inactivity_timers_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_tsif_inactivity_timers_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_tsif_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_tsif_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_sys_noc_cpuss_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_sys_noc_cpuss_ahb_clk\" freq_hz=19.2 MHz\r\n    clock-out \"gcc_sdcc4_apps_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_sdcc4_apps_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_sdcc4_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_sdcc4_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_sdcc2_apps_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_sdcc2_apps_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_sdcc2_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_sdcc2_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap_2_s_ahb_clk_parent\" freq_hz=100 MHz\r\n    clock-out \"gcc_qupv3_wrap_2_s_ahb_clk\" freq_hz=100 MHz\r\n    clock-in \"gcc_qupv3_wrap_2_m_ahb_clk_parent\" freq_hz=100 MHz\r\n    clock-out \"gcc_qupv3_wrap_2_m_ahb_clk\" freq_hz=100 MHz\r\n    clock-in \"gcc_qupv3_wrap_1_s_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap_1_s_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap_1_m_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap_1_m_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap_0_s_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap_0_s_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap_0_m_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap_0_m_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s5_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s5_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s4_clk_src\" freq_hz=7.37 MHz\r\n    clock-out \"gcc_qupv3_wrap2_s4_clk\" freq_hz=7.37 MHz\r\n    clock-out \"gcc_qupv3_wrap2_s3_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s3_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s2_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s1_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap2_core_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_core_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap2_core_2x_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_core_2x_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s5_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s5_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s4_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s4_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s3_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s3_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s2_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s1_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap1_core_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_core_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap1_core_2x_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_core_2x_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s7_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s7_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s6_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s6_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s5_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s5_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s4_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s4_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s3_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s3_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s2_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s1_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap0_core_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_core_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap0_core_2x_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_core_2x_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qmip_video_vcodec_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qmip_video_vcodec_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qmip_video_cvp_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qmip_video_cvp_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qmip_disp_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qmip_disp_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qmip_camera_rt_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qmip_camera_rt_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qmip_camera_nrt_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qmip_camera_nrt_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_prng_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_prng_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pdm_xo4_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pdm_xo4_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pdm_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pdm_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pdm2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_pdm2_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_wigig_clkref_en_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_wigig_clkref_en\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_wifi_clkref_en_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_wifi_clkref_en\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_phy_refgen_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_phy_aux_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_mdm_clkref_en_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_mdm_clkref_en\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_2_slv_q2a_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_slv_q2a_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_2_slv_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_slv_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_2_pipe_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_pipe_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_2_mstr_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_mstr_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_2_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_aux_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_1_slv_q2a_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_slv_q2a_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_1_slv_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_slv_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_1_pipe_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_pipe_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_1_mstr_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_mstr_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_1_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_aux_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_0_slv_q2a_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_slv_q2a_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_0_slv_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_slv_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_0_pipe_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_pipe_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_0_mstr_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_mstr_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_0_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie2_phy_refgen_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie1_phy_refgen_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie0_phy_refgen_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_gpll0_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_gpll0_clk_src\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_dma_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_dma_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_bwmon_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_bwmon_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_bwmon_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_bwmon_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_gpu_snoc_dvm_gfx_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_snoc_dvm_gfx_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_gpu_memnoc_gfx_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_memnoc_gfx_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_gpu_iref_en_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_iref_en\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_gpll0_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_gpll0_clk_src\" freq_hz=0 Hz\r\n    clock-in \"gcc_gpu_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp3_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp3_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp2_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp1_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_disp_xo_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_disp_xo_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_disp_sf_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_disp_sf_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_disp_hf_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_disp_hf_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_disp_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_disp_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ddrss_pcie_sf_tbu_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ddrss_pcie_sf_tbu_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ddrss_gpu_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ddrss_gpu_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_cpuss_rbcpr_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_cpuss_rbcpr_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_cpuss_dvm_bus_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_cpuss_dvm_bus_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_cpuss_ahb_postdiv_clk_src\" freq_hz=19.2 MHz\r\n    clock-out \"gcc_cpuss_ahb_clk_src\" freq_hz=19.2 MHz\r\n    clock-out \"gcc_cpuss_ahb_clk\" freq_hz=19.2 MHz\r\n    clock-out \"gcc_cfg_noc_usb3_sec_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_cfg_noc_usb3_prim_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_camera_xo_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_camera_xo_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_camera_sf_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_camera_sf_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_camera_hf_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_camera_hf_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_camera_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_camera_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_boot_rom_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_boot_rom_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_aggre_usb3_sec_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_aggre_usb3_prim_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_aggre_ufs_phy_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_aggre_ufs_card_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_aggre_noc_pcie_tbu_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_aggre_noc_pcie_tbu_clk\" freq_hz=0 Hz\r\n    clock-out \"gpll9\" freq_hz=0 Hz\r\n    clock-out \"gpll4\" freq_hz=0 Hz\r\n    clock-out \"gpll0_out_even\" freq_hz=300 MHz\r\n    clock-out \"gpll0\" freq_hz=600 MHz\r\n    clock-in \"audio\" freq_hz=0 Hz\r\n    clock-in \"sleep\" freq_hz=32 KHz\r\n    clock-in \"xo\" freq_hz=19.2 MHz\r\n    boot-configured = true\r\n    mmio 0000000000100000/00000000001f0000\r\n  dev: qcom-sm8250-tbu-debug, id \"\"\r\n    smmu = \"/machine/apps-smmu\"\r\n    reference-profile = 0 (0x0)\r\n    reference-version = 33554432 (0x2000000)\r\n    operation-latency-ns = 1000 (0x3e8)\r\n    mmio ffffffffffffffff/0000000000000020\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio ffffffffffffffff/0000000000000008\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio ffffffffffffffff/0000000000000008\r\n  dev: arm-smmuv2, id \"\"\r\n    gpio-out \"sysbus-irq\" 10\r\n    mmio-size = 65536 (0x10000)\r\n    num-context-banks = 8 (0x8)\r\n    num-smrs = 128 (0x80)\r\n    aarch64-granules = 1 (0x1)\r\n    memory = \"/machine/unattached/system[0]\"\r\n    mmio 0000000003da0000/0000000000010000\r\n  dev: arm-smmuv2, id \"\"\r\n    gpio-out \"sysbus-irq\" 98\r\n    mmio-size = 1048576 (0x100000)\r\n    num-context-banks = 96 (0x60)\r\n    num-smrs = 128 (0x80)\r\n    aarch64-granules = 1 (0x1)\r\n    memory = \"/machine/unattached/system[0]\"\r\n    mmio 0000000015000000/0000000000100000\r\n  dev: qcom-gdsc, id \"\"\r\n    gpio-out \"reset-asserted\" 1\r\n    gpio-out \"clamp-io\" 1\r\n    gpio-out \"power-on\" 1\r\n    gpio-in \"external-vote\" 1\r\n    gpio-in \"hw-enable\" 1\r\n    enabled-reference = false\r\n    reference-on = false\r\n    mmio ffffffffffffffff/0000000000000004\r\n    mmio ffffffffffffffff/0000000000000004\r\n    mmio ffffffffffffffff/0000000000000004\r\n    mmio ffffffffffffffff/0000000000000004\r\n  dev: qcom-gdsc, id \"\"\r\n    gpio-out \"reset-asserted\" 1\r\n    gpio-out \"clamp-io\" 1\r\n    gpio-out \"power-on\" 1\r\n    gpio-in \"external-vote\" 1\r\n    gpio-in \"hw-enable\" 1\r\n    enabled-reference = false\r\n    reference-on = false\r\n    mmio ffffffffffffffff/0000000000000004\r\n    mmio ffffffffffffffff/0000000000000004\r\n    mmio ffffffffffffffff/0000000000000004\r\n    mmio ffffffffffffffff/0000000000000004\r\n  dev: qcom-tb371fc-tlmm, id \"\"\r\n    gpio-out \"ufs-reset\" 1\r\n    gpio-out \"gpio-oe\" 180\r\n    gpio-out \"gpio-out\" 180\r\n    gpio-in \"gpio-in\" 180\r\n    gpio-out \"sysbus-irq\" 1\r\n    boot-ufs-reset-high = true\r\n    mmio 000000000f000000/0000000001000000\r\n  dev: qcom-refgen, id \"\"\r\n    gpio-out \"state-known\" 1\r\n    gpio-out \"software-enable\" 1\r\n    boot-disabled-reference = false\r\n    mmio 00000000088e7080/0000000000000004\r\n  dev: qcom-aop-msgram, id \"\"\r\n    mmio 000000000c300000/0000000000001000\r\n  dev: qcom-smem-handoff, id \"\"\r\n    ram = \"/objects/tb371fc.ram/tb371fc.ram[0]\"\r\n    reference-empty = false\r\n  dev: qcom-tcsr-mutex, id \"\"\r\n    boot-unlocked-reference = false\r\n    mmio 0000000001f40000/0000000000020000\r\n  dev: qcom-qsee-irq, id \"\"\r\n    gpio-in \"notify\" 8\r\n    gpio-out \"sysbus-irq\" 2\r\n    mmio 0000000001886000/0000000000000020\r\n    mmio 0000000001888000/0000000000000020\r\n  dev: qcom-ipcc, id \"\"\r\n    gpio-out \"sysbus-irq\" 1\r\n    local-client-id = 8 (0x8)\r\n    mmio 0000000000408000/0000000000001000\r\n  dev: qcom-dcc-v2, id \"\"\r\n    memory = \"/machine/unattached/system[0]\"\r\n    capture-delay-ns = 1000 (0x3e8)\r\n    mmio 0000000001023000/0000000000001000\r\n    mmio 000000000103a000/0000000000006000\r\n  dev: qcom-pshold, id \"\"\r\n    gpio-out \"ps-hold\" 1\r\n    mmio 000000000c264000/0000000000000004\r\n  dev: qcom-kpss-watchdog, id \"\"\r\n    gpio-out \"wakeup\" 1\r\n    gpio-out \"sysbus-irq\" 2\r\n    frequency = 32765 (0x7ffd)\r\n    mmio 0000000017c10000/0000000000001000\r\n  dev: arm-arch-timer-mmio, id \"\"\r\n    gpio-out \"sysbus-irq\" 14\r\n    num-frames = 7 (0x7)\r\n    frequency = 19200000 (0x124f800)\r\n    exact-frequency = true\r\n    virtual-frame-mask = 1 (0x1)\r\n    el0-frame-mask = 1 (0x1)\r\n    reset-ns-access = 1 (0x1)\r\n    mmio 0000000017c20000/0000000000001000\r\n    mmio 0000000017c21000/0000000000001000\r\n    mmio 0000000017c22000/0000000000001000\r\n    mmio 0000000017c23000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio 0000000017c25000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio 0000000017c27000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio 0000000017c29000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio 0000000017c2b000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio 0000000017c2d000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n  dev: qcom-pdc, id \"\"\r\n    gpio-out \"sysbus-irq\" 138\r\n    gpio-in \"irq-in\" 138\r\n    num-pins = 138 (0x8a)\r\n    reference-version = 0 (0x0)\r\n    mmio 000000000b220000/0000000000030000\r\n    mmio 0000000017c000f0/0000000000000060\r\n  dev: arm-gicv3, id \"\"\r\n    gpio-out \"sysbus-irq\" 48\r\n    gpio-in \"\" 1216\r\n    num-cpu = 8 (0x8)\r\n    num-irq = 992 (0x3e0)\r\n    revision = 3 (0x3)\r\n    has-lpi = false\r\n    has-nmi = false\r\n    has-security-extensions = false\r\n    maintenance-interrupt-id = 0 (0x0)\r\n    force-8-bit-prio = false\r\n    redist-region-count = 8 (0x8)\r\n    sysmem = \"\"\r\n    first-cpu-index = 0 (0x0)\r\n    mmio 0000000017a00000/0000000000010000\r\n    mmio 0000000017a60000/0000000000100000\r\n",
+        "id": 15
+      }
+    },
+    {
+      "direction": "send",
+      "command": "query-status",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {
+          "status": "running",
+          "running": true
+        },
+        "id": 16
+      }
+    },
+    {
+      "direction": "send",
+      "command": "human-monitor-command",
+      "arguments": {
+        "command-line": "info registers"
+      }
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": "\r\nCPU#0\r\n PC=ffff800080231244 X00=ffff0001fef751b8 X01=ffff80008031b1b8\r\nX02=0000000000000005 X03=0000000000188e79 X04=0000000000000000\r\nX05=0000000000000104 X06=0000000000000004 X07=0000000000000000\r\nX08=ffff8000803396d0 X09=ffff800080333d30 X10=00000000000007b0\r\nX11=00000000000000c0 X12=0000000000000000 X13=0000000000000001\r\nX14=000000007cd12b02 X15=ffff8000802b15a8 X16=0000000000000000\r\nX17=0000000000000000 X18=fffffdffc0814480 X19=ffff800080338ec0\r\nX20=ffff800080338640 X21=0000000000000000 X22=ffff800080338600\r\nX23=ffff0001fefff200 X24=ffff0001fefff208 X25=0000000000000000\r\nX26=ffff80008028b9ab X27=ffff80008028b9ab X28=0000000000000000\r\nX29=ffff800080333db0 X30=ffff800080231254  SP=ffff800080333db0\r\nPSTATE=00000000400000c9 -Z-- EL2h     FPCR=00000000 FPSR=00000000\r\nQ00=0000000000000000:0000000000000000 Q01=463137334254000a:7325207325204b43\r\nQ02=45524f545345525f:4d505f4e4f495441 Q03=000000000000ff00:00ff0000ff000000\r\nQ04=0000000000000000:000000f00f00f000 Q05=bcbcbcc030000000:bcbcbcc030000000\r\nQ06=0000000000000000:0000000000000000 Q07=0000000000000000:0000000000000000\r\nQ08=0000000000000000:0000000000000000 Q09=0000000000000000:0000000000000000\r\nQ10=0000000000000000:0000000000000000 Q11=0000000000000000:0000000000000000\r\nQ12=0000000000000000:0000000000000000 Q13=0000000000000000:0000000000000000\r\nQ14=0000000000000000:0000000000000000 Q15=0000000000000000:0000000000000000\r\nQ16=0000000000000000:0000000000000000 Q17=0000000000000000:0000000000000000\r\nQ18=0000000000000000:0000000000000000 Q19=0000000000000000:0000000000000000\r\nQ20=0000000000000000:0000000000000000 Q21=0000000000000000:0000000000000000\r\nQ22=0000000000000000:0000000000000000 Q23=0000000000000000:0000000000000000\r\nQ24=0000000000000000:0000000000000000 Q25=0000000000000000:0000000000000000\r\nQ26=0000000000000000:0000000000000000 Q27=0000000000000000:0000000000000000\r\nQ28=0000000000000000:0000000000000000 Q29=0000000000000000:0000000000000000\r\nQ30=0000000000000000:0000000000000000 Q31=0000000000000000:0000000000000000\r\n",
+        "id": 17
+      }
+    },
+    {
+      "direction": "send",
+      "command": "quit",
+      "arguments": null
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "timestamp": {
+          "seconds": 1795514759,
+          "microseconds": 46817
+        },
+        "event": "SHUTDOWN",
+        "data": {
+          "guest": false,
+          "reason": "host-qmp-quit"
+        }
+      }
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "return": {},
+        "id": 18
+      }
+    }
+  ],
+  "pid": 23659,
+  "started_monotonic": 470.441826134,
+  "migration": {
+    "status": "completed"
+  },
+  "loaded_status": {
+    "status": "paused",
+    "running": false
+  },
+  "serial_input": [
+    "CONTINUE"
+  ],
+  "aborted_after_failure": true,
+  "failure_status": {
+    "status": "running",
+    "running": true
+  },
+  "failure_registers": "\r\nCPU#0\r\n PC=ffff800080231244 X00=ffff0001fef751b8 X01=ffff80008031b1b8\r\nX02=0000000000000005 X03=0000000000188e79 X04=0000000000000000\r\nX05=0000000000000104 X06=0000000000000004 X07=0000000000000000\r\nX08=ffff8000803396d0 X09=ffff800080333d30 X10=00000000000007b0\r\nX11=00000000000000c0 X12=0000000000000000 X13=0000000000000001\r\nX14=000000007cd12b02 X15=ffff8000802b15a8 X16=0000000000000000\r\nX17=0000000000000000 X18=fffffdffc0814480 X19=ffff800080338ec0\r\nX20=ffff800080338640 X21=0000000000000000 X22=ffff800080338600\r\nX23=ffff0001fefff200 X24=ffff0001fefff208 X25=0000000000000000\r\nX26=ffff80008028b9ab X27=ffff80008028b9ab X28=0000000000000000\r\nX29=ffff800080333db0 X30=ffff800080231254  SP=ffff800080333db0\r\nPSTATE=00000000400000c9 -Z-- EL2h     FPCR=00000000 FPSR=00000000\r\nQ00=0000000000000000:0000000000000000 Q01=463137334254000a:7325207325204b43\r\nQ02=45524f545345525f:4d505f4e4f495441 Q03=000000000000ff00:00ff0000ff000000\r\nQ04=0000000000000000:000000f00f00f000 Q05=bcbcbcc030000000:bcbcbcc030000000\r\nQ06=0000000000000000:0000000000000000 Q07=0000000000000000:0000000000000000\r\nQ08=0000000000000000:0000000000000000 Q09=0000000000000000:0000000000000000\r\nQ10=0000000000000000:0000000000000000 Q11=0000000000000000:0000000000000000\r\nQ12=0000000000000000:0000000000000000 Q13=0000000000000000:0000000000000000\r\nQ14=0000000000000000:0000000000000000 Q15=0000000000000000:0000000000000000\r\nQ16=0000000000000000:0000000000000000 Q17=0000000000000000:0000000000000000\r\nQ18=0000000000000000:0000000000000000 Q19=0000000000000000:0000000000000000\r\nQ20=0000000000000000:0000000000000000 Q21=0000000000000000:0000000000000000\r\nQ22=0000000000000000:0000000000000000 Q23=0000000000000000:0000000000000000\r\nQ24=0000000000000000:0000000000000000 Q25=0000000000000000:0000000000000000\r\nQ26=0000000000000000:0000000000000000 Q27=0000000000000000:0000000000000000\r\nQ28=0000000000000000:0000000000000000 Q29=0000000000000000:0000000000000000\r\nQ30=0000000000000000:0000000000000000 Q31=0000000000000000:0000000000000000\r\n",
+  "exit_code": 0,
+  "guest_checks": [
+    [
+      "PASS",
+      "resume_control_received"
+    ],
+    [
+      "PASS",
+      "preserved_pid1"
+    ],
+    [
+      "PASS",
+      "preserved_boot_id"
+    ],
+    [
+      "PASS",
+      "preserved_monotonic"
+    ],
+    [
+      "PASS",
+      "eight_online_cpus_after"
+    ],
+    [
+      "PASS",
+      "ufs_translated_dma_domain_after"
+    ],
+    [
+      "PASS",
+      "pm_target_host_suspended"
+    ],
+    [
+      "PASS",
+      "pm_target_lun_suspended"
+    ],
+    [
+      "PASS",
+      "pm_target_wlun_suspended"
+    ],
+    [
+      "PASS",
+      "pm_suspended_time_preserved"
+    ],
+    [
+      "PASS",
+      "pm_open_fd_preserved"
+    ]
+  ],
+  "guest_verdicts": [],
+  "serial.log_sha256": "e85837aa29e2e206a60a3a934da72fc81a58e6cd84f7d16bf57e1ff822d97bc7",
+  "qemu-debug.log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

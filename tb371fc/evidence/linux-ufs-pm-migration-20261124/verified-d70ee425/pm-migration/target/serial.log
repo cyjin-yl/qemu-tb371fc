@@ -1,0 +1,54 @@
+TB371FC_UFS_MIGRATION_CHECK PASS resume_control_received
+TB371FC_UFS_MIGRATION_CHECK PASS preserved_pid1
+TB371FC_UFS_MIGRATION_CHECK PASS preserved_boot_id
+TB371FC_UFS_MIGRATION_CHECK PASS preserved_monotonic
+TB371FC_UFS_MIGRATION_CHECK PASS eight_online_cpus_after
+TB371FC_UFS_MIGRATION_IOMMU /sys/kernel/iommu_groups/0/type DMA
+TB371FC_UFS_MIGRATION_CHECK PASS ufs_translated_dma_domain_after
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/platform/devices/1d84000.ufshc/power/control value=auto readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/platform/devices/1d84000.ufshc/power/runtime_status value=suspended readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/platform/devices/1d84000.ufshc/power/runtime_active_time value=1540 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/platform/devices/1d84000.ufshc/power/runtime_suspended_time value=222 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/block/sda/device/power/control value=auto readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/block/sda/device/power/runtime_status value=suspended readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/block/sda/device/power/runtime_active_time value=868 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/block/sda/device/power/runtime_suspended_time value=852 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/scsi/devices/0:0:0:49488/power/control value=auto readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/scsi/devices/0:0:0:49488/power/runtime_status value=suspended readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/scsi/devices/0:0:0:49488/power/runtime_active_time value=1509 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/scsi/devices/0:0:0:49488/power/runtime_suspended_time value=227 readable=1
+TB371FC_UFS_MIGRATION_CHECK PASS pm_target_host_suspended
+TB371FC_UFS_MIGRATION_CHECK PASS pm_target_lun_suspended
+TB371FC_UFS_MIGRATION_CHECK PASS pm_target_wlun_suspended
+TB371FC_UFS_MIGRATION_PM_RESTORED_MS checkpoint=137 target=226
+TB371FC_UFS_MIGRATION_CHECK PASS pm_suspended_time_preserved
+TB371FC_UFS_MIGRATION_CHECK PASS pm_open_fd_preserved
+TB371FC_UFS_MIGRATION_CHECK PASS pm_direct_read_wakes
+TB371FC_UFS_MIGRATION_CHECK PASS pm_target_host_active
+TB371FC_UFS_MIGRATION_CHECK PASS pm_target_lun_active
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_after_io /sys/bus/platform/devices/1d84000.ufshc/power/control value=auto readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_after_io /sys/bus/platform/devices/1d84000.ufshc/power/runtime_status value=active readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_after_io /sys/bus/platform/devices/1d84000.ufshc/power/runtime_active_time value=1575 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_after_io /sys/bus/platform/devices/1d84000.ufshc/power/runtime_suspended_time value=231 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_after_io /sys/block/sda/device/power/control value=auto readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_after_io /sys/block/sda/device/power/runtime_status value=active readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_after_io /sys/block/sda/device/power/runtime_active_time value=894 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_after_io /sys/block/sda/device/power/runtime_suspended_time value=870 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_after_io /sys/bus/scsi/devices/0:0:0:49488/power/control value=auto readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_after_io /sys/bus/scsi/devices/0:0:0:49488/power/runtime_status value=active readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_after_io /sys/bus/scsi/devices/0:0:0:49488/power/runtime_active_time value=1535 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_after_io /sys/bus/scsi/devices/0:0:0:49488/power/runtime_suspended_time value=245 readable=1
+TB371FC_UFS_MIGRATION_CHECK PASS pm_retained_fd_close
+TB371FC_UFS_MIGRATION_CHECK PASS target_open
+TB371FC_UFS_MIGRATION_CHECK PASS logical_sector_4096_after
+TB371FC_UFS_MIGRATION_CHECK PASS capacity_64_mib_after
+TB371FC_UFS_MIGRATION_CHECK PASS target_reads_source_payload
+TB371FC_UFS_MIGRATION_CHECK PASS target_direct_write
+TB371FC_UFS_MIGRATION_CHECK PASS target_flush
+TB371FC_UFS_MIGRATION_CHECK PASS target_direct_readback
+TB371FC_UFS_MIGRATION_CHECK PASS target_close
+TB371FC_UFS_MIGRATION_CHECK PASS target_reopen
+TB371FC_UFS_MIGRATION_CHECK PASS target_reopen_source_payload
+TB371FC_UFS_MIGRATION_CHECK PASS target_reopen_target_payload
+TB371FC_UFS_MIGRATION_CHECK PASS target_final_close
+TB371FC_UFS_MIGRATION_RESULT PASS nonce=ab78910d9b26c8fc48d2e28acf536d2b boot_id=f954111d-43e0-4292-be5d-dc9a879d66ae checks=61 failures=0

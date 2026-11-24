@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Continue real Linux UFS I/O after a stopped, cross-process checkpoint."""
+"""Continue real Linux UFS I/O across an active or runtime-suspended checkpoint."""
 # SPDX-License-Identifier: GPL-2.0-only
 import argparse
 import datetime
@@ -39,6 +39,17 @@ TARGET_CHECKS = [
     "target_reopen_source_payload", "target_reopen_target_payload",
     "target_final_close",
 ]
+PM_SOURCE_CHECKS = (
+    "pm_source_reopen pm_source_block_identity pm_host_control_on "
+    "pm_lun_control_on pm_host_active pm_lun_active pm_target_hibern8 "
+    "pm_scsi_autosuspend pm_host_control_auto pm_source_host_suspended "
+    "pm_source_lun_suspended pm_source_wlun_suspended pm_source_stays_suspended"
+).split()
+PM_TARGET_CHECKS = (
+    "pm_target_host_suspended pm_target_lun_suspended pm_target_wlun_suspended "
+    "pm_suspended_time_preserved pm_open_fd_preserved pm_direct_read_wakes "
+    "pm_target_host_active pm_target_lun_active pm_retained_fd_close"
+).split()
 CHECK_RE = re.compile(r"TB371FC_UFS_MIGRATION_CHECK (PASS|FAIL) (\w+)")
 CHECKPOINT_RE = re.compile(
     r"TB371FC_UFS_MIGRATION_CHECKPOINT nonce=([0-9a-f]{32}) "
@@ -238,12 +249,24 @@ def verify_disk(path, include_target):
             "all_other_bytes_expected": 0}
 
 
+def require_suspended(observation, running):
+    require(observation["vm"]["running"] is running,
+            "Unexpected VM run state in " + observation["phase"])
+    require(observation["link_state"] == "hibern8",
+            "UFS lost Hibern8 in " + observation["phase"])
+    for name in ("core-clk", "iface-clk", "unipro-clk"):
+        require(observation["clock_frequency_display"][name] == "0 Hz",
+                f"UFS {name} not gated in {observation['phase']}")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--qemu", type=Path, required=True)
     parser.add_argument("--kernel", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--timeout", type=float, default=120)
+    parser.add_argument("--runtime-suspended", action="store_true",
+                        help="Checkpoint after real Linux UFS runtime suspend, then wake by I/O")
     args = parser.parse_args()
     if not 0 < args.timeout <= 300:
         parser.error("--timeout must be in (0, 300]")
@@ -257,6 +280,16 @@ def main():
                    "kernel_build_receipt": args.kernel.parent / "build.json",
                    "guest_source": source, "harness": Path(__file__).resolve(),
                    "init": init, "initramfs": initrd}
+    source_checks = SOURCE_CHECKS + (PM_SOURCE_CHECKS if args.runtime_suspended else [])
+    target_checks = (TARGET_CHECKS[:6] + PM_TARGET_CHECKS + TARGET_CHECKS[6:]
+                     if args.runtime_suspended else TARGET_CHECKS)
+    input_paths.update({"boot_smoke_module": Path(__file__).with_name("boot_smoke.py"),
+                        "qmp_module": Path(__file__).with_name("validate_machine.py")})
+    if args.runtime_suspended:
+        input_paths.update({
+            "runtime_pm_module": Path(__file__).with_name("boot_ufs_runtime_pm.py"),
+            "kernel_config": args.kernel.parent / "kernel.config",
+        })
     started = time.monotonic()
     guests = []
     report = {
@@ -265,7 +298,10 @@ def main():
         "scope": "Real Linux qcom UFS and translated SMMU DMA after a quiescent process checkpoint",
         "guest_shutdown_tested": False, "inflight_ufs_migration_tested": False,
         "external_disk_bytes_migrated": False,
-        "expected_source_checks": SOURCE_CHECKS, "expected_target_checks": TARGET_CHECKS,
+        "expected_source_checks": source_checks, "expected_target_checks": target_checks,
+        "runtime_suspended_migration_requested": args.runtime_suspended,
+        "runtime_suspended_migration_tested": False,
+        "system_suspend_tested": False, "host_observations": [],
         "limitations": [
             "One stopped checkpoint, one synthetic 64 MiB LUN and a generated device tree.",
             "The source exits before the receiver opens the same disk with normal locking.",
@@ -273,6 +309,19 @@ def main():
         ],
     }
     try:
+        if args.runtime_suspended:
+            # Reuse the independent driver's read-only QMP observations and
+            # pinned kernel/config validation, without its process lifecycle.
+            from boot_ufs_runtime_pm import snapshot, validate_kernel
+            validate_kernel(args.kernel, input_paths["kernel_config"],
+                            input_paths["kernel_build_receipt"])
+            require("CONFIG_PROC_SYSCTL=y" in
+                    input_paths["kernel_config"].read_text().splitlines(),
+                    "Runtime-suspended continuation requires the boot-ID interface")
+            report["scope"] = ("Real Linux UFS runtime-suspended process checkpoint, "
+                               "preserved open fd and ordinary direct-I/O wake")
+            report["limitations"].append(
+                "UFS queues remain quiescent; system suspend, ICE and physical-media power behavior are not tested.")
         receipt_path = args.kernel.parent / "build.json"
         receipt = json.loads(receipt_path.read_text())
         require(receipt["source_version"] == "6.12.114" and
@@ -287,6 +336,8 @@ def main():
         report["compile_command"] = ["aarch64-linux-gnu-gcc", "-static", "-Os",
                                      "-Wall", "-Wextra", "-Werror", str(source),
                                      "-o", str(init)]
+        if args.runtime_suspended:
+            report["compile_command"].insert(1, "-DTB371FC_RUNTIME_SUSPENDED=1")
         with (args.out / "compile.log").open("wb") as log:
             subprocess.run(report["compile_command"], check=True, stdout=log,
                            stderr=subprocess.STDOUT, timeout=60)
@@ -306,20 +357,30 @@ def main():
         guests.append(sender)
         sender.start()
         sender.wait_serial("TB371FC_UFS_MIGRATION_READY", args.timeout)
+        if args.runtime_suspended:
+            report["host_observations"].append(snapshot(sender.qmp, "source_baseline"))
         sender.send("STORE:" + nonce)
         text = sender.wait_serial("TB371FC_UFS_MIGRATION_CHECKPOINT ", args.timeout)
         checkpoint = CHECKPOINT_RE.findall(text)
         report["checkpoint_markers"] = checkpoint
         require(len(checkpoint) == 1 and checkpoint[0][0] == nonce and
                 int(checkpoint[0][2]) > 0 and
-                checkpoint[0][3:] == (str(len(SOURCE_CHECKS)), "0"),
+                checkpoint[0][3:] == (str(len(source_checks)), "0"),
                 f"Invalid source checkpoint marker: {checkpoint}")
-        require(CHECK_RE.findall(text) == [("PASS", name) for name in SOURCE_CHECKS],
+        require(CHECK_RE.findall(text) == [("PASS", name) for name in source_checks],
                 "Source check names, order or verdicts differ")
         require(text.count("TB371FC_UFS_MIGRATION_BOOT pid=1") == 1 and
                 "TB371FC_UFS_MIGRATION_RESULT " not in text,
                 "Source did not reach its unique PID 1 checkpoint")
+        if args.runtime_suspended:
+            sleeping = snapshot(sender.qmp, "source_suspended_running")
+            report["host_observations"].append(sleeping)
+            require_suspended(sleeping, running=True)
         sender.stop()
+        if args.runtime_suspended:
+            saved_pm = snapshot(sender.qmp, "source_suspended_paused")
+            report["host_observations"].append(saved_pm)
+            require_suspended(saved_pm, running=False)
         report["source_disk"] = verify_disk(disk, include_target=False)
         require(report["source_disk"]["passed"], "Source disk differs from exact expected image")
         sender.qmp.command("migrate", {"uri": "file:" + str(stream)})
@@ -347,19 +408,34 @@ def main():
                 "Receiver ran before the explicit cont command")
         require("TB371FC_UFS_MIGRATION_" not in receiver.text(),
                 "Receiver emitted guest markers before explicit resume")
+        if args.runtime_suspended:
+            loaded_pm = snapshot(receiver.qmp, "target_loaded_paused")
+            report["host_observations"].append(loaded_pm)
+            require_suspended(loaded_pm, running=False)
+            report["runtime_pm_state_preserved"] = all(
+                saved_pm[key] == loaded_pm[key]
+                for key in ("link_state", "clock_frequency_display"))
+            require(report["runtime_pm_state_preserved"],
+                    "Receiver changed the saved UFS link or clock state")
         receiver.qmp.command("cont")
+        if args.runtime_suspended:
+            before_wake = snapshot(receiver.qmp, "target_running_before_io")
+            report["host_observations"].append(before_wake)
+            require_suspended(before_wake, running=True)
         # Deliberately do not resend the nonce, STORE command, or guest state.
         receiver.send("CONTINUE")
         text = receiver.wait_serial("TB371FC_UFS_MIGRATION_RESULT ", args.timeout)
         verdicts = RESULT_RE.findall(text)
-        require(CHECK_RE.findall(text) == [("PASS", name) for name in TARGET_CHECKS],
+        require(CHECK_RE.findall(text) == [("PASS", name) for name in target_checks],
                 "Target continuation checks, order or verdicts differ")
         require(verdicts == [("PASS", nonce, checkpoint[0][1],
-                             str(len(SOURCE_CHECKS) + len(TARGET_CHECKS)), "0")],
+                             str(len(source_checks) + len(target_checks)), "0")],
                 f"Target did not preserve the original nonce, boot ID and counters: {verdicts}")
         require(not any(marker in text for marker in (
             "TB371FC_UFS_MIGRATION_BOOT", "TB371FC_UFS_MIGRATION_READY",
             "TB371FC_UFS_MIGRATION_CHECKPOINT")), "Target rebooted or replayed source markers")
+        if args.runtime_suspended:
+            report["host_observations"].append(snapshot(receiver.qmp, "target_after_io"))
         receiver.stop()
         report["target_disk"] = verify_disk(disk, include_target=True)
         require(report["target_disk"]["passed"], "Target disk differs from exact expected image")
@@ -367,6 +443,7 @@ def main():
         report["migration_sha256_after_load"] = sha256(stream)
         require(report["migration_sha256_before_load"] == report["migration_sha256_after_load"],
                 "Migration input changed between save and load")
+        report["runtime_suspended_migration_tested"] = args.runtime_suspended
         report["passed"] = True
     except Exception:
         report["error"] = traceback.format_exc()
@@ -378,6 +455,14 @@ def main():
                 report.setdefault("cleanup_errors", []).append(traceback.format_exc())
                 report["passed"] = False
         report["guests"] = {guest.name: guest.receipt for guest in guests}
+        if args.runtime_suspended:
+            report["kernel_failure_lines"] = [
+                {"guest": guest.name, "line": line}
+                for guest in guests for line in guest.text().splitlines()
+                if re.search(r"ufshcd.*failed|hibern8.*failed|I/O error|timed out|Kernel panic",
+                             line, re.I)]
+            if report["kernel_failure_lines"]:
+                report["passed"] = False
         for name, path in {**input_paths, "disk": disk, "migration": stream}.items():
             if path.is_file():
                 report[name + "_sha256"] = sha256(path)
@@ -398,3 +483,4 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

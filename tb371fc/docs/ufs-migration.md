@@ -160,6 +160,144 @@ stock Android, power-cycle persistence and full-device migration equivalence
 remain outside the result. The host ends the successful receiver with QMP;
 guest shutdown is not tested.
 
+### Runtime-suspended Linux continuation
+
+The same gate has an additional `--runtime-suspended` mode. It reuses the
+independent [runtime-PM fixture](../scripts/boot_ufs_runtime_pm.py)'s pinned
+Linux Image/config validation and read-only QMP observations. This mode tests
+an additional combination; the historical acceptance below covers the
+original active-controller mode only. A new run's `result.json` is authoritative
+for whether the suspended mode actually passed.
+
+```sh
+python3 tb371fc/scripts/boot_ufs_migration.py \
+  --runtime-suspended \
+  --qemu /absolute/path/qemu-system-aarch64 \
+  --kernel /absolute/path/clean-linux/artifacts/Image \
+  --out /absolute/path/new-suspended-migration-results
+```
+
+The source PID 1 completes the original payload/nonce preparation, opens the
+synthetic LUN and keeps its descriptor open. Linux enables SCSI autosuspend
+through the normal sysfs interfaces, waits for the host, LUN and device-WLUN
+to suspend, and requires the suspended-time counter to advance while idle.
+Before stopping the source, read-only host observations require Hibern8 and
+zero core/iface/unipro clocks while the VM itself is still running. The same
+sleep state is checked after the VM pauses.
+
+The source checkpoint is completed and its process exits before the receiver
+opens the ordinary locked disk file. After loading while paused, the receiver
+must retain all observed UFS input clocks and Hibern8. It must still be asleep
+after `cont`, before receiving the sole `CONTINUE` serial command. The resumed
+PID 1 checks its original boot ID, nonce, counters and descriptor's block-device
+identity, then checks host/LUN/device-WLUN runtime-suspended state and preserved
+suspended-time accounting. An `O_DIRECT` read on that retained descriptor must
+wake Linux's UFS controller and return the original payload. The receiver does
+not write `power/control=on`, reopen the block device or inject device state to
+perform this wake. It then completes the original write/read/reopen sequence.
+
+This adds **13 source and 9 receiver checks** to the existing 39: successful
+suspended-mode runs require **34 source plus 27 receiver checks** in exact
+order. The source/receiver logs remain separate; every byte of the 64 MiB
+medium is checked before and after migration. Source, harness, imported Python
+helpers, kernel/config/receipt, compiled init, initramfs and QEMU hashes are
+checked for changes. Raw QMP observations, commands, exit codes and failures
+are retained. CI runs both modes and excludes both temporary media and migration
+streams from its uploaded artifacts, retaining their size and hash receipts.
+
+The queues are still quiescent. These checks do not implement in-flight SCSI
+or MCQ serialization, system suspend, external-disk replication, ICE, physical
+power behavior or native tablet Linux acceptance. No physical tablet is used.
+
+### CNTHP event restoration
+
+The first suspended-mode run at `3ed38f3d7fa04e974e5fe904f8771e4b8c5252ec`
+([run 45370015290](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45370015290))
+passed all 34 source checks and the first 11 receiver checks, then timed out on
+the first ordinary direct read. The source Linux log reports VHE and CPUs
+started at EL2. Linux 6.12.114 selects the hypervisor physical timer in this
+configuration: its CNTP accesses are redirected to CNTHP.
+
+The CPU migration stream preserved CNTHP's compare/control registers through
+the cpreg list, but only serialized the CNTP and CNTV `QEMUTimer` objects.
+Raw cpreg restoration does not re-arm CNTHP. A receiver could therefore run
+until it needed a scheduler tick, then sleep with no CNTHP event to wake it.
+The new `cpu/gt-hyp-timer` version 1 subsection preserves that pending event
+using the same timer serializer as CNTP/CNTV. It does not write guest registers,
+inject an interrupt or change the UFS wake path.
+
+The subsection is emitted only when the CNTHP timer object exists and has a
+pending event. Disabled/unarmed timers add no data. Armed masked timers and
+already-expired timers retain the existing timer deadline and architectural
+control state; interrupt mask handling remains in the existing timer callback.
+An older receiver rejects an unknown active-timer subsection. Streams emitted
+by the earlier implementation with an active CNTHP timer lack that event and
+are outside this fix's acceptance boundary; the Linux gate requires identical
+source and receiver QEMU binaries.
+
+The existing CPU timer migration probe now also arms CNTHP and observes its
+actual GIC redistributor input, INTID 28 on this board. It requires the line to
+be clear before the checkpoint, asserted after the migrated compare deadline,
+then clear after the guest disables CNTHP. It does not read CNTHP CTL or write
+CNTHP between restore and expiry: an exact-mode CTL read recalculates a timer
+and could hide a missing event. The identical ELF also runs without migration
+as a control. The original physical/virtual checks, all original Linux checks
+and their host timeouts remain mandatory. The recorded run below passes these
+gates with the pending CNTHP event preserved.
+
+### Recorded runtime-suspended continuation acceptance
+
+[Run 45374585821](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45374585821)
+completed successfully on **2026-11-24 at 10:32:34 UTC** for code head
+`d70ee4255c5305abff0d718d2e97f60c3d6472e0`. The actual CI checkout was merge
+`a9e450bf385bcea27771b9b8731c6a9c494b6e29`; both have tree
+`9cc576655c8390f6541eae050c1a5ff654edbf5b`. The
+[source binding](../evidence/linux-ufs-pm-migration-20261124/source-binding.json)
+records both attempts, complete artifact digests, jobs, runtime Git blobs and
+the hashes of every archived raw JSON/log. This evidence archive changes no
+runtime, fixture, configuration or workflow file from the tested code head.
+
+| Gate | Measured result | Raw evidence |
+| --- | --- | --- |
+| Suspended real-Linux UFS continuation | **61/61**, source 34 plus receiver 27; both QEMU processes exit 0 | [Result](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/pm-migration/result.json) |
+| Original active-controller continuation | **39/39**, source 21 plus receiver 18 | [Result](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/active-migration/result.json) |
+| CNTHP migration and identical-ELF control | INTID 28 clear before migration, asserted after its compare deadline, clear after disable; both runs pass | [Migration](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/cpu-timer-migration/result.json), [control](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/cpu-timer-control/result.json) |
+| Public component gates | **59/59** | [Result](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/components-result.json) |
+| Independent unpatched-Linux gates | **5/5**, including standalone UFS runtime suspend/read-wake | [Result](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/linux-result.json) |
+| UFS QTest migrations | **21/21 groups**, three completed transfers and seven rejection scenarios | [Result](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/ufs-migration-result.json) |
+| Shared PCI UFS regression | **17/17**, no skipped cases | [Result](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/pci-ufs-result.json) |
+| Isolated A77 architectural probes | **852 checks** across nine configurations, plus two invalid-configuration rejections | [Result](../evidence/linux-ufs-pm-migration-20261124/verified-d70ee425/a77-result.json) |
+
+The suspended run retained the same PID 1, nonce, boot ID and open descriptor.
+Host, LUN and device-WLUN remained runtime-suspended on the receiver. The source
+running/paused, receiver loaded/paused and receiver running/before-I/O QMP
+observations all reported Hibern8 and zero core/iface/unipro clocks. Only the
+ordinary direct read started the wake path. After the I/O sequence, QMP reported
+an active link and restored core/unipro clocks of 37.5 MHz and iface of 100 MHz.
+Both 64 MiB whole-media comparisons passed, all retained input hashes remained
+unchanged during the run, and no kernel failure line was found. The complete
+suspended-mode harness run took 5.345 seconds; this is not a per-I/O latency
+measurement.
+
+The focused CNTHP probe observed its compare value at **3,860,236 ticks** and
+the asserted GIC input at **3,862,244 ticks**, without a CNTHP control read or
+register rewrite between restore and expiry. Its control used the identical
+ELF. The tested board QEMU SHA-256 was
+`4240bb5caf2b1ec101878adf18ed31b5a5bc3fabbf89b80122c99f74a5695697`;
+the archive digests and individual raw files are independently recorded in
+the source binding.
+
+The [first failure](../evidence/linux-ufs-pm-migration-20261124/first-3ed38f3d/result.json)
+and its separate source/receiver logs remain alongside the passing evidence.
+The Linux Image, effective config, guest source, compiled init, initramfs,
+Linux migration harness and all imported harness modules were byte-identical
+between those two attempts. Within the Linux continuation input set, the QEMU
+binary and the timestamp-bearing kernel build receipt changed. The old
+120-second timeout and all original
+Linux assertions were retained. This acceptance covers these public emulated
+queues and runtime-PM states; it adds no system-suspend, in-flight UFS or native
+tablet Linux pass.
+
 ### Recorded Linux continuation acceptance
 
 [Run 45312366652](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45312366652)
@@ -293,3 +431,4 @@ The existing [UFS model notes](ufs-sm8250.md) retain the fixed Linux driver
 references and hardware-equivalence limits. This checkpoint gate does not
 cover ICE, RPMB, analog PHY behavior, stock Android, a native-DT boot, an XNU
 boot or arbitrary active storage queues.
+

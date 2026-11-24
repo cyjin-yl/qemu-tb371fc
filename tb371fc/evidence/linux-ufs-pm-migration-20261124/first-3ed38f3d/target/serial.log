@@ -1,0 +1,25 @@
+TB371FC_UFS_MIGRATION_CHECK PASS resume_control_received
+TB371FC_UFS_MIGRATION_CHECK PASS preserved_pid1
+TB371FC_UFS_MIGRATION_CHECK PASS preserved_boot_id
+TB371FC_UFS_MIGRATION_CHECK PASS preserved_monotonic
+TB371FC_UFS_MIGRATION_CHECK PASS eight_online_cpus_after
+TB371FC_UFS_MIGRATION_IOMMU /sys/kernel/iommu_groups/0/type DMA
+TB371FC_UFS_MIGRATION_CHECK PASS ufs_translated_dma_domain_after
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/platform/devices/1d84000.ufshc/power/control value=auto readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/platform/devices/1d84000.ufshc/power/runtime_status value=suspended readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/platform/devices/1d84000.ufshc/power/runtime_active_time value=1518 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/platform/devices/1d84000.ufshc/power/runtime_suspended_time value=200 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/block/sda/device/power/control value=auto readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/block/sda/device/power/runtime_status value=suspended readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/block/sda/device/power/runtime_active_time value=844 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/block/sda/device/power/runtime_suspended_time value=828 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/scsi/devices/0:0:0:49488/power/control value=auto readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/scsi/devices/0:0:0:49488/power/runtime_status value=suspended readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/scsi/devices/0:0:0:49488/power/runtime_active_time value=1491 readable=1
+TB371FC_UFS_MIGRATION_PM_OBSERVE target_before_io /sys/bus/scsi/devices/0:0:0:49488/power/runtime_suspended_time value=205 readable=1
+TB371FC_UFS_MIGRATION_CHECK PASS pm_target_host_suspended
+TB371FC_UFS_MIGRATION_CHECK PASS pm_target_lun_suspended
+TB371FC_UFS_MIGRATION_CHECK PASS pm_target_wlun_suspended
+TB371FC_UFS_MIGRATION_PM_RESTORED_MS checkpoint=125 target=202
+TB371FC_UFS_MIGRATION_CHECK PASS pm_suspended_time_preserved
+TB371FC_UFS_MIGRATION_CHECK PASS pm_open_fd_preserved
