@@ -1,0 +1,336 @@
+{
+  "android_boot_completed_observed": false,
+  "android_userspace_observed": false,
+  "aop_unchanged": true,
+  "artifact": {
+    "api_url": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/artifacts/14965063970",
+    "archive_bytes": 53150327,
+    "archive_sha256": "43c0ac017612bfb56c86ed6e6c84cddc9f099ecb3354e786b53a2b56b268c7b1",
+    "artifact_name": "tb371fc-public-gates-ed43749ccea68fb082db3470f75c061b04ca09c0",
+    "id": 14965063970,
+    "qemu_bytes": 63578408,
+    "qemu_member": "qemu-build/qemu-system-aarch64",
+    "qemu_sha256": "681baabea7577ed011d4db1bd3f5f626b0237cd002c940d1fe3f391549c552bb",
+    "run_id": 45487380226
+  },
+  "automatic_retry": false,
+  "backup_complete": false,
+  "completed_utc": "2026-11-24T21:36:26.183288+00:00",
+  "core_input_digests": {
+    "bootargs": {
+      "sha256": "63c5738bb0c67419dd7efa0c585156499d163479d01b421203c0b51756fc6732",
+      "size": 1392
+    },
+    "dtb": {
+      "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+      "size": 973052
+    },
+    "initrd": {
+      "sha256": "563f4b334f8470155c6a451395342f7044b70e79b480a886c7641960f534f596",
+      "size": 1298323
+    },
+    "kernel": {
+      "sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+      "size": 37445648
+    }
+  },
+  "core_input_preservation": {
+    "bootargs": true,
+    "dtb": true,
+    "initrd": true,
+    "kernel": true
+  },
+  "elapsed_seconds": 5.074,
+  "exact_ci_evidence_commit": "8cd54b1f917033563e6bd2e0ca4f2d87c89fd82b",
+  "global_properties": [
+    "qcom-refgen.boot-disabled-reference=on",
+    "qcom-tcsr-mutex.boot-unlocked-reference=on",
+    "qcom-gpu-cx-gdsc.boot-collapsed-reference=on",
+    "qcom-gdsc.enabled-reference=on",
+    "qcom-sm8250-gpucc.enabled-reference=on",
+    "qcom-sm8250-npucc.enabled-reference=on",
+    "qcom-noc-qos.enabled-reference=on",
+    "qcom-smmuv500.enabled-reference=on",
+    "qcom-smmuv500.reference-hw-version=0x02000000",
+    "qcom-tsens24xx.enabled-reference=on",
+    "qcom-tsens24xx.reference-boot-enable-mask=0xffff",
+    "qcom-tsens24xx.reference-temperature-millicelsius=25000",
+    "qcom-cpufreq-hw-epss.enabled-reference=on",
+    "qcom-cpufreq-hw-epss.reference-boot-perf-index=0",
+    "qcom-devfreq-fw.enabled-reference=on",
+    "qcom-devfreq-fw.reference-boot-perf-index=0",
+    "qcom-noc-sbm.enabled-reference=on",
+    "qcom-sm8250-rpmh.reference-wait-mask-reserved=on",
+    "qcom-camera-gdsc.enabled-reference=on",
+    "qcom-mdss-gdsc.enabled-reference=on",
+    "qcom-npu-gdsc.enabled-reference=on",
+    "qcom-video-gdsc.enabled-reference=on",
+    "qcom-sm8250-camcc.enabled-reference=on",
+    "qcom-sm8250-dispcc.enabled-reference=on",
+    "qcom-sm8250-videocc.enabled-reference=on",
+    "qcom-sm8250-dsi-pll.enabled-reference=on",
+    "qcom-sm8250-dp-pll.enabled-reference=on"
+  ],
+  "global_property_count": 27,
+  "host_boot_id": "f093b2c8-08ac-413b-92ea-f2c1efd77c5a",
+  "host_job_result_sha256": "9c48b8b441132bb5dfefd9b04f59996dc9dc1d397aa5d727d234e5ad7593ad18",
+  "interactive_display_verified": false,
+  "native_command_plan_sha256": "2e890905bdd68662ee576236812183107ca2c279f0baa91a9b6710be286eaaab",
+  "native_executed": true,
+  "next_frontier": {
+    "access": "read",
+    "access_bytes": 4,
+    "dp_model_rejections": 0,
+    "fault_pc": "regmap_mmio_read32le+0x8/0x20",
+    "guest_time_seconds": 3.277153,
+    "kernel_fault": "synchronous external abort 0x96000010",
+    "original_dp_fault_recurred": false,
+    "physical_address": "0x0923000c",
+    "symbol": "qcom_llcc_probe+0x13c/0x650"
+  },
+  "observation": {
+    "android_boot_completed_observed": false,
+    "android_userspace_observed": false,
+    "first_kernel_failure": {
+      "guest_time_seconds": 3.277153,
+      "line": 961,
+      "source": "printk-0000/kernel-printk.log",
+      "text": "[    3.277153] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP"
+    },
+    "hardware_diagnostics": [
+      {
+        "guest_time_seconds": 3.277153,
+        "line": 961,
+        "source": "printk-0000/kernel-printk.log",
+        "text": "[    3.277153] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP"
+      },
+      {
+        "line": 19521,
+        "source": "qemu.log",
+        "text": "Invalid read at addr 0x923000C, size 4, region '(null)', reason: rejected"
+      }
+    ],
+    "interactive_display_verified": false,
+    "kernel_failures": [
+      {
+        "guest_time_seconds": 3.277153,
+        "line": 961,
+        "source": "printk-0000/kernel-printk.log",
+        "text": "[    3.277153] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP"
+      },
+      {
+        "guest_time_seconds": 3.280552,
+        "line": 1009,
+        "source": "printk-0000/kernel-printk.log",
+        "text": "[    3.280552] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b"
+      }
+    ],
+    "stages": {
+      "kernel_entry": {
+        "guest_time_seconds": 0.0,
+        "line": 1,
+        "source": "printk-0000/kernel-printk.log",
+        "text": "[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x412fd050]"
+      },
+      "ramdisk_unpack": {
+        "guest_time_seconds": 2.857768,
+        "line": 909,
+        "source": "printk-0000/kernel-printk.log",
+        "text": "[    2.857768] Trying to unpack rootfs image as initramfs..."
+      }
+    }
+  },
+  "observed_utc": "2026-11-24T21:46:19.204721+00:00",
+  "one_artifact_one_attempt": true,
+  "outcome": "kernel-failure",
+  "owner_pre_native": {
+    "active_foreground_orchestration": true,
+    "checkpoint": "/home/ezra/qemu-stockboot-e1a9-control/checkpoint.json",
+    "checkpoint_sha256": "2705ebaa04f54f97f796286a7ca3514e416550a0acd429b93b3522cd4d049055",
+    "native_processes": {
+      "container": {
+        "matches": [],
+        "schema": "tb371fc-native-process-scan-v1"
+      },
+      "host": {
+        "matches": [],
+        "schema": "tb371fc-native-process-scan-v1"
+      }
+    },
+    "observed_utc": "2026-11-24T21:36:14.650105+00:00",
+    "owner": "root/e1a9",
+    "owner_updated_utc": "2026-11-24T18:49:48.514660+00:00",
+    "run008": {
+      "deployed": false,
+      "started": false,
+      "state": "local_only_unbound_not_deployed"
+    }
+  },
+  "owner_preflight": {
+    "active_foreground_orchestration": true,
+    "checkpoint": "/home/ezra/qemu-stockboot-e1a9-control/checkpoint.json",
+    "checkpoint_sha256": "2705ebaa04f54f97f796286a7ca3514e416550a0acd429b93b3522cd4d049055",
+    "native_processes": {
+      "container": {
+        "matches": [],
+        "schema": "tb371fc-native-process-scan-v1"
+      },
+      "host": {
+        "matches": [],
+        "schema": "tb371fc-native-process-scan-v1"
+      }
+    },
+    "observed_utc": "2026-11-24T21:35:35.170636+00:00",
+    "owner": "root/e1a9",
+    "owner_updated_utc": "2026-11-24T18:49:48.514660+00:00",
+    "run008": {
+      "deployed": false,
+      "started": false,
+      "state": "local_only_unbound_not_deployed"
+    }
+  },
+  "printk": {
+    "bytes": 68773,
+    "full_private_log_published": false,
+    "guest_memory_written": false,
+    "record_count": 1015,
+    "selected_records": [
+      {
+        "line": 883,
+        "text": "[    2.762011] dsi_pll_clock_register_7nm: Registered DSI PLL ndx=0, clocks successfully"
+      },
+      {
+        "line": 886,
+        "text": "[    2.792460] dsi_pll_clock_register_7nm: Registered DSI PLL ndx=1, clocks successfully"
+      },
+      {
+        "line": 887,
+        "text": "[    2.793132] mdss_pll_probe: MDSS pll label = MDSS DP PLL"
+      },
+      {
+        "line": 888,
+        "text": "[    2.802907] NET: Registered protocol family 2"
+      },
+      {
+        "line": 909,
+        "text": "[    2.857768] Trying to unpack rootfs image as initramfs..."
+      },
+      {
+        "line": 910,
+        "text": "[    2.912344] Freeing initrd memory: 1264K"
+      },
+      {
+        "line": 961,
+        "text": "[    3.277153] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP"
+      },
+      {
+        "line": 967,
+        "text": "[    3.277577] pc : regmap_mmio_read32le+0x8/0x20"
+      },
+      {
+        "line": 968,
+        "text": "[    3.277591] lr : regmap_mmio_read+0x40/0x68"
+      },
+      {
+        "line": 990,
+        "text": "[    3.277918]  qcom_llcc_probe+0x13c/0x650"
+      },
+      {
+        "line": 991,
+        "text": "[    3.277931]  kona_qcom_llcc_probe+0x18/0x20"
+      },
+      {
+        "line": 1009,
+        "text": "[    3.280552] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b"
+      }
+    ],
+    "sha256": "c0b233d2d9f4bf377ca2e4b962fb1a812c33d964479610f9c894d710a48a522a",
+    "text_lines": 1017
+  },
+  "qemu_log": {
+    "all_invalid_access_lines": [
+      "Invalid read at addr 0x923000C, size 4, region '(null)', reason: rejected"
+    ],
+    "bytes": 714659,
+    "dp_model_rejection_lines": [],
+    "line_count": 19578,
+    "sha256": "cd0b209d12b521c17ac3b4275a731d5b06391a94aa0e54a1f64bc152b4aef132"
+  },
+  "qemu_returncode": 0,
+  "qmp_drain": {
+    "closed": true,
+    "errno": 104,
+    "error": null,
+    "message_count": 22,
+    "prior_command_error": null,
+    "residual_bytes": 0,
+    "terminal": "reset",
+    "transport_error": "[Errno 104] Connection reset by peer"
+  },
+  "qmp_quit": {
+    "acknowledged": true,
+    "message_start": 20,
+    "messages": [
+      {
+        "data": {
+          "guest": false,
+          "reason": "host-qmp-quit"
+        },
+        "event": "SHUTDOWN",
+        "timestamp": {
+          "microseconds": 954994,
+          "seconds": 1795556183
+        }
+      },
+      {
+        "id": 16,
+        "return": {}
+      }
+    ],
+    "request_id": 16,
+    "response": {
+      "id": 16,
+      "return": {}
+    }
+  },
+  "qmp_shutdown_normal": true,
+  "qualification_sha256": "f8cb53769aa338d87aa436f7fa84a25da41a5c78a12f0d284b3e59e563b2ea90",
+  "result_sha256": "f66cd3cde86afe433bd4eb32b810c3cd8b2074ac6f364739dbf7c348e7e19db7",
+  "run_tag": "dp-ed43749-diagnostic-f093",
+  "runner_exit_code": 2,
+  "schema": "tb371fc-dp-original-kernel-bounded-observation-v1",
+  "scope": "Unchanged original Android Image/ramdisk/full DT/bootargs direct-kernel diagnostic with zero attached LUNs. OEM bootloader chain, full storage, Android userspace, UI and boot completion are not established.",
+  "shared_native_lock": {
+    "device": 29,
+    "exclusive": true,
+    "inode": 6066218,
+    "nonblocking": true,
+    "open_mode": "rb",
+    "path": "/home/ezra/qemu-stockboot-e1a9-control/native-run.lock"
+  },
+  "snapshot_consistent": false,
+  "source_commit": "ed43749ccea68fb082db3470f75c061b04ca09c0",
+  "started_utc": "2026-11-24T21:36:18.514607+00:00",
+  "stock_android_boot_passed": false,
+  "storage_complete": false,
+  "storage_selection": {
+    "capture_qualification": {
+      "all_backups_complete": false,
+      "android_boot_tested": false,
+      "pristine_factory_images": false,
+      "restore_tested": false,
+      "snapshot_consistent": false,
+      "source_immutable_claim_verified": false
+    },
+    "classification": "no-lun-diagnostic",
+    "original_luns_attached": 0,
+    "prepared_manifest": "/work/stockboot-e1a9/runner-5223/prepared-001/manifest.json",
+    "prepared_manifest_sha256": "1a4e7fbdb34062ee815a445a065d6b7b3edffb1ea7a9e9ae38d5b9737fa2680f",
+    "ready_candidate": "/work/stockboot-e1a9/full-original-20261124-e1a9/generation2-assembly-20261124T152912Z-d32c9387/ready.json",
+    "ready_present_at_selection": false,
+    "reason": "generation2-ready-not-present-at-selection",
+    "selected_utc": "2026-11-24T21:36:16.028558+00:00",
+    "storage_complete": false
+  },
+  "symbols_unchanged": true
+}
