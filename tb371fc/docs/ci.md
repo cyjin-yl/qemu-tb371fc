@@ -186,7 +186,7 @@ still apply to any future authorized consumer execution.
 
 ## Gates
 
-The current integration plan registers **94 gates: 89 component/parser gates
+The current integration plan registers **96 gates: 91 component/parser gates
 and five Linux integration gates**, plus separate active and runtime-suspended
 real-Linux UFS checkpoints and the A77/PCI UFS compatibility job. This union
 preserves the wholeboard reference peripherals and default-branch storage,
@@ -220,8 +220,10 @@ VIDEO GDSC section are checked together. The separate
 [source-generation gate](../scripts/verify_videocc_generation.py) verifies ten
 pinned primary inputs and reproduces both VIDEOCC data outputs byte for byte.
 The original VIDEOCC 36-group/87+5 combination passed at c232d14e. The
-expanded 41-group VIDEOCC suite and DSI addition require their own formal
-89+5 CI receipt; registration in this plan is not a completed result.
+expanded 41-group VIDEOCC suite and DSI addition passed their own exact
+89+5 CI at 8e8e19a; three independent actual-artifact audits and the
+original-input diagnostic are linked below. The DP addition requires its
+own 91+5 receipt; registration in this plan is not a completed result.
 The preceding 4cc source passed 81+5, but this new combination still needs its
 own actual compiled receipt and native original-input run.
 The archived
@@ -583,6 +585,35 @@ these two DSI gates for 89 components plus five Linux gates. Every component
 result still requires the unchanged binary and exact expected receipt fields.
 First destination observations must precede device MMIO and `cont`, with
 saved deadlines still pending; metadata alone is not an accepted migration.
-The separate original-Image run is still required after exact artifact review.
-The historical run007 kernel failure remains unchanged and does not provide
-DSI, Android userspace, boot-complete or display acceptance.
+Exact runtime 8e8e19a passed its 89+5 CI and three independent artifact
+audits. Its actual unchanged-original-input diagnostic registered both DSI
+PLLs, then first faulted in DP PLL +0x158 at guest 6.260019 s. The corrected
+runner completed normal QMP cleanup. [CI qualification](https://github.com/cyjin-yl/qemu-tb371fc/tree/558159ad6be720090706a33fe2fc16cf36879802/tb371fc/evidence/dsi-pll-20261124-6a5/ci-8e8e19a)
+and [native evidence](https://github.com/cyjin-yl/qemu-tb371fc/tree/ab88bc65d1dba621ca6291aea717fd461a64a0a9/tb371fc/evidence/dsi-pll-20261124-6a5/native-8e8e19a)
+are separately bound. Zero original LUNs were attached; Android userspace,
+boot-complete and display acceptance remain unobserved. Historical run007
+is retained as its own earlier kernel failure.
+
+### DP 7 nm PLL increment
+
+The `dp-pll-source-generation` gate verifies seventeen complete pinned inputs
+and regenerates the C table and JSON register manifest byte for byte.
+Separate rate/helper source evidence records the driver-facing kHz units.
+The compiled `dp-pll-7nm-reference` gate is added beside the existing DSI
+gate; all 94 previous acceptance contracts and their relative order remain
+unchanged. This produces 91 components plus five Linux gates. The exact
+component protocol is specified in [the DP model contract](dp-pll-7nm.md).
+
+The DP gate requires 36 groups: 24 ordinary cases, two special profiles,
+four completed migrations, two profile rejections and four single-bit stream
+rejections. Five original streams plus four changed copies are retained. Every
+complete 791-byte DP state and 64-byte MDSS state is compared with the stopped
+source. Each successful destination begins with 304 pure QOM observations,
+before device MMIO or continuation, including the two real DISPCC input
+periods. Pending PLL, pending PHY and the source-required 2 ms late PHY wait
+retain their deadlines across migration.
+
+The actual production Image and DT identify the cold read at PLL +0x158
+and subsequent PHY +0x28; that evidence does not imply LOCK or a known
+clock carrier. Component execution, original-kernel execution and Android
+userspace/UI/boot completion keep separate verdicts.

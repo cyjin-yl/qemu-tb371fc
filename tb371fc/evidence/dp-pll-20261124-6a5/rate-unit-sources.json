@@ -1,0 +1,116 @@
+{
+  "schema": "tb371fc-dp-pll-rate-unit-sources-v1",
+  "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+  "source_count": 6,
+  "complete_bytes_verified": true,
+  "sources": [
+    {
+      "bytes": 42928,
+      "commit": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "git_blob_sha": "7fe18865f561bb805567bae7e8a70e2f7f74e4b9",
+      "path": "drivers/clk/qcom/dispcc-kona.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "sha256": "1cc21909cc97a709f3c2cbfa2cc30c4221d8652eda394e4f12a9b7bbcbb795f0",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/clk/qcom/dispcc-kona.c"
+    },
+    {
+      "bytes": 35165,
+      "commit": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "git_blob_sha": "c84ec44e67751a24e1be74d6ed4a8852ac1fdfbd",
+      "path": "techpack/display/msm/dp/dp_ctrl.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "sha256": "a54c88fb19f62e86c18322d5952a39757dcf646ee65c3e18ebefdb08bfd0b253",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/98719830b0de5584f5588bbe9f4c8304d97a64c6/techpack/display/msm/dp/dp_ctrl.c"
+    },
+    {
+      "bytes": 15637,
+      "commit": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "git_blob_sha": "e14488f43fa0226bf834f5ce7e5fc317368f0b06",
+      "path": "techpack/display/msm/dp/dp_power.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "sha256": "eb68dfeec3387d948c49b6ac20be41667db9a176a210ddb23860cde075cc86d0",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/98719830b0de5584f5588bbe9f4c8304d97a64c6/techpack/display/msm/dp/dp_power.c"
+    },
+    {
+      "bytes": 13040,
+      "commit": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "git_blob_sha": "09649c59819a7bda5e20de9bd09c6415628caf77",
+      "path": "techpack/display/msm/sde_io_util.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "sha256": "e1a692c8079a5b3e9abe903cd12febe17b5863151f96cf26d6ae5b96fe00624a",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/98719830b0de5584f5588bbe9f4c8304d97a64c6/techpack/display/msm/sde_io_util.c"
+    },
+    {
+      "bytes": 50787,
+      "commit": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "git_blob_sha": "e0d711e8b9a237e326ee6177555b8f67b6ab54c7",
+      "path": "include/drm/drm_dp_helper.h",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "sha256": "b591fc7194c726f222b73cb5d11e2fbc39130dbd03ca3420773fce57ebb4fde4",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/98719830b0de5584f5588bbe9f4c8304d97a64c6/include/drm/drm_dp_helper.h"
+    },
+    {
+      "bytes": 36447,
+      "commit": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "git_blob_sha": "0cccbcb2d03ea8670e71ee62a9bd6526db6b0b97",
+      "path": "drivers/gpu/drm/drm_dp_helper.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "sha256": "817b924b72d59df13d26bc6366bbcc55e7a2c807cbefa1d9fd1972ce71beae81",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/gpu/drm/drm_dp_helper.c"
+    }
+  ],
+  "source_semantics": [
+    {
+      "source": "drivers/gpu/drm/drm_dp_helper.c",
+      "lines": [
+        169,
+        182
+      ],
+      "finding": "drm_dp_bw_code_to_link_rate returns 162000, 270000, 540000 or 810000."
+    },
+    {
+      "source": "techpack/display/msm/dp/dp_ctrl.c",
+      "lines": [
+        600,
+        627
+      ],
+      "finding": "The link helper number is assigned directly to cfg->rate."
+    },
+    {
+      "source": "techpack/display/msm/dp/dp_ctrl.c",
+      "lines": [
+        771,
+        774
+      ],
+      "finding": "The pixel clock uses pixel_clk_khz, divided by two in wide-bus mode."
+    },
+    {
+      "source": "techpack/display/msm/dp/dp_power.c",
+      "lines": [
+        235,
+        247
+      ],
+      "finding": "Rate configuration reaches msm_dss_clk_set_rate without multiplication by 1000."
+    },
+    {
+      "source": "techpack/display/msm/sde_io_util.c",
+      "lines": [
+        388,
+        402
+      ],
+      "finding": "The final non-AHB call is clk_set_rate(clk->clk, clk->rate)."
+    },
+    {
+      "source": "drivers/clk/qcom/dispcc-kona.c",
+      "lines": [
+        91,
+        110,
+        460,
+        464
+      ],
+      "finding": "Non-V2 DP input names and link F-table retain the same numeric convention."
+    }
+  ],
+  "reference_boundary": "The digital reference multiplies a qualified HSCLK kHz request by 1000 to express physical Hz in QEMU Clock periods. Cold CCF recalc and software fallback values do not qualify a carrier; analog VCO dynamics are not established.",
+  "scope": "Six semantic support sources, separate from the seventeen table inputs; neither set proves whole Lenovo Image source identity."
+}

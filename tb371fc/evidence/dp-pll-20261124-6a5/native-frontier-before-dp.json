@@ -1,0 +1,287 @@
+{
+  "schema": "tb371fc-original-input-native-observation-v1",
+  "runtime_commit": "8e8e19a97efc23c215b35ed4dd40120ffab0e40d",
+  "run_tag": "dsi-8e8e19a-diagnostic-f093",
+  "scope": "Unchanged original kernel, ramdisk, full DT and bootargs in a zero-LUN diagnostic. OEM PBL/XBL/ABL chain is not executed. Kernel execution is distinct from Android userspace, UI and boot-complete.",
+  "source_result_sha256": "29927fbe7a9690e5f2755ec93a8206e1af48bc444bf1901ea60a64c60d792105",
+  "source_result_bytes": 6915,
+  "result": {
+    "schema": "tb371fc-android-boot-result-v1",
+    "started_utc": "2026-11-24T19:51:12.677433+00:00",
+    "manifest_sha256": "1a4e7fbdb34062ee815a445a065d6b7b3edffb1ea7a9e9ae38d5b9737fa2680f",
+    "qemu_sha256": "f04e3250977c3ac8852bf1aa7692771835a657dc6a3af84c1fafe58c6c5dac2c",
+    "qemu_img_sha256": "77a92b0ca43516403064a4d0939f91c38b9ab2447b32e8f66709dcf29432d626",
+    "runner_sha256": "ebba3b55ae4f931e5768717d635647dd855ab56a1efb19350acbaf1a4498b3eb",
+    "dry_run": false,
+    "executed": true,
+    "stop_on_kernel_failure": true,
+    "stock_android_boot_passed": false,
+    "input_provenance": {
+      "factory_provenance_verified": false,
+      "avb_verified": false,
+      "luns": []
+    },
+    "scope": "Original Android direct-kernel boot; OEM PBL/XBL/ABL chain is not executed",
+    "printk_symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+    "configuration_evidence": {
+      "path": "/work/stockboot-6a5/dsi-8e8e19a-diagnostic-f093/native-command-plan.json",
+      "sha256": "3f7e1d624f2b223f12e3b63852a73c2a7432d59d3648110f31e940daf87392b6"
+    },
+    "overlay_creation": [],
+    "printk": [
+      {
+        "directory": "printk-0000",
+        "before": {
+          "status": "shutdown",
+          "running": false
+        },
+        "guest_memory_written": false,
+        "capture": {
+          "scope": "Stopped guest Linux 4.x printk ring; private diagnostic, not an Android boot verdict",
+          "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+          "banner": "Linux version 4.19.157-perf+ (buildslave@hqsl009) (clang version 10.0.7 for Android NDK, GNU ld (binutils-2.27-bd24d23f) 2.27.0.20170315) #1 SMP PREEMPT Fri Nov 29 19:47:27 CST 2024\n",
+          "buffer_address": "0xffffffc17fa2e7c0",
+          "buffer_bytes": 1048576,
+          "first_index": 0,
+          "next_index": 73160,
+          "records": 937,
+          "ring_sha256": "a12f936e739293169521f373bdc5aae7e510f848362c9f430fceeac8de4a694f",
+          "log_sha256": "b7815c55daf2803a8255cde6a9dae3c799ac91d37924a75eb43f7d003fda0007"
+        },
+        "after": {
+          "status": "shutdown",
+          "running": false
+        }
+      }
+    ],
+    "stop_reason": "guest-shutdown-or-panic-event",
+    "qmp_events": [
+      {
+        "timestamp": {
+          "seconds": 1795549876,
+          "microseconds": 120065
+        },
+        "event": "RESUME"
+      },
+      {
+        "timestamp": {
+          "seconds": 1795549884,
+          "microseconds": 177032
+        },
+        "event": "WATCHDOG",
+        "data": {
+          "action": "reset"
+        }
+      },
+      {
+        "timestamp": {
+          "seconds": 1795549884,
+          "microseconds": 183545
+        },
+        "event": "SHUTDOWN",
+        "data": {
+          "guest": true,
+          "reason": "guest-reset"
+        }
+      },
+      {
+        "timestamp": {
+          "seconds": 1795549884,
+          "microseconds": 185365
+        },
+        "event": "STOP"
+      },
+      {
+        "timestamp": {
+          "seconds": 1795549884,
+          "microseconds": 341865
+        },
+        "event": "SHUTDOWN",
+        "data": {
+          "guest": false,
+          "reason": "host-qmp-quit"
+        }
+      }
+    ],
+    "base_files_opened_read_only": true,
+    "pid": 97,
+    "initial_status": {
+      "status": "prelaunch",
+      "running": false
+    },
+    "block_nodes": [],
+    "final_status": {
+      "status": "shutdown",
+      "running": false
+    },
+    "qmp_quit": {
+      "request_id": 16,
+      "message_start": 20,
+      "acknowledged": true,
+      "response": {
+        "return": {},
+        "id": 16
+      },
+      "messages": [
+        {
+          "timestamp": {
+            "seconds": 1795549884,
+            "microseconds": 341865
+          },
+          "event": "SHUTDOWN",
+          "data": {
+            "guest": false,
+            "reason": "host-qmp-quit"
+          }
+        },
+        {
+          "return": {},
+          "id": 16
+        }
+      ]
+    },
+    "qemu_returncode": 0,
+    "qmp_drain": {
+      "terminal": "reset",
+      "errno": 104,
+      "error": null,
+      "prior_command_error": null,
+      "transport_error": "[Errno 104] Connection reset by peer",
+      "closed": true,
+      "residual_bytes": 0,
+      "message_count": 22
+    },
+    "qmp_shutdown_normal": true,
+    "elapsed_seconds": 10.545,
+    "logs": [
+      {
+        "path": "serial.log",
+        "size": 0,
+        "read_bytes": 0,
+        "analysis_truncated": false,
+        "analyzed_bytes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "printk-0000/kernel-printk.log",
+        "size": 62885,
+        "read_bytes": 62885,
+        "analysis_truncated": false,
+        "analyzed_bytes_sha256": "b7815c55daf2803a8255cde6a9dae3c799ac91d37924a75eb43f7d003fda0007"
+      },
+      {
+        "path": "stderr.log",
+        "size": 0,
+        "read_bytes": 0,
+        "analysis_truncated": false,
+        "analyzed_bytes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "qemu.log",
+        "size": 790959,
+        "read_bytes": 790959,
+        "analysis_truncated": false,
+        "analyzed_bytes_sha256": "2298e2fe4fa2595dd6f713032c96e77a2f5af015e8a6997e0f9dc6c2419f9e59"
+      }
+    ],
+    "observation": {
+      "stages": {
+        "kernel_entry": {
+          "source": "printk-0000/kernel-printk.log",
+          "line": 1,
+          "text": "[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x412fd050]",
+          "guest_time_seconds": 0
+        }
+      },
+      "android_userspace_observed": false,
+      "android_boot_completed_observed": false,
+      "first_kernel_failure": {
+        "source": "printk-0000/kernel-printk.log",
+        "line": 888,
+        "text": "[    6.260019] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP",
+        "guest_time_seconds": 6.260019
+      },
+      "kernel_failures": [
+        {
+          "source": "printk-0000/kernel-printk.log",
+          "line": 888,
+          "text": "[    6.260019] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP",
+          "guest_time_seconds": 6.260019
+        },
+        {
+          "source": "printk-0000/kernel-printk.log",
+          "line": 934,
+          "text": "[    6.306745] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b",
+          "guest_time_seconds": 6.306745
+        }
+      ],
+      "hardware_diagnostics": [
+        {
+          "source": "printk-0000/kernel-printk.log",
+          "line": 888,
+          "text": "[    6.260019] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP",
+          "guest_time_seconds": 6.260019
+        },
+        {
+          "source": "qemu.log",
+          "line": 21544,
+          "text": "Invalid read at addr 0x88EA158, size 4, region '(null)', reason: rejected"
+        }
+      ],
+      "interactive_display_verified": false
+    },
+    "preservation": {
+      "core_input_digests_unchanged": {
+        "kernel": true,
+        "initrd": true,
+        "dtb": true,
+        "bootargs": true
+      },
+      "original_luns": [],
+      "preserved": true
+    },
+    "qemu_sha256_after": "f04e3250977c3ac8852bf1aa7692771835a657dc6a3af84c1fafe58c6c5dac2c",
+    "qemu_unchanged": true,
+    "outcome": "kernel-failure"
+  },
+  "coordinator_receipt": {
+    "aop_sha256_after": "a971809c06fa1a3ff44c9d28463bc6ff53203d9375ffd0f76dc73d4c8a3ea6f9",
+    "aop_unchanged": true,
+    "core_unchanged": {
+      "bootargs": true,
+      "dtb": true,
+      "initrd": true,
+      "kernel": true
+    },
+    "finished_utc": "2026-11-24T19:51:25.405674+00:00",
+    "full_lun_binding_sha256": null,
+    "input_classification": "no-lun-diagnostic",
+    "invocation_exit_code": 2,
+    "original_luns_attached": 0,
+    "qmp_shutdown_normal": true,
+    "runner_exit_code": 2,
+    "runner_outcome": "kernel-failure",
+    "runner_result": "/work/stockboot-6a5/dsi-8e8e19a-diagnostic-f093/original-android-dsi/result.json",
+    "snapshot_consistent": false,
+    "started_utc": "2026-11-24T19:51:11.188769+00:00",
+    "stock_android_boot_passed": false,
+    "storage_complete": false,
+    "symbols_sha256_after": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+    "symbols_unchanged": true
+  },
+  "host_boot_id": "f093b2c8-08ac-413b-92ea-f2c1efd77c5a",
+  "source_file_retention": "Full raw evidence retained in the isolated run directory; this receipt embeds decoded result values and the bounded fault excerpt.",
+  "source_kernel_printk_sha256": "b7815c55daf2803a8255cde6a9dae3c799ac91d37924a75eb43f7d003fda0007",
+  "excerpt_first_source_line": 881,
+  "kernel_excerpt": "[    5.856750] mdss_pll_probe: MDSS pll label = MDSS DSI 0 PLL\n[    5.856863] mdss_pll_probe: mdss_pll_probe: label=MDSS DSI 0 PLL PLL SSC enabled\n[    6.170571] dsi_pll_clock_register_7nm: Registered DSI PLL ndx=0, clocks successfully\n[    6.171004] mdss_pll_probe: MDSS pll label = MDSS DSI 1 PLL\n[    6.171032] mdss_pll_probe: mdss_pll_probe: label=MDSS DSI 1 PLL PLL SSC enabled\n[    6.240493] dsi_pll_clock_register_7nm: Registered DSI PLL ndx=1, clocks successfully\n[    6.242075] mdss_pll_probe: MDSS pll label = MDSS DP PLL\n[    6.260019] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP\n[    6.261728] Modules linked in:\n[    6.261946] Process swapper/0 (pid: 1, stack limit = 0x(____ptrval____))\n[    6.262057] CPU: 5 PID: 1 Comm: swapper/0 Tainted: G S      W         4.19.157-perf+ #1\n[    6.262081] Hardware name: Qualcomm Technologies, Inc. kona QRD (DT)\n[    6.262143] pstate: 60c00005 (nZCv daif +PAN +UAO)\n[    6.262192] pc : dp_vco_recalc_rate_7nm+0x64/0x168\n[    6.262217] lr : dp_vco_recalc_rate_7nm+0x58/0x168\n[    6.262233] sp : ffffff800805b9b0\n[    6.262264] x29: ffffff800805b9b0 x28: ffffff8009f080a0 \n[    6.262290] x27: ffffff800a39b000 x26: 0000000000000001 \n[    6.262313] x25: ffffff800a4ca000 x24: 0000000000000000 \n[    6.263208] x23: ffffffc15e636c80 x22: ffffffc00089e200 \n[    6.263232] x21: ffffffc15c82b028 x20: ffffffc15c829080 \n[    6.263248] x19: ffffff800a39b3e8 x18: 000000000000003c \n[    6.263815] x17: ffffff800a460000 x16: 0000000000000000 \n[    6.263840] x15: 0000000000000000 x14: 0000000000080800 \n[    6.263901] x13: 0000000000004b00 x12: 0000000000103700 \n[    6.263929] x11: ffffffffffffffff x10: ffffff800a4f7d88 \n[    6.263949] x9 : 0000000000000000 x8 : ffffff800af15158 \n[    6.263970] x7 : 0000000000000000 x6 : 0000000000000000 \n[    6.263991] x5 : 0000000000000000 x4 : 0000000000000000 \n[    6.264633] x3 : 0000000000000001 x2 : 0000000080000001 \n[    6.264669] x1 : 0000000000000000 x0 : 0000000000000000 \n[    6.264697] Call trace:\n[    6.264722]  dp_vco_recalc_rate_7nm+0x64/0x168\n[    6.264747]  clk_register+0x760/0xf18\n[    6.265494]  devm_clk_register+0x48/0x98\n[    6.265512]  dp_pll_clock_register_7nm+0x13c/0x240\n[    6.265526]  mdss_pll_probe+0x63c/0x7c0\n[    6.265546]  platform_drv_probe+0x7c/0xb8\n[    6.265559]  really_probe+0x43c/0x4c8\n[    6.265572]  driver_probe_device+0x60/0xf8\n[    6.265585]  __driver_attach+0xe8/0x128\n[    6.265600]  bus_for_each_dev+0x78/0xc0\n[    6.265613]  driver_attach+0x20/0x28\n[    6.265627]  bus_add_driver+0x120/0x200\n[    6.265640]  driver_register+0x74/0x108\n[    6.265653]  __platform_driver_register+0x40/0x48\n[    6.265672]  mdss_pll_driver_init+0x1c/0x4c\n[    6.266620]  do_one_initcall+0x11c/0x280\n[    6.266658]  kernel_init_freeable+0x2dc/0x390\n[    6.270502]  kernel_init+0x14/0x290\n[    6.274734]  ret_from_fork+0x10/0x18\n[    6.281945] Code: 97ffda0b 35000760 f9401a88 91056108 (b9400108) \n[    6.282767] ---[ end trace 5ff938f017a460dc ]---\n[    6.306745] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b\n\n[    6.308362] SMP: stopping secondary CPUs\n[    6.351072] SMP: stopping secondary CPUs\n[    6.351279] Going down for restart now\n[    6.354454] Failed to set secure DLOAD mode: -19",
+  "actual_next_frontier": {
+    "first_failure_guest_seconds": 6.260019,
+    "physical_address": "0x088ea158",
+    "width_bytes": 4,
+    "function": "dp_vco_recalc_rate_7nm+0x64/0x168",
+    "original_dt_pll_base": "0x088ea000",
+    "register_offset": "0x158",
+    "dsi0_registered_guest_seconds": 6.170571,
+    "dsi1_registered_guest_seconds": 6.240493,
+    "causality_limit": "Two DSI driver registrations are observed; analog PHY/PLL, physical panel/scanout and complete DSI operation are not established."
+  }
+}

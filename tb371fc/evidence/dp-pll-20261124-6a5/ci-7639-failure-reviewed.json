@@ -1,0 +1,59 @@
+{
+  "schema": "tb371fc-dp-initial-ci-failure-fix-v1",
+  "source_commit": "7639c8706faa7c7a0dbc2740214e12564a4a78b9",
+  "run_id": 45484446351,
+  "job_id": 138765954535,
+  "artifact_id": 14963702741,
+  "archive_bytes": 45146606,
+  "archive_sha256": "c12778c803bbe94ae1433d2e140bd613853890c3f7baca04ee1a1d5f2e0e0c7e",
+  "qemu_sha256": "0085c1d1c1488dd148be59d34e7823be1c9cbaf0c71734cc410bb0565a61136b",
+  "old_test_sha256": "0dc0c36c16fa7a7d9a0708daecfd3e2aebc0aaf7d03406bb168bbdf2bdb4ed92",
+  "new_test_sha256": "1a04d27e40f81360a23c53dfa075f3baf80573912ba2e68d8aef859d0e482f14",
+  "new_test_bytes": 61809,
+  "passed_component_gates": 90,
+  "expected_component_gates": 91,
+  "dp_completed_checks": 17,
+  "dp_expected_checks": 36,
+  "migration_checks_reached": false,
+  "failing_group": "exact_sparse_leaves_holes_widths_and_shared_owner",
+  "actual_qtest_send": {
+    "send": "writeq 0x88ea00c 0xdeadbeef0000000a",
+    "virtual_ns_before": 0
+  },
+  "actual_qtest_reply": {
+    "receive": "OK"
+  },
+  "actual_device_diagnostic": "qcom-sm8250-dp-pll: rejected write pll+0x00c size 8 (disabled-or-invalid-access)",
+  "last_actual_qom_request": {
+    "send": {
+      "execute": "qom-get",
+      "id": 612,
+      "arguments": {
+        "path": "/machine/dp-pll",
+        "property": "reg.pll.00c"
+      }
+    }
+  },
+  "last_actual_qom_reply": {
+    "receive": {
+      "return": 0,
+      "id": 612
+    }
+  },
+  "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_dp_pll_7nm.py\", line 1276, in main\n    details = test(rig) or {}\n              ^^^^^^^^^\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_dp_pll_7nm.py\", line 703, in exact_sparse_leaves_holes_widths_and_shared_owner\n    assert r.reg(0x00c) == 0x0a\n           ^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+  "root_cause": "Test incorrectly assumed a split 64-bit access. The DP MemoryRegion ops delivered one size-8 callback, which rejected it and retained the raw word at zero.",
+  "fix": "Require the exact size-8 DP rejection, register zero, complete world equality and no additional core hole diagnostic. Rename return evidence to isolated_leaf_wide_access_rejected.",
+  "outside_target_function_ast_identical": true,
+  "test_syntax_passed": true,
+  "model_changed": false,
+  "check_count_changed": false,
+  "wire_changed": false,
+  "new_compiled_qemu_execution_performed": false,
+  "new_compiled_result": "awaiting_CI",
+  "source_members": {
+    "tb371fc-results/components/59-dp-pll-7nm-reference/fixtures/data/result.json": "918eed1bb364065bd818609b1811a5ba2bd0c60bab9857f32c50f5d61c7e8460",
+    "tb371fc-results/components/59-dp-pll-7nm-reference/fixtures/data/ordinary-17-exact_sparse_leaves_holes_widths_and_shared_owner/qemu.stderr": "998bcd516b4916715b8945c93de67c3f16f9b362a7b55f7db448ba2ee6e51f05",
+    "tb371fc-results/components/59-dp-pll-7nm-reference/fixtures/data/ordinary-17-exact_sparse_leaves_holes_widths_and_shared_owner/qtest.jsonl": "37c474e4a194e3ff85d239dd34ac661344e6ee090eceaadb2020e1fe801ca23a",
+    "tb371fc-results/components/59-dp-pll-7nm-reference/fixtures/data/ordinary-17-exact_sparse_leaves_holes_widths_and_shared_owner/qmp.jsonl": "de3b6639637e94e41963d9fac79254f45a1ce2583ce329544668488ee441d071"
+  }
+}

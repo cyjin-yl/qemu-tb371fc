@@ -1,0 +1,225 @@
+{
+  "schema": "tb371fc-dp-native-frontier-evidence-v1",
+  "dt_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+  "actual_node": {
+    "path": "/soc/qcom,mdss_dp_pll@c011000",
+    "properties": {
+      "compatible": [
+        "qcom,mdss_dp_pll_7nm"
+      ],
+      "label": [
+        "MDSS DP PLL"
+      ],
+      "cell-index": [
+        "0x0"
+      ],
+      "#clock-cells": [
+        "0x1"
+      ],
+      "reg": [
+        "0x88ea000",
+        "0x200",
+        "0x88eaa00",
+        "0x200",
+        "0x88ea200",
+        "0x200",
+        "0x88ea2b8",
+        "0x8",
+        "0x88ea2e8",
+        "0x4",
+        "0x88ea600",
+        "0x200",
+        "0x88ea6b8",
+        "0x8",
+        "0x88ea6e8",
+        "0x4",
+        "0xaf03000",
+        "0x8"
+      ],
+      "reg-names": [
+        "pll_base",
+        "phy_base",
+        "ln_tx0_base",
+        "ln_tx0_tran_base",
+        "ln_tx0_vmode_base",
+        "ln_tx1_base",
+        "ln_tx1_tran_base",
+        "ln_tx1_vmode_base",
+        "gdsc_base"
+      ],
+      "clocks": [
+        "0x6b",
+        "0x0",
+        "0x15",
+        "0x0",
+        "0x16",
+        "0x18",
+        "0x16",
+        "0xc5"
+      ],
+      "clock-names": [
+        "iface_clk",
+        "ref_clk_src",
+        "gcc_iface",
+        "pipe_clk"
+      ],
+      "clock-rate": [
+        "0x0"
+      ],
+      "phandle": [
+        "0x24c"
+      ]
+    }
+  },
+  "clock_providers": {
+    "0x6b": {
+      "path": "/soc/qcom,dispcc@af00000",
+      "properties": {
+        "compatible": [
+          "qcom,kona-dispcc",
+          "syscon"
+        ],
+        "reg": [
+          "0xaf00000",
+          "0x20000"
+        ],
+        "reg-names": [
+          "cc_base"
+        ],
+        "clock-names": [
+          "cfg_ahb_clk"
+        ],
+        "clocks": [
+          "0x16",
+          "0x18"
+        ],
+        "#clock-cells": [
+          "0x1"
+        ],
+        "phandle": [
+          "0x6b"
+        ]
+      }
+    },
+    "0x15": {
+      "path": "/soc/rsc@18200000/qcom,rpmhclk",
+      "properties": {
+        "compatible": [
+          "qcom,kona-rpmh-clk"
+        ],
+        "#clock-cells": [
+          "0x1"
+        ],
+        "phandle": [
+          "0x15"
+        ]
+      }
+    },
+    "0x16": {
+      "path": "/soc/qcom,gcc@100000",
+      "properties": {
+        "compatible": [
+          "qcom,gcc-kona",
+          "syscon"
+        ],
+        "reg": [
+          "0x100000",
+          "0x1f0000"
+        ],
+        "reg-names": [
+          "cc_base"
+        ],
+        "#clock-cells": [
+          "0x1"
+        ],
+        "phandle": [
+          "0x16"
+        ]
+      }
+    }
+  },
+  "overlapping_resources": [
+    {
+      "path": "/soc/ssphy@88e8000",
+      "properties": {
+        "compatible": [
+          "qcom,usb-ssphy-qmp-dp-combo"
+        ],
+        "reg": [
+          "0x88e8000",
+          "0x3000"
+        ],
+        "reg-names": [
+          "qmp_phy_base"
+        ]
+      }
+    },
+    {
+      "path": "/soc/qcom,mdss_dp_pll@c011000",
+      "properties": {
+        "compatible": [
+          "qcom,mdss_dp_pll_7nm"
+        ],
+        "reg": [
+          "0x88ea000",
+          "0x200",
+          "0x88eaa00",
+          "0x200",
+          "0x88ea200",
+          "0x200",
+          "0x88ea2b8",
+          "0x8",
+          "0x88ea2e8",
+          "0x4",
+          "0x88ea600",
+          "0x200",
+          "0x88ea6b8",
+          "0x8",
+          "0x88ea6e8",
+          "0x4",
+          "0xaf03000",
+          "0x8"
+        ],
+        "reg-names": [
+          "pll_base",
+          "phy_base",
+          "ln_tx0_base",
+          "ln_tx0_tran_base",
+          "ln_tx0_vmode_base",
+          "ln_tx1_base",
+          "ln_tx1_tran_base",
+          "ln_tx1_vmode_base",
+          "gdsc_base"
+        ]
+      }
+    }
+  ],
+  "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+  "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+  "text_virtual_address": "0xffffff8008080000",
+  "vco_virtual_address": "0xffffff8008fc62b8",
+  "vco_file_offset": "0xf462b8",
+  "vco_bytes": "fd7bbda9f65701a9fd030091f44f02a9c00600b4141840f9f30300aa883a40f9a80000b4080140b92801f837f5031faa40000014e06400d000b82c9147eac397f5031faa000021d43a000014e00314aa210080520bdaff9760070035881a40f908610591080140b9080d00121f0d0071a8000054e96400f029c12391365968b802000014b6008052881e40f9155c86523505a07208a10091080140b9020d02535f08007102010054df0e007180030054df16007181020054150497521503a07217000014c0020054e06400f0e16400f000ec1f9121d01e91fa23c697df0e007181feff540e000014e06400f0e16400f000c4159121d01e91f223c697f5031faa0c0000140814935209b88c52df0a0071680fa072490aa0723501889ae00314aae1031f2ad7d9ff97750e00f9955200f9e00315aaf44f42a9f65741a9fd7bc3a8c0035fd6823241b9e06400f0e16400f0002c1f9121d01e91da23c697f5031faaf4ffff171f2003d5",
+  "vco_disassembly": "\n/work/stockboot-e1a9/runner-5223/prepared-001/kernel.bin:     file format binary\n\n\nDisassembly of section .data:\n\nffffff8008fc62b8 <.data+0xf462b8>:\nffffff8008fc62b8:\ta9bd7bfd \tstp\tx29, x30, [sp, #-48]!\nffffff8008fc62bc:\ta90157f6 \tstp\tx22, x21, [sp, #16]\nffffff8008fc62c0:\t910003fd \tmov\tx29, sp\nffffff8008fc62c4:\ta9024ff4 \tstp\tx20, x19, [sp, #32]\nffffff8008fc62c8:\tb40006c0 \tcbz\tx0, 0xffffff8008fc63a0\nffffff8008fc62cc:\tf9401814 \tldr\tx20, [x0, #48]\nffffff8008fc62d0:\taa0003f3 \tmov\tx19, x0\nffffff8008fc62d4:\tf9403a88 \tldr\tx8, [x20, #112]\nffffff8008fc62d8:\tb40000a8 \tcbz\tx8, 0xffffff8008fc62ec\nffffff8008fc62dc:\tb9400108 \tldr\tw8, [x8]\nffffff8008fc62e0:\t37f80128 \ttbnz\tw8, #31, 0xffffff8008fc6304\nffffff8008fc62e4:\taa1f03f5 \tmov\tx21, xzr\nffffff8008fc62e8:\t14000040 \tb\t0xffffff8008fc63e8\nffffff8008fc62ec:\td00064e0 \tadrp\tx0, 0xffffff8009c64000\nffffff8008fc62f0:\t912cb800 \tadd\tx0, x0, #0xb2e\nffffff8008fc62f4:\t97c3ea47 \tbl\t0xffffff80080c0c10\nffffff8008fc62f8:\taa1f03f5 \tmov\tx21, xzr\nffffff8008fc62fc:\td4210000 \tbrk\t#0x800\nffffff8008fc6300:\t1400003a \tb\t0xffffff8008fc63e8\nffffff8008fc6304:\taa1403e0 \tmov\tx0, x20\nffffff8008fc6308:\t52800021 \tmov\tw1, #0x1                   \t// #1\nffffff8008fc630c:\t97ffda0b \tbl\t0xffffff8008fbcb38\nffffff8008fc6310:\t35000760 \tcbnz\tw0, 0xffffff8008fc63fc\nffffff8008fc6314:\tf9401a88 \tldr\tx8, [x20, #48]\nffffff8008fc6318:\t91056108 \tadd\tx8, x8, #0x158\nffffff8008fc631c:\tb9400108 \tldr\tw8, [x8]\nffffff8008fc6320:\t12000d08 \tand\tw8, w8, #0xf\nffffff8008fc6324:\t71000d1f \tcmp\tw8, #0x3\nffffff8008fc6328:\t540000a8 \tb.hi\t0xffffff8008fc633c  // b.pmore\nffffff8008fc632c:\tf00064e9 \tadrp\tx9, 0xffffff8009c65000\nffffff8008fc6330:\t9123c129 \tadd\tx9, x9, #0x8f0\nffffff8008fc6334:\tb8685936 \tldr\tw22, [x9, w8, uxtw #2]\nffffff8008fc6338:\t14000002 \tb\t0xffffff8008fc6340\nffffff8008fc633c:\t528000b6 \tmov\tw22, #0x5                   \t// #5\nffffff8008fc6340:\tf9401e88 \tldr\tx8, [x20, #56]\nffffff8008fc6344:\t52865c15 \tmov\tw21, #0x32e0                \t// #13024\nffffff8008fc6348:\t72a00535 \tmovk\tw21, #0x29, lsl #16\nffffff8008fc634c:\t9100a108 \tadd\tx8, x8, #0x28\nffffff8008fc6350:\tb9400108 \tldr\tw8, [x8]\nffffff8008fc6354:\t53020d02 \tubfx\tw2, w8, #2, #2\nffffff8008fc6358:\t7100085f \tcmp\tw2, #0x2\nffffff8008fc635c:\t54000102 \tb.cs\t0xffffff8008fc637c  // b.hs, b.nlast\nffffff8008fc6360:\t71000edf \tcmp\tw22, #0x3\nffffff8008fc6364:\t54000380 \tb.eq\t0xffffff8008fc63d4  // b.none\nffffff8008fc6368:\t710016df \tcmp\tw22, #0x5\nffffff8008fc636c:\t54000281 \tb.ne\t0xffffff8008fc63bc  // b.any\nffffff8008fc6370:\t52970415 \tmov\tw21, #0xb820                \t// #47136\nffffff8008fc6374:\t72a00315 \tmovk\tw21, #0x18, lsl #16\nffffff8008fc6378:\t14000017 \tb\t0xffffff8008fc63d4\nffffff8008fc637c:\t540002c0 \tb.eq\t0xffffff8008fc63d4  // b.none\nffffff8008fc6380:\tf00064e0 \tadrp\tx0, 0xffffff8009c65000\nffffff8008fc6384:\tf00064e1 \tadrp\tx1, 0xffffff8009c65000\nffffff8008fc6388:\t911fec00 \tadd\tx0, x0, #0x7fb\nffffff8008fc638c:\t911ed021 \tadd\tx1, x1, #0x7b4\nffffff8008fc6390:\t97c623fa \tbl\t0xffffff800814f378\nffffff8008fc6394:\t71000edf \tcmp\tw22, #0x3\nffffff8008fc6398:\t54fffe81 \tb.ne\t0xffffff8008fc6368  // b.any\nffffff8008fc639c:\t1400000e \tb\t0xffffff8008fc63d4\nffffff8008fc63a0:\tf00064e0 \tadrp\tx0, 0xffffff8009c65000\nffffff8008fc63a4:\tf00064e1 \tadrp\tx1, 0xffffff8009c65000\nffffff8008fc63a8:\t9115c400 \tadd\tx0, x0, #0x571\nffffff8008fc63ac:\t911ed021 \tadd\tx1, x1, #0x7b4\nffffff8008fc63b0:\t97c623f2 \tbl\t0xffffff800814f378\nffffff8008fc63b4:\taa1f03f5 \tmov\tx21, xzr\nffffff8008fc63b8:\t1400000c \tb\t0xffffff8008fc63e8\nffffff8008fc63bc:\t52931408 \tmov\tw8, #0x98a0                \t// #39072\nffffff8008fc63c0:\t528cb809 \tmov\tw9, #0x65c0                \t// #26048\nffffff8008fc63c4:\t71000adf \tcmp\tw22, #0x2\nffffff8008fc63c8:\t72a00f68 \tmovk\tw8, #0x7b, lsl #16\nffffff8008fc63cc:\t72a00a49 \tmovk\tw9, #0x52, lsl #16\nffffff8008fc63d0:\t9a880135 \tcsel\tx21, x9, x8, eq\t// eq = none\nffffff8008fc63d4:\taa1403e0 \tmov\tx0, x20\nffffff8008fc63d8:\t2a1f03e1 \tmov\tw1, wzr\nffffff8008fc63dc:\t97ffd9d7 \tbl\t0xffffff8008fbcb38\nffffff8008fc63e0:\tf9000e75 \tstr\tx21, [x19, #24]\nffffff8008fc63e4:\tf9005295 \tstr\tx21, [x20, #160]\nffffff8008fc63e8:\taa1503e0 \tmov\tx0, x21\nffffff8008fc63ec:\ta9424ff4 \tldp\tx20, x19, [sp, #32]\nffffff8008fc63f0:\ta94157f6 \tldp\tx22, x21, [sp, #16]\nffffff8008fc63f4:\ta8c37bfd \tldp\tx29, x30, [sp], #48\nffffff8008fc63f8:\td65f03c0 \tret\nffffff8008fc63fc:\tb9413282 \tldr\tw2, [x20, #304]\nffffff8008fc6400:\tf00064e0 \tadrp\tx0, 0xffffff8009c65000\nffffff8008fc6404:\tf00064e1 \tadrp\tx1, 0xffffff8009c65000\nffffff8008fc6408:\t911f2c00 \tadd\tx0, x0, #0x7cb\nffffff8008fc640c:\t911ed021 \tadd\tx1, x1, #0x7b4\nffffff8008fc6410:\t97c623da \tbl\t0xffffff800814f378\nffffff8008fc6414:\taa1f03f5 \tmov\tx21, xzr\nffffff8008fc6418:\t17fffff4 \tb\t0xffffff8008fc63e8\nffffff8008fc641c:\td503201f \tnop\n",
+  "fault_relative_offset": "0x64",
+  "fault_instruction": "080140b9",
+  "symbols": {
+    "mdss_pll_resource_enable": "0xffffff8008fbcb38",
+    "dp_pll_clock_register_7nm": "0xffffff8008fc5598",
+    "dp_mux_set_parent_7nm": "0xffffff8008fc58d8",
+    "dp_mux_get_parent_7nm": "0xffffff8008fc5990",
+    "dp_7nm_pll_get_status_name": "0xffffff8008fc5a70",
+    "dp_vco_prepare_7nm": "0xffffff8008fc5a98",
+    "dp_vco_unprepare_7nm": "0xffffff8008fc5c60",
+    "dp_vco_set_rate_7nm": "0xffffff8008fc5d08",
+    "dp_vco_recalc_rate_7nm": "0xffffff8008fc62b8",
+    "dp_vco_round_rate_7nm": "0xffffff8008fc6420",
+    "dp_7nm_pll_get_status": "0xffffff8008fc6498",
+    "dp_7nm_vco_clk_ops": "0xffffff8009862aa8",
+    "dp_pll_7nm_cfg": "0xffffff800a39b2f0",
+    "mdss_dp_pllcc_7nm.1": "0xffffff800a39b7c0",
+    "mdss_dp_pllcc_7nm.5": "0xffffff800a39b7c8",
+    "dp_pdb_7nm": "0xffffff800a51b970"
+  },
+  "overlap_scope": "Direct children of /soc in the CPU physical-address space; child-bus reg identifiers are excluded."
+}

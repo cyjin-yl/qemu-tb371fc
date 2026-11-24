@@ -52,6 +52,7 @@
 #include "hw/misc/qcom-sm8250-dispcc.h"
 #include "hw/misc/qcom-sm8250-videocc.h"
 #include "hw/misc/qcom-sm8250-dsi-pll.h"
+#include "hw/misc/qcom-sm8250-dp-pll.h"
 #include "hw/misc/qcom-noc-qos.h"
 #include "hw/misc/qcom-pshold.h"
 #include "hw/misc/qcom-dcc.h"
@@ -174,6 +175,7 @@ struct TB371FCMachineState {
     QcomSm8250GccState gcc;
     DeviceState *ufs;
     DeviceState *dsi_pll;
+    DeviceState *dp_pll;
     DeviceState *apps_smmu, *kgsl_smmu, *mmio_timer, *rpmh, *watchdog;
     DeviceState *tlmm;
     DeviceState *pdc;
@@ -1120,26 +1122,48 @@ static DeviceState *tb371fc_create_mdss_and_video_gdsc(TB371FCMachineState *s,
     return mdss;
 }
 
-static void tb371fc_connect_dsi_power(TB371FCMachineState *s, DeviceState *mdss)
+static void tb371fc_connect_display_pll_power(TB371FCMachineState *s,
+                                              DeviceState *mdss)
 {
-    qemu_irq known = qdev_get_gpio_in_named(s->dsi_pll, "power-known", 0);
-    qemu_irq power = qdev_get_gpio_in_named(s->dsi_pll, "power-on", 0);
+    DeviceState *consumers[] = { s->dsi_pll, s->dp_pll };
+    static const char *const fanout_names[] = {
+        "mdss-pll-known-fanout", "mdss-pll-power-fanout",
+    };
+    static const char *const input_names[] = { "power-known", "power-on" };
+    static const char *const output_names[] = { "state-known", "power" };
+    qemu_irq inputs[2];
     bool state_known = object_property_get_bool(OBJECT(mdss),
                                                "domain0.state-known",
                                                &error_fatal);
     bool state_on = object_property_get_bool(OBJECT(mdss),
                                             "domain0.powered", &error_fatal);
 
-    /* Both DSI PLL banks share this existing MDSS supply, not a new GDSCR. */
-    qdev_connect_gpio_out_named(mdss, "state-known", 0, known);
-    qdev_connect_gpio_out_named(mdss, "power", 0, power);
+    /*
+     * DSI and DP share the existing MDSS owner. Each supplier output has one
+     * stateless fanout; attaching DP must not replace the DSI connection.
+     */
+    for (unsigned signal = 0; signal < ARRAY_SIZE(inputs); signal++) {
+        DeviceState *splitter = qdev_new(TYPE_SPLIT_IRQ);
+
+        object_property_add_child(OBJECT(s), fanout_names[signal],
+                                  OBJECT(splitter));
+        qdev_prop_set_uint16(splitter, "num-lines", ARRAY_SIZE(consumers));
+        qdev_realize_and_unref(splitter, NULL, &error_fatal);
+        for (unsigned i = 0; i < ARRAY_SIZE(consumers); i++) {
+            qdev_connect_gpio_out(splitter, i,
+                qdev_get_gpio_in_named(consumers[i], input_names[signal], 0));
+        }
+        inputs[signal] = qdev_get_gpio_in(splitter, 0);
+        qdev_connect_gpio_out_named(mdss, output_names[signal], 0,
+                                    inputs[signal]);
+    }
     /* Seed from pure supplier observations in mdss_publish() order. */
     if (state_known) {
-        qemu_set_irq(power, state_on);
-        qemu_set_irq(known, 1);
+        qemu_set_irq(inputs[1], state_on);
+        qemu_set_irq(inputs[0], 1);
     } else {
-        qemu_set_irq(known, 0);
-        qemu_set_irq(power, 0);
+        qemu_set_irq(inputs[0], 0);
+        qemu_set_irq(inputs[1], 0);
     }
 }
 
@@ -1292,6 +1316,24 @@ static void tb371fc_create_dsi_pll(TB371FCMachineState *s)
     }
 }
 
+static void tb371fc_create_dp_pll(TB371FCMachineState *s, DeviceState *mdss)
+{
+    DeviceState *pll = qdev_new(TYPE_QCOM_SM8250_DP_PLL);
+
+    s->dp_pll = pll;
+    object_property_add_child(OBJECT(s), "dp-pll", OBJECT(pll));
+    object_property_set_link(OBJECT(pll), "mdss-provider", OBJECT(mdss),
+                              &error_fatal);
+    /* The actual non-V2 PLL DT ref_clk_src is the existing RPMh XO carrier. */
+    qdev_connect_clock_in(pll, "ref_clk_src", s->xo);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(pll), &error_fatal);
+    for (unsigned region = 0; region < DP_PLL_REGIONS; region++) {
+        /* 42 exact leaves; shared SS PHY holes and the MDSS owner stay open. */
+        sysbus_mmio_map(SYS_BUS_DEVICE(pll), region,
+                       qcom_sm8250_dp_pll_bases[region]);
+    }
+}
+
 static void tb371fc_create_dispcc(TB371FCMachineState *s)
 {
     DeviceState *dispcc = qdev_new(TYPE_QCOM_SM8250_DISPCC);
@@ -1299,11 +1341,14 @@ static void tb371fc_create_dispcc(TB371FCMachineState *s)
         "dsi0_phy_pll_out_byteclk", "dsi1_phy_pll_out_byteclk",
         "dsi0_phy_pll_out_dsiclk", "dsi1_phy_pll_out_dsiclk",
     };
+    static const char *const dp_clocks[] = {
+        "dp_link_clk_divsel_ten", "dp_vco_divided_clk_src_mux",
+    };
 
     object_property_add_child(OBJECT(s), "dispcc", OBJECT(dispcc));
     /*
-     * Fixed clk-rpmh.c proves bi_tcxo. The explicit DSI reference supplies
-     * its four same-name taps; other absent carriers remain unknown.
+     * Fixed clk-rpmh.c proves bi_tcxo. Enabled DSI and non-V2 DP references
+     * supply their same-name physical carriers before DISPCC is realized.
      */
     qdev_connect_clock_in(dispcc, "bi_tcxo", s->xo);
     if (object_property_get_bool(OBJECT(s->dsi_pll), "enabled-reference",
@@ -1311,6 +1356,13 @@ static void tb371fc_create_dispcc(TB371FCMachineState *s)
         for (unsigned i = 0; i < ARRAY_SIZE(dsi_clocks); i++) {
             qdev_connect_clock_in(dispcc, dsi_clocks[i],
                 qdev_get_clock_out(s->dsi_pll, dsi_clocks[i]));
+        }
+    }
+    if (object_property_get_bool(OBJECT(s->dp_pll), "enabled-reference",
+                                 &error_fatal)) {
+        for (unsigned i = 0; i < ARRAY_SIZE(dp_clocks); i++) {
+            qdev_connect_clock_in(dispcc, dp_clocks[i],
+                qdev_get_clock_out(s->dp_pll, dp_clocks[i]));
         }
     }
     sysbus_realize_and_unref(SYS_BUS_DEVICE(dispcc), &error_fatal);
@@ -1892,11 +1944,12 @@ static void tb371fc_init(MachineState *ms)
                                             tb371fc_create_camera_gdsc(s));
     /*
      * Register provider VMState before its consumers. MDSS pre_load retracts
-     * stale GPIO outputs; it must finish before incoming DSI qualification is
-     * restored. DISPCC then restores its saved physical DSI input periods.
+     * stale GPIO outputs; it must finish before incoming DSI/DP qualification
+     * is restored. DISPCC then restores its saved physical input periods.
      */
     tb371fc_create_dsi_pll(s);
-    tb371fc_connect_dsi_power(s, mdss);
+    tb371fc_create_dp_pll(s, mdss);
+    tb371fc_connect_display_pll_power(s, mdss);
     tb371fc_create_dispcc(s);
     if (s->ufs) {
         tb371fc_realize_ufs(s);
