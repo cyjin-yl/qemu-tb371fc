@@ -1,0 +1,103 @@
+{
+  "schema": "tb371fc-dp-pll-implementation-static-review-v1",
+  "base_commit": "804e696342c811b23fed934a51220135a03b1c22",
+  "base_tree": "1516df2c2b640688f2966b88ea8de4395a3b3f8f",
+  "files": [
+    {
+      "path": "hw/misc/qcom-sm8250-dp-pll.c",
+      "bytes": 31439,
+      "sha256": "9a876a06787f1b847bf732801283a03963dd6a482fdcc5c57c0b77af8af860b2",
+      "git_blob_sha1": "67519cec415ce38872dab3097c24cc5254ce9a08"
+    },
+    {
+      "path": "include/hw/misc/qcom-sm8250-dp-pll.h",
+      "bytes": 1389,
+      "sha256": "1f36a7e23387cd2e5d26a83829efce67d4081e49b949fde7e1ad59feb9f9b8a1",
+      "git_blob_sha1": "bff40a3287bc7ec3fc62b37e3011eba0b26ca3ad"
+    },
+    {
+      "path": "hw/arm/lenovo-tb371fc.c",
+      "bytes": 101354,
+      "sha256": "464785d9d2f1def621b407cd03f091ad9927601890ceff7774da48cb147b7e4b",
+      "git_blob_sha1": "8853394a05c8c6d152fef3f06758724c604f9ab2"
+    },
+    {
+      "path": "hw/arm/Kconfig",
+      "bytes": 15363,
+      "sha256": "af12de0450a34ebba2ffb2eff372ee2a33a5f306da9d0b34d4b83344ded93126",
+      "git_blob_sha1": "bb733926b5ab9172d07780d05228b8c6b60f8f59"
+    },
+    {
+      "path": "hw/misc/Kconfig",
+      "bytes": 4070,
+      "sha256": "3a94e227e3c3bb8e0c1b95c136ca8713cc0aa37fe5fb4dc2c2c272a73d17afc8",
+      "git_blob_sha1": "0596cfd736a0b838ea6d05a9b6727b18015be383"
+    },
+    {
+      "path": "hw/misc/meson.build",
+      "bytes": 10529,
+      "sha256": "88613210e40f0120558e17738e502d9f2e4ac3856c0bdb26e36b5614b6d64217",
+      "git_blob_sha1": "1cae6ef30068f97d4f711e621fbde912eb98b664"
+    },
+    {
+      "path": "hw/misc/qcom-sm8250-dp-pll-data.inc",
+      "bytes": 11215,
+      "sha256": "36871a517d97b694252bfee383adf781878ac013215b98fd17089e7e73a5dd0d",
+      "git_blob_sha1": "e1afb962bf656556ad4283b2f5b88eea80cca516"
+    }
+  ],
+  "data_contract": {
+    "registers": 73,
+    "required": 58,
+    "windows": 42,
+    "mapped_bytes": 292,
+    "region_order": [
+      "pll",
+      "phy",
+      "tx0",
+      "tx1"
+    ],
+    "vmstate_bytes": 791,
+    "data_regions_exact_leaf_coverage": true,
+    "sorted_unique": true
+  },
+  "qemu_api_read_verification": [
+    {
+      "path": "include/hw/core/qdev-clock.h",
+      "git_blob": "af0d8499a675023d813c9d77148944ab3cbc3b35",
+      "finding": "includes full Clock type; qdev_connect_clock_in requires before realize"
+    },
+    {
+      "path": "include/hw/core/qdev-properties.h",
+      "git_blob": "eba5436e53b1aed627545094dab3c5d7e8279818",
+      "finding": "DEFINE_PROP_LINK signature and DeviceState pointer match"
+    },
+    {
+      "path": "hw/core/split-irq.c",
+      "git_blob": "7491d74791e9156ebb3b0cd83ddb5a5cba039f70",
+      "finding": "fanout has no reset or VMState; 2 lines valid"
+    }
+  ],
+  "reviewed_invariants": [
+    "MDSS provider realized and migrated before DSI/DP consumers, then DISPCC",
+    "two stateless MDSS signal fanouts preserve both consumers; pure initial supplier observations",
+    "DP inputs and DISPCC carrier connections made before consumer realize",
+    "only enabled DP profile connects two non-V2 physical clock names",
+    "status stores remain zero and all writes including zero are rejected",
+    "physical frequency uses uint64 period; vendor CCF kHz normalized once at DP boundary",
+    "MDSS loss clears written eligibility and capture; migration rejects nonzero written without power",
+    "capture command snapshot and command written flags are validated",
+    "phase1/3 finite 64-XO reference delay; phase5 source-required 2ms; overflow guarded",
+    "QOM getters do not advance time or mutate registers",
+    "postload restores captured deadlines and outputs without propagation or advance"
+  ],
+  "validation_scope": "source, schema, API and diff inspection only; not a QEMU build or runtime pass",
+  "qemu_compiled": false,
+  "qemu_executed": false,
+  "native_executed": false,
+  "pending": [
+    "actual CI compilation",
+    "independent DP QTest execution",
+    "original-stock-kernel boot using exact qualified artifact"
+  ]
+}

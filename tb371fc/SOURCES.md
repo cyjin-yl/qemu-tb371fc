@@ -349,3 +349,34 @@ This does not establish whole-machine migration to an older receiver that
 rejects these high-frequency inputs. [The source validation](evidence/dsi-pll-20261124-6a5/source-validation.json)
 records thirteen exact pins, two reproduced outputs and deliberate input/output
 negative checks; it is not a compiled-QEMU or native-boot receipt.
+
+## Non-V2 DP 7 nm increment after the qualified DSI native run
+
+The [DP reference contract](docs/dp-pll-7nm.md),
+[register/clock manifest](docs/dp-pll-7nm-registers.json),
+[generator](scripts/generate_dp_pll_7nm.py) and
+[regeneration verifier](scripts/verify_dp_pll_generation.py) pin seventeen
+complete primary inputs to OnePlusOSS/android_kernel_oneplus_sm8250 commit
+`98719830b0de5584f5588bbe9f4c8304d97a64c6`. These cover the DP PLL topology and
+utility, dispatch/resource helpers, bindings, named DTS resources, v420 shared
+register client and orientation enum. Six separately byte-hashed
+[rate-unit support sources](evidence/dp-pll-20261124-6a5/rate-unit-sources.json)
+trace the kHz-valued CCF call chain. The generation gate still has seventeen
+inputs and two outputs; it does not claim all twenty-three files as its inputs.
+
+The [original DT and Image instructions](evidence/dp-pll-20261124-6a5/actual-kernel-dp-probe-instructions.json)
+select `qcom,mdss_dp_pll_7nm` and confirm the cold 32-bit read at PLL `+0x158`,
+then PHY `+0x28`. The [DP controller resource](evidence/dp-pll-20261124-6a5/actual-dp-controller-dt.json)
+at `0x088ea040` has length `0x10`; its `+0x4` BIAS word aliases PLL `+0x44`.
+The [actual PHY-version property](evidence/dp-pll-20261124-6a5/actual-dp-phy-version.json)
+is `0x420`. These are bounded source/production correspondences, not proof of
+whole Lenovo Image source identity or analog hardware behavior.
+
+The [before-DP native receipt](evidence/dp-pll-20261124-6a5/native-frontier-before-dp.json)
+binds the DSI `8e8e19a` binary to both DSI registrations and the first DP fault
+at `0x088ea158`, guest `6.260019`. It remains a zero-LUN kernel-failure
+diagnostic. The new DP tables own 73 words in 42 sparse leaves, preserve the
+existing MDSS owner, and retain unknown carriers until qualification. The
+[DP source validation](evidence/dp-pll-20261124-6a5/source-validation.json)
+records exact regeneration and seventeen input-tamper rejections; compiled DP,
+native DP and Android acceptance require their own subsequent evidence.

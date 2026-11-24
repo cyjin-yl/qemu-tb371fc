@@ -1,0 +1,318 @@
+{
+  "schema": "tb371fc-dp-pll-source-validation-v1",
+  "scope": "Static primary-source, limited original-Image instruction correspondence, and local generation only.",
+  "source_validation_passed": true,
+  "compiled_dp_qemu_executed": false,
+  "native_dp_candidate_executed": false,
+  "android_boot_verdict": false,
+  "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+  "table_input_count": 17,
+  "support_input_count": 6,
+  "distinct_primary_source_count": 23,
+  "complete_bytes_sha256_and_git_blob_verified": true,
+  "files": [
+    {
+      "path": "tb371fc/scripts/generate_dp_pll_7nm.py",
+      "bytes": 29759,
+      "sha256": "ceed885cb25f01e34a11161cd892e2816b1fedb3b9485f8c2ac12cc298542006"
+    },
+    {
+      "path": "tb371fc/scripts/verify_dp_pll_generation.py",
+      "bytes": 4361,
+      "sha256": "6ea5b665b9a4e0e8eb895fc2a1107f289cbcdbf0f478c50bcca1ad119e82a475"
+    },
+    {
+      "path": "hw/misc/qcom-sm8250-dp-pll-data.inc",
+      "bytes": 11215,
+      "sha256": "36871a517d97b694252bfee383adf781878ac013215b98fd17089e7e73a5dd0d"
+    },
+    {
+      "path": "tb371fc/docs/dp-pll-7nm-registers.json",
+      "bytes": 78166,
+      "sha256": "a9150fda61e16a0deb6acabe17f9e3b532963a61453fb98c125dab0cf08ec101"
+    },
+    {
+      "path": "tb371fc/docs/dp-pll-7nm.md",
+      "bytes": 14649,
+      "sha256": "85e53685d2e9407bddd05a2100e385f18b50e33572319121d7d37957c8c50810"
+    }
+  ],
+  "support_provenance": {
+    "path": "tb371fc/evidence/dp-pll-20261124-6a5/rate-unit-sources.json",
+    "bytes": 4942,
+    "sha256": "89ec5237c25920e73f682f2ee3a92d458aab80363c1b82007ccd26a0454834f6"
+  },
+  "generation": {
+    "command": "python tb371fc/scripts/verify_dp_pll_generation.py --source-root ../dp-pll-review-6a5/primary-r11 --out .work/dp-source-generation-001",
+    "exit_code": 0,
+    "schema": "tb371fc-dp-pll-generation-v1",
+    "source_pins_verified": true,
+    "input_count": 17,
+    "checks": [
+      {
+        "name": "hw/misc/qcom-sm8250-dp-pll-data.inc",
+        "passed": true,
+        "generated_bytes": 11215,
+        "committed_bytes": 11215,
+        "generated_sha256": "36871a517d97b694252bfee383adf781878ac013215b98fd17089e7e73a5dd0d",
+        "committed_sha256": "36871a517d97b694252bfee383adf781878ac013215b98fd17089e7e73a5dd0d"
+      },
+      {
+        "name": "tb371fc/docs/dp-pll-7nm-registers.json",
+        "passed": true,
+        "generated_bytes": 78166,
+        "committed_bytes": 78166,
+        "generated_sha256": "a9150fda61e16a0deb6acabe17f9e3b532963a61453fb98c125dab0cf08ec101",
+        "committed_sha256": "a9150fda61e16a0deb6acabe17f9e3b532963a61453fb98c125dab0cf08ec101"
+      }
+    ],
+    "generated_contract": {
+      "source_input_count": 17,
+      "register_count": 73,
+      "required_register_count": 58,
+      "window_count": 42,
+      "mapped_bytes": 292,
+      "clock_count": 6
+    },
+    "receipt_sha256": "d143e78d489a59523f0ee8c70341f0ed1137d2847428c4f3aa36634c2b80f52f",
+    "determinism": "The initial direct generator output and a separate verifier subprocess regeneration produced identical complete bytes for both outputs."
+  },
+  "source_tamper": {
+    "receipt_sha256": "ed3194f133b2ffbc3dbb47cbebc4943572a97e90c8a87f74fe0741a714379958",
+    "all_17_complete_file_pins_exercised": true,
+    "all_original_inputs_unchanged": true,
+    "checks": [
+      {
+        "path": "arch/arm64/boot/dts/vendor/qcom/kona-sde-pll.dtsi",
+        "rejected": true,
+        "error": "Pinned source hash differs: arch/arm64/boot/dts/vendor/qcom/kona-sde-pll.dtsi",
+        "source_sha256": "d275792039d00a135a3f809e49954196c62f1e68202702597fe9d93fb5484118",
+        "tampered_sha256": "f81ffd61a8b9ff316d152630f7b898b0dc7e6859f6dbae73ce8fc23a1e5f3418",
+        "changed_bits": 1
+      },
+      {
+        "path": "arch/arm64/boot/dts/vendor/qcom/kona-sde.dtsi",
+        "rejected": true,
+        "error": "Pinned source hash differs: arch/arm64/boot/dts/vendor/qcom/kona-sde.dtsi",
+        "source_sha256": "1247f63e2538357a0ca825064ad3b44ce1e0bfa17d45b13f90ca9e5f7b88f352",
+        "tampered_sha256": "107fba2f9d82b2506ca7d406dab5b14214385a8b14c229534441e3a58765f2b7",
+        "changed_bits": 1
+      },
+      {
+        "path": "include/dt-bindings/clock/mdss-7nm-pll-clk.h",
+        "rejected": true,
+        "error": "Pinned source hash differs: include/dt-bindings/clock/mdss-7nm-pll-clk.h",
+        "source_sha256": "51632c1a73cfce8c4915e5e5c56f46b0fddae983d3e0ac44cd2731c488105d82",
+        "tampered_sha256": "a44f979a31aacbf40a6ca388ea13c99cf8ea76858c2c49644b0d13db97511bf7",
+        "changed_bits": 1
+      },
+      {
+        "path": "include/dt-bindings/clock/qcom,dispcc-kona.h",
+        "rejected": true,
+        "error": "Pinned source hash differs: include/dt-bindings/clock/qcom,dispcc-kona.h",
+        "source_sha256": "a624fe5555fd4eddc10a46a80ff3a52da66ddb56f81567c7ea4df591f5949ac2",
+        "tampered_sha256": "3d71fcc6c13c36335cbd7edf9fa603a177d6c65ac70b784a56b39db6a331de00",
+        "changed_bits": 1
+      },
+      {
+        "path": "include/dt-bindings/clock/qcom,gcc-kona.h",
+        "rejected": true,
+        "error": "Pinned source hash differs: include/dt-bindings/clock/qcom,gcc-kona.h",
+        "source_sha256": "ec7b2a775a7f96a543c064c7fc733fb83ffa7e3dae3c4bb517200627ae5f7fed",
+        "tampered_sha256": "41c1fdfc6488b914e106ed06ac2ff3a58cdc98cc027694ba20eeee09a8cce672",
+        "changed_bits": 1
+      },
+      {
+        "path": "include/dt-bindings/clock/qcom,rpmh.h",
+        "rejected": true,
+        "error": "Pinned source hash differs: include/dt-bindings/clock/qcom,rpmh.h",
+        "source_sha256": "9b8ad7915183052c15a1acd4b227099904120639d885e46ea80a5c4be4d13136",
+        "tampered_sha256": "15121f1a486ecd7d78e55219cc2db4c52110d91b190d5ba34b8730c332fd7351",
+        "changed_bits": 1
+      },
+      {
+        "path": "include/linux/usb/usbpd.h",
+        "rejected": true,
+        "error": "Pinned source hash differs: include/linux/usb/usbpd.h",
+        "source_sha256": "6128e1eeaaac1e4ffe13d2ec1a2a6a50c2dda9184346edb8e21e4b1fc39ec957",
+        "tampered_sha256": "0acc54dae14d2ee314d8b0fb1638eb208d60c4b1a7054f393802244d05b8ead7",
+        "changed_bits": 1
+      },
+      {
+        "path": "techpack/display/msm/dp/dp_catalog_v420.c",
+        "rejected": true,
+        "error": "Pinned source hash differs: techpack/display/msm/dp/dp_catalog_v420.c",
+        "source_sha256": "6c68e49ac69d52b1394e4c64344734f3312ff5cccda04f35eefba04dbc3dddc3",
+        "tampered_sha256": "4300128181e0c63d9c7ccefc2aa02447d4afded0fe9d87f63349193338eb6754",
+        "changed_bits": 1
+      },
+      {
+        "path": "techpack/display/msm/dp/dp_reg.h",
+        "rejected": true,
+        "error": "Pinned source hash differs: techpack/display/msm/dp/dp_reg.h",
+        "source_sha256": "9f359d5c920644fc573fe9478be62e3ae0ecc197daf0c81efbb7a886836f8cab",
+        "tampered_sha256": "b81e7193cd901053613cfb23860c5a821896bb946747ffd17485470aaa656b18",
+        "changed_bits": 1
+      },
+      {
+        "path": "techpack/display/pll/Makefile",
+        "rejected": true,
+        "error": "Pinned source hash differs: techpack/display/pll/Makefile",
+        "source_sha256": "83598d0660b38fb30979ca52a17e2ac2ece01573ca49ed9a86ea01cd3624bcf0",
+        "tampered_sha256": "6a8d8738d46522bb2abc96c4b6de744ea68610f69049ff1deb7727ec962e073e",
+        "changed_bits": 1
+      },
+      {
+        "path": "techpack/display/pll/dp_pll.h",
+        "rejected": true,
+        "error": "Pinned source hash differs: techpack/display/pll/dp_pll.h",
+        "source_sha256": "f9d9cae58e7720bd4415d1c33d3645850ce3d3c5dba2adf835d6d9acd07f4a1c",
+        "tampered_sha256": "b89188d6fdc011e84e0fbb624f0026a8625980e32330c965b0ca15446f9553a9",
+        "changed_bits": 1
+      },
+      {
+        "path": "techpack/display/pll/dp_pll_7nm.c",
+        "rejected": true,
+        "error": "Pinned source hash differs: techpack/display/pll/dp_pll_7nm.c",
+        "source_sha256": "b8c40f85bb9ee966b905434e91225c70e27ecd945a5ea2495cc7604219d483a1",
+        "tampered_sha256": "6faa8c8477669e075cae2d8ee340a47158fba453a19001c1bde580a6fe1d586c",
+        "changed_bits": 1
+      },
+      {
+        "path": "techpack/display/pll/dp_pll_7nm.h",
+        "rejected": true,
+        "error": "Pinned source hash differs: techpack/display/pll/dp_pll_7nm.h",
+        "source_sha256": "7c95097365330c9aad6999ec62e9b15ee20957ca76f94f599e6fc5be615705fd",
+        "tampered_sha256": "aa12e796b298a44324f4888a98423592b0345f5ff6049a4b9752c52b7782204f",
+        "changed_bits": 1
+      },
+      {
+        "path": "techpack/display/pll/dp_pll_7nm_util.c",
+        "rejected": true,
+        "error": "Pinned source hash differs: techpack/display/pll/dp_pll_7nm_util.c",
+        "source_sha256": "1135de217c3ec633a4539565e699baa86fdbe452e48e444cd3660b5cab981532",
+        "tampered_sha256": "3e73a309936a4fcbff301539af9528f08cd11cf255b6750cfe0870d8eef287a3",
+        "changed_bits": 1
+      },
+      {
+        "path": "techpack/display/pll/pll_drv.c",
+        "rejected": true,
+        "error": "Pinned source hash differs: techpack/display/pll/pll_drv.c",
+        "source_sha256": "14652116c7ea1ff9c5380fe5441087c910d57b890d52aec3a2a031b76b250c56",
+        "tampered_sha256": "c2fd006edd8a0ff4f6fa79c5e385b296bf496ae459d0bd80e3de6f81c37c84be",
+        "changed_bits": 1
+      },
+      {
+        "path": "techpack/display/pll/pll_drv.h",
+        "rejected": true,
+        "error": "Pinned source hash differs: techpack/display/pll/pll_drv.h",
+        "source_sha256": "ba1df695799b9c4b078fcde5c6cfa3bddf35ed026f818f4fe372cf89d3221feb",
+        "tampered_sha256": "14e18b8156528d0036162b8eec4c3981150f4b70f1166f9c54994f6c7038e47a",
+        "changed_bits": 1
+      },
+      {
+        "path": "techpack/display/pll/pll_util.c",
+        "rejected": true,
+        "error": "Pinned source hash differs: techpack/display/pll/pll_util.c",
+        "source_sha256": "652450b062d1a957a2db5b83c46244e11168974e259506f0c9a3e5b959f2e49a",
+        "tampered_sha256": "7667e06c15334ae4659c5bc42a91c8f056b45b29bc54d9cb460b71791d084782",
+        "changed_bits": 1
+      }
+    ]
+  },
+  "production_evidence": [
+    {
+      "path": "tb371fc/evidence/dp-pll-20261124-6a5/actual-kernel-dp-probe-instructions.json",
+      "bytes": 10886,
+      "sha256": "949db9a57a4e0f37bc15b0bfc273bfeb9f8f458c3bc49fb1c63c32d005a92bbb"
+    },
+    {
+      "path": "tb371fc/evidence/dp-pll-20261124-6a5/actual-kernel-dp-helper-instructions.json",
+      "bytes": 17349,
+      "sha256": "579798d7f221f4ddb0f1130c2855f580f7c8839d3789a32e406ccf0093d2b554"
+    },
+    {
+      "path": "tb371fc/evidence/dp-pll-20261124-6a5/actual-dp-controller-dt.json",
+      "bytes": 1845,
+      "sha256": "d9669b9f65d4d822e7bbfa9d80bebe69ed84d7ac7c834ba332db777310c93373"
+    },
+    {
+      "path": "tb371fc/evidence/dp-pll-20261124-6a5/actual-dp-phy-version.json",
+      "bytes": 255,
+      "sha256": "2d5f286882e76e3f40c5c888e71127c760b111ec6b1da5ec9203fad50608f316"
+    },
+    {
+      "path": "tb371fc/evidence/dp-pll-20261124-6a5/native-frontier-before-dp.json",
+      "bytes": 13078,
+      "sha256": "79a245ee2738a9db89298f03fcfd20febbc51239336cce63dfb0aac27f60c143"
+    }
+  ],
+  "production_comparison": {
+    "original_dt_resource_and_provider_ids_match": true,
+    "actual_dp_controller_alias_size_bytes": 16,
+    "actual_phy_version": "0x420",
+    "cold_probe_instructions": [
+      {
+        "relative_offset": "0x60",
+        "instruction_word": "0x91056108",
+        "interpretation": "ADD pointer, 0x158",
+        "matched": true
+      },
+      {
+        "relative_offset": "0x64",
+        "instruction_word": "0xb9400108",
+        "interpretation": "32-bit LDR",
+        "matched": true
+      },
+      {
+        "relative_offset": "0x68",
+        "instruction_word": "0x12000d08",
+        "interpretation": "AND low four bits",
+        "matched": true
+      },
+      {
+        "relative_offset": "0x94",
+        "instruction_word": "0x9100a108",
+        "interpretation": "ADD PHY pointer, 0x28",
+        "matched": true
+      },
+      {
+        "relative_offset": "0x98",
+        "instruction_word": "0xb9400108",
+        "interpretation": "32-bit LDR",
+        "matched": true
+      },
+      {
+        "relative_offset": "0x9c",
+        "instruction_word": "0x53020d02",
+        "interpretation": "UBFX bits 3:2",
+        "matched": true
+      }
+    ],
+    "actual_hsclk_jump_table": [
+      1,
+      2,
+      5,
+      3
+    ],
+    "whole_image_public_source_identity_established": false,
+    "analog_semantics_established": false,
+    "scope": "Instruction comparison is limited to retained probe/helper evidence; named source compatibility does not identify the full Lenovo build."
+  },
+  "native_observation_before_dp": {
+    "runtime_commit": "8e8e19a97efc23c215b35ed4dd40120ffab0e40d",
+    "luns": 0,
+    "first_fatal_physical_address": "0x088ea158",
+    "first_fatal_guest_seconds": 6.260019,
+    "first_fatal_function": "dp_vco_recalc_rate_7nm+0x64",
+    "outcome": "kernel-failure",
+    "stock_android_boot_passed": false,
+    "full_printk_sha256": "b7815c55daf2803a8255cde6a9dae3c799ac91d37924a75eb43f7d003fda0007"
+  },
+  "remaining_qualification": [
+    "Compiled DP component suite and full migration/protocol receipts",
+    "Independent audit of the exact CI artifact",
+    "An original-input native run of the qualified DP binary",
+    "Complete six-LUN Android userspace, boot-complete and interactive display evidence"
+  ]
+}

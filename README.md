@@ -14,7 +14,7 @@
 
 ## 当前整合：原厂 Android 启动开发基线
 
-本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。在已合入的 VIDEOCC 之后加入 DSI 7 nm v4.1 协议及固定源码再生两个 gate，当前公开计划为 **94 项：89 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
+本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。在已合入且实际通过验证的 DSI 7 nm v4.1 之后加入 DP 7 nm PLL 协议及固定源码再生两个 gate，当前公开计划为 **96 项：91 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
 
 两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
 
@@ -76,7 +76,14 @@ run005 的首个显示异常发生于 guest 3.697772 秒，CPU4、PID84 `kworker
 
 只有实际 MDSS 供电已知且开启、19.2 MHz XO 已知、完整 v4.1 配置有效并收到启动沿，才开始有限的锁定事务。250 ns bias 间隔有源码依据，64 个 XO 周期是明确的参考锁定策略；输出还要求锁定后的数字复位脉冲及实际分频／门控。源丢失或配置改变会撤销资格。动态刷新、REFGEN_READY、模拟 PHY、lane、panel 和画面仍未实现。
 
-四个最终 DSI byte／pixel 输出在显式启用时接入 DISPCC。两个 pixel 输入按源码允许至 5 GHz，频率和 Clock 周期使用 64 位换算；其余十五个输入保留原边界。DIS1 的 1676 B wire 不变，新增高频迁移状态不声称可由旧版接收。DSI 自身使用 DSI4 / v1 的 2926 B 完整状态，并保留尚未完成的 bias／LOCK 截止时间。所有新设备测试通过后仍需实际原始输入启动；这里未声明 Android 用户态、启动完成或显示成功。
+四个最终 DSI byte／pixel 输出在显式启用时接入 DISPCC。两个 pixel 输入按源码允许至 5 GHz，频率和 Clock 周期使用 64 位换算；其余十五个输入保留原边界。DIS1 的 1676 B wire 不变，新增高频迁移状态不声称可由旧版接收。DSI 自身使用 DSI4 / v1 的 2926 B 完整状态，并保留尚未完成的 bias／LOCK 截止时间。精确源码 `8e8e19a` 已实际通过 89+5 CI 和三个独立完整产物审计，并合入主线 `804e6963`。同一个已审计二进制的原始输入诊断中，两路 DSI PLL 在 guest 6.170571／6.240493 秒注册成功；随后 DP PLL 首次读取 `0x088ea158` 失败。该次零原始 LUN，正常 QMP 清理，原输入摘要不变；Android 用户态、启动完成和显示成功仍未观察到。见[CI 资格证据](https://github.com/cyjin-yl/qemu-tb371fc/tree/558159ad6be720090706a33fe2fc16cf36879802/tb371fc/evidence/dsi-pll-20261124-6a5/ci-8e8e19a)与[实际原始输入回执](https://github.com/cyjin-yl/qemu-tb371fc/tree/ab88bc65d1dba621ca6291aea717fd461a64a0a9/tb371fc/evidence/dsi-pll-20261124-6a5/native-8e8e19a)。
+
+### DP PLL：原始设备树与生产指令共同定位
+
+下一首个异常在 guest 6.260019 秒的 `dp_vco_recalc_rate_7nm+0x64`。原始完整 DT 的 `qcom,mdss_dp_pll_7nm` 声明 PLL 基址 `0x088ea000`，生产指令将该基址加 `0x158` 后执行 32 位读取；下一步还会读 PHY `+0x28`。冷探测读取配置并不先检查锁定。新的 [DP 7 nm 模型合同](tb371fc/docs/dp-pll-7nm.md)据此区分寄存器读回、有限锁定事务和实际 Clock 输出，沿用原来的 MDSS／XO 提供者。
+
+此增量需要自己的 91+5 正式 CI、完整迁移产物审计和新的原始输入运行；既有 DSI 成功记录只绑定 `8e8e19a`。原始存储备份尚未完成，UI 与完整 Android 启动目标仍在推进。
+
 
 ## 默认分支既有验收：2026-11-24 存储与电源修复
 
