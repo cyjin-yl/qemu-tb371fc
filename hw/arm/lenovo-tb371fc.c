@@ -66,6 +66,7 @@
 #include "hw/misc/qcom-gdsc.h"
 #include "hw/misc/qcom-camera-gdsc.h"
 #include "hw/misc/qcom-mdss-gdsc.h"
+#include "hw/misc/qcom-npu-gdsc.h"
 #include "hw/misc/qcom-spmi-pmic-arb.h"
 #include "hw/gpio/qcom-tb371fc-tlmm.h"
 #include "hw/misc/qcom-sm8250-rpmh.h"
@@ -1094,6 +1095,21 @@ static void tb371fc_create_mdss_gdsc(TB371FCMachineState *s,
     }
 }
 
+static void tb371fc_create_npu_gdsc(TB371FCMachineState *s)
+{
+    DeviceState *gdsc = qdev_new(TYPE_QCOM_NPU_GDSC);
+
+    object_property_add_child(OBJECT(s), "npu-gdsc", OBJECT(gdsc));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(gdsc), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gdsc), 0,
+                   qcom_npu_gdsc_domains[0].address);
+    /*
+     * The actual NPU GDSC node declares no parent supply. Keep both parent
+     * inputs unknown; neither mmcx, NPUCC nor a clock vote supplies evidence
+     * that this rail is available. The collapsed reference still reads OFF.
+     */
+}
+
 static void tb371fc_create_cpufreq(TB371FCMachineState *s)
 {
     for (unsigned i = 0; i < QCOM_CPUFREQ_HW_DOMAINS; i++) {
@@ -1746,6 +1762,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_sbm(s);
     tb371fc_create_gpucc(s);
     tb371fc_create_npucc(s);
+    tb371fc_create_npu_gdsc(s);
     tb371fc_create_noc_qos(s);
     tb371fc_create_gpu_cx_gdsc(s);
     tb371fc_create_gpu_gx_gdsc(s);

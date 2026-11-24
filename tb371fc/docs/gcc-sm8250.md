@@ -260,9 +260,26 @@ The same pinned branch driver stores PERIPH/MEM requests in bits 13/14 at
 The clock descriptor, unknown parent, GPIO behavior and GCC v3 layout remain
 unchanged. The vendor's separate HWCG bit 1 remains outside the currently
 implemented mask; retention support does not imply that mode is implemented.
-VIDEO_AHB `0xb004` and NPU_CFG_AHB `0x4d004` keep their existing permissions.
+VIDEO_AHB `0xb004` keeps its existing permissions. The later NPU increment
+below changes only its own AHB word.
 The MDSS gate requires real retention round trips, rejected reserved writes
 and restoration of a nonzero DISP_AHB word without inventing a clock rate.
+
+## NPU configuration AHB retention request fields
+
+The [independent NPU GDSC](npu-gdsc-reference.md) refers to vendor binding
+`GCC_NPU_CFG_AHB_CLK = 43`, existing QEMU descriptor 42 and external input 21.
+The pinned `gcc_npu_cfg_ahb_clk` declaration and `clk_branch2_ops.set_flags`
+support the same PERIPH/MEM requests at bits 13/14 of offset `0x4d004`.
+Its writable mask changes from `0x00000003` to `0x00006003`; its already
+implemented HWCG bit 1 and read-only status mask `0xf0000000` are preserved.
+The generator records the checked source declaration and hashes.
+
+The descriptor has no declared clock parent in the fixed vendor source.
+Its selected external input stays unknown, so votes, HWCG and retention
+requests cannot create a frequency. The NPU gate requires nonzero retention
+state in an actual GCC v3 transfer, reserved-bit rejection and unchanged
+clock period. No retained contents or NPU processing are simulated.
 
 ## Actual tablet observations and frequency assumptions
 

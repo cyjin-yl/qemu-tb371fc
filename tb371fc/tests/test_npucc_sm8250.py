@@ -1070,7 +1070,7 @@ WINDOWS = (
 )
 
 
-def three_physical_banks_have_only_26_sparse_windows_and_leave_gdsc_unmapped(args, out):
+def three_physical_banks_keep_26_windows_and_independent_gdsc_owner(args, out):
     rig = NpuRig(args, out / "physical-windows-and-gaps")
     try:
         mtree = rig.monitor("human-monitor-command", {"command-line": "info mtree -f"})
@@ -1086,9 +1086,22 @@ def three_physical_banks_have_only_26_sparse_windows_and_leave_gdsc_unmapped(arg
         assert found == expected and len(found) == 26, (found, expected, mtree)
         configured_outputs(rig)
         before = rig.snapshot()
-        # The separate DT GDSC at 0x09981004 has no implementation here.
-        # Actual memory-core decode errors must accompany the unchanged state.
-        gaps = (CC + 0x1004, CC + 0x1040, CC + 0x11a8, CC + 0x1500,
+        # The separate GDSC owner remains disabled by this NPUCC-only profile.
+        # NPUCC still has exactly 26 windows and does not own that word.
+        for operation in ("write", "read"):
+            diagnostic = ("qcom-npu-gdsc: rejected " + operation +
+                          " domain=0 offset=0x0 size=4 value=0x" +
+                          ("12345678" if operation == "write" else "0") +
+                          " reason=reference-disabled")
+            old_count = rig.diagnostic_count(diagnostic)
+            if operation == "write":
+                rig.write(CC + 0x1004, 0x12345678)
+            else:
+                rig.read(CC + 0x1004)
+            assert rig.diagnostic_count(diagnostic) == old_count + 1
+            assert rig.snapshot() == before
+        # Actual memory-core decode errors accompany unchanged controller state.
+        gaps = (CC + 0x1008, CC + 0x100c, CC + 0x1040, CC + 0x11a8, CC + 0x1500,
                 DSP, DSP + 0x24, DSP + 0x30, DSP_PLL + 0x44)
         for address in gaps:
             old_log = rig.log_path.read_text(errors="replace")
@@ -1380,8 +1393,8 @@ def main():
                                  "passed": True})
         paused = normal_tcg_exposes_no_fixture_setters(args, out)
         report["checks"].append({"name": "normal_tcg_exposes_no_fixture_setters", "passed": True, **paused})
-        three_physical_banks_have_only_26_sparse_windows_and_leave_gdsc_unmapped(args, out)
-        report["checks"].append({"name": "three_physical_banks_have_only_26_sparse_windows_and_leave_gdsc_unmapped",
+        three_physical_banks_keep_26_windows_and_independent_gdsc_owner(args, out)
+        report["checks"].append({"name": "three_physical_banks_keep_26_windows_and_independent_gdsc_owner",
                                  "passed": True})
         migration_checks(args, out, report)
         report["binary_unchanged"] = digest(args.qemu) == initial_hash

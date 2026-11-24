@@ -14,7 +14,7 @@
 
 ## 当前整合：原厂 Android 启动开发基线
 
-本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。加入下面的 MDSS gate 后，当前公开计划为 **84 项：79 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
+本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。加入下面的独立 NPU GDSC gate 后，当前公开计划为 **85 项：80 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
 
 两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
 
@@ -22,9 +22,17 @@
 
 [原始输入运行摘要](tb371fc/evidence/mdss-20261124-e1a9/native-frontier-before-mdss.json)记录：相机域继续注册后，`42144e8` 的正式二进制在 guest 3.696830 秒对 `0x0af03000` 的 4 B 读取触发新的首个同步外部异常；进程是 CPU4 的 PID78 `kworker/4:1`，调用链经过 `gdsc_probe`。这是延迟 probe 线程 Oops，未观察到 PID1 panic 或用户态成功。原始 kernel／ramdisk／完整 DT／bootargs 摘要前后一致，本次没有挂载原始 LUN。
 
-[MDSS 独立参考模型](tb371fc/docs/mdss-gdsc-reference.md)只拥有 `0x0af03000` 的 4 B 控制字，需显式 `qcom-mdss-gdsc.enabled-reference=on`。其三态父资源／硬件请求与 64 B v1 状态独立于原有六域相机；无状态分流器保留相机连接并共享实际 RPMh `mmcx.lvl` 输出。DISP_AHB `0xb00c` 只增加源码支持的 retention 位 13/14，未知父时钟不变。DISPCC 其余范围、NPU 和视频 GDSC 仍未实现。
+[MDSS 独立参考模型](tb371fc/docs/mdss-gdsc-reference.md)只拥有 `0x0af03000` 的 4 B 控制字，需显式 `qcom-mdss-gdsc.enabled-reference=on`。其三态父资源／硬件请求与 64 B v1 状态独立于原有六域相机；无状态分流器保留相机连接并共享实际 RPMh `mmcx.lvl` 输出。DISP_AHB `0xb00c` 只增加源码支持的 retention 位 13/14，未知父时钟不变。DISPCC 其余范围和视频 GDSC 仍未实现。
 
-新增组件 gate 要求 20 组、3 次完成迁移、2 次 profile 拒绝和 2 次单 bit 损坏拒绝，并核验共享父资源、未知输入和恢复前首次只读状态。此处记录源码与验收要求；必须取得本组合的真实编译／CI 及原始输入复测结果，才能声称越过 MDSS 原厂异常。
+源码 `9d5e942` 的[正式 CI 45402110062](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45402110062)已实际通过 MDSS 20 组、3 次完成迁移、2 次 profile 拒绝和 2 次单 bit 损坏拒绝，以及当时 79+5 全计划。板级二进制 SHA-256 为 `33d27c37b0a9abd53630616fc803808702326ec3aab8a8d13dfeadccea47e94e`；MDSS／camera 完整 payload、实际迁移文件和各拒绝日志已独立核验。
+
+### NPU GDSC：从真实下一异常推进
+
+同一个 `9d5e942` 正式二进制的[原始输入 run002 摘要](https://github.com/cyjin-yl/qemu-tb371fc/blob/fd905b821f318c1499ea0e0f8a4e7017226b383d/tb371fc/evidence/mdss-20261124-e1a9/native-frontier-after-mdss.json)确认 MDSS 于 guest 3.546862 秒注册。下一首个同步外部异常是 3.555330 秒读取物理 `0x09981004` 的 4 B，发生在 CPU6、PID83 `kworker/6:1` 的 `gdsc_probe`；不是 PID1 panic。原始输入摘要前后一致，120 秒诊断尚未挂载原始 LUN，也没有 Android 用户态或完成启动证据。
+
+[NPU 独立参考模型](tb371fc/docs/npu-gdsc-reference.md)只接管这个单 word。实际 DT 没有声明父供电或硬件触发，所以模型不接 mmcx，保持父供电未知并拒绝 HW_CONTROL。显式 `qcom-npu-gdsc.enabled-reference=on` 的冷态 collapse 可读为已关闭；请求开启时，如果父供电仍未知，状态读取返回错误，不能给出虚构 ON。NPUCC 原 26 个稀疏窗口和迁移格式保持不变。
+
+NPU_CFG_AHB `0x4d004` 仅增加源码支持的 retention 位 13/14，保留原 HWCG 位及未知父时钟。新的 21 组／3 次完成／2 次 profile／2 次损坏流门禁还需实际编译执行，随后使用同一二进制和不变原厂输入验证是否越过本次异常。NPU 推理执行和完整 Android 启动仍未通过。
 
 ## 默认分支既有验收：2026-11-24 存储与电源修复
 

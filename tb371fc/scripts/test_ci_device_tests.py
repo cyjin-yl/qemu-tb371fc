@@ -173,7 +173,7 @@ class PlanTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         plan = ci.plan(args, Path("/test/runtime"))
         cases = {case.name: case for case in plan}
-        self.assertEqual(len(plan), 79)
+        self.assertEqual(len(plan), 80)
         self.assertEqual(len(cases), len(plan))
         self.assertEqual(cases["tbu-reference-ecats"].expected_count, 17)
         self.assertEqual(cases["smmuv500-reference"].expected_count, 36)
@@ -182,8 +182,18 @@ class PlanTests(unittest.TestCase):
         self.assertNotIn("gpu-gdsc", cases)
         for name in ("ufs-crypto-rejection", "ufs-auto-hibern8",
                      "power-checkpoint", "camera-gdsc-reference",
-                     "mdss-gdsc-reference"):
+                     "mdss-gdsc-reference", "npu-gdsc-reference"):
             self.assertIn(name, cases)
+        npu = cases["npu-gdsc-reference"]
+        self.assertEqual(npu.expected_count, 21)
+        self.assertEqual(npu.expected_values["parent_resource_index"], 0xffffffff)
+        self.assertIs(npu.expected_values["parent_supply_declared"], False)
+        self.assertIs(npu.expected_values["parent_power_connected"], False)
+        self.assertEqual(npu.expected_values["hardware_mode_domain_mask"], 0)
+        self.assertEqual(npu.expected_lengths,
+                         {"migrations": 3, "rejected_migrations": 2,
+                          "corrupted_stream_rejections": 2,
+                          "migration_sources": 4, "actual_stream_files": 6})
         rpmh = cases["rpmh-wait-mask-reference"].expected_values
         self.assertEqual(rpmh["vmstate_version"], 3)
         self.assertEqual(rpmh["vmstate_minimum_version"], 2)
@@ -194,7 +204,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 84)
+        self.assertEqual(len(cases), 85)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]

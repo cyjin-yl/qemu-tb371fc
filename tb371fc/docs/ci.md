@@ -186,7 +186,7 @@ still apply to any future authorized consumer execution.
 
 ## Gates
 
-The current integration plan registers **84 gates: 79 component/parser gates
+The current integration plan registers **85 gates: 80 component/parser gates
 and five Linux integration gates**, plus separate active and runtime-suspended
 real-Linux UFS checkpoints and the A77/PCI UFS compatibility job. This union
 preserves the wholeboard reference peripherals and default-branch storage,
@@ -196,6 +196,12 @@ three completed process migrations, two profile rejections and two single-bit
 corruption rejections. Its 64-byte section is independent of the unchanged
 194-byte camera section. Shared mmcx and unknown-clock behavior are tested
 through the real board wiring; the added gate is not native Android evidence.
+The independent [NPU GDSC gate](npu-gdsc-reference.md) adds 21 required checks,
+three completed migrations, two profile rejections and two single-bit stream
+rejections. Its separate 64-byte section binds a no-declared-parent sentinel;
+the board leaves both parent inputs unconnected. Actual RPMh mmcx votes must
+not resolve NPU power, and NPU_CFG_AHB retention requests must not invent a
+clock rate. NPUCC's 26 sparse windows and all earlier migration formats remain.
 The archived
 [47-gate isolated run](../evidence/verified-20261123-0820/public-47/result.json)
 actually passed all gates in 73.261 seconds on board binary `87f52240ff55e0b60a87e9a0dc57b76dff75e653f3dbe1d5dbdc64b2b7d9ac89`.
@@ -225,6 +231,7 @@ pass does not attest newly added devices.
 | NoC QoS | 20 checks; 47 independent ports / 188 words, two completed transfers, two profile mismatches and two deliberately corrupted-stream rejections; no traffic or SBM synthesis |
 | Config NoC SBM reference | 28 checks; eight independent logical deadlines, three words, pure stopped state, two completed transfers, two profile mismatches and two corrupted-field rejections; no real traffic drain |
 | NPUCC | 37 checks across three physical banks, actual Clock outputs, source-bound CRC/dividers, two completed migrations and two profile rejections; full NPU/DSP execution remains outside scope |
+| NPU GDSC | 21 checks; independent 4-byte word and 64-byte v1 state, unknown parent preserved, hardware mode rejected, NPU_CFG_AHB retention only, three completed transfers, two profile and two corruption rejections |
 | GPUCC | 30 actual digital PLL/RCG/branch/reset checks, two completed migrations and two profile rejections; actual Clock providers and sparse ownership boundaries |
 | GPU CX and GX power domains | CX 26 checks with 9 migration attempts (6 completed, 3 rejected); GX 37 checks with 12 attempts (8 completed, 4 rejected); explicit digital reference states only |
 | SMEM reference handoff | 22 checks and 4 real migration cases; the separate stopped-production-kernel observer never substitutes for a native run |

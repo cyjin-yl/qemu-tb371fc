@@ -87,9 +87,12 @@ bit 27. Subword, unaligned and unsupported-bit writes fail without changing
 the target register. Generated read-only bits are ignored on otherwise
 valid read/modify/write operations.
 
-The NPU core GDSC at cc `+0x1004` has no model in this change and is
-outside every window. The model does not silently acknowledge that power
-domain. Existing GPUCC, GPU CX/GX and GCC mappings remain separate.
+The NPU core GDSC at cc `+0x1004` remains outside every NPUCC window.
+The later [independent GDSC owner](npu-gdsc-reference.md) maps that one word
+and rejects accesses unless its own reference profile is selected. It does
+not extend these 26 windows or change NPUCC VMState. The adjacent words at
+cc `+0x1008/+0x100c` remain unassigned. Existing GPUCC, GPU CX/GX and GCC
+mappings remain separate.
 
 ## PLL and divider behavior
 

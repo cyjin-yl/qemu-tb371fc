@@ -222,7 +222,22 @@ It selects only the MDSS word at `0x0af03000`, preserves the camera type and
 Its self proxy remains a software consumer rather than a hardware parent.
 The GCC generator checks the fixed display branch declaration and stores
 only its two source-supported retention requests. The unknown parent clock,
-NPU/video GDSC holes and all other DISPCC addresses retain their old scope.
+video GDSC holes and all other DISPCC addresses retain their old scope.
 Independent 64-byte MDSS migration and real-wiring acceptance are required;
 neither source generation nor component checks establish display or Android
 execution.
+
+## NPU GDSC and NPU_CFG_AHB bounded increment
+
+The [NPU contract](docs/npu-gdsc-reference.md) binds the next actual native
+read failure at `0x09981004` to the same fixed vendor regulator/branch
+sources and original DT. That node declares no parent supply and no hardware
+trigger, so the independent reference leaves parent inputs unconnected and
+rejects hardware mode. A collapsed request is known-off; an asserted
+request cannot produce ON feedback without an explicitly known parent.
+There is no inferred mmcx link. NPUCC's 26 sparse windows and VMState stay
+unchanged. The GCC generator adds only the two source-supported retention
+request bits to its existing NPU_CFG_AHB word, keeping HWCG, status and the
+unknown clock input. The 21-check gate and independent 64-byte migration
+require actual compiled execution; source inspection is not an Android or
+NPU workload result.
