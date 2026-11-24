@@ -37,6 +37,7 @@ jobs:
       - name: Validate original Android input preservation and bounded orchestration
         run: |
           set -euo pipefail
+          python3 tb371fc/scripts/test_ci_device_tests.py
           python3 tb371fc/tests/test_android_boot_inputs.py
           python3 tb371fc/tests/test_boot_android.py
           python3 tb371fc/tests/test_acquire_block_ranges.py

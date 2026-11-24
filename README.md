@@ -72,7 +72,9 @@ PLL1 的通用配置可写入 standby，只有最终 v2 配方具有 LOCK／ACK 
 
 [原厂 run007](tb371fc/evidence/videocc-20261124-e1a9/native-frontier-after-videocc.json)在 guest 2.673751 秒注册 Video CC，2.974308 秒在 `vco_7nm_recalc_rate` 读取 `0x0ae94418` 时发生外部异常，随后 PID1 panic。Guest reset 使 QEMU 停在 `shutdown`；运行器在发送 `quit` 前因要求 `paused` 报错，最终由 host signal 退出。因此该次运行的正常 QMP 清理仍判定失败，QEMU 返回 0 不改变结论。原始输入摘要不变，但没有挂载原始 LUN或观察到 Android 用户态。
 
-[并行整合记录](tb371fc/evidence/videocc-20261124-e1a9/reconciliation.json)保留已合入 PR23 的 C 实现、寄存器表和 `VIC2` 迁移身份，并合入本分支补充的 41 组检查、十源验证及历史回执。`be708c3` 使用的 `VID2` 身份只属于该历史候选；其流不冒充当前格式，整合后源码需要重新执行 CI。
+[并行整合记录](tb371fc/evidence/videocc-20261124-e1a9/reconciliation.json)保留已合入 PR23 的 C 实现、寄存器表和 `VIC2` 迁移身份，并合入本分支补充的 41 组检查、十源验证及历史回执。`be708c3` 使用的 `VID2` 身份只属于该历史候选；其流不冒充当前格式。
+
+整合源码 `e07a0bf` 的[正式 CI 45454077103](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45454077103)已另行通过 87+5、41 组／3/2/2、十源再生与独立 A77／PCI UFS；[实际 ZIP 审计](tb371fc/evidence/videocc-20261124-e1a9/ci-artifact-audit-e07a0bf.json)核验了当前 VIC2 流及全部时钟，二进制 SHA-256 为 `249801cddb5bde525c05dfbc282a1f630ceb320dabe6b6891a688e7e3e5a583c`。原始输入保护阶段实际通过新运行器的 39 项检查；没有为相同 DSI 异常再启动原厂运行。另发现 CI 原先没有调用辅助脚本的 31 项单元检查，本增量将它接入现有验证步骤，需以新提交的正式执行结果验收。
 
 ## 默认分支既有验收：2026-11-24 存储与电源修复
 

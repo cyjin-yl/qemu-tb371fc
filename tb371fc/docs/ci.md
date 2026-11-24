@@ -535,3 +535,19 @@ records Video CC registration followed by a DSI PHY external abort and PID1
 panic. It also preserves a separate cleanup failure: QEMU stayed in shutdown
 after guest reset, the runner raised before quit and used a host signal.
 Return code zero is not accepted as normal QMP cleanup or Android success.
+
+The reconciled VIC2 source `e07a0bfff87b1004cbd362507c689154822f5905`
+subsequently passed its own [push run 45454077103](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45454077103).
+The [independent ZIP audit](../evidence/videocc-20261124-e1a9/ci-artifact-audit-e07a0bf.json)
+binds all 87+5 gates, 41 VIDEOCC groups, complete VIC2/VIDEO payloads and 19
+rates to binary `249801cddb5bde525c05dfbc282a1f630ceb320dabe6b6891a688e7e3e5a583c`.
+Its original-input step executed 28 input, 39 runner, 16 collector and 15
+assembler unit tests. The separate six-LUN handoff workflow passed as well.
+No new original-firmware run was performed for this reconciliation.
+
+Full-log review showed that this workflow did not invoke
+`test_ci_device_tests.py`; e07's success is therefore not evidence for those
+31 host tests. The next increment explicitly adds that existing suite to the
+preservation/orchestration validation step. The previous local AF_UNIX-denied
+preflight remains recorded as failed, and the added suite requires its own
+actual official run. It does not change the 87 component / five Linux plan.
