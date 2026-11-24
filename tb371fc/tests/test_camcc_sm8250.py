@@ -751,6 +751,82 @@ def expect_root(r, index, hz):
     assert bool(r.read(offset) & OFF) == (hz == 0)
 
 
+def assert_lucid_update_bypass_cleared(r, active):
+    """Pure observers cannot repair a canceled latch or a migrated ACK."""
+    for i, expected in active.items():
+        assert r.reg(PLLS[i][0]) & (UPDATE | UPDATE_BYPASS) == UPDATE
+        assert not r.pll(i, "ack") and not r.pll(i, "latch-pending")
+        assert r.pll(i, "latch-deadline") == -1
+        assert (r.pll(i, "active-l"), r.pll(i, "active-alpha")) == expected
+        assert r.pll(i, "locked") is True
+        r.expect_hz(PLLS[i][1], pll_rate(i, *expected))
+
+
+def clear_lucid_update_bypass_in_acked_and_pending_states(r):
+    """Exercise the supported control write, not a claimed kernel transaction."""
+    before = {i: (r.pll(i, "active-l"), r.pll(i, "active-alpha")) for i in (0, 1)}
+    captured = {i: (before[i][0] + 1, 0x4560 + i) for i in (0, 1)}
+    for i in (0, 1):
+        base = PLLS[i][0]
+        assert r.reg(base) & (UPDATE | UPDATE_BYPASS) == UPDATE_BYPASS
+        r.write(base + 4, captured[i][0])
+        r.write(base + 64, captured[i][1])
+        r.write(base, r.read(base) | UPDATE)
+        r.step(LATCH_NS + LOCK_NS if i == 0 else LATCH_NS // 2)
+    assert r.pll(0, "ack") is True and not r.pll(0, "latch-pending")
+    assert r.pll(1, "ack") is False and r.pll(1, "latch-pending") is True
+    assert r.pll(1, "latch-deadline") == r.last_clock + LATCH_NS // 2
+    for i in (0, 1):
+        base = PLLS[i][0]
+        # Leave UPDATE high: clearing it would miss the already-ACK regression.
+        r.write(base, r.read(base) & ~UPDATE_BYPASS)
+    active = {0: captured[0], 1: before[1]}
+    assert_lucid_update_bypass_cleared(r, active)
+    return active
+
+
+def literal_critical_xo_bootstrap(r):
+    """Fixed vendor safe-enable sequence, without warming every RCG first."""
+    # 94304e12 camcc-kona.c:1365/1814 and clk-rcg2.c:649-690:
+    # binding37 branch -> binding110 XO; force ROOT, configure/UPDATE, unforce.
+    # CCF orphan/reparent callback counts and analog timing are not asserted.
+    cmd, cfg, branch = 0xc154, 0xc158, 0xc16c
+    index = RCG_INDEX["cam_cc_xo_clk_src"]
+    assert OUTPUTS[37] == "cam_cc_gdsc_clk" and OUTPUTS[110] == "cam_cc_xo_clk_src"
+    assert RCGS[index][0] == cmd
+    assert r.reg(cmd) == r.reg(cfg) == r.reg(branch) == 0
+    assert r.read(cmd) & OFF and r.read(branch) & OFF
+
+    def update_bits(offset, mask, value):
+        old = r.read(offset)
+        new = (old & ~mask) | (value & mask)
+        if new != old:  # regmap_update_bits omits an unchanged physical write.
+            r.write(offset, new)
+
+    update_bits(cmd, ROOT, ROOT)
+    assert not r.read(cmd) & OFF and not r.read(cmd) & BUSY
+    r.expect_hz("cam_cc_xo_clk_src", XO)
+    update_bits(cfg, 0x1f | (7 << 8) | (3 << 12) | HW_CLK, HW_CLK | 1)
+    update_bits(cmd, BUSY, BUSY)
+    assert r.read(cmd) & (ROOT | BUSY) == ROOT | BUSY
+    r.step(RCG_NS - 1)
+    assert r.rcg(index, "pending") is True
+    r.step(1)
+    assert not r.read(cmd) & BUSY and r.rcg(index, "active-cfg") == HW_CLK | 1
+    update_bits(cmd, ROOT, 0)
+    assert r.reg(cmd) == 0 and r.read(cmd) & OFF
+    r.expect_hz("cam_cc_xo_clk_src", 0)
+    update_bits(branch, 1, 1)
+    assert r.reg(cmd) == 0 and not r.read(cmd) & OFF
+    assert r.read(branch) == 1
+    r.expect_hz("cam_cc_xo_clk_src", XO)
+    r.expect_hz("cam_cc_gdsc_clk", XO)
+    update_bits(branch, 1, 0)
+    assert r.read(cmd) & OFF and r.read(branch) & OFF
+    r.expect_hz("cam_cc_xo_clk_src", 0)
+    r.expect_hz("cam_cc_gdsc_clk", 0)
+
+
 def run_defaults(r):
     configure_all(r)
     enable_all(r)
@@ -965,6 +1041,11 @@ def four_lucid_updates_capture_shadow_once_then_ack_and_relock(r):
     for i in LUCID:
         r.expect_hz(PLLS[i][1], pll_rate(i, *captured[i]))
     r.expect_hz("cam_cc_pll2", pll_rate(2))
+    cancelled = clear_lucid_update_bypass_in_acked_and_pending_states(r)
+    r.step(10_000)
+    assert_lucid_update_bypass_cleared(r, cancelled)
+    return {"update_bypass_cleared_with_update_high": {"acked_pll": 0, "pending_pll": 1},
+            "canceled_latches_do_not_revive": True}
 
 
 def zonda_l_write_captures_alpha_and_settles_without_lucid_ack(r):
@@ -1230,6 +1311,7 @@ def unknown_aux2_sleep_and_test_inputs_only_gain_explicit_fixture_rates(r):
 
 
 def all_66_branches_have_independent_local_requests(r):
+    literal_critical_xo_bootstrap(r)
     r.fixture("chip_sleep_clk", 32768)
     for i in range(33):
         configure_rcg(r, i, root=False)
@@ -1245,7 +1327,9 @@ def all_66_branches_have_independent_local_requests(r):
         r.write(offset, 0)
         r.expect_hz(name, 0)
         assert r.read(offset) == OFF
-    return {"local_branch_requests_checked": 66, "remote_vote_gpio_assumed": False}
+    return {"local_branch_requests_checked": 66, "remote_vote_gpio_assumed": False,
+            "critical_xo_literal_force_update_unforce": True,
+            "critical_xo_runs_from_branch_demand_with_root_clear": True}
 
 
 def sbi_readonly_divider_uses_explicit_fixture_and_generic_ceil(r):
@@ -1704,6 +1788,7 @@ def migration_checks(args, out, report):
         steady.monitor("qom-set", {"path": DEVICE, "property": "qtest-sbi-divider", "value": 5})
         for i, offset in enumerate(GDSC_OFFSETS):
             steady.write(offset, ((i + 1) << 11) | 1)
+        cancelled = clear_lucid_update_bypass_in_acked_and_pending_states(steady)
         steady_path = out / "camcc-v1-steady.migration"
         steady_saved = save_source(steady, steady_path, 0x43414d31)
         report["migration_sources"].append(steady_saved)
@@ -1711,10 +1796,12 @@ def migration_checks(args, out, report):
         old = prewarm_target(steady_target, steady_saved["source_virtual_ns"])
         assert old != steady_saved["snapshot"]
         first = receive_source(steady_target, steady_path, steady_saved)
+        assert_lucid_update_bypass_cleared(steady_target, cancelled)
         before_mmio = steady_target.device_mmio_operations
         steady_target.monitor("cont")
         steady_target.step(20_000)
         assert steady_target.pure_snapshot() == steady_saved["snapshot"]
+        assert_lucid_update_bypass_cleared(steady_target, cancelled)
         assert steady_target.device_mmio_operations == before_mmio
         # The incoming Clock object, rather than an old target fixture, owns
         # this rate. Changing it after restore must propagate without MMIO.
@@ -1726,7 +1813,8 @@ def migration_checks(args, out, report):
         completed("v1_steady_clocks_registers_resets_and_camera_replace_stale_target",
                   steady_path, steady, steady_target, steady_saved, first,
                   stale_target_deadlines_discarded=True,
-                  clock_fixture_changes_propagate_after_restore=True)
+                  clock_fixture_changes_propagate_after_restore=True,
+                  update_bypass_canceled_acked_and_pending_states_reloaded=True)
 
         locking = new("migration-five-locks-33-rcgs-source")
         locking.step(100_000)
