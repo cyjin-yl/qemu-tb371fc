@@ -1,0 +1,319 @@
+{
+  "schema": "tb371fc-camcc-ci-artifact-audit-v1",
+  "source_commit": "8798465b1b70f9c86f5cd5e1e38ce595bd6088ce",
+  "run_id": 45426713919,
+  "artifact_id": 14938651765,
+  "artifact_zip_sha256": "a37519a493f28337eb5c705a7a759e6f8bc3fe90709cd56a4b41bb5c568b6950",
+  "compiled_artifact_read": true,
+  "private_original_inputs_used": false,
+  "stock_android_boot_passed": false,
+  "independent_cpu_job": {
+    "source_commit": "8798465b1b70f9c86f5cd5e1e38ce595bd6088ce",
+    "run_id": 45426713919,
+    "job_id": 138560590480,
+    "job_conclusion": "success",
+    "cpu_guest_checks": 852,
+    "configuration_rejections": 2,
+    "pci_ufs_checks": 17,
+    "variants": [
+      {
+        "name": "default",
+        "checks": 94
+      },
+      {
+        "name": "observed-revidr",
+        "checks": 94
+      },
+      {
+        "name": "l2-128k",
+        "checks": 94
+      },
+      {
+        "name": "l2-256k",
+        "checks": 94
+      },
+      {
+        "name": "l3-512k",
+        "checks": 95
+      },
+      {
+        "name": "l3-1m",
+        "checks": 95
+      },
+      {
+        "name": "l3-2m",
+        "checks": 95
+      },
+      {
+        "name": "l3-4m",
+        "checks": 95
+      },
+      {
+        "name": "crypto-off",
+        "checks": 96
+      }
+    ],
+    "pci_checks": [
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/reg-read",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/init",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-read-write",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-read-write",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-crypto-rejected",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-crypto-rejected",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/no-prdt",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/sync-cache",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/long-prdt",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/short-prdt",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-cq-wraparound",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-flag",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-attribute",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-desciptor",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-init",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-read-write",
+      "/aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/hid"
+    ],
+    "rejected_configurations": [
+      ",l2-cache-size=1M",
+      ",l3-cache-size=128K"
+    ],
+    "actual_job_log_read": true,
+    "guest_architecture_only": true,
+    "stock_android_boot_passed": false
+  },
+  "binary_sha256": "026f93a8c26950dd66cdb5c44eaf5e1575db638e59b69cbf025591d810be5594",
+  "binary_member": "qemu-build/qemu-system-aarch64",
+  "binary_hash_verified_from_zip": true,
+  "aggregates": {
+    "components": {
+      "count": 83,
+      "passed": true,
+      "source_dirty": false,
+      "qemu_unchanged": true
+    },
+    "linux": {
+      "count": 5,
+      "passed": true,
+      "source_dirty": false,
+      "qemu_unchanged": true
+    }
+  },
+  "ufs_quiescent": {
+    "checks": 21,
+    "migrations": 3,
+    "rejections": 7,
+    "passed": true
+  },
+  "linux_ufs_checkpoints": {
+    "linux-ufs-migration": {
+      "passed": true,
+      "source_checks": 21,
+      "target_checks": 18,
+      "inputs_unchanged": true,
+      "source_exited_before_target_started": true,
+      "runtime_pm_state_preserved": false,
+      "bytes_compared_at_each_checkpoint": 67108864
+    },
+    "linux-ufs-pm-migration": {
+      "passed": true,
+      "source_checks": 34,
+      "target_checks": 27,
+      "inputs_unchanged": true,
+      "source_exited_before_target_started": true,
+      "runtime_pm_state_preserved": true,
+      "bytes_compared_at_each_checkpoint": 67108864
+    }
+  },
+  "source_generation": {
+    "verified_primary_inputs": 8,
+    "exact_file_comparisons": 2,
+    "manifest_sha256": "2f333b79f20f7fa6ad92acf404b8a02b643e66d0ec0423a6325071ddbaa2a4e8"
+  },
+  "camcc_checks": 41,
+  "camcc_test_seconds": 33.79433,
+  "sibling_gates": {
+    "camera-gdsc-reference": {
+      "passed": true,
+      "checks": 29
+    },
+    "mdss-gdsc-reference": {
+      "passed": true,
+      "checks": 20
+    },
+    "npu-gdsc-reference": {
+      "passed": true,
+      "checks": 21
+    },
+    "video-gdsc-reference": {
+      "passed": true,
+      "checks": 22
+    },
+    "npucc-sm8250": {
+      "passed": true,
+      "checks": 37
+    },
+    "gpucc-sm8250": {
+      "passed": true,
+      "checks": 30
+    }
+  },
+  "actual_files": [
+    {
+      "name": "camcc-corrupt-physical_base.migration",
+      "bytes": 2265486,
+      "sha256": "c4fabd06029e24f4d7f972f27b24fcc4a16b792483c86b5f8a10ca905f83a0c5",
+      "zip_member_verified": true
+    },
+    {
+      "name": "camcc-corrupt-sbi_reserved_control.migration",
+      "bytes": 2265486,
+      "sha256": "5f4ceef674d814e4318a75308bf31735c331b09a71e57e1724b21e6085c8de61",
+      "zip_member_verified": true
+    },
+    {
+      "name": "camcc-v1-default.migration",
+      "bytes": 2265486,
+      "sha256": "44cc9bc131559c64aaefe518593c1c2fb4fcc38afc3abbf6ebe7924aff347eac",
+      "zip_member_verified": true
+    },
+    {
+      "name": "camcc-v1-five-locks-33-rcgs.migration",
+      "bytes": 2265486,
+      "sha256": "761b9db6e588b675b4871ce4f47496d0f8294264411673d7ea2cb0385d355cea",
+      "zip_member_verified": true
+    },
+    {
+      "name": "camcc-v1-lucid-zonda-mnd-latches.migration",
+      "bytes": 2265486,
+      "sha256": "3e6632ea7605ff6e7767aa39a69bdaa3de9031e1380c8d9be333ad828d425920",
+      "zip_member_verified": true
+    },
+    {
+      "name": "camcc-v1-steady.migration",
+      "bytes": 2265486,
+      "sha256": "774a72563456c806e232016046fef2d9bb8354abf92bdcdc0cb90e83f7de16e3",
+      "zip_member_verified": true
+    }
+  ],
+  "source_wire_checks": [
+    {
+      "file": "camcc-v1-steady.migration",
+      "camcc": {
+        "version": 1,
+        "bytes": 2579,
+        "sha256": "adbef02de49a2aec9dbaee63c4b503a2c206ffac15a2a1df7ef69b15a0e2fd48",
+        "complete_payload_verified": true
+      },
+      "camera": {
+        "version": 1,
+        "bytes": 194,
+        "sha256": "954fd7abf41773c7105f4097fd47db098b9c6d5723505638d3a87185ea0bd594",
+        "complete_payload_verified": true
+      },
+      "all_111_output_hz_and_periods_independently_recomputed": true
+    },
+    {
+      "file": "camcc-v1-five-locks-33-rcgs.migration",
+      "camcc": {
+        "version": 1,
+        "bytes": 2579,
+        "sha256": "d710971b3ee304465040a43540a254af19d23a8c7c2aab4aae54c64bf7ee2ae8",
+        "complete_payload_verified": true
+      },
+      "camera": {
+        "version": 1,
+        "bytes": 194,
+        "sha256": "8ef46215cd3983fc12119ff69930a3870d8d0259fd1696879dc7a796f366a58b",
+        "complete_payload_verified": true
+      },
+      "all_111_output_hz_and_periods_independently_recomputed": true
+    },
+    {
+      "file": "camcc-v1-lucid-zonda-mnd-latches.migration",
+      "camcc": {
+        "version": 1,
+        "bytes": 2579,
+        "sha256": "67cccef871967285bee79fa32fa64ae9fd26ee4331070509055b43b79bd5cc97",
+        "complete_payload_verified": true
+      },
+      "camera": {
+        "version": 1,
+        "bytes": 194,
+        "sha256": "8ef46215cd3983fc12119ff69930a3870d8d0259fd1696879dc7a796f366a58b",
+        "complete_payload_verified": true
+      },
+      "all_111_output_hz_and_periods_independently_recomputed": true
+    },
+    {
+      "file": "camcc-v1-default.migration",
+      "camcc": {
+        "version": 1,
+        "bytes": 2579,
+        "sha256": "e8affec85d9224ad388fe3ee394c95c6b991775958fe17a04cfdad769708a577",
+        "complete_payload_verified": true
+      },
+      "camera": {
+        "version": 1,
+        "bytes": 194,
+        "sha256": "8ef46215cd3983fc12119ff69930a3870d8d0259fd1696879dc7a796f366a58b",
+        "complete_payload_verified": true
+      },
+      "all_111_output_hz_and_periods_independently_recomputed": true
+    }
+  ],
+  "migrations": [
+    {
+      "name": "v1_steady_clocks_registers_resets_and_camera_replace_stale_target",
+      "source_status": "completed",
+      "target_status": "completed",
+      "continued_after_restore": true,
+      "first_destination_state_verified": true,
+      "actual_qmp_pre_cont_getters": 950
+    },
+    {
+      "name": "v1_five_locks_and_33_rcg_deadlines_fire_without_mmio_repair",
+      "source_status": "completed",
+      "target_status": "completed",
+      "continued_after_restore": true,
+      "first_destination_state_verified": true,
+      "actual_qmp_pre_cont_getters": 950
+    },
+    {
+      "name": "v1_mixed_lucid_zonda_and_mnd_snapshots_keep_distinct_deadlines",
+      "source_status": "completed",
+      "target_status": "completed",
+      "continued_after_restore": true,
+      "first_destination_state_verified": true,
+      "actual_qmp_pre_cont_getters": 950
+    }
+  ],
+  "rejections": [
+    {
+      "name": "enabled_to_disabled",
+      "exit_code": 1,
+      "expected_diagnostic": "0 != 1",
+      "actual_stderr_verified": true
+    },
+    {
+      "name": "disabled_to_enabled",
+      "exit_code": 1,
+      "expected_diagnostic": "1 != 0",
+      "actual_stderr_verified": true
+    },
+    {
+      "name": "physical_base",
+      "exit_code": 1,
+      "expected_diagnostic": "ad00000 != ad00004",
+      "actual_stderr_verified": true,
+      "actual_single_bit_difference_verified": true,
+      "field_offset": 44
+    },
+    {
+      "name": "sbi_reserved_control",
+      "exit_code": 1,
+      "expected_diagnostic": "qcom-sm8250-camcc: invalid migrated register 155",
+      "actual_stderr_verified": true,
+      "actual_single_bit_difference_verified": true,
+      "field_offset": 672
+    }
+  ]
+}

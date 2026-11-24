@@ -49,6 +49,7 @@
 #include "hw/misc/qcom-sm8250-gpucc.h"
 #include "hw/misc/qcom-sm8250-npucc.h"
 #include "hw/misc/qcom-sm8250-camcc.h"
+#include "hw/misc/qcom-sm8250-dispcc.h"
 #include "hw/misc/qcom-noc-qos.h"
 #include "hw/misc/qcom-pshold.h"
 #include "hw/misc/qcom-dcc.h"
@@ -1249,6 +1250,21 @@ static void tb371fc_create_camcc(TB371FCMachineState *s)
     sysbus_mmio_map(SYS_BUS_DEVICE(camcc), 0, CAMCC_PHYSICAL_BASE);
 }
 
+static void tb371fc_create_dispcc(TB371FCMachineState *s)
+{
+    DeviceState *dispcc = qdev_new(TYPE_QCOM_SM8250_DISPCC);
+
+    object_property_add_child(OBJECT(s), "dispcc", OBJECT(dispcc));
+    /*
+     * Fixed clk-rpmh.c proves bi_tcxo. The 16 other carriers, including
+     * DSI/DP PHYs, unregistered PLL1 even and parentless XO, stay unknown.
+     */
+    qdev_connect_clock_in(dispcc, "bi_tcxo", s->xo);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dispcc), &error_fatal);
+    /* 39 exact leaves; the existing MDSS GDSCR at +0x3000 remains separate. */
+    sysbus_mmio_map(SYS_BUS_DEVICE(dispcc), 0, DISPCC_PHYSICAL_BASE);
+}
+
 static void tb371fc_create_noc_qos(TB371FCMachineState *s)
 {
     /*
@@ -1799,6 +1815,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_gpucc(s);
     tb371fc_create_npucc(s);
     tb371fc_create_camcc(s);
+    tb371fc_create_dispcc(s);
     tb371fc_create_npu_gdsc(s);
     tb371fc_create_noc_qos(s);
     tb371fc_create_gpu_cx_gdsc(s);

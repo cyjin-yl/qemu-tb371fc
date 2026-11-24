@@ -230,15 +230,30 @@ normal mismatch diagnostic.
 
 ## Acceptance boundary
 
-The new compiled gate requires 41 distinct checks, including default-off
+The compiled gate requires 41 distinct checks, including default-off
 rejection, paused-TCG observers, all sparse ownership boundaries, all sourced
 muxes, separate PLL protocols, MND, actual RPMh XO propagation, three
 completed migrations, two profile rejections and two single-bit corrupted
 streams. Four original streams and both mutations must be retained and
 decoded against the full 2579-byte oracle. Camera VMState remains independent.
 
-The separate generation gate adds two exact comparisons. Together they extend
-the plan from 81 to 83 component gates plus the existing five Linux gates.
-Source regeneration has been checked locally; compiled QTest, migration and
-native acceptance require new receipts for this source. No 4cc result is
-reused as a pass for CAMCC.
+The separate generation gate adds two exact comparisons. Exact source
+`8798465b1b70f9c86f5cd5e1e38ce595bd6088ce` passed both gates, all 83 components,
+five Linux integrations, the real active/suspended UFS checkpoints and the
+independent A77/PCI UFS job in
+[CI 45426713919](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45426713919).
+The [independent ZIP audit](../evidence/camcc-20261124-e1a9/ci-artifact-audit-8798465.json)
+binds the actual binary SHA-256
+`026f93a8c26950dd66cdb5c44eaf5e1575db638e59b69cbf025591d810be5594`,
+41 successful CAMCC groups in 33.79433 seconds, 3/2/2 migration results,
+six actual files, full CAMCC/camera payloads and independently recomputed
+111 output frequencies and Clock periods. Each target had 950 actual QOM
+observations before its first `cont`, with no intervening `qom-set`.
+
+The same binary's [original-input run005](../evidence/camcc-20261124-e1a9/native-frontier-after-camcc.json)
+reported `Registered CAM CC clocks` at guest 3.693603 seconds. The next first
+fatal was the DISPCC read32 at `0x0af00000` at 3.697772 seconds. Normal QMP
+shutdown completed after 17.415 seconds, with original input and executable
+hashes unchanged. No LUN or Android userspace success was observed. The next
+[DISPCC increment](dispcc-sm8250.md) requires its own compiled/native evidence;
+the CAMCC receipt does not qualify a later binary automatically.
