@@ -1,0 +1,4250 @@
+{
+  "schema": "tb371fc-llcc-sm8250-registers-v1",
+  "source_input_count": 8,
+  "sources": [
+    {
+      "path": "primary-r11/drivers/soc/qcom/llcc-slice.c",
+      "source_path": "drivers/soc/qcom/llcc-slice.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 10965,
+      "git_blob_sha": "a933f377db535f12f47942eff31fffe214af0912",
+      "sha256": "5a49480bebfa84ca94240202abc3fc3bc8eaf6379df9f4b71a92640e140eb1c5"
+    },
+    {
+      "path": "primary-r11/drivers/soc/qcom/llcc-kona.c",
+      "source_path": "drivers/soc/qcom/llcc-kona.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 3764,
+      "git_blob_sha": "a155d6365246ceaf2e8bca5a289ed72772cac74e",
+      "sha256": "140c5774139c0827003754bb083d0b6945fbd9982bc5538105084614eac1b2a9"
+    },
+    {
+      "path": "primary-r11/include/linux/soc/qcom/llcc-qcom.h",
+      "source_path": "include/linux/soc/qcom/llcc-qcom.h",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 5789,
+      "git_blob_sha": "f0e21085aec911e1f9d854fefd77418666e77d4d",
+      "sha256": "1d348978460ba7a32087af7567c80ddeaa98399855c719e7c0c2b1fcc4d7f093"
+    },
+    {
+      "path": "primary-r11/drivers/soc/qcom/llcc_perfmon.c",
+      "source_path": "drivers/soc/qcom/llcc_perfmon.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 37150,
+      "git_blob_sha": "99278c99cc311838d0b612bd5a96e908a5ec03ed",
+      "sha256": "38f1df996a946b0a6ce8f4cd71559367d1f4498d475605bc9089311d63defeeb"
+    },
+    {
+      "path": "primary-r11/drivers/soc/qcom/llcc_perfmon.h",
+      "source_path": "drivers/soc/qcom/llcc_perfmon.h",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 9820,
+      "git_blob_sha": "4a3accda43e9a2f681c118f43b502e13a52d2eba",
+      "sha256": "536de10d400093fa406b88f7a3ebfaf30966b43e15f88533be98c85ac5baebfd"
+    },
+    {
+      "path": "primary-r11/drivers/edac/qcom_edac.c",
+      "source_path": "drivers/edac/qcom_edac.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 11972,
+      "git_blob_sha": "560c96c1e5b88dc8b9b622ce4d3d590370470d7a",
+      "sha256": "ae3c0da558345d3c471fd35a5ae7f878a84c61d21093056d4ac66359f2486a24"
+    },
+    {
+      "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+      "source_path": "arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 132499,
+      "git_blob_sha": "e9651f09bd579616787894dc8514429063623b2d",
+      "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55"
+    },
+    {
+      "path": "primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+      "source_path": "arch/arm64/boot/dts/qcom/sm8250.dtsi",
+      "repository": "torvalds/linux",
+      "revision": "adc218676eef25575469234709c2d87185ca223a",
+      "bytes": 176883,
+      "git_blob_sha": "630f4eff20bf810e347685066dce74ab92a23b56",
+      "sha256": "8735b5d8bb61d6a3a579e5b088ff2a719132266cef57c91c319ec19e12770499"
+    }
+  ],
+  "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+  "geometry_source_revision": "adc218676eef25575469234709c2d87185ca223a",
+  "bank_count": 4,
+  "slice_count": 16,
+  "register_count": 71,
+  "region_count": 2,
+  "mapped_register_count": 349,
+  "window_count": 139,
+  "mapped_bytes": 1396,
+  "geometry": {
+    "bank_count": 4,
+    "bank_stride": 524288,
+    "bank_resource_bytes": 327680,
+    "bank_bases": [
+      153092096,
+      153616384,
+      154140672,
+      154664960
+    ],
+    "broadcast_base": 157286400,
+    "regions": [
+      {
+        "name": "llcc_base",
+        "base": 153092096,
+        "bytes": 1900544
+      },
+      {
+        "name": "llcc_broadcast_base",
+        "base": 157286400,
+        "bytes": 327680
+      }
+    ],
+    "original_physical_common_status_measured": false,
+    "four_banks_are_source_bound_reference_geometry": true
+  },
+  "source_semantics": {
+    "source_activation_assert_then_deassert": true,
+    "source_poll_timeout_us": 100,
+    "source_cache_line_bytes": 64,
+    "perfmon_probe_read_offsets": [
+      196620,
+      196608
+    ],
+    "perfmon_probe_starts_counter": false,
+    "edac_no_irq_poll_interval_ms": 5000,
+    "edac_no_error_poll_offsets_per_bank": [
+      266240,
+      132224
+    ],
+    "perfmon_runtime_counters_implemented": false,
+    "cache_data_ecc_datapath_implemented": false,
+    "hardware_version_known": false,
+    "memory_controller_count_known": false
+  },
+  "supported_sid_mask": 3519265862,
+  "source_table_aarch64_layout": "<IIIIB3xIIII4B",
+  "source_table_row_bytes": 40,
+  "source_table_bytes": 640,
+  "source_table_sha256": "1ae851c29537ec405b15db1bd151710c25ad0f063a74970253f9d16754dc5d55",
+  "source_init_slice_ids": [
+    1,
+    13,
+    31
+  ],
+  "source_final_masks": {
+    "CAD": 0,
+    "PCB": 1371772934,
+    "WRSC": 4096
+  },
+  "reference_mask_scope": "Supported reference writes, not a complete silicon reserved-bit specification",
+  "slices": [
+    {
+      "usecase_id": 1,
+      "slice_id": 1,
+      "max_cap": 3072,
+      "priority": 1,
+      "fixed_size": 1,
+      "bonus_ways": 4095,
+      "res_ways": 0,
+      "cache_mode": 0,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 0,
+      "retain_on_pc": 1,
+      "activate_on_init": 1,
+      "index": 0,
+      "name": "LLCC_CPUSS",
+      "attr0": 268369920,
+      "attr1": 805306392,
+      "per_bank_max_capacity_cachelines": 12288
+    },
+    {
+      "usecase_id": 2,
+      "slice_id": 2,
+      "max_cap": 512,
+      "priority": 3,
+      "fixed_size": 1,
+      "bonus_ways": 4095,
+      "res_ways": 0,
+      "cache_mode": 0,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 0,
+      "retain_on_pc": 1,
+      "activate_on_init": 0,
+      "index": 1,
+      "name": "LLCC_VIDSC0",
+      "attr0": 268369920,
+      "attr1": 134217784,
+      "per_bank_max_capacity_cachelines": 2048
+    },
+    {
+      "usecase_id": 6,
+      "slice_id": 6,
+      "max_cap": 1024,
+      "priority": 1,
+      "fixed_size": 0,
+      "bonus_ways": 4095,
+      "res_ways": 0,
+      "cache_mode": 0,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 0,
+      "retain_on_pc": 0,
+      "activate_on_init": 0,
+      "index": 2,
+      "name": "LLCC_AUDIO",
+      "attr0": 268369920,
+      "attr1": 268435472,
+      "per_bank_max_capacity_cachelines": 4096
+    },
+    {
+      "usecase_id": 10,
+      "slice_id": 10,
+      "max_cap": 1024,
+      "priority": 1,
+      "fixed_size": 0,
+      "bonus_ways": 4095,
+      "res_ways": 0,
+      "cache_mode": 0,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 0,
+      "retain_on_pc": 0,
+      "activate_on_init": 0,
+      "index": 3,
+      "name": "LLCC_CMPT",
+      "attr0": 268369920,
+      "attr1": 268435472,
+      "per_bank_max_capacity_cachelines": 4096
+    },
+    {
+      "usecase_id": 11,
+      "slice_id": 11,
+      "max_cap": 1024,
+      "priority": 1,
+      "fixed_size": 1,
+      "bonus_ways": 4095,
+      "res_ways": 0,
+      "cache_mode": 0,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 0,
+      "retain_on_pc": 1,
+      "activate_on_init": 0,
+      "index": 4,
+      "name": "LLCC_GPUHTW",
+      "attr0": 268369920,
+      "attr1": 268435480,
+      "per_bank_max_capacity_cachelines": 4096
+    },
+    {
+      "usecase_id": 12,
+      "slice_id": 12,
+      "max_cap": 1024,
+      "priority": 1,
+      "fixed_size": 0,
+      "bonus_ways": 4095,
+      "res_ways": 0,
+      "cache_mode": 0,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 1,
+      "retain_on_pc": 1,
+      "activate_on_init": 0,
+      "index": 5,
+      "name": "LLCC_GPU",
+      "attr0": 268369920,
+      "attr1": 268435472,
+      "per_bank_max_capacity_cachelines": 4096
+    },
+    {
+      "usecase_id": 13,
+      "slice_id": 13,
+      "max_cap": 1024,
+      "priority": 1,
+      "fixed_size": 1,
+      "bonus_ways": 4095,
+      "res_ways": 0,
+      "cache_mode": 0,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 0,
+      "retain_on_pc": 0,
+      "activate_on_init": 1,
+      "index": 6,
+      "name": "LLCC_MMUHWT",
+      "attr0": 268369920,
+      "attr1": 268435480,
+      "per_bank_max_capacity_cachelines": 4096
+    },
+    {
+      "usecase_id": 15,
+      "slice_id": 15,
+      "max_cap": 1024,
+      "priority": 1,
+      "fixed_size": 0,
+      "bonus_ways": 4095,
+      "res_ways": 0,
+      "cache_mode": 0,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 0,
+      "retain_on_pc": 1,
+      "activate_on_init": 0,
+      "index": 7,
+      "name": "LLCC_CMPTDMA",
+      "attr0": 268369920,
+      "attr1": 268435472,
+      "per_bank_max_capacity_cachelines": 4096
+    },
+    {
+      "usecase_id": 16,
+      "slice_id": 16,
+      "max_cap": 3072,
+      "priority": 1,
+      "fixed_size": 1,
+      "bonus_ways": 4095,
+      "res_ways": 0,
+      "cache_mode": 0,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 0,
+      "retain_on_pc": 1,
+      "activate_on_init": 0,
+      "index": 8,
+      "name": "LLCC_DISP",
+      "attr0": 268369920,
+      "attr1": 805306392,
+      "per_bank_max_capacity_cachelines": 12288
+    },
+    {
+      "usecase_id": 22,
+      "slice_id": 22,
+      "max_cap": 1024,
+      "priority": 1,
+      "fixed_size": 1,
+      "bonus_ways": 4095,
+      "res_ways": 0,
+      "cache_mode": 0,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 0,
+      "retain_on_pc": 1,
+      "activate_on_init": 0,
+      "index": 9,
+      "name": "LLCC_AUDHW",
+      "attr0": 268369920,
+      "attr1": 268435480,
+      "per_bank_max_capacity_cachelines": 4096
+    },
+    {
+      "usecase_id": 23,
+      "slice_id": 23,
+      "max_cap": 3072,
+      "priority": 1,
+      "fixed_size": 1,
+      "bonus_ways": 4095,
+      "res_ways": 0,
+      "cache_mode": 0,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 0,
+      "retain_on_pc": 1,
+      "activate_on_init": 0,
+      "index": 10,
+      "name": "LLCC_NPU",
+      "attr0": 268369920,
+      "attr1": 805306392,
+      "per_bank_max_capacity_cachelines": 12288
+    },
+    {
+      "usecase_id": 24,
+      "slice_id": 24,
+      "max_cap": 1024,
+      "priority": 1,
+      "fixed_size": 0,
+      "bonus_ways": 4095,
+      "res_ways": 0,
+      "cache_mode": 0,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 0,
+      "retain_on_pc": 1,
+      "activate_on_init": 0,
+      "index": 11,
+      "name": "LLCC_WLNHW",
+      "attr0": 268369920,
+      "attr1": 268435472,
+      "per_bank_max_capacity_cachelines": 4096
+    },
+    {
+      "usecase_id": 28,
+      "slice_id": 28,
+      "max_cap": 256,
+      "priority": 3,
+      "fixed_size": 1,
+      "bonus_ways": 4095,
+      "res_ways": 0,
+      "cache_mode": 0,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 0,
+      "retain_on_pc": 1,
+      "activate_on_init": 0,
+      "index": 12,
+      "name": "LLCC_CVP",
+      "attr0": 268369920,
+      "attr1": 67108920,
+      "per_bank_max_capacity_cachelines": 1024
+    },
+    {
+      "usecase_id": 30,
+      "slice_id": 30,
+      "max_cap": 128,
+      "priority": 3,
+      "fixed_size": 0,
+      "bonus_ways": 0,
+      "res_ways": 3,
+      "cache_mode": 1,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 0,
+      "retain_on_pc": 1,
+      "activate_on_init": 0,
+      "index": 13,
+      "name": "LLCC_APTCM",
+      "attr0": 3,
+      "attr1": 33554481,
+      "per_bank_max_capacity_cachelines": 512
+    },
+    {
+      "usecase_id": 31,
+      "slice_id": 31,
+      "max_cap": 256,
+      "priority": 1,
+      "fixed_size": 1,
+      "bonus_ways": 4095,
+      "res_ways": 0,
+      "cache_mode": 0,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 0,
+      "retain_on_pc": 0,
+      "activate_on_init": 1,
+      "index": 14,
+      "name": "LLCC_WRTCH",
+      "attr0": 268369920,
+      "attr1": 67108888,
+      "per_bank_max_capacity_cachelines": 1024
+    },
+    {
+      "usecase_id": 32,
+      "slice_id": 17,
+      "max_cap": 512,
+      "priority": 1,
+      "fixed_size": 0,
+      "bonus_ways": 4095,
+      "res_ways": 0,
+      "cache_mode": 0,
+      "probe_target_ways": 0,
+      "dis_cap_alloc": 0,
+      "write_scid_en": 0,
+      "retain_on_pc": 1,
+      "activate_on_init": 0,
+      "index": 15,
+      "name": "LLCC_CVPFW",
+      "attr0": 268369920,
+      "attr1": 134217744,
+      "per_bank_max_capacity_cachelines": 2048
+    }
+  ],
+  "registers": [
+    {
+      "name": "LLCC_TRP_ACT_CTRL1",
+      "offset": 4096,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 0
+    },
+    {
+      "name": "LLCC_TRP_STATUS1",
+      "offset": 4100,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 0
+    },
+    {
+      "name": "LLCC_TRP_ACT_CTRL2",
+      "offset": 8192,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 1
+    },
+    {
+      "name": "LLCC_TRP_STATUS2",
+      "offset": 8196,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 1
+    },
+    {
+      "name": "LLCC_TRP_ACT_CTRL6",
+      "offset": 24576,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 2
+    },
+    {
+      "name": "LLCC_TRP_STATUS6",
+      "offset": 24580,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 2
+    },
+    {
+      "name": "LLCC_TRP_ACT_CTRL10",
+      "offset": 40960,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 3
+    },
+    {
+      "name": "LLCC_TRP_STATUS10",
+      "offset": 40964,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 3
+    },
+    {
+      "name": "LLCC_TRP_ACT_CTRL11",
+      "offset": 45056,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 4
+    },
+    {
+      "name": "LLCC_TRP_STATUS11",
+      "offset": 45060,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 4
+    },
+    {
+      "name": "LLCC_TRP_ACT_CTRL12",
+      "offset": 49152,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 5
+    },
+    {
+      "name": "LLCC_TRP_STATUS12",
+      "offset": 49156,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 5
+    },
+    {
+      "name": "LLCC_TRP_ACT_CTRL13",
+      "offset": 53248,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 6
+    },
+    {
+      "name": "LLCC_TRP_STATUS13",
+      "offset": 53252,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 6
+    },
+    {
+      "name": "LLCC_TRP_ACT_CTRL15",
+      "offset": 61440,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 7
+    },
+    {
+      "name": "LLCC_TRP_STATUS15",
+      "offset": 61444,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 7
+    },
+    {
+      "name": "LLCC_TRP_ACT_CTRL16",
+      "offset": 65536,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 8
+    },
+    {
+      "name": "LLCC_TRP_STATUS16",
+      "offset": 65540,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 8
+    },
+    {
+      "name": "LLCC_TRP_ACT_CTRL17",
+      "offset": 69632,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 15
+    },
+    {
+      "name": "LLCC_TRP_STATUS17",
+      "offset": 69636,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 15
+    },
+    {
+      "name": "LLCC_TRP_ACT_CTRL22",
+      "offset": 90112,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 9
+    },
+    {
+      "name": "LLCC_TRP_STATUS22",
+      "offset": 90116,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 9
+    },
+    {
+      "name": "LLCC_TRP_ACT_CTRL23",
+      "offset": 94208,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 10
+    },
+    {
+      "name": "LLCC_TRP_STATUS23",
+      "offset": 94212,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 10
+    },
+    {
+      "name": "LLCC_TRP_ACT_CTRL24",
+      "offset": 98304,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 11
+    },
+    {
+      "name": "LLCC_TRP_STATUS24",
+      "offset": 98308,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 11
+    },
+    {
+      "name": "LLCC_TRP_ACT_CTRL28",
+      "offset": 114688,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 12
+    },
+    {
+      "name": "LLCC_TRP_STATUS28",
+      "offset": 114692,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 12
+    },
+    {
+      "name": "LLCC_TRP_ACT_CTRL30",
+      "offset": 122880,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 13
+    },
+    {
+      "name": "LLCC_TRP_STATUS30",
+      "offset": 122884,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 13
+    },
+    {
+      "name": "LLCC_TRP_ACT_CTRL31",
+      "offset": 126976,
+      "write_mask": 7,
+      "kind": "CTRL",
+      "slice": 14
+    },
+    {
+      "name": "LLCC_TRP_STATUS31",
+      "offset": 126980,
+      "write_mask": 0,
+      "kind": "STATUS",
+      "slice": 14
+    },
+    {
+      "name": "TRP_INTERRUPT_0_STATUS",
+      "offset": 132224,
+      "write_mask": 0,
+      "kind": "TRP_ERROR",
+      "slice": 255
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG1",
+      "offset": 135176,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 0
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG1",
+      "offset": 135180,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 0
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG2",
+      "offset": 135184,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 1
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG2",
+      "offset": 135188,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 1
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG6",
+      "offset": 135216,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 2
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG6",
+      "offset": 135220,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 2
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG10",
+      "offset": 135248,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 3
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG10",
+      "offset": 135252,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 3
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG11",
+      "offset": 135256,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 4
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG11",
+      "offset": 135260,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 4
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG12",
+      "offset": 135264,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 5
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG12",
+      "offset": 135268,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 5
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG13",
+      "offset": 135272,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 6
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG13",
+      "offset": 135276,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 6
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG15",
+      "offset": 135288,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 7
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG15",
+      "offset": 135292,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 7
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG16",
+      "offset": 135296,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 8
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG16",
+      "offset": 135300,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 8
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG17",
+      "offset": 135304,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 15
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG17",
+      "offset": 135308,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 15
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG22",
+      "offset": 135344,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 9
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG22",
+      "offset": 135348,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 9
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG23",
+      "offset": 135352,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 10
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG23",
+      "offset": 135356,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 10
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG24",
+      "offset": 135360,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 11
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG24",
+      "offset": 135364,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 11
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG28",
+      "offset": 135392,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 12
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG28",
+      "offset": 135396,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 12
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG30",
+      "offset": 135408,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 13
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG30",
+      "offset": 135412,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 13
+    },
+    {
+      "name": "LLCC_TRP_ATTR0_CFG31",
+      "offset": 135416,
+      "write_mask": 268374015,
+      "kind": "ATTR0",
+      "slice": 14
+    },
+    {
+      "name": "LLCC_TRP_ATTR1_CFG31",
+      "offset": 135420,
+      "write_mask": 4294901821,
+      "kind": "ATTR1",
+      "slice": 14
+    },
+    {
+      "name": "LLCC_TRP_SCID_DIS_CAP_ALLOC",
+      "offset": 139008,
+      "write_mask": 3519265862,
+      "kind": "CAD",
+      "slice": 255
+    },
+    {
+      "name": "LLCC_TRP_PCB_ACT",
+      "offset": 139012,
+      "write_mask": 3519265862,
+      "kind": "PCB",
+      "slice": 255
+    },
+    {
+      "name": "LLCC_TRP_WRSC_EN",
+      "offset": 139040,
+      "write_mask": 3519265862,
+      "kind": "WRSC",
+      "slice": 255
+    },
+    {
+      "name": "LLCC_COMMON_HW_INFO",
+      "offset": 196608,
+      "write_mask": 0,
+      "kind": "HW_INFO",
+      "slice": 255
+    },
+    {
+      "name": "LLCC_COMMON_STATUS0",
+      "offset": 196620,
+      "write_mask": 0,
+      "kind": "COMMON_STATUS",
+      "slice": 255
+    },
+    {
+      "name": "DRP_INTERRUPT_STATUS",
+      "offset": 266240,
+      "write_mask": 0,
+      "kind": "DRP_ERROR",
+      "slice": 255
+    }
+  ],
+  "exposed_words": [
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 4096,
+      "logical_offset": 4096,
+      "name": "LLCC_TRP_ACT_CTRL1"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 4100,
+      "logical_offset": 4100,
+      "name": "LLCC_TRP_STATUS1"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 8192,
+      "logical_offset": 8192,
+      "name": "LLCC_TRP_ACT_CTRL2"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 8196,
+      "logical_offset": 8196,
+      "name": "LLCC_TRP_STATUS2"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 24576,
+      "logical_offset": 24576,
+      "name": "LLCC_TRP_ACT_CTRL6"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 24580,
+      "logical_offset": 24580,
+      "name": "LLCC_TRP_STATUS6"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 40960,
+      "logical_offset": 40960,
+      "name": "LLCC_TRP_ACT_CTRL10"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 40964,
+      "logical_offset": 40964,
+      "name": "LLCC_TRP_STATUS10"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 45056,
+      "logical_offset": 45056,
+      "name": "LLCC_TRP_ACT_CTRL11"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 45060,
+      "logical_offset": 45060,
+      "name": "LLCC_TRP_STATUS11"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 49152,
+      "logical_offset": 49152,
+      "name": "LLCC_TRP_ACT_CTRL12"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 49156,
+      "logical_offset": 49156,
+      "name": "LLCC_TRP_STATUS12"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 53248,
+      "logical_offset": 53248,
+      "name": "LLCC_TRP_ACT_CTRL13"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 53252,
+      "logical_offset": 53252,
+      "name": "LLCC_TRP_STATUS13"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 61440,
+      "logical_offset": 61440,
+      "name": "LLCC_TRP_ACT_CTRL15"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 61444,
+      "logical_offset": 61444,
+      "name": "LLCC_TRP_STATUS15"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 65536,
+      "logical_offset": 65536,
+      "name": "LLCC_TRP_ACT_CTRL16"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 65540,
+      "logical_offset": 65540,
+      "name": "LLCC_TRP_STATUS16"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 69632,
+      "logical_offset": 69632,
+      "name": "LLCC_TRP_ACT_CTRL17"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 69636,
+      "logical_offset": 69636,
+      "name": "LLCC_TRP_STATUS17"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 90112,
+      "logical_offset": 90112,
+      "name": "LLCC_TRP_ACT_CTRL22"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 90116,
+      "logical_offset": 90116,
+      "name": "LLCC_TRP_STATUS22"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 94208,
+      "logical_offset": 94208,
+      "name": "LLCC_TRP_ACT_CTRL23"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 94212,
+      "logical_offset": 94212,
+      "name": "LLCC_TRP_STATUS23"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 98304,
+      "logical_offset": 98304,
+      "name": "LLCC_TRP_ACT_CTRL24"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 98308,
+      "logical_offset": 98308,
+      "name": "LLCC_TRP_STATUS24"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 114688,
+      "logical_offset": 114688,
+      "name": "LLCC_TRP_ACT_CTRL28"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 114692,
+      "logical_offset": 114692,
+      "name": "LLCC_TRP_STATUS28"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 122880,
+      "logical_offset": 122880,
+      "name": "LLCC_TRP_ACT_CTRL30"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 122884,
+      "logical_offset": 122884,
+      "name": "LLCC_TRP_STATUS30"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 126976,
+      "logical_offset": 126976,
+      "name": "LLCC_TRP_ACT_CTRL31"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 126980,
+      "logical_offset": 126980,
+      "name": "LLCC_TRP_STATUS31"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 132224,
+      "logical_offset": 132224,
+      "name": "TRP_INTERRUPT_0_STATUS"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135176,
+      "logical_offset": 135176,
+      "name": "LLCC_TRP_ATTR0_CFG1"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135180,
+      "logical_offset": 135180,
+      "name": "LLCC_TRP_ATTR1_CFG1"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135184,
+      "logical_offset": 135184,
+      "name": "LLCC_TRP_ATTR0_CFG2"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135188,
+      "logical_offset": 135188,
+      "name": "LLCC_TRP_ATTR1_CFG2"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135216,
+      "logical_offset": 135216,
+      "name": "LLCC_TRP_ATTR0_CFG6"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135220,
+      "logical_offset": 135220,
+      "name": "LLCC_TRP_ATTR1_CFG6"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135248,
+      "logical_offset": 135248,
+      "name": "LLCC_TRP_ATTR0_CFG10"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135252,
+      "logical_offset": 135252,
+      "name": "LLCC_TRP_ATTR1_CFG10"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135256,
+      "logical_offset": 135256,
+      "name": "LLCC_TRP_ATTR0_CFG11"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135260,
+      "logical_offset": 135260,
+      "name": "LLCC_TRP_ATTR1_CFG11"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135264,
+      "logical_offset": 135264,
+      "name": "LLCC_TRP_ATTR0_CFG12"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135268,
+      "logical_offset": 135268,
+      "name": "LLCC_TRP_ATTR1_CFG12"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135272,
+      "logical_offset": 135272,
+      "name": "LLCC_TRP_ATTR0_CFG13"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135276,
+      "logical_offset": 135276,
+      "name": "LLCC_TRP_ATTR1_CFG13"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135288,
+      "logical_offset": 135288,
+      "name": "LLCC_TRP_ATTR0_CFG15"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135292,
+      "logical_offset": 135292,
+      "name": "LLCC_TRP_ATTR1_CFG15"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135296,
+      "logical_offset": 135296,
+      "name": "LLCC_TRP_ATTR0_CFG16"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135300,
+      "logical_offset": 135300,
+      "name": "LLCC_TRP_ATTR1_CFG16"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135304,
+      "logical_offset": 135304,
+      "name": "LLCC_TRP_ATTR0_CFG17"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135308,
+      "logical_offset": 135308,
+      "name": "LLCC_TRP_ATTR1_CFG17"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135344,
+      "logical_offset": 135344,
+      "name": "LLCC_TRP_ATTR0_CFG22"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135348,
+      "logical_offset": 135348,
+      "name": "LLCC_TRP_ATTR1_CFG22"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135352,
+      "logical_offset": 135352,
+      "name": "LLCC_TRP_ATTR0_CFG23"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135356,
+      "logical_offset": 135356,
+      "name": "LLCC_TRP_ATTR1_CFG23"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135360,
+      "logical_offset": 135360,
+      "name": "LLCC_TRP_ATTR0_CFG24"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135364,
+      "logical_offset": 135364,
+      "name": "LLCC_TRP_ATTR1_CFG24"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135392,
+      "logical_offset": 135392,
+      "name": "LLCC_TRP_ATTR0_CFG28"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135396,
+      "logical_offset": 135396,
+      "name": "LLCC_TRP_ATTR1_CFG28"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135408,
+      "logical_offset": 135408,
+      "name": "LLCC_TRP_ATTR0_CFG30"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135412,
+      "logical_offset": 135412,
+      "name": "LLCC_TRP_ATTR1_CFG30"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135416,
+      "logical_offset": 135416,
+      "name": "LLCC_TRP_ATTR0_CFG31"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135420,
+      "logical_offset": 135420,
+      "name": "LLCC_TRP_ATTR1_CFG31"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 139008,
+      "logical_offset": 139008,
+      "name": "LLCC_TRP_SCID_DIS_CAP_ALLOC"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 139012,
+      "logical_offset": 139012,
+      "name": "LLCC_TRP_PCB_ACT"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 139040,
+      "logical_offset": 139040,
+      "name": "LLCC_TRP_WRSC_EN"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 196620,
+      "logical_offset": 196620,
+      "name": "LLCC_COMMON_STATUS0"
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 266240,
+      "logical_offset": 266240,
+      "name": "DRP_INTERRUPT_STATUS"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 528384,
+      "logical_offset": 4096,
+      "name": "LLCC_TRP_ACT_CTRL1"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 528388,
+      "logical_offset": 4100,
+      "name": "LLCC_TRP_STATUS1"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 532480,
+      "logical_offset": 8192,
+      "name": "LLCC_TRP_ACT_CTRL2"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 532484,
+      "logical_offset": 8196,
+      "name": "LLCC_TRP_STATUS2"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 548864,
+      "logical_offset": 24576,
+      "name": "LLCC_TRP_ACT_CTRL6"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 548868,
+      "logical_offset": 24580,
+      "name": "LLCC_TRP_STATUS6"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 565248,
+      "logical_offset": 40960,
+      "name": "LLCC_TRP_ACT_CTRL10"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 565252,
+      "logical_offset": 40964,
+      "name": "LLCC_TRP_STATUS10"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 569344,
+      "logical_offset": 45056,
+      "name": "LLCC_TRP_ACT_CTRL11"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 569348,
+      "logical_offset": 45060,
+      "name": "LLCC_TRP_STATUS11"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 573440,
+      "logical_offset": 49152,
+      "name": "LLCC_TRP_ACT_CTRL12"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 573444,
+      "logical_offset": 49156,
+      "name": "LLCC_TRP_STATUS12"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 577536,
+      "logical_offset": 53248,
+      "name": "LLCC_TRP_ACT_CTRL13"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 577540,
+      "logical_offset": 53252,
+      "name": "LLCC_TRP_STATUS13"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 585728,
+      "logical_offset": 61440,
+      "name": "LLCC_TRP_ACT_CTRL15"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 585732,
+      "logical_offset": 61444,
+      "name": "LLCC_TRP_STATUS15"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 589824,
+      "logical_offset": 65536,
+      "name": "LLCC_TRP_ACT_CTRL16"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 589828,
+      "logical_offset": 65540,
+      "name": "LLCC_TRP_STATUS16"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 593920,
+      "logical_offset": 69632,
+      "name": "LLCC_TRP_ACT_CTRL17"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 593924,
+      "logical_offset": 69636,
+      "name": "LLCC_TRP_STATUS17"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 614400,
+      "logical_offset": 90112,
+      "name": "LLCC_TRP_ACT_CTRL22"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 614404,
+      "logical_offset": 90116,
+      "name": "LLCC_TRP_STATUS22"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 618496,
+      "logical_offset": 94208,
+      "name": "LLCC_TRP_ACT_CTRL23"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 618500,
+      "logical_offset": 94212,
+      "name": "LLCC_TRP_STATUS23"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 622592,
+      "logical_offset": 98304,
+      "name": "LLCC_TRP_ACT_CTRL24"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 622596,
+      "logical_offset": 98308,
+      "name": "LLCC_TRP_STATUS24"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 638976,
+      "logical_offset": 114688,
+      "name": "LLCC_TRP_ACT_CTRL28"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 638980,
+      "logical_offset": 114692,
+      "name": "LLCC_TRP_STATUS28"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 647168,
+      "logical_offset": 122880,
+      "name": "LLCC_TRP_ACT_CTRL30"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 647172,
+      "logical_offset": 122884,
+      "name": "LLCC_TRP_STATUS30"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 651264,
+      "logical_offset": 126976,
+      "name": "LLCC_TRP_ACT_CTRL31"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 651268,
+      "logical_offset": 126980,
+      "name": "LLCC_TRP_STATUS31"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 656512,
+      "logical_offset": 132224,
+      "name": "TRP_INTERRUPT_0_STATUS"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659464,
+      "logical_offset": 135176,
+      "name": "LLCC_TRP_ATTR0_CFG1"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659468,
+      "logical_offset": 135180,
+      "name": "LLCC_TRP_ATTR1_CFG1"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659472,
+      "logical_offset": 135184,
+      "name": "LLCC_TRP_ATTR0_CFG2"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659476,
+      "logical_offset": 135188,
+      "name": "LLCC_TRP_ATTR1_CFG2"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659504,
+      "logical_offset": 135216,
+      "name": "LLCC_TRP_ATTR0_CFG6"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659508,
+      "logical_offset": 135220,
+      "name": "LLCC_TRP_ATTR1_CFG6"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659536,
+      "logical_offset": 135248,
+      "name": "LLCC_TRP_ATTR0_CFG10"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659540,
+      "logical_offset": 135252,
+      "name": "LLCC_TRP_ATTR1_CFG10"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659544,
+      "logical_offset": 135256,
+      "name": "LLCC_TRP_ATTR0_CFG11"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659548,
+      "logical_offset": 135260,
+      "name": "LLCC_TRP_ATTR1_CFG11"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659552,
+      "logical_offset": 135264,
+      "name": "LLCC_TRP_ATTR0_CFG12"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659556,
+      "logical_offset": 135268,
+      "name": "LLCC_TRP_ATTR1_CFG12"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659560,
+      "logical_offset": 135272,
+      "name": "LLCC_TRP_ATTR0_CFG13"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659564,
+      "logical_offset": 135276,
+      "name": "LLCC_TRP_ATTR1_CFG13"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659576,
+      "logical_offset": 135288,
+      "name": "LLCC_TRP_ATTR0_CFG15"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659580,
+      "logical_offset": 135292,
+      "name": "LLCC_TRP_ATTR1_CFG15"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659584,
+      "logical_offset": 135296,
+      "name": "LLCC_TRP_ATTR0_CFG16"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659588,
+      "logical_offset": 135300,
+      "name": "LLCC_TRP_ATTR1_CFG16"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659592,
+      "logical_offset": 135304,
+      "name": "LLCC_TRP_ATTR0_CFG17"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659596,
+      "logical_offset": 135308,
+      "name": "LLCC_TRP_ATTR1_CFG17"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659632,
+      "logical_offset": 135344,
+      "name": "LLCC_TRP_ATTR0_CFG22"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659636,
+      "logical_offset": 135348,
+      "name": "LLCC_TRP_ATTR1_CFG22"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659640,
+      "logical_offset": 135352,
+      "name": "LLCC_TRP_ATTR0_CFG23"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659644,
+      "logical_offset": 135356,
+      "name": "LLCC_TRP_ATTR1_CFG23"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659648,
+      "logical_offset": 135360,
+      "name": "LLCC_TRP_ATTR0_CFG24"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659652,
+      "logical_offset": 135364,
+      "name": "LLCC_TRP_ATTR1_CFG24"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659680,
+      "logical_offset": 135392,
+      "name": "LLCC_TRP_ATTR0_CFG28"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659684,
+      "logical_offset": 135396,
+      "name": "LLCC_TRP_ATTR1_CFG28"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659696,
+      "logical_offset": 135408,
+      "name": "LLCC_TRP_ATTR0_CFG30"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659700,
+      "logical_offset": 135412,
+      "name": "LLCC_TRP_ATTR1_CFG30"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659704,
+      "logical_offset": 135416,
+      "name": "LLCC_TRP_ATTR0_CFG31"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659708,
+      "logical_offset": 135420,
+      "name": "LLCC_TRP_ATTR1_CFG31"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 663296,
+      "logical_offset": 139008,
+      "name": "LLCC_TRP_SCID_DIS_CAP_ALLOC"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 663300,
+      "logical_offset": 139012,
+      "name": "LLCC_TRP_PCB_ACT"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 663328,
+      "logical_offset": 139040,
+      "name": "LLCC_TRP_WRSC_EN"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 720908,
+      "logical_offset": 196620,
+      "name": "LLCC_COMMON_STATUS0"
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 790528,
+      "logical_offset": 266240,
+      "name": "DRP_INTERRUPT_STATUS"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1052672,
+      "logical_offset": 4096,
+      "name": "LLCC_TRP_ACT_CTRL1"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1052676,
+      "logical_offset": 4100,
+      "name": "LLCC_TRP_STATUS1"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1056768,
+      "logical_offset": 8192,
+      "name": "LLCC_TRP_ACT_CTRL2"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1056772,
+      "logical_offset": 8196,
+      "name": "LLCC_TRP_STATUS2"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1073152,
+      "logical_offset": 24576,
+      "name": "LLCC_TRP_ACT_CTRL6"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1073156,
+      "logical_offset": 24580,
+      "name": "LLCC_TRP_STATUS6"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1089536,
+      "logical_offset": 40960,
+      "name": "LLCC_TRP_ACT_CTRL10"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1089540,
+      "logical_offset": 40964,
+      "name": "LLCC_TRP_STATUS10"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1093632,
+      "logical_offset": 45056,
+      "name": "LLCC_TRP_ACT_CTRL11"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1093636,
+      "logical_offset": 45060,
+      "name": "LLCC_TRP_STATUS11"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1097728,
+      "logical_offset": 49152,
+      "name": "LLCC_TRP_ACT_CTRL12"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1097732,
+      "logical_offset": 49156,
+      "name": "LLCC_TRP_STATUS12"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1101824,
+      "logical_offset": 53248,
+      "name": "LLCC_TRP_ACT_CTRL13"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1101828,
+      "logical_offset": 53252,
+      "name": "LLCC_TRP_STATUS13"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1110016,
+      "logical_offset": 61440,
+      "name": "LLCC_TRP_ACT_CTRL15"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1110020,
+      "logical_offset": 61444,
+      "name": "LLCC_TRP_STATUS15"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1114112,
+      "logical_offset": 65536,
+      "name": "LLCC_TRP_ACT_CTRL16"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1114116,
+      "logical_offset": 65540,
+      "name": "LLCC_TRP_STATUS16"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1118208,
+      "logical_offset": 69632,
+      "name": "LLCC_TRP_ACT_CTRL17"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1118212,
+      "logical_offset": 69636,
+      "name": "LLCC_TRP_STATUS17"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1138688,
+      "logical_offset": 90112,
+      "name": "LLCC_TRP_ACT_CTRL22"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1138692,
+      "logical_offset": 90116,
+      "name": "LLCC_TRP_STATUS22"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1142784,
+      "logical_offset": 94208,
+      "name": "LLCC_TRP_ACT_CTRL23"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1142788,
+      "logical_offset": 94212,
+      "name": "LLCC_TRP_STATUS23"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1146880,
+      "logical_offset": 98304,
+      "name": "LLCC_TRP_ACT_CTRL24"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1146884,
+      "logical_offset": 98308,
+      "name": "LLCC_TRP_STATUS24"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1163264,
+      "logical_offset": 114688,
+      "name": "LLCC_TRP_ACT_CTRL28"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1163268,
+      "logical_offset": 114692,
+      "name": "LLCC_TRP_STATUS28"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1171456,
+      "logical_offset": 122880,
+      "name": "LLCC_TRP_ACT_CTRL30"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1171460,
+      "logical_offset": 122884,
+      "name": "LLCC_TRP_STATUS30"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1175552,
+      "logical_offset": 126976,
+      "name": "LLCC_TRP_ACT_CTRL31"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1175556,
+      "logical_offset": 126980,
+      "name": "LLCC_TRP_STATUS31"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1180800,
+      "logical_offset": 132224,
+      "name": "TRP_INTERRUPT_0_STATUS"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183752,
+      "logical_offset": 135176,
+      "name": "LLCC_TRP_ATTR0_CFG1"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183756,
+      "logical_offset": 135180,
+      "name": "LLCC_TRP_ATTR1_CFG1"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183760,
+      "logical_offset": 135184,
+      "name": "LLCC_TRP_ATTR0_CFG2"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183764,
+      "logical_offset": 135188,
+      "name": "LLCC_TRP_ATTR1_CFG2"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183792,
+      "logical_offset": 135216,
+      "name": "LLCC_TRP_ATTR0_CFG6"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183796,
+      "logical_offset": 135220,
+      "name": "LLCC_TRP_ATTR1_CFG6"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183824,
+      "logical_offset": 135248,
+      "name": "LLCC_TRP_ATTR0_CFG10"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183828,
+      "logical_offset": 135252,
+      "name": "LLCC_TRP_ATTR1_CFG10"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183832,
+      "logical_offset": 135256,
+      "name": "LLCC_TRP_ATTR0_CFG11"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183836,
+      "logical_offset": 135260,
+      "name": "LLCC_TRP_ATTR1_CFG11"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183840,
+      "logical_offset": 135264,
+      "name": "LLCC_TRP_ATTR0_CFG12"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183844,
+      "logical_offset": 135268,
+      "name": "LLCC_TRP_ATTR1_CFG12"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183848,
+      "logical_offset": 135272,
+      "name": "LLCC_TRP_ATTR0_CFG13"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183852,
+      "logical_offset": 135276,
+      "name": "LLCC_TRP_ATTR1_CFG13"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183864,
+      "logical_offset": 135288,
+      "name": "LLCC_TRP_ATTR0_CFG15"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183868,
+      "logical_offset": 135292,
+      "name": "LLCC_TRP_ATTR1_CFG15"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183872,
+      "logical_offset": 135296,
+      "name": "LLCC_TRP_ATTR0_CFG16"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183876,
+      "logical_offset": 135300,
+      "name": "LLCC_TRP_ATTR1_CFG16"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183880,
+      "logical_offset": 135304,
+      "name": "LLCC_TRP_ATTR0_CFG17"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183884,
+      "logical_offset": 135308,
+      "name": "LLCC_TRP_ATTR1_CFG17"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183920,
+      "logical_offset": 135344,
+      "name": "LLCC_TRP_ATTR0_CFG22"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183924,
+      "logical_offset": 135348,
+      "name": "LLCC_TRP_ATTR1_CFG22"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183928,
+      "logical_offset": 135352,
+      "name": "LLCC_TRP_ATTR0_CFG23"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183932,
+      "logical_offset": 135356,
+      "name": "LLCC_TRP_ATTR1_CFG23"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183936,
+      "logical_offset": 135360,
+      "name": "LLCC_TRP_ATTR0_CFG24"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183940,
+      "logical_offset": 135364,
+      "name": "LLCC_TRP_ATTR1_CFG24"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183968,
+      "logical_offset": 135392,
+      "name": "LLCC_TRP_ATTR0_CFG28"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183972,
+      "logical_offset": 135396,
+      "name": "LLCC_TRP_ATTR1_CFG28"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183984,
+      "logical_offset": 135408,
+      "name": "LLCC_TRP_ATTR0_CFG30"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183988,
+      "logical_offset": 135412,
+      "name": "LLCC_TRP_ATTR1_CFG30"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183992,
+      "logical_offset": 135416,
+      "name": "LLCC_TRP_ATTR0_CFG31"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183996,
+      "logical_offset": 135420,
+      "name": "LLCC_TRP_ATTR1_CFG31"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1187584,
+      "logical_offset": 139008,
+      "name": "LLCC_TRP_SCID_DIS_CAP_ALLOC"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1187588,
+      "logical_offset": 139012,
+      "name": "LLCC_TRP_PCB_ACT"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1187616,
+      "logical_offset": 139040,
+      "name": "LLCC_TRP_WRSC_EN"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1245196,
+      "logical_offset": 196620,
+      "name": "LLCC_COMMON_STATUS0"
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1314816,
+      "logical_offset": 266240,
+      "name": "DRP_INTERRUPT_STATUS"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1576960,
+      "logical_offset": 4096,
+      "name": "LLCC_TRP_ACT_CTRL1"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1576964,
+      "logical_offset": 4100,
+      "name": "LLCC_TRP_STATUS1"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1581056,
+      "logical_offset": 8192,
+      "name": "LLCC_TRP_ACT_CTRL2"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1581060,
+      "logical_offset": 8196,
+      "name": "LLCC_TRP_STATUS2"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1597440,
+      "logical_offset": 24576,
+      "name": "LLCC_TRP_ACT_CTRL6"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1597444,
+      "logical_offset": 24580,
+      "name": "LLCC_TRP_STATUS6"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1613824,
+      "logical_offset": 40960,
+      "name": "LLCC_TRP_ACT_CTRL10"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1613828,
+      "logical_offset": 40964,
+      "name": "LLCC_TRP_STATUS10"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1617920,
+      "logical_offset": 45056,
+      "name": "LLCC_TRP_ACT_CTRL11"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1617924,
+      "logical_offset": 45060,
+      "name": "LLCC_TRP_STATUS11"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1622016,
+      "logical_offset": 49152,
+      "name": "LLCC_TRP_ACT_CTRL12"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1622020,
+      "logical_offset": 49156,
+      "name": "LLCC_TRP_STATUS12"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1626112,
+      "logical_offset": 53248,
+      "name": "LLCC_TRP_ACT_CTRL13"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1626116,
+      "logical_offset": 53252,
+      "name": "LLCC_TRP_STATUS13"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1634304,
+      "logical_offset": 61440,
+      "name": "LLCC_TRP_ACT_CTRL15"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1634308,
+      "logical_offset": 61444,
+      "name": "LLCC_TRP_STATUS15"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1638400,
+      "logical_offset": 65536,
+      "name": "LLCC_TRP_ACT_CTRL16"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1638404,
+      "logical_offset": 65540,
+      "name": "LLCC_TRP_STATUS16"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1642496,
+      "logical_offset": 69632,
+      "name": "LLCC_TRP_ACT_CTRL17"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1642500,
+      "logical_offset": 69636,
+      "name": "LLCC_TRP_STATUS17"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1662976,
+      "logical_offset": 90112,
+      "name": "LLCC_TRP_ACT_CTRL22"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1662980,
+      "logical_offset": 90116,
+      "name": "LLCC_TRP_STATUS22"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1667072,
+      "logical_offset": 94208,
+      "name": "LLCC_TRP_ACT_CTRL23"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1667076,
+      "logical_offset": 94212,
+      "name": "LLCC_TRP_STATUS23"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1671168,
+      "logical_offset": 98304,
+      "name": "LLCC_TRP_ACT_CTRL24"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1671172,
+      "logical_offset": 98308,
+      "name": "LLCC_TRP_STATUS24"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1687552,
+      "logical_offset": 114688,
+      "name": "LLCC_TRP_ACT_CTRL28"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1687556,
+      "logical_offset": 114692,
+      "name": "LLCC_TRP_STATUS28"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1695744,
+      "logical_offset": 122880,
+      "name": "LLCC_TRP_ACT_CTRL30"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1695748,
+      "logical_offset": 122884,
+      "name": "LLCC_TRP_STATUS30"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1699840,
+      "logical_offset": 126976,
+      "name": "LLCC_TRP_ACT_CTRL31"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1699844,
+      "logical_offset": 126980,
+      "name": "LLCC_TRP_STATUS31"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1705088,
+      "logical_offset": 132224,
+      "name": "TRP_INTERRUPT_0_STATUS"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708040,
+      "logical_offset": 135176,
+      "name": "LLCC_TRP_ATTR0_CFG1"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708044,
+      "logical_offset": 135180,
+      "name": "LLCC_TRP_ATTR1_CFG1"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708048,
+      "logical_offset": 135184,
+      "name": "LLCC_TRP_ATTR0_CFG2"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708052,
+      "logical_offset": 135188,
+      "name": "LLCC_TRP_ATTR1_CFG2"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708080,
+      "logical_offset": 135216,
+      "name": "LLCC_TRP_ATTR0_CFG6"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708084,
+      "logical_offset": 135220,
+      "name": "LLCC_TRP_ATTR1_CFG6"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708112,
+      "logical_offset": 135248,
+      "name": "LLCC_TRP_ATTR0_CFG10"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708116,
+      "logical_offset": 135252,
+      "name": "LLCC_TRP_ATTR1_CFG10"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708120,
+      "logical_offset": 135256,
+      "name": "LLCC_TRP_ATTR0_CFG11"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708124,
+      "logical_offset": 135260,
+      "name": "LLCC_TRP_ATTR1_CFG11"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708128,
+      "logical_offset": 135264,
+      "name": "LLCC_TRP_ATTR0_CFG12"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708132,
+      "logical_offset": 135268,
+      "name": "LLCC_TRP_ATTR1_CFG12"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708136,
+      "logical_offset": 135272,
+      "name": "LLCC_TRP_ATTR0_CFG13"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708140,
+      "logical_offset": 135276,
+      "name": "LLCC_TRP_ATTR1_CFG13"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708152,
+      "logical_offset": 135288,
+      "name": "LLCC_TRP_ATTR0_CFG15"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708156,
+      "logical_offset": 135292,
+      "name": "LLCC_TRP_ATTR1_CFG15"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708160,
+      "logical_offset": 135296,
+      "name": "LLCC_TRP_ATTR0_CFG16"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708164,
+      "logical_offset": 135300,
+      "name": "LLCC_TRP_ATTR1_CFG16"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708168,
+      "logical_offset": 135304,
+      "name": "LLCC_TRP_ATTR0_CFG17"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708172,
+      "logical_offset": 135308,
+      "name": "LLCC_TRP_ATTR1_CFG17"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708208,
+      "logical_offset": 135344,
+      "name": "LLCC_TRP_ATTR0_CFG22"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708212,
+      "logical_offset": 135348,
+      "name": "LLCC_TRP_ATTR1_CFG22"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708216,
+      "logical_offset": 135352,
+      "name": "LLCC_TRP_ATTR0_CFG23"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708220,
+      "logical_offset": 135356,
+      "name": "LLCC_TRP_ATTR1_CFG23"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708224,
+      "logical_offset": 135360,
+      "name": "LLCC_TRP_ATTR0_CFG24"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708228,
+      "logical_offset": 135364,
+      "name": "LLCC_TRP_ATTR1_CFG24"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708256,
+      "logical_offset": 135392,
+      "name": "LLCC_TRP_ATTR0_CFG28"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708260,
+      "logical_offset": 135396,
+      "name": "LLCC_TRP_ATTR1_CFG28"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708272,
+      "logical_offset": 135408,
+      "name": "LLCC_TRP_ATTR0_CFG30"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708276,
+      "logical_offset": 135412,
+      "name": "LLCC_TRP_ATTR1_CFG30"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708280,
+      "logical_offset": 135416,
+      "name": "LLCC_TRP_ATTR0_CFG31"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708284,
+      "logical_offset": 135420,
+      "name": "LLCC_TRP_ATTR1_CFG31"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1711872,
+      "logical_offset": 139008,
+      "name": "LLCC_TRP_SCID_DIS_CAP_ALLOC"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1711876,
+      "logical_offset": 139012,
+      "name": "LLCC_TRP_PCB_ACT"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1711904,
+      "logical_offset": 139040,
+      "name": "LLCC_TRP_WRSC_EN"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1769484,
+      "logical_offset": 196620,
+      "name": "LLCC_COMMON_STATUS0"
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1839104,
+      "logical_offset": 266240,
+      "name": "DRP_INTERRUPT_STATUS"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 4096,
+      "logical_offset": 4096,
+      "name": "LLCC_TRP_ACT_CTRL1"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 4100,
+      "logical_offset": 4100,
+      "name": "LLCC_TRP_STATUS1"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 8192,
+      "logical_offset": 8192,
+      "name": "LLCC_TRP_ACT_CTRL2"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 8196,
+      "logical_offset": 8196,
+      "name": "LLCC_TRP_STATUS2"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 24576,
+      "logical_offset": 24576,
+      "name": "LLCC_TRP_ACT_CTRL6"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 24580,
+      "logical_offset": 24580,
+      "name": "LLCC_TRP_STATUS6"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 40960,
+      "logical_offset": 40960,
+      "name": "LLCC_TRP_ACT_CTRL10"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 40964,
+      "logical_offset": 40964,
+      "name": "LLCC_TRP_STATUS10"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 45056,
+      "logical_offset": 45056,
+      "name": "LLCC_TRP_ACT_CTRL11"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 45060,
+      "logical_offset": 45060,
+      "name": "LLCC_TRP_STATUS11"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 49152,
+      "logical_offset": 49152,
+      "name": "LLCC_TRP_ACT_CTRL12"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 49156,
+      "logical_offset": 49156,
+      "name": "LLCC_TRP_STATUS12"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 53248,
+      "logical_offset": 53248,
+      "name": "LLCC_TRP_ACT_CTRL13"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 53252,
+      "logical_offset": 53252,
+      "name": "LLCC_TRP_STATUS13"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 61440,
+      "logical_offset": 61440,
+      "name": "LLCC_TRP_ACT_CTRL15"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 61444,
+      "logical_offset": 61444,
+      "name": "LLCC_TRP_STATUS15"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 65536,
+      "logical_offset": 65536,
+      "name": "LLCC_TRP_ACT_CTRL16"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 65540,
+      "logical_offset": 65540,
+      "name": "LLCC_TRP_STATUS16"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 69632,
+      "logical_offset": 69632,
+      "name": "LLCC_TRP_ACT_CTRL17"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 69636,
+      "logical_offset": 69636,
+      "name": "LLCC_TRP_STATUS17"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 90112,
+      "logical_offset": 90112,
+      "name": "LLCC_TRP_ACT_CTRL22"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 90116,
+      "logical_offset": 90116,
+      "name": "LLCC_TRP_STATUS22"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 94208,
+      "logical_offset": 94208,
+      "name": "LLCC_TRP_ACT_CTRL23"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 94212,
+      "logical_offset": 94212,
+      "name": "LLCC_TRP_STATUS23"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 98304,
+      "logical_offset": 98304,
+      "name": "LLCC_TRP_ACT_CTRL24"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 98308,
+      "logical_offset": 98308,
+      "name": "LLCC_TRP_STATUS24"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 114688,
+      "logical_offset": 114688,
+      "name": "LLCC_TRP_ACT_CTRL28"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 114692,
+      "logical_offset": 114692,
+      "name": "LLCC_TRP_STATUS28"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 122880,
+      "logical_offset": 122880,
+      "name": "LLCC_TRP_ACT_CTRL30"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 122884,
+      "logical_offset": 122884,
+      "name": "LLCC_TRP_STATUS30"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 126976,
+      "logical_offset": 126976,
+      "name": "LLCC_TRP_ACT_CTRL31"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 126980,
+      "logical_offset": 126980,
+      "name": "LLCC_TRP_STATUS31"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135176,
+      "logical_offset": 135176,
+      "name": "LLCC_TRP_ATTR0_CFG1"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135180,
+      "logical_offset": 135180,
+      "name": "LLCC_TRP_ATTR1_CFG1"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135184,
+      "logical_offset": 135184,
+      "name": "LLCC_TRP_ATTR0_CFG2"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135188,
+      "logical_offset": 135188,
+      "name": "LLCC_TRP_ATTR1_CFG2"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135216,
+      "logical_offset": 135216,
+      "name": "LLCC_TRP_ATTR0_CFG6"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135220,
+      "logical_offset": 135220,
+      "name": "LLCC_TRP_ATTR1_CFG6"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135248,
+      "logical_offset": 135248,
+      "name": "LLCC_TRP_ATTR0_CFG10"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135252,
+      "logical_offset": 135252,
+      "name": "LLCC_TRP_ATTR1_CFG10"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135256,
+      "logical_offset": 135256,
+      "name": "LLCC_TRP_ATTR0_CFG11"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135260,
+      "logical_offset": 135260,
+      "name": "LLCC_TRP_ATTR1_CFG11"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135264,
+      "logical_offset": 135264,
+      "name": "LLCC_TRP_ATTR0_CFG12"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135268,
+      "logical_offset": 135268,
+      "name": "LLCC_TRP_ATTR1_CFG12"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135272,
+      "logical_offset": 135272,
+      "name": "LLCC_TRP_ATTR0_CFG13"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135276,
+      "logical_offset": 135276,
+      "name": "LLCC_TRP_ATTR1_CFG13"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135288,
+      "logical_offset": 135288,
+      "name": "LLCC_TRP_ATTR0_CFG15"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135292,
+      "logical_offset": 135292,
+      "name": "LLCC_TRP_ATTR1_CFG15"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135296,
+      "logical_offset": 135296,
+      "name": "LLCC_TRP_ATTR0_CFG16"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135300,
+      "logical_offset": 135300,
+      "name": "LLCC_TRP_ATTR1_CFG16"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135304,
+      "logical_offset": 135304,
+      "name": "LLCC_TRP_ATTR0_CFG17"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135308,
+      "logical_offset": 135308,
+      "name": "LLCC_TRP_ATTR1_CFG17"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135344,
+      "logical_offset": 135344,
+      "name": "LLCC_TRP_ATTR0_CFG22"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135348,
+      "logical_offset": 135348,
+      "name": "LLCC_TRP_ATTR1_CFG22"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135352,
+      "logical_offset": 135352,
+      "name": "LLCC_TRP_ATTR0_CFG23"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135356,
+      "logical_offset": 135356,
+      "name": "LLCC_TRP_ATTR1_CFG23"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135360,
+      "logical_offset": 135360,
+      "name": "LLCC_TRP_ATTR0_CFG24"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135364,
+      "logical_offset": 135364,
+      "name": "LLCC_TRP_ATTR1_CFG24"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135392,
+      "logical_offset": 135392,
+      "name": "LLCC_TRP_ATTR0_CFG28"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135396,
+      "logical_offset": 135396,
+      "name": "LLCC_TRP_ATTR1_CFG28"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135408,
+      "logical_offset": 135408,
+      "name": "LLCC_TRP_ATTR0_CFG30"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135412,
+      "logical_offset": 135412,
+      "name": "LLCC_TRP_ATTR1_CFG30"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135416,
+      "logical_offset": 135416,
+      "name": "LLCC_TRP_ATTR0_CFG31"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135420,
+      "logical_offset": 135420,
+      "name": "LLCC_TRP_ATTR1_CFG31"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 139008,
+      "logical_offset": 139008,
+      "name": "LLCC_TRP_SCID_DIS_CAP_ALLOC"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 139012,
+      "logical_offset": 139012,
+      "name": "LLCC_TRP_PCB_ACT"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 139040,
+      "logical_offset": 139040,
+      "name": "LLCC_TRP_WRSC_EN"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 196608,
+      "logical_offset": 196608,
+      "name": "LLCC_COMMON_HW_INFO"
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 196620,
+      "logical_offset": 196620,
+      "name": "LLCC_COMMON_STATUS0"
+    }
+  ],
+  "windows": [
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 4096,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 8192,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 24576,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 40960,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 45056,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 49152,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 53248,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 61440,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 65536,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 69632,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 90112,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 94208,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 98304,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 114688,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 122880,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 126976,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 132224,
+      "size": 4
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135176,
+      "size": 16
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135216,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135248,
+      "size": 32
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135288,
+      "size": 24
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135344,
+      "size": 24
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135392,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 135408,
+      "size": 16
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 139008,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 139040,
+      "size": 4
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 196620,
+      "size": 4
+    },
+    {
+      "region": 0,
+      "bank": 0,
+      "offset": 266240,
+      "size": 4
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 528384,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 532480,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 548864,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 565248,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 569344,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 573440,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 577536,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 585728,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 589824,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 593920,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 614400,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 618496,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 622592,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 638976,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 647168,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 651264,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 656512,
+      "size": 4
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659464,
+      "size": 16
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659504,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659536,
+      "size": 32
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659576,
+      "size": 24
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659632,
+      "size": 24
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659680,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 659696,
+      "size": 16
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 663296,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 663328,
+      "size": 4
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 720908,
+      "size": 4
+    },
+    {
+      "region": 0,
+      "bank": 1,
+      "offset": 790528,
+      "size": 4
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1052672,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1056768,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1073152,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1089536,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1093632,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1097728,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1101824,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1110016,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1114112,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1118208,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1138688,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1142784,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1146880,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1163264,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1171456,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1175552,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1180800,
+      "size": 4
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183752,
+      "size": 16
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183792,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183824,
+      "size": 32
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183864,
+      "size": 24
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183920,
+      "size": 24
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183968,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1183984,
+      "size": 16
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1187584,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1187616,
+      "size": 4
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1245196,
+      "size": 4
+    },
+    {
+      "region": 0,
+      "bank": 2,
+      "offset": 1314816,
+      "size": 4
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1576960,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1581056,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1597440,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1613824,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1617920,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1622016,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1626112,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1634304,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1638400,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1642496,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1662976,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1667072,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1671168,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1687552,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1695744,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1699840,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1705088,
+      "size": 4
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708040,
+      "size": 16
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708080,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708112,
+      "size": 32
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708152,
+      "size": 24
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708208,
+      "size": 24
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708256,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1708272,
+      "size": 16
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1711872,
+      "size": 8
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1711904,
+      "size": 4
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1769484,
+      "size": 4
+    },
+    {
+      "region": 0,
+      "bank": 3,
+      "offset": 1839104,
+      "size": 4
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 4096,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 8192,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 24576,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 40960,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 45056,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 49152,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 53248,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 61440,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 65536,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 69632,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 90112,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 94208,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 98304,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 114688,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 122880,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 126976,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135176,
+      "size": 16
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135216,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135248,
+      "size": 32
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135288,
+      "size": 24
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135344,
+      "size": 24
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135392,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 135408,
+      "size": 16
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 139008,
+      "size": 8
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 139040,
+      "size": 4
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 196608,
+      "size": 4
+    },
+    {
+      "region": 1,
+      "bank": 255,
+      "offset": 196620,
+      "size": 4
+    }
+  ]
+}

@@ -186,7 +186,7 @@ still apply to any future authorized consumer execution.
 
 ## Gates
 
-The current integration plan registers **96 gates: 91 component/parser gates
+The current integration plan registers **98 gates: 93 component/parser gates
 and five Linux integration gates**, plus separate active and runtime-suspended
 real-Linux UFS checkpoints and the A77/PCI UFS compatibility job. This union
 preserves the wholeboard reference peripherals and default-branch storage,
@@ -222,8 +222,10 @@ pinned primary inputs and reproduces both VIDEOCC data outputs byte for byte.
 The original VIDEOCC 36-group/87+5 combination passed at c232d14e. The
 expanded 41-group VIDEOCC suite and DSI addition passed their own exact
 89+5 CI at 8e8e19a; three independent actual-artifact audits and the
-original-input diagnostic are linked below. The DP addition requires its
-own 91+5 receipt; registration in this plan is not a completed result.
+original-input diagnostic are linked below. DP subsequently passed its own
+91+5 at ed43749, four independent artifact audits and original-kernel
+continuation to the LLCC frontier. The LLCC addition requires its own 93+5
+receipt; registration in this plan is not a completed result.
 The preceding 4cc source passed 81+5, but this new combination still needs its
 own actual compiled receipt and native original-input run.
 The archived
@@ -617,3 +619,52 @@ The actual production Image and DT identify the cold read at PLL +0x158
 and subsequent PHY +0x28; that evidence does not imply LOCK or a known
 clock carrier. Component execution, original-kernel execution and Android
 userspace/UI/boot completion keep separate verdicts.
+
+
+Exact DP revision `ed43749ccea68fb082db3470f75c061b04ca09c0` passed
+[run 45487380226](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45487380226)
+and its separate PR lane. All 91+5 gates, 31 harness units, A77 852+2 and
+17 PCI UFS cases passed. Four independent read-only artifact audits verified
+actual ZIP/ELF bytes, all gate contracts, DP/DSI/VIDEOCC source regeneration,
+and complete DP/DSI/DISPCC/VIDEOCC streams. The supplemental real Linux UFS
+checkpoint observations verify 39 and 61 actual guest checks; the workflow
+excludes the large disk and checkpoint files, so the supplemental audit does
+not claim an independent full disk or checkpoint-wire rehash. The first DP
+compiled width-test failure and first aggregate selector-auditor failure
+remain recorded separately from the final pass.
+
+The same binary continued the original kernel beyond DP to network setup and
+original initramfs unpacking, then faulted in `qcom_llcc_probe` reading
+`0x0923000c`. All original input hashes remained unchanged, zero LUNs were
+attached, and acknowledged QMP cleanup was normal. Android userspace, UI and
+boot completion remain unobserved. See [qualified artifact and bounded native
+records](https://github.com/cyjin-yl/qemu-tb371fc/tree/f70826e788da7114d4c48fa4990a5c7276013715/tb371fc/evidence/dp-pll-ed43749-ci-20261124-6a5).
+
+### LLCC SM8250 slice-control increment
+
+The `llcc-source-generation` gate pins eight complete source files at two
+immutable revisions and regenerates the C descriptor table and JSON manifest.
+The `llcc-sm8250-reference` gate adds 32 groups: 20 ordinary groups, two
+special profile/TCG groups, four completed migrations, two profile rejections
+and four one-bit corrupt-stream rejections. All 96 previous contracts and
+their relative order are preserved, making 93 component gates plus five Linux
+gates. The [LLCC model contract](llcc-sm8250.md) defines the bounded behavior.
+
+The source table contains 16 slices and is independently matched against all
+640 bytes of the production table. Four bank bases are explicit in the pinned
+upstream SM8250 DTS. They define reference geometry, not a physical bank-count
+measurement. Two transparent containers expose only 139 leaves / 349 words /
+1396 bytes. Hardware-version and memory-controller-count knowledge remain
+false; no cache data, performance, error injection or external clock/power
+provider is modeled.
+
+Each successful migration must compare all 783 serialized bytes and begin with
+313 pure QOM observations before MMIO or continuation. Five original streams
+and four one-bit mutations are retained. Steady, armed, activation-pending and
+deactivation-pending state are separate completed transfers; both profile
+directions and each specific corrupted field must produce actual receiver
+failure diagnostics. The finite 1000 ns transition delay is a reference policy
+within the driver's 100 us polling budget, not measured silicon timing.
+
+This newly registered LLCC combination still requires its own compiled CI
+artifact, complete artifact review and subsequent original-input diagnostic.

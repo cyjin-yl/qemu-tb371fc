@@ -380,3 +380,52 @@ existing MDSS owner, and retain unknown carriers until qualification. The
 [DP source validation](evidence/dp-pll-20261124-6a5/source-validation.json)
 records exact regeneration and seventeen input-tamper rejections; compiled DP,
 native DP and Android acceptance require their own subsequent evidence.
+
+## LLCC v2 increment after the qualified DP native run
+
+The [LLCC reference contract](docs/llcc-sm8250.md),
+[register manifest](docs/llcc-sm8250-registers.json),
+[generator](scripts/generate_llcc_sm8250.py) and
+[regeneration verifier](scripts/verify_llcc_generation.py) pin eight complete
+primary inputs. Seven come from OnePlusOSS/android_kernel_oneplus_sm8250
+commit `98719830b0de5584f5588bbe9f4c8304d97a64c6`: the slice driver, Kona table,
+public LLCC header, perfmon driver/header, EDAC driver and original controller
+DTS. The eighth is the SM8250 DTS from torvalds/linux commit
+`adc218676eef25575469234709c2d87185ca223a`, which explicitly identifies four
+banks at `0x09200000`, `0x09280000`, `0x09300000` and `0x09380000`.
+Every complete source is pinned by byte count, SHA-256 and Git blob identity.
+The vendor binding symlink has no target in that snapshot; no missing binding
+text is presented as inspected evidence.
+
+The [original DT extraction](evidence/llcc-20261124-6a5/actual-controller-node.json)
+contains `qcom,llcc-v2`, the combined `0x001d0000` bank resource, the separate
+`0x00050000` broadcast resource, and `cap-based-alloc-and-pwr-collapse`.
+It contains no bank count, clock, IRQ or controller child. The separate PMU
+at `0x09095000` remains outside this model. Four banks are an explicit,
+source-backed reference geometry, not a measured physical COMMON_STATUS0
+value and not a replacement of the production DT.
+
+The [production probe instructions](evidence/llcc-20261124-6a5/actual-kernel-llcc-instructions.json)
+bind the first failing read to `llcc_base + 0x3000c`, followed by a right shift
+of 28 bits. The [production SCT table](evidence/llcc-20261124-6a5/actual-kernel-kona-table.json)
+and [source comparison](evidence/llcc-20261124-6a5/actual-kernel-kona-table-source-comparison.json)
+match all sixteen 40-byte rows, including padding: all 640 bytes have SHA-256
+`1ae851c29537ec405b15db1bd151710c25ad0f063a74970253f9d16754dc5d55`.
+This is a bounded production correspondence, not whole-kernel source identity.
+
+The [before-LLCC native receipt](evidence/llcc-20261124-6a5/native-frontier-before-llcc.json)
+records the qualified DP `ed43749` run passing both DSI registrations and DP
+probe before its only rejected access, the LLCC read at `0x0923000c`.
+It is still a zero-LUN kernel-failure diagnostic, with no Android userspace,
+UI or boot-complete observation.
+
+The LLCC reference has 71 canonical registers, 349 mapped words in 139 exact
+windows, and 1396 mapped bytes. It preserves per-row source order, explicit
+zero-write credit and initialization activation of SIDs 1, 13 and 31.
+Activation and deactivation require the source trigger edges and a finite
+1000 ns virtual-time policy; the source establishes a 100 us polling budget,
+not a measured silicon transition latency. Hardware version and memory
+controller count remain unknown. No cache data, coherency traffic, active
+performance counters, ECC injection, physical power or clock provider is
+modeled. Source-generation checks, compiled-device CI, original-input native
+execution and Android acceptance remain distinct evidence stages.

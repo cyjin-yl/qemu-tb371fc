@@ -14,7 +14,7 @@
 
 ## 当前整合：原厂 Android 启动开发基线
 
-本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。在已合入且实际通过验证的 DSI 7 nm v4.1 之后加入 DP 7 nm PLL 协议及固定源码再生两个 gate，当前公开计划为 **96 项：91 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
+本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。精确 DP 源码 `ed43749` 已通过自己的 91+5 CI、四个独立产物审计和原始输入诊断，并合入 `47083401`。本次在该基线上增加 LLCC slice 控制及固定源码再生两个 gate，当前公开计划为 **98 项：93 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。LLCC 组合的编译验收和原始输入运行仍须以新提交实际回执为准。
 
 两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
 
@@ -82,7 +82,17 @@ run005 的首个显示异常发生于 guest 3.697772 秒，CPU4、PID84 `kworker
 
 下一首个异常在 guest 6.260019 秒的 `dp_vco_recalc_rate_7nm+0x64`。原始完整 DT 的 `qcom,mdss_dp_pll_7nm` 声明 PLL 基址 `0x088ea000`，生产指令将该基址加 `0x158` 后执行 32 位读取；下一步还会读 PHY `+0x28`。冷探测读取配置并不先检查锁定。新的 [DP 7 nm 模型合同](tb371fc/docs/dp-pll-7nm.md)据此区分寄存器读回、有限锁定事务和实际 Clock 输出，沿用原来的 MDSS／XO 提供者。
 
-此增量需要自己的 91+5 正式 CI、完整迁移产物审计和新的原始输入运行；既有 DSI 成功记录只绑定 `8e8e19a`。原始存储备份尚未完成，UI 与完整 Android 启动目标仍在推进。
+精确源码 `ed43749` 的 [CI 45487380226](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45487380226) 实际通过 91+5、31 个 harness 单元测试、A77 852+2 和 PCI UFS 17 项；真实 Linux UFS 普通及 runtime-suspended 检查点分别通过 39／61 项。实际 ZIP 的总计划、源码再生与 VIDEOCC，以及 DP／DSI／DISPCC 完整 wire 和原始协议，分别通过四个独立审计。初轮 `7639c870` 的宽访问测试期望错误及其最小修正保留在证据中。
+
+同一已审计 QEMU `681baabe…` 的原始输入诊断完成两路 DSI 注册，DP 探测后继续到网络栈及原始 ramdisk 解包；原 `0x088ea158` 异常未再出现。下一致命读取是 LLCC `0x0923000c`，guest 3.277153 秒的 `qcom_llcc_probe+0x13c`。原始输入摘要不变，QEMU 正常清理；本次仍为零 LUN 诊断，未进入 Android 用户态。见[完整资格与原始运行证据](https://github.com/cyjin-yl/qemu-tb371fc/tree/f70826e788da7114d4c48fa4990a5c7276013715/tb371fc/evidence/dp-pll-ed43749-ci-20261124-6a5)。
+
+### LLCC：生产驱动的 COMMON_STATUS0 下一异常
+
+[原始 DT 与生产指令](tb371fc/evidence/llcc-20261124-6a5/actual-controller-node.json)给出 `qcom,llcc-v2` 的 bank 资源 `0x09200000/0x1d0000` 和 broadcast 资源 `0x09600000/0x50000`。固定主线 SM8250 DTS 明确列出四个 bank；该四 bank 几何属于参考配置，未声称读取过平板的物理 STATUS。生产 Image 的 16 项 Kona slice 表共 640 B 已与固定驱动源码逐字节核对。
+
+[LLCC 数字控制模型](tb371fc/docs/llcc-sm8250.md)默认关闭，显式 `qcom-sm8250-llcc.enabled-reference=on` 后开放 139 个精确窗口、349 个 word，共 1396 B。16 个 slice 独立执行两次边沿写入的激活／停用事务；1000 ns 是参考完成延迟，源码的 100 μs 只作为轮询预算证据。配置或本 slice 的全局位变化撤销未完成事务；bank 只读视图镜像 broadcast 写入。硬件版本和内存控制器数量保持未知，模型范围限于数字控制，不证明缓存数据、性能、ECC 注入或物理电源行为。
+
+新 LLCC gate 要求 32 组、4 次完成迁移、2 次 profile 拒绝和 4 次单 bit 损坏拒绝；五个原流和四个修改副本保留完整 783 B 状态，恢复目标在 MMIO 或 `cont` 前执行 313 次纯 QOM 查询。另一个 gate 核对八份完整固定源码并再生两个输出。当前代码与计划检查不替代新组合的实际编译 CI、原始内核或 Android 验收。
 
 
 ## 默认分支既有验收：2026-11-24 存储与电源修复
