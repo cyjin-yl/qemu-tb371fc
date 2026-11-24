@@ -1,0 +1,488 @@
+{
+  "a77_actual_raw_log_audit": {
+    "bytes": 15630,
+    "path": "/dev/shm/llcc-ci-evidence/llcc-c02f3d7-a77-rawlog-audit-001.json",
+    "sha256": "f94048bb892e1aa136127eb79727e43a499deb0dd2c61c0794c565b40dda5cf8"
+  },
+  "a77_attempt2_carryforward": {
+    "bytes": 10923,
+    "path": "/dev/shm/llcc-ci-evidence/llcc-c02f3d7-a77-attempt2-carryforward-observation-001.json",
+    "sha256": "3458b1517c6833238b79be7f92efd0591624d1d2fd0533ae527e1553f1d3391b"
+  },
+  "a77_attempt2_executed_again": false,
+  "additional_optional_tests_run": false,
+  "all_five_independent_audits_passed": true,
+  "android_boot_established": false,
+  "android_userspace_established": false,
+  "artifact": {
+    "api_url": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/artifacts/14973051830",
+    "archive_bytes": 54476107,
+    "archive_sha256": "40015b5451fcdd45aef215637eb76979638d3d36d5b967a97bc9048107834678",
+    "artifact_name": "tb371fc-public-gates-c02f3d794e85cb5bc95d1aca62780542e806d4dc",
+    "id": 14973051830,
+    "qemu_bytes": 63645720,
+    "qemu_member": "qemu-build/qemu-system-aarch64",
+    "qemu_sha256": "10d21844e6c411e64af7a6aade7354d90c0aeffb82643d9676986fc0a160c214",
+    "run_id": 45501927279
+  },
+  "audit_evidence_commit": "0258a0b9b0ac374f294f3373f7ceb092809c42d9",
+  "audits": [
+    {
+      "auditor": {
+        "bytes": 115382,
+        "path": "/workspace/scratch/6a5ea697094c/llcc-candidate/.work/audit_llcc_integration_artifact_c02f3d7.py",
+        "sha256": "16e3db8f18055edfa869838e73b8d95206449472e6b5685c0d9991943e4febe5"
+      },
+      "name": "integration",
+      "passed": true,
+      "receipt": {
+        "bytes": 135285,
+        "path": "/dev/shm/llcc-ci-evidence/llcc-c02f3d7-final-integration-audit-001.json",
+        "sha256": "e85e8e1f885129f98ed517655401bce8048589adca342bc5670326f3aed835fb"
+      },
+      "scope": {
+        "actual_archive_and_elf_bytes_hashed": true,
+        "ci_harness_unittests_from_actual_push_artifact": 31,
+        "component_gates": 93,
+        "description": "All 98 gate contracts and real aggregate/individual receipts, actual QEMU/clean-Linux bytes, VIDEOCC complete streams, VIDEOCC, DSI, DP and LLCC source regeneration",
+        "linux_gates": 5,
+        "source_generation": {
+          "dp_generation": {
+            "committed_output_pins": {
+              "hw/misc/qcom-sm8250-dp-pll-data.inc": "36871a517d97b694252bfee383adf781878ac013215b98fd17089e7e73a5dd0d",
+              "tb371fc/docs/dp-pll-7nm-registers.json": "a9150fda61e16a0deb6acabe17f9e3b532963a61453fb98c125dab0cf08ec101"
+            },
+            "inputs_verified_from_actual_bytes": 17,
+            "outputs_verified_from_actual_bytes": 2,
+            "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6"
+          },
+          "dsi_generation": {
+            "committed_output_pins": {
+              "hw/misc/qcom-sm8250-dsi-pll-data.inc": "c193666bb41923063ca295cdb0f0327cea5f0e5b917c23d1b4b94d16bff23c16",
+              "tb371fc/docs/dsi-pll-7nm-registers.json": "c73a7e5ad6f36c008f2e9991c8d7a56d3b30cb2781b015a46fd3c13ca0d5b6df"
+            },
+            "inputs_verified_from_actual_bytes": 13,
+            "outputs_verified_from_actual_bytes": 2,
+            "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6"
+          },
+          "generation": {
+            "committed_output_pins": {
+              "hw/misc/qcom-sm8250-videocc-data.inc": "7e98e8885f0cca0781063890c7e0011dac370f60c4ebb8e885f31fa1fd84cbc8",
+              "tb371fc/docs/videocc-sm8250-registers.json": "ffbfd3bacb39d4fc22780b42a161b64142a784fda05b595bbb933c117ab44a14"
+            },
+            "inputs_verified_from_actual_bytes": 10,
+            "outputs_verified_from_actual_bytes": 2,
+            "source_revision": "94304e12a3509eac7b3716bf574ce0b1fcaacbae"
+          },
+          "llcc_generation": {
+            "committed_output_pins": {
+              "hw/misc/qcom-sm8250-llcc-data.inc": "f3f7979c7973b2fbf9d8d398c064b8a404a290fbdd9d5a141407c0b28f974a46",
+              "tb371fc/docs/llcc-sm8250-registers.json": "9b9989a04b3719665439dab6287be8ced18511021c58ef5c7011f36a587b4772"
+            },
+            "geometry_source_revision": "adc218676eef25575469234709c2d87185ca223a",
+            "inputs_verified_from_actual_bytes": 8,
+            "outputs_verified_from_actual_bytes": 2,
+            "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6"
+          }
+        },
+        "supplementary_wire_audits": [
+          "DSI 2926 + MDSS 64",
+          "DISPCC 1676 + MDSS 64",
+          "DP 791 + MDSS 64",
+          "LLCC 783"
+        ],
+        "videocc": {
+          "all_source_and_target_qom_replies_checked": true,
+          "checks": 41,
+          "completed": 3,
+          "original_files": 4,
+          "profile_rejections": 2,
+          "single_bit_rejections": 2,
+          "source_and_target_output_rates_recomputed": true,
+          "total_stream_files": 6
+        }
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 77024,
+        "path": "/dev/shm/llcc-independent-audit/audit_llcc_artifact_c02f3d7.py",
+        "sha256": "7f135d9e94509c348f27c8621cf58f2b319ae5cd8684a1ec4a54acda5d38f475"
+      },
+      "name": "llcc",
+      "passed": true,
+      "receipt": {
+        "bytes": 65923,
+        "path": "/dev/shm/llcc-independent-audit/llcc-c02f3d7-final-independent-audit-001.json",
+        "sha256": "a27d4060154d9c160838d9684096385bfdaa0d9500d7aab41d267830b4664828"
+      },
+      "scope": {
+        "bytes_per_original_payload": 783,
+        "checks": 32,
+        "completed_migrations": 4,
+        "first_target_actual_cont_count_each": 0,
+        "first_target_actual_mmio_delta_each": 0,
+        "first_target_qom_getters_each": 313,
+        "ordinary": {
+          "all_actual_protocol_files_read": true,
+          "count": 20,
+          "default_off_physical_words": 349,
+          "exact_139_leaves": true,
+          "paused_tcg_no_cont_or_mmio": true,
+          "true_hole_count": 26
+        },
+        "profile_rejections": 2,
+        "single_bit_rejections": 4,
+        "source_generation": {
+          "all_actual_bytes_and_git_blobs_verified": true,
+          "case": "tb371fc-results/components/16-llcc-source-generation/case.json",
+          "four_named_banks_verified": true,
+          "inputs": 8,
+          "literal_source_capacity_arithmetic_verified": true,
+          "output_sha256": {
+            "hw/misc/qcom-sm8250-llcc-data.inc": "f3f7979c7973b2fbf9d8d398c064b8a404a290fbdd9d5a141407c0b28f974a46",
+            "tb371fc/docs/llcc-sm8250-registers.json": "9b9989a04b3719665439dab6287be8ced18511021c58ef5c7011f36a587b4772"
+          },
+          "outputs": 2,
+          "physical_bank_count_measured": false,
+          "source_table_bytes": 640,
+          "source_table_sha256": "1ae851c29537ec405b15db1bd151710c25ad0f063a74970253f9d16754dc5d55"
+        },
+        "stream_files": 9,
+        "unmodified_streams": 5
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 87087,
+        "path": "/dev/shm/llcc-ci-evidence/audit_dp_pll_artifact_c02f3d7.py",
+        "sha256": "82d1e11863f4e7dcf768e26c7208fb64658f251596bb1d3482bd3504045eb1de"
+      },
+      "name": "dp",
+      "passed": true,
+      "receipt": {
+        "bytes": 48764,
+        "path": "/dev/shm/llcc-ci-evidence/dp-c02f3d7-final-independent-audit-001.json",
+        "sha256": "4f0049e21478af711d2c4d3e3231ae4531abd88b4818ef805e4fae06b6db7500"
+      },
+      "scope": {
+        "checks": 36,
+        "clock_views_per_source_and_first_target": 6,
+        "completed_migrations": 4,
+        "dp_bytes_per_original": 791,
+        "first_target_actual_cont_count_each": 0,
+        "first_target_actual_mmio_delta_each": 0,
+        "first_target_qom_getters_each": 304,
+        "mdss_bytes_per_original": 64,
+        "power_loss_credit_invariant_checked_on_legal_states_and_actual_target_observation": true,
+        "power_loss_credit_invariant_claimed_as_isolated_corruption_case": false,
+        "profile_rejections": 2,
+        "single_bit_rejections": 4,
+        "stream_files": 9,
+        "unmodified_streams": 5
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 91462,
+        "path": "/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/audit_dsi_pll_artifact.py",
+        "sha256": "0e0b7e6ebe3a9486383c2946669629a97d4d037414be9d6e5ea28970462954fe"
+      },
+      "name": "dsi",
+      "passed": true,
+      "receipt": {
+        "bytes": 42451,
+        "path": "/dev/shm/llcc-ci-evidence/dsi-c02f3d7-final-independent-audit-001.json",
+        "sha256": "c7d67e6135408971c53c716e4eb3d45c9e876d711d4d00f6dc80de64da0b6097"
+      },
+      "scope": {
+        "checks": 36,
+        "clock_views_per_source_and_first_target": 52,
+        "completed_migrations": 3,
+        "dsi_bytes_per_original": 2926,
+        "first_target_actual_cont_count_each": 0,
+        "first_target_actual_mmio_delta_each": 0,
+        "first_target_qom_getters_each": 1163,
+        "mdss_bytes_per_original": 64,
+        "profile_rejections": 2,
+        "single_bit_rejections": 4,
+        "stream_files": 8,
+        "unmodified_streams": 4
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 52957,
+        "path": "/workspace/scratch/6a5ea697094c/dsi-pll-candidate/.work/audit_dispcc_wide_artifact_rootpath.py",
+        "sha256": "62837675b808db7ed5671e9cff7653f7b76d4c295d668919ffff10a4134fc4c8"
+      },
+      "name": "dispcc",
+      "passed": true,
+      "receipt": {
+        "bytes": 20600,
+        "path": "/dev/shm/llcc-ci-evidence/dispcc-c02f3d7-final-independent-audit-001.json",
+        "sha256": "77b95b9387610fd8618168c1fe03ff8282e773c3f1ebc29ef2dbee95662b2f1c"
+      },
+      "scope": {
+        "all_1676_dispcc_and_64_mdss_bytes_independently_decoded": true,
+        "all_61_source_and_first_target_clocks_recomputed": true,
+        "checks": 42,
+        "completed_migrations": 3,
+        "original_streams": 4,
+        "profile_rejections": 2,
+        "single_bit_rejections": 3,
+        "source_receipts": [
+          {
+            "file": "dispcc-v1-steady.migration",
+            "mdss_bytes_decoded": 64,
+            "output_clocks_recomputed": 61,
+            "sha256": "6d6723575577765cf65f208dbdc20ba7df94d01909fc4304f900b9c94992a404",
+            "source_trace": {
+              "actual_source_completed": true,
+              "actual_stopped_qom_getters": 556
+            },
+            "target_trace": {
+              "actual_first_qom_getters": 556,
+              "cont_before_full_first_observation": 0,
+              "cross_channel_association": "reviewed test hash, persisted equal counters, exact QMP ordering and QTest epoch/witness sequence",
+              "mmio_between_epoch_and_witness_drain": 0,
+              "persisted_counter_pair_verified": true,
+              "prewarm_device_mmio_recounted": 200,
+              "raw_ram_witness_verified": true,
+              "shared_cross_channel_timestamp_available": false
+            },
+            "wire_bytes_decoded": 1676
+          },
+          {
+            "file": "dispcc-v1-two-locks-22-rcgs.migration",
+            "mdss_bytes_decoded": 64,
+            "output_clocks_recomputed": 61,
+            "sha256": "5217240a8875402732ed5332747b548038842c287f1ba03778b8b72e3237b87b",
+            "source_trace": {
+              "actual_source_completed": true,
+              "actual_stopped_qom_getters": 556
+            },
+            "target_trace": {
+              "actual_first_qom_getters": 556,
+              "cont_before_full_first_observation": 0,
+              "cross_channel_association": "reviewed test hash, persisted equal counters, exact QMP ordering and QTest epoch/witness sequence",
+              "mmio_between_epoch_and_witness_drain": 0,
+              "persisted_counter_pair_verified": true,
+              "prewarm_device_mmio_recounted": 200,
+              "raw_ram_witness_verified": true,
+              "shared_cross_channel_timestamp_available": false
+            },
+            "wire_bytes_decoded": 1676
+          },
+          {
+            "file": "dispcc-v1-two-latches-six-mnd.migration",
+            "mdss_bytes_decoded": 64,
+            "output_clocks_recomputed": 61,
+            "sha256": "da5c5da722c706b2294e6a184672942f0e8d8c20870986a11416afdf93361503",
+            "source_trace": {
+              "actual_source_completed": true,
+              "actual_stopped_qom_getters": 556
+            },
+            "target_trace": {
+              "actual_first_qom_getters": 556,
+              "cont_before_full_first_observation": 0,
+              "cross_channel_association": "reviewed test hash, persisted equal counters, exact QMP ordering and QTest epoch/witness sequence",
+              "mmio_between_epoch_and_witness_drain": 0,
+              "persisted_counter_pair_verified": true,
+              "prewarm_device_mmio_recounted": 200,
+              "raw_ram_witness_verified": true,
+              "shared_cross_channel_timestamp_available": false
+            },
+            "wire_bytes_decoded": 1676
+          },
+          {
+            "file": "dispcc-v1-default.migration",
+            "mdss_bytes_decoded": 64,
+            "output_clocks_recomputed": 61,
+            "sha256": "834932c935f8473160b564149233bc1e1ebbcfddc8786e69b956548af2d21df3",
+            "source_trace": {
+              "actual_source_completed": true,
+              "actual_stopped_qom_getters": 556
+            },
+            "wire_bytes_decoded": 1676
+          }
+        ],
+        "total_streams": 7,
+        "wide_pixel_evidence": [
+          {
+            "clock": "disp_cc_mdss_pclk0_clk_src",
+            "clock_hz": 4500000004,
+            "clock_period": 954437176,
+            "input": "dsi0_phy_pll_out_dsiclk",
+            "input_period": 954437176
+          },
+          {
+            "clock": "disp_cc_mdss_pclk1_clk_src",
+            "clock_hz": 5000000001,
+            "clock_period": 858993459,
+            "input": "dsi1_phy_pll_out_dsiclk",
+            "input_period": 858993459
+          }
+        ]
+      }
+    }
+  ],
+  "commit": "c02f3d794e85cb5bc95d1aca62780542e806d4dc",
+  "coordinator_deployed": false,
+  "device_rpc_used_for_qualification": false,
+  "extra_linux_ufs_observation": {
+    "boundary": {
+      "external_disk_bytes_rehashed_from_archive": false,
+      "full_migration_wire_decoded": false,
+      "host_full_media_comparison_receipts_reviewed": true,
+      "inflight_ufs_migration_tested": false,
+      "migration_hash_immutability_is_receipt_evidence": true,
+      "source_process_ordering_is_recorded_host_monotonic_evidence": true,
+      "stock_android_boot_claimed": false,
+      "system_suspend_tested": false,
+      "workflow_excluded_members": [
+        "tb371fc-results/linux-ufs-migration/checkpoint.migration",
+        "tb371fc-results/linux-ufs-migration/disk.raw",
+        "tb371fc-results/linux-ufs-pm-migration/checkpoint.migration",
+        "tb371fc-results/linux-ufs-pm-migration/disk.raw"
+      ],
+      "workflow_exclusion_lines": [
+        123,
+        124,
+        125,
+        126
+      ],
+      "workflow_git_blob": "df5d3d9bca9c5908dfda73181932e18e8a0e2173"
+    },
+    "checks": [
+      39,
+      61
+    ],
+    "receipt": {
+      "bytes": 18738,
+      "path": "/dev/shm/llcc-ci-evidence/ufs-c02f3d7-final-observation-001.json",
+      "sha256": "0d8d30afb104a5af39be4122c7e07e0356adc301de91d729788ea61d7aec730d"
+    }
+  },
+  "github_evidence": {
+    "bytes": 86913,
+    "path": "/dev/shm/llcc-ci-evidence/llcc-c02-qualification-github-evidence.json",
+    "sha256": "53db2308a58c14b7e61501f859fc297fc9ec216f4892a8c538a3c0d8df8babfd"
+  },
+  "host_boot_guard_bound": false,
+  "independent_board_log_observations": [
+    {
+      "bytes": 3626,
+      "path": "/dev/shm/llcc-ci-review/c02f3d-push-counts-independent-observation.json",
+      "sha256": "7de6cf4b99f980b112abd746595826d5d0d77c4a7528934095ad64eb1d643d09"
+    },
+    {
+      "bytes": 3686,
+      "path": "/dev/shm/llcc-ci-review/c02f3d-pr-attempt2-counts-independent-observation.json",
+      "sha256": "91765be6cf775ea08d681c40435a77f21a4fe19c1e029de57c99f6dabe14ab90"
+    }
+  ],
+  "native_executed": false,
+  "native_started": false,
+  "passed": true,
+  "qualification": "Exact-head push and PR CI plus five independent actual-push-ZIP audits passed",
+  "qualification_evidence_observed_utc": "2026-11-24T23:07:24.650003+00:00",
+  "read_only_qualification_assembly": true,
+  "repository": "cyjin-yl/qemu-tb371fc",
+  "retained_initial_ci_failure": {
+    "cause": "Final test path join used PosixPath indexing; only that expression was repaired.",
+    "commit": "50836513e30bb1d122bd3fce49d70c509b3efb1f",
+    "native_used": false,
+    "qualified": false,
+    "receipt": {
+      "bytes": 5019,
+      "path": "/workspace/scratch/6a5ea697094c/llcc-candidate/.work/llcc-initial-5083651-failure-observation.json",
+      "sha256": "b83d915a33151c826fb726d59ef09549cdeba696ed607e3fa5da107a616ee5d9"
+    }
+  },
+  "retained_pr_attempt1_failure": {
+    "attempt": 1,
+    "cause": "HTTP 429 before downloading the eighth fixed source input; generator did not run.",
+    "native_used": false,
+    "qualified": false,
+    "receipt": {
+      "bytes": 6292,
+      "path": "/dev/shm/llcc-ci-evidence/llcc-c02-pr-attempt1-http429-failure.json",
+      "sha256": "abbddaed6a404c45ff350191c5b16c584d42bf95808b32500a929a8d9c4026dd"
+    },
+    "rerun_changed_source_or_acceptance": false,
+    "run_id": 45501932082
+  },
+  "schema": "tb371fc-llcc-c02f3d7-qualified-artifact-v1",
+  "scope": "Compiled CI artifact qualification for one later original-input native attempt. This receipt does not establish original Android userspace, UI, boot completion, physical LLCC geometry, or cache performance.",
+  "tree": "e16fa89f92cb997ca013415c8ced5adcc1db8659",
+  "ui_established": false,
+  "workflow_runs": [
+    {
+      "conclusion": "success",
+      "event": "push",
+      "head_branch": "tb371fc-verified-llcc-20261124-6a5",
+      "head_sha": "c02f3d794e85cb5bc95d1aca62780542e806d4dc",
+      "html_url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45501927279",
+      "id": 45501927279,
+      "jobs": [
+        {
+          "completed_at": "2026-11-24T22:36:35Z",
+          "conclusion": "success",
+          "head_sha": "c02f3d794e85cb5bc95d1aca62780542e806d4dc",
+          "id": 138827154114,
+          "name": "cortex-a77-architecture",
+          "run_attempt": 1,
+          "started_at": "2026-11-24T22:32:50Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-11-24T22:57:18Z",
+          "conclusion": "success",
+          "head_sha": "c02f3d794e85cb5bc95d1aca62780542e806d4dc",
+          "id": 138827154224,
+          "name": "board-components-and-linux",
+          "run_attempt": 1,
+          "started_at": "2026-11-24T22:32:50Z",
+          "status": "completed"
+        }
+      ],
+      "run_attempt": 1,
+      "status": "completed",
+      "updated_at": "2026-11-24T22:57:19Z"
+    },
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_branch": "tb371fc-llcc-20261124-6a5",
+      "head_sha": "c02f3d794e85cb5bc95d1aca62780542e806d4dc",
+      "html_url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45501932082",
+      "id": 45501932082,
+      "jobs": [
+        {
+          "completed_at": "2026-11-24T23:04:54Z",
+          "conclusion": "success",
+          "head_sha": "c02f3d794e85cb5bc95d1aca62780542e806d4dc",
+          "id": 138835640061,
+          "name": "board-components-and-linux",
+          "run_attempt": 2,
+          "started_at": "2026-11-24T22:48:47Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-11-24T22:36:44Z",
+          "conclusion": "success",
+          "head_sha": "c02f3d794e85cb5bc95d1aca62780542e806d4dc",
+          "id": 138835643987,
+          "name": "cortex-a77-architecture",
+          "run_attempt": 2,
+          "started_at": "2026-11-24T22:32:52Z",
+          "status": "completed"
+        }
+      ],
+      "run_attempt": 2,
+      "status": "completed",
+      "updated_at": "2026-11-24T23:04:55Z"
+    }
+  ]
+}
