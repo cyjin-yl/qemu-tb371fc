@@ -1,0 +1,93 @@
+name: Android full-LUN ready handoff
+
+on:
+  push:
+    branches: ['**']
+    paths:
+      - 'tb371fc/scripts/boot_android_from_ready.py'
+      - 'tb371fc/scripts/boot_android.py'
+      - 'tb371fc/scripts/android_boot_inputs.py'
+      - 'tb371fc/scripts/boot_qmp.py'
+      - 'tb371fc/scripts/legacy_printk.py'
+      - 'tb371fc/tests/test_boot_android_from_ready.py'
+      - 'tb371fc/tests/test_android_boot_inputs.py'
+      - '.github/workflows/android-full-lun-ready.yml'
+  pull_request:
+    branches: [tb371fc]
+    paths:
+      - 'tb371fc/scripts/boot_android_from_ready.py'
+      - 'tb371fc/scripts/boot_android.py'
+      - 'tb371fc/scripts/android_boot_inputs.py'
+      - 'tb371fc/scripts/boot_qmp.py'
+      - 'tb371fc/scripts/legacy_printk.py'
+      - 'tb371fc/tests/test_boot_android_from_ready.py'
+      - 'tb371fc/tests/test_android_boot_inputs.py'
+      - '.github/workflows/android-full-lun-ready.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-full-lun-ready-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ready-handoff-fixtures:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Check complete storage handoff and rejection paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/android-full-lun-ready"
+          python3 - <<'PY' 2>&1 | tee "$RUNNER_TEMP/android-full-lun-ready/tests.log"
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+          import unittest
+
+          source_paths = [Path("tb371fc/scripts") / name for name in (
+              "boot_android_from_ready.py", "boot_android.py",
+              "android_boot_inputs.py", "boot_qmp.py", "legacy_printk.py")]
+          source_paths += [Path("tb371fc/tests") / name for name in (
+              "test_boot_android_from_ready.py", "test_android_boot_inputs.py")]
+          hashes = {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
+                    for p in source_paths}
+          sys.path.insert(0, str(Path("tb371fc/tests").resolve()))
+          suite = unittest.defaultTestLoader.loadTestsFromName("test_boot_android_from_ready")
+          expected = suite.countTestCases()
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          passed = (expected > 0 and result.testsRun == expected
+                    and result.wasSuccessful() and not result.skipped
+                    and not result.expectedFailures)
+          receipt = {
+              "scope": "public host fixtures; no physical capture or original Android execution",
+              "commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "source_sha256": hashes,
+              "discovered": expected, "ran": result.testsRun,
+              "failures": len(result.failures), "errors": len(result.errors),
+              "skipped": len(result.skipped),
+              "expected_failures": len(result.expectedFailures),
+              "passed": passed, "original_android_boot_verified": False,
+          }
+          output = Path(os.environ["RUNNER_TEMP"]) / "android-full-lun-ready/result.json"
+          output.write_text(json.dumps(receipt, indent=2) + "\n")
+          print(json.dumps(receipt, indent=2))
+          raise SystemExit(0 if passed else 1)
+          PY
+      - name: Preserve handoff test evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: android-full-lun-ready-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
+          path: ${{ runner.temp }}/android-full-lun-ready/
