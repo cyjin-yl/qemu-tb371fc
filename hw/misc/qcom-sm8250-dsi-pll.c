@@ -339,7 +339,7 @@ static void dsi_rates(QcomSm8250DsiPllState *s, uint64_t *rates)
         bool internal = !(cfg1 & 4);
         bool full_rate = cphy || dsi_value(regs, PHY_CTRL2) == 0x40;
         bool gate = s->digital_ready[b] &&
-                    (cfg1 & 0x30) == 0x30 &&
+                    (cfg1 & 0x20) &&
                     dsi_value(regs, PHY_CTRL3) == 4 &&
                     !(dsi_value(regs, PHY_SPARE4) & 1);
 

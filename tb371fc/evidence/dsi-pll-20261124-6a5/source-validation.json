@@ -334,8 +334,8 @@
     },
     {
       "path": "tb371fc/docs/dsi-pll-7nm.md",
-      "bytes": 12119,
-      "sha256": "aa6c4c9a7381e745a921d2428f94017e515a406d4d0eddf08b40ea5b3120b6ff"
+      "bytes": 13129,
+      "sha256": "2379887634ce113333ed9738a8a9385e4d3813fc9c2bcce079c740b3c5bfb637"
     },
     {
       "path": "tb371fc/evidence/dsi-pll-20261124-6a5/divider-semantics-sources.json",
@@ -366,7 +366,7 @@
     "source_bias_wait_ns": 250
   },
   "native_result_boundary": "Retained run007 used zero LUNs, registered VIDEOCC, then faulted at DSI PHY+0x18. This candidate has not yet been exercised by a native run.",
-  "documentation_revision": "Documented post-LOCK SPARE4 reference qualification and separate generic-ceil/fixed-factor-floor CCF projection. Source generator and both generated tables are unchanged.",
+  "documentation_revision": "Documented post-LOCK SPARE4 qualification, separate generic-ceil/fixed-factor-floor projection, and CFG1 bit5 as sustained enable while bit4 is cleared after retime FIFO synchronization. Source generator and both generated tables are unchanged.",
   "rate_semantics_support": {
     "path": "tb371fc/evidence/dsi-pll-20261124-6a5/divider-semantics-sources.json",
     "source_count": 3,
@@ -374,5 +374,24 @@
     "additional_to_thirteen_table_generation_inputs": true,
     "total_distinct_primary_files_for_tables_and_semantics": 16,
     "does_not_change_generation_gate_input_count": 13
+  },
+  "global_gate_source_review": {
+    "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+    "pll_source": "techpack/display/pll/dsi_pll_7nm.c",
+    "pll_source_lines": [
+      1356,
+      1374
+    ],
+    "phy_source": "techpack/display/msm/dsi/dsi_phy_hw_v4_0.c",
+    "phy_source_lines": [
+      484,
+      493
+    ],
+    "sustained_global_enable_bit": 5,
+    "clk_en_sel_bit_cleared_after_retime_sync": 4,
+    "post_lock_digital_reset_qualification_retained": true,
+    "ctrl3_value_retained": 4,
+    "deasserted_spare4_retained": true,
+    "compiled_runtime_claimed": false
   }
 }

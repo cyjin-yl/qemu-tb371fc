@@ -629,6 +629,19 @@ def dphy_dividers_muxes_and_gates_keep_separate_roles(r):
     r.supply()
     request = 4_500_000_123
     run_bank(r, 0, request)
+    capture = tuple(r.reg(0, o, "captured") for o in REGISTERS)
+    # The PHY's reset_clk_en_sel() clears bit4 after retime-buffer sync.
+    # Bit5 remains the sustained global clock enable in the PLL driver.
+    assert r.reg(0, 0x14) == 0x30
+    r.write(0, 0x14, r.read(0, 0x14) & ~0x10)
+    assert r.reg(0, 0x14) == 0x20 and r.bank(0, "pll-locked")
+    expect_bank(r, 0, request)
+    assert tuple(r.reg(0, o, "captured") for o in REGISTERS) == capture
+    r.write(0, 0x14, r.read(0, 0x14) & ~0x20)
+    assert r.reg(0, 0x14) == 0 and r.bank(0, "pll-locked")
+    expect_bank(r, 0, request, gated=False)
+    assert tuple(r.reg(0, o, "captured") for o in REGISTERS) == capture
+    r.write(0, 0x14, 0x30)
     for bitdiv, pixeldiv, mux in ((3, 7, 0), (7, 3, 1), (15, 15, 0),
                                   (0, 1, 0), (1, 0, 0), (1, 1, 2), (1, 1, 3)):
         r.write(0, 0x10, bitdiv | pixeldiv << 4)
@@ -637,19 +650,32 @@ def dphy_dividers_muxes_and_gates_keep_separate_roles(r):
         expect_bank(r, 0, request, bitdiv=bitdiv, pixeldiv=pixeldiv, selector=mux)
     r.write(0, 0x10, 0x11)
     for cfg1, ctrl3, full, gated in ((0, 4, True, False), (0x10, 4, True, False),
-                                    (0x20, 4, True, False), (0x30, 0, True, False),
+                                    (0x20, 4, True, True), (0x30, 0, True, False),
                                     (0x30, 4, False, True), (0x30, 4, True, True)):
         r.write(0, 0x14, cfg1)
         r.write(0, 0x30, ctrl3)
         r.write(0, 0x2c, 0x40 if full else 0)
         assert r.bank(0, "pll-locked")
         expect_bank(r, 0, request, full_rate=full, gated=gated)
+    return {"legal_clk_en_sel_clear_keeps_carriers": True,
+            "sustained_global_enable_is_bit5": True, "capture_unchanged_by_gate_writes": True}
 
 
 def cphy_clock_views_and_unknown_external_selection(r):
     r.supply()
     for bank in range(2):
         run_bank(r, bank, 4_500_000_123, cphy=True)
+        capture = tuple(r.reg(bank, o, "captured") for o in REGISTERS)
+        assert r.reg(bank, 0x14) == 0x33
+        r.write(bank, 0x14, r.read(bank, 0x14) & ~0x10)
+        assert r.reg(bank, 0x14) == 0x23 and r.bank(bank, "pll-locked")
+        expect_bank(r, bank, 4_500_000_123, cphy=True, selector=3)
+        assert tuple(r.reg(bank, o, "captured") for o in REGISTERS) == capture
+        r.write(bank, 0x14, r.read(bank, 0x14) & ~0x20)
+        assert r.reg(bank, 0x14) == 3 and r.bank(bank, "pll-locked")
+        expect_bank(r, bank, 4_500_000_123, cphy=True, selector=3, gated=False)
+        assert tuple(r.reg(bank, o, "captured") for o in REGISTERS) == capture
+        r.write(bank, 0x14, 0x33)
         for bitdiv, pixeldiv, mux in ((3, 7, 3), (7, 3, 3), (1, 1, 0), (0, 1, 3), (1, 0, 3)):
             r.write(bank, 0x10, bitdiv | pixeldiv << 4)
             r.write(bank, 0x14, 0x30 | mux)
@@ -659,7 +685,8 @@ def cphy_clock_views_and_unknown_external_selection(r):
         r.write(bank, 0x14, 0x37)
         assert r.bank(bank, "external-selected") and not r.bank(bank, "external-known")
         expect_bank(r, bank, 4_500_000_123, cphy=True, selector=3, external=True)
-    return {"normal_and_shadow_views_verified": 52, "external_carrier_kept_unknown": True}
+    return {"normal_and_shadow_views_verified": 52, "external_carrier_kept_unknown": True,
+            "both_banks_keep_carriers_after_clk_en_sel_clear": True}
 
 
 def shared_phy_fields_and_bank_storage_are_independent(r):
@@ -672,6 +699,9 @@ def shared_phy_fields_and_bank_storage_are_independent(r):
     assert r.reg(0, 0x10) == 0x73
     r.write(0, 0x14, (r.read(0, 0x14) & ~3) | 1)
     assert r.reg(0, 0x14) == 0x31
+    expect_bank(r, 0, 4_500_000_000, bitdiv=3, pixeldiv=7, selector=1)
+    r.write(0, 0x14, r.read(0, 0x14) & ~0x10)
+    assert r.reg(0, 0x14) == 0x21 and r.bank(0, "pll-locked")
     expect_bank(r, 0, 4_500_000_000, bitdiv=3, pixeldiv=7, selector=1)
     r.write(0, 0x14, r.read(0, 0x14) | 4)
     expect_bank(r, 0, 4_500_000_000, bitdiv=3, pixeldiv=7, selector=1, external=True)

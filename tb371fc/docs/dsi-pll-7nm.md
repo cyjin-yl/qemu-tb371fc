@@ -182,6 +182,18 @@ source sequence and does not claim that silicon cannot be reset before lock.
 The unestablished external slave carrier remains unknown even if the source
 writes the slave's raw pulse or global-enable bits.
 
+The sustained global carrier gate is `PHY_CMN_CLK_CFG1` bit 5. Bit 4 is
+`CLK_EN_SEL`: the PLL source sets it before resynchronizing the FIFO, and
+`dsi_phy_hw_v4_0_reset_clk_en_sel()` clears it after retime-buffer synchronization
+([PHY source, lines 484–493](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/98719830b0de5584f5588bbe9f4c8304d97a64c6/techpack/display/msm/dsi/dsi_phy_hw_v4_0.c#L484-L493)).
+The PLL disable routine clears bit 5
+([PLL source, lines 1356–1374](https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/98719830b0de5584f5588bbe9f4c8304d97a64c6/techpack/display/pll/dsi_pll_7nm.c#L1356-L1374)).
+Accordingly, clearing bit 4 while bit 5 remains set preserves qualified
+carriers; clearing bit 5 withdraws them. Post-LOCK digital-reset qualification,
+`CTRL3=4`, and deasserted `SPARE4` remain required. This distinguishes the
+source's synchronization selector from its persistent enable without modeling
+the analog PHY or claiming that a panel is operational.
+
 ## Reproduction and evidence level
 
 The two generated outputs are
