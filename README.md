@@ -14,7 +14,7 @@
 
 ## 当前整合：原厂 Android 启动开发基线
 
-本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。加入 CAMCC 协议及固定源码再生两个 gate 后，当前公开计划为 **88 项：83 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
+本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。加入 DISPCC 协议及固定源码再生两个 gate 后，当前公开计划为 **90 项：85 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。以下历史通过记录仍只属于所列源码与产物，不能作为新组合的验收结果。
 
 两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
 
@@ -22,7 +22,7 @@
 
 [原始输入运行摘要](tb371fc/evidence/mdss-20261124-e1a9/native-frontier-before-mdss.json)记录：相机域继续注册后，`42144e8` 的正式二进制在 guest 3.696830 秒对 `0x0af03000` 的 4 B 读取触发新的首个同步外部异常；进程是 CPU4 的 PID78 `kworker/4:1`，调用链经过 `gdsc_probe`。这是延迟 probe 线程 Oops，未观察到 PID1 panic 或用户态成功。原始 kernel／ramdisk／完整 DT／bootargs 摘要前后一致，本次没有挂载原始 LUN。
 
-[MDSS 独立参考模型](tb371fc/docs/mdss-gdsc-reference.md)只拥有 `0x0af03000` 的 4 B 控制字，需显式 `qcom-mdss-gdsc.enabled-reference=on`。其三态父资源／硬件请求与 64 B v1 状态独立于原有六域相机；无状态分流器保留相机连接并共享实际 RPMh `mmcx.lvl` 输出。DISP_AHB `0xb00c` 只增加源码支持的 retention 位 13/14，未知父时钟不变。DISPCC 其余范围仍未实现。
+[MDSS 独立参考模型](tb371fc/docs/mdss-gdsc-reference.md)只拥有 `0x0af03000` 的 4 B 控制字，需显式 `qcom-mdss-gdsc.enabled-reference=on`。其三态父资源／硬件请求与 64 B v1 状态独立于原有六域相机；无状态分流器保留相机连接并共享实际 RPMh `mmcx.lvl` 输出。DISP_AHB `0xb00c` 只增加源码支持的 retention 位 13/14，未知父时钟不变。其余显示时钟协议由下述独立 DISPCC 增量处理，未声明地址仍拒绝。
 
 源码 `9d5e942` 的[正式 CI 45402110062](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45402110062)已实际通过 MDSS 20 组、3 次完成迁移、2 次 profile 拒绝和 2 次单 bit 损坏拒绝，以及当时 79+5 全计划。板级二进制 SHA-256 为 `33d27c37b0a9abd53630616fc803808702326ec3aab8a8d13dfeadccea47e94e`；MDSS／camera 完整 payload、实际迁移文件和各拒绝日志已独立核验。
 
@@ -48,7 +48,15 @@ NPU_CFG_AHB `0x4d004` 仅增加源码支持的 retention 位 13/14，保留原 H
 
 [CAMCC 新参考模型](tb371fc/docs/camcc-sm8250.md)核对了实际 `qcom,camcc-kona-v2`，实现四个 Lucid PLL 和一个 Zonda PLL、33 个 RCG、66 个 branch、六个后分频器、只读 SBI divider 与六条 reset。236 个确切字分为 74 个窗口，共 944 B，六个原 camera GDSC 继续独立。默认关闭，需显式 `qcom-sm8250-camcc.enabled-reference=on`；只有两个源码已证实的 XO 名称接线，其余三个输入保持未知。
 
-Lucid UPDATE/ACK 与 Zonda BYPASS/直接重调频分开；M/N/D、HID 和 SBI 舍入按固定源码计算。独立 2579 B v1 迁移保留已捕获配置与截止时间。41 组编译验收及 3/2/2 迁移、八份固定源码的两项再生比较已加入新计划，仍需本组合的新编译／CI及原厂运行回执。
+Lucid UPDATE/ACK 与 Zonda BYPASS/直接重调频分开；M/N/D、HID 和 SBI 舍入按固定源码计算。独立 2579 B v1 迁移保留已捕获配置与截止时间。`8798465` 的[正式 CI 45426713919](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45426713919)已实际通过 83+5 全计划、CAMCC 41 组／3/2/2 迁移，以及独立 A77 852+2 和 PCI UFS 17 项。[独立 ZIP 审计](tb371fc/evidence/camcc-20261124-e1a9/ci-artifact-audit-8798465.json)核验了六份实际迁移文件、CAMCC／camera 完整负载与全部 111 路输出时钟。二进制 SHA-256 为 `026f93a8c26950dd66cdb5c44eaf5e1575db638e59b69cbf025591d810be5594`。
+
+同二进制的[原始输入 run005](tb371fc/evidence/camcc-20261124-e1a9/native-frontier-after-camcc.json)在 guest 3.693603 秒实际输出 Registered CAM CC clocks；下一首个异常是 DISPCC `0x0af00000`。17.415 秒后正常 QMP 停止，原始输入及二进制摘要不变；仍未挂载原始 LUN、未观察到 Android 用户态。
+
+### DISPCC：实际显示 PLL 下一异常
+
+run005 的首个显示异常发生于 guest 3.697772 秒，CPU4、PID84 `kworker/4:1` 经 `disp_cc_kona_probe` → `clk_lucid_pll_configure` 读取 `0x0af00000`。新的 [DISPCC 有界协议](tb371fc/docs/dispcc-sm8250.md)按实际 `qcom,kona-dispcc` 复核两 Lucid PLL、22 个 RCG、32 个 branch、五个 divider、两条 reset 和 MISC bit4；130 个字分为 39 个窗口，共 520 B。MDSS GDSC `0x0af03000` 保持原 owner 和独立迁移。
+
+需显式 `qcom-sm8250-dispcc.enabled-reference=on`。只有 `bi_tcxo` 接现有 XO；16 个其它 carrier 保持未知，包括 DSI／DP／eDP PHY、未导出的 PLL1 even 和源中没有父声明的 critical XO branch。8／16 位 M/N/D、两路显式 remote vote、两可写／三只读 divider 与独立 1676 B v1 迁移按源码分开处理。41 组及 3/2/2 迁移、九源两文件再生加入新 85+5 计划，仍需该增量的正式编译／CI及原厂运行；显示执行和 Android 尚未通过。
 
 ## 默认分支既有验收：2026-11-24 存储与电源修复
 

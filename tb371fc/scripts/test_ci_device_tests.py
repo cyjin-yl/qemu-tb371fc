@@ -173,7 +173,7 @@ class PlanTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         plan = ci.plan(args, Path("/test/runtime"))
         cases = {case.name: case for case in plan}
-        self.assertEqual(len(plan), 83)
+        self.assertEqual(len(plan), 85)
         self.assertEqual(len(cases), len(plan))
         self.assertEqual(cases["tbu-reference-ecats"].expected_count, 17)
         self.assertEqual(cases["smmuv500-reference"].expected_count, 36)
@@ -184,7 +184,8 @@ class PlanTests(unittest.TestCase):
                      "power-checkpoint", "camera-gdsc-reference",
                      "mdss-gdsc-reference", "npu-gdsc-reference",
                      "video-gdsc-reference", "camcc-sm8250-reference",
-                     "camcc-source-generation"):
+                     "camcc-source-generation", "dispcc-sm8250-reference",
+                     "dispcc-source-generation"):
             self.assertIn(name, cases)
         npu = cases["npu-gdsc-reference"]
         self.assertEqual(npu.expected_count, 21)
@@ -218,6 +219,23 @@ class PlanTests(unittest.TestCase):
         self.assertEqual(camcc.expected_lengths, npu.expected_lengths)
         self.assertEqual(cases["camcc-source-generation"].expected_lengths,
                          {"inputs": 8})
+        dispcc = cases["dispcc-sm8250-reference"]
+        self.assertEqual(dispcc.expected_count, 41)
+        self.assertEqual(dispcc.expected_values["vmstate_payload_bytes"], 1676)
+        self.assertEqual(dispcc.expected_values["register_count"], 130)
+        self.assertEqual(dispcc.expected_values["sparse_window_count"], 39)
+        self.assertEqual(dispcc.expected_values["lucid_pll_count"], 2)
+        self.assertEqual(dispcc.expected_values["mnd_width8_count"], 2)
+        self.assertEqual(dispcc.expected_values["mnd_width16_count"], 4)
+        self.assertEqual(dispcc.expected_values["unknown_external_input_count"], 16)
+        self.assertEqual(dispcc.expected_values["remote_vote_count"], 2)
+        self.assertEqual(dispcc.expected_values["writable_divider_count"], 2)
+        self.assertEqual(dispcc.expected_values["read_only_divider_count"], 3)
+        self.assertIs(dispcc.expected_values["generic_dividers_round_up"], True)
+        self.assertIs(dispcc.expected_values["reference_enabled_by_default"], False)
+        self.assertEqual(dispcc.expected_lengths, npu.expected_lengths)
+        self.assertEqual(cases["dispcc-source-generation"].expected_lengths,
+                         {"inputs": 9})
         rpmh = cases["rpmh-wait-mask-reference"].expected_values
         self.assertEqual(rpmh["vmstate_version"], 3)
         self.assertEqual(rpmh["vmstate_minimum_version"], 2)
@@ -228,7 +246,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 88)
+        self.assertEqual(len(cases), 90)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]

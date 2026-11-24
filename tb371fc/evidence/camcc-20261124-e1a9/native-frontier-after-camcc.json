@@ -1,0 +1,79 @@
+{
+  "schema": "tb371fc-original-input-frontier-v1",
+  "run": "original-android-005",
+  "attempt": "camcc-8798465-run005",
+  "started_utc": "2026-11-24T15:50:00.830606Z",
+  "finished_utc": "2026-11-24T15:50:23.377176Z",
+  "qemu_source_commit": "8798465b1b70f9c86f5cd5e1e38ce595bd6088ce",
+  "qemu_source_ci_run": 45426713919,
+  "qemu_sha256": "026f93a8c26950dd66cdb5c44eaf5e1575db638e59b69cbf025591d810be5594",
+  "scope": "Unchanged original direct-kernel inputs with explicit MDSS, NPU, VIDEO and CAMCC references; no original LUNs attached",
+  "runner_sha256": "2d3e4c5206eca92a5ffdf9dab1b69d3a0482305a1b1756f9df509b22a464baf6",
+  "original_inputs": {
+    "kernel_sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "initrd_sha256": "563f4b334f8470155c6a451395342f7044b70e79b480a886c7641960f534f596",
+    "full_dtb_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "bootargs_sha256": "63c5738bb0c67419dd7efa0c585156499d163479d01b421203c0b51756fc6732",
+    "bootargs_preserved": true,
+    "core_input_digests_unchanged": {
+      "kernel": true,
+      "initrd": true,
+      "dtb": true,
+      "bootargs": true
+    },
+    "aop_unchanged": true,
+    "symbols_unchanged": true
+  },
+  "observation": {
+    "requested_seconds": 120,
+    "stop_on_kernel_failure": true,
+    "stop_reason": "kernel-failure",
+    "elapsed_seconds": 17.415,
+    "qemu_returncode": 0,
+    "runner_exit_code": 2,
+    "qemu_unchanged": true,
+    "camcc_registration": {
+      "guest_seconds": 3.693603,
+      "message": "cam_cc-kona ad00000.qcom,camcc: Registered CAM CC clocks"
+    },
+    "first_kernel_failure": {
+      "guest_seconds": 3.697772,
+      "kind": "synchronous external abort",
+      "esr": "0x96000010",
+      "far": "0xffffff8015cc0000",
+      "elr": "0xffffff800884e968",
+      "cpu": 4,
+      "pid": 84,
+      "process": "kworker/4:1",
+      "workqueue": "events deferred_probe_work_func",
+      "pc": "regmap_mmio_read32le+0x8/0x20",
+      "callers": [
+        "clk_lucid_pll_configure+0x40/0x320",
+        "disp_cc_kona_probe+0x11c/0x1e0"
+      ],
+      "physical_address": "0x0af00000",
+      "access": "read",
+      "bytes": 4,
+      "controller": "DISPCC",
+      "qemu_invalid_read_and_data_abort_corroborate": true
+    },
+    "qmp_shutdown_normal": true,
+    "qmp_drain_error": null,
+    "final_status": {
+      "status": "paused",
+      "running": false
+    },
+    "original_luns_attached": 0,
+    "android_userspace_observed": false,
+    "android_boot_completed_observed": false,
+    "interactive_display_verified": false,
+    "stock_android_boot_passed": false
+  },
+  "private_logs": {
+    "first_printk_bytes": 55347,
+    "first_printk_sha256": "9a2639cfa65a48c5c7e9ec6cba4c151ecfc04f5edb3f039b1f580df95e4a18ea",
+    "qemu_log_bytes": 638678,
+    "qemu_log_sha256": "2c725d2caf414c16c0a862100d1bb54bd95067aea55f48f4a3329c90d5aa4b3f"
+  },
+  "next_boundary": "The original CAMCC driver registered its clocks. The next first unmapped read is DISPCC PLL0 MODE during disp_cc_kona_probe. This qualifies the observed probe advance, not camera capture, display scanout or complete Android boot."
+}

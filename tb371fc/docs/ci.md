@@ -186,7 +186,7 @@ still apply to any future authorized consumer execution.
 
 ## Gates
 
-The current integration plan registers **88 gates: 83 component/parser gates
+The current integration plan registers **90 gates: 85 component/parser gates
 and five Linux integration gates**, plus separate active and runtime-suspended
 real-Linux UFS checkpoints and the A77/PCI UFS compatibility job. This union
 preserves the wholeboard reference peripherals and default-branch storage,
@@ -245,6 +245,7 @@ pass does not attest newly added devices.
 | Config NoC SBM reference | 28 checks; eight independent logical deadlines, three words, pure stopped state, two completed transfers, two profile mismatches and two corrupted-field rejections; no real traffic drain |
 | NPUCC | 37 checks across three physical banks, actual Clock outputs, source-bound CRC/dividers, two completed migrations and two profile rejections; full NPU/DSP execution remains outside scope |
 | CAMCC | 41 checks; four Lucid/one Zonda PLL, 111 actual Clock outputs, 236 words/74 windows, full 2579-byte migration oracle, three completed transfers and 2/2 profile/corruption rejections; separate eight-source regeneration of both data files |
+| DISPCC | 41 checks; two Lucid PLLs, 8/16-bit MND, two explicit remote votes, five dividers, 61 actual Clock outputs, 130 words/39 windows, full 1676-byte migration oracle plus MDSS64, three completed transfers and 2/2 rejections; separate nine-source regeneration |
 | NPU GDSC | 21 checks; independent 4-byte word and 64-byte v1 state, unknown parent preserved, hardware mode rejected, NPU_CFG_AHB retention only, three completed transfers, two profile and two corruption rejections |
 | VIDEO GDSC | 22 checks; four sparse words and 142-byte v1 state, HW mode only on two DT-declared domains, real three-consumer mmcx fanout, VIDEO_AHB retention, three completed transfers and 2/2 profile/corruption rejections |
 | GPUCC | 30 actual digital PLL/RCG/branch/reset checks, two completed migrations and two profile rejections; actual Clock providers and sparse ownership boundaries |
@@ -472,3 +473,27 @@ GPU runtime test scripts are unchanged. The separate full-DT fixture remains
 a build-only step outside the four Linux gates until a same-binary primary
 run is fatal-free and the explicit userspace consumer is actually invoked.
 This section records planned acceptance, not completed CI or native results.
+
+### CAMCC qualification and next DISPCC gates
+
+Exact source `8798465b1b70f9c86f5cd5e1e38ce595bd6088ce` passed
+[run45426713919](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45426713919):
+83/83 components and5/5 Linux integrations, the two real UFS checkpoint modes
+and separate A77/PCI UFS execution. Its [actual ZIP audit](../evidence/camcc-20261124-e1a9/ci-artifact-audit-8798465.json)
+checks binary `026f93a8c26950dd66cdb5c44eaf5e1575db638e59b69cbf025591d810be5594`,
+CAMCC41/3/2/2 and six actual streams, complete2579-byte CAMCC/194-byte camera
+payloads, all111 output rates/periods and first-target pure QOM. Original run005
+then registered CAMCC and faulted at DISPCC0x0af00000; its
+[receipt](../evidence/camcc-20261124-e1a9/native-frontier-after-camcc.json)
+retains the original-input hashes and normal QMP cleanup, with no LUN/Android
+userspace success.
+
+The new `dispcc-source-generation` gate requires nine exact primary-source
+digests and two byte-identical generated files. `dispcc-sm8250-reference`
+requires41 compiled groups,3 completed transfers,2 profile and2 single-bit
+stream rejections,4 originals and6 total files. It verifies the complete1676-byte
+DISPCC payload and independent MDSS64-byte section, actual simultaneous owners,
+unknown input behavior, deadline continuation and first destination observation
+without device-MMIO repair. All83 preceding component contracts retain their
+order and counts. This85+5 combination requires its own formal CI; 8798465's
+qualification is not reused as proof for the new binary.

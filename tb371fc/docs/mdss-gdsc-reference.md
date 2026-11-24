@@ -197,3 +197,12 @@ loaded over an already-powered target.
 These are required tests, not a claim that this source revision has already
 passed compiled execution. New CI/CT102 receipts and a new unchanged-input
 native run are required before advancing the observed Android frontier.
+
+## Separate DISPCC owner
+
+The subsequent [DISPCC reference](dispcc-sm8250.md) adds only its 130 sourced
+clock/control words in 39 leaves. Its transparent resource excludes the MDSS
+GDSCR at0x0af03000; the MDSS device, parent fanout and64-byte v1 section remain
+unchanged. The compiled DISPCC gate must enable both devices and verify actual
+MDSS MMIO/QOM ownership. The MDSS negative test now expects the disabled
+DISPCC-specific rejection at0x0af00000; adjacent MDSS holes remain unassigned.

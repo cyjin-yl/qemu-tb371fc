@@ -256,3 +256,21 @@ NPU remains unconnected. The generator adds only VIDEO_AHB retention bits
 all clock geometry and GCC v3. The 22-check compiled gate requires actual
 MMIO, three completed transfers and real negative cases; codec, firmware,
 DMA and Android execution are not established by these control words.
+
+## Kona DISPCC increment after native run005
+
+The [DISPCC contract](docs/dispcc-sm8250.md),
+[register manifest](docs/dispcc-sm8250-registers.json) and
+[generator](scripts/generate_dispcc_sm8250.py) pin nine primary files to
+OnePlusOSS/android_kernel_oneplus_sm8250 commit
+`94304e12a3509eac7b3716bf574ce0b1fcaacbae`. The controller file SHA-256 is
+`63eef01db44478e3be216025f672f73c652f9f3952f840bedf1791bc62d77061`;
+the binding SHA-256 is
+`a624fe5555fd4eddc10a46a80ff3a52da66ddb56f81567c7ea4df591f5949ac2`.
+The other seven pins cover Lucid, RCG, branch source/header, regmap/generic
+dividers and RPMh XO naming. The complete
+[actual DT node](evidence/dispcc-20261124-e1a9/actual-dt-dispcc-node.json)
+is copied from the existing public inventory, original DT SHA-256
+`5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207`.
+No unspecified PHY rate, PLL1-even provider, parentless critical-XO carrier,
+opaque PLL STATUS, physical display execution or panel behavior is inferred.

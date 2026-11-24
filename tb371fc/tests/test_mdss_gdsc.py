@@ -334,7 +334,7 @@ def access_shapes_and_unowned_controller_holes_are_exact(r):
                         for offset, size in chunks]
             assert core_diagnostics(r.log_path.read_text(errors="replace"))[len(previous):] == expected
     assert r.pure_snapshot() == before
-    holes = (0x0af00000, ADDRESS - 4, ADDRESS + 4, ADDRESS + 0x10, 0x0af1fffc,
+    holes = (ADDRESS - 4, ADDRESS + 4, ADDRESS + 0x10, 0x0af1fffc,
              0x09981008, 0x0998100c,
              0x0abf0bf4, 0x0abf0bfc, 0x0abf0c94, 0x0abf0c9c,
              0x0abf0d14, 0x0abf0d1c, 0x0abf0d94, 0x0abf0d9c)
@@ -345,6 +345,16 @@ def access_shapes_and_unowned_controller_holes_are_exact(r):
         r.raw_write(address, 0xffffffff)
         expected.extend((op, address, 4, "(null)", "rejected") for op in ("read", "write"))
     assert core_diagnostics(r.log_path.read_text(errors="replace"))[len(previous):] == expected
+    # The exact DISPCC PLL word now has its own disabled reference owner.
+    # The adjacent MDSS holes above remain unassigned and must still reject.
+    for operation in ("read", "write"):
+        diagnostic = f"qcom-sm8250-dispcc: unmodeled {operation} +0x0 size 4"
+        count = r.diagnostic_count(diagnostic)
+        if operation == "read":
+            r.raw_read(0x0af00000)
+        else:
+            r.raw_write(0x0af00000, 0xffffffff)
+        assert r.diagnostic_count(diagnostic) == count + 1
     for owner, domain, address in (("qcom-npu-gdsc", 0, 0x09981004),
                                    ("qcom-video-gdsc", 0, 0x0abf0bf8),
                                    ("qcom-video-gdsc", 1, 0x0abf0c98),
