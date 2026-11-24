@@ -33,6 +33,10 @@
 #define UFS_PHY_RESET   BIT(1)
 #define PHY_READY_NS    10000
 #define UIC_COMPLETE_NS 1000
+#define AHIT_TIMER_MASK 0x3ff
+#define AHIT_SCALE_MASK 0x1c00
+#define AHIT_MASK       (AHIT_TIMER_MASK | AHIT_SCALE_MASK)
+#define AHIT_MAX_SCALE  5
 #define DME_VALUES      256
 #define PHY_WORDS       (QCOM_SM8250_UFS_PHY_SIZE / 4)
 
@@ -62,7 +66,8 @@ struct QcomSm8250UfsState {
     Clock *core_clk, *iface_clk, *unipro_clk, *ref_clk, *phy_aux_clk;
     Clock *aggre_clk, *qref_clk, *sync_clk[3];
     Clock *symbol_clk[3];
-    QEMUTimer *phy_timer, *uic_timer;
+    QEMUTimer *phy_timer, *uic_timer, *ahit_timer;
+    qemu_irq irq;
     uint32_t vendor[QCOM_SM8250_UFS_HCI_SIZE / 4];
     uint32_t phy_regs[PHY_WORDS];
     bool phy_written[PHY_WORDS];
@@ -72,10 +77,25 @@ struct QcomSm8250UfsState {
     QcomUfsLink link;
     bool power_on, reset_held, device_reset_held;
     bool phy_ready, initialized, uic_busy;
+    bool auto_hibern8, auto_hibern8_active;
     uint8_t migration_config[32];
 };
 
 static void qcom_ufs_update_phy(QcomSm8250UfsState *s);
+static void qcom_ufs_update_ahit(QcomSm8250UfsState *s);
+
+/*
+ * The transport notifies its IRQ output after completing a request even when
+ * IE is zero. Observe that callback to start AHIT at the actual completion,
+ * without polling or treating a masked IRQ as an outstanding request.
+ */
+static void qcom_ufs_core_irq(void *opaque, int n, int level)
+{
+    QcomSm8250UfsState *s = opaque;
+
+    qcom_ufs_update_ahit(s);
+    qemu_set_irq(s->irq, level);
+}
 
 static void qcom_ufs_irq(QcomSm8250UfsState *s)
 {
@@ -100,6 +120,82 @@ static bool qcom_ufs_link_running(QcomSm8250UfsState *s)
     return qcom_ufs_host_running(s) && s->phy_ready &&
            !s->device_reset_held && clock_get_hz(s->sync_clk[0]) &&
            clock_get_hz(s->sync_clk[1]) && clock_get_hz(s->sync_clk[2]);
+}
+
+static int64_t qcom_ufs_ahit_ns(QcomSm8250UfsState *s)
+{
+    uint32_t ahit = s->ufs.reg.ahit;
+    int64_t ns = (ahit & AHIT_TIMER_MASK) * 1000;
+    unsigned scale = (ahit & AHIT_SCALE_MASK) >> 10;
+
+    while (scale--) {
+        ns *= 10;
+    }
+    return ns;
+}
+
+static bool qcom_ufs_queues_idle(QcomSm8250UfsState *s)
+{
+    UfsHc *u = &s->ufs;
+    unsigned i;
+
+    if (u->resetting || u->reg.utrldbr || u->reg.utmrldbr) {
+        return false;
+    }
+    /* A submitted doorbell has READY slots before its BH sets UTRLDBR. */
+    for (i = 0; i < u->params.nutrs; i++) {
+        if (u->req_list[i].state != UFS_REQUEST_IDLE) {
+            return false;
+        }
+    }
+    return true;
+}
+
+static bool qcom_ufs_ahit_idle(QcomSm8250UfsState *s)
+{
+    return s->initialized && s->auto_hibern8 &&
+           (s->ufs.reg.ahit & AHIT_TIMER_MASK) && (s->ufs.reg.hce & 1) &&
+           s->link == LINK_ACTIVE && qcom_ufs_link_running(s) &&
+           !s->uic_busy && qcom_ufs_queues_idle(s);
+}
+
+static void qcom_ufs_update_ahit(QcomSm8250UfsState *s)
+{
+    if (!s->initialized) {
+        return;
+    }
+    if (!qcom_ufs_ahit_idle(s)) {
+        timer_del(s->ahit_timer);
+    } else if (!timer_pending(s->ahit_timer)) {
+        timer_mod(s->ahit_timer, qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL) +
+                  qcom_ufs_ahit_ns(s));
+    }
+}
+
+static void qcom_ufs_auto_enter(void *opaque)
+{
+    QcomSm8250UfsState *s = opaque;
+
+    if (qcom_ufs_ahit_idle(s)) {
+        s->link = LINK_HIBERN8;
+        s->ufs.link_hibern8 = true;
+        s->auto_hibern8_active = true;
+        /* Successful automatic transitions do not signal a UIC command. */
+    }
+}
+
+static bool qcom_ufs_auto_exit(QcomSm8250UfsState *s)
+{
+    if (!s->auto_hibern8_active) {
+        return true;
+    }
+    if (!qcom_ufs_link_running(s)) {
+        return false;
+    }
+    s->link = LINK_ACTIVE;
+    s->ufs.link_hibern8 = false;
+    s->auto_hibern8_active = false;
+    return true;
 }
 
 static bool qcom_ufs_phy_can_start(QcomSm8250UfsState *s)
@@ -140,8 +236,10 @@ static void qcom_ufs_symbols(QcomSm8250UfsState *s)
 
 static void qcom_ufs_drop_link(QcomSm8250UfsState *s)
 {
+    timer_del(s->ahit_timer);
     s->link = LINK_DOWN;
     s->ufs.link_hibern8 = false;
+    s->auto_hibern8_active = false;
     s->ufs.reg.hcs &= ~(R_HCS_DP_MASK | R_HCS_UTRLRDY_MASK |
                          R_HCS_UTMRLRDY_MASK);
 }
@@ -153,6 +251,7 @@ static void qcom_ufs_phy_ready(void *opaque)
     if (qcom_ufs_phy_can_start(s)) {
         s->phy_ready = true;
         qcom_ufs_symbols(s);
+        qcom_ufs_update_ahit(s);
     }
 }
 
@@ -182,6 +281,7 @@ static void qcom_ufs_clock_changed(void *opaque, ClockEvent event)
     QcomSm8250UfsState *s = opaque;
 
     qcom_ufs_update_phy(s);
+    qcom_ufs_update_ahit(s);
 }
 
 static const QcomUfsPhyRegister *qcom_ufs_phy_reg(hwaddr offset)
@@ -234,6 +334,7 @@ static MemTxResult qcom_ufs_phy_write(void *opaque, hwaddr offset,
     s->phy_regs[offset / 4] = value;
     s->phy_written[offset / 4] = true;
     qcom_ufs_update_phy(s);
+    qcom_ufs_update_ahit(s);
     return MEMTX_OK;
 }
 
@@ -433,16 +534,19 @@ static void qcom_ufs_uic_complete(void *opaque)
         if (qcom_ufs_link_running(s)) {
             s->link = LINK_ACTIVE;
             s->ufs.link_hibern8 = false;
+            s->auto_hibern8_active = false;
             r->hcs |= R_HCS_DP_MASK | R_HCS_UTRLRDY_MASK |
                       R_HCS_UTMRLRDY_MASK;
             result = 0;
         }
         break;
     case UFS_UIC_CMD_DME_HIBER_ENTER:
-        if (s->link == LINK_ACTIVE && qcom_ufs_link_running(s) &&
-            !r->utrldbr && !r->utmrldbr) {
+        if ((s->link == LINK_ACTIVE || s->auto_hibern8_active) &&
+            qcom_ufs_link_running(s) &&
+            qcom_ufs_queues_idle(s)) {
             s->link = LINK_HIBERN8;
             s->ufs.link_hibern8 = true;
+            s->auto_hibern8_active = false;
             r->is |= R_IS_UHES_MASK;
             r->hcs = FIELD_DP32(r->hcs, HCS, UPMCRS, UFS_PWR_LOCAL);
             result = 0;
@@ -452,6 +556,7 @@ static void qcom_ufs_uic_complete(void *opaque)
         if (s->link == LINK_HIBERN8 && qcom_ufs_link_running(s)) {
             s->link = LINK_ACTIVE;
             s->ufs.link_hibern8 = false;
+            s->auto_hibern8_active = false;
             r->is |= R_IS_UHXS_MASK;
             r->hcs = FIELD_DP32(r->hcs, HCS, UPMCRS, UFS_PWR_LOCAL);
             result = 0;
@@ -459,7 +564,7 @@ static void qcom_ufs_uic_complete(void *opaque)
         break;
     case UFS_UIC_CMD_DME_RESET:
     case UFS_UIC_CMD_DME_END_PT_RST:
-        if (!r->utrldbr && !r->utmrldbr) {
+        if (qcom_ufs_queues_idle(s)) {
             qcom_ufs_drop_link(s);
             memset(s->dme, 0, sizeof(s->dme));
             result = 0;
@@ -580,6 +685,13 @@ static MemTxResult qcom_ufs_hci_write(void *opaque, hwaddr offset,
                           "sm8250-ufs: UIC command while controller busy/off\n");
             return MEMTX_ERROR;
         }
+        /* Explicit Hibern8 commands take ownership of an automatic sleep. */
+        if ((value & 0xff) != UFS_UIC_CMD_DME_HIBER_ENTER &&
+            (value & 0xff) != UFS_UIC_CMD_DME_HIBER_EXIT &&
+            !qcom_ufs_auto_exit(s)) {
+            return MEMTX_ERROR;
+        }
+        timer_del(s->ahit_timer);
         s->uic_cmd = value & 0xff;
         s->uic_args[0] = r->ucmdarg1;
         s->uic_args[1] = r->ucmdarg2;
@@ -590,13 +702,32 @@ static MemTxResult qcom_ufs_hci_write(void *opaque, hwaddr offset,
                   UIC_COMPLETE_NS);
         return MEMTX_OK;
     }
-    if ((offset == A_UTRLDBR || offset == A_UTMRLDBR) &&
-        (!qcom_ufs_link_running(s) || s->link != LINK_ACTIVE ||
-         !(r->hce & 1) ||
-         (offset == A_UTRLDBR && !(r->utrlrsr & 1)))) {
-        qemu_log_mask(LOG_GUEST_ERROR,
-                      "sm8250-ufs: transfer before active link/request list\n");
-        return MEMTX_ERROR;
+    if (offset == A_AHIT) {
+        if (!s->auto_hibern8 || value & ~AHIT_MASK ||
+            ((value & AHIT_SCALE_MASK) >> 10) > AHIT_MAX_SCALE) {
+            qemu_log_mask(LOG_UNIMP, "sm8250-ufs: unsupported AHIT 0x%"
+                          PRIx64 "\n", value);
+            return MEMTX_ERROR;
+        }
+        s->ufs.reg.ahit = value;
+        timer_del(s->ahit_timer);
+        qcom_ufs_update_ahit(s);
+        return MEMTX_OK;
+    }
+    if (offset == A_UTRLDBR || offset == A_UTMRLDBR) {
+        if (!value) {
+            return MEMTX_OK;
+        }
+        if (!qcom_ufs_link_running(s) || !(r->hce & 1) ||
+            (offset == A_UTRLDBR && !(r->utrlrsr & 1)) ||
+            (offset == A_UTMRLDBR && !(r->utmrlrsr & 1)) ||
+            !qcom_ufs_auto_exit(s) || s->link != LINK_ACTIVE) {
+            qemu_log_mask(LOG_GUEST_ERROR,
+                          "sm8250-ufs: transfer before active link/request list\n");
+            return MEMTX_ERROR;
+        }
+        /* Task management can complete synchronously inside the core. */
+        timer_del(s->ahit_timer);
     }
     if (offset < 0xc0) {
         ufs_mmio_write(&s->ufs, offset, value, size);
@@ -606,6 +737,7 @@ static MemTxResult qcom_ufs_hci_write(void *opaque, hwaddr offset,
             qcom_ufs_drop_link(s);
             memset(s->dme, 0, sizeof(s->dme));
         }
+        qcom_ufs_update_ahit(s);
         return MEMTX_OK;
     }
     if (!qcom_ufs_vendor_register(offset) ||
@@ -617,6 +749,7 @@ static MemTxResult qcom_ufs_hci_write(void *opaque, hwaddr offset,
     s->vendor[offset / 4] = value;
     if (offset == V_CFG1) {
         qcom_ufs_update_phy(s);
+        qcom_ufs_update_ahit(s);
     }
     return MEMTX_OK;
 }
@@ -641,9 +774,11 @@ static void qcom_ufs_reset_state(QcomSm8250UfsState *s)
 {
     timer_del(s->phy_timer);
     timer_del(s->uic_timer);
+    timer_del(s->ahit_timer);
     s->uic_busy = false;
     s->phy_ready = false;
     s->link = LINK_DOWN;
+    s->auto_hibern8_active = false;
     memset(s->vendor, 0, sizeof(s->vendor));
     memset(s->phy_regs, 0, sizeof(s->phy_regs));
     memset(s->phy_written, 0, sizeof(s->phy_written));
@@ -690,9 +825,20 @@ static void qcom_ufs_device_reset_input(void *opaque, int n, int level)
 
     s->device_reset_held = level;
     if (level && s->initialized) {
-        ufs_reset_controller(&s->ufs);
+        timer_del(s->uic_timer);
+        s->uic_busy = false;
         qcom_ufs_drop_link(s);
+        memset(s->dme, 0, sizeof(s->dme));
+        ufs_reset_controller(&s->ufs);
     }
+}
+
+static char *qcom_ufs_get_link_state(Object *obj, Error **errp)
+{
+    QcomSm8250UfsState *s = QCOM_SM8250_UFS(obj);
+    const char *names[] = { "down", "active", "hibern8" };
+
+    return g_strdup(names[s->link]);
 }
 
 static void qcom_ufs_realize(DeviceState *dev, Error **errp)
@@ -715,6 +861,7 @@ static void qcom_ufs_realize(DeviceState *dev, Error **errp)
         return;
     }
     s->ufs.reg.ver = s->hci_version;
+    s->ufs.reg.cap = FIELD_DP32(s->ufs.reg.cap, CAP, AUTOH8, s->auto_hibern8);
     s->ufs.device_desc.spec_version = cpu_to_be16(0x310);
     s->ufs.device_desc.manufacturer_id = cpu_to_be16(0x1ce);
     /*
@@ -737,6 +884,7 @@ static void qcom_ufs_unrealize(DeviceState *dev)
     s->initialized = false;
     timer_del(s->phy_timer);
     timer_del(s->uic_timer);
+    timer_del(s->ahit_timer);
     ufs_unrealize(&s->ufs);
     address_space_destroy(&s->dma_as);
 }
@@ -755,7 +903,9 @@ static void qcom_ufs_init(Object *obj)
                           "sm8250-ufs-phy", QCOM_SM8250_UFS_PHY_SIZE);
     sysbus_init_mmio(SYS_BUS_DEVICE(dev), &s->hci);
     sysbus_init_mmio(SYS_BUS_DEVICE(dev), &s->phy);
-    sysbus_init_irq(SYS_BUS_DEVICE(dev), &s->ufs.irq);
+    sysbus_init_irq(SYS_BUS_DEVICE(dev), &s->irq);
+    s->ufs.irq = qemu_allocate_irq(qcom_ufs_core_irq, s, 0);
+    object_property_add_str(obj, "link-state", qcom_ufs_get_link_state, NULL);
     qdev_init_gpio_in_named(dev, qcom_ufs_reset_input, "reset", 1);
     qdev_init_gpio_in_named(dev, qcom_ufs_power_input, "power", 1);
     qdev_init_gpio_in_named(dev, qcom_ufs_device_reset_input,
@@ -781,6 +931,7 @@ static void qcom_ufs_init(Object *obj)
     }
     s->phy_timer = timer_new_ns(QEMU_CLOCK_VIRTUAL, qcom_ufs_phy_ready, s);
     s->uic_timer = timer_new_ns(QEMU_CLOCK_VIRTUAL, qcom_ufs_uic_complete, s);
+    s->ahit_timer = timer_new_ns(QEMU_CLOCK_VIRTUAL, qcom_ufs_auto_enter, s);
 }
 
 static void qcom_ufs_finalize(Object *obj)
@@ -789,9 +940,12 @@ static void qcom_ufs_finalize(Object *obj)
 
     timer_free(s->phy_timer);
     timer_free(s->uic_timer);
+    timer_free(s->ahit_timer);
+    qemu_free_irq(s->ufs.irq);
 }
 
 static const Property qcom_ufs_properties[] = {
+    DEFINE_PROP_BOOL("auto-hibern8", QcomSm8250UfsState, auto_hibern8, true),
     DEFINE_PROP_STRING("serial", QcomSm8250UfsState, ufs.params.serial),
     DEFINE_PROP_UINT8("nutrs", QcomSm8250UfsState, ufs.params.nutrs, 32),
     DEFINE_PROP_UINT8("nutmrs", QcomSm8250UfsState, ufs.params.nutmrs, 8),

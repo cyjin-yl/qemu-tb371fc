@@ -170,6 +170,14 @@ static bool qcom_ufs_migration_valid(QcomSm8250UfsState *s, Error **errp)
         error_setg(errp, "SM8250 UFS migration: inconsistent link or timer state");
         return false;
     }
+    if ((u->reg.ahit & ~AHIT_MASK) ||
+        ((u->reg.ahit & AHIT_SCALE_MASK) >> 10) > AHIT_MAX_SCALE ||
+        (!s->auto_hibern8 && (u->reg.ahit || s->auto_hibern8_active)) ||
+        (s->auto_hibern8_active && s->link != LINK_HIBERN8) ||
+        timer_pending(s->ahit_timer) != qcom_ufs_ahit_idle(s)) {
+        error_setg(errp, "SM8250 UFS migration: inconsistent Auto-Hibern8 state");
+        return false;
+    }
     if (wb->min_bytes > wb->curr_bytes || wb->curr_bytes > wb->max_bytes ||
         wb->used_bytes > wb->curr_bytes ||
         wb->fifo_max_bytes > wb->max_bytes ||
@@ -257,6 +265,8 @@ static bool qcom_ufs_pre_load(void *opaque, Error **errp)
     QcomSm8250UfsState *s = opaque;
 
     s->initialized = false;
+    s->auto_hibern8_active = false;
+    timer_del(s->ahit_timer);
     return qcom_ufs_migration_config(s, errp);
 }
 
@@ -461,6 +471,26 @@ static const VMStateDescription vmstate_qcom_ufs_dme = {
     },
 };
 
+static bool qcom_ufs_ahit_needed(void *opaque)
+{
+    QcomSm8250UfsState *s = opaque;
+
+    return s->auto_hibern8;
+}
+
+/* Keep the existing v1 wire fields and reject capability profile mismatches. */
+static const VMStateDescription vmstate_qcom_ufs_ahit = {
+    .name = TYPE_QCOM_SM8250_UFS "/auto-hibern8",
+    .version_id = 1,
+    .minimum_version_id = 1,
+    .needed = qcom_ufs_ahit_needed,
+    .fields = (const VMStateField[]) {
+        VMSTATE_BOOL(auto_hibern8_active, QcomSm8250UfsState),
+        VMSTATE_TIMER_PTR(ahit_timer, QcomSm8250UfsState),
+        VMSTATE_END_OF_LIST()
+    },
+};
+
 static const VMStateDescription vmstate_qcom_ufs = {
     .name = TYPE_QCOM_SM8250_UFS,
     .version_id = 1,
@@ -501,5 +531,9 @@ static const VMStateDescription vmstate_qcom_ufs = {
         VMSTATE_TIMER_PTR(phy_timer, QcomSm8250UfsState),
         VMSTATE_TIMER_PTR(uic_timer, QcomSm8250UfsState),
         VMSTATE_END_OF_LIST()
+    },
+    .subsections = (const VMStateDescription * const[]) {
+        &vmstate_qcom_ufs_ahit,
+        NULL
     },
 };
