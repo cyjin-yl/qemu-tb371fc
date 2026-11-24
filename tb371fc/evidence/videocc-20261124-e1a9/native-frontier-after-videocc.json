@@ -1,0 +1,141 @@
+{
+  "schema": "tb371fc-native-frontier-after-videocc-v1",
+  "source_commit": "be708c3cc6c2b5ed2fde28dba0dca39ab6c4864c",
+  "ci_run": 45445501200,
+  "artifact_id": 14946258315,
+  "binary_sha256": "95dde8deba27b05a4cf28a961898725d466e4fb52671ab240376a2e59b25b878",
+  "candidate_reference_identity": "VID2 0x56494432",
+  "current_main_reference_identity": "VIC2 0x56494332; different format identity; not claimed compatible",
+  "run": "original-android-007",
+  "scope": "Original Android direct-kernel boot; OEM PBL/XBL/ABL chain is not executed",
+  "input_classification": "no-lun-diagnostic",
+  "original_luns_attached": 0,
+  "storage_complete": false,
+  "ready_present_at_selection": false,
+  "started_utc": "2026-11-24T17:29:16.077014+00:00",
+  "finished_utc": "2026-11-24T17:29:26.664872+00:00",
+  "elapsed_seconds": 8.54,
+  "outcome": "kernel-failure",
+  "stop_reason": "runner-error",
+  "runner_exit_code": 1,
+  "qemu_returncode": 0,
+  "qmp_shutdown_normal": false,
+  "host_terminated_qemu": true,
+  "qmp_quit_sent": false,
+  "final_status": {
+    "status": "shutdown",
+    "running": false
+  },
+  "cleanup_error": "RuntimeError: QEMU did not pause before quit",
+  "qmp_events": [
+    {
+      "event": "RESUME",
+      "data": null
+    },
+    {
+      "event": "WATCHDOG",
+      "data": {
+        "action": "reset"
+      }
+    },
+    {
+      "event": "SHUTDOWN",
+      "data": {
+        "guest": true,
+        "reason": "guest-reset"
+      }
+    },
+    {
+      "event": "STOP",
+      "data": null
+    },
+    {
+      "event": "SHUTDOWN",
+      "data": {
+        "guest": false,
+        "reason": "host-signal"
+      }
+    }
+  ],
+  "video_cc_registration": {
+    "guest_seconds": 2.673751,
+    "text": "[    2.673751] video_cc-kona abf0000.qcom,videocc: Registered Video CC clocks"
+  },
+  "first_fatal": {
+    "guest_seconds": 2.974308,
+    "operation": "read",
+    "bytes": 4,
+    "physical_address": "0x0ae94418",
+    "esr": "0x96000010",
+    "far": "0xffffff800aedd418",
+    "elr": "0xffffff8008fc0c8c",
+    "pc": "vco_7nm_recalc_rate+0x4c/0xc8",
+    "lr": "vco_7nm_recalc_rate+0x34/0xc8",
+    "cpu": 5,
+    "pid": 1,
+    "comm": "swapper/0"
+  },
+  "subsequent_kernel_panic": {
+    "source": "printk-0000/kernel-printk.log",
+    "line": 929,
+    "text": "[    2.978989] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b",
+    "guest_time_seconds": 2.978989
+  },
+  "preservation": {
+    "core_input_digests_unchanged": {
+      "kernel": true,
+      "initrd": true,
+      "dtb": true,
+      "bootargs": true
+    },
+    "original_luns": [],
+    "preserved": true
+  },
+  "aop_unchanged": true,
+  "symbols_unchanged": true,
+  "qemu_unchanged": true,
+  "aop_sha256": "a971809c06fa1a3ff44c9d28463bc6ff53203d9375ffd0f76dc73d4c8a3ea6f9",
+  "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0",
+  "runner_sha256": "bececc39ae2c640762be3b59e04ab2401f9dd41209c07ba4a68d0e83d4e6bc07",
+  "stock_android_boot_passed": false,
+  "android_userspace_observed": false,
+  "android_boot_completed_observed": false,
+  "interactive_display_verified": false,
+  "capture_qualification": {
+    "all_backups_complete": false,
+    "android_boot_tested": false,
+    "pristine_factory_images": false,
+    "restore_tested": false,
+    "snapshot_consistent": false,
+    "source_immutable_claim_verified": false
+  },
+  "evidence_files": [
+    {
+      "name": "result.json",
+      "bytes": 6513,
+      "sha256": "dcbb8acb4b73a6979ae97d553e4343c6f798b524fee085515c2dac1ddf01dd63"
+    },
+    {
+      "name": "qmp-messages.json",
+      "bytes": 1943,
+      "sha256": "77174758721e1e147ad95f2b3dc1cdce9ee29ff0865d38c156203dc8ef71fcab"
+    },
+    {
+      "name": "printk-0000/kernel-printk.log",
+      "bytes": 62488,
+      "sha256": "6b267e91ecdb98010cf5ba6db6469ddbc080c445952d5593b32401eec3d6ba5d"
+    },
+    {
+      "name": "qemu.log",
+      "bytes": 522281,
+      "sha256": "b6a8fc179747da21ad4308a1f2a830c25c297a30e16b813c10a4ba35f83bffb5"
+    },
+    {
+      "name": "stderr.log",
+      "bytes": 69,
+      "sha256": "c25d72675bc08835efb7be1750cecb6b2ac9ba510625277077d23145c969bf77"
+    }
+  ],
+  "raw_firmware_or_private_logs_published": false,
+  "qualification_note": "Actual VIDEOCC registration and next fatal observed. The run also failed normal cleanup: stopped guest reset remained shutdown, runner raised before quit and terminated QEMU by host signal. Return code 0 is not normal QMP shutdown, and this historical failed result is retained unchanged."
+}

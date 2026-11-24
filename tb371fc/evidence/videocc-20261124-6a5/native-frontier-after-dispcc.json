@@ -1,0 +1,164 @@
+{
+  "outcome": "kernel-failure",
+  "stock_android_boot_passed": false,
+  "executed": true,
+  "elapsed_seconds": 16.449,
+  "qemu_returncode": 0,
+  "qemu_sha256": "0738a1910ef86c8ccc403ba100ae2094de573d4f0c11fdff9877e1b9fa798d6c",
+  "qemu_sha256_after": "0738a1910ef86c8ccc403ba100ae2094de573d4f0c11fdff9877e1b9fa798d6c",
+  "qemu_unchanged": true,
+  "runner_sha256": "2d3e4c5206eca92a5ffdf9dab1b69d3a0482305a1b1756f9df509b22a464baf6",
+  "qmp_shutdown_normal": true,
+  "early_kernel_failure": {
+    "source": "printk-0000/kernel-printk.log",
+    "line": 863,
+    "text": "[    3.508680] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP",
+    "guest_time_seconds": 3.50868
+  },
+  "stop_reason": "kernel-failure",
+  "preservation": {
+    "core_input_digests_unchanged": {
+      "kernel": true,
+      "initrd": true,
+      "dtb": true,
+      "bootargs": true
+    },
+    "original_luns": [],
+    "preserved": true
+  },
+  "observation": {
+    "stages": {
+      "kernel_entry": {
+        "source": "printk-0000/kernel-printk.log",
+        "line": 1,
+        "text": "[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x412fd050]",
+        "guest_time_seconds": 0
+      }
+    },
+    "android_userspace_observed": false,
+    "android_boot_completed_observed": false,
+    "first_kernel_failure": {
+      "source": "printk-0000/kernel-printk.log",
+      "line": 863,
+      "text": "[    3.508680] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP",
+      "guest_time_seconds": 3.50868
+    },
+    "kernel_failures": [
+      {
+        "source": "printk-0000/kernel-printk.log",
+        "line": 863,
+        "text": "[    3.508680] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP",
+        "guest_time_seconds": 3.50868
+      }
+    ],
+    "hardware_diagnostics": [
+      {
+        "source": "printk-0000/kernel-printk.log",
+        "line": 863,
+        "text": "[    3.508680] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP",
+        "guest_time_seconds": 3.50868
+      },
+      {
+        "source": "qemu.log",
+        "line": 16854,
+        "text": "Invalid read at addr 0xABF042C, size 4, region '(null)', reason: rejected"
+      },
+      {
+        "source": "qemu.log",
+        "line": 16855,
+        "text": "Invalid read at addr 0x42C, size 4, region '(null)', reason: rejected"
+      }
+    ],
+    "interactive_display_verified": false
+  },
+  "result_sha256": "7887940c182c895926b14f7bfb7cde07c0046bd4e75193f9088bcfd318506717",
+  "printk_path": "/work/stockboot-e1a9/dispcc-f209f65-run006/original-android-006/printk-0001/kernel-printk.log",
+  "printk_sha256": "748f4a5c57d1c5c047f7ac79d0f9a4c5631cc33dac69f3e3a765ac8da692b318",
+  "display_registration": [
+    "[    3.503753] disp_cc-kona af00000.qcom,dispcc: Registered Display CC clocks"
+  ],
+  "fatal_excerpt": [
+    "[    3.503753] disp_cc-kona af00000.qcom,dispcc: Registered Display CC clocks",
+    "[    3.505512] video_cc-kona abf0000.qcom,videocc: Linked as a consumer to regulator.1",
+    "[    3.505650] video_cc-kona abf0000.qcom,videocc: Linked as a consumer to regulator.10",
+    "[    3.505836] register_client_adhoc:find path.src 1 dest 596",
+    "[    3.507418] register_client_adhoc:Client handle 28 clk_videocc_debugfs",
+    "[    3.508680] Internal error: synchronous external abort: 96000010 [#1] PREEMPT SMP",
+    "[    3.508942] Modules linked in:",
+    "[    3.509064] Process kworker/4:1 (pid: 78, stack limit = 0x(____ptrval____))",
+    "[    3.509102] CPU: 4 PID: 78 Comm: kworker/4:1 Tainted: G S      W         4.19.157-perf+ #1",
+    "[    3.509121] Hardware name: Qualcomm Technologies, Inc. kona QRD (DT)",
+    "[    3.509170] Workqueue: events deferred_probe_work_func",
+    "[    3.509195] pstate: 20c00085 (nzCv daIf +PAN +UAO)",
+    "[    3.509217] pc : regmap_mmio_read32le+0x8/0x20",
+    "[    3.509235] lr : regmap_mmio_read+0x40/0x68",
+    "[    3.509249] sp : ffffff800aefba50",
+    "[    3.509264] x29: ffffff800aefba50 x28: ffffffc17fb9bd20 ",
+    "[    3.509286] x27: ffffff8009f17028 x26: 000000007fba010d ",
+    "[    3.509309] x25: 0000000000000000 x24: 0000000000000013 ",
+    "[    3.509333] x23: ffffff800a2a5fe0 x22: ffffffc15aefba00 ",
+    "[    3.509353] x21: 000000000000042c x20: ffffffc15e242a80 ",
+    "[    3.509368] x19: ffffff800aefbb04 x18: 0000000000000040 ",
+    "[    3.509383] x17: ffffff800a460000 x16: 000000000000003a ",
+    "[    3.509398] x15: ffffff8009385448 x14: 0000000000003336 ",
+    "[    3.509413] x13: 0000000000000036 x12: 0000000000000000 ",
+    "[    3.509427] x11: 0000000000000000 x10: 0000000000000001 ",
+    "[    3.509443] x9 : 0000000000000000 x8 : ffffff8015cf042c ",
+    "[    3.509458] x7 : 69663a636f686461 x6 : ffffff800a4625ea ",
+    "[    3.509472] x5 : 0000000000000000 x4 : 0000000000000000 ",
+    "[    3.509487] x3 : 0000000000003639 x2 : ffffff800aefbb04 ",
+    "[    3.509514] x1 : 000000000000042c x0 : ffffffc15e242a80 ",
+    "[    3.509533] Call trace:",
+    "[    3.509550]  regmap_mmio_read32le+0x8/0x20",
+    "[    3.509566]  _regmap_bus_reg_read+0x14/0x20",
+    "[    3.509579]  _regmap_read+0x160/0x230",
+    "[    3.509593]  regmap_read+0x50/0x78",
+    "[    3.509615]  clk_lucid_pll_configure+0x40/0x320",
+    "[    3.509634]  video_cc_kona_probe+0x274/0x378",
+    "[    3.509651]  platform_drv_probe+0x7c/0xb8",
+    "[    3.509667]  really_probe+0x43c/0x4c8",
+    "[    3.509685]  driver_probe_device+0x60/0xf8",
+    "[    3.509699]  __device_attach_driver+0xfc/0x120",
+    "[    3.509714]  bus_for_each_drv+0x7c/0xc8",
+    "[    3.509727]  __device_attach+0x104/0x170",
+    "[    3.509740]  device_initial_probe+0x10/0x18",
+    "[    3.509753]  bus_probe_device+0x30/0x90",
+    "[    3.509766]  deferred_probe_work_func+0x64/0xc0",
+    "[    3.509785]  process_one_work+0x278/0x440",
+    "[    3.509799]  worker_thread+0x30c/0x4a8",
+    "[    3.509812]  kthread+0x140/0x150",
+    "[    3.509829]  ret_from_fork+0x10/0x18",
+    "[    3.510059] Code: d65f03c0 d503201f f9400008 8b214108 (b9400100) ",
+    "[    3.511002] ---[ end trace 0f8b3942e3a75a70 ]---",
+    "[    3.511197] note: kworker/4:1[78] exited with preempt_count 1",
+    "[   10.728525] virt zone: sensor[skin-msm-therm-usr] read error:-22",
+    "[   10.728799] thermal thermal_zone90: failed to read out thermal zone (-22)"
+  ],
+  "mmio_failures": [
+    "Invalid read at addr 0xABF042C, size 4, region '(null)', reason: rejected",
+    "Invalid read at addr 0x42C, size 4, region '(null)', reason: rejected"
+  ],
+  "qemu_log_sha256": "e6ec8e61564b22efab72088e983d98c000fffd561ce2e590dd755513aaf8d070",
+  "schema": "tb371fc-original-input-frontier-after-dispcc-v1",
+  "source_commit": "f209f658316ada5ddd5c245f0be6c2c0eca271bd",
+  "ci_run": 45434451557,
+  "ci_event": "push",
+  "result_path": "/work/stockboot-e1a9/dispcc-f209f65-run006/original-android-006/result.json",
+  "input_classification": "no-lun-diagnostic",
+  "original_luns_attached": 0,
+  "storage_complete": false,
+  "snapshot_consistent": false,
+  "physical_device_modified": false,
+  "first_abort_physical": 180290604,
+  "first_abort_width": 4,
+  "first_abort_operation": "read",
+  "videocc_model_enabled": false,
+  "display_cc_registration_observed": true,
+  "video_cc_registration_observed": false,
+  "core_input_sha256": {
+    "kernel": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "initrd": "563f4b334f8470155c6a451395342f7044b70e79b480a886c7641960f534f596",
+    "dtb": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "bootargs": "63c5738bb0c67419dd7efa0c585156499d163479d01b421203c0b51756fc6732"
+  }
+}

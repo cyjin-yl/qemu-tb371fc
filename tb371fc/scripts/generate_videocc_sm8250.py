@@ -278,9 +278,11 @@ def c_data(data):
         lines.append("    { %u, %u, %d, %d }," % (item["clock_id"], item["register_index"], item["parent_clock_id"], item["remote_vote_index"]))
     lines += ["};", "static const VideoccDivider videocc_dividers[VIDEOCC_DIVIDERS] = {"]
     for item in data["dividers"]:
-        lines.append("    { %u, %u, %d, %u, %u, %s }," % (
+        if not item["read_only"]:
+            raise ValueError("The fixed Kona VIDEOCC contract requires read-only dividers")
+        lines.append("    { %u, %u, %d, %u, %u }," % (
             item["clock_id"], item["register_index"], item["parent_clock_id"],
-            item["shift"], item["width"], "true" if item["read_only"] else "false"))
+            item["shift"], item["width"]))
     lines += ["};", "static const VideoccReset videocc_resets[VIDEOCC_RESETS] = {"]
     for item in data["resets"]:
         lines.append("    { %u, 0x%x }," % (item["register_index"], item["mask"]))

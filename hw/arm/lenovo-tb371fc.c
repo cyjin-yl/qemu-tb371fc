@@ -1271,11 +1271,12 @@ static void tb371fc_create_videocc(TB371FCMachineState *s)
     DeviceState *videocc = qdev_new(TYPE_QCOM_SM8250_VIDEOCC);
 
     object_property_add_child(OBJECT(s), "videocc", OBJECT(videocc));
-    /* Both sourced XO carriers share xo_board; test and sleep stay unknown. */
+    /* Both source-declared XO names use the established xo.lvl carrier. */
     qdev_connect_clock_in(videocc, "bi_tcxo", s->xo);
     qdev_connect_clock_in(videocc, "bi_tcxo_ao", s->xo);
+    /* The sleep and test parents remain unknown until providers exist. */
     sysbus_realize_and_unref(SYS_BUS_DEVICE(videocc), &error_fatal);
-    /* 26 exact leaves preserve all four independent VIDEO GDSCR owners. */
+    /* 26 exact leaves preserve all four independent VIDEO GDSC owners. */
     sysbus_mmio_map(SYS_BUS_DEVICE(videocc), 0, VIDEOCC_PHYSICAL_BASE);
 }
 

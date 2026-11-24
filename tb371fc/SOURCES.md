@@ -292,3 +292,10 @@ fields and two shared CBCR/ARES words are handled separately. Neither
 `div2` names, software critical flags, an undeclared input rate nor the
 resource/regmap extent authorizes invented clock demand or generic RAM.
 Four VIDEO GDSC words keep their prior owners and migration format.
+
+The parallel [PR23](https://github.com/cyjin-yl/qemu-tb371fc/pull/23)
+runtime and VIC2 identity were merged before this branch was reconciled.
+They remain byte-identical in the [reconciliation receipt](evidence/videocc-20261124-e1a9/reconciliation.json).
+Both source-evidence directories remain available. The expanded ten-pin
+generator explicitly requires each fixed divider to be read-only and emits
+the already merged five-field C descriptors without changing their behavior.

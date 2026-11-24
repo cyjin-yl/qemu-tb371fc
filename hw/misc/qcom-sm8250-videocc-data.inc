@@ -173,10 +173,10 @@ static const VideoccBranch videocc_branches[VIDEOCC_BRANCHES] = {
     { 15, 51, 16, -1 },
 };
 static const VideoccDivider videocc_dividers[VIDEOCC_DIVIDERS] = {
-    { 4, 42, 3, 0, 2, true },
-    { 6, 36, 3, 0, 2, true },
-    { 10, 45, 8, 0, 2, true },
-    { 12, 39, 8, 0, 2, true },
+    { 4, 42, 3, 0, 2 },
+    { 6, 36, 3, 0, 2 },
+    { 10, 45, 8, 0, 2 },
+    { 12, 39, 8, 0, 2 },
 };
 static const VideoccReset videocc_resets[VIDEOCC_RESETS] = {
     { 47, 0x1 },

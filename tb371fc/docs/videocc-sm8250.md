@@ -242,10 +242,14 @@ stored words, captured values, status/deadlines, divider fields, votes and
 input/divider setters are absent in ordinary TCG; connected XO overrides and
 rates whose period would quantize beyond u32 are rejected.
 
-This correction retains the v1 474-byte layout and VID2 identity. Standby
-generic-configuration states remain representable. A stream from the earlier
-experimental candidate with a legacy PLL1 lock or pending lock/latch is
-rejected by the strengthened recipe consistency check; its prior qualification
+The reconciled implementation retains the already merged v1 474-byte layout
+and VIC2 identity (`0x56494332`) from PR23, with its C runtime and generated
+register table unchanged. The separate `be708c3` candidate used VID2
+(`0x56494432`); its streams are historical evidence for that exact binary and
+are not treated as compatible with the merged VIC2 model. Standby
+generic-configuration states remain representable. A stream with a legacy
+PLL1 lock or pending lock/latch is rejected by the strict recipe consistency
+check; the earlier experimental candidate's qualification
 cannot be reused for this source. Historical calibration or ACK is not an
 assertion that a subsequently edited recipe can newly qualify.
 
@@ -277,3 +281,33 @@ checks are recorded separately; actual compiled QTest, migration and the
 next original-input run require a new exact-source binary. Neither f209's
 prior success nor this source contract establishes VIDEOCC/native Android
 completion.
+
+## Exact candidate evidence and parallel reconciliation
+
+Historical candidate `be708c3cc6c2b5ed2fde28dba0dca39ab6c4864c` passed
+[push CI 45445501200](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45445501200).
+The [independent artifact audit](../evidence/videocc-20261124-e1a9/ci-artifact-audit-be708c3.json)
+binds all 87 component and five Linux gates, 41 VIDEOCC groups, six actual
+migration files, complete VIDEOCC/VIDEO payloads and all 19 rates to binary
+`95dde8deba27b05a4cf28a961898725d466e4fb52671ab240376a2e59b25b878`.
+The independent CPU job also passed 852 checks, two configuration rejections
+and 17 shared PCI UFS cases. These qualifications belong to that exact VID2
+candidate, not to a later tree.
+
+Its [original-input run007](../evidence/videocc-20261124-e1a9/native-frontier-after-videocc.json)
+registered Video CC at guest 2.673751 seconds and then faulted on a 32-bit
+read at `0x0ae94418` in `vco_7nm_recalc_rate`. A following PID1 panic and guest
+reset left QEMU stopped in `shutdown`. The runner raised before sending
+`quit`, then terminated QEMU by host signal. The historical result therefore
+keeps `qmp_shutdown_normal=false`, despite QEMU return code zero. No original
+LUN was attached, and no Android userspace or boot completion was observed.
+
+The [reconciliation receipt](../evidence/videocc-20261124-e1a9/reconciliation.json)
+retains the runtime, generated C table and VIC2 identity already merged by
+PR23. Its earlier source evidence in `videocc-20261124-6a5` remains intact.
+The stronger 41-group gate now targets that existing identity; the RAM
+migration witnesses are arbitrary data and do not define VMState identity.
+The [new source reconstruction](../evidence/videocc-20261124-e1a9/reconciliation-source-validation.json)
+rechecks all ten pins and exactly reproduces the retained C table and the
+expanded manifest. Fresh compiled qualification is required for this combined
+tree; neither prior candidate's CI is reassigned to it.

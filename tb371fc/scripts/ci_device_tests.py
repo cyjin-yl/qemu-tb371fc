@@ -386,7 +386,7 @@ def plan(args, runtime):
                          "expected_stream_files": 6,
                          "vmstate_version": 1, "vmstate_minimum_version": 1,
                          "vmstate_payload_bytes": 474,
-                         "reference_identity": 0x56494432,
+                         "reference_identity": 0x56494332,
                          "actual_compatible": "qcom,videocc-kona-v2",
                          "physical_base": 0x0abf0000, "resource_bytes": 65536,
                          "register_count": 55, "sparse_window_count": 26,

@@ -1,0 +1,130 @@
+{
+  "schema": "tb371fc-guest-shutdown-cleanup-review-public-v1",
+  "source_review_sha256": "aa972c9eaf3e37845da41ce10ecd3d2ecf76b0253a8eb9d07fa0d726109b62f6",
+  "completed_utc": "2026-11-24T17:50:47.977757+00:00",
+  "base": "afbba4d691bb6d4411102f40c86cb76908ca25c3",
+  "files": {
+    "tb371fc/scripts/boot_android.py": "61093aab7176842ef14f592e90456c0c0b91206d594447474d0a02cbf3fb10d1",
+    "tb371fc/tests/test_boot_android.py": "cd7d27c6ccd58d7bdf550ce9ed9e763b2f26321dec12f64115bfee7a1a71c861",
+    "tb371fc/scripts/boot_qmp.py": "b0d95776470110fd682371d393ffda4e2996fb295b1d3c81b41c46980be7a54c",
+    "tb371fc/scripts/boot_android_from_ready.py": "b2ef676a99c7064b9d31035d1b3e1e471d613500cba6373a0992b4c4f4e4154d"
+  },
+  "actual_run007": {
+    "result_sha256": "dcbb8acb4b73a6979ae97d553e4343c6f798b524fee085515c2dac1ddf01dd63",
+    "qmp_messages_sha256": "77174758721e1e147ad95f2b3dc1cdce9ee29ff0865d38c156203dc8ef71fcab",
+    "events": [
+      {
+        "timestamp": {
+          "seconds": 1795541358,
+          "microseconds": 760663
+        },
+        "event": "RESUME"
+      },
+      {
+        "timestamp": {
+          "seconds": 1795541362,
+          "microseconds": 628489
+        },
+        "event": "WATCHDOG",
+        "data": {
+          "action": "reset"
+        }
+      },
+      {
+        "timestamp": {
+          "seconds": 1795541362,
+          "microseconds": 628597
+        },
+        "event": "SHUTDOWN",
+        "data": {
+          "guest": true,
+          "reason": "guest-reset"
+        }
+      },
+      {
+        "timestamp": {
+          "seconds": 1795541362,
+          "microseconds": 629113
+        },
+        "event": "STOP"
+      },
+      {
+        "timestamp": {
+          "seconds": 1795541365,
+          "microseconds": 720761
+        },
+        "event": "SHUTDOWN",
+        "data": {
+          "guest": false,
+          "reason": "host-signal"
+        }
+      }
+    ],
+    "final_status": {
+      "status": "shutdown",
+      "running": false
+    },
+    "error": "RuntimeError: QEMU did not pause before quit",
+    "host_terminated_qemu": true,
+    "qmp_quit_present": false,
+    "original_qmp_shutdown_normal": false,
+    "new_predicate_still_rejects_this_old_result": true,
+    "original_evidence_modified": false
+  },
+  "root_cause": {
+    "kind": "QEMU stop runstate semantics, not a final-drain race",
+    "sequence": "WATCHDOG reset -> guest-reset SHUTDOWN -> STOP -> stop ACK -> query-status shutdown/running=false -> runner exception before quit -> SIGTERM -> host-signal SHUTDOWN; QEMU handled the signal and returned 0.",
+    "primary_code": [
+      "monitor/qmp-cmds.c:qmp_stop",
+      "system/cpus.c:do_vm_stop",
+      "include/system/runstate.h:runstate_is_live",
+      "qapi/run-state.json:RunState.shutdown and SHUTDOWN event"
+    ],
+    "explanation": "The stop command invokes vm_stop(PAUSED), but do_vm_stop changes state only when the old state is live; shutdown remains shutdown under -no-shutdown."
+  },
+  "change_contract": {
+    "extended_cleanup_state": "shutdown with running strictly false and the last relevant pre-quit transition an actual guest SHUTDOWN for guest-reset, guest-shutdown, or guest-panic",
+    "new_guest_success_eligibility": false,
+    "stock_success_still_requires_paused": true,
+    "strict_quit_ack_host_event_drain_exit_and_no_force_checks_retained": true,
+    "existing_kernel_failure_priority_retained": true,
+    "boot_qmp_changed": false
+  },
+  "validation": {
+    "baseline_regression": {
+      "baseline_runner_sha256": "bececc39ae2c640762be3b59e04ab2401f9dd41209c07ba4a68d0e83d4e6bc07",
+      "test_methods": 2,
+      "failures": 1,
+      "errors": 2,
+      "expected_old_runner_rejection_observed": true
+    },
+    "baseline_regression_log_sha256": "42f1f63b4dcd1d4d070c1289a384baf2d4d18007808fb4a8c863e76989b2d90f",
+    "runner_suite": {
+      "tests": 39,
+      "failures": 0,
+      "errors": 0,
+      "log_sha256": "5ab56f6ce6e3df661425d055f6e24efe67cb5d551d2e7855886f1545cc64458b"
+    },
+    "consumer_suite": {
+      "tests": 28,
+      "failures": 0,
+      "errors": 0,
+      "log_sha256": "928e9d4d2e9bc986724c9181c3f3e8893c909a690e257c2ac9a2da8dbf12bd6e"
+    },
+    "new_regression_methods": [
+      "guest-reset shutdown keeps kernel-failure, exit2 and stockpassfalse after actual CLI finalization with fixture I/O",
+      "real AF_UNIX shutdown stop no-op reaches unique ACK and host-qmp-quit at EOF and ECONNRESET",
+      "shutdown without current guest evidence or after RESUME/RESET/WATCHDOG rejects before quit",
+      "shutdown with running CPUs rejects before quit",
+      "guest shutdown cannot excuse absent ACK or host-signal tail"
+    ],
+    "diff_check_passed": true
+  },
+  "limits": {
+    "qemu_vm_executed": false,
+    "native_run_retried": false,
+    "device_rpc": false,
+    "pushed": false,
+    "original_android_boot_claim": false
+  }
+}

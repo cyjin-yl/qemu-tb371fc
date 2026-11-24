@@ -38,7 +38,9 @@ Linux 板级补齐与 UniXNU 路线 A 并行推进，按[跨仓库硬件契约](
 - [x] VIDEO GDSC：`4cc9dee` 正式 CI 45414535386 实际通过 22 组、3/2/2 迁移及 81+5 全计划；独立实际 ZIP 审核通过。同二进制原始 run004 已注册四域，新的首错是 CAMCC `0x0ad00000`；视频引擎执行仍未证明。
 - [x] CAMCC：`8798465` 正式 CI 45426713919 实际通过 83+5 全计划、41 组／3/2/2 迁移与八源两文件再生；独立 ZIP 全负载／111 输出核验通过。同二进制原始 run005 已注册 CAMCC，下一首错为 DISPCC `0x0af00000`；不代表相机执行。
 - [x] DISPCC：`f209f65` 正式 CI 45434451557 实际通过 85+5、41 组／3/2/2 迁移与九源再生；实际 ZIP 的 1676 B／MDSS64／61 输出和首次恢复已独立核验。原厂 run006 已注册 Display CC，下一首错为 VIDEOCC PLL0 `0x0abf042c`；16 未知父钟与 MDSS owner 保持，critical XO 警告未被伪造 ACK 隐藏。
-- [ ] VIDEOCC：实际 Kona v2／十份固定主源核对；两 Lucid、五整数 RCG、八 branches、四 RO dividers、七 resets、55 字／26 窗口／19 Clock 与独立 474 B v1 已实现。PLL1 双配方、共享 ARES、四显式 vote、四独立 VIDEO GDSC 和未知 test/sleep 保留；41 组／3/2/2 及新 87+5 计划待实际 compiled CI／原厂复测。
+- [x] VIDEOCC 候选验证：精确 `be708c3` 已实际通过 87+5、41 组／3/2/2、十源再生与独立 ZIP 全负载／19 时钟检查；原厂 run007 已注册 Video CC，下一首错为 DSI PHY `0x0ae94418`。未挂载原始 LUN、未进入 Android 用户态，PID1 panic 后的 QMP 清理另有失败，原结果保留。
+- [ ] VIDEOCC 并行整合验证：保留已合入 PR23 的 C 实现和 VIC2 迁移身份，补充本分支的强检查与证据；不得把 VID2 候选的迁移流或 CI 回执移作整合后资格。
+- [ ] DSI 7nm PLL／PHY：根据 run007 的实际 `vco_7nm_recalc_rate` 异常，建立来源明确、地址不重叠的有限数字协议。
 - [ ] 原厂完整 DT 用户态及 Android 启动；不能将 77 项公共成功、控制器注册或 NoC 配置匹配当作整板可用。
 
 本轮精确构建与原厂证据见 [README](../README.md) 和

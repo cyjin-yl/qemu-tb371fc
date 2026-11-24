@@ -510,3 +510,28 @@ unknown input behavior, deadline continuation and first destination observation
 without device-MMIO repair. All83 preceding component contracts retain their
 order and counts. This85+5 combination requires its own formal CI; 8798465's
 qualification is not reused as proof for the new binary.
+
+### VIDEOCC qualification and reconciled validation
+
+Exact source `be708c3cc6c2b5ed2fde28dba0dca39ab6c4864c` passed
+[run 45445501200](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45445501200):
+87 components, five Linux integrations, both actual Linux UFS checkpoints,
+852 A77 checks, two rejected CPU configurations and 17 PCI UFS cases.
+The [actual artifact audit](../evidence/videocc-20261124-e1a9/ci-artifact-audit-be708c3.json)
+independently checks the 41-group VIDEOCC report, three completed transfers,
+two profile and two single-bit corruption rejections, all six actual files,
+474-byte VIDEOCC and 142-byte VIDEO payloads, 19 output frequencies/periods,
+and the first target state before continuation or device MMIO.
+
+That candidate used VID2. The parallel merged PR23 implementation uses VIC2;
+the [reconciliation](../evidence/videocc-20261124-e1a9/reconciliation.json)
+retains its C runtime and identity and applies the stronger gate to it.
+The ten-source reconstruction reproduces the unchanged generated C table.
+Both historical evidence sets remain intact. The combined source must pass
+its own full 87+5 plan before its artifacts can be used.
+
+The candidate's [run007 receipt](../evidence/videocc-20261124-e1a9/native-frontier-after-videocc.json)
+records Video CC registration followed by a DSI PHY external abort and PID1
+panic. It also preserves a separate cleanup failure: QEMU stayed in shutdown
+after guest reset, the runner raised before quit and used a host signal.
+Return code zero is not accepted as normal QMP cleanup or Android success.

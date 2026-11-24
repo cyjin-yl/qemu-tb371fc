@@ -14,7 +14,7 @@
 
 ## 当前整合：原厂 Android 启动开发基线
 
-本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。加入 VIDEOCC 协议及固定源码再生两个 gate 后，当前公开计划为 **92 项：87 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。精确 `f209f65` 已实际通过此前 85+5 计划并完成原厂 run006；新增 VIDEOCC 仍需自己的编译和运行回执。
+本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。加入 VIDEOCC 协议及固定源码再生两个 gate 后，当前公开计划为 **92 项：87 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。精确候选 `be708c3` 已实际通过 87+5，原厂 run007 已注册 Video CC 并推进到 DSI PHY `0x0ae94418`。该运行仍发生 PID1 panic 和退出清理失败，未进入 Android 用户态；下述并行分支整合需要自己对应的 CI 回执。
 
 两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
 
@@ -66,7 +66,13 @@ run006 下一首个 fatal 是 guest 3.508680 秒读取 `0x0abf042c` 的 4 B，CP
 
 [VIDEOCC 有界模型](tb371fc/docs/videocc-sm8250.md)核对实际 `qcom,videocc-kona-v2`，实现两 Lucid PLL、五个整数 RCG、八个 branch、四个只读 divider 和七条 reset；55 个字分为 26 个窗口，共 220 B。四个 VIDEO GDSC 继续保留原 owner、mmcx 连线和 142 B v1 状态。需显式 `qcom-sm8250-videocc.enabled-reference=on`，两 XO 名称接已有 carrier，test/sleep 输入保持未知。
 
-PLL1 的通用配置再 v2 覆写、四路 remote vote、共享 CBCR/ARES 和向上取整 RO divider 分别按源码处理，不从 `div2` 名称推定固定分频，不为 critical 标志自动创建请求。独立 474 B v1 只保存整数 RCG 的实际 CFG 状态。新增 41 组／3/2/2 迁移与十源再生加入 87+5 计划；此源码增量的 compiled CI 和原厂复测仍待执行，不代表视频处理或 Android 完成。
+PLL1 的通用配置可写入 standby，只有最终 v2 配方具有 LOCK／ACK 资格。四路 remote vote、共享 CBCR/ARES 和向上取整 RO divider 分别按源码处理，不从 `div2` 名称推定固定分频，不为 critical 标志自动创建请求。独立 474 B v1 只保存整数 RCG 的实际 CFG 状态。
+
+精确 `be708c3` 的[正式 CI 45445501200](https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45445501200)已实际通过 87+5、VIDEOCC 41 组／3/2/2 迁移和十源再生。[独立 ZIP 审计](tb371fc/evidence/videocc-20261124-e1a9/ci-artifact-audit-be708c3.json)核验六个真实流、VIDEOCC／VIDEO 完整负载和 19 个输出时钟；二进制 SHA-256 为 `95dde8deba27b05a4cf28a961898725d466e4fb52671ab240376a2e59b25b878`。
+
+[原厂 run007](tb371fc/evidence/videocc-20261124-e1a9/native-frontier-after-videocc.json)在 guest 2.673751 秒注册 Video CC，2.974308 秒在 `vco_7nm_recalc_rate` 读取 `0x0ae94418` 时发生外部异常，随后 PID1 panic。Guest reset 使 QEMU 停在 `shutdown`；运行器在发送 `quit` 前因要求 `paused` 报错，最终由 host signal 退出。因此该次运行的正常 QMP 清理仍判定失败，QEMU 返回 0 不改变结论。原始输入摘要不变，但没有挂载原始 LUN或观察到 Android 用户态。
+
+[并行整合记录](tb371fc/evidence/videocc-20261124-e1a9/reconciliation.json)保留已合入 PR23 的 C 实现、寄存器表和 `VIC2` 迁移身份，并合入本分支补充的 41 组检查、十源验证及历史回执。`be708c3` 使用的 `VID2` 身份只属于该历史候选；其流不冒充当前格式，整合后源码需要重新执行 CI。
 
 ## 默认分支既有验收：2026-11-24 存储与电源修复
 

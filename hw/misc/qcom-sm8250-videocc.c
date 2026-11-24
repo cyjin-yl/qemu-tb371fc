@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
- * Bounded Kona v2 VIDEOCC digital reference protocol.
+ * Bounded Kona-v2 VIDEOCC digital reference protocol.
  * OnePlusOSS/android_kernel_oneplus_sm8250 at
  * 94304e12a3509eac7b3716bf574ce0b1fcaacbae: videocc-kona.c,
  * clk-alpha-pll.c, clk-rcg2.c, clk-branch.c and clk-regmap-divider.c.
@@ -22,7 +22,6 @@
 #include "system/qtest.h"
 
 #define PLL_OUTCTRL BIT(0)
-#define PLL_BYPASSNL BIT(1)
 #define PLL_RESET_N BIT(2)
 #define PLL_UPDATE BIT(22)
 #define PLL_UPDATE_BYPASS BIT(23)
@@ -45,7 +44,7 @@ enum {
 };
 enum { RC_CMD, RC_CFG, RCG_FIELDS };
 enum { REG_PLL, REG_RCG, REG_BRANCH, REG_DIVIDER, REG_RESET };
-enum { I_XO };
+enum { I_XO, I_XO_AO, I_TEST, I_SLEEP };
 
 typedef struct VideoccRegister {
     uint32_t offset, write_mask, status_mask, stored_mask;
@@ -69,7 +68,6 @@ typedef struct VideoccDivider {
     unsigned clock_id, reg;
     int parent;
     unsigned shift, width;
-    bool read_only;
 } VideoccDivider;
 typedef struct VideoccReset {
     unsigned reg;
@@ -105,7 +103,7 @@ static bool videocc_user_supported(uint32_t value)
 
 static bool videocc_recipe(QcomSm8250VideoccState *s, unsigned p)
 {
-    /* The v2 probe replaces PLL1's generic standby setup before enabling it. */
+    /* The v2 driver reconfigures PLL1 after its base standby recipe. */
     return !PREG(s, p, R_TEST) && !PREG(s, p, R_TEST_U) &&
            !PREG(s, p, R_TEST_U1) && PREG(s, p, R_CAL_L) == 0x44 &&
            PREG(s, p, R_CONFIG) == 0x20485699 &&
@@ -115,8 +113,8 @@ static bool videocc_recipe(QcomSm8250VideoccState *s, unsigned p)
            PREG(s, p, R_USER_U1) == 0;
 }
 
-static uint64_t videocc_pll_frequency(QcomSm8250VideoccState *s, unsigned p,
-                                    uint32_t l, uint32_t alpha)
+static uint64_t videocc_pll_frequency(QcomSm8250VideoccState *s,
+                                     uint32_t l, uint32_t alpha)
 {
     uint64_t xo = clock_get_hz(s->input[I_XO]);
     uint64_t maximum = 2000000000ULL;
@@ -141,14 +139,14 @@ static bool videocc_pll_running(QcomSm8250VideoccState *s, unsigned p)
 {
     return s->enabled_reference && (PREG(s, p, R_MODE) & PLL_RESET_N) &&
            PREG(s, p, R_OPMODE) == 1 && videocc_recipe(s, p) &&
-           videocc_pll_frequency(s, p, s->active_l[p], s->active_alpha[p]);
+           videocc_pll_frequency(s, s->active_l[p], s->active_alpha[p]);
 }
 
 static bool videocc_cfg_valid(unsigned r, uint32_t cfg)
 {
     const VideoccRcg *root = &videocc_rcgs[r];
 
-    /* All five source declarations have mnd_width = 0: integer mode only. */
+    /* All five source-defined roots have mnd_width=0. No fraction words. */
     return !(cfg & ~root->cfg_mask) && !((cfg >> 12) & 3) &&
            root->parents[(cfg >> 8) & 7] != NO_PARENT;
 }
@@ -182,7 +180,7 @@ static void videocc_rates(QcomSm8250VideoccState *s, uint64_t *rates)
             (PREG(s, i, R_MODE) & PLL_OUTCTRL) &&
             PREG(s, i, R_USER) == 7) {
             rates[videocc_plls[i].clock_id] =
-                videocc_pll_frequency(s, i, s->active_l[i], s->active_alpha[i]);
+                videocc_pll_frequency(s, s->active_l[i], s->active_alpha[i]);
         }
     }
     for (i = 0; i < VIDEOCC_RCGS; i++) {
@@ -292,7 +290,7 @@ static bool videocc_latch_valid(QcomSm8250VideoccState *s, unsigned p)
     return s->enabled_reference && (mode & PLL_RESET_N) &&
            (mode & PLL_UPDATE) && (mode & PLL_UPDATE_BYPASS) &&
            videocc_recipe(s, p) &&
-           videocc_pll_frequency(s, p, s->pending_l[p], s->pending_alpha[p]);
+           videocc_pll_frequency(s, s->pending_l[p], s->pending_alpha[p]);
 }
 
 static void videocc_update(QcomSm8250VideoccState *s)
@@ -411,7 +409,7 @@ static void videocc_start_pll(QcomSm8250VideoccState *s, unsigned p)
 {
     bool valid = (PREG(s, p, R_MODE) & PLL_RESET_N) &&
                  PREG(s, p, R_OPMODE) == 1 && videocc_recipe(s, p) &&
-                 videocc_pll_frequency(s, p, PREG(s, p, R_L),
+                 videocc_pll_frequency(s, PREG(s, p, R_L),
                                       PREG(s, p, R_ALPHA));
 
     s->pll_locked[p] = false;
@@ -445,7 +443,7 @@ static void videocc_pll_write(QcomSm8250VideoccState *s, unsigned p,
             s->pll_ack[p] = false;
             s->latch_deadline[p] = -1;
             if ((val & PLL_RESET_N) && videocc_recipe(s, p) &&
-                videocc_pll_frequency(s, p, PREG(s, p, R_L),
+                videocc_pll_frequency(s, PREG(s, p, R_L),
                                      PREG(s, p, R_ALPHA))) {
                 s->pending_l[p] = PREG(s, p, R_L);
                 s->pending_alpha[p] = PREG(s, p, R_ALPHA);
@@ -475,9 +473,9 @@ static MemTxResult videocc_write(void *opaque, hwaddr address, uint64_t value,
         return MEMTX_ERROR;
     }
     reg = &videocc_registers[id];
-    if (reg->kind == REG_DIVIDER && videocc_dividers[reg->index].read_only) {
+    if (reg->kind == REG_DIVIDER) {
         qemu_log_mask(LOG_GUEST_ERROR, TYPE_QCOM_SM8250_VIDEOCC
-                      ": read-only divider +0x%" HWADDR_PRIx "\n",
+                      ": read-only VIDEO divider +0x%" HWADDR_PRIx "\n",
                       w->offset + address);
         return MEMTX_ERROR;
     }
@@ -688,23 +686,18 @@ static const VMStateDescription vmstate_videocc = {
         VMSTATE_UINT64_EQUAL(physical_base, QcomSm8250VideoccState),
         VMSTATE_UINT32_ARRAY(regs, QcomSm8250VideoccState, VIDEOCC_REGISTERS),
         VMSTATE_UINT32_ARRAY(active_l, QcomSm8250VideoccState, VIDEOCC_PLLS),
-        VMSTATE_UINT32_ARRAY(active_alpha, QcomSm8250VideoccState,
-                            VIDEOCC_PLLS),
+        VMSTATE_UINT32_ARRAY(active_alpha, QcomSm8250VideoccState, VIDEOCC_PLLS),
         VMSTATE_UINT32_ARRAY(pending_l, QcomSm8250VideoccState, VIDEOCC_PLLS),
-        VMSTATE_UINT32_ARRAY(pending_alpha, QcomSm8250VideoccState,
-                            VIDEOCC_PLLS),
+        VMSTATE_UINT32_ARRAY(pending_alpha, QcomSm8250VideoccState, VIDEOCC_PLLS),
         VMSTATE_UINT32_ARRAY(active_cfg, QcomSm8250VideoccState, VIDEOCC_RCGS),
         VMSTATE_UINT32_ARRAY(pending_cfg, QcomSm8250VideoccState, VIDEOCC_RCGS),
-        VMSTATE_INT64_ARRAY(lock_deadline, QcomSm8250VideoccState,
-                           VIDEOCC_PLLS),
-        VMSTATE_INT64_ARRAY(latch_deadline, QcomSm8250VideoccState,
-                           VIDEOCC_PLLS),
+        VMSTATE_INT64_ARRAY(lock_deadline, QcomSm8250VideoccState, VIDEOCC_PLLS),
+        VMSTATE_INT64_ARRAY(latch_deadline, QcomSm8250VideoccState, VIDEOCC_PLLS),
         VMSTATE_INT64_ARRAY(rcg_deadline, QcomSm8250VideoccState, VIDEOCC_RCGS),
         VMSTATE_UINT64(last_xo_hz, QcomSm8250VideoccState),
         VMSTATE_BOOL_ARRAY(pll_locked, QcomSm8250VideoccState, VIDEOCC_PLLS),
         VMSTATE_BOOL_ARRAY(pll_ack, QcomSm8250VideoccState, VIDEOCC_PLLS),
-        VMSTATE_BOOL_ARRAY(pll_calibrated, QcomSm8250VideoccState,
-                          VIDEOCC_PLLS),
+        VMSTATE_BOOL_ARRAY(pll_calibrated, QcomSm8250VideoccState, VIDEOCC_PLLS),
         VMSTATE_BOOL_ARRAY(remote_vote, QcomSm8250VideoccState,
                            VIDEOCC_REMOTE_VOTES),
         VMSTATE_ARRAY_CLOCK(input, QcomSm8250VideoccState, VIDEOCC_INPUTS),
@@ -763,7 +756,7 @@ static void videocc_divider_set(Object *obj, Visitor *v, const char *name,
     if (!visit_type_uint32(v, name, &value, errp)) {
         return;
     }
-    if (!s->enabled_reference || !divider->read_only || value > 3) {
+    if (!s->enabled_reference || value > 3) {
         error_setg(errp, "%s requires an enabled reference and a 2-bit value",
                    name);
         return;
@@ -898,8 +891,9 @@ static void videocc_init(Object *obj)
     object_property_add_uint64_ptr(obj, "last-xo-hz", &s->last_xo_hz,
                                    OBJ_PROP_FLAG_READ);
     /*
-     * A transparent container exports 26 exact leaves. No handlers or
-     * storage cover intervening holes, including the four VIDEO GDSCRs.
+     * Only the 26 exact leaves respond. The transparent container owns no
+     * RAM or fallback handler; four VIDEO GDSCs and all other holes remain
+     * independent of this clock controller.
      */
     memory_region_init(&s->container, obj, "videocc-sparse", 0x10000);
     sysbus_init_mmio(SYS_BUS_DEVICE(s), &s->container);
@@ -968,8 +962,8 @@ static void videocc_init(Object *obj)
         g_autofree char *deadline = g_strdup_printf("rcg%u-deadline", i);
 
         s->rcg_deadline[i] = -1;
-        object_property_add(obj, pending, "bool", videocc_status_get,
-                            NULL, NULL, GUINT_TO_POINTER(5 * VIDEOCC_PLLS + i));
+        object_property_add(obj, pending, "bool", videocc_status_get, NULL, NULL,
+                            GUINT_TO_POINTER(5 * VIDEOCC_PLLS + i));
         object_property_add(obj, deadline, "int64", videocc_signed_get,
                             NULL, NULL, &s->rcg_deadline[i]);
         for (j = 0; j < ARRAY_SIZE(rcg_values); j++) {
@@ -985,7 +979,7 @@ static void videocc_init(Object *obj)
 
         object_property_add(obj, name, "uint32", videocc_divider_get,
                             NULL, NULL, GUINT_TO_POINTER(i));
-        if (qtest_enabled() && videocc_dividers[i].read_only) {
+        if (qtest_enabled()) {
             g_autofree char *fixture =
                 g_strdup_printf("qtest-divider%u-value", i);
 

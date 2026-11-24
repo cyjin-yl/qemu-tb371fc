@@ -101,7 +101,7 @@ assert (len(REGISTERS), len(WINDOWS), len(OUTPUTS), len(RCGS), len(BRANCHES),
         len(DIVIDERS), len(RESETS), len(HW_RCG), len(VOTED)) == (55, 26, 19, 5, 8, 4, 7, 3, 4)
 assert not set(REGISTERS) & set(GDSC_OFFSETS)
 
-IDENTITY, VMSTATE_BYTES, EXPECTED_CHECKS = 0x56494432, 474, 41
+IDENTITY, VMSTATE_BYTES, EXPECTED_CHECKS = 0x56494332, 474, 41
 GLOBAL_FIELDS = ("reference-profile", "reference-identity", "register-count", "clock-count",
                  "input-count", "pll-count", "rcg-count", "branch-count", "divider-count",
                  "reset-count", "remote-vote-count", "window-count", "mapped-bytes", "physical-base")
