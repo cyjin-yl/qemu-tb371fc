@@ -696,15 +696,16 @@ def exact_sparse_leaves_holes_widths_and_shared_owner(r):
             rejected_access(r, 0x044, write=write, width=width, value=0)
         rejected_access(r, 0x045, write=write, value=0)
     assert r.world() == before
-    # A 64-bit operation at an isolated 4-byte leaf legitimately commits its
-    # low word, then fails at the hole. No transaction-wide rollback claim.
+    # The DP ops preserve an 8-byte access for callback rejection, including
+    # this isolated 4-byte leaf. The compiled QTest path delivers one size-8
+    # callback; it does not first commit a low word or access the next hole.
     old = len(core_diagnostics(r.log_path.read_text(errors="replace")))
-    r.command(f"writeq {BASE+0x00c:#x} 0xdeadbeef0000000a")
-    assert r.reg(0x00c) == 0x0a
-    assert core_diagnostics(r.log_path.read_text(errors="replace"))[old:] == [
-        ("write", BASE+0x010, 4, "(null)", "rejected")]
+    rejected_access(r, 0x00c, width="q", value=0xdeadbeef0000000a)
+    assert r.reg(0x00c) == 0
+    assert core_diagnostics(r.log_path.read_text(errors="replace"))[old:] == []
+    assert r.world() == before
     return {"exact_leaf_count": 42, "exact_mapped_bytes": 292,
-            "mdss_owner_preserved": True, "cross_leaf_partial_write_verified": True}
+            "mdss_owner_preserved": True, "isolated_leaf_wide_access_rejected": True}
 
 
 def connect_dispcc_roots(r):
