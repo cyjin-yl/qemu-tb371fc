@@ -96,6 +96,65 @@ MMIO timer migration test, the receiver explicitly aligns that test fixture to
 the recorded source timestamp before checking remaining deadlines. QTest
 clock steps briefly resume the VM and return it to its prior paused state.
 
+## Real Linux driver continuation gate
+
+The separate `boot_ufs_migration.py` gate exercises the real Linux drivers across
+one stopped checkpoint. It requires the matching `build.json` for the public,
+unpatched Linux 6.12.114 Image produced by `build_smoke_kernel.sh`; the source
+archive, Image and receipt are checked before QEMU starts.
+The smoke configuration explicitly enables `CONFIG_PROC_SYSCTL=y` and its build
+gate checks that setting, so `/proc/sys/kernel/random/boot_id` is available for
+the continuity assertion. Earlier minimal smoke kernels disabled that setting
+and cannot satisfy this new guest requirement.
+
+```sh
+python3 tb371fc/scripts/boot_ufs_migration.py \
+  --qemu /absolute/path/qemu-system-aarch64 \
+  --kernel /absolute/path/clean-linux/artifacts/Image \
+  --out /absolute/path/new-linux-migration-results
+```
+
+The gate uses eight CPUs, 8 GiB RAM and a newly created 64 MiB synthetic LUN.
+Its PID 1 verifies the qcom UFS, QMP PHY, GCC and apps SMMU bindings, the `DMA`
+IOMMU domain, capacity and 4 KiB sectors. It completes an aligned 32 KiB
+`O_DIRECT` write at 4 MiB, `fsync`, readback and close before acknowledging the
+checkpoint. The host sends a random nonce once over GENI RX; the guest keeps
+that value, its boot ID, PID, monotonic timestamp and check counter in RAM.
+
+After a successful QMP `stop`, a received STOP event and a paused status, the
+host verifies **every byte of the disk**, saves the checkpoint, requires
+`completed` and `postmigrate`, and exits the source process. Only then does it
+start the receiver with `-incoming defer -S`, the same media and ordinary file
+locking. The receiver must finish loading while paused before an explicit
+`cont`. Its sole serial input is `CONTINUE`; the nonce is never resent or
+placed in the guest command line, initramfs or disk.
+
+The resumed PID 1 must retain its original nonce, boot ID, monotonic time and
+counter. It verifies the translated domain again, reads the source payload,
+writes a different aligned 32 KiB payload at 8 MiB, flushes it, and checks both
+payloads again after close/reopen. The host requires exactly **21 source and
+18 continuation checks**, all passing in the expected order. Separate serial
+logs must contain one source boot and no target boot or replayed source phase.
+It then checks the entire 64 MiB image against the two payloads and zeros
+everywhere else. The migration stream hash must be unchanged across loading,
+and the QEMU, kernel, receipt, guest source, harness, init and initramfs hashes
+must remain unchanged from before source startup through receiver completion.
+
+The workflow runs this gate in addition to all existing component, four Linux,
+21-group QTest migration, PCI and CPU gates. `result.json`, per-process receipts,
+commands, QMP messages, serial/debug logs, public kernel receipt and hashes of
+the runnable inputs are retained even on failure. Read the receipt for the
+actual verdict; adding this gate alone is not a passing runtime result.
+The CI upload excludes the temporary migration stream and synthetic disk;
+their exact sizes, SHA-256 values and whole-media comparison results remain
+in the receipt. The public kernel, QEMU binary, init and initramfs are retained.
+
+This is one quiescent Linux UFS continuation on a generated device tree.
+In-flight UFS requests, a changed external disk, a native device-tree boot,
+stock Android, power-cycle persistence and full-device migration equivalence
+remain outside the result. The host ends the successful receiver with QMP;
+guest shutdown is not tested.
+
 ## Recorded validation
 
 ### Profile and QMP-drain follow-up
