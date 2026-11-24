@@ -102,6 +102,10 @@ The separate `boot_ufs_migration.py` gate exercises the real Linux drivers acros
 one stopped checkpoint. It requires the matching `build.json` for the public,
 unpatched Linux 6.12.114 Image produced by `build_smoke_kernel.sh`; the source
 archive, Image and receipt are checked before QEMU starts.
+The smoke configuration explicitly enables `CONFIG_PROC_SYSCTL=y` and its build
+gate checks that setting, so `/proc/sys/kernel/random/boot_id` is available for
+the continuity assertion. Earlier minimal smoke kernels disabled that setting
+and cannot satisfy this new guest requirement.
 
 ```sh
 python3 tb371fc/scripts/boot_ufs_migration.py \
