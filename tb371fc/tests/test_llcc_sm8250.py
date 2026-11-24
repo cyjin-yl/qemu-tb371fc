@@ -984,7 +984,7 @@ def migration_checks(args, out, report):
                 "original_stream_unchanged": digest(source_path) == saved["sha256"], **details})
             passed("single_bit_"+name+"_rejected", **details)
             target.close()
-        assert all(digest(out[item["file"]]) == item["sha256"] for item in report["migration_sources"])
+        assert all(digest(out / item["file"]) == item["sha256"] for item in report["migration_sources"])
     finally:
         for rig in reversed(rigs):
             rig.close()

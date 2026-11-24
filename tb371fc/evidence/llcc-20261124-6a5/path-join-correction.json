@@ -1,0 +1,63 @@
+{
+  "schema": "tb371fc-llcc-final-path-join-fix-v1",
+  "fix_verified": true,
+  "old_test_sha256": "ff3caf5ffee5f75f41e8beab480bed19f2384f2b252bb3cfce15d2d072bcd96e",
+  "old_test_preserved": "/dev/shm/llcc-independent-audit/path-join-fix-001/test_llcc_sm8250-ff3caf5f.py",
+  "new_test_sha256": "4472734a675049a4a0f18e4699617ceecde6b293e6b8ede7f4a0825f403d48e3",
+  "new_test_bytes": 48079,
+  "archive": "/dev/shm/tb371fc-llcc-initial-pr-5083651-14970373195.zip",
+  "archive_sha256": "0a44e3ee563a8a26a89f541f0db46812bb533a6ed714e596a2b1ae7a22b029b0",
+  "actual_failed_report_member": "tb371fc-results/components/61-llcc-sm8250-reference/fixtures/data/result.json",
+  "actual_failed_report_sha256": "a0dd0c93dfe1fa21afc5ec7c3eb32b726ecd6e8e6805409be3d502d18db44dae",
+  "actual_initial_report_passed": false,
+  "actual_completed_check_count": 32,
+  "actual_completed_migrations": 4,
+  "actual_profile_rejections": 2,
+  "actual_single_bit_rejections": 4,
+  "actual_initial_error": "'PosixPath' object is not subscriptable",
+  "reproduced_original_exception": "'PosixPath' object is not subscriptable",
+  "changed_ast_subscript_to_divide_count": 1,
+  "all_other_ast_identical": true,
+  "one_removed_and_one_added_source_line": true,
+  "diff": "--- frozen-ff3caf5f.py\n+++ corrected-test_llcc_sm8250.py\n@@ -984,7 +984,7 @@\n                 \"original_stream_unchanged\": digest(source_path) == saved[\"sha256\"], **details})\n             passed(\"single_bit_\"+name+\"_rejected\", **details)\n             target.close()\n-        assert all(digest(out[item[\"file\"]]) == item[\"sha256\"] for item in report[\"migration_sources\"])\n+        assert all(digest(out / item[\"file\"]) == item[\"sha256\"] for item in report[\"migration_sources\"])\n     finally:\n         for rig in reversed(rigs):\n             rig.close()\n",
+  "corrected_final_assert_executed": true,
+  "actual_source_stream_count": 5,
+  "actual_source_streams": [
+    {
+      "file": "llcc-steady.migration",
+      "bytes": 2285785,
+      "sha256": "93eb94673c5e9eea1b41cdb412803d29e434e22402569eea7d9ce7d3d8ac5875"
+    },
+    {
+      "file": "llcc-armed.migration",
+      "bytes": 2285785,
+      "sha256": "1082e9f70fce77c1e069727d89dcbb178280242cc952b67caccd2d5d73b8c723"
+    },
+    {
+      "file": "llcc-activate-pending.migration",
+      "bytes": 2285785,
+      "sha256": "f4064496f79588a893a7db2d023b3df4dc16d765f323e5adfc9b97d75987f7e8"
+    },
+    {
+      "file": "llcc-deactivate-pending.migration",
+      "bytes": 2285785,
+      "sha256": "27f7e1639b594814e8073ae66a876d9add709e38491aa3a1c80ac2f3202726ce"
+    },
+    {
+      "file": "llcc-disabled.migration",
+      "bytes": 2285785,
+      "sha256": "25d2009b86400a3f0aabc22e52f630627a72cd7a14c4b2bd894f0a8785017f25"
+    }
+  ],
+  "real_posixpath_inputs": "/dev/shm/llcc-independent-audit/path-join-fix-001/actual-original-streams",
+  "unchanged_source_pins": {
+    "hw/misc/qcom-sm8250-llcc.c": "1312474d66959cc70188a76769765014779b999602b8885f3c9658927d563f04",
+    "llcc-test-ci-contract.json": "e5af19afcfaceff0f60c805fd61a1d4dfa291377c5c5f1bc03f492a12b4e1a16",
+    "tb371fc/scripts/ci_device_tests.py": "ad6661e68f31f72c71b6ac1a3224f0b656c3d679fdb6d04de389400c361a9330"
+  },
+  "qemu_executed": false,
+  "guest_executed": false,
+  "whole_suite_rerun": false,
+  "whole_suite_pass_claimed": false,
+  "initial_failure_receipt_unchanged": true
+}

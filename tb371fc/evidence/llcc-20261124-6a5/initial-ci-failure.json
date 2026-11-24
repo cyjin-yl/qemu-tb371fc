@@ -1,0 +1,87 @@
+{
+  "schema": "tb371fc-llcc-initial-ci-failure-observation-v1",
+  "head": "50836513e30bb1d122bd3fce49d70c509b3efb1f",
+  "tree": "a1d84f07e94d08c4ef375ac381227c3019c25c89",
+  "pr_checkout": "09768b1708f45a5076b3849899cc35b07bcc0717",
+  "push": {
+    "run": 45497132875,
+    "board_job": 138810491038,
+    "passed_components": 92,
+    "required_components": 93,
+    "failed_gates": [
+      "llcc-sm8250-reference"
+    ],
+    "dp_source_generation_passed": true
+  },
+  "pr": {
+    "run": 45497216490,
+    "board_job": 138810775349,
+    "passed_components": 91,
+    "required_components": 93,
+    "failed_gates": [
+      "dp-pll-source-generation",
+      "llcc-sm8250-reference"
+    ]
+  },
+  "failed_pr_artifact": {
+    "id": 14970373195,
+    "path": "/dev/shm/tb371fc-llcc-initial-pr-5083651-14970373195.zip",
+    "bytes": 47490501,
+    "sha256": "0a44e3ee563a8a26a89f541f0db46812bb533a6ed714e596a2b1ae7a22b029b0",
+    "qemu_bytes": 63652744,
+    "qemu_sha256": "910e06ab1b2a6cf2e6799ea246bb338e0870eaac89c39e8bb3d8bddff8537bbd"
+  },
+  "llcc": {
+    "result_member": "tb371fc-results/components/61-llcc-sm8250-reference/fixtures/data/result.json",
+    "result_bytes": 119937,
+    "result_sha256": "a0dd0c93dfe1fa21afc5ec7c3eb32b726ecd6e8e6805409be3d502d18db44dae",
+    "report_passed": false,
+    "completed_checks": 32,
+    "all_32_recorded_checks_passed": true,
+    "completed_migrations": 4,
+    "profile_rejections": 2,
+    "single_bit_rejections": 4,
+    "original_streams": 5,
+    "actual_stream_inventory_finalized": false,
+    "error": "'PosixPath' object is not subscriptable",
+    "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_llcc_sm8250.py\", line 1053, in main\n    migration_checks(args, out, report)\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_llcc_sm8250.py\", line 987, in migration_checks\n    assert all(digest(out[item[\"file\"]]) == item[\"sha256\"] for item in report[\"migration_sources\"])\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/tests/test_llcc_sm8250.py\", line 987, in <genexpr>\n    assert all(digest(out[item[\"file\"]]) == item[\"sha256\"] for item in report[\"migration_sources\"])\n                      ~~~^^^^^^^^^^^^^^\nTypeError: 'PosixPath' object is not subscriptable\n",
+    "binary_unchanged": true
+  },
+  "dp_pr_source_fetch": {
+    "result_member": "tb371fc-results/components/15-dp-pll-source-generation/fixtures/data/result.json",
+    "result_sha256": "161522f05694ce0f28e29f582868e9d9cc20bee173eda53b0a5c014aff1f0a81",
+    "verified_inputs_before_failure": 7,
+    "expected_inputs": 17,
+    "error": "Traceback (most recent call last):\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/scripts/verify_dp_pll_generation.py\", line 35, in run\n    with urllib.request.urlopen(url, timeout=30) as response:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 521, in open\n    response = meth(req, response)\n               ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 630, in http_response\n    response = self.parent.error(\n               ^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 559, in error\n    return self._call_chain(*args)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 639, in http_error_default\n    raise HTTPError(req.full_url, code, msg, hdrs, fp)\nurllib.error.HTTPError: HTTP Error 503: Backend.max_conn reached\n",
+    "generator_executed": false,
+    "source_pin_mismatch_reported": false
+  },
+  "native_executed": false,
+  "artifact_qualified": false,
+  "linux_tests_executed": false,
+  "model_changed_to_address_failure": false,
+  "failed_artifact_preserved": true,
+  "actual_complete_board_logs": [
+    {
+      "side": "push",
+      "job_id": 138810491038,
+      "path": "/dev/shm/llcc-initial-push-5083651-job-138810491038.log",
+      "bytes": 323233,
+      "sha256": "3d040dab96755555a7efc4db2c81ed6a0905c6e23dee8d04065f5262d17e961e",
+      "failed_gate_lines": [
+        "2026-11-24T22:15:45.2258249Z FAIL llcc-sm8250-reference"
+      ]
+    },
+    {
+      "side": "pr",
+      "job_id": 138810775349,
+      "path": "/dev/shm/llcc-initial-pr-5083651-job-138810775349.log",
+      "bytes": 323819,
+      "sha256": "eb9f89b5025181a1b219b05af7950e8d932099a08bae54020e57e90be67eb3a9",
+      "failed_gate_lines": [
+        "2026-11-24T22:07:29.3409665Z FAIL dp-pll-source-generation",
+        "2026-11-24T22:14:35.4451125Z FAIL llcc-sm8250-reference"
+      ]
+    }
+  ]
+}
