@@ -1,0 +1,162 @@
+{
+  "actual_failure_review": {
+    "bytes": 2062,
+    "path": "cache-review/actual-failure-review-001.json",
+    "sha256": "04658aeb5ae5b5b6d0663734589ab2a6a261fad03db58f012ae2ad4112913295"
+  },
+  "actual_generation_ci_qemu_device_run_claimed": false,
+  "added_test_functions": [
+    "PublicSourceCacheTests.test_actual_gcc_verifier_still_rejects_wrong_tag_content_without_retry",
+    "PublicSourceCacheTests.test_actual_gcc_verifier_still_rejects_wrong_tag_content_without_retry.response",
+    "PublicSourceCacheTests.test_gcc_tag_url_is_never_cached_and_does_not_change_pinned_entries",
+    "PublicSourceCacheTests.test_uncacheable_tag_retains_original_transient_retry_policy",
+    "PublicSourceCacheTests.test_unpinned_nonpublic_or_ambiguous_urls_use_uncached_transport"
+  ],
+  "all_other_helper_functions_ast_unchanged": true,
+  "changed_existing_test_functions": [],
+  "changed_helper_functions": [
+    "read_source"
+  ],
+  "complete_diff": {
+    "bytes": 6636,
+    "path": "cache-review/cache-compatibility-003.diff",
+    "sha256": "b3c4c823d49f5ec944b7be555a65538be13da73940330f8a53b5540b5e1ac41e"
+  },
+  "created_utc": "2026-11-25T08:12:48.891630+00:00",
+  "files": [
+    {
+      "bytes": 13409,
+      "git_blob_sha1": "b946a5c8c2fac0150ac1023b5eb3bff00afb4a25",
+      "path": "tb371fc/scripts/source_download.py",
+      "sha256": "988060e6c9e604f5562e840996a778bf7049aabc8f547082566aae159f4779cf"
+    },
+    {
+      "bytes": 39099,
+      "git_blob_sha1": "7f76c1b33172c8a133e2c64e2f3b05c857a74970",
+      "path": "tb371fc/scripts/test_source_download.py",
+      "sha256": "5a5d5dfe85e3c8b7d097529a117e328f80016e99a5926ddd13cd715e7bd2c46d"
+    }
+  ],
+  "old_cache002_and_failed_ci_retained": true,
+  "predecessor_files": [
+    {
+      "bytes": 13065,
+      "git_blob_sha1": "1fdfc962617f621a509f26e5cd789c138565512d",
+      "path": "cache-review/before-source_download.py",
+      "sha256": "007f430930aeae13e028271e95bf2b1eee2ab79ff3ec085475fc29d1f7195c95"
+    },
+    {
+      "bytes": 35146,
+      "git_blob_sha1": "6939be87947455fb7f76668529c9dfbc13fd2258",
+      "path": "cache-review/before-test_source_download.py",
+      "sha256": "c0a7ea65ef6cdce330142409c32bf2c6303b50ab9cd7a706b720f18f76260001"
+    }
+  ],
+  "preserved_test_functions": [
+    "CacheResponse.__init__",
+    "CacheResponse.geturl",
+    "CacheResponse.read",
+    "DownloadTests.test_certificate_failures_are_not_retried",
+    "DownloadTests.test_excessive_retry_after_does_not_retry_early",
+    "DownloadTests.test_exhausted_retries_preserve_http_failure",
+    "DownloadTests.test_http_error_response_is_closed",
+    "DownloadTests.test_oversize_body_is_bounded_and_not_retried",
+    "DownloadTests.test_permanent_http_errors_are_not_retried",
+    "DownloadTests.test_retry_after_delta_is_respected",
+    "DownloadTests.test_retry_after_http_date_is_respected",
+    "DownloadTests.test_retry_delay_budget_is_shared_across_attempts",
+    "DownloadTests.test_short_http_body_is_discarded_before_retry",
+    "DownloadTests.test_temporary_dns_and_timeout_are_retried_but_other_dns_is_not",
+    "DownloadTests.test_transient_http_recovers_with_fresh_complete_body",
+    "HttpFixture.__enter__",
+    "HttpFixture.__enter__.Handler.do_GET",
+    "HttpFixture.__enter__.Handler.log_message",
+    "HttpFixture.__exit__",
+    "HttpFixture.__init__",
+    "LlccVerifierTests.replies",
+    "LlccVerifierTests.setUp",
+    "LlccVerifierTests.test_cache_hits_still_fail_each_complete_source_pin",
+    "LlccVerifierTests.test_cache_reuses_eight_inputs_and_runs_full_verifier_twice",
+    "LlccVerifierTests.test_eighth_source_429_recovers_and_preserves_all_pin_checks",
+    "LlccVerifierTests.test_source_root_does_not_use_network_and_rejects_bad_pin",
+    "LlccVerifierTests.test_wrong_hash_length_or_blob_fails_without_retry_or_generation",
+    "LlccVerifierTests.verifier",
+    "LlccVerifierTests.verifier.generate",
+    "LlccVerifierTests.verifier.open_local",
+    "PublicSourceCacheTests.assert_bad_without_network",
+    "PublicSourceCacheTests.entry",
+    "PublicSourceCacheTests.seed",
+    "PublicSourceCacheTests.setUp",
+    "PublicSourceCacheTests.test_cache_body_symlink_is_not_followed",
+    "PublicSourceCacheTests.test_cache_entry_symlink_is_not_followed",
+    "PublicSourceCacheTests.test_cache_owned_by_another_uid_is_rejected",
+    "PublicSourceCacheTests.test_cached_response_larger_than_new_limit_fails_bounded",
+    "PublicSourceCacheTests.test_complete_cache_hit_uses_no_network_and_private_permissions",
+    "PublicSourceCacheTests.test_complete_response_without_content_length_can_be_cached",
+    "PublicSourceCacheTests.test_concurrent_complete_publication_never_overwrites_existing_bytes",
+    "PublicSourceCacheTests.test_concurrent_complete_publication_never_overwrites_existing_bytes.miss_then_existing",
+    "PublicSourceCacheTests.test_directory_and_ancestor_symlinks_are_not_followed",
+    "PublicSourceCacheTests.test_disabled_cache_preserves_uncached_mutable_url_behavior",
+    "PublicSourceCacheTests.test_empty_target_appearing_at_publication_is_preserved_and_rejected",
+    "PublicSourceCacheTests.test_empty_target_appearing_at_publication_is_preserved_and_rejected.concurrent_empty",
+    "PublicSourceCacheTests.test_failed_atomic_publication_remains_staging_and_is_not_a_hit",
+    "PublicSourceCacheTests.test_incomplete_directory_and_fifo_body_fail_without_blocking",
+    "PublicSourceCacheTests.test_incomplete_responses_exhaust_original_three_attempts_without_entry",
+    "PublicSourceCacheTests.test_invalid_arguments_fail_before_cache_or_network",
+    "PublicSourceCacheTests.test_invalid_or_shorter_declared_length_is_not_cached",
+    "PublicSourceCacheTests.test_missing_renameat2_fails_without_replace_fallback",
+    "PublicSourceCacheTests.test_nonlinux_opt_in_fails_without_fallback",
+    "PublicSourceCacheTests.test_nonprivate_cache_directory_is_rejected",
+    "PublicSourceCacheTests.test_nonprivate_entry_or_body_and_hardlink_fail_closed",
+    "PublicSourceCacheTests.test_other_url_entry_cannot_be_renamed_into_a_valid_hit",
+    "PublicSourceCacheTests.test_oversize_network_response_is_bounded_and_never_cached",
+    "PublicSourceCacheTests.test_redirect_or_partial_status_is_never_read_or_cached",
+    "PublicSourceCacheTests.test_relative_or_dot_cache_directory_is_rejected",
+    "PublicSourceCacheTests.test_revision_repository_and_path_are_distinct_keys",
+    "PublicSourceCacheTests.test_same_length_body_corruption_is_rejected_without_retry",
+    "PublicSourceCacheTests.test_self_consistent_cache_is_not_an_external_source_pin",
+    "PublicSourceCacheTests.test_short_response_retries_then_caches_only_complete_body",
+    "PublicSourceCacheTests.test_truncated_and_wrong_magic_entries_are_not_silent_misses",
+    "quick_retries"
+  ],
+  "public_dependency_pins": {
+    "bytes": 839,
+    "path": "cache-review/dependency-pins.json",
+    "sha256": "ac5f4a0bb45561cc964506b2a74f12e7912830bc5db9c1e602836b7204488976"
+  },
+  "replaced_test": [
+    "PublicSourceCacheTests.test_unpinned_nonpublic_or_ambiguous_urls_fail_before_network"
+  ],
+  "schema": "tb371fc-public-source-cache-compatibility-freeze-v1",
+  "semantics": {
+    "attempts": 3,
+    "cache_integrity_filesystem_or_publication_error_fallback": false,
+    "cache_only_fixed_40hex_raw_github_https": true,
+    "caller_content_identity_checks_unchanged": true,
+    "disabled_behavior_unchanged": true,
+    "ineligible_url_uses_original_uncached_transport": true,
+    "old_bad_cache_and_atomic_noreplace_tests_retained": true,
+    "retry_wait_budget_seconds": 30
+  },
+  "test_result": {
+    "duration_reported_seconds": 12.781,
+    "execution": {
+      "bytes": 681,
+      "path": "cache-review/unit-001/execution.json",
+      "sha256": "4bb29827de1923834a688c87b506399b3778a664099f2f48a40097efafb26128"
+    },
+    "exit_code": 0,
+    "passed": true,
+    "stderr": {
+      "bytes": 9059,
+      "path": "cache-review/unit-001/stderr.log",
+      "sha256": "b7ce960cb537a1169952a8046913654381092d9388b1f417dd749af385e12b17"
+    },
+    "stdout": {
+      "bytes": 1810,
+      "path": "cache-review/unit-001/stdout.log",
+      "sha256": "f733a1c09b41f88dc9b21270df505efe20c4a8778dd5ad51fda6df802757552d"
+    },
+    "tests_run": 49
+  }
+}

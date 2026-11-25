@@ -384,7 +384,7 @@ class PublicSourceCacheTests(unittest.TestCase):
             opened.assert_not_called()
         self.assertEqual(len(list(self.cache.iterdir())), 4)
 
-    def test_unpinned_nonpublic_or_ambiguous_urls_fail_before_network(self):
+    def test_unpinned_nonpublic_or_ambiguous_urls_use_uncached_transport(self):
         bad = [self.URL.replace("https:", "http:"), self.URL.replace("raw.githubusercontent.com", "example.com"),
                self.URL.replace("1" * 40, "main"), self.URL.replace("1" * 40, "1" * 39),
                self.URL + "?token=fixture", self.URL + "#fragment",
@@ -393,8 +393,69 @@ class PublicSourceCacheTests(unittest.TestCase):
                self.URL.replace("source.c", "../main/source.c"), self.URL.replace("source.c", "%2e%2e/source.c"),
                self.URL.replace("source.c", "dir\\source.c"), self.URL + "\n"]
         for url in bad:
-            with self.subTest(url=url):
-                self.assert_bad_without_network(url)
+            with self.subTest(url=url), \
+                    patch.object(source_download, "_cache_directory") as directory, \
+                    patch.object(source_download, "_read_source_network", return_value=b"uncached") as network:
+                with self.assertRaises(ValueError):
+                    source_download._cache_key(url)
+                self.assertEqual(source_download.read_source(url, max_bytes=100), b"uncached")
+                network.assert_called_once_with(url, max_bytes=100, timeout=30)
+                directory.assert_not_called()
+        self.assertFalse(self.cache.exists())
+
+    def test_gcc_tag_url_is_never_cached_and_does_not_change_pinned_entries(self):
+        url = "https://raw.githubusercontent.com/gregkh/linux/v6.12.114/drivers/clk/qcom/gcc-sm8250.c"
+        cached = self.seed()
+        before = (self.entry() / "source").read_bytes()
+        with patch.object(source_download, "_cache_directory") as directory, \
+                patch.object(source_download.urllib.request, "urlopen", side_effect=[
+                    CacheResponse(b"first tag response", url), CacheResponse(b"second tag response", url)]) as opened:
+            self.assertEqual(source_download.read_source(url, max_bytes=512*1024), b"first tag response")
+            self.assertEqual(source_download.read_source(url, max_bytes=512*1024), b"second tag response")
+            self.assertEqual(opened.call_count, 2)
+            directory.assert_not_called()
+        self.assertEqual((self.entry() / "source").read_bytes(), before)
+        self.assertEqual([p.name for p in self.cache.iterdir()], [self.entry().name])
+        with patch.object(source_download.urllib.request, "urlopen") as opened:
+            self.assertEqual(source_download.read_source(self.URL, max_bytes=100), cached)
+            opened.assert_not_called()
+
+    def test_uncacheable_tag_retains_original_transient_retry_policy(self):
+        url = "https://raw.githubusercontent.com/gregkh/linux/v6.12.114/drivers/clk/qcom/gcc-sm8250.c"
+        error = urllib.error.HTTPError(url, 429, "limited", {"Retry-After": "5"}, io.BytesIO(b"limited"))
+        with patch.object(source_download, "_cache_directory") as directory, \
+                patch.object(source_download.urllib.request, "urlopen", side_effect=[
+                    error, CacheResponse(b"complete tag response", url)]) as opened, quick_retries() as sleep:
+            self.assertEqual(source_download.read_source(url, max_bytes=100), b"complete tag response")
+            self.assertEqual(opened.call_count, 2)
+            sleep.assert_called_once_with(5.0)
+            directory.assert_not_called()
+        self.assertFalse(self.cache.exists())
+
+    def test_actual_gcc_verifier_still_rejects_wrong_tag_content_without_retry(self):
+        import verify_gcc_generation as gcc
+
+        output = self.root / "gcc-hash-rejection"
+        calls = []
+        def response(url, timeout):
+            self.assertTrue(url.startswith("https://raw.githubusercontent.com/gregkh/linux/v6.12.114/"))
+            self.assertEqual(timeout, 30)
+            calls.append(url)
+            return CacheResponse(b"wrong complete GCC source bytes\n", url)
+        with patch.object(source_download, "_cache_directory") as directory, \
+                patch.object(source_download.urllib.request, "urlopen", side_effect=response), \
+                patch.object(gcc.subprocess, "run") as generated, quick_retries() as sleep:
+            self.assertEqual(gcc.run(Namespace(out=output)), 1)
+            generated.assert_not_called()
+            sleep.assert_not_called()
+            directory.assert_not_called()
+        report = json.loads((output / "result.json").read_text())
+        self.assertEqual(len(calls), 1)
+        self.assertFalse(report["source_pins_verified"])
+        self.assertEqual(report["checks"], [])
+        self.assertEqual(len(report["inputs"]), 1)
+        self.assertIn("Public source hash differs:", report["error"])
+        self.assertNotIn("public source cache requires", report["error"])
         self.assertFalse(self.cache.exists())
 
     def test_disabled_cache_preserves_uncached_mutable_url_behavior(self):

@@ -260,7 +260,8 @@ def read_source(url, *, max_bytes, timeout=30):
 
 Without TB371FC_PUBLIC_SOURCE_CACHE this is the original uncached transport.
 When explicitly enabled on Linux, the value names a private0700 directory whose parent
-already exists. Only fixed-revision public raw-GitHub URLs are admitted. Cache
+already exists. Only fixed-revision public raw-GitHub URLs enter the cache;
+other URLs use the original uncached transport and caller validation. Cache
 framing detects local truncation/corruption but does not authenticate a source;
 every caller's existing pinned-content validation remains mandatory. A bad
 entry fails closed without network fallback. Oversize or incomplete responses
@@ -274,9 +275,14 @@ Atomic publication requires renameat2(RENAME_NOREPLACE); missing support fails.
     cache = os.environ.get(CACHE_ENV)
     if not cache:
         return _read_source_network(url, max_bytes=max_bytes, timeout=timeout)
+    try:
+        key = _cache_key(url)
+    except ValueError:
+        # Cache eligibility is not a restriction on the existing downloader.
+        # In particular, older generators use tags with complete content pins.
+        return _read_source_network(url, max_bytes=max_bytes, timeout=timeout)
     if sys.platform != "linux":
         raise OSError(errno.ENOSYS, "public source cache is supported only on Linux")
-    key = _cache_key(url)
     directory = _cache_directory(cache)
     try:
         raw = _cache_read(directory, key, max_bytes)

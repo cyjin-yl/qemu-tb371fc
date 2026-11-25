@@ -1,0 +1,11 @@
+--- b5/tb371fc/tests/test_geni_hs_sm8250.py
++++ corrected/tb371fc/tests/test_geni_hs_sm8250.py
+@@ -212,7 +212,7 @@
+     assert first == repeated and after['qom_get'] - before['qom_get'] == 2 * FIRST_GETTERS
+     assert after['memory'] == before['memory'] == 0
+     props = {x['name']:x['type'] for x in r.monitor('qom-list', {'path':DEVICE})}
+-    for field in DYNAMIC_STR: assert props[field] == 'str'
++    for field in DYNAMIC_STR: assert props[field] == 'string'
+     for field in DYNAMIC_UINT + IDENTITY_UINT: assert props[field] == 'uint64'
+     for field in DYNAMIC_BOOL + IDENTITY_BOOL: assert props[field] == 'bool'
+     assert not any(k.startswith('qtest-') for k in props)
