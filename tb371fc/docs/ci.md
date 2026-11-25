@@ -707,7 +707,8 @@ and Git blob identity of two fixed public inputs and byte-compares the generated
 C include and JSON manifest. Its bounded fetch retry applies only to HTTP 429,
 HTTP 5xx and transport timeouts, at most three attempts with 1 s and 2 s delays.
 Source identity failures are final; there is no alternate URL or substituted
-cache. Prior source-generation gates are unchanged.
+cache. Prior source-generation gate contracts are unchanged; the seven
+shared downloader integrations are described below.
 
 These two registrations extend the public plan to 95 component plus 5 Linux
 cases. This SPSS combination still requires its own actual compiled receipt,
@@ -715,3 +716,27 @@ complete artifact review and subsequent original-input diagnostic. The
 [before-SPSS native observation](../evidence/spss-irq-mask-20261124-6a5/native-frontier-before-spss.json)
 comes from the preceding qualified LLCC binary and is not evidence that this
 new model has executed. Android acceptance remains unpassed.
+
+## Public source download retries
+
+The GCC, CAMCC, DISPCC, VIDEOCC, DSI PLL, DP PLL and LLCC source-generation
+gates use the shared downloader for each immutable public input, with at most
+three requests. Only temporary HTTP 408/429/500/502/503/504 and selected transport
+failures are retried. Retry delays share a 30-second allowance per input; a
+server `Retry-After` exceeding the remaining allowance fails without an early
+retry. Certificate failures and permanent HTTP errors fail immediately.
+
+Each retry starts a complete new request, with the existing 512 KiB size bound.
+Source SHA-256, Git blob and exact-size checks retain each verifier's existing
+contract outside the retry loop; identity mismatches are never retried. The
+existing 180-second source-generation process timeout and 60-second generator
+timeout are unchanged. Socket timeouts do not establish a whole-response
+wall-clock deadline.
+
+Host validation runs `test_source_download.py` against a local HTTP server,
+including an eighth-source LLCC rate-limit recovery and identity-rejection
+cases. These admission tests use synthetic source pins and stub generation;
+the normal source-generation gates still verify the actual pinned upstream
+inputs and reproduce the committed tables. The host step also runs
+`test_ci_device_tests.py`, so changes to the acceptance harness are exercised
+before the QEMU build.

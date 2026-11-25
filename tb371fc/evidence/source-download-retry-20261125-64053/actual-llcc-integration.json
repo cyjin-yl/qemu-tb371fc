@@ -1,0 +1,126 @@
+{
+  "schema": "tb371fc-source-download-actual-llcc-integration-v1",
+  "fixture_artifact_id": 14973051830,
+  "fixture_zip_sha256": "40015b5451fcdd45aef215637eb76979638d3d36d5b967a97bc9048107834678",
+  "runtime_base": "7372681f546a7ac1b816377480601ddd8e7c16f5",
+  "complete_inputs": [
+    {
+      "index": 0,
+      "path": "primary-r11/drivers/soc/qcom/llcc-slice.c",
+      "sha256": "5a49480bebfa84ca94240202abc3fc3bc8eaf6379df9f4b71a92640e140eb1c5",
+      "git_blob_sha": "a933f377db535f12f47942eff31fffe214af0912",
+      "bytes": 10965
+    },
+    {
+      "index": 1,
+      "path": "primary-r11/drivers/soc/qcom/llcc-kona.c",
+      "sha256": "140c5774139c0827003754bb083d0b6945fbd9982bc5538105084614eac1b2a9",
+      "git_blob_sha": "a155d6365246ceaf2e8bca5a289ed72772cac74e",
+      "bytes": 3764
+    },
+    {
+      "index": 2,
+      "path": "primary-r11/include/linux/soc/qcom/llcc-qcom.h",
+      "sha256": "1d348978460ba7a32087af7567c80ddeaa98399855c719e7c0c2b1fcc4d7f093",
+      "git_blob_sha": "f0e21085aec911e1f9d854fefd77418666e77d4d",
+      "bytes": 5789
+    },
+    {
+      "index": 3,
+      "path": "primary-r11/drivers/soc/qcom/llcc_perfmon.c",
+      "sha256": "38f1df996a946b0a6ce8f4cd71559367d1f4498d475605bc9089311d63defeeb",
+      "git_blob_sha": "99278c99cc311838d0b612bd5a96e908a5ec03ed",
+      "bytes": 37150
+    },
+    {
+      "index": 4,
+      "path": "primary-r11/drivers/soc/qcom/llcc_perfmon.h",
+      "sha256": "536de10d400093fa406b88f7a3ebfaf30966b43e15f88533be98c85ac5baebfd",
+      "git_blob_sha": "4a3accda43e9a2f681c118f43b502e13a52d2eba",
+      "bytes": 9820
+    },
+    {
+      "index": 5,
+      "path": "primary-r11/drivers/edac/qcom_edac.c",
+      "sha256": "ae3c0da558345d3c471fd35a5ae7f878a84c61d21093056d4ac66359f2486a24",
+      "git_blob_sha": "560c96c1e5b88dc8b9b622ce4d3d590370470d7a",
+      "bytes": 11972
+    },
+    {
+      "index": 6,
+      "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+      "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+      "git_blob_sha": "e9651f09bd579616787894dc8514429063623b2d",
+      "bytes": 132499
+    },
+    {
+      "index": 7,
+      "path": "primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+      "sha256": "8735b5d8bb61d6a3a579e5b088ff2a719132266cef57c91c319ec19e12770499",
+      "git_blob_sha": "630f4eff20bf810e347685066dce74ab92a23b56",
+      "bytes": 176883
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario": "eighth-source-http429",
+      "expectation_passed": true,
+      "verifier_exit": 0,
+      "seconds": 1.102,
+      "requests": {
+        "/input0": 1,
+        "/input1": 1,
+        "/input2": 1,
+        "/input3": 1,
+        "/input4": 1,
+        "/input5": 1,
+        "/input6": 1,
+        "/input7": 2
+      },
+      "source_pins_verified": true,
+      "generated_checks": [
+        {
+          "name": "hw/misc/qcom-sm8250-llcc-data.inc",
+          "passed": true,
+          "generated_bytes": 10514,
+          "committed_bytes": 10514,
+          "generated_sha256": "f3f7979c7973b2fbf9d8d398c064b8a404a290fbdd9d5a141407c0b28f974a46",
+          "committed_sha256": "f3f7979c7973b2fbf9d8d398c064b8a404a290fbdd9d5a141407c0b28f974a46"
+        },
+        {
+          "name": "tb371fc/docs/llcc-sm8250-registers.json",
+          "passed": true,
+          "generated_bytes": 84889,
+          "committed_bytes": 84889,
+          "generated_sha256": "9b9989a04b3719665439dab6287be8ced18511021c58ef5c7011f36a587b4772",
+          "committed_sha256": "9b9989a04b3719665439dab6287be8ced18511021c58ef5c7011f36a587b4772"
+        }
+      ],
+      "generator_stubbed": false,
+      "pins_modified": false,
+      "output": "validation/actual-llcc-eighth-source-http429"
+    },
+    {
+      "scenario": "eighth-source-wrong-hash",
+      "expectation_passed": true,
+      "verifier_exit": 1,
+      "seconds": 0.012,
+      "requests": {
+        "/input0": 1,
+        "/input1": 1,
+        "/input2": 1,
+        "/input3": 1,
+        "/input4": 1,
+        "/input5": 1,
+        "/input6": 1,
+        "/input7": 1
+      },
+      "source_pins_verified": false,
+      "generated_checks": [],
+      "generator_stubbed": false,
+      "pins_modified": false,
+      "output": "validation/actual-llcc-eighth-source-wrong-hash"
+    }
+  ],
+  "passed": true
+}

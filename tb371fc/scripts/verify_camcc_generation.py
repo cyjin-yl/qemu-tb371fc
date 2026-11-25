@@ -8,7 +8,7 @@ from pathlib import Path
 import subprocess
 import sys
 import traceback
-import urllib.request
+from source_download import read_source
 
 import generate_camcc_sm8250 as generator
 
@@ -31,8 +31,7 @@ def run(args):
                    "android_kernel_oneplus_sm8250/" + generator.REVISION +
                    "/" + relative)
             if args.source_root is None:
-                with urllib.request.urlopen(url, timeout=30) as response:
-                    content = response.read(512 * 1024 + 1)
+                content = read_source(url, max_bytes=512 * 1024)
             else:
                 content = (args.source_root / relative).read_bytes()
             if len(content) > 512 * 1024:

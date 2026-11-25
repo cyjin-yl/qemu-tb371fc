@@ -8,7 +8,7 @@ from pathlib import Path
 import subprocess
 import sys
 import traceback
-import urllib.request
+from source_download import read_source
 
 import generate_gcc_sm8250 as generator
 
@@ -46,8 +46,7 @@ def run(args):
             "android_kernel_oneplus_sm8250/" + generator.VENDOR_REVISION +
             "/" + generator.VENDOR_BRANCH_PATH, branch, generator.VENDOR_BRANCH_SHA256))
         for url, path, expected in public:
-            with urllib.request.urlopen(url, timeout=30) as response:
-                content = response.read(512 * 1024 + 1)
+            content = read_source(url, max_bytes=512 * 1024)
             if len(content) > 512 * 1024:
                 raise ValueError("Public GCC input exceeds its size bound")
             actual = digest(content)
