@@ -1,0 +1,283 @@
+{
+  "schema": "tb371fc-rpm-stats-offset-source-validation-v1",
+  "passed": true,
+  "source_inputs": 4,
+  "outputs": 2,
+  "source_tamper_checks": [
+    {
+      "mutation": {
+        "path": "primary-r11/drivers/soc/qcom/rpm_stats.c",
+        "offset": 5664,
+        "xor": 1,
+        "bytes": 11328,
+        "sha256": "d1804a9108690fbb3b83127a47644c473ff6bb6a7d1506a1f76faf4fc9fb32a5"
+      },
+      "generator_error": "Complete source identity mismatch: primary-r11/drivers/soc/qcom/rpm_stats.c",
+      "verifier_exit": 1,
+      "generator_not_run": true,
+      "verifier_result_sha256": "abb946eb9faab035fb6e2726e1d0649f4c10020855ee4fcc8147d7d5b5eb9bed",
+      "passed": true
+    },
+    {
+      "mutation": {
+        "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi",
+        "offset": 1408,
+        "xor": 1,
+        "bytes": 2817,
+        "sha256": "430a236321452d5dbf176e660bad5ae7584cfb682dd91d65ce404051be8dd7f8"
+      },
+      "generator_error": "Complete source identity mismatch: primary-r11/arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi",
+      "verifier_exit": 1,
+      "generator_not_run": true,
+      "verifier_result_sha256": "3dbd6c173cba561a0f57107c2d1ade57c8720e118e1fcab030349c431b877dd0",
+      "passed": true
+    },
+    {
+      "mutation": {
+        "path": "primary-upstream/drivers/soc/qcom/qcom_stats.c",
+        "offset": 3820,
+        "xor": 1,
+        "bytes": 7641,
+        "sha256": "ef196a4f71215740a0599473acfb313b187460e57b8e65d35704d3128a57e389"
+      },
+      "generator_error": "Complete source identity mismatch: primary-upstream/drivers/soc/qcom/qcom_stats.c",
+      "verifier_exit": 1,
+      "generator_not_run": true,
+      "verifier_result_sha256": "1febec87b37bc698972b68487aa5ef05015304906adbbc14554152e2a8e921f6",
+      "passed": true
+    },
+    {
+      "mutation": {
+        "path": "primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+        "offset": 88441,
+        "xor": 1,
+        "bytes": 176883,
+        "sha256": "74f403b1fcc66e1b62c230400d0b598a7767813c03ffcbf84cc0f69e3d848033"
+      },
+      "generator_error": "Complete source identity mismatch: primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+      "verifier_exit": 1,
+      "generator_not_run": true,
+      "verifier_result_sha256": "cbac003a4eb6fd8d2acf66f4074c7e60b94242ddb12636767a5b9811c943c6d8",
+      "passed": true
+    }
+  ],
+  "parser_negative_checks": [
+    {
+      "name": "vendor_write_instead_of_offset_read",
+      "error": "Vendor offset branch is not the bounded map/read/unmap sequence",
+      "passed": true
+    },
+    {
+      "name": "vendor_mapping_is_eight_bytes",
+      "error": "Vendor offset branch is not the bounded map/read/unmap sequence",
+      "passed": true
+    },
+    {
+      "name": "vendor_address_formula_is_or",
+      "error": "Vendor probe address contract changed: pdata->phys_addr_base=res->start+offset_addr;",
+      "passed": true
+    },
+    {
+      "name": "vendor_duplicate_offset_read",
+      "error": "Vendor offset branch is not the bounded map/read/unmap sequence",
+      "passed": true
+    },
+    {
+      "name": "vendor_aperture_is_eight_bytes",
+      "error": "Unsupported four-byte offset aperture",
+      "passed": true
+    },
+    {
+      "name": "vendor_resource_names_reordered",
+      "error": "Unexpected vendor resource geometry",
+      "passed": true
+    },
+    {
+      "name": "vendor_record_count_differs",
+      "error": "This profile requires three SM8250 records",
+      "passed": true
+    },
+    {
+      "name": "vendor_compatible_differs",
+      "error": "Unexpected vendor RPM statistics compatible",
+      "passed": true
+    },
+    {
+      "name": "upstream_compatible_differs",
+      "error": "Unsupported upstream statistics compatible",
+      "passed": true
+    },
+    {
+      "name": "upstream_parent_address_cells_changed",
+      "error": "Upstream statistics parent cell geometry changed",
+      "passed": true
+    },
+    {
+      "name": "upstream_reg_cell_geometry_changed",
+      "error": "Upstream statistics resource must have two address and two size cells",
+      "passed": true
+    },
+    {
+      "name": "upstream_match_points_to_other_config",
+      "error": "RPMh compatible points at another profile",
+      "passed": true
+    },
+    {
+      "name": "upstream_dynamic_offset_enabled",
+      "error": "RPMh fixed layout/profile contract changed",
+      "passed": true
+    },
+    {
+      "name": "upstream_appended_records_enabled",
+      "error": "RPMh fixed layout/profile contract changed",
+      "passed": true
+    },
+    {
+      "name": "upstream_duplicate_layout_field",
+      "error": "Duplicate configuration field: stats_offset",
+      "passed": true
+    },
+    {
+      "name": "upstream_record_width_changed",
+      "error": "Unsupported sleep statistics record layout",
+      "passed": true
+    },
+    {
+      "name": "upstream_record_stride_expression_changed",
+      "error": "Upstream fixed layout use changed: offset+=sizeof(structsleep_stats);",
+      "passed": true
+    },
+    {
+      "name": "upstream_resource_macro_not_literal",
+      "error": "Only unsigned integer literals are supported",
+      "passed": true
+    },
+    {
+      "name": "upstream_cell_exceeds_uint32",
+      "error": "Integer literal exceeds uint32",
+      "passed": true
+    },
+    {
+      "name": "upstream_unknown_config_field",
+      "error": "Unexpected RPMh configuration fields",
+      "passed": true
+    },
+    {
+      "name": "upstream_records_exceed_region",
+      "error": "Reference records exceed or overlap the source pointer layout",
+      "passed": true
+    },
+    {
+      "name": "upstream_records_are_unaligned",
+      "error": "Reference records exceed or overlap the source pointer layout",
+      "passed": true
+    }
+  ],
+  "committed_output_tamper_checks": [
+    {
+      "path": "hw/misc/qcom-sm8250-rpm-stats-offset-data.inc",
+      "xor": 1,
+      "generator_exit": 0,
+      "verifier_exit": 1,
+      "only_mutated_output_failed": true,
+      "passed": true,
+      "result_sha256": "fb1ea4e4febffc9b7ed64e79e6de4a7f96fc9057a1c71f72ddfc04f0abd53043"
+    },
+    {
+      "path": "tb371fc/docs/rpm-stats-offset-sm8250-registers.json",
+      "xor": 1,
+      "generator_exit": 0,
+      "verifier_exit": 1,
+      "only_mutated_output_failed": true,
+      "passed": true,
+      "result_sha256": "bd0ef9073f3f1ff9e6209825a58b3a31e05c998d7225c215be6b54f95fdcbc55"
+    }
+  ],
+  "network_used": false,
+  "firmware_executed": false,
+  "qemu_executed": false,
+  "device_RPC_used": false,
+  "SSH_used": false,
+  "complete_bad_response": {
+    "passed": true,
+    "transport_calls": 1,
+    "identity_mismatch_final": true,
+    "generator_not_run": true,
+    "result_sha256": "6413c19fbad68fde002795f67e7bdc15bea44adf8b4908a377b1343f3b9e79c9"
+  },
+  "counts": {
+    "whole_source_one_bit_rejections": 4,
+    "parser_negative_rejections": 22,
+    "complete_bad_response_rejections_without_retry": 1,
+    "committed_output_one_bit_rejections": 2
+  },
+  "input_manifest": [
+    {
+      "path": "primary-r11/drivers/soc/qcom/rpm_stats.c",
+      "source_path": "drivers/soc/qcom/rpm_stats.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 11328,
+      "git_blob_sha": "3c493aed9975865203e5e3e2b2cbd95b8357bb47",
+      "sha256": "cb733f4433d6432187dd7faa31d8eff81e1b115ee20691eb53a3b1ca0eba0750",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/soc/qcom/rpm_stats.c"
+    },
+    {
+      "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi",
+      "source_path": "arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 2817,
+      "git_blob_sha": "a5eba34468ee25209d8f07baf5efe9c53462ec2a",
+      "sha256": "c1f3a89f461cf1381335ffb2e3066026c28a27642389f9f92fccf540646e5231",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi"
+    },
+    {
+      "path": "primary-upstream/drivers/soc/qcom/qcom_stats.c",
+      "source_path": "drivers/soc/qcom/qcom_stats.c",
+      "repository": "torvalds/linux",
+      "revision": "adc218676eef25575469234709c2d87185ca223a",
+      "bytes": 7641,
+      "git_blob_sha": "c429d5154aaec2c3115ccefd1c23d712bf6817f7",
+      "sha256": "b62608854c3dbdef9b43d69a0e5b51b577624c583a80da6eeb5cd176752dd6c5",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/drivers/soc/qcom/qcom_stats.c"
+    },
+    {
+      "path": "primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+      "source_path": "arch/arm64/boot/dts/qcom/sm8250.dtsi",
+      "repository": "torvalds/linux",
+      "revision": "adc218676eef25575469234709c2d87185ca223a",
+      "bytes": 176883,
+      "git_blob_sha": "630f4eff20bf810e347685066dce74ab92a23b56",
+      "sha256": "8735b5d8bb61d6a3a579e5b088ff2a719132266cef57c91c319ec19e12770499",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/arch/arm64/boot/dts/qcom/sm8250.dtsi"
+    }
+  ],
+  "files": [
+    {
+      "path": "tb371fc/scripts/gen_rpm_stats_offset.py",
+      "bytes": 19192,
+      "sha256": "47f77997d2708da12235cde157b25228ef75b93bb689a92f1338769dcc99537c"
+    },
+    {
+      "path": "tb371fc/scripts/verify_rpm_stats_offset_generation.py",
+      "bytes": 4965,
+      "sha256": "2673e6cc5457db0a1e281013c14d30941e7251bf7f40f2a4bf2265f40831630c"
+    },
+    {
+      "path": "tb371fc/scripts/source_download.py",
+      "bytes": 4642,
+      "sha256": "4fde0300dc4c8777531402dc700fbed6364f16b0550fc852c3031fe641fe7dd7"
+    },
+    {
+      "path": "hw/misc/qcom-sm8250-rpm-stats-offset-data.inc",
+      "bytes": 346,
+      "sha256": "dc38191138f43d396b94971b15b9b6617924131669b602cb1bccf185f75d22e5"
+    },
+    {
+      "path": "tb371fc/docs/rpm-stats-offset-sm8250-registers.json",
+      "bytes": 4870,
+      "sha256": "df0c4dad7572a918f579e98174663496893039d27315db6427726de9641a6adb"
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "actual_probe_scope": "Captured probe reads only the offset word, unmaps it, adds the declared base and stores the computed pointer; it does not dereference the statistics payload during this probe. Advancing past it proves execution progress only.",
+  "address_qualification": [
+    "The firmware-local data pointer0x000e1cc4 is associated with the matching initialized ELF data at0x0b0e1cc4 using the image local/ELF-load address relation; firmware was not executed to observe that mapping.",
+    "No generic AOP-view0x01300000 to APSS0x0c300000 physical alias is claimed as independently proven.",
+    "The exact APSS offset word0x0c3f0004 is instead independently fixed by the captured DT and original kernel probe. Pinned public SM8250 consumer layout independently derives the same relative offset0x000f0048.",
+    "Original firmware static producer arithmetic corroborates the public reference layout. It is not a live capture of the word, a hardware reset value, or evidence that AOP initialization executed in QEMU."
+  ],
+  "bounded_code_units": {
+    "one_record_zeroer": {
+      "bytes": 14,
+      "elf_address": "0x8081a1a8",
+      "file_offset": 193620,
+      "sha256": "c9e3964b1bb616a5ea4bf8e3fe8d8d682f9114c0417af9b97e09d53b22737e7b"
+    },
+    "pointer_table_writer": {
+      "bytes": 36,
+      "elf_address": "0x8081a90c",
+      "file_offset": 195512,
+      "sha256": "67bbbea5f77b78ba0c585d0526d6750dcd9f2e8db30d7ee232aa99db54199c7a"
+    },
+    "records_callsite": {
+      "bytes": 4,
+      "elf_address": "0x808180b6",
+      "file_offset": 185186,
+      "sha256": "c42f42ca0db980af32b1ec232ae753db3971fcbad4356d71f7fff2c0c7ea30cd"
+    },
+    "statistics_payload_getter": {
+      "bytes": 8,
+      "elf_address": "0x8081a96c",
+      "file_offset": 195608,
+      "sha256": "caa9fb546bd26deb79fe08cdb51615afaf486436c7263272234208a9dfb8aeea"
+    },
+    "three_record_initializer": {
+      "bytes": 44,
+      "elf_address": "0x8081a168",
+      "file_offset": 193556,
+      "sha256": "779ce9363eb9ede737ecee0ee3ddf12da94a6c898c9e0025b4840193ed663a6d"
+    },
+    "writer_callsite": {
+      "bytes": 4,
+      "elf_address": "0x8081806e",
+      "file_offset": 185114,
+      "sha256": "c42f42ca0db980af32b1ec232ae753db3971fcbad4356d71f7fff2c0c7ea30cd"
+    }
+  },
+  "channel_table": {
+    "address_stride": "0x10000",
+    "bytes": 128,
+    "each_window_bytes": "0x400",
+    "elf_address": "0xb0e1cc4",
+    "file_offset": 105428,
+    "firmware_local_pointer_literal": "0x000e1cc4",
+    "first_address": "0x01300000",
+    "record_bytes": 8,
+    "selected_entry_address": "0x13f0000",
+    "selected_entry_file_offset": 105548,
+    "selected_entry_index": 15,
+    "selected_field_offset": "0x78",
+    "sha256": "e2404d1dc9306617efe07ccecd3be339a0bedaf88c88dbf099e9f9f954ac2fda"
+  },
+  "decoder": "LLVM 19.1 C API, thumbv7m-unknown-none; code and literal pools bounded separately",
+  "derived_pointer": {
+    "addend": "0xfed00048",
+    "destination_in_AOP_address_view": "0x013f0004",
+    "equivalent_expression": "0x013f0000 + 0x48 - 0x01300000",
+    "expression": "(0x013f0000 + 0xfed00048) & 0xffffffff",
+    "literal_file_offset": 195556,
+    "result": "0xf0048",
+    "write_width_bytes": 4,
+    "writer_store_elf_address": "0x8081a91a",
+    "writer_store_file_offset": 195526
+  },
+  "firmware": {
+    "bytes": 524288,
+    "classification": "private current active-partition backup; not certified pristine factory image",
+    "elf_class": 32,
+    "elf_machine": "EM_ARM",
+    "entry": "0xb000009",
+    "firmware_blob_published": false,
+    "firmware_executed": false,
+    "sha256": "3dbb0746d21100d124d76ee19b096d122d58c4aa534dec5828005835535b6671"
+  },
+  "firmware_executed": false,
+  "full_private_review": {
+    "bytes": 14620,
+    "public_download_claimed": false,
+    "sha256": "49e60b4d3d04377646a9dbc6b2b3b3f5f5c83d4cd42f62e040724d9cc44dae34"
+  },
+  "independent_payload_relation": {
+    "counter_runtime_values_claimed": false,
+    "getter_returns": "selected channel address + 0x48",
+    "initializer_calls_getter": true,
+    "initializer_type_words": [
+      "aosd",
+      "cxsd",
+      "ddr "
+    ],
+    "record_count": 3,
+    "record_stride": 32,
+    "zero_initializer_does_not_establish_current_or_reset_statistics": true
+  },
+  "minimal_model_feasible": true,
+  "physical_word_live_read": false,
+  "private_firmware_bytes_or_disassembly_published": false,
+  "public_CI_source_policy": "Generate constants from the four pinned public Linux DT/consumer sources. This private firmware corroboration must not become a required private artifact download or be represented as a captured running-device value.",
+  "recommended_contract": {
+    "adjacent_pointer_fields": "remain unknown and unmapped, including0x0c3f0000,0x0c3f0008 and0x0c3f001c",
+    "default_enabled": false,
+    "disabled_or_other_reads": "reject with MEMTX_ERROR; unknown is not zero",
+    "legal_read": "aligned little-endian32-bit access at the exact word when explicitly enabled",
+    "mapped_bytes": 4,
+    "migration": "strict profile/identity/geometry/value validation; reject enabled/disabled or fixed-layout mismatches before guest MMIO",
+    "no_signals_or_timing": "no IRQ, timer, clock, power, READY, AOP execution or fabricated telemetry",
+    "physical_word": "0x0c3f0004",
+    "reference_profile_only": true,
+    "reference_value": "0x000f0048",
+    "statistics_payload": "remain unknown and unmapped, including0x0c3f0048..0x0c3f00a7",
+    "writes": "reject all APSS writes in this source-bounded consumer view; do not claim immutable physical SRAM"
+  },
+  "review_passed": true,
+  "reviewer_source_sha256": "0f9a37bf2b4393b6cd86f9e3d434290faf43cc710136e8d764520971be1c9f1b",
+  "schema": "tb371fc-rpmstats-original-aop-static-layout-public-v1",
+  "static_call_evidence": {
+    "full_reset_to_runtime_reachability_proven": false,
+    "records_indirect_call": "0x808180b8",
+    "records_thumb_pointer": "0x8081a169",
+    "sequencing_function": "0x80818054",
+    "sequencing_function_thumb_reference_file_offset": "0x3ea0",
+    "writer_indirect_call": "0x80818070",
+    "writer_thumb_pointer": "0x8081a90d"
+  }
+}

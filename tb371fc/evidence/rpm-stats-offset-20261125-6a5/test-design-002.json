@@ -1,0 +1,192 @@
+{
+  "schema": "tb371fc-rpm-stats-offset-test-design-v2",
+  "source_only": true,
+  "compiled_or_QEMU_runtime_pass_claimed": false,
+  "device_rpc_or_ssh_used": false,
+  "scope": "Immutable configured offset metadata, actual MMIO access shape, mapped holes and full migration validation. No mutable firmware or statistics data.",
+  "test_groups": [
+    "cold_identity_and_pure_getters",
+    "enabled_reads_return_only_layout_offset",
+    "all_aligned_writes_are_readonly",
+    "narrow_unaligned_and_u64_reads_are_rejected",
+    "invalid_write_shapes_and_buffered_write_never_change_layout",
+    "reset_retains_enabled_layout_without_firmware_data",
+    "exact_single_leaf_and_unmodeled_neighbors",
+    "runtime_observers_are_readonly_and_time_has_no_effect",
+    "default_off_keeps_unknown_offset_and_rejects_all_access",
+    "paused_tcg_exposes_no_mutating_fixture_or_guest_execution",
+    "migration_enabled",
+    "migration_disabled",
+    "profile_on_to_off_rejected",
+    "profile_off_to_on_rejected",
+    "single_bit_profile_rejected",
+    "single_bit_identity_rejected",
+    "single_bit_physical_base_rejected",
+    "single_bit_window_bytes_rejected",
+    "single_bit_enabled_offset_rejected",
+    "single_bit_disabled_offset_rejected"
+  ],
+  "group_count": 20,
+  "qom_getter_count": 17,
+  "wire_payload_bytes": 24,
+  "complete_migrations": [
+    "enabled_to_enabled",
+    "disabled_to_disabled"
+  ],
+  "profile_rejections": [
+    "on_to_off",
+    "off_to_on"
+  ],
+  "original_streams": [
+    "rpm-stats-offset-enabled.migration",
+    "rpm-stats-offset-disabled.migration"
+  ],
+  "corrupt_streams": [
+    "rpm-stats-offset-corrupt-profile.migration",
+    "rpm-stats-offset-corrupt-identity.migration",
+    "rpm-stats-offset-corrupt-physical_base.migration",
+    "rpm-stats-offset-corrupt-window_bytes.migration",
+    "rpm-stats-offset-corrupt-enabled_offset.migration",
+    "rpm-stats-offset-corrupt-disabled_offset.migration"
+  ],
+  "one_bit_mutations": [
+    {
+      "name": "profile",
+      "source": "enabled",
+      "field_offset": 0,
+      "field_bytes": 4,
+      "old_value": 1,
+      "xor": 2,
+      "changed_payload_byte": 3,
+      "changed_bits": 1,
+      "target_reference": true,
+      "expected_diagnostic": "migrated profile mismatch"
+    },
+    {
+      "name": "identity",
+      "source": "enabled",
+      "field_offset": 4,
+      "field_bytes": 4,
+      "old_value": 1381191473,
+      "xor": 1,
+      "changed_payload_byte": 7,
+      "changed_bits": 1,
+      "target_reference": true,
+      "expected_diagnostic": "migrated identity mismatch"
+    },
+    {
+      "name": "physical_base",
+      "source": "enabled",
+      "field_offset": 8,
+      "field_bytes": 8,
+      "old_value": 205455364,
+      "xor": 4,
+      "changed_payload_byte": 15,
+      "changed_bits": 1,
+      "target_reference": true,
+      "expected_diagnostic": "migrated geometry mismatch"
+    },
+    {
+      "name": "window_bytes",
+      "source": "enabled",
+      "field_offset": 16,
+      "field_bytes": 4,
+      "old_value": 4,
+      "xor": 1,
+      "changed_payload_byte": 19,
+      "changed_bits": 1,
+      "target_reference": true,
+      "expected_diagnostic": "migrated geometry mismatch"
+    },
+    {
+      "name": "enabled_offset",
+      "source": "enabled",
+      "field_offset": 20,
+      "field_bytes": 4,
+      "old_value": 983112,
+      "xor": 1,
+      "changed_payload_byte": 23,
+      "changed_bits": 1,
+      "target_reference": true,
+      "expected_diagnostic": "migrated offset mismatch"
+    },
+    {
+      "name": "disabled_offset",
+      "source": "disabled",
+      "field_offset": 20,
+      "field_bytes": 4,
+      "old_value": 0,
+      "xor": 1,
+      "changed_payload_byte": 23,
+      "changed_bits": 1,
+      "target_reference": false,
+      "expected_diagnostic": "migrated offset mismatch"
+    }
+  ],
+  "first_observation": {
+    "snapshot_file": "destination-before-first-device-mmio.json",
+    "prewarm_file": "destination-before-incoming.json",
+    "qom_get_count": 17,
+    "repeated_qom_get_count": 17,
+    "prewarm_device_mmio_count": 0,
+    "prewarm_ram_command_count": 2,
+    "prewarm_device_state_mutable": false,
+    "prewarm_device_state_dirtied": false,
+    "prewarm_ram_witness_dirtied": true,
+    "device_mmio_delta": 0,
+    "all_memory_command_delta_before_observations": 0,
+    "cont_delta": 0,
+    "ram_witness_loaded_before_cont": true,
+    "shared_log_timestamp_claimed": false
+  },
+  "destination_prewarm": "Write and read back only an inverted RAM witness; device snapshot necessarily equals source because configuration is immutable. No device dirty-state claim.",
+  "transport_boundary": "QTest OK is transport-only. Legal read checks exactu32 or actual4byte little-endian bytes and absence of callback/core rejection. Rejected delivered callback requires exactly one specific device log and unchanged QOM. Generic Invalid lines are not emitted merely for MEMTX_ERROR. Neighbor holes require actual generic Invalid read/write entries.",
+  "dispatch_boundary": "valid/impl max8 and unalignedtrue deliver typed8 and unaligned4 as one callback even at4byte leaf. Raw5byte read yields the exact valid4byteprefix then rejects the unmapped5thbyte; raw5bytewrite rejects both readonly4bytecallback and unmapped5thbyte. Callback MEMTX_ERROR has onlyspecificdevice log; onlyunmappedbyte adds genericInvalid. No failedsuffixvalue, wholebuffersuccess, mutableprefix or atomicity claim.",
+  "reviewed_local_dispatch_source_pins": [
+    {
+      "path": "system/memory.c",
+      "bytes": 118660,
+      "sha256": "09a3c9c186629f082f63b50b3ee7c54366c37a62584f6d9f897980cd276aca13"
+    },
+    {
+      "path": "system/physmem.c",
+      "bytes": 140872,
+      "sha256": "3210a543353b435a146f7ae4a33608ea849aad038cd9e889ddb3a30c104c063f"
+    },
+    {
+      "path": "system/qtest.c",
+      "bytes": 30014,
+      "sha256": "b9278555cbea97cfb0e4a13cf5a65ddf1fe9d9df1e1ff939cb7424ff41adc5f6"
+    },
+    {
+      "path": "tb371fc/tests/test_camera_gdsc.py",
+      "bytes": 74782,
+      "sha256": "e187b3de97b5ae2d53376bd41d1f82099053c69bce9034af572830f8e1c1e619"
+    }
+  ],
+  "test_sha256": "8e878e30ad978d7affb389573e4df4cc3bb3009843ac74b5d363ebd723eee39f",
+  "contract_sha256": "2d137f7cd52b52c281414fd2508a04fde7c5ae567a123f6c3a2c7a31128e032a",
+  "independent_source_review_pending": true,
+  "formal_compiled_CI_pending": true,
+  "preceding_design_sha256": "3c739fe8a2a101dcfc16dc8ff0d2829eac0c930cc60e70c35b84f6971f7f40a6",
+  "independent_review_requested_additions": {
+    "existing_group": "enabled_reads_return_only_layout_offset",
+    "raw_five_byte_read": {
+      "exact_valid_prefix_hex": "48000f00",
+      "returned_buffer_bytes": 5,
+      "failed_suffix_numeric_value_interpreted": false,
+      "expected_generic_rejection": {
+        "access": "read",
+        "address": "0x0c3f0008",
+        "bytes": 1,
+        "region": "(null)"
+      },
+      "device_rejection_absent": true,
+      "state_unchanged": true,
+      "whole_buffer_succeeded": false,
+      "whole_buffer_atomicity_claimed": false
+    },
+    "extra_hole": "0x0c3f00a4",
+    "group_count_unchanged": 20
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "tb371fc-rpm-stats-offset-registers-v1",
+  "source_pins": [
+    {
+      "path": "primary-r11/drivers/soc/qcom/rpm_stats.c",
+      "source_path": "drivers/soc/qcom/rpm_stats.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 11328,
+      "git_blob_sha": "3c493aed9975865203e5e3e2b2cbd95b8357bb47",
+      "sha256": "cb733f4433d6432187dd7faa31d8eff81e1b115ee20691eb53a3b1ca0eba0750",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/soc/qcom/rpm_stats.c"
+    },
+    {
+      "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi",
+      "source_path": "arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 2817,
+      "git_blob_sha": "a5eba34468ee25209d8f07baf5efe9c53462ec2a",
+      "sha256": "c1f3a89f461cf1381335ffb2e3066026c28a27642389f9f92fccf540646e5231",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi"
+    },
+    {
+      "path": "primary-upstream/drivers/soc/qcom/qcom_stats.c",
+      "source_path": "drivers/soc/qcom/qcom_stats.c",
+      "repository": "torvalds/linux",
+      "revision": "adc218676eef25575469234709c2d87185ca223a",
+      "bytes": 7641,
+      "git_blob_sha": "c429d5154aaec2c3115ccefd1c23d712bf6817f7",
+      "sha256": "b62608854c3dbdef9b43d69a0e5b51b577624c583a80da6eeb5cd176752dd6c5",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/drivers/soc/qcom/qcom_stats.c"
+    },
+    {
+      "path": "primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+      "source_path": "arch/arm64/boot/dts/qcom/sm8250.dtsi",
+      "repository": "torvalds/linux",
+      "revision": "adc218676eef25575469234709c2d87185ca223a",
+      "bytes": 176883,
+      "git_blob_sha": "630f4eff20bf810e347685066dce74ab92a23b56",
+      "sha256": "8735b5d8bb61d6a3a579e5b088ff2a719132266cef57c91c319ec19e12770499",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/arch/arm64/boot/dts/qcom/sm8250.dtsi"
+    }
+  ],
+  "source_input_count": 4,
+  "vendor_repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+  "vendor_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+  "upstream_repository": "torvalds/linux",
+  "upstream_revision": "adc218676eef25575469234709c2d87185ca223a",
+  "register_count": 1,
+  "window_count": 1,
+  "physical_base": 205455364,
+  "mapped_bytes": 4,
+  "offset_value": 983112,
+  "vendor_consumer": {
+    "function": "msm_rpmstats_probe",
+    "read_function": "readl_relaxed",
+    "mapping_function": "ioremap_nocache",
+    "mapping_size_token": "SZ_4",
+    "direct_mmio_reads": 1,
+    "direct_mmio_writes": 0,
+    "payload_read_during_probe": false,
+    "address_formula": "phys_addr_base resource start + uint32 offset word"
+  },
+  "vendor_resources": [
+    {
+      "name": "phys_addr_base",
+      "base": 204472320,
+      "bytes": 4096
+    },
+    {
+      "name": "offset_addr",
+      "base": 205455364,
+      "bytes": 4
+    }
+  ],
+  "upstream_layout": {
+    "node": "sram@c3f0000",
+    "compatible": "qcom,rpmh-stats",
+    "config_name": "rpmh_data",
+    "config": {
+      "stats_offset": 72,
+      "num_records": 3,
+      "appended_stats_avail": false,
+      "dynamic_offset": false,
+      "subsystem_stats_in_smem": true
+    },
+    "region_base": 205455360,
+    "region_bytes": 1024,
+    "stats_offset": 72,
+    "num_records": 3,
+    "record_bytes": 32,
+    "payload_base": 205455432,
+    "payload_bytes": 96,
+    "payload_mapped_by_this_device": false
+  },
+  "derivation": {
+    "expression": "upstream region base + matching fixed stats offset - vendor base",
+    "hex_expression": "0x0c3f0000 + 0x48 - 0x0c300000 = 0x000f0048",
+    "little_endian_bytes": "48000f00",
+    "classification": "explicit public SM8250 reference ABI layout",
+    "captured_runtime_word_claimed": false
+  },
+  "reference_scope": {
+    "default_enabled": false,
+    "enabled_aligned_read32_supported": true,
+    "writes_supported": false,
+    "disabled_reads_supported": false,
+    "statistics_payload_implemented": false,
+    "statistics_counters_implemented": false,
+    "statistics_names_implemented": false,
+    "firmware_ready_implemented": false,
+    "aop_execution_implemented": false,
+    "irq_output_implemented": false,
+    "clock_implemented": false,
+    "timer_implemented": false,
+    "ddr_statistics_pointer_implemented": false,
+    "mailbox_aperture_modified": false,
+    "native_reset_value_known": false,
+    "whole_production_kernel_source_identity_claimed": false
+  }
+}

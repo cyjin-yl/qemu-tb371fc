@@ -707,19 +707,23 @@ and Git blob identity of two fixed public inputs and byte-compares the generated
 C include and JSON manifest. Its bounded fetch retry applies only to HTTP 429,
 HTTP 5xx and transport timeouts, at most three attempts with 1 s and 2 s delays.
 Source identity failures are final; there is no alternate URL or substituted
-cache. Prior source-generation gate contracts are unchanged; the seven
+cache. Prior source-generation gate contracts are unchanged; the shared
 shared downloader integrations are described below.
 
-These two registrations extend the public plan to 95 component plus 5 Linux
-cases. This SPSS combination still requires its own actual compiled receipt,
-complete artifact review and subsequent original-input diagnostic. The
+These two registrations extended the public plan to 95 component plus 5 Linux
+cases. Exact source `54ec744` passed its push and PR board/A77 jobs, all six
+actual-artifact audits and a guarded original-input diagnostic. The
+[immutable CI and native evidence](https://github.com/cyjin-yl/qemu-tb371fc/tree/310fa06c7031bdbda063b3fe4e4f8689e37dde98/tb371fc/evidence/spss-54ec744-ci-20261125-6a5)
+records preserved inputs, absence of the prior SPSS invalid write, and the new
+RPM statistics read abort at `0x0c3f0004`. It does not establish an explicit
+SPSS probe-completion message or Android boot. The
 [before-SPSS native observation](../evidence/spss-irq-mask-20261124-6a5/native-frontier-before-spss.json)
 comes from the preceding qualified LLCC binary and is not evidence that this
-new model has executed. Android acceptance remains unpassed.
+SPSS model had executed at that earlier point. Android acceptance remains unpassed.
 
 ## Public source download retries
 
-The GCC, CAMCC, DISPCC, VIDEOCC, DSI PLL, DP PLL and LLCC source-generation
+The GCC, CAMCC, DISPCC, VIDEOCC, DSI PLL, DP PLL, LLCC and RPM statistics offset source-generation
 gates use the shared downloader for each immutable public input, with at most
 three requests. Only temporary HTTP 408/429/500/502/503/504 and selected transport
 failures are retried. Retry delays share a 30-second allowance per input; a
@@ -740,3 +744,36 @@ the normal source-generation gates still verify the actual pinned upstream
 inputs and reproduce the committed tables. The host step also runs
 `test_ci_device_tests.py`, so changes to the acceptance harness are exercised
 before the QEMU build.
+
+## RPM statistics offset reference
+
+The `rpm-stats-offset-source-generation` gate verifies all four complete,
+pinned public sources before parsing. Vendor consumer and resource geometry
+are checked against the compatible-specific upstream SM8250 stats node and
+its driver data. The relative word is calculated as
+`0x0c3f0000 + 0x48 - 0x0c300000 = 0x000f0048`; both generated outputs must match
+committed bytes. Shared bounded source-download retries preserve whole-file
+size, SHA-256 and Git blob checks. Private original firmware is not a CI input.
+
+The `rpm-stats-offset-sm8250-reference` compiled gate requires 20 unique groups,
+two completed migrations, both directional profile rejections and six
+single-bit corrupted-stream rejections. It retains two original and six
+mutated streams, checking every byte of the 24-byte `RSO1` / version-1 payload.
+The fields are profile, identity, physical base, window size and offset word.
+All writes and invalid delivered reads fail; the enabled legal read is stable
+across reset and migration. The disabled profile returns errors and exposes
+an explicitly unknown placeholder through QOM.
+
+All 17 first-target observations are pure QOM getters before device MMIO or
+CPU continuation. The destination RAM witness is deliberately different before
+incoming and must restore from the source. The device itself has immutable
+configured state: neither the test nor its receipt claims to dirty nonexistent
+mutable firmware data. Adjacent offset words and the stats payload remain
+unmapped. No READY, IRQ, clock, timer, firmware execution or successful Android
+outcome is inferred from this reference interface.
+
+These additions extend the plan to 97 component plus five Linux gates. A
+normalized fingerprint separately preserves every field and the relative order
+of the preceding 100 gate contracts; the earlier 98-case preservation check
+also remains enforced. The new combined source still needs its own compiled
+CI receipts, actual-artifact audits and original-input diagnostic.

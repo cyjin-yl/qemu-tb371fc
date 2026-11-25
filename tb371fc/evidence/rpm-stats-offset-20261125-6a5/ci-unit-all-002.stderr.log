@@ -1,0 +1,51 @@
+test_aop_reference_gate_requires_actual_migration_outcomes (__main__.PlanTests.test_aop_reference_gate_requires_actual_migration_outcomes) ... ok
+test_component_plans_require_boot_resources_receipt (__main__.PlanTests.test_component_plans_require_boot_resources_receipt) ... ok
+test_console_gates_require_guest_initiated_shutdown (__main__.PlanTests.test_console_gates_require_guest_initiated_shutdown) ... ok
+test_counter_plan_accepts_empty_error_list_and_rejects_errors (__main__.PlanTests.test_counter_plan_accepts_empty_error_list_and_rejects_errors) ... ok
+test_dcc_gate_requires_all_seventeen_real_checks (__main__.PlanTests.test_dcc_gate_requires_all_seventeen_real_checks) ... ok
+test_integrated_plan_keeps_both_tbu_contracts_and_rpmh_v3 (__main__.PlanTests.test_integrated_plan_keeps_both_tbu_contracts_and_rpmh_v3) ... ok
+test_ipcc_gate_requires_sixteen_real_checks (__main__.PlanTests.test_ipcc_gate_requires_sixteen_real_checks) ... ok
+test_linux_empty_ufs_gate_keeps_controller_and_omits_lun (__main__.PlanTests.test_linux_empty_ufs_gate_keeps_controller_and_omits_lun) ... ok
+test_linux_plans_require_rpmh_driver_and_host_evidence (__main__.PlanTests.test_linux_plans_require_rpmh_driver_and_host_evidence) ... ok
+test_linux_runtime_pm_rejects_incomplete_wake_evidence (__main__.PlanTests.test_linux_runtime_pm_rejects_incomplete_wake_evidence) ... ok
+test_pdc_gates_require_eighteen_tests_and_ten_migration_checks (__main__.PlanTests.test_pdc_gates_require_eighteen_tests_and_ten_migration_checks) ... ok
+test_rpm_stats_offset_contract_rejects_missing_or_false_boundaries (__main__.PlanTests.test_rpm_stats_offset_contract_rejects_missing_or_false_boundaries) ... ok
+test_rpm_stats_offset_preserves_all_prior_100_contracts_and_order (__main__.PlanTests.test_rpm_stats_offset_preserves_all_prior_100_contracts_and_order) ... ok
+test_spmi_route_requires_real_unintercepted_transfer (__main__.PlanTests.test_spmi_route_requires_real_unintercepted_transfer) ... ok
+test_spss_additions_preserve_all_prior_98_contracts_and_order (__main__.PlanTests.test_spss_additions_preserve_all_prior_98_contracts_and_order) ... ok
+test_spss_contract_requires_complete_bounded_receipts (__main__.PlanTests.test_spss_contract_requires_complete_bounded_receipts) ... ok
+test_contradictory_individual_checks_rejected (__main__.VerdictTests.test_contradictory_individual_checks_rejected) ... ok
+test_contradictory_summary_verdicts_rejected (__main__.VerdictTests.test_contradictory_summary_verdicts_rejected) ... ok
+test_duplicate_check_names_rejected (__main__.VerdictTests.test_duplicate_check_names_rejected) ... ok
+test_failed_or_malformed_guest_checks_rejected (__main__.VerdictTests.test_failed_or_malformed_guest_checks_rejected) ... ok
+test_false_missing_and_nonboolean_verdict_rejected (__main__.VerdictTests.test_false_missing_and_nonboolean_verdict_rejected) ... ok
+test_fixture_copy_ignores_sockets_and_symlinks (__main__.VerdictTests.test_fixture_copy_ignores_sockets_and_symlinks) ... ERROR
+test_guest_check_receipt_formats (__main__.VerdictTests.test_guest_check_receipt_formats) ... ok
+test_nonzero_exit_overrides_true_verdict (__main__.VerdictTests.test_nonzero_exit_overrides_true_verdict) ... ok
+test_partial_check_list_rejected (__main__.VerdictTests.test_partial_check_list_rejected) ... ok
+test_placeholder_and_unattested_checks_rejected (__main__.VerdictTests.test_placeholder_and_unattested_checks_rejected) ... ok
+test_required_boolean_and_nested_types_are_strict (__main__.VerdictTests.test_required_boolean_and_nested_types_are_strict) ... ok
+test_required_evidence_field_rejected (__main__.VerdictTests.test_required_evidence_field_rejected) ... ok
+test_secondary_list_evidence_rejects_missing_wrong_type_and_count (__main__.VerdictTests.test_secondary_list_evidence_rejects_missing_wrong_type_and_count) ... ok
+test_subprocess_logs_and_receipt_retained (__main__.VerdictTests.test_subprocess_logs_and_receipt_retained) ... ok
+test_tap_invalid_plan_duplicate_and_todo_rejected (__main__.VerdictTests.test_tap_invalid_plan_duplicate_and_todo_rejected) ... ok
+test_tap_passes (__main__.VerdictTests.test_tap_passes) ... ok
+test_tap_skip_and_failure_rejected (__main__.VerdictTests.test_tap_skip_and_failure_rejected) ... ok
+test_timeout_cannot_pass (__main__.VerdictTests.test_timeout_cannot_pass) ... ok
+test_true_json_and_expected_count (__main__.VerdictTests.test_true_json_and_expected_count) ... ok
+
+======================================================================
+ERROR: test_fixture_copy_ignores_sockets_and_symlinks (__main__.VerdictTests.test_fixture_copy_ignores_sockets_and_symlinks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/dev/shm/rpmstats-candidate-6a5/tb371fc/scripts/test_ci_device_tests.py", line 160, in test_fixture_copy_ignores_sockets_and_symlinks
+    control = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+----------------------------------------------------------------------
+Ran 35 tests in 1.198s
+
+FAILED (errors=1)

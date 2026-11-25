@@ -1,0 +1,93 @@
+{
+  "schema": "tb371fc-rpm-stats-offset-test-ci-contract-v1",
+  "case_name": "rpm-stats-offset-sm8250-reference",
+  "script": "tb371fc/tests/test_rpm_stats_offset_sm8250.py",
+  "report": "result.json",
+  "check_count": 20,
+  "expected_values": {
+    "schema": "tb371fc-rpm-stats-offset-sm8250-v1",
+    "suite": "rpm-stats-offset-sm8250-reference",
+    "expected_checks": 20,
+    "expected_completed_migrations": 2,
+    "expected_rejected_migrations": 2,
+    "expected_corrupted_stream_rejections": 6,
+    "expected_unmodified_streams": 2,
+    "expected_stream_files": 8,
+    "vmstate_version": 1,
+    "vmstate_minimum_version": 1,
+    "vmstate_payload_bytes": 24,
+    "reference_identity": 1381191473,
+    "physical_base": 205455364,
+    "register_count": 1,
+    "sparse_window_count": 1,
+    "mapped_bytes": 4,
+    "source_offset_value": 983112,
+    "first_observation_qom_get_count": 17,
+    "irq_output_count": 0,
+    "input_clock_count": 0,
+    "output_clock_count": 0,
+    "timer_count": 0,
+    "reference_enabled_by_default": false,
+    "readonly_offset_register": true,
+    "mutable_device_state": false,
+    "migration_destination_device_state_dirtied": false,
+    "migration_destination_ram_witness_dirtied": true,
+    "stats_payload_modeled": false,
+    "ddr_offset_modeled": false,
+    "firmware_modeled": false,
+    "ready_modeled": false,
+    "guest_cpu_executed": false,
+    "native_kernel_probe_observed": false,
+    "android_boot_passed": false,
+    "binary_unchanged": true
+  },
+  "expected_lengths": {
+    "checks": 20,
+    "migrations": 2,
+    "rejected_migrations": 2,
+    "corrupted_stream_rejections": 6,
+    "migration_sources": 2,
+    "actual_stream_files": 8
+  },
+  "original_stream_files": [
+    "rpm-stats-offset-enabled.migration",
+    "rpm-stats-offset-disabled.migration"
+  ],
+  "corrupt_stream_files": [
+    "rpm-stats-offset-corrupt-profile.migration",
+    "rpm-stats-offset-corrupt-identity.migration",
+    "rpm-stats-offset-corrupt-physical_base.migration",
+    "rpm-stats-offset-corrupt-window_bytes.migration",
+    "rpm-stats-offset-corrupt-enabled_offset.migration",
+    "rpm-stats-offset-corrupt-disabled_offset.migration"
+  ],
+  "first_observation_evidence": {
+    "snapshot_file": "destination-before-first-device-mmio.json",
+    "prewarm_file": "destination-before-incoming.json",
+    "qom_get_count": 17,
+    "repeated_qom_get_count": 17,
+    "prewarm_device_mmio_count": 0,
+    "prewarm_ram_command_count": 2,
+    "prewarm_device_state_mutable": false,
+    "prewarm_device_state_dirtied": false,
+    "prewarm_ram_witness_dirtied": true,
+    "device_mmio_delta": 0,
+    "all_memory_command_delta_before_observations": 0,
+    "cont_delta": 0,
+    "ram_witness_loaded_before_cont": true,
+    "shared_log_timestamp_claimed": false
+  },
+  "source_generation": {
+    "case_name": "rpm-stats-offset-source-generation",
+    "script": "tb371fc/scripts/verify_rpm_stats_offset_generation.py",
+    "check_count": 2,
+    "expected_values": {
+      "schema": "tb371fc-rpm-stats-offset-generation-v1",
+      "source_pins_verified": true
+    },
+    "expected_lengths": {
+      "inputs": 4
+    }
+  },
+  "scope": "Compiled QTest/QMP verification of one configured read-only RPM statistics offset. No mutable device state: migration prewarming modifies RAM only. No statistics payload, DDR offset, firmware, READY, guest CPU, native probe, or Android boot claim."
+}

@@ -1,0 +1,106 @@
+{
+  "schema": "tb371fc-rpm-stats-offset-ci-contract-preservation-v1",
+  "base_commit": "8d0bc64d8da6da18bf43b52a2a9547f28f44c3e9",
+  "baseline_ci_sha256": "22d0482115a1cb252161dce33d79355d93a435b4b8f4ca8df129e7bb3c721117",
+  "current_ci_sha256": "a69c1916407867d25b5484b45d25b427bb4921adc04b15b1f7c7589a758c1faa",
+  "current_unit_sha256": "ed7e8d5ad970e7f138fe418db026f0b1825ee5b037d6d58b15044e59ddf5602b",
+  "retained_cases": 100,
+  "all_retained_fields_and_order_identical": true,
+  "retained_fingerprint": "c3a85b57e4a88b6c4378e479df0c3e1d6e083a21a6abec0ed432c40d2950c1af",
+  "component_cases": 97,
+  "linux_cases": 5,
+  "host_unit_test_count": 35,
+  "new_cases": [
+    {
+      "name": "rpm-stats-offset-source-generation",
+      "command": [
+        "@PYTHON@",
+        "@ROOT@/tb371fc/scripts/verify_rpm_stats_offset_generation.py",
+        "--out",
+        "@FIXTURE:rpm-stats-offset-source-generation@/data"
+      ],
+      "fixture": "@FIXTURE:rpm-stats-offset-source-generation@",
+      "result": "@FIXTURE:rpm-stats-offset-source-generation@/data/result.json",
+      "verdict": "passed",
+      "expected_count": 2,
+      "count_field": "checks",
+      "expected_values": {
+        "schema": "tb371fc-rpm-stats-offset-generation-v1",
+        "source_pins_verified": true
+      },
+      "tap_count": null,
+      "timeout": 180,
+      "expected_lengths": {
+        "inputs": 4
+      },
+      "guest_errno": false
+    },
+    {
+      "name": "rpm-stats-offset-sm8250-reference",
+      "command": [
+        "@PYTHON@",
+        "@ROOT@/tb371fc/tests/test_rpm_stats_offset_sm8250.py",
+        "--qemu",
+        "/test/qemu",
+        "--out",
+        "@FIXTURE:rpm-stats-offset-sm8250-reference@/data"
+      ],
+      "fixture": "@FIXTURE:rpm-stats-offset-sm8250-reference@",
+      "result": "@FIXTURE:rpm-stats-offset-sm8250-reference@/data/result.json",
+      "verdict": "passed",
+      "expected_count": 20,
+      "count_field": "checks",
+      "expected_values": {
+        "schema": "tb371fc-rpm-stats-offset-sm8250-v1",
+        "suite": "rpm-stats-offset-sm8250-reference",
+        "expected_checks": 20,
+        "expected_completed_migrations": 2,
+        "expected_rejected_migrations": 2,
+        "expected_corrupted_stream_rejections": 6,
+        "expected_unmodified_streams": 2,
+        "expected_stream_files": 8,
+        "vmstate_version": 1,
+        "vmstate_minimum_version": 1,
+        "vmstate_payload_bytes": 24,
+        "reference_identity": 1381191473,
+        "physical_base": 205455364,
+        "register_count": 1,
+        "sparse_window_count": 1,
+        "mapped_bytes": 4,
+        "source_offset_value": 983112,
+        "first_observation_qom_get_count": 17,
+        "irq_output_count": 0,
+        "input_clock_count": 0,
+        "output_clock_count": 0,
+        "timer_count": 0,
+        "reference_enabled_by_default": false,
+        "readonly_offset_register": true,
+        "mutable_device_state": false,
+        "migration_destination_device_state_dirtied": false,
+        "migration_destination_ram_witness_dirtied": true,
+        "stats_payload_modeled": false,
+        "ddr_offset_modeled": false,
+        "firmware_modeled": false,
+        "ready_modeled": false,
+        "guest_cpu_executed": false,
+        "native_kernel_probe_observed": false,
+        "android_boot_passed": false,
+        "binary_unchanged": true
+      },
+      "tap_count": null,
+      "timeout": 240,
+      "expected_lengths": {
+        "checks": 20,
+        "migrations": 2,
+        "rejected_migrations": 2,
+        "corrupted_stream_rejections": 6,
+        "migration_sources": 2,
+        "actual_stream_files": 8
+      },
+      "guest_errno": false
+    }
+  ],
+  "model_contract_file_sha256": "2d137f7cd52b52c281414fd2508a04fde7c5ae567a123f6c3a2c7a31128e032a",
+  "static_plan_verified": true,
+  "compiled_ci_not_yet_run": true
+}

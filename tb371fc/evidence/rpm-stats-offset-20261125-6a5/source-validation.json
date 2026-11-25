@@ -1,0 +1,78 @@
+{
+  "schema": "tb371fc-rpm-stats-offset-source-validation-summary-v1",
+  "passed": true,
+  "candidate_base": "8d0bc64d8da6da18bf43b52a2a9547f28f44c3e9",
+  "positive": {
+    "name": "result.json",
+    "bytes": 4408,
+    "sha256": "da908947918094dedb781fcb088c426b465c0bda66898e2eb3500ff97e5b8576"
+  },
+  "negative": {
+    "name": "result.json",
+    "bytes": 10212,
+    "sha256": "5d84a9e0fec03751b01c10118e0e464d4c5676052851e72b392463fb06edffa4"
+  },
+  "validation_script": {
+    "name": "validate_rpm_stats_offset_sources.py",
+    "bytes": 12051,
+    "sha256": "ae57e3a72e74d97c1aada4d434abbf72c79dfa443e07e23a2cacd858d6e6d512"
+  },
+  "counts": {
+    "whole_source_one_bit_rejections": 4,
+    "parser_negative_rejections": 22,
+    "complete_bad_response_rejections_without_retry": 1,
+    "committed_output_one_bit_rejections": 2
+  },
+  "positive_counts": {
+    "source_inputs": 4,
+    "outputs": 2
+  },
+  "commands": [
+    [
+      "python3",
+      "-I",
+      "-S",
+      "-B",
+      "tb371fc/scripts/gen_rpm_stats_offset.py",
+      "--source-root",
+      "SOURCE_ROOT",
+      "--output-root",
+      "CANDIDATE_ROOT"
+    ],
+    [
+      "python3",
+      "-I",
+      "-S",
+      "-B",
+      "validate-source-generation.py",
+      "--candidate",
+      "CANDIDATE_ROOT",
+      "--source-root",
+      "SOURCE_ROOT",
+      "--out",
+      "NEW_VALIDATION_DIRECTORY"
+    ]
+  ],
+  "detail_paths": {
+    "positive": "source-regeneration.json",
+    "negative": "source-validation-detail.json",
+    "validation_script": "validate-source-generation.py"
+  },
+  "execution_bounds": {
+    "qemu_executed": false,
+    "firmware_executed": false,
+    "network_used_by_validation": false,
+    "device_RPC_used": false,
+    "SSH_used": false
+  },
+  "source_download_helper": {
+    "name": "source_download.py",
+    "bytes": 4642,
+    "sha256": "4fde0300dc4c8777531402dc700fbed6364f16b0550fc852c3031fe641fe7dd7"
+  },
+  "source_download_helper_changed": false,
+  "sources_are_public_complete_pins": true,
+  "private_firmware_is_only_static_corroboration": true,
+  "compiled_component_test_pass_claimed": false,
+  "new_native_execution_claimed": false
+}

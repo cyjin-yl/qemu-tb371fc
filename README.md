@@ -14,7 +14,9 @@
 
 ## 当前整合：原厂 Android 启动开发基线
 
-本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。精确 LLCC 源码 `c02f3d7` 已通过自己的 93+5 CI、五个独立产物审计和一次原始输入诊断，并合入 `7372681f`。本次在该基线上增加 SPSS 中断屏蔽控制及固定源码再生两个 gate，当前公开计划为 **100 项：95 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。SPSS 组合的编译验收和原始输入运行仍须以新提交实际回执为准。
+本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。精确 LLCC 源码 `c02f3d7` 已通过自己的 93+5 CI、五个独立产物审计和一次原始输入诊断，并合入 `7372681f`。随后 SPSS 源码 `54ec744` 实际通过 push/PR 两套 95+5 gate、A77/PCI UFS 和六个产物审计；同一产物的一次原始输入运行越过 `0x01881028` 写异常，停在 RPM statistics 的 `0x0c3f0004` 读异常，原始 kernel／ramdisk／完整 DT／bootargs 保持不变。该修复已合入 `8d0bc64`；[完整编译与有界原生证据](https://github.com/cyjin-yl/qemu-tb371fc/tree/310fa06c7031bdbda063b3fe4e4f8689e37dde98/tb371fc/evidence/spss-54ec744-ci-20261125-6a5)保留了实际 kernel-failure、0 LUN 和 Android 未通过的结论。
+
+本次增加 [RPM statistics offset 参考接口](tb371fc/docs/rpm-stats-offset-sm8250.md)及四份固定公开源码再生 gate，当前计划为 **102 项：97 项组件 + 5 项 Linux**，另保留 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。默认关闭的 `qcom-sm8250-rpm-stats-offset.enabled-reference` 只在 `0x0c3f0004/4` 接受对齐 32 位读，返回源码及原机 AOP 静态分析共同支持的 `0x000f0048`。统计记录、DDR offset、相邻 SRAM、READY 和固件运行仍未实现；新组合须取得自己的编译产物和原始输入运行回执。
 
 两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
 
