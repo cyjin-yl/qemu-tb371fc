@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "evidence://reviewed-source/qualification-main-001.py.txt", line 1622, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "evidence://reviewed-source/qualification-main-001.py.txt", line 1613, in main
+    result = assemble(read(args.binding), binding_pin)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "evidence://reviewed-source/qualification-main-001.py.txt", line 1552, in assemble
+    audits, reports = validate_audit_receipts(binding, source_files)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "evidence://reviewed-source/qualification-main-001.py.txt", line 1213, in validate_audit_receipts
+    validate_geni_receipts(reports, by_name, sources)
+  File "evidence://reviewed-source/qualification-main-001.py.txt", line 1229, in validate_geni_receipts
+    need(type(compiled[key]) is list and len(compiled[key]) == count, 'compiledGENI exact list ' + key)
+  File "evidence://reviewed-source/qualification-main-001.py.txt", line 964, in need
+    raise ValueError(label)
+ValueError: compiledGENI exact list ordinary_and_special

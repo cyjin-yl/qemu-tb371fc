@@ -1,0 +1,1823 @@
+#!/usr/bin/env python3
+"""Independent GENI HS actual-archive audit; never executes producer or QEMU.
+
+This source-only successor incorporates the bounded protocol corrections
+confirmed by diagnostic004. Failed B5/4710 CI and intermediate diagnostic
+failures remain retained. Source head/tree are fixed below; the actual CI artifact is unbound;
+component diagnostic success is not new-head CI qualification. Generic strict archive/JSON/protocol routines are
+retained from the reviewed DDR audit.
+All GENI wire layouts, identity, fields, mutation positions and raw-evidence
+requirements are stated independently below. Separate protocol logs have no
+common timestamp: source pins, per-channel order, counter receipts and the RAM
+witness establish their limited cross-channel chronology.
+"""
+import argparse
+from datetime import datetime, timezone
+import hashlib
+import json
+from pathlib import Path, PurePosixPath
+import re
+import stat
+import traceback
+from zipfile import ZipFile
+
+if not __debug__:
+    raise SystemExit('Independent audit requires assertions; do not use Python -O.')
+
+CHUNK, MAX_SMALL = 1024 * 1024, 64 * 1024 * 1024
+HEAD = '70b387fb064cdf2099e85dd89213a5ea7e2c398f'
+TREE = '37bf696bc687422eac2bd967abda7d80af8e02b9'
+SOURCE_PINS = {'hw/arm/lenovo-tb371fc.c': (105293, '9119e88b7fcb6cdd103f4fad8ef11a4cc9ba7f8314e989a12747e7dd05017bda'),
+ 'hw/char/qcom-geni-uart.c': (50414, 'c1fe1af46ec3383f9a080d1ba10f60073dfd59696fccfa363a9567551ebb3e10'),
+ 'hw/char/qcom-sm8250-geni-hs-data.inc': (909, '4cc9babbdc75fd6006f39ce32a92b6161d1bcf2739de843005e02af19179b9a6'),
+ 'hw/core/clock-vmstate.c': (1540, 'f6a71ff89c1073b94409a5a6102b315a2de9c04f0481595e2435d3ce08b2fe70'),
+ 'hw/core/clock.c': (5685, '3d877ef4c1824508ded8e4e5f2b0f56dd621661b5368bdfc311fa5db23dd891e'),
+ 'hw/misc/qcom-sm8250-gcc.c': (29024, 'f9f0dc291e6a183298a0114082df1f5ea65a369dc4f1685dfc330996121da95a'),
+ 'include/hw/char/qcom-geni-uart.h': (2135, 'f2efb7233b29ae2ece90de924b7d64e1f33a9f1fd04ed3da37298e0f6efd83bf'),
+ 'include/hw/core/clock.h': (11374, '8e43731157aaf5f019c3c5c16cf355076b1fab10d49a47aba9217f257ff99ac4'),
+ 'tb371fc/docs/geni-hs-sm8250-private-producer-facts.json': (3246,
+                                                             '1df0eb4cfd41cf8a42918407dba8e391a985164ecc9a1e513ca6b471c0bdfc80'),
+ 'tb371fc/docs/geni-hs-sm8250-reference-policy.json': (1923,
+                                                       '6d1ed6d87381f2d6e7cbc8c11804e150ad6c3be9b5e8db84654dcb9accb0d85f'),
+ 'tb371fc/docs/geni-hs-sm8250-registers.json': (25446,
+                                                'e143022b5d3a678e3e93be4911af36c8bc81c3aebd2cbc5b58437137bda0a040'),
+ 'tb371fc/evidence/geni-hs-sm8250-20261125-6a5/test-design.json': (17635,
+                                                                   'ad576fc69d0d0ebbca250700ee1250a9a160f29af67a8f3c8bcd31c7db0f0b94'),
+ 'tb371fc/evidence/geni-hs-sm8250-20261125-6a5/test-independent-static-review.json': (4975,
+                                                                                      '3963a123737bfdac2b917b7594af5001a784858323bf0b15237e41cd64713a80'),
+ 'tb371fc/scripts/ci_device_tests.py': (93011, 'affce15c868fbf2dd11d9f80d78736a601dfc634528f340f59b0ac6d1b9d62e9'),
+ 'tb371fc/scripts/test_ci_device_tests.py': (63932,
+                                             'e1c1d5aed26224853f839922ddd791bf342eb2be0354691fdbf602a803e91b4e'),
+ 'tb371fc/tests/geni_hs_test_transport.py': (20061,
+                                             '319e8049aa82a4e2be7b956e3e7dc2de9b48477dfdd5cc5442805980cefeed11'),
+ 'tb371fc/tests/test_geni_hs_sm8250.py': (70882,
+                                          '01802bf20b9e9e5a68c32aa32bdb6bde48d733694f8d9559d4dc7db161a259b5')}
+TYPE, DEVICE, LEGACY = 'qcom-sm8250-geni-hs', '/machine/uart-hs', '/machine/uart'
+CASE = 'geni-hs-sm8250-reference'
+HS_BASE, OLD_BASE, WRAPPER, GCC, RAM = 0x998000, 0xa90000, 0x9c0004, 0x100000, 0x80010000
+IDENTITY, FW, WRAPPER_VERSION = 0x47485331, 0x201, 0x20050000
+NATIVE_BYTES, LEGACY_BYTES, GUARD_BYTES, GETTERS = 16608, 16587, 48, 49
+DEFAULT_MACHINE = 'tb371fc,ufs-enabled=off,rpmh-profile=off,rpmh-boot-configured=off'
+TEST_SHA = '01802bf20b9e9e5a68c32aa32bdb6bde48d733694f8d9559d4dc7db161a259b5'
+HELPER_SHA = '319e8049aa82a4e2be7b956e3e7dc2de9b48477dfdd5cc5442805980cefeed11'
+
+class AuditFailure(RuntimeError):
+    pass
+
+def need(ok, message):
+    if not ok:
+        raise AuditFailure(message)
+
+def same(actual, expected, where):
+    """Type-sensitive comparison; bool is never accepted as an integer."""
+    need(type(actual) is type(expected), f"{where}: type {type(actual).__name__} != {type(expected).__name__}")
+    if type(expected) is dict:
+        need(set(actual) == set(expected), f"{where}: object keys differ")
+        for key in expected:
+            same(actual[key], expected[key], where + "." + str(key))
+    elif type(expected) in (tuple, list):
+        need(len(actual) == len(expected), f"{where}: length {len(actual)} != {len(expected)}")
+        for i, value in enumerate(expected):
+            same(actual[i], value, f"{where}[{i}]")
+    else:
+        need(actual == expected, f"{where}: {str(actual)[:160]} != {str(expected)[:160]}")
+
+def uint(value, bits, where, signed=False):
+    need(type(value) is int, where + ": integer required")
+    low, high = (-(1 << (bits - 1)), 1 << (bits - 1)) if signed else (0, 1 << bits)
+    need(low <= value < high, where + ": integer out of range")
+    return value
+
+def boolean(value, where):
+    need(type(value) is bool, where + ": boolean required")
+    return value
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+def file_hash(path):
+    h = hashlib.sha256()
+    with Path(path).open("rb") as f:
+        for block in iter(lambda: f.read(CHUNK), b""):
+            h.update(block)
+    return h.hexdigest()
+
+def pairs_unique(pairs):
+    result = {}
+    for key, value in pairs:
+        need(key not in result, "Duplicate JSON key " + key)
+        result[key] = value
+    return result
+
+def json_value(raw, where):
+    def bad_constant(value):
+        raise AuditFailure(where + ": nonfinite JSON " + value)
+    try:
+        return json.loads(raw, object_pairs_hook=pairs_unique, parse_constant=bad_constant)
+    except (ValueError, UnicodeError) as error:
+        raise AuditFailure(where + ": invalid JSON: " + str(error)) from error
+
+def safe_name(name):
+    need(type(name) is str and name and "\\" not in name and "\x00" not in name,
+         "Invalid archive path")
+    p = PurePosixPath(name)
+    need(not p.is_absolute() and all(part not in ("", ".", "..") for part in name.split("/")),
+         "Unsafe archive path " + name)
+    return name
+
+class Store:
+    """One ZIP or existing directory; paths are never extracted or executed."""
+    def __init__(self, zip_path=None, directory=None):
+        self.zip_path = Path(zip_path).resolve() if zip_path else None
+        self.root = Path(directory).resolve() if directory else None
+        self.z = ZipFile(self.zip_path) if self.zip_path else None
+        self.entries, self.observed = {}, {}
+        if self.z:
+            self.initial = self.zip_path.stat()
+            for entry in self.z.infolist():
+                name = entry.filename.rstrip("/")
+                if not name:
+                    continue
+                safe_name(name)
+                need(name not in self.entries, "Duplicate ZIP member " + name)
+                need(not stat.S_ISLNK(entry.external_attr >> 16), "Symlink ZIP member " + name)
+                if not entry.is_dir():
+                    self.entries[name] = entry
+        else:
+            need(self.root.is_dir(), "Result directory does not exist")
+            for p in self.root.rglob("*"):
+                need(not p.is_symlink(), "Symlink in result directory: " + str(p))
+                if p.is_file():
+                    self.entries[p.relative_to(self.root).as_posix()] = p
+        need(len(self.entries) < 200000, "Unreasonable member count")
+
+    def size(self, name):
+        safe_name(name)
+        need(name in self.entries, "Missing member " + name)
+        entry = self.entries[name]
+        return entry.file_size if self.z else entry.stat().st_size
+
+    def open(self, name):
+        self.size(name)
+        return self.z.open(self.entries[name]) if self.z else self.entries[name].open("rb")
+
+    def read(self, name, limit=MAX_SMALL):
+        need(self.size(name) <= limit, "Member too large for bounded small-file read: " + name)
+        with self.open(name) as f:
+            raw = f.read(limit + 1)
+        same(len(raw), self.size(name), name + ".actual size")
+        self.observed[name] = {"bytes": len(raw), "sha256": sha(raw)}
+        return raw
+
+    def text(self, name):
+        return self.read(name).decode("utf-8", errors="strict")
+
+    def json(self, name):
+        return json_value(self.read(name), name)
+
+    def finish(self):
+        if self.z:
+            now = self.zip_path.stat()
+            same((now.st_dev, now.st_ino, now.st_size, now.st_mtime_ns),
+                 (self.initial.st_dev, self.initial.st_ino, self.initial.st_size, self.initial.st_mtime_ns),
+                 "ZIP changed during audit")
+            self.z.close()
+
+def one_bit_difference(store, original, changed, expected_absolute, expected_xor, source_sha, changed_sha):
+    same(store.size(original), store.size(changed), changed + ".whole stream length")
+    offset, differences = 0, []
+    a_hash, b_hash = hashlib.sha256(), hashlib.sha256()
+    with store.open(original) as a, store.open(changed) as b:
+        while True:
+            left, right = a.read(CHUNK), b.read(CHUNK)
+            same(len(left), len(right), changed + ".stream chunk length")
+            if not left:
+                break
+            a_hash.update(left)
+            b_hash.update(right)
+            if left != right:
+                for i, (x, y) in enumerate(zip(left, right)):
+                    if x != y:
+                        differences.append((offset + i, x, y))
+                        need(len(differences) == 1, changed + ": more than one actual changed byte")
+            offset += len(left)
+    same(a_hash.hexdigest(), source_sha, original + ".unmodified after copying")
+    same(b_hash.hexdigest(), changed_sha, changed + ".stable actual mutated bytes")
+    same(len(differences), 1, changed + ".actual differing byte count")
+    at, before, after = differences[0]
+    same(at, expected_absolute, changed + ".actual changed byte offset")
+    same(before ^ after, expected_xor, changed + ".actual one-bit xor")
+    same((before ^ after).bit_count(), 1, changed + ".actual changed bit count")
+    return {"byte_offset": at, "before": before, "after": after, "changed_bits": 1,
+            "all_other_stream_bytes_equal": True, "original_stream_sha256_unchanged": True}
+
+def qmp_calls(store, directory):
+    path, calls, pending, last_id = directory + "/qmp.jsonl", [], None, 0
+    greeting = 0
+    for line_number, line in enumerate(store.text(path).splitlines(), 1):
+        row = json_value(line, f"{path}:{line_number}")
+        need(type(row) is dict and len(row) == 1, path + ": malformed QMP log entry")
+        if "send" in row:
+            need(pending is None, path + ": overlapping QMP sends")
+            request = row["send"]
+            need(type(request) is dict and type(request.get("execute")) is str, path + ": malformed QMP command")
+            same(request.get("id"), last_id + 1, path + ": sequential request id")
+            last_id += 1
+            pending = {"request": request, "response": None, "line": line_number}
+            calls.append(pending)
+        else:
+            need("receive" in row and type(row["receive"]) is dict, path + ": malformed QMP receive")
+            response = row["receive"]
+            if "QMP" in response:
+                greeting += 1
+                need(not calls, path + ": late QMP greeting")
+                continue
+            if "event" in response:
+                continue
+            need(pending is not None, path + ": unsolicited QMP response")
+            same(response.get("id"), pending["request"]["id"], path + ": unmatched response id")
+            need(("return" in response) != ("error" in response), path + ": malformed QMP verdict")
+            pending["response"] = response
+            pending = None
+    same(greeting, 1, path + ".greeting count")
+    # A failed incoming migration can close the socket before its reply.
+    if pending is not None:
+        same(pending["request"]["execute"], "migrate-incoming", path + ": truncated non-migration QMP request")
+    return calls
+
+def operation(call):
+    return call["request"]["execute"]
+
+def reply(call):
+    response = call["response"]
+    need(type(response) is dict and "return" in response and "error" not in response,
+         "Missing successful QMP response for " + operation(call))
+    return response["return"]
+
+def migration_argument(call, expected):
+    args = call["request"].get("arguments")
+    need(type(args) is dict and set(args) == {"channels"}, "Migration arguments must use one reviewed file channel")
+    channels = args["channels"]
+    need(type(channels) is list and len(channels) == 1, "Wrong migration channel count")
+    channel = channels[0]
+    same(channel.get("channel-type"), "main", "Migration channel type")
+    addr = channel.get("addr")
+    need(type(addr) is dict and addr.get("transport") == "file", "Migration is not from a local file")
+    same(addr.get("offset"), 0, "Required file migration offset starts at byte zero")
+    filename = addr.get("filename")
+    need(type(filename) is str and PurePosixPath(filename).name == expected,
+         "Actual migration filename differs from reviewed stream")
+
+def qtest_time(calls, where):
+    now = 0
+    for item in calls:
+        same(item["virtual_ns_before"], now, where + ": local virtual-clock sequence")
+        command = item["command"].split()
+        need(command, where + ": empty QTest command")
+        if command[0] in ("clock_set", "clock_step"):
+            need(len(command) == 2, where + ": unbounded clock command")
+            value = int(command[1], 0)
+            need(value >= 0, where + ": negative virtual time")
+            now = value if command[0] == "clock_set" else now + value
+            parts = item["reply"].split()
+            need(len(parts) == 2, where + ": malformed clock response")
+            same(int(parts[1], 0), now, where + ": clock response value")
+    return now
+
+def hash_member(store, name):
+    digest, size = hashlib.sha256(), 0
+    with store.open(name) as source:
+        for chunk in iter(lambda: source.read(CHUNK), b""):
+            digest.update(chunk)
+            size += len(chunk)
+    same(size, store.size(name), name + ".full bytes")
+    result = {"bytes": size, "sha256": digest.hexdigest()}
+    store.observed[name] = result
+    return result
+
+def fields_equal(actual, expected, where):
+    need(type(actual) is dict, where + ": object required")
+    for key, value in expected.items():
+        need(key in actual, where + ": missing " + key)
+        same(actual[key], value, where + "." + key)
+
+def completed_polls(calls, saved_reply, where):
+    need(calls, where + ": no migration status response")
+    for index, call in enumerate(calls):
+        same(operation(call), "query-migrate", where + ".status polling only")
+        need("arguments" not in call["request"], where + ".status arguments")
+        status = reply(call)
+        need(type(status) is dict and type(status.get("status")) is str, where + ".actual status")
+        need(status["status"] not in ("failed", "cancelled"), where + ".failed migration")
+        same(status["status"] == "completed", index == len(calls) - 1,
+             where + ".first completed poll terminates polling")
+    same(reply(calls[-1]), saved_reply, where + ".saved versus actual completion response")
+
+def locate_case(store, name):
+    candidates = [p for p in store.entries
+                  if re.search(r"(?:^|/)components/[0-9]+-" + re.escape(name) + r"/case\.json$", p)]
+    same(len(candidates), 1, "Exactly one compiled case " + name)
+    path = candidates[0]
+    root = path.rsplit("/", 1)[0]
+    case = store.json(path)
+    fields_equal(case, {"name": name, "passed": True, "exit_code": 0}, name + ".actual harness verdict")
+    need(not any(k in case for k in ("error", "artifact_error", "timed_out")), name + ": failed/incomplete case")
+    need(type(case.get("completed_utc")) is str and case["completed_utc"], name + ": missing completion time")
+    logs = {}
+    for filename in ("stdout.log", "stderr.log"):
+        raw = store.read(root + "/" + filename)
+        same(case["log_sha256"][filename], sha(raw), name + ".actual harness log hash " + filename)
+        logs[filename] = raw
+    command = case["command"]
+    need(type(command) is list and all(type(s) is str for s in command), name + ".actual harness argv")
+    need(not set(command).intersection(("-O", "-OO", "-c")), name + ": assertion-disabled or inline producer")
+    return path, root, case, logs
+
+def source_head(store, case_root):
+    prefix = case_root.split("/components/", 1)[0]
+    path = prefix + "/source-commit.txt"
+    same(store.text(path).strip(), HEAD, "Actual archived exact QEMU head")
+    return path
+
+
+DSTR = ('registers-hex', 'tx-fifo-hex', 'rx-fifo-hex')
+DUINT = ('tx-count','rx-count','tx-remaining','tx-sent','rx-received',
+         'se-clock-period','m-ahb-clock-period','s-ahb-clock-period','fifo-bytes')
+DBOOL = ('tx-active','rx-active','tx-zero-pending','reset-held','irq-level')
+DYNAMIC = DSTR + DUINT + DBOOL
+IUINT = ('reference-identity','physical-base','window-bytes','wrapper-address',
+         'wrapper-window-bytes','main-fw-revision','secondary-fw-revision',
+         'wrapper-version','vmstate-bytes','profile-wire-bytes')
+IBOOL = ('enabled-reference','firmware-executed','dma-modeled','physical-state-captured','dma-mask-modeled')
+IFIELDS = IUINT + IBOOL
+PERIOD_UNIT = 1_000_000_000 << 32
+HS_VOTE, OLD_VOTE = GCC+0x52008, GCC+0x52010
+SE, M_AHB, S_AHB, OLD_SE = 1<<16, 1<<6, 1<<7, 1<<8
+START, DONE, RX_LAST, RX_WM, TX_WM = 1<<27, 1, 1<<27, 1<<26, 1<<30
+ORDINARY = (
+ 'identity_and_pure_observation', 'exact_original_cold_probe_and_dma_masks',
+ 'exact_mapping_and_neighbor_holes', 'tx_partial_word_real_bytes',
+ 'core_irq_mask_aliases_and_w1c', 'rx_partial_empty_and_no_peer_invention',
+ 'rx_backpressure_preserves_all_bytes', 'tx_fifo_overflow_and_clock_pause',
+ 'commands_cancel_abort_and_overrun', 'three_clock_gates_and_real_irq_suppression',
+ 'hwcg_request_removal_is_real', 'wrapper_reset_isolation_and_fixed_identity',
+ 'two_engine_fifo_and_backend_isolation', 'strict_shapes_readonly_and_unknown_registers',
+ 'unsupported_dma_transfer_has_no_effect', 'immutable_qom_properties',
+ 'disconnected_backend_retains_pending', 'absent_backend_cannot_complete',
+ 'real_socket_tx_backpressure_and_resume', 'zero_length_waits_for_engine_clock')
+SPECIAL = ('default_off_keeps_both_windows_unmapped','paused_tcg_has_real_pure_observers',
+           'absent_clock_parent_remains_zero')
+GUARD_MUTANTS = (
+ ('profile',0,4,2),('identity',4,4,1),('se_base',8,8,4),('se_window',16,4,4),
+ ('wrapper_address',20,8,4),('wrapper_window',28,4,1),('main_revision',32,4,1),
+ ('secondary_revision',36,4,1),('wrapper_version',40,4,1),('fifo_geometry',44,4,1))
+DYNAMIC_MUTANTS = (
+ ('unsupported_register','enabled',64,4,1,'invalid migration state'),
+ ('global_irq_reserved_bit','enabled',48+0xe1c,4,0x10,'invalid migration state'),
+ ('unsupported_dma_mode','enabled',48+0x258,4,1,'invalid migration state'),
+ ('tx_count_out_of_range','enabled',16560,4,64,'invalid migration state'),
+ ('rx_count_out_of_range','enabled',16564,4,64,'invalid migration state'),
+ ('active_remaining_zero','enabled',16568,4,4,'invalid migration state'),
+ ('command_accounting_overflow','enabled',16572,4,1<<24,'invalid migration state'),
+ ('inactive_pending_tx','enabled',16580,1,1,'invalid migration state'),
+ ('noncanonical_boolean','enabled',16580,1,2,'invalid migration state'),
+ ('reset_with_active_state','enabled',16606,1,1,'invalid migration state'),
+ ('zero_pending_with_active_tx','enabled',16607,1,1,'invalid migration state'),
+ ('se_period_witness','enabled',16582,8,1,'input clock witness mismatch'),
+ ('m_ahb_period_witness','enabled',16590,8,1,'input clock witness mismatch'),
+ ('s_ahb_period_witness','enabled',16598,8,1,'input clock witness mismatch'),
+ ('disabled_rx_state','disabled',16564,4,1,'invalid disabled migration state'))
+STRUCTURAL = ('missing_guard','unknown_section_identity','unsupported_section_version')
+CHECKS = (ORDINARY+SPECIAL+('migration_enabled','migration_disabled',
+          'profile_on_to_off_rejected','profile_off_to_on_rejected')+
+          tuple('single_bit_'+x[0]+'_rejected' for x in GUARD_MUTANTS+DYNAMIC_MUTANTS)+
+          tuple('structural_'+x+'_rejected' for x in STRUCTURAL))
+LENGTHS = {'migrations':2,'rejected_migrations':2,'corrupted_stream_rejections':25,
+           'structural_stream_rejections':3,'migration_sources':2,'actual_stream_files':30,
+           'process_cleanup':58}
+DMA_OFFSETS = (0xc30,0xc34,0xc38,0xc3c,0xc40,0xc44,0xc54,0xc58,0xc5c,
+               0xd30,0xd34,0xd38,0xd3c,0xd40,0xd44,0xd54,0xd58,0xd5c,0xd60)
+READ_ONLY = (0,4,0x40,0x60,0x64,0x68,0x6c,0x610,0x640,0x780,0x800,0x804,
+             0x908,0x910,0x914,0xe24,0xe28)
+# Explicit declared reference write/storage contract; no runtime C/include parse.
+WRITE_MASKS = {0x20:1,0x24:0x7f,0x28:0x7f,0x48:0xfff1,0x4c:0xfff1,0x7c:7,
+ 0x254:3,0x258:0,0x260:0xfffff,0x264:0xfffff,0x284:0xfffff,0x288:0xfffff,
+ 0x268:0x3ff,0x28c:0x3ff,0x270:0xffffff,0x294:0xffffff,
+ 0x600:0xf8000000,0x630:0xf8000000,0x604:7,0x634:7,
+ 0x614:0xffffffff,0x644:0xffffffff,0x618:0xffffffff,0x648:0xffffffff,
+ 0x61c:0xffffffff,0x64c:0xffffffff,0x620:0xffffffff,0x650:0xffffffff,
+ 0x700:0xffffffff,0x80c:0x3f,0x810:0x3f,0x814:0x3f,0xe1c:0xf,
+ 0xc48:0x400f,0xc4c:0x400f,0xc50:0x400f,0xd48:0x77ff,0xd4c:0x77ff,0xd50:0x77ff,
+ 0x22c:0,0x240:0,0x25c:0,0x26c:0,0x280:0,0x2a4:0,0x2a8:0,0x2ac:0,0xe18:0}
+NONSTORED = (0x604,0x634,0x618,0x648,0x61c,0x64c,0x620,0x650,0x700,
+              0xc4c,0xc50,0xd4c,0xd50)
+
+
+def identity(enabled):
+    return dict(zip(IFIELDS,(IDENTITY,HS_BASE,0x4000,WRAPPER,4,FW,FW,WRAPPER_VERSION,
+                             NATIVE_BYTES,GUARD_BYTES,enabled,False,False,False,True)))
+
+
+def raw_registers(value):
+    raw = bytes.fromhex(value['registers-hex'])
+    return [int.from_bytes(raw[i:i+4],'big') for i in range(0,16384,4)]
+
+
+def irq_from_state(value):
+    r = raw_registers(value)
+    rxwords = (value['rx-count']+3)//4
+    secondary = r[0x640//4] | (RX_WM if rxwords and rxwords >= r[0x810//4] else 0)
+    primary = r[0x610//4] | (TX_WM if r[0x80c//4] and
+                           (value['tx-count']+3)//4 < r[0x80c//4] else 0)
+    primary |= secondary & RX_WM
+    if secondary & r[0x644//4]:
+        primary |= 1<<31
+    available = (not value['reset-held'] and all(value[k]>0 for k in
+                 ('se-clock-period','m-ahb-clock-period','s-ahb-clock-period')))
+    return bool(available and (((r[0xe1c//4]&4) and (primary&r[0x614//4])) or
+                              ((r[0xe1c//4]&8) and (secondary&r[0x644//4]))))
+
+
+def check_engine(value, where, hs=True):
+    same(set(value),set(DYNAMIC),where+'.17 pure fields')
+    for name in DUINT:
+        uint(value[name],64,where+'.'+name)
+    for name in DBOOL:
+        boolean(value[name],where+'.'+name)
+    for name,size in (('registers-hex',16384),('tx-fifo-hex',64),('rx-fifo-hex',64)):
+        need(type(value[name]) is str and re.fullmatch('[0-9a-f]{'+str(size*2)+'}',value[name]),
+             where+'.canonical complete hex '+name)
+    same(value['fifo-bytes'],64,where+'.fixed FIFO geometry')
+    need(0<=value['tx-count']<=64 and 0<=value['rx-count']<=64,where+'.FIFO counts')
+    need(value['tx-count']<=value['tx-remaining'],where+'.queued vs remaining')
+    need(not value['tx-active'] or value['tx-remaining']>0,where+'.active TX')
+    need(value['tx-active'] or not (value['tx-count'] or value['tx-remaining']),where+'.inactive TX')
+    need(not (value['tx-zero-pending'] and value['tx-active']),where+'.zero command consistency')
+    need(not value['reset-held'] or not any(value[k] for k in
+         ('tx-active','rx-active','tx-count','rx-count','tx-zero-pending')),where+'.held reset state')
+    same(value['irq-level'],irq_from_state(value),where+'.independent pure IRQ formula')
+    if hs:
+        need(value['tx-sent']+value['tx-remaining']<=0xffffff,where+'.24-bit command accounting')
+        regs=raw_registers(value)
+        for i,word in enumerate(regs):
+            off=i*4
+            mask=WRITE_MASKS.get(off,0) if off not in NONSTORED else 0
+            if off==0x610:mask=0x2b00003f
+            if off==0x640:mask=0x0b00003f
+            need(not (word&~mask),where+f'.raw register {off:#x} reserved bits')
+            if off in (0x600,0x630):need(word in (0,START),where+'.stored command')
+            if off in (0x268,0x28c):same(word,8,where+'.eight-bit words')
+            if off in (0x260,0x284):need(word in (0,0x4380e),where+'.packing0')
+            if off in (0x264,0x288):need(word in (0,0xc3e0e),where+'.packing1')
+            if off==0x254:same(word,0,where+'.byte granularity')
+        if value['tx-active'] or value['tx-zero-pending']:
+            same(regs[0x600//4],START,where+'.active TX command')
+        if value['rx-active']:same(regs[0x630//4],START,where+'.active RX command')
+        if value['tx-zero-pending']:same(value['tx-sent'],0,where+'.zero command sent count')
+    return value
+
+
+def check_world(value,enabled,where):
+    same(set(value),{'hs','identity','legacy'},where+'.world keys')
+    same(value['identity'],identity(enabled),where+'.independent immutable reference')
+    check_engine(value['hs'],where+'.hs')
+    check_engine(value['legacy'],where+'.legacy',False)
+    return value
+
+
+def qom_queries(value):
+    return ([({'path':DEVICE,'property':k},value['hs'][k]) for k in DYNAMIC]+
+            [({'path':DEVICE,'property':k},value['identity'][k]) for k in IFIELDS]+
+            [({'path':LEGACY,'property':k},value['legacy'][k]) for k in DYNAMIC])
+
+
+def match_world(calls,at,value,where):
+    expected=qom_queries(value)
+    need(at+49<=len(calls),where+'.complete49 getter block')
+    for i,(args,val) in enumerate(expected):
+        same(operation(calls[at+i]),'qom-get',where+f'.getter{i}')
+        same(calls[at+i]['request'].get('arguments'),args,where+f'.getter arguments{i}')
+        same(reply(calls[at+i]),val,where+f'.actual getter value{i}')
+    return at+49
+
+
+def decode_world(calls,at,enabled,where):
+    names=[(DEVICE,k,'hs') for k in DYNAMIC]+[(DEVICE,k,'identity') for k in IFIELDS]+[(LEGACY,k,'legacy') for k in DYNAMIC]
+    value={'hs':{},'identity':{},'legacy':{}}
+    need(at+49<=len(calls),where+'.complete world')
+    for i,(path,name,part) in enumerate(names):
+        call=calls[at+i]
+        same(operation(call),'qom-get',where+'.getter operation')
+        same(call['request'].get('arguments'),{'path':path,'property':name},where+'.getter order')
+        value[part][name]=reply(call)
+    return check_world(value,enabled,where)
+
+
+def audit_all_qom(calls,enabled,where,allow_set=False):
+    worlds=[];engines=[];i=0
+    while i<len(calls):
+        call=calls[i];op=operation(call)
+        if op=='qom-get':
+            args=call['request'].get('arguments',{});same(set(args),{'path','property'},where+'.QOM arguments')
+            path,name=args['path'],args['property'];need(path in (DEVICE,LEGACY),where+'.QOM path')
+            need(name in DYNAMIC or path==DEVICE and name in IFIELDS,where+'.QOM property')
+            val=reply(call)
+            if path==DEVICE and name in IFIELDS:same(val,identity(enabled)[name],where+'.identity getter '+name)
+            elif name in DUINT:uint(val,64,where+'.'+name)
+            elif name in DBOOL:boolean(val,where+'.'+name)
+            else:
+                n=32768 if name=='registers-hex' else 128
+                need(type(val) is str and re.fullmatch('[0-9a-f]{'+str(n)+'}',val),where+'.QOM complete hex')
+            if name==DYNAMIC[0] and i+17<=len(calls):
+                block=calls[i:i+17]
+                if all(operation(c)=='qom-get' and c['request'].get('arguments')=={'path':path,'property':n}
+                       for c,n in zip(block,DYNAMIC)):
+                    value={n:reply(c) for n,c in zip(DYNAMIC,block)}
+                    check_engine(value,where+f'.engine-block{i}',path==DEVICE)
+                    engines.append({'index':i,'path':path,'value':value})
+                    if path==DEVICE and i+49<=len(calls) and calls[i+17]['request'].get('arguments')=={'path':DEVICE,'property':IFIELDS[0]}:
+                        worlds.append({'index':i,'value':decode_world(calls,i,enabled,where+f'.world{i}')})
+        elif op=='qom-set':
+            need(allow_set,where+'.unexpected QOM mutation request')
+            need(type(call['response']) is dict and 'error' in call['response'],where+'.readonly QOM rejection')
+        elif op=='qom-list':
+            path=call['request'].get('arguments',{}).get('path')
+            need(path in (DEVICE,DEVICE+'/se-clk',DEVICE+'/m-ahb',DEVICE+'/s-ahb'),where+'.QOM list scope')
+            props=reply(call);need(type(props) is list,where+'.QOM property list')
+            names=[p.get('name') for p in props];same(len(names),len(set(names)),where+'.unique QOM names')
+            need(not any(n.startswith('qtest-') for n in names),where+'.no fixture QOM properties')
+            if path==DEVICE:
+                types={p['name']:p['type'] for p in props}
+                for n in DSTR:same(types.get(n),'string',where+'.string property')
+                for n in DUINT+IUINT:same(types.get(n),'uint64',where+'.uint64 property')
+                for n in DBOOL+IBOOL:same(types.get(n),'bool',where+'.bool property')
+        else:
+            need(op in ('qmp_capabilities','cont','stop','query-status','human-monitor-command','system_reset',
+                        'migrate','migrate-incoming','query-migrate','quit'),where+'.unreviewed QMP operation '+op)
+            if op=='human-monitor-command':
+                same(call['request'].get('arguments'),{'command-line':'info mtree -f'},where+'.read-only bounded HMP command')
+            elif op not in ('migrate','migrate-incoming'):
+                need('arguments' not in call['request'],where+'.no extra control arguments')
+            if op!='migrate-incoming':reply(call)
+        i+=1
+    return {'worlds':worlds,'engines':engines}
+
+
+def qtest_trace(store,directory):
+    path=directory+'/qtest.jsonl';calls=[];pending=None;irq=[];level=False
+    for line_number,line in enumerate(store.text(path).splitlines(),1):
+        row=json_value(line,path+f':{line_number}')
+        if 'send' in row:
+            same(set(row),{'send','virtual_ns_before'},path+'.send keys')
+            need(pending is None and type(row['send']) is str,path+'.overlapping command')
+            pending={'command':row['send'],'virtual_ns_before':row['virtual_ns_before'],
+                     'reply':None,'line':line_number,'irq_before':level,'irq_after':None}
+            calls.append(pending)
+        else:
+            same(set(row),{'receive'},path+'.reply keys');text=row['receive']
+            need(type(text) is str,path+'.text reply')
+            if text.startswith('IRQ '):
+                m=re.fullmatch(r'IRQ (raise|lower) ([0-9]+)',text);need(m is not None,path+'.IRQ syntax')
+                same(int(m[2]),0,path+'.only HS sysbus line0')
+                value=m[1]=='raise';need(value!=level,path+'.genuine IRQ transition')
+                level=value;irq.append({'level':m[1],'number':0,'line':line_number})
+                continue
+            need(pending is not None and (text=='OK' or text.startswith('OK ')),path+'.successful QTest response')
+            pending['reply']=text;pending['irq_after']=level;pending=None
+    need(pending is None,path+'.truncated command')
+    qtest_time(calls,path)
+    return calls,irq
+
+
+def backend_trace(store,directory):
+    path=directory+'/backend.jsonl';rows=[];sent={'hs':b'','legacy':b''};received={'hs':b'','legacy':b''}
+    connections=[];starts=[];finishes=[];send_count=recv_count=0
+    for number,line in enumerate(store.text(path).splitlines(),1):
+        row=json_value(line,path+f':{number}');need(type(row) is dict,path+'.object entry')
+        rows.append(row)
+        if 'send' in row or 'receive' in row:
+            action='send' if 'send' in row else 'receive'
+            same(set(row),{action,'bytes','engine'},path+'.data record')
+            engine=row['engine'];need(engine in sent,path+'.backend engine')
+            data=row[action];need(type(data) is str and re.fullmatch('(?:[0-9a-f]{2})+',data),path+'.exact peer bytes')
+            raw=bytes.fromhex(data);same(row['bytes'],len(raw),path+'.data byte count')
+            (sent if action=='send' else received)[engine]+=raw
+            if action=='send':send_count+=1
+            else:recv_count+=1
+        else:
+            event=row.get('event')
+            if event=='connected':
+                same(set(row),{'event','engine'},path+'.connection entry');connections.append(row['engine'])
+            elif event=='no-output':
+                same(set(row),{'event','engine','timeout_seconds','consumed_bytes'},path+'.nonconsuming probe')
+                need(row['engine'] in sent,path+'.probe engine');same(row['consumed_bytes'],0,path+'.probe does not consume')
+                need(type(row['timeout_seconds']) in (int,float) and 0<=row['timeout_seconds']<=5,path+'.bounded output probe')
+            elif event=='failure-observation-start':starts.append(row)
+            elif event=='failure-observation-complete':finishes.append(row)
+            else:raise AuditFailure(path+': unreviewed backend event '+str(event))
+    return {'rows':rows,'sent':sent,'received':received,'connections':connections,
+            'starts':starts,'finishes':finishes,'send_count':send_count,'receive_count':recv_count}
+
+
+def scalar(call):
+    parts=call['reply'].split();same(len(parts),2,'scalar QTest reply')
+    return int(parts[1],0)
+
+
+def parts(call):
+    words=call['command'].split();need(words,'nonempty QTest command')
+    if words[0] in ('irq_intercept_out','set_irq_in'):return tuple(words)
+    return (words[0],)+tuple(int(x,0) for x in words[1:])
+
+
+def memory_call(call):
+    return call['command'].split()[0] in ('readb','readw','readl','readq','writeb','writew','writel','writeq','read','write')
+
+
+def memory_counts(calls):
+    mem=[c for c in calls if memory_call(c)]
+    dev=sum((HS_BASE<=parts(c)[1]<HS_BASE+0x4000 or OLD_BASE<=parts(c)[1]<OLD_BASE+0x4000 or
+             WRAPPER<=parts(c)[1]<WRAPPER+4 or GCC<=parts(c)[1]<GCC+0x1f0000) for c in mem)
+    ram=sum(RAM<=parts(c)[1]<RAM+4 for c in mem)
+    return {'memory':len(mem),'device_mmio':dev,'ram':ram}
+
+
+def complete_command(store,directory,report,enabled,incoming=False,accel='qtest',backend='connected',
+                     omitted=False,boot=True):
+    argv=store.json(directory+'/command.json')
+    need(type(argv) is list and all(type(x) is str for x in argv),directory+'.argv')
+    same(argv.count('-qmp'),1,directory+'.one QMP channel');qmp=argv[argv.index('-qmp')+1]
+    m=re.fullmatch(r'unix:(/[^,]+)/m,server=on,wait=off',qmp);need(m is not None,directory+'.local socket directory')
+    sock=m[1]
+    machine=DEFAULT_MACHINE+',gcc-boot-configured='+('on' if boot else 'off')
+    expected=[report['qemu'],'-machine',machine,'-accel',accel,'-m','128M','-smp','8','-display','none',
+              '-monitor','none','-S','-d','unimp,guest_errors,invalid_mem','-qmp',qmp,
+              '-chardev','socket,id=legacy,path='+sock+'/legacy,server=on,wait=off','-serial','chardev:legacy']
+    if backend=='absent':expected+=['-serial','none']
+    else:expected+=['-chardev','socket,id=hs,path='+sock+'/hs,server=on,wait=off','-serial','chardev:hs']
+    if not omitted:expected+=['-global',TYPE+'.enabled-reference='+('on' if enabled else 'off')]
+    if accel=='qtest':expected+=['-qtest','unix:'+sock+'/t,server=on,wait=off','-qtest-log','/dev/null']
+    if incoming:expected+=['-incoming','defer']
+    same(argv,expected,directory+'.complete reviewed command')
+
+
+def diagnostic_rows(text):
+    core=re.findall(r"Invalid (read|write) at addr 0x([0-9a-fA-F]+), size ([0-9]+), region '([^']+)', reason: ([^\r\n]+)",text)
+    same(len(core),text.count('Invalid read at addr ')+text.count('Invalid write at addr '),'all generic rejections parsed')
+    core=[(op,int(a,16),int(n),region,reason) for op,a,n,region,reason in core]
+    pattern=re.escape(TYPE)+r': rejected (wrapper )?(read|write) offset=0x([0-9a-f]+) size=([0-9]+)(?: value=0x([0-9a-f]+))? reason=([^\r\n]+)'
+    device=re.findall(pattern,text)
+    same(len(device),text.count(TYPE+': rejected '),'all device rejections parsed')
+    device=[(bool(w),op,int(a,16),int(n),int(v,16) if v else None,reason) for w,op,a,n,v,reason in device]
+    for wrapper,op,off,size,value,reason in device:
+        same(size,4,'delivered callback width')
+        need(off%4==0,'delivered aligned callback')
+        same(value is None,op=='read','write diagnostic contains its actual value')
+        need(reason in ('unsupported-register','read-only','reserved-bits','unsupported-dma','unsupported-format','bus-unavailable'),
+             'bounded callback rejection reason')
+    return core,device
+
+
+class Fixture:
+    def __init__(self,store,data,name,report,enabled=True,incoming=False,accel='qtest',backend='connected',
+                 omitted=False,boot=True,failed=False,allow_set=False):
+        self.store,self.name,self.path,self.enabled=store,name,data+'/'+name,enabled
+        complete_command(store,self.path,report,enabled,incoming,accel,backend,omitted,boot)
+        self.qmp=qmp_calls(store,self.path)
+        self.qt,self.irq=qtest_trace(store,self.path)
+        self.peer=backend_trace(store,self.path)
+        self.stderr=store.text(self.path+'/qemu.stderr')
+        self.core,self.device=diagnostic_rows(self.stderr)
+        self.qom=audit_all_qom(self.qmp,enabled,self.path,allow_set)
+        self.cleanup=store.json(self.path+'/cleanup.json')
+        expected={'forced_terminate':False,'forced_kill':False,'quit_acknowledged':not failed,'exit_code':1 if failed else 0}
+        same(self.cleanup,expected,self.path+'.actual complete cleanup')
+        same(operation(self.qmp[0]),'qmp_capabilities',self.path+'.initial capability handshake')
+        same(reply(self.qmp[0]),{},self.path+'.capability reply')
+        if accel=='qtest':
+            same(self.qt[0]['command'],'irq_intercept_out /machine/uart-hs sysbus-irq',self.path+'.actual HS output interception')
+            same(sum(c['command'].startswith('irq_intercept') for c in self.qt),1,self.path+'.one output hook')
+        else:
+            same(self.qt,[],self.path+'.TCG has no QTest commands')
+            same(self.irq,[],self.path+'.TCG has no injected IRQ observations')
+        if failed:
+            same(operation(self.qmp[-1]),'migrate-incoming',self.path+'.failed incoming terminal command')
+            need(not any(operation(c) in ('cont','quit') for c in self.qmp),self.path+'.no run/quit before failure')
+        else:
+            same(operation(self.qmp[-1]),'quit',self.path+'.normal terminal quit')
+            same(reply(self.qmp[-1]),{},self.path+'.actual quit acknowledgment')
+            need('load of migration failed' not in self.stderr.lower(),self.path+'.no concealed failed load')
+            same(self.peer['starts'],[],self.path+'.no failed-load observer on successful fixture')
+            same(self.peer['finishes'],[],self.path+'.no failed-load terminal observation')
+        expected_connections=['legacy'] if backend=='absent' else ['legacy','hs']
+        same(self.peer['connections'],expected_connections,self.path+'.separate actual backend connections')
+        if accel=='tcg':same(sum(operation(c)=='cont' for c in self.qmp),0,self.path+'.paused TCG')
+        elif not incoming:same(sum(operation(c)=='cont' for c in self.qmp),1,self.path+'.single initial qtest run')
+        outgoing=name.startswith('migration-') and name.endswith('-source')
+        for op,count in (('qmp_capabilities',1),('migrate',int(outgoing)),('migrate-incoming',int(incoming)),
+                         ('stop',int(outgoing)),('system_reset',int(name in ('default-omitted','explicit-off'))),
+                         ('qom-set',32 if allow_set else 0),
+                         ('qom-list',4 if accel=='tcg' else int(name.endswith('identity_and_pure_observation'))),
+                         ('query-status',2 if outgoing or accel=='tcg' else int(incoming and not failed))):
+            same(sum(operation(c)==op for c in self.qmp),count,self.path+'.exact '+op+' count')
+        if not incoming and not outgoing:
+            same(sum(operation(c)=='query-migrate' for c in self.qmp),0,self.path+'.no unrequested migration polling')
+        hmp=(2 if name in ('default-omitted','explicit-off') else
+             1 if name.endswith('exact_mapping_and_neighbor_holes') else
+             (1 if enabled else 2) if incoming and not failed else 0)
+        same(sum(operation(c)=='human-monitor-command' for c in self.qmp),hmp,self.path+'.exact mapping query count')
+        self.memory=memory_counts(self.qt)
+
+    def summary(self):
+        return {'fixture':self.name,'qmp_calls':len(self.qmp),'qtest_calls':len(self.qt),
+                'complete_qom_worlds':len(self.qom['worlds']),'complete_engine_blocks':len(self.qom['engines']),
+                'qom_getters':sum(operation(c)=='qom-get' for c in self.qmp),
+                'actual_irq_transitions':len(self.irq),'memory_counts':self.memory,
+                'backend_sent_bytes':{k:len(v) for k,v in self.peer['sent'].items()},
+                'backend_received_bytes':{k:len(v) for k,v in self.peer['received'].items()},
+                'generic_rejections':len(self.core),'device_rejections':len(self.device),
+                'cleanup':self.cleanup}
+
+    def peer_bytes(self,sent_hs=b'',sent_legacy=b'',recv_hs=b'',recv_legacy=b''):
+        same(self.peer['sent'],{'hs':sent_hs,'legacy':sent_legacy},self.path+'.complete actual host input bytes')
+        same(self.peer['received'],{'hs':recv_hs,'legacy':recv_legacy},self.path+'.complete actual device output bytes')
+
+    def no_errors(self):
+        same(self.core,[],self.path+'.no unexpected generic invalid memory')
+        same(self.device,[],self.path+'.no unexpected rejected callback')
+
+
+def world_occurrences(f,value):
+    return [x['index'] for x in f.qom['worlds'] if x['value']==value]
+
+
+def observed_world(f,value,where,enabled=None):
+    check_world(value,f.enabled if enabled is None else enabled,where)
+    at=world_occurrences(f,value)
+    need(at,where+'.full reported world occurs in raw QMP')
+    return at
+
+
+def mapping(f,filename,enabled):
+    text=f.store.text(f.path+'/'+filename)
+    calls=[c for c in f.qmp if operation(c)=='human-monitor-command' and reply(c)==text]
+    need(calls,f.path+'.retained mtree exactly matches actual QMP response')
+    for c in calls:same(c['request'].get('arguments'),{'command-line':'info mtree -f'},f.path+'.mtree command')
+    need('FlatView #' in text,f.path+'.active FlatView output')
+    rows={(int(a,16),int(b,16),n) for a,b,n in re.findall(
+          r'([0-9a-fA-F]+)-([0-9a-fA-F]+) .*: ('+re.escape(TYPE)+r'[^\s]*)(?:\s|$)',text)}
+    expected={(HS_BASE,HS_BASE+0x3fff,TYPE),(WRAPPER,WRAPPER+3,TYPE+'/wrapper-version')} if enabled else set()
+    same(rows,expected,f.path+'.exact active HS mappings')
+    return {'mtree_file':filename,'active_leaves':[list(x) for x in sorted(rows)],
+            'active_leaf_count':len(rows),'active_mapped_bytes':0x4004 if enabled else 0}
+
+
+def wire_from_world(value):
+    """Explicit independent physical offsets; no producer serializer import."""
+    hs=value['hs'];enabled=value['identity']['enabled-reference']
+    check_world(value,enabled,'independent wire source')
+    raw=bytearray(NATIVE_BYTES)
+    fields=((0,4,int(enabled)),(4,4,IDENTITY),(8,8,HS_BASE),(16,4,0x4000),
+            (20,8,WRAPPER),(28,4,4),(32,4,FW),(36,4,FW),(40,4,WRAPPER_VERSION),(44,4,64))
+    for off,width,number in fields:raw[off:off+width]=number.to_bytes(width,'big')
+    raw[48:16432]=bytes.fromhex(hs['registers-hex'])
+    raw[16432:16496]=bytes.fromhex(hs['tx-fifo-hex'])
+    raw[16496:16560]=bytes.fromhex(hs['rx-fifo-hex'])
+    for off,name in zip((16560,16564,16568,16572,16576),DUINT[:5]):
+        raw[off:off+4]=uint(hs[name],32,'wire counter').to_bytes(4,'big')
+    raw[16580]=hs['tx-active'];raw[16581]=hs['rx-active']
+    for off,name in zip((16582,16590,16598),DUINT[5:8]):raw[off:off+8]=hs[name].to_bytes(8,'big')
+    raw[16606]=hs['reset-held'];raw[16607]=hs['tx-zero-pending']
+    old=value['legacy'];legacy=bytearray(16534)
+    legacy[:16384]=bytes.fromhex(old['registers-hex'])
+    legacy[16384:16448]=bytes.fromhex(old['tx-fifo-hex'])
+    legacy[16448:16512]=bytes.fromhex(old['rx-fifo-hex'])
+    for off,name in zip((16512,16516,16520,16524,16528),DUINT[:5]):legacy[off:off+4]=old[name].to_bytes(4,'big')
+    legacy[16532]=old['tx-active'];legacy[16533]=old['rx-active']
+    legacy+=b'\x05\x15qcom-geni-uart/clocks\x00\x00\x00\x01'
+    for name in DUINT[5:8]:legacy+=old[name].to_bytes(8,'big')
+    legacy+=bytes((old['reset-held'],old['tx-zero-pending']))
+    same(len(raw),16608,'complete HS wire bytes');same(len(legacy),16587,'complete legacy wire including clock subsection')
+    return bytes(raw),bytes(legacy)
+
+
+def scan_uart_sections(store,path,expected_world):
+    payloads=dict(zip((TYPE,'qcom-geni-uart'),wire_from_world(expected_world)))
+    needles={name:bytes((len(name),))+name.encode()+b'\x00\x00\x00\x00\x00\x00\x00\x01' for name in payloads}
+    found={name:{} for name in payloads};tail=b'';total=0;hasher=hashlib.sha256();magic=None
+    with store.open(path) as stream:
+        for chunk in iter(lambda:stream.read(CHUNK),b''):
+            if magic is None:magic=chunk[:8]
+            hasher.update(chunk);block=tail+chunk;start=total-len(tail)
+            for name,needle in needles.items():
+                pos=0
+                while True:
+                    at=block.find(needle,pos)
+                    if at<0:break
+                    pos=at+1;head=at-5;body=at+len(needle);end=body+len(payloads[name])
+                    if head<0 or start+head<8 or block[head] not in (1,4):continue
+                    absolute=start+head;previous=found[name].setdefault(absolute,None)
+                    if end+5>len(block):continue
+                    sid=int.from_bytes(block[head+1:head+5],'big');footer=b'\x7e'+sid.to_bytes(4,'big')
+                    same(block[body:end],payloads[name],path+'.every actual '+name+' payload byte')
+                    same(block[end:end+5],footer,path+'.exact footer, no unparsed clock ratio subsection')
+                    row={'name':name,'instance_id':0,'version':1,'header_offset':absolute,
+                         'name_offset':start+at+1,'version_offset':start+body-4,'section_id':sid,
+                         'payload_offset':start+body,'payload_bytes':len(payloads[name]),
+                         'payload_sha256':sha(payloads[name]),'footer_offset':start+end,
+                         'section_end_offset':start+end+5,'footer_hex':footer.hex(),
+                         'all_payload_bytes_match_source_pure_observation':True}
+                    if previous is not None:same(row,previous,path+'.overlap scan consistency')
+                    found[name][absolute]=row
+            total+=len(chunk);tail=block[-65536:]
+    same(magic,b'QEVM\x00\x00\x00\x03',path+'.QEVM v3 envelope')
+    same(total,store.size(path),path+'.whole actual file length')
+    rows={}
+    for name in payloads:
+        same(len(found[name]),1,path+'.one unique complete '+name+' section')
+        item=next(iter(found[name].values()));need(item is not None,path+'.no truncated UART section')
+        rows['hs' if name==TYPE else 'legacy']=item
+    need(rows['hs']['section_id']!=rows['legacy']['section_id'],path+'.distinct device section identities')
+    info={'bytes':total,'sha256':hasher.hexdigest()};store.observed[path]=info
+    for label,payload in zip(('hs','legacy'),payloads.values()):
+        same(store.read(path+'.'+label+'.payload.bin'),payload,path+'.retained independently reconstructed payload '+label)
+    parsed=store.json(path+'.sections.json')
+    fields_equal(parsed,{'file':PurePosixPath(path).name,**info,'sections':rows,
+                         'hs_full_wire_bytes':16608,'hs_guard_bytes':48,
+                         'hs_guard_precedes_every_mutable_field':True,
+                         'legacy_full_wire_bytes':16587,'legacy_body_bytes':16534,
+                         'legacy_clock_subsection_observed':True,'legacy_clock_muldiv_subsections_observed':0,
+                         'all_4096_register_words_and_both_full_fifos_verified':True,
+                         'all_counters_boolean_bytes_and_clock_witnesses_verified':True,
+                         'complete_machine_other_device_payload_oracle_claimed':False},path+'.retained complete wire record')
+    return {'sections':rows,**info,'full_wire_validation':parsed}
+
+
+def expected_source_world(enabled):
+    def engine(active,legacy):
+        regs=[0]*4096;regs[0x268//4]=regs[0x28c//4]=8
+        if active:
+            for off,value in ((0x270,8),(0x600,START),(0x630,START),(0x610,RX_LAST),(0x640,RX_LAST),
+                              (0x614,DONE|RX_LAST),(0x644,RX_LAST),(0x810,2),(0xe1c,12)):
+                regs[off//4]=value
+            if not legacy:
+                for off,value in ((0x260,0x4380e),(0x264,0xc3e0e),(0x284,0x4380e),(0x288,0xc3e0e)):
+                    regs[off//4]=value
+        tx=(b'TAIL' if legacy else b'EFGH') if active else b''
+        rx=(b'old' if legacy else b'source!') if active else b''
+        result={'registers-hex':b''.join(x.to_bytes(4,'big') for x in regs).hex(),
+                'tx-fifo-hex':(tx+bytes(64-len(tx))).hex(),'rx-fifo-hex':(rx+bytes(64-len(rx))).hex(),
+                'tx-count':4 if active else 0,'rx-count':len(rx),'tx-remaining':4 if active else 0,
+                'tx-sent':4 if active else 0,'rx-received':len(rx),'fifo-bytes':64,
+                'se-clock-period':0 if legacy or not active else PERIOD_UNIT//19_200_000,
+                'm-ahb-clock-period':PERIOD_UNIT//100_000_000 if active else 0,
+                's-ahb-clock-period':PERIOD_UNIT//100_000_000 if active else 0,
+                'tx-active':active,'rx-active':active,'reset-held':False,'tx-zero-pending':False,
+                'irq-level':active and not legacy}
+        return result
+    result={'identity':identity(enabled),'hs':engine(enabled,False),'legacy':engine(True,True)}
+    return check_world(result,enabled,'independently derived pending source')
+
+
+class QtCursor:
+    def __init__(self,fixture):self.f=fixture;self.i=0;self.expected_irqs=[]
+    def take(self,expected,value=None):
+        need(self.i<len(self.f.qt),self.f.path+'.missing QTest operation')
+        row=self.f.qt[self.i];self.i+=1;same(parts(row),expected,self.f.path+f'.QTest operation{self.i}')
+        if value is not None:same(scalar(row),value,self.f.path+f'.QTest value{self.i}')
+        elif expected[0].startswith('write') or expected[0] in ('irq_intercept_out','set_irq_in'):
+            same(row['reply'],'OK',self.f.path+'.write/control acknowledgment')
+        return row
+    def write(self,address,value):return self.take(('writel',address,value))
+    def read(self,address,value=None):return self.take(('readl',address),value)
+    def gate(self,address,mask,enabled):
+        row=self.read(address);old=scalar(row)
+        self.write(address,old|mask if enabled else old&~mask)
+    def configure(self,cfg=1):
+        for off,val in ((0x17738,0),(0x1773c,0),(0x17740,0),(0x17734,cfg),(0x17730,1)):
+            self.write(GCC+off,val)
+        n=0
+        while True:
+            n+=1;need(n<=100,self.f.path+'.bounded RCG settling')
+            self.take(('clock_step',1000));row=self.read(GCC+0x17730)
+            if scalar(row)&1==0:break
+        return n
+    def bring_up(self):self.configure();self.gate(HS_VOTE,SE|M_AHB|S_AHB,True)
+    def packing(self):
+        for off,val in ((0x254,0),(0x260,0x4380e),(0x264,0xc3e0e),(0x284,0x4380e),(0x288,0xc3e0e),(0x268,8),(0x28c,8)):
+            self.write(HS_BASE+off,val);self.read(HS_BASE+off,val)
+    def irq(self,value):
+        row=self.take(('endianness',));same(row['reply'],'OK little',self.f.path+'.read-only IRQ protocol fence')
+        same(row['irq_after'],value,self.f.path+'.actual device IRQ output')
+        self.expected_irqs.append(value)
+    def flags(self,address,ones=0,zeros=0):
+        value=scalar(self.read(address));need((value&ones)==ones and not(value&zeros),self.f.path+'.actual status bits')
+        return value
+    def finish(self):same(self.i,len(self.f.qt),self.f.path+'.all QTest commands consumed')
+
+
+def source_trace(f,saved,enabled,witness):
+    expected=expected_source_world(enabled)
+    same(saved['snapshot'],expected,f.path+'.independent complete pending source snapshot')
+    same(saved['ram_witness'],witness,f.path+'.source RAM witness')
+    epoch=250000 if enabled else 350000;same(saved['source_virtual_ns'],epoch,f.path+'.source virtual epoch')
+    q=QtCursor(f);q.take(('irq_intercept_out',DEVICE,'sysbus-irq'))
+    if enabled:q.bring_up();q.packing()
+    for legacy in ((True,False) if enabled else (True,)):
+        base=OLD_BASE if legacy else HS_BASE;prefix=b'OLD!' if legacy else b'ABCD'
+        for off,val in ((0xe1c,12),(0x614,DONE|RX_LAST),(0x644,RX_LAST),(0x80c,0),(0x810,2),
+                        (0x270,8),(0x600,START),(0x700,int.from_bytes(prefix,'little')),(0x630,START)):
+            q.write(base+off,val)
+    q.gate(OLD_VOTE,OLD_SE,False);q.write(OLD_BASE+0x700,int.from_bytes(b'TAIL','little'))
+    q.take(('clock_set',epoch),epoch)
+    if enabled:q.write(HS_BASE+0x700,int.from_bytes(b'EFGH','little'))
+    q.write(RAM,witness);q.read(RAM,witness);q.finish()
+    f.peer_bytes(b'source!' if enabled else b'',b'old',b'ABCD' if enabled else b'',b'OLD!')
+    f.no_errors()
+    worlds=f.qom['worlds'];same(len(worlds),3,f.path+'.three complete stopped-source worlds')
+    for w in worlds:same(w['value'],expected,f.path+'.source worlds preserve complete state')
+    stop=[i for i,c in enumerate(f.qmp) if operation(c)=='stop'];same(len(stop),1,f.path+'.one stop')
+    same(operation(f.qmp[stop[0]+1]),'query-status',f.path+'.stopped status query')
+    same(reply(f.qmp[stop[0]+1])['running'],False,f.path+'.stopped source')
+    same(worlds[0]['index'],stop[0]+2,f.path+'.first full source world after stop')
+    same(worlds[1]['index'],worlds[0]['index']+49,f.path+'.world after source RAM operations')
+    mig=[i for i,c in enumerate(f.qmp) if operation(c)=='migrate'];same(len(mig),1,f.path+'.one outgoing migration')
+    same(mig[0],worlds[1]['index']+49,f.path+'.migration after preserved source world')
+    migration_argument(f.qmp[mig[0]],saved['file'])
+    p=mig[0]+1;end=p
+    while end<len(f.qmp) and operation(f.qmp[end])=='query-migrate':end+=1
+    completed_polls(f.qmp[p:end],saved['query_migrate'],f.path+'.outgoing polls')
+    same(operation(f.qmp[end]),'query-status',f.path+'.postmigrate status')
+    same(reply(f.qmp[end]),saved['query_status'],f.path+'.retained postmigrate status')
+    fields_equal(reply(f.qmp[end]),{'status':'postmigrate','running':False},f.path+'.actual postmigrate')
+    same(worlds[2]['index'],end+1,f.path+'.last source world')
+    same(worlds[2]['index']+49,len(f.qmp)-1,f.path+'.only quit follows source state verification')
+    fields_equal(saved,{'scenario':'enabled' if enabled else 'disabled','source_directory':f.name,
+                        'source_first_four_tx_bytes_already_delivered_per_active_engine':True,
+                        'source_pending_legacy_tx_hex':'5441494c','source_pending_hs_tx_hex':'45464748' if enabled else '',
+                        'source_pending_hs_rx_hex':'736f7572636521' if enabled else '',
+                        'source_pending_legacy_rx_hex':'6f6c64','original_stream_modified':False},f.path+'.source receipt')
+    same(f.store.json(f.path+'/stopped-source.json'),saved,f.path+'.independent retained source record')
+    return expected
+
+
+def expected_counters(qom,qtest,memory,ram,epoch,hs_sent=0,terminal=False):
+    return {'qom_get':qom,'memory':memory,'device_mmio':0,'ram':ram,'cont':0,'qtest':qtest,
+            'backend_send_calls':int(hs_sent>0),'backend_receive_calls':0,
+            'backend_sent_bytes':{'hs':hs_sent,'legacy':0},
+            'backend_received_bytes':{'hs':0,'legacy':0},
+            'backend_terminal_reads':{'hs':int(terminal),'legacy':int(terminal)},'virtual_ns':epoch}
+
+
+def fresh_engine(value,where):
+    registers=[0]*4096;registers[0x268//4]=registers[0x28c//4]=8
+    same(raw_registers(value),registers,where+'.fresh raw register bank')
+    same(bytes.fromhex(value['tx-fifo-hex']),bytes(64),where+'.fresh TX FIFO')
+    same(bytes.fromhex(value['rx-fifo-hex']),bytes(64),where+'.fresh RX FIFO')
+    for name in DUINT[:5]:same(value[name],0,where+'.fresh '+name)
+    for name in DBOOL:same(value[name],False,where+'.fresh '+name)
+
+
+def target_trace(f,saved,row,enabled):
+    source=saved['snapshot'];epoch=saved['source_virtual_ns'];witness=saved['ram_witness']
+    pre=f.store.json(f.path+'/prewarm.json');same(row['prewarm'],pre,f.path+'.retained prewarm')
+    initial=pre['initial_world'];check_world(initial,enabled,f.path+'.initial world')
+    fresh_engine(initial['hs'],f.path+'.untouched target HS');fresh_engine(initial['legacy'],f.path+'.untouched target legacy')
+    p=1
+    for _ in range(3):p=match_world(f.qmp,p,initial,f.path+'.three prewarm worlds')
+    same(operation(f.qmp[p]),'migrate-incoming',f.path+'.incoming after147 pure getters')
+    migration_argument(f.qmp[p],saved['file']);incoming_id=f.qmp[p]['request']['id'];p+=1
+    begin=p
+    while p<len(f.qmp) and operation(f.qmp[p])=='query-migrate':p+=1
+    first=row['first_target_observation']
+    completed_polls(f.qmp[begin:p],first['query_migrate'],f.path+'.incoming completed polls')
+    same(operation(f.qmp[p]),'query-status',f.path+'.paused incoming status')
+    same(reply(f.qmp[p]),first['query_status'],f.path+'.saved query-status')
+    same(reply(f.qmp[p])['running'],False,f.path+'.paused after restore');p+=1
+    first_index=p;p=match_world(f.qmp,p,source,f.path+'.first49 actual post-incoming getters')
+    p=match_world(f.qmp,p,source,f.path+'.repeated49 actual post-incoming getters')
+    same(first['first_world'],source,f.path+'.first snapshot equals independent source')
+    same(first['repeated_world'],source,f.path+'.repeated snapshot equals independent source')
+    before=expected_counters(147,4,2,2,epoch,3)
+    after=expected_counters(245,4,2,2,epoch,3)
+    ram_after=expected_counters(245,5,3,3,epoch,3)
+    fields_equal(pre,{'counters':before,'ram_dirtied':True,'device_state_dirtied':False,
+                      'queued_host_rx_hex':'4e4557','host_rx_consumed_before_incoming':False,
+                      'reference':enabled},f.path+'.RAM-only prewarm fact record')
+    fields_equal(first,{'first_qom_get_count':49,'repeated_qom_get_count':49,
+                        'counters_before_incoming':before,'counters_after_two_pure_worlds':after,
+                        'device_mmio_delta_before_observations':0,'any_memory_delta_before_observations':0,
+                        'cont_delta_before_observations':0,'backend_receive_delta_before_observations':0,
+                        'first_world_includes_both_engines':True,'no_backend_consumption_or_output_observed':True,
+                        'guest_cpu_executed':False,'ram_witness':witness,
+                        'ram_loaded_after_two_worlds_before_cont':True,'counters_after_ram_witness':ram_after,
+                        'actual_hs_irq_after_ram_fence':enabled,
+                        'gic_or_guest_interrupt_handling_verified':False},f.path+'.first observation counters and boundaries')
+    same(f.store.json(f.path+'/destination-before-first-device-mmio.json'),first,
+         f.path+'.independent retained first destination observation')
+    same(operation(f.qmp[p]),'human-monitor-command',f.path+'.mapping after two worlds');p+=1
+    same(row['active_mapping_after_restore'],mapping(f,'mtree-after-two-pure-worlds.txt',enabled),f.path+'.target active mapping')
+    same(operation(f.qmp[p]),'cont',f.path+'.only now continue');p+=1
+    if enabled:
+        polled=[]
+        while p<len(f.qmp) and operation(f.qmp[p])=='qom-get' and f.qmp[p]['request'].get('arguments')=={'path':DEVICE,'property':'rx-count'}:
+            polled.append(reply(f.qmp[p]));p+=1
+        need(polled and polled[-1]==10 and all(v in (7,8,9,10) for v in polled),f.path+'.actual saved plus target input RX')
+        need(all(v!=10 for v in polled[:-1]),f.path+'.first completed RX poll terminates')
+    else:
+        for name in ('rx-count','tx-count'):
+            same(f.qmp[p]['request'].get('arguments'),{'path':DEVICE,'property':name},f.path+'.disabled target pure counter')
+            same(reply(f.qmp[p]),0,f.path+'.disabled target zero counter');p+=1
+        same(operation(f.qmp[p]),'human-monitor-command',f.path+'.disabled mapping remains off');p+=1
+        mapping(f,'mtree-disabled-after-restore.txt',False)
+    snapshots=[]
+    for _ in range(2):
+        values={}
+        for name in DYNAMIC:
+            call=f.qmp[p];same(operation(call),'qom-get',f.path+'.HS isolation getters')
+            same(call['request'].get('arguments'),{'path':DEVICE,'property':name},f.path+'.HS isolation getter order')
+            values[name]=reply(call);p+=1
+        check_engine(values,f.path+'.post-cont HS state');snapshots.append(values)
+    same(snapshots[0],snapshots[1],f.path+'.legacy resume leaves complete HS state unchanged')
+    same(p,len(f.qmp)-1,f.path+'.all target QMP through final quit accounted')
+    q=QtCursor(f);q.take(('irq_intercept_out',DEVICE,'sysbus-irq'));q.take(('clock_set',epoch),epoch)
+    q.write(RAM,witness^0xffffffff);q.read(RAM,witness^0xffffffff)
+    fence=q.read(RAM,witness);same(fence['irq_after'],enabled,f.path+'.actual restored HS output at RAM fence')
+    # IRQ records are read before the RAM command's OK. The next send boundary
+    # includes precisely the queued output transitions consumed by that fence.
+    boundary=f.qt[5]['line'] if len(f.qt)>5 else 1<<60
+    transitions=[{'level':x['level'],'number':x['number']} for x in f.irq if x['line']<boundary]
+    same(first['actual_hs_irq_transitions_before_cont'],transitions,f.path+'.actual captured pre-cont transitions')
+    if enabled:
+        for word in (b'sour',b'ce!N',b'EW'):q.read(HS_BASE+0x780,int.from_bytes(word,'little'))
+        q.read(HS_BASE+0x910,8);q.read(HS_BASE+0x914,10)
+        status=q.read(HS_BASE+0x610);need(scalar(status)&DONE,f.path+'.pending TX really completed after cont')
+        q.write(HS_BASE+0x618,0xffffffff);q.write(HS_BASE+0x648,0xffffffff)
+    q.gate(OLD_VOTE,OLD_SE,True)
+    q.read(OLD_BASE+0x780,int.from_bytes(b'old','little'));q.read(OLD_BASE+0x910,8);q.read(OLD_BASE+0x914,3)
+    if enabled:
+        for off,val in ((0x270,4),(0x600,START),(0x700,int.from_bytes(b'NEXT','little'))):q.write(HS_BASE+off,val)
+    for off,val in ((0x270,4),(0x600,START),(0x700,int.from_bytes(b'OLD2','little'))):q.write(OLD_BASE+off,val)
+    q.finish();f.no_errors()
+    f.peer_bytes(b'NEW',b'',b'EFGHNEXT' if enabled else b'',b'TAILOLD2')
+    same(len(f.qom['worlds']),5,f.path+'.exact five complete target worlds')
+    fields_equal(row['continuation'],{'pending_hs_bytes_after_cont':4 if enabled else 0,
+              'pending_legacy_bytes_after_clock_restore':4,'already_sent_prefix_replayed':False,
+              'prequeued_target_hs_rx_consumed_only_after_cont':enabled,
+              'legacy_and_hs_dynamic_states_independent':True,'post_restore_new_io_verified':True},f.path+'.continuation report')
+    return {'fixture':f.name,'incoming_request_id':incoming_id,'first_world_request_id':f.qmp[first_index]['request']['id'],
+            'first_getters':49,'repeated_getters':49,'all_first98_actual_getters_verified':True,
+            'prewarm_memory_commands':2,'prewarm_device_mmio':0,'prewarm_ram_inverse_verified':True,
+            'first_post_restore_memory_is_ram_witness':True,'first_cont_after_observations':True,
+            'restored_sysbus_irq_captured':True,'prequeued_input_stays_out_of_first_world':True,
+            'actual_hs_output_hex':f.peer['received']['hs'].hex(),
+            'actual_legacy_output_hex':f.peer['received']['legacy'].hex(),
+            'gic_or_guest_interrupt_handling_verified':False}
+
+
+def failed_trace(f,row,saved,filename,diagnostic,core=False):
+    epoch=saved['source_virtual_ns'];initial=row['initial_target_world'];check_world(initial,f.enabled,f.path+'.initial failed target world')
+    fresh_engine(initial['hs'],f.path+'.fresh failed-target HS');fresh_engine(initial['legacy'],f.path+'.fresh failed-target console')
+    p=1;p=match_world(f.qmp,p,initial,f.path+'.before EARLY input');p=match_world(f.qmp,p,initial,f.path+'.EARLY remains unconsumed')
+    same(p,len(f.qmp)-1,f.path+'.only incoming follows initial98 getters')
+    same(operation(f.qmp[p]),'migrate-incoming',f.path+'.actual failed incoming');migration_argument(f.qmp[p],filename)
+    same(len(f.qt),2,f.path+'.no memory/QTest work during failed load')
+    same(parts(f.qt[0]),('irq_intercept_out',DEVICE,'sysbus-irq'),f.path+'.failure IRQ hook')
+    same(parts(f.qt[1]),('clock_set',epoch),f.path+'.failure clock alignment')
+    same(scalar(f.qt[1]),epoch,f.path+'.actual failure target time')
+    same(f.memory,{'memory':0,'device_mmio':0,'ram':0},f.path+'.no failed-target memory requests')
+    f.peer_bytes(b'EARLY',b'',b'',b'');f.no_errors()
+    needle=diagnostic if core else TYPE+': '+diagnostic
+    need(needle in f.stderr,f.path+'.specific actual migration diagnostic')
+    need('load of migration failed' in f.stderr.lower(),f.path+'.actual migration failure marker')
+    need(core or 'error while loading state' in f.stderr.lower(),f.path+'.actual device state rejection')
+    same(len(f.peer['starts']),1,f.path+'.one pre-incoming continuous observer')
+    same(len(f.peer['finishes']),1,f.path+'.one completed continuous observer')
+    reqid=f.qmp[p]['request']['id'];start=f.peer['starts'][0]
+    same(start,{'event':'failure-observation-start','before_qmp_request_id':reqid,
+                'engines':['hs','legacy']},f.path+'.actual pre-request observer marker')
+    observer=f.store.json(f.path+'/backend-failure-observation.json')
+    same(f.peer['finishes'][0],{'event':'failure-observation-complete',**observer},f.path+'.raw peer log and terminal observation')
+    fields_equal(observer,{'started_before_qmp_request_id':reqid,'observed_from_before_incoming':True,
+                          'expected_process_exit_code':1,'actual_process_exit_code':1,
+                          'specific_migration_failure_verified':True,'observer_thread_finished':True,
+                          'thread_error':None},f.path+'.complete observer facts')
+    same(len(observer['backends']),2,f.path+'.two independently observed backend terminations')
+    terminations=[]
+    for item,engine in zip(observer['backends'],('hs','legacy')):
+        fields_equal(item,{'engine':engine,'data_bytes':0,'chunks_hex':[]},f.path+'.zero actual observed output '+engine)
+        need(type(item['recv_calls']) is int and item['recv_calls']>=1,f.path+'.actual terminal recv '+engine)
+        need(item['termination'] in ('eof','reset'),f.path+'.only explicit EOF or reset accepted')
+        same(item['errno'],104 if item['termination']=='reset' else None,f.path+'.specific terminal errno')
+        if item['termination']=='reset':need(item.get('error_type') in ('ConnectionResetError','OSError'),f.path+'.recorded reset exception')
+        else:need('error_type' not in item,f.path+'.EOF is not an exception')
+        terminations.append({'engine':engine,'termination':item['termination'],'errno':item['errno'],'recv_calls':item['recv_calls']})
+    same(len(f.peer['rows']),5,f.path+'.complete connected/input/observer log only')
+    before=expected_counters(98,2,0,0,epoch,5)
+    after=expected_counters(98,2,0,0,epoch,5,True)
+    detail=f.store.json(f.path+'/load-failure.json')
+    fields_equal(detail,{'target_directory':f.name,'target_exit_code':1,'expected_diagnostic':needle,
+                'specific_failure_observed':True,'core_section_validation_failure':core,
+                'initial_target_world':initial,'counters_before_incoming':before,
+                'counters_after_process_exit':after,'prequeued_target_rx_hex':'4541524c59',
+                'no_early_backend_output':True,'backend_failure_observation':observer,
+                'output_observed_continuously_from_before_incoming':True,
+                'no_destination_memory_commands':True,'no_cont_command':True,
+                'accepted_after_state_repair':False,'failed_process_state_readback_claimed':False,
+                'stderr_sha256':sha(f.stderr.encode())},f.path+'.independent complete failed-load record')
+    fields_equal(row,detail,f.path+'.report agrees with retained failed-load evidence')
+    return {'fixture':f.name,'specific_diagnostic':needle,'process_exit_code':1,'output_bytes':0,
+            'backend_terminations':terminations,'actual_pre_request_observer_id':reqid,
+            'destination_memory_commands':0,'cont_commands':0,'raw_qom_getters':98,
+            'accepted_after_repair':False,'failed_process_state_readback_claimed':False}
+
+
+def deleted_span_difference(store,original,changed,offset,length,source_sha,changed_sha):
+    same(store.size(original)-length,store.size(changed),changed+'.exact deleted length')
+    with store.open(original) as a,store.open(changed) as b:
+        remaining=offset
+        while remaining:
+            n=min(CHUNK,remaining);same(a.read(n),b.read(n),changed+'.unaltered prefix');remaining-=n
+        same(len(a.read(length)),length,changed+'.complete removed guard')
+        while True:
+            left,right=a.read(CHUNK),b.read(CHUNK);same(left,right,changed+'.unaltered complete suffix')
+            if not left:break
+    same(hash_member(store,original)['sha256'],source_sha,changed+'.original remains exact')
+    same(hash_member(store,changed)['sha256'],changed_sha,changed+'.actual removed-guard stream hash')
+    return {'removed_offset':offset,'removed_bytes':length,'all_remaining_bytes_equal':True,
+            'guard_removed_inside_present_section':True,'entire_missing_device_section_tested':False}
+
+
+def uncovered_irq_getters(f):
+    covered=set()
+    for block in f.qom['engines']:covered.update(range(block['index'],block['index']+17))
+    return [reply(call) for i,call in enumerate(f.qmp) if i not in covered and operation(call)=='qom-get' and
+            call['request'].get('arguments')=={'path':DEVICE,'property':'irq-level'}]
+
+
+def last_qom(f,name,path=DEVICE):
+    values=[reply(c) for c in f.qmp if operation(c)=='qom-get' and c['request'].get('arguments')=={'path':path,'property':name}]
+    need(values,f.path+'.actual getter observed '+name)
+    return values[-1]
+
+
+def rejection_expect(f,q,row,offset,*,write=False,value=0,width='l',reason='unsupported-register',wrapper=False,shape=False):
+    op='write' if write else 'read';size={'b':1,'w':2,'l':4,'q':8}[width]
+    address=(WRAPPER if wrapper else HS_BASE)+offset
+    expected=(op+width,address,value) if write else (op+width,address)
+    call=q.take(expected)
+    if shape:
+        need(not wrapper, 'Shape check is restricted to the HS register region')
+        if size in (1,2):
+            same(offset%size,0,'Reviewed aligned narrow buffer request')
+            fragments=[(offset,size)]
+        else:
+            same(size,4,'Reviewed unaligned buffer request width')
+            widths={1:(1,2,1),2:(2,2),3:(1,2,1)}.get(offset%4)
+            need(widths is not None,'Reviewed unaligned buffer request offset')
+            fragments=[];cursor=offset
+            for part in widths:
+                fragments.append((cursor,part));cursor+=part
+        core=[(op,address,part,TYPE,'invalid size (min:4 max:4)') for address,part in fragments]
+        device=[];line=None
+    else:
+        core=[];device=[(wrapper,op,offset,size,value if write else None,reason)]
+        line=TYPE+': rejected '+('wrapper ' if wrapper else '')+f'{op} offset={offset:#x} size={size}'
+        if write:line+=f' value={value:#x}'
+        line+=' reason='+reason
+    actual_lines=[] if line is None else [line]
+    fields_equal(row,{'command':call['command'],'expected_specific_diagnostic':line,
+                      'actual_core_diagnostics':[list(x) for x in core],
+                      'actual_device_diagnostics':actual_lines,'full_state_unchanged':True,
+                      'error_return_used_as_register_value':False},f.path+'.reported rejection binds actual operation')
+    return core,device
+
+
+def paired_rejection_worlds(f,count,tail=0):
+    worlds=f.qom['worlds'];same(len(worlds),2*count+tail,f.path+'.all complete rejection observations')
+    for i in range(count):same(worlds[2*i]['value'],worlds[2*i+1]['value'],f.path+'.rejection has no state effect')
+    if tail==2:same(worlds[-2]['value'],worlds[-1]['value'],f.path+'.buffered suffix rejection has no state effect')
+
+
+def audit_ordinary_fixture(f,q,index,row):
+    """Independent complete QTest sequence and actual peer-byte assertions."""
+    base=HS_BASE;w=lambda o,v:q.write(base+o,v);r=lambda o,v=None:q.read(base+o,v)
+    core=[];device=[]
+    if index==0:
+        worlds=f.qom['worlds'];same(len(worlds),2,f.path+'.initial pure worlds')
+        same(worlds[0]['index'],2,f.path+'.first observations follow caps/cont only')
+        same(worlds[1]['index'],51,f.path+'.immediate repeated49 getters')
+        same(worlds[0]['value'],worlds[1]['value'],f.path+'.initial worlds are pure')
+        same(row['first_snapshot'],worlds[0]['value'],f.path+'.first report snapshot')
+        same(row['repeated_snapshot'],worlds[1]['value'],f.path+'.repeated report snapshot')
+        r(0x68,FW);r(0x6c,FW);q.read(WRAPPER,WRAPPER_VERSION)
+        need((scalar(r(0xe24))>>16)&0x3f==16,f.path+'.actual TX geometry')
+        need((scalar(r(0xe28))>>24)&0x3f==32,f.path+'.actual RX geometry')
+        f.peer_bytes()
+    elif index==1:
+        r(0x68,FW);r(0x68,FW);r(0x6c,FW);q.read(WRAPPER,WRAPPER_VERSION)
+        w(0x614,1);w(0x644,2);r(0x614,1);w(0x614,0x0cc00031)
+        r(0x644,2);w(0x644,0x0c000032);r(0x614,0x0cc00031);r(0x644,0x0c000032)
+        q.write(RAM,0xa55a7319);w(0xc4c,0x400f);w(0xd4c,0x402f);r(0xc48,0x400f);r(0xd48,0x402f)
+        q.read(RAM,0xa55a7319);q.irq(False);w(0xc50,0x4000);w(0xd50,0x20);r(0xc48,0xf);r(0xd48,0x400f)
+        same(len(f.qom['worlds']),2,f.path+'.before and after DMA mask storage')
+        before,after=[x['value'] for x in f.qom['worlds']]
+        expected=json.loads(json.dumps(before));regs=raw_registers(before['hs']);regs[0xc48//4]=0x400f;regs[0xd48//4]=0x402f
+        expected['hs']['registers-hex']=b''.join(v.to_bytes(4,'big') for v in regs).hex()
+        same(after,expected,f.path+'.only two DMA IRQ mask words changed');f.peer_bytes()
+    elif index==2:
+        same({k:row[k] for k in ('mtree_file','active_leaves','active_leaf_count','active_mapped_bytes')},
+             mapping(f,'mtree-enabled.txt',True),f.path+'.exact enabled mapping record')
+        holes=(HS_BASE-4,HS_BASE+0x4000,WRAPPER-4,WRAPPER+4,0x988000,0x99c000)
+        same(len(row['holes']),6,f.path+'.six hole probes')
+        for address,item in zip(holes,row['holes']):
+            call=q.read(address);core.append(('read',address,4,'(null)','rejected'))
+            same(item,{'command':call['command'],'actual_core_rejections':[list(core[-1])],
+                       'full_state_unchanged':True},f.path+'.hole probe receipt')
+        paired_rejection_worlds(f,6);f.peer_bytes()
+    elif index==3:
+        q.packing();w(0xe1c,4);w(0x614,1);w(0x270,5);w(0x600,START);w(0x700,0x80ff0100)
+        q.flags(base+0x40,1);r(0x910,4);w(0x700,0xeeeeee7f);r(0x910,5);q.flags(base+0x40,zeros=1)
+        q.flags(base+0x610,DONE);q.irq(True)
+        same(last_qom(f,'tx-count'),0,f.path+'.drained partial TX FIFO');same(last_qom(f,'tx-remaining'),0,f.path+'.completed five-byte TX')
+        f.peer_bytes(recv_hs=bytes.fromhex('0001ff807f'))
+    elif index==4:
+        w(0xe1c,0);w(0x270,1);w(0x600,START);w(0x700,ord('I'));q.flags(base+0x610,DONE);q.irq(False)
+        w(0x61c,17);r(0x614,17);w(0xe1c,4);q.irq(True);w(0x618,16);q.irq(True)
+        w(0x620,1);r(0x614,16);q.irq(False);w(0x61c,1);q.irq(True);w(0x618,1);q.irq(False)
+        w(0x64c,RX_LAST|(1<<24));w(0x650,RX_LAST);r(0x644,1<<24)
+        w(0x614,TX_WM);w(0x80c,2);q.flags(base+0x610,TX_WM);q.irq(True)
+        w(0x618,TX_WM);q.irq(True);w(0x80c,0);w(0x618,TX_WM);q.irq(False);f.peer_bytes(recv_hs=b'I')
+    elif index==5:
+        q.packing();w(0xe1c,8);w(0x644,RX_LAST|(1<<24));w(0x810,2);w(0x630,START)
+        r(0x804,0);r(0x780,0);q.flags(base+0x640,1<<24);q.irq(True)
+        w(0x648,1<<24);w(0x618,1<<24);q.irq(False)
+        r(0x804,0xb0000002);q.irq(True);r(0x780,0x8001ff00);r(0x804,0xb0000001)
+        r(0x780,0xa5557f);r(0x804,0);r(0x914,7);w(0x648,RX_LAST);w(0x618,RX_LAST);q.irq(False)
+        f.peer_bytes(sent_hs=bytes.fromhex('00ff01807f55a5'))
+    elif index==6:
+        w(0x630,START)
+        data=bytes(range(80))
+        for off in range(0,80,4):r(0x780,int.from_bytes(data[off:off+4],'little'))
+        r(0x914,80);same(last_qom(f,'rx-count'),0,f.path+'.all RX bytes drained')
+        same(last_qom(f,'rx-received'),64,f.path+'.observed capacity before first read')
+        f.peer_bytes(sent_hs=data)
+    elif index==7:
+        q.gate(HS_VOTE,SE,False);w(0x270,68);w(0x600,START);data=bytes(range(64))
+        for off in range(0,64,4):w(0x700,int.from_bytes(data[off:off+4],'little'))
+        w(0x700,0xdeadbeef);q.flags(base+0x610,1<<29);q.flags(base+0x610,zeros=DONE)
+        q.gate(HS_VOTE,SE,True);w(0x700,0x73727170);r(0x910,68);q.flags(base+0x610,DONE)
+        blocks=[b['value'] for b in f.qom['engines'] if b['path']==DEVICE]
+        same(len(blocks),2,f.path+'.before/after actual overflow snapshots')
+        before,after=blocks;fields_equal(before,{'tx-count':64,'tx-sent':0,'se-clock-period':0},f.path+'.gated full FIFO')
+        expected=dict(before);regs=raw_registers(before);regs[0x610//4]|=1<<29
+        expected['registers-hex']=b''.join(v.to_bytes(4,'big') for v in regs).hex();same(after,expected,f.path+'.overflow changes only error latch')
+        f.peer_bytes(recv_hs=data+b'pqrs')
+    elif index==8:
+        w(0x270,8);w(0x600,START);w(0x600,START);q.flags(base+0x610,2)
+        w(0x700,int.from_bytes(b'DATA','little'));w(0x604,4);q.flags(base+0x40,zeros=1);q.flags(base+0x610,17)
+        w(0x618,0xffffffff);w(0x600,START);w(0x604,2);q.flags(base+0x610,33);r(0x800,0)
+        w(0x630,START);w(0x634,2);r(0x804,0);q.flags(base+0x40,zeros=0x1000);q.flags(base+0x640,33)
+        w(0x618,0xffffffff);w(0x648,0xffffffff);w(0x600,2<<27);w(0x630,2<<27)
+        q.flags(base+0x610,4);q.flags(base+0x640,4);q.flags(base+0x610,zeros=DONE);q.flags(base+0x640,zeros=DONE)
+        f.peer_bytes(sent_hs=b'rx!',recv_hs=b'DATA')
+    elif index==9:
+        w(0xe1c,4);w(0x614,DONE|TX_WM);w(0x80c,2);w(0x270,5);w(0x600,START);q.irq(True)
+        q.gate(HS_VOTE,SE,False);q.irq(False);w(0x700,0x44434241);w(0x700,0x45);q.flags(base+0x610,zeros=DONE)
+        q.gate(HS_VOTE,SE,True);q.irq(True);w(0x80c,0);w(0x618,0xffffffff)
+        same(len(row['ahb_gated_rejections']),4,f.path+'.both AHB directions checked')
+        for i,mask in enumerate((M_AHB,S_AHB)):
+            w(0x270,0x1234);q.gate(HS_VOTE,mask,False)
+            for j,write in enumerate((True,False)):
+                a,b=rejection_expect(f,q,row['ahb_gated_rejections'][i*2+j],0x270,write=write,value=0x5678 if write else 0,reason='bus-unavailable')
+                core+=a;device+=b
+            q.gate(HS_VOTE,mask,True);r(0x270,0x1234)
+        paired_rejection_worlds(f,4);f.peer_bytes(recv_hs=b'ABCDE')
+    elif index==10:
+        old=scalar(q.read(GCC+0x17008));q.write(GCC+0x17008,(old&2)|2)
+        q.take(('set_irq_in','/machine/gcc','hw-request','132','0'))
+        q.read(base+0x68);device.append((False,'read',0x68,4,None,'bus-unavailable'))
+        q.take(('set_irq_in','/machine/gcc','hw-request','132','1'));r(0x68,FW)
+        q.write(GCC+0x17008,0);q.take(('set_irq_in','/machine/gcc','hw-request','132','0'))
+        q.take(('set_irq_in','/machine/gcc','hw-request','132','1'))
+        paired_rejection_worlds(f,1);f.peer_bytes()
+        same(last_qom(f,'s-ahb-clock-period'),PERIOD_UNIT//100_000_000,f.path+'.software vote works without HWCG demand')
+    elif index==11:
+        w(0xe1c,12);w(0x614,DONE|TX_WM);w(0x644,RX_LAST);w(0x80c,2);w(0x270,8);w(0x600,START)
+        w(0x700,0x44434241);w(0x630,START);q.gate(HS_VOTE,SE,False);w(0x700,0x48474645)
+        q.write(GCC+0x17000,1);q.irq(False)
+        q.write(base+0x270,7);device.append((False,'write',0x270,4,7,'bus-unavailable'))
+        q.write(GCC+0x17000,0);q.gate(HS_VOTE,SE,True)
+        w(0x270,2);w(0x600,START);w(0x700,int.from_bytes(b'OK','little'))
+        q.write(GCC+0x1e000,1);q.write(GCC+0x1e000,0)
+        worlds=f.qom['worlds'];same(len(worlds),4,f.path+'.initial, rejected before/after, reset worlds')
+        same(worlds[1]['value'],worlds[2]['value'],f.path+'.held reset rejects without effect')
+        same(worlds[0]['value'],worlds[3]['value'],f.path+'.complete reset returns fresh observed state')
+        blocks=[b for b in f.qom['engines'] if b['path']==DEVICE]
+        same(blocks[-1]['value'],blocks[-2]['value'],f.path+'.legacy reset preserves HS state')
+        f.peer_bytes(sent_hs=b'RX!',recv_hs=b'ABCDOK')
+    elif index==12:
+        q.read(OLD_BASE+0x68,0x200)
+        for b,data in ((HS_BASE,b'HS\x00\xff'),(OLD_BASE,b'OLD\x80')):
+            q.write(b+0x270,4);q.write(b+0x600,START);q.write(b+0x700,int.from_bytes(data,'little'))
+        for b,mask in ((HS_BASE,RX_LAST),(OLD_BASE,RX_WM)):
+            q.write(b+0x644,mask);q.write(b+0x630,START)
+        r(0x780,int.from_bytes(b'hsrx','little'));q.read(OLD_BASE+0x780,int.from_bytes(b'cons','little'));q.read(OLD_BASE+0x780,int.from_bytes(b'ole','little'))
+        q.gate(HS_VOTE,SE,False)
+        hs=[x['value'] for x in f.qom['engines'] if x['path']==DEVICE]
+        legacy=[x['value'] for x in f.qom['engines'] if x['path']==LEGACY]
+        same(hs[1],hs[2],f.path+'.console transfer does not alter HS')
+        same(legacy[0],legacy[1],f.path+'.HS transfer does not alter console')
+        same(legacy[-2],legacy[-1],f.path+'.HS clock gate does not alter console')
+        same(row['source_initial_hs'],hs[0],f.path+'.reported initial HS state')
+        f.peer_bytes(b'hsrx',b'console',b'HS\x00\xff',b'OLD\x80')
+    elif index==13:
+        cases=[]
+        for width in ('b','w'):
+            cases.extend([{'offset':0x68,'width':width,'shape':True},{'offset':0x614,'width':width,'shape':True,'write':True,'value':1}])
+        for delta in (1,2,3):cases.extend([{'offset':0x614+delta,'shape':True},{'offset':0x614+delta,'shape':True,'write':True,'value':1}])
+        for off in (0x68,0x6c,0x40,0x800,0x804,0x910,0x914,0xe24,0xe28):
+            cases.append({'offset':off,'write':True,'value':0xdeadbeef,'reason':'read-only'})
+        cases.append({'offset':0,'wrapper':True,'write':True,'value':0xdeadbeef,'reason':'read-only'})
+        for off in (0x10,0x200,0x1000,0x1004,0x1010,0x3ffc):cases.extend([{'offset':off},{'offset':off,'write':True,'value':0x12345678}])
+        cases.append({'offset':0xe1c,'write':True,'value':0x10,'reason':'reserved-bits'})
+        for off in (0x268,0x28c):cases.append({'offset':off,'write':True,'value':7,'reason':'unsupported-format'})
+        for off,value in ((0x260,0x4380f),(0x264,0xc3e0f),(0x284,0x4380f),(0x288,0xc3e0f),(0x254,1)):
+            cases.append({'offset':off,'write':True,'value':value,'reason':'unsupported-format'})
+        for off in (0x260,0x264,0x284,0x288):cases.append({'offset':off,'write':True,'value':1<<20,'reason':'reserved-bits'})
+        for off in (0x22c,0x25c,0x26c,0x280,0x2a4,0x2a8,0x2ac):cases.append({'offset':off,'write':True,'value':1,'reason':'reserved-bits'})
+        same(len(cases),51,'independent narrow/unaligned/register rejection count')
+        same(len(row['rejections']),51,f.path+'.reported strict-access count')
+        for case_index,(expected,actual) in enumerate(zip(cases,row['rejections'])):
+            if case_index==4:
+                q.take(('readq',HS_BASE+0x68),FW|(FW<<32))
+                q.take(('writeq',HS_BASE+0x68,0x12345678deadbeef))
+                wide_lines=[TYPE+': rejected write offset=0x68 size=4 value=0xdeadbeef reason=read-only',
+                            TYPE+': rejected write offset=0x6c size=4 value=0x12345678 reason=read-only']
+                device.extend([(False,'write',0x68,4,0xdeadbeef,'read-only'),
+                               (False,'write',0x6c,4,0x12345678,'read-only')])
+                same(row['eight_byte_qtest_buffer'],{'read_value':FW|(FW<<32),'requested_bytes':8,
+                    'actual_readonly_write_rejections':wide_lines,'full_state_unchanged':True,
+                    'unsplit_eight_byte_callback_observed':False},f.path+'.exact split-buffer scope')
+            a,b=rejection_expect(f,q,actual,**expected);core+=a;device+=b
+        call=q.take(('read',HS_BASE+0x68,5));buf=bytes.fromhex(call['reply'].split()[1][2:])
+        same(len(buf),5,f.path+'.five-byte read length');same(buf[:4],b'\x01\x02\x00\x00',f.path+'.accepted prefix bytes')
+        core.append(('read',0x6c,1,TYPE,'invalid size (min:4 max:4)'))
+        fields_equal(row,{'five_byte_read_prefix_hex':'01020000','failed_suffix_interpreted':False,
+                          'whole_buffer_read_succeeded':False},f.path+'.buffered read scope')
+        worlds=f.qom['worlds'];same(len(worlds),107,f.path+'.all51 paired rejections plus3 wide-buffer and2 suffix worlds')
+        for case_index in range(51):
+            at=2*case_index if case_index<4 else 2*case_index+3
+            same(worlds[at]['value'],worlds[at+1]['value'],f.path+'.rejected operation leaves full state unchanged')
+        same(worlds[8]['value'],worlds[9]['value'],f.path+'.wide revision read leaves full state unchanged')
+        same(worlds[8]['value'],worlds[10]['value'],f.path+'.two readonly write callbacks leave full state unchanged')
+        same(worlds[-2]['value'],worlds[-1]['value'],f.path+'.five-byte suffix leaves full state unchanged')
+        f.peer_bytes()
+    elif index==14:
+        q.write(RAM,0x67534831);cases=[{'offset':0x258,'write':True,'value':1,'reason':'unsupported-dma'}]
+        for off in DMA_OFFSETS:
+            cases.extend([{'offset':off,'reason':'unsupported-dma'},
+                          {'offset':off,'write':True,'value':RAM if off in (0xc30,0xd30) else 4,'reason':'unsupported-dma'}])
+        same(len(row['all_unsupported_transfer_accesses']),39,f.path+'.all19 read/write DMA registers plus mode')
+        for expected,actual in zip(cases,row['all_unsupported_transfer_accesses']):
+            a,b=rejection_expect(f,q,actual,**expected);core+=a;device+=b
+        q.read(RAM,0x67534831);r(0x258,0);q.flags(base+0x610,zeros=DONE);q.flags(base+0x640,zeros=DONE);q.irq(False)
+        paired_rejection_worlds(f,39);f.peer_bytes()
+    elif index==15:
+        worlds=f.qom['worlds'];same(len(worlds),2,f.path+'.before and after QOM write attempts')
+        same(worlds[0]['value'],worlds[1]['value'],f.path+'.QOM writes never mutate')
+        calls=[c for c in f.qmp if operation(c)=='qom-set'];same(len(calls),32,f.path+'.all properties rejected')
+        need(type(row['qom_write_rejections']) is list and len(row['qom_write_rejections'])==32,
+             f.path+'.complete32 reported readonly QOM rejections')
+        for call,name,item in zip(calls,IFIELDS+DYNAMIC,row['qom_write_rejections']):
+            old=worlds[0]['value']['identity' if name in IFIELDS else 'hs'][name]
+            proposal=not old if type(old) is bool else old^1 if type(old) is int else '00'
+            same(call['request']['arguments'],{'path':DEVICE,'property':name,'value':proposal},f.path+'.actual QOM mutation attempt')
+            same(item,{'property':name,'error':call['response']['error']},f.path+'.actual rejection response')
+        f.peer_bytes()
+    elif index in (16,17):
+        data=b'WAIT!' if index==16 else b'NONE';w(0x270,len(data));w(0x600,START)
+        for off in range(0,len(data),4):w(0x700,int.from_bytes(data[off:off+4],'little'))
+        q.take(('clock_step',10000))
+        blocks=[b['value'] for b in f.qom['engines'] if b['path']==DEVICE];same(len(blocks),2,f.path+'.pending backend worlds')
+        same(blocks[0],blocks[1],f.path+'.no progress without peer')
+        fields_equal(blocks[0],{'tx-count':len(data),'tx-remaining':len(data),'tx-sent':0,'tx-active':True},f.path+'.actual queued bytes')
+        need(not(raw_registers(blocks[0])[0x610//4]&DONE),f.path+'.no fabricated completion')
+        if index==16:
+            q.flags(base+0x610,DONE);same(last_qom(f,'tx-sent'),5,f.path+'.reconnect actual sent count');same(last_qom(f,'tx-count'),0,f.path+'.reconnect drained')
+            f.peer_bytes(recv_hs=data)
+        else:
+            w(0x604,4);q.flags(base+0x610,16);same(last_qom(f,'tx-sent'),0,f.path+'.absent peer sent no bytes');same(last_qom(f,'tx-count'),0,f.path+'.explicit cancel clears queue')
+            f.peer_bytes()
+    elif index==18:
+        w(0x270,1<<20);w(0x600,START);sent=bytearray();n=0
+        while q.i<len(f.qt) and parts(f.qt[q.i])[:2]==('writel',HS_BASE+0x700):
+            piece=bytes(((n*64+j)*17+3)&255 for j in range(64))
+            for off in range(0,64,4):w(0x700,int.from_bytes(piece[off:off+4],'little'))
+            sent.extend(piece);n+=1;need(len(sent)<=1<<20,f.path+'.bounded real backpressure stimulus')
+        need(n>0 and len(sent)<1<<20,f.path+'.socket genuinely saturated before finite limit')
+        q.flags(base+0x610,zeros=DONE);w(0x604,4)
+        blocks=[b['value'] for b in f.qom['engines'] if b['path']==DEVICE];same(len(blocks),1,f.path+'.actual blocked state')
+        blocked=blocks[0];need(0<blocked['tx-count']<=64,f.path+'.nonempty blocked FIFO')
+        same(blocked['tx-sent']+blocked['tx-count'],len(sent),f.path+'.no dropped submitted bytes')
+        same(blocked['tx-remaining'],(1<<20)-blocked['tx-sent'],f.path+'.command accounting at saturation')
+        same(last_qom(f,'tx-count'),0,f.path+'.writability drains pending bytes')
+        same(last_qom(f,'tx-sent'),len(sent),f.path+'.actual drained output count')
+        same(row['submitted_bytes'],len(sent),f.path+'.reported actual saturation point')
+        same(row['pending_bytes_at_backpressure'],blocked['tx-count'],f.path+'.actual pending count')
+        f.peer_bytes(recv_hs=bytes(sent))
+    elif index==19:
+        w(0xe1c,4);w(0x614,DONE);q.gate(HS_VOTE,SE,False);w(0x270,0);w(0x600,START)
+        q.flags(base+0x610,zeros=DONE);q.irq(False);q.gate(HS_VOTE,SE,True);q.flags(base+0x610,DONE);q.irq(True)
+        zero=[reply(c) for c in f.qmp if operation(c)=='qom-get' and c['request'].get('arguments')=={'path':DEVICE,'property':'tx-zero-pending'}]
+        same(zero,[True,False],f.path+'.actual deferred zero-command completion');f.peer_bytes()
+    else:raise AuditFailure('Unknown independently expected ordinary case')
+    q.finish();same(f.core,core,f.path+'.all actual generic diagnostics accounted')
+    same(f.device,device,f.path+'.all actual specific diagnostics accounted')
+    same(uncovered_irq_getters(f),q.expected_irqs,f.path+'.pure and actual IRQ evidence agree')
+    return {'name':ORDINARY[index],**f.summary(),'complete_qtest_sequence_verified':True,
+            'complete_backend_byte_streams_verified':True,'generic_and_callback_diagnostics_accounted':True,
+            'actual_sysbus_irq_assertions':len(q.expected_irqs)}
+
+
+def audit_special(store,data,report,fixtures):
+    result=[];checks={x['name']:x for x in report['checks']}
+    off=checks[SPECIAL[0]];same(len(off['default_and_explicit_off']),2,'both default profiles exercised')
+    for name,omitted,detail in zip(('default-omitted','explicit-off'),(True,False),off['default_and_explicit_off']):
+        f=Fixture(store,data,name,report,False,omitted=omitted);fixtures[name]=f
+        q=QtCursor(f);q.take(('irq_intercept_out',DEVICE,'sysbus-irq'));core=[];probes=[]
+        for address in (HS_BASE,HS_BASE+0x68,HS_BASE+0x3ffc,WRAPPER):
+            for write in (False,True):
+                call=q.write(address,0xdeadbeef) if write else q.read(address)
+                diagnostic=('write' if write else 'read',address,4,'(null)','rejected');core.append(diagnostic)
+                probes.append({'command':call['command'],'actual_core_rejections':[list(diagnostic)],'full_state_unchanged':True})
+        payload=b'unchanged-console';q.write(OLD_BASE+0x270,17);q.write(OLD_BASE+0x600,START)
+        for at in range(0,17,4):q.write(OLD_BASE+0x700,int.from_bytes(payload[at:at+4],'little'))
+        q.take(('clock_step',1000));q.finish();f.peer_bytes(b'no fabricated RX',b'',b'',payload)
+        same(f.core,core,f.path+'.default-off generic-hole diagnostics');same(f.device,[],f.path+'.no disabled callbacks')
+        worlds=f.qom['worlds'];same(len(worlds),17,f.path+'.default profile full observation count')
+        initial=worlds[0]['value'];fresh_engine(initial['hs'],f.path+'.fresh disabled HS')
+        for block in f.qom['engines']:
+            if block['path']==DEVICE:same(block['value'],initial['hs'],f.path+'.disabled state never changed')
+        for i in range(8):same(worlds[1+2*i]['value'],worlds[2+2*i]['value'],f.path+'.unmapped request did not affect either device')
+        before=mapping(f,'mtree-before-reset.txt',False);after=mapping(f,'mtree-after-reset.txt',False)
+        same(detail,{'fixture':name,'global_property_omitted':omitted,'before':before,'after_reset':after,
+                     'generic_hole_checks':probes,'legacy_console_real_bytes':17,'hs_backend_consumed_bytes':0},
+             f.path+'.actual disabled-profile record')
+        result.append(f.summary())
+    same(off['new_clock_wiring_in_default_profile'],False,'disabled profile clock scope')
+    tcg=checks[SPECIAL[1]];f=Fixture(store,data,'paused-tcg',report,True,accel='tcg');fixtures[f.name]=f
+    same(len(f.qom['worlds']),2,f.path+'.two pure TCG worlds')
+    w1,w2=[x['value'] for x in f.qom['worlds']];same(w1,w2,f.path+'.TCG pure world equality')
+    statuses=[reply(c) for c in f.qmp if operation(c)=='query-status']
+    for s in statuses:same(s['running'],False,f.path+'.paused actual query-status')
+    fields_equal(tcg,{'fixture':f.name,'accel':'tcg','status_before':statuses[0],'status_after':statuses[1],
+                      'first_world':w1,'repeated_world':w2,'getters_per_world':49,
+                      'guest_cpu_executed':False,'memory_commands':0,'cont_commands':0,
+                      'qtest_channel_created':False},f.path+'.paused TCG evidence record')
+    f.no_errors();f.peer_bytes();result.append(f.summary())
+    miss=checks[SPECIAL[2]];f=Fixture(store,data,'missing-clock-parent',report,True,boot=False);fixtures[f.name]=f
+    q=QtCursor(f);q.take(('irq_intercept_out',DEVICE,'sysbus-irq'));q.gate(HS_VOTE,SE|M_AHB|S_AHB,True)
+    q.configure(0x101);q.write(HS_BASE+0x270,1);q.write(HS_BASE+0x600,START);q.write(HS_BASE+0x700,ord('P'))
+    q.configure(1);q.flags(HS_BASE+0x610,DONE);q.finish();f.no_errors();f.peer_bytes(recv_hs=b'P')
+    states=[x['value'] for x in f.qom['engines'] if x['path']==DEVICE];same(len(states),1,f.path+'.one pending source observation')
+    fields_equal(states[0],{'tx-count':1,'tx-sent':0,'se-clock-period':0},f.path+'.pending byte with missing parent')
+    same(last_qom(f,'se-clock-period'),PERIOD_UNIT//19_200_000,f.path+'.explicit XO parent becomes live')
+    fields_equal(miss,{'fixture':f.name,'disabled_pll_parent_period':0,'xo_parent_period':PERIOD_UNIT//19_200_000,
+                       'pending_byte_released_only_with_real_parent':True},f.path+'.missing parent report')
+    result.append(f.summary())
+    return result
+
+
+def audit_ordinary(store,data,report,receipt,fixtures):
+    details=[]
+    for i,name in enumerate(ORDINARY):
+        dirname=f'ordinary-{i:02d}-{name}'
+        backend='disconnected' if i==16 else 'absent' if i==17 else 'connected'
+        f=Fixture(store,data,dirname,report,True,backend=backend,allow_set=i==15);fixtures[dirname]=f
+        row=report['checks'][i];same(row['name'],name,'ordered ordinary case identity')
+        same(row['fixture'],dirname,'ordinary report fixture provenance')
+        setup={'se_hz':19_200_000,'explicit_bus_reference_hz':100_000_000,
+               'vote_register':HS_VOTE,'vote_mask':SE|M_AHB|S_AHB,'rcg_config':1,'physical_clock_measurement_claimed':False}
+        same(row['clock_setup'],None if i==0 else setup,f.path+'.source-bounded clock setup')
+        q=QtCursor(f);q.take(('irq_intercept_out',DEVICE,'sysbus-irq'));q.bring_up()
+        details.append(audit_ordinary_fixture(f,q,i,row))
+    special=audit_special(store,data,report,fixtures)
+    receipt['ordinary_and_special']={'group_count':23,'process_count':24,'ordinary':details,'special_processes':special,
+         'actual_output_byte_streams_checked':True,'both_engine_qom_state_checks':True,
+         'actual_irq_output_checked':True,'gic_or_guest_interrupt_handling_verified':False,
+         'all_actual_qtest_commands_and_rejection_diagnostics_accounted':True}
+
+
+def audit_migrations(store,data,report,receipt,fixtures):
+    originals={};saved_by={};streams={};completed=[]
+    for i,scenario in enumerate(('enabled','disabled')):
+        enabled=scenario=='enabled';saved=report['migration_sources'][i];saved_by[scenario]=saved
+        source_name='migration-'+scenario+'-source';target_name='migration-'+scenario+'-target'
+        same(saved['file'],'geni-hs-'+scenario+'.migration','original migration name')
+        f=Fixture(store,data,source_name,report,enabled);fixtures[source_name]=f
+        state=source_trace(f,saved,enabled,0x47485310+i)
+        path=data+'/'+saved['file'];wire=scan_uart_sections(store,path,state);streams[scenario]=path
+        fields_equal(saved,{'sha256':wire['sha256'],'bytes':wire['bytes'],'sections':wire['sections'],
+                            'full_wire_validation':wire['full_wire_validation']},source_name+'.actual original complete stream')
+        originals[scenario]={'file':saved['file'],'sha256':wire['sha256'],'bytes':wire['bytes'],
+                             'sections':wire['sections'],'independent_source_world_verified':True,
+                             'hs_payload_bytes':16608,'legacy_payload_bytes':16587,'fixture':f.summary()}
+        row=report['migrations'][i]
+        fields_equal(row,{'name':'migration_'+scenario,'source_status':'completed','target_status':'completed',
+                          'passed':True,'stream_file':saved['file'],'stream_sha256':wire['sha256'],
+                          'stream_modified':False,'source_directory':source_name,'target_directory':target_name,
+                          'complete_hs_wire_bytes_verified':16608,'complete_legacy_wire_bytes_verified':16587,
+                          'continued_after_restore':True,'both_engine_payloads_distinct':True},target_name+'.completed migration record')
+        f=Fixture(store,data,target_name,report,enabled,incoming=True);fixtures[target_name]=f
+        actual=target_trace(f,saved,row,enabled)
+        completed.append({'scenario':scenario,'stream_sha256':wire['sha256'],'source_status':'completed',
+                          'target_status':'completed','raw_observations':actual,'fixture':f.summary()})
+    receipt['original_streams']=originals;receipt['completed_migrations']=completed
+    profiles=[]
+    for row,label,scenario,target_enabled in zip(report['rejected_migrations'],('on_to_off','off_to_on'),('enabled','disabled'),(False,True)):
+        dirname='reject-profile-'+label;saved=saved_by[scenario]
+        fields_equal(row,{'name':'profile_'+label+'_rejected','passed':True,'stream_file':saved['file'],
+                          'stream_sha256':saved['sha256'],'stream_modified':False},dirname+'.profile direction stream identity')
+        f=Fixture(store,data,dirname,report,target_enabled,incoming=True,failed=True);fixtures[dirname]=f
+        trace=failed_trace(f,row,saved,saved['file'],'invalid migration profile')
+        profiles.append({'direction':label,'unmodified_original_stream_sha256':saved['sha256'],**trace})
+    receipt['profile_rejections']=profiles
+    cases=[(n,'enabled',off,width,xor,'invalid migration profile') for n,off,width,xor in GUARD_MUTANTS]+list(DYNAMIC_MUTANTS)
+    mutants=[]
+    for row,(name,scenario,relative,width,xor,diagnostic) in zip(report['corrupted_stream_rejections'],cases):
+        saved=saved_by[scenario];original=streams[scenario];filename='geni-hs-corrupt-'+name+'.migration';path=data+'/'+filename
+        absolute=saved['sections']['hs']['payload_offset']+relative
+        bit=(xor.bit_length()-1);byte_at=absolute+width-1-bit//8;byte_xor=1<<(bit%8)
+        info=hash_member(store,path);change=one_bit_difference(store,original,path,byte_at,byte_xor,saved['sha256'],info['sha256'])
+        with store.open(original) as stream:
+            stream.read(absolute);old=int.from_bytes(stream.read(width),'big')
+        fields_equal(row,{'name':'single_bit_'+name+'_rejected','passed':True,'source_file':saved['file'],
+                          'stream_file':filename,'stream_modified':True,'field_relative_offset':relative,
+                          'field_absolute_offset':absolute,'field_bytes':width,'old_value':old,'xor':xor,
+                          'changed_byte_offsets':[byte_at],'changed_bits':1,'source_sha256':saved['sha256'],
+                          'mutated_sha256':info['sha256'],'bytes':info['bytes'],'original_stream_unchanged':True},
+                     path+'.actual physical mutation and preserved whole original')
+        dirname='reject-bit-'+name;f=Fixture(store,data,dirname,report,scenario=='enabled',incoming=True,failed=True);fixtures[dirname]=f
+        trace=failed_trace(f,row,saved,filename,diagnostic)
+        mutants.append({'name':name,'profile':scenario,'source_sha256':saved['sha256'],'mutated_sha256':info['sha256'],
+                        'field_relative_offset':relative,'field_absolute_offset':absolute,**change,**trace})
+    receipt['one_bit_rejections']=mutants
+    saved=saved_by['enabled'];original=streams['enabled'];sec=saved['sections']['hs'];structural=[]
+    for name,row in zip(STRUCTURAL,report['structural_stream_rejections']):
+        filename='geni-hs-structural-'+name+'.migration';path=data+'/'+filename;info=hash_member(store,path)
+        if name=='missing_guard':
+            change=deleted_span_difference(store,original,path,sec['payload_offset'],48,saved['sha256'],info['sha256'])
+            diagnostic='invalid migration profile';core=False
+            fields_equal(row,{'removed_offset':sec['payload_offset'],'removed_bytes':48,
+                              'guard_removed_inside_present_section':True,'entire_missing_device_section_tested':False},path+'.guard deletion scope')
+        else:
+            offset=sec['name_offset']+len(TYPE)-1 if name=='unknown_section_identity' else sec['version_offset']+3
+            change=one_bit_difference(store,original,path,offset,1,saved['sha256'],info['sha256']);core=True
+            fields_equal(row,{'changed_byte_offsets':[offset],'changed_bits':1},path+'.header mutation byte')
+            if name=='unknown_section_identity':
+                diagnostic='Unknown section or instance'
+                fields_equal(row,{'original_section_name':TYPE,'mutated_section_name':TYPE[:-1]+chr(ord(TYPE[-1])^1)},path+'.unknown section identity')
+            else:
+                diagnostic=TYPE+': incoming version_id 0 is too old for local minimum version_id 1'
+                fields_equal(row,{'old_version':1,'new_version':0},path+'.unsupported section version')
+        fields_equal(row,{'name':'structural_'+name+'_rejected','passed':True,'source_file':saved['file'],
+                          'source_sha256':saved['sha256'],'stream_file':filename,'stream_sha256':info['sha256'],
+                          'stream_modified':True,'bytes':info['bytes'],'original_stream_unchanged':True},path+'.actual structural file')
+        dirname='reject-structural-'+name;f=Fixture(store,data,dirname,report,True,incoming=True,failed=True);fixtures[dirname]=f
+        trace=failed_trace(f,row,saved,filename,diagnostic,core)
+        structural.append({'name':name,'source_sha256':saved['sha256'],'mutated_sha256':info['sha256'],**change,**trace})
+    receipt['structural_rejections']=structural
+    paths=[p for p in store.entries if p.startswith(data+'/') and '/' not in p[len(data)+1:] and p.endswith('.migration')]
+    expected={'geni-hs-enabled.migration','geni-hs-disabled.migration'}|{'geni-hs-corrupt-'+x[0]+'.migration' for x in cases}|{'geni-hs-structural-'+x+'.migration' for x in STRUCTURAL}
+    same({PurePosixPath(p).name for p in paths},expected,'exact30 actual original and mutant stream files')
+    actual=[{'name':PurePosixPath(p).name,**hash_member(store,p)} for p in sorted(paths)]
+    same(report['actual_stream_files'],actual,'all30 producer stream rows independently fully hashed')
+    for scenario,path in streams.items():same(hash_member(store,path)['sha256'],saved_by[scenario]['sha256'],'original preserved after all mutant audits')
+
+
+def audit_cleanup(store,data,report,receipt,fixtures):
+    same(len(fixtures),58,'all58 real fixture records independently visited')
+    actual_paths={p for p in store.entries if p.startswith(data+'/') and p.endswith('/cleanup.json')}
+    same(actual_paths,{f.path+'/cleanup.json' for f in fixtures.values()},'no additional or missing fixture cleanup')
+    command_paths={p for p in store.entries if p.startswith(data+'/') and p.endswith('/command.json')}
+    same(command_paths,{f.path+'/command.json' for f in fixtures.values()},'no additional or missing QEMU invocation')
+    expected=[];counts={0:0,1:0}
+    for name,f in sorted(fixtures.items()):
+        code=1 if name.startswith('reject-') else 0;counts[code]+=1
+        expected.append({'fixture':name,'cleanup_file':name+'/cleanup.json',
+                         'cleanup_sha256':hash_member(store,f.path+'/cleanup.json')['sha256'],
+                         'expected_exit_code':code,**f.cleanup})
+    same(counts,{0:28,1:30},'28 normal and30 specific rejected loads')
+    same(report['process_cleanup'],expected,'complete cleanup report independently binds raw files')
+    receipt['process_cleanup']={'records':58,'normal_exit0_with_quit_ack':28,'expected_exit1_without_quit':30,
+                                'forced_terminations':0,'forced_kills':0,'actual_records':expected}
+
+
+
+EXPECTED_REPORT_CONSTANTS = {'android_boot_passed': False,
+ 'bluetooth_peer_modeled': False,
+ 'cold_primary_irq_or_mask': 213909552,
+ 'cold_secondary_irq_or_mask': 201326640,
+ 'default_off_mapped_bytes': 0,
+ 'dma_mask_modeled': True,
+ 'dma_rx_irq_valid_mask': 30719,
+ 'dma_transfer_modeled': False,
+ 'dma_tx_irq_valid_mask': 16399,
+ 'enabled_mapped_bytes': 16388,
+ 'expected_checks': 55,
+ 'expected_completed_migrations': 2,
+ 'expected_corrupted_stream_rejections': 25,
+ 'expected_rejected_migrations': 2,
+ 'expected_stream_files': 30,
+ 'expected_structural_stream_rejections': 3,
+ 'expected_unmodified_streams': 2,
+ 'fifo_capacity_bytes': 64,
+ 'fifo_depth_words': 16,
+ 'fifo_width_bits': 32,
+ 'firmware_executed': False,
+ 'first_observation_qom_get_count': 49,
+ 'full_migration_stream_hashes_verified': True,
+ 'guest_cpu_executed': False,
+ 'legacy_complete_payload_bytes': 16587,
+ 'legacy_functional_payload_bytes': 16534,
+ 'main_firmware_revision': 513,
+ 'migration_destination_device_state_dirtied': False,
+ 'migration_destination_ram_dirtied': True,
+ 'native_kernel_probe_observed': False,
+ 'physical_base': 10059776,
+ 'physical_state_captured': False,
+ 'profile_guard_bytes': 48,
+ 'pure_dynamic_getters_per_engine': 17,
+ 'pure_hs_identity_getters': 15,
+ 'reference_enabled_by_default': False,
+ 'reference_identity': 1195922225,
+ 'repeated_observation_qom_get_count': 49,
+ 'schema': 'tb371fc-geni-hs-sm8250-v1',
+ 'secondary_firmware_revision': 513,
+ 'suite': 'geni-hs-sm8250-reference',
+ 'test_oracle_reads_device_implementation': False,
+ 'two_engine_backend_isolation_tested': True,
+ 'vmstate_minimum_version': 1,
+ 'vmstate_payload_bytes': 16608,
+ 'vmstate_version': 1,
+ 'window_bytes': 16384,
+ 'wrapper_address': 10223620,
+ 'wrapper_version': 537198592,
+ 'wrapper_window_bytes': 4}
+
+
+def validate_sources(root):
+    need(type(SOURCE_PINS) is dict and len(SOURCE_PINS)>=10,'Frozen source pins are unbound')
+    actual={}
+    for relative,(size,expected) in SOURCE_PINS.items():
+        path=root/relative;need(path.is_file() and not path.is_symlink(),'Missing regular reviewed source '+relative)
+        raw=path.read_bytes();same((len(raw),sha(raw)),(size,expected),'Exact published source '+relative)
+        if relative.endswith('.py'):compile(raw,str(path),'exec')
+        actual[relative]={'bytes':size,'sha256':expected}
+    same(SOURCE_PINS['tb371fc/tests/test_geni_hs_sm8250.py'][1],TEST_SHA,'Frozen producer source constant')
+    same(SOURCE_PINS['tb371fc/tests/geni_hs_test_transport.py'][1],HELPER_SHA,'Frozen transport source constant')
+    return actual
+
+
+def validate_report(report,qemu_sha):
+    metadata={'passed':True,'machine':DEFAULT_MACHINE,'test_script_sha256':TEST_SHA,
+              'transport_helper_sha256':HELPER_SHA,'source_register_revision':'98719830b0de5584f5588bbe9f4c8304d97a64c6',
+              'qemu_sha256_before':qemu_sha,'qemu_sha256_after':qemu_sha,'binary_unchanged':True,
+              'process_cleanup_verified':True,'qtest_intercept_replaces_gic_connection':True,
+              'gic_or_guest_interrupt_handling_verified':False,
+              'hs_irq_observation_method':'QTest intercept of actual sysbus output; pure QOM crosscheck',
+              'reference_word_derivation':{'protocol_byte':2,'firmware_low_byte':1,
+                 'formula':'(protocol_byte << 8) | firmware_low_byte','both_actual_producer_writes_equal':True,
+                 'physical_0x998000_selection_proven':False,'wrapper_version_is_declared_model_profile':True}}
+    fields_equal(report,{**EXPECTED_REPORT_CONSTANTS,**metadata},'actual compiled report fixed contract')
+    same(set(report),set(EXPECTED_REPORT_CONSTANTS)|set(metadata)|set(LENGTHS)|{'checks','qemu','work_dir','duration_seconds'},
+         'exact known report fields, no extra failure or claim fields')
+    same(len(report['checks']),55,'actual55 checked groups')
+    same([x['name'] for x in report['checks']],list(CHECKS),'complete actual group identity and ordering')
+    for row in report['checks']:same(row.get('passed'),True,'actual named producer check')
+    for name,count in LENGTHS.items():
+        need(type(report[name]) is list,'report array '+name);same(len(report[name]),count,'exact actual '+name+' count')
+    for name in ('qemu','work_dir'):
+        need(type(report[name]) is str and PurePosixPath(report[name]).is_absolute(),'absolute producer '+name)
+    need(type(report['duration_seconds']) in (int,float) and report['duration_seconds']>=0,'actual producer duration')
+
+
+def component(store,receipt,qemu_sha):
+    case_path,root,case,logs=locate_case(store,CASE)
+    data=root+'/fixtures/data';report=store.json(data+'/result.json');validate_report(report,qemu_sha)
+    same(json_value(logs['stdout.log'],'actual harness stdout'),report,'actual stdout equals retained complete report')
+    same(logs['stderr.log'],b'','successful test harness stderr')
+    same(case['verified'],{'verdict_field':'passed','verdict':True,'check_count':55,'verified_lengths':LENGTHS},
+         'complete harness verified contract')
+    same(case['timeout_seconds'],900,'reviewed compiled gate timeout')
+    argv=case['command'];same(len(argv),6,'complete producer invocation')
+    same(PurePosixPath(argv[1]).name,'test_geni_hs_sm8250.py','exact producer script')
+    same(argv[2:],['--qemu',report['qemu'],'--out',report['work_dir']],'exact producer flags')
+    same(PurePosixPath(report['work_dir']),PurePosixPath(case['fixture'])/'data','actual runtime fixture identity')
+    env=case.get('environment',{});same(env.get('QTEST_QEMU_BINARY'),report['qemu'],'harness actual binary environment')
+    same(env.get('PYTHONDONTWRITEBYTECODE'),'1','harness side-effect-free Python cache setting')
+    head_file=source_head(store,root)
+    receipt['component']={'case':case_path,'report':data+'/result.json','source_commit_file':head_file,
+                          'head':HEAD,'checks':55,'producer_test_sha256':TEST_SHA,
+                          'transport_helper_sha256':HELPER_SHA,'exit_code':0}
+    return data,report
+
+
+def static_self_check():
+    same(len(CHECKS),55,'independent group count');same(len(set(CHECKS)),55,'independent unique group names')
+    same(len(DYNAMIC),17,'17 pure engine fields');same(len(IFIELDS),15,'15 pure profile fields')
+    same(2*len(DYNAMIC)+len(IFIELDS),49,'49 getters per world')
+    same(len(GUARD_MUTANTS),10,'ten independently mapped guard fields')
+    same(len(DYNAMIC_MUTANTS),15,'fifteen independent dynamic/clock corruptions')
+    for name,scenario,offset,width,xor,reason in ([
+            (n,'enabled',o,w,x,'invalid migration profile') for n,o,w,x in GUARD_MUTANTS]+list(DYNAMIC_MUTANTS)):
+        need(0<=offset and offset+width<=16608,'mutation inside exact HS payload')
+        same(xor.bit_count(),1,'single physical-bit mutation value')
+    for enabled in (True,False):
+        hs,old=wire_from_world(expected_source_world(enabled))
+        same(len(hs),16608,'independent complete HS wire');same(len(old),16587,'independent complete old wire')
+        same(hs[:48].hex(),('00000001' if enabled else '00000000')+
+             '4748533100000000009980000000400000000000009c00040000000400000201000002012005000000000040',
+             'independent literal guard bytes')
+        same(old[16534:16561],b'\x05\x15qcom-geni-uart/clocks\x00\x00\x00\x01','complete explicit legacy clock subsection header')
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--zip',required=True,type=Path)
+    parser.add_argument('--expected-zip-sha256',required=True)
+    parser.add_argument('--expected-head',required=True)
+    parser.add_argument('--expected-tree',required=True)
+    parser.add_argument('--expected-qemu-sha256',required=True)
+    parser.add_argument('--source-root',type=Path,default=Path('retained-proof://bd3c31370f280d6eb629190af8f919ae231d7064940c33056ca424a149d7230b'))
+    parser.add_argument('--out',required=True,type=Path)
+    args=parser.parse_args()
+    if args.out.exists():raise SystemExit('Refusing to overwrite retained independent audit receipt: '+str(args.out))
+    receipt={'schema':'tb371fc-geni-hs-independent-artifact-audit-v1','passed':False,
+             'observed_utc':datetime.now(timezone.utc).isoformat(),'auditor_sha256':file_hash(__file__),
+             'expected_head':args.expected_head,'expected_tree':args.expected_tree,
+             'expected_zip_sha256':args.expected_zip_sha256,'read_only_archive':True,
+             'qemu_executed':False,'guest_executed':False,'extracted_members':[],
+             'producer_serializer_imported':False,'model_imported':False,'generator_imported':False,
+             'whole_workflow_verdict_claimed':False,'source_generation_semantics_audited_here':False,
+             'native_android_passed':False,'shared_log_timestamp_claimed':False,
+             'scope':'Actual55-group GENI HS compiled component: raw QMP/QTest/backend evidence; two full UART wire sections; '
+                     'two originals,25 body/guard one-bit corruptions and3 structural corruptions; two successful migrations, '
+                     'two profile rejections and58 exact process cleanups. Source-generation semantic and retained legacy '
+                     'workflow audits are separate.',
+             'protocol_limit':'Separate trace files have no shared timestamp. Exact per-channel order, source-pinned producer '
+                              'ordering, actual counters and inverse/restored RAM witnesses support bounded cross-channel chronology.',
+             'physical_limit':'The identities are an explicit source-bounded reference profile. No captured SE6 firmware selection, '
+                              'live/reset wrapper value, firmware execution, DMA transfer, GIC routing, guest interrupt handling or Android boot is claimed.',
+             'failed_load_limit':'The whole before-incoming through process-exit output observation requires zero bytes on both '
+                                 'real backends; EOF or only ECONNRESET104 is accepted after exit1 and the specific load error. '
+                                 'The dead process is not read back and state rollback is not claimed.',
+             'source_tree_binding_basis':'Published exact head/tree are supplied before archive access. The actual source-commit.txt '
+                                         'and all reviewed local source bytes are checked; no absent archive tree record is invented.'}
+    store=None
+    try:
+        need(re.fullmatch('[0-9a-f]{40}',HEAD) and re.fullmatch('[0-9a-f]{40}',TREE),'Auditor source identity unbound')
+        same(args.expected_head,HEAD,'exact reviewed published head');same(args.expected_tree,TREE,'exact reviewed published tree')
+        for value,label in ((args.expected_zip_sha256,'ZIP'),(args.expected_qemu_sha256,'QEMU')):
+            need(re.fullmatch('[0-9a-f]{64}',value),label+' full SHA256 required')
+        static_self_check();receipt['reviewed_source_pins']=validate_sources(args.source_root)
+        same(file_hash(args.zip),args.expected_zip_sha256,'independently hashed whole actual archive')
+        receipt['archive']={'path':str(args.zip.resolve()),'bytes':args.zip.stat().st_size,'sha256':args.expected_zip_sha256}
+        store=Store(zip_path=args.zip);binary='qemu-build/qemu-system-aarch64';qemu=hash_member(store,binary)
+        same(qemu['sha256'],args.expected_qemu_sha256,'external actual QEMU hash')
+        with store.open(binary) as stream:header=stream.read(20)
+        same(header[:6],b'\x7fELF\x02\x01','complete actual little-endian64 ELF');same(len(header),20,'complete ELF header prefix')
+        receipt['qemu']={'member':binary,**qemu,'executed':False,'host_elf_machine':int.from_bytes(header[18:20],'little')}
+        data,report=component(store,receipt,qemu['sha256']);fixtures={}
+        audit_ordinary(store,data,report,receipt,fixtures)
+        audit_migrations(store,data,report,receipt,fixtures)
+        audit_cleanup(store,data,report,receipt,fixtures)
+        receipt['summary']={'checks':55,'ordinary_and_special_groups':23,'original_streams':2,'completed_migrations':2,
+             'profile_rejections':2,'one_bit_rejections':25,'structural_rejections':3,'total_stream_files':30,
+             'hs_payload_bytes':16608,'legacy_payload_bytes':16587,'guard_bytes':48,'first_getters':49,'repeated_getters':49,
+             'process_cleanup_records':58,'normal_process_exits':28,'rejected_process_exits':30,
+             'prewarm_device_mmio':0,'first_memory_command_delta':0,'first_device_mmio_delta':0,'first_cont_delta':0,
+             'actual_archive_evidence_verified':True,'native_probe_claimed':False,'android_boot_claimed':False,
+             'gic_or_guest_interrupt_handling_verified':False}
+        receipt['verified_members']=dict(sorted(store.observed.items()));receipt['verified_member_count']=len(store.observed)
+        store.finish();store=None
+        same(file_hash(args.zip),args.expected_zip_sha256,'archive remains unchanged after complete independent audit')
+        receipt['passed']=True
+    except BaseException as exc:
+        receipt['error']=str(exc);receipt['traceback']=traceback.format_exc()
+        if store is not None:
+            receipt['verified_members']=dict(sorted(store.observed.items()));receipt['verified_member_count']=len(store.observed)
+    finally:
+        if store is not None:
+            try:store.finish()
+            except BaseException as exc:receipt['archive_finish_error']=str(exc);receipt['passed']=False
+    args.out.parent.mkdir(parents=True,exist_ok=True)
+    with args.out.open('x') as stream:json.dump(receipt,stream,indent=2);stream.write('\n')
+    print(json.dumps({'passed':receipt['passed'],'out':str(args.out),'receipt_sha256':file_hash(args.out),
+                      'verified_member_count':receipt.get('verified_member_count',0),'error':receipt.get('error')}))
+    return 0 if receipt['passed'] else 1
+
+
+if __name__=='__main__':
+    raise SystemExit(main())

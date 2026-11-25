@@ -1,0 +1,203 @@
+{
+  "CI_artifact_audits_and_observers_rerun_for_schema_correction": false,
+  "attempt_001_outcome": "Consumer-schema failure; no qualification was created.",
+  "attempt_002_outcome": "Reviewed versioned consumer correction; actual qualification passed.",
+  "attempts": [
+    {
+      "execution": {
+        "content": {
+          "argv": [
+            "python3",
+            "-B",
+            "evidence://reviewed-source/qualification-main-001.py.txt",
+            "--binding",
+            "evidence://qualification/binding-001.public.json",
+            "--out",
+            "retained-proof://5b51ae282860087bb8dd8ed92b63f3521a594e07403da130b2d504008a810d70"
+          ],
+          "automatic_retry": false,
+          "binding": {
+            "bytes": 38653,
+            "path": "evidence://qualification/binding-001.public.json",
+            "sha256": "a649d255ccd78da4dd6a645e078d2a51f79ea80cb448a0db5c19cf1a007c53ae"
+          },
+          "finished_utc": "2026-11-25T11:25:01.675187+00:00",
+          "main_source": {
+            "bytes": 120009,
+            "path": "evidence://reviewed-source/qualification-main-001.py.txt",
+            "sha256": "79875d358c44ce28259ed4212ecde68b9aa754640a1f9398283e63f073c5104f"
+          },
+          "qualification": null,
+          "returncode": 1,
+          "schema": "tb371fc-root-actual-main-qualification-execution-v1",
+          "started_utc": "2026-11-25T11:25:01.188812+00:00",
+          "stderr": {
+            "bytes": 1341,
+            "path": "evidence://qualification/first-main-failure.stderr.txt",
+            "sha256": "0614a86d26dec8866f7e7bbf4c2cb60ad0cf8ebe263f29cd83154d4d984e6e9c"
+          },
+          "stdout": {
+            "bytes": 0,
+            "path": "execution-source://main-qualification-001.stdout",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "original": {
+          "bytes": 1430,
+          "git_blob_sha1": "7f29b27053200bd367d889fa2a6ba72c58b74db1",
+          "sha256": "bfe2a43c7e682619144323b4393c4333d89ac60141e3fc2b825f7a57b881cbd3"
+        },
+        "source_alias": "execution-source://main-qualification-001.execution.json"
+      },
+      "number": 1,
+      "started": {
+        "content": {
+          "argv": [
+            "python3",
+            "-B",
+            "evidence://reviewed-source/qualification-main-001.py.txt",
+            "--binding",
+            "evidence://qualification/binding-001.public.json",
+            "--out",
+            "retained-proof://5b51ae282860087bb8dd8ed92b63f3521a594e07403da130b2d504008a810d70"
+          ],
+          "automatic_retry": false,
+          "started_utc": "2026-11-25T11:25:01.188812+00:00"
+        },
+        "original": {
+          "bytes": 359,
+          "git_blob_sha1": "aacfd5511d4a72f087fa3cc659276fc7e4772e4a",
+          "sha256": "57e2635300c1ca84de1727e180483ecbf1117300538ffa7ca9fdc3771cde93e0"
+        },
+        "source_alias": "execution-source://main-qualification-001.started.json"
+      },
+      "stderr": {
+        "content": "Traceback (most recent call last):\n  File \"evidence://reviewed-source/qualification-main-001.py.txt\", line 1622, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"evidence://reviewed-source/qualification-main-001.py.txt\", line 1613, in main\n    result = assemble(read(args.binding), binding_pin)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"evidence://reviewed-source/qualification-main-001.py.txt\", line 1552, in assemble\n    audits, reports = validate_audit_receipts(binding, source_files)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"evidence://reviewed-source/qualification-main-001.py.txt\", line 1213, in validate_audit_receipts\n    validate_geni_receipts(reports, by_name, sources)\n  File \"evidence://reviewed-source/qualification-main-001.py.txt\", line 1229, in validate_geni_receipts\n    need(type(compiled[key]) is list and len(compiled[key]) == count, 'compiledGENI exact list ' + key)\n  File \"evidence://reviewed-source/qualification-main-001.py.txt\", line 964, in need\n    raise ValueError(label)\nValueError: compiledGENI exact list ordinary_and_special\n",
+        "original": {
+          "bytes": 1341,
+          "git_blob_sha1": "15a4de45ec898e5ebc7721d9d8cdb37e5ef54840",
+          "sha256": "0614a86d26dec8866f7e7bbf4c2cb60ad0cf8ebe263f29cd83154d4d984e6e9c"
+        },
+        "source_alias": "evidence://qualification/first-main-failure.stderr.txt"
+      },
+      "stdout": {
+        "content": "",
+        "original": {
+          "bytes": 0,
+          "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "source_alias": "execution-source://main-qualification-001.stdout"
+      }
+    },
+    {
+      "execution": {
+        "content": {
+          "argv": [
+            "python3",
+            "-B",
+            "evidence://reviewed-source/qualification-main-002.py.txt",
+            "--binding",
+            "evidence://qualification/binding-001.public.json",
+            "--out",
+            "evidence://qualification/qualification-002.public.json"
+          ],
+          "automatic_retry": false,
+          "binding": {
+            "bytes": 38653,
+            "path": "evidence://qualification/binding-001.public.json",
+            "sha256": "a649d255ccd78da4dd6a645e078d2a51f79ea80cb448a0db5c19cf1a007c53ae"
+          },
+          "finished_utc": "2026-11-25T11:30:02.035097+00:00",
+          "main_source": {
+            "bytes": 122768,
+            "path": "evidence://reviewed-source/qualification-main-002.py.txt",
+            "sha256": "49dd1a49ab3f88856008724fa9f0e2ec64bfa37b17d1841600ad950ee7359766"
+          },
+          "passed": true,
+          "prior_failed_main_execution_retained": {
+            "bytes": 1430,
+            "path": "execution-source://main-qualification-001.execution.json",
+            "sha256": "bfe2a43c7e682619144323b4393c4333d89ac60141e3fc2b825f7a57b881cbd3"
+          },
+          "qualification": {
+            "bytes": 101092,
+            "path": "evidence://qualification/qualification-002.public.json",
+            "sha256": "c80a60c82415d16fde7ef974ca6da5d43dc232ec424c3b3ad73ac8576f49da65"
+          },
+          "returncode": 0,
+          "schema": "tb371fc-root-actual-main-qualification-execution-v1",
+          "started_utc": "2026-11-25T11:29:59.342850+00:00",
+          "stderr": {
+            "bytes": 0,
+            "path": "execution-source://main-qualification-002.stderr",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stdout": {
+            "bytes": 231,
+            "path": "execution-source://main-qualification-002.stdout",
+            "sha256": "a8bc1df3d74ca8ea4255ab77d5faf5101acf8babd9833c956577ad32f6b334f2"
+          }
+        },
+        "original": {
+          "bytes": 1881,
+          "git_blob_sha1": "f3b5a4b3866bd9fa9daa344ad7330b07268e8418",
+          "sha256": "70ebfcb068abb1c5509cdb9d715f0c620ef39f19cbe1a1cdfee69cd092a0cd32"
+        },
+        "source_alias": "execution-source://main-qualification-002.execution.json"
+      },
+      "number": 2,
+      "started": {
+        "content": {
+          "argv": [
+            "python3",
+            "-B",
+            "evidence://reviewed-source/qualification-main-002.py.txt",
+            "--binding",
+            "evidence://qualification/binding-001.public.json",
+            "--out",
+            "evidence://qualification/qualification-002.public.json"
+          ],
+          "automatic_retry": false,
+          "prior_failure_retained": {
+            "bytes": 1430,
+            "path": "execution-source://main-qualification-001.execution.json",
+            "sha256": "bfe2a43c7e682619144323b4393c4333d89ac60141e3fc2b825f7a57b881cbd3"
+          },
+          "reviewed_schema_correction": {
+            "bytes": 3605,
+            "path": "evidence://qualification/ordinary-schema-only.diff",
+            "sha256": "d17d3f426a07ef62ad2b88ca389c722b3600c2a99a34b97078c553b5693fdcdc"
+          },
+          "started_utc": "2026-11-25T11:29:59.342850+00:00"
+        },
+        "original": {
+          "bytes": 800,
+          "git_blob_sha1": "2705f36dccaa9fcd50c4d188ebd27745fbb1f5c4",
+          "sha256": "5ea899ffe7b09d9ed730b94f1102e350b1315ce978824c2e08402871f0ebcf2f"
+        },
+        "source_alias": "execution-source://main-qualification-002.started.json"
+      },
+      "stderr": {
+        "content": "",
+        "original": {
+          "bytes": 0,
+          "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "source_alias": "execution-source://main-qualification-002.stderr"
+      },
+      "stdout": {
+        "content": "{\"passed\": true, \"qualification\": {\"path\": \"evidence://qualification/qualification-002.public.json\", \"bytes\": 101092, \"sha256\": \"c80a60c82415d16fde7ef974ca6da5d43dc232ec424c3b3ad73ac8576f49da65\"}, \"native_executed\": false}\n",
+        "original": {
+          "bytes": 231,
+          "git_blob_sha1": "5994a401028923bc8b98049867aed83e3fe1d17f",
+          "sha256": "a8bc1df3d74ca8ea4255ab77d5faf5101acf8babd9833c956577ad32f6b334f2"
+        },
+        "source_alias": "execution-source://main-qualification-002.stdout"
+      }
+    }
+  ],
+  "automatic_retry": false,
+  "schema": "tb371fc-public-qualification-attempt-history-v1"
+}

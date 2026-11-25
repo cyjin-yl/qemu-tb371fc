@@ -1,0 +1,689 @@
+#!/usr/bin/env python3
+"""Independently read complete GENI generation evidence; never execute producers.
+
+The preparation contract is intentionally disabled for the known-failed B5 CI.
+A reviewed successor contract and exact new archive identity are required before
+the entry point will open any ZIP. Pure parser tests may call the functions below
+with already retained public source files.
+"""
+import argparse
+import ast
+import copy
+import hashlib
+import json
+import operator
+from pathlib import Path, PurePosixPath
+import re
+import stat
+import zipfile
+
+CONTRACT_SHA256 = '1c9f71d5a9e96b81ad12affd89e34609f6a3d0b840afad13c6a2710beab6a9ed'
+FAILED_B5_HEAD = 'b5bf00086640cbee8ef0c13375ba281cd73b8369'
+SMALL_LIMIT = 8 * 1024 * 1024
+
+
+def need(value, label):
+    if not value:
+        raise ValueError(label)
+
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+
+def blob(raw):
+    return hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest()
+
+
+def canonical(value):
+    return (json.dumps(value, sort_keys=True, indent=2, allow_nan=False) + '\n').encode()
+
+
+def equal(left, right, label):
+    need(canonical(left) == canonical(right), label)
+
+
+def unique_pairs(items):
+    value = {}
+    for key, item in items:
+        need(key not in value, 'duplicate JSON key: ' + key)
+        value[key] = item
+    return value
+
+
+def document(raw):
+    def reject(value):
+        raise ValueError('nonfinite JSON: ' + value)
+    return json.loads(raw, object_pairs_hook=unique_pairs, parse_constant=reject)
+
+
+def identity(raw, pin, label):
+    need(len(raw) == pin['bytes'] and sha(raw) == pin['sha256'] and
+         ('git_blob_sha1' not in pin or blob(raw) == pin['git_blob_sha1']), label + ' complete identity differs')
+
+
+def without_comments(text):
+    return re.sub(r'/\*.*?\*/|//[^\n]*', '', text, flags=re.S)
+
+
+def single(pattern, text, label, flags=0):
+    values = list(re.finditer(pattern, text, flags))
+    need(len(values) == 1, label + ': missing or duplicate occurrence')
+    return values[0]
+
+
+def block_after(pattern, text, label):
+    text = without_comments(text)
+    match = single(pattern, text, label)
+    opening = text.rfind('{', match.start(), match.end())
+    need(opening >= match.start() and not text[opening+1:match.end()].strip(), label + ': block delimiter')
+    start = opening + 1
+    depth, quoted, escaped = 1, None, False
+    for index in range(start, len(text)):
+        c = text[index]
+        if quoted:
+            if escaped:
+                escaped = False
+            elif c == '\\':
+                escaped = True
+            elif c == quoted:
+                quoted = None
+        elif c in ('"', "'"):
+            quoted = c
+        elif c == '{':
+            depth += 1
+        elif c == '}':
+            depth -= 1
+            if depth == 0:
+                return text[start:index]
+    raise ValueError(label + ': unterminated block')
+
+
+def function_body(text, name):
+    return block_after(r'(?m)^[ \t]*(?:static\s+)?[A-Za-z_][\w\s*]*?\b' +
+                       re.escape(name) + r'\s*\([^;{}]*\)\s*\{', text, 'function ' + name)
+
+
+def ordered_tokens(text, tokens, label):
+    text = re.sub(r'\s+', '', without_comments(text))
+    last = -1
+    for token in tokens:
+        token = re.sub(r'\s+', '', token)
+        positions = [m.start() for m in re.finditer(re.escape(token), text)]
+        need(positions and positions[0] > last, label + ': first-token/order ' + token)
+        last = positions[0]
+
+
+class IntegerDefinitions:
+    """Small AST evaluator for literal C integer macros, with no eval/import."""
+    def __init__(self, text=''):
+        text = without_comments(text).replace('\\\n', '')
+        self.values = {}
+        self.expressions = {}
+        for name, expression in re.findall(r'^\s*#\s*define\s+([A-Za-z_]\w*)[ \t]+([^\n]+)', text, re.M):
+            self.expressions.setdefault(name, []).append(expression.strip())
+
+    def get(self, name, visiting=()):
+        need(name not in visiting, 'recursive C integer')
+        need(name in self.expressions and len(self.expressions[name]) == 1, 'C macro missing/ambiguous: ' + name)
+        return self.expression(self.expressions[name][0], visiting + (name,))
+
+    def expression(self, text, visiting=()):
+        text = re.sub(r'\b(0x[0-9a-fA-F]+|[0-9]+)[uUlL]+\b', r'\1', text)
+        node = ast.parse(text.strip(), mode='eval').body
+        binary = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul,
+                  ast.LShift: operator.lshift, ast.RShift: operator.rshift,
+                  ast.BitOr: operator.or_, ast.BitAnd: operator.and_, ast.BitXor: operator.xor}
+        def walk(value):
+            if isinstance(value, ast.Constant) and type(value.value) is int:
+                return value.value
+            if isinstance(value, ast.Name):
+                return self.get(value.id, visiting)
+            if isinstance(value, ast.UnaryOp) and isinstance(value.op, (ast.USub, ast.UAdd, ast.Invert)):
+                x = walk(value.operand)
+                return -x if isinstance(value.op, ast.USub) else +x if isinstance(value.op, ast.UAdd) else ~x
+            if isinstance(value, ast.BinOp):
+                left, right = walk(value.left), walk(value.right)
+                if isinstance(value.op, ast.Div):
+                    need(right != 0 and left % right == 0, 'nonintegral C division')
+                    return left // right
+                need(type(value.op) in binary, 'unsupported C integer operator')
+                if isinstance(value.op, (ast.LShift, ast.RShift)):
+                    need(0 <= right <= 63, 'C shift outside bounded width')
+                return binary[type(value.op)](left, right)
+            if isinstance(value, ast.Call) and isinstance(value.func, ast.Name) and not value.keywords:
+                args = [walk(item) for item in value.args]
+                if value.func.id in ('BIT', 'BIT_ULL') and len(args) == 1:
+                    need(0 <= args[0] <= 63, 'BIT width'); return 1 << args[0]
+                if value.func.id in ('GENMASK', 'GENMASK_ULL') and len(args) == 2:
+                    high, low = args
+                    need(0 <= low <= high <= 63, 'GENMASK bounds')
+                    return ((1 << (high-low+1)) - 1) << low
+            raise ValueError('unsupported C integer expression')
+        return walk(node)
+
+
+def enumeration(text, name=None):
+    pattern = r'\benum\s+' + re.escape(name) + r'\s*\{' if name else r'\benum\s*\{'
+    body = block_after(pattern, text, 'enum ' + str(name))
+    result, next_value = {}, 0
+    for declaration in body.split(','):
+        declaration = declaration.strip()
+        if not declaration:
+            continue
+        match = re.fullmatch(r'([A-Za-z_]\w*)(?:\s*=\s*(.+))?', declaration)
+        need(match and match[1] not in result, 'enum duplicate/invalid member')
+        value = next_value if match[2] is None else IntegerDefinitions().expression(match[2])
+        result[match[1]] = value
+        next_value = value + 1
+    return result
+
+
+def fields(body):
+    result, start, depth, quoted = [], 0, 0, False
+    for i, c in enumerate(body):
+        if c == '"':
+            quoted = not quoted
+        if quoted:
+            continue
+        if c in '({':
+            depth += 1
+        elif c in ')}':
+            depth -= 1
+        elif c == ',' and depth == 0:
+            result.append(body[start:i].strip()); start = i + 1
+    need(depth == 0 and not quoted, 'initializer nesting')
+    if body[start:].strip():
+        result.append(body[start:].strip())
+    return result
+
+
+def dt_property(body, name):
+    return single(r'(?m)^\s*' + re.escape(name) + r'\s*=\s*([^;]+);', body, 'DT property ' + name)[1].strip()
+
+
+def dt_cells(body, name):
+    value = dt_property(body, name)
+    parts = re.findall(r'<([^<>]+)>', value)
+    need(parts and re.fullmatch(r'(?:\s*<[^<>]+>\s*,?\s*)+', value), 'DT cell syntax ' + name)
+    return [part.split() for part in parts]
+
+
+def dt_node(text, label):
+    return block_after(r'\b' + re.escape(label) + r'\s*:\s*[^{}]+\{', text, 'DT node ' + label)
+
+
+def dt_reg(body):
+    cells = dt_cells(body, 'reg')
+    need(len(cells) == 1 and len(cells[0]) == 2, 'DT single address/size pair')
+    return [int(value, 0) for value in cells[0]]
+
+
+def independent_primary(sources, policy, facts, contract):
+    """Separate parser/arithmetic, not producer imports or producer report values."""
+    need(set(sources) == {row['id'] for row in contract['public_inputs']}, 'nineteen source roles')
+    for key in ('default_enabled', 'physical_wrapper_version_known', 'dma_status_or_completion_implemented'):
+        need(policy[key] is False, 'unsupported reference policy ' + key)
+    need(facts['selection']['se6_selection_established'] is False, 'private SE6 selection claim')
+    need(facts['producer']['write_to_readonly_alias_proved'] is False, 'private revision alias claim')
+    need(policy['fifo_words'] == 16 and policy['fifo_word_bits'] == 32 and
+         policy['profile_id'] == int.from_bytes(b'GHS1', 'big'), 'explicit reference FIFO/profile policy')
+    need(policy['wrapper_mapping_bytes'] == 4, 'version cell width')
+    uart = dt_node(sources['vendor_qupv3'], 'qupv3_se6_4uart')
+    wrapper = dt_node(sources['vendor_qupv3'], 'qupv3_0')
+    gcc_node = dt_node(sources['vendor_kona'], 'clock_gcc')
+    need(dt_property(uart, 'compatible') == '"qcom,msm-geni-serial-hs"', 'public DT HS compatible')
+    need(dt_property(uart, 'reg-names') == '"se_phys"', 'public DT SE register name')
+    need(dt_property(wrapper, 'compatible') == '"qcom,qupv3-geni-se"', 'wrapper compatible')
+    need('"qcom,gcc-kona"' in dt_property(gcc_node, 'compatible'), 'GCC compatible')
+    se_base, se_bytes = dt_reg(uart); wrapper_base, wrapper_bytes = dt_reg(wrapper)
+    gcc_base, gcc_bytes = dt_reg(gcc_node)
+    irq, iommu = dt_cells(uart, 'interrupts-extended'), dt_cells(wrapper, 'iommus')
+    need(len(irq) == 2 and irq[0][:2] == ['&intc', 'GIC_SPI'] and irq[0][3] == 'IRQ_TYPE_LEVEL_HIGH' and
+         irq[1][0] == '&tlmm' and len(iommu) == 1 and iommu[0][0] == '&apps_smmu', 'DT topology')
+    clocks = dt_cells(uart, 'clocks')
+    clock_macros = ['GCC_QUPV3_WRAP0_S6_CLK', 'GCC_QUPV3_WRAP_0_M_AHB_CLK', 'GCC_QUPV3_WRAP_0_S_AHB_CLK']
+    equal(clocks, [['&clock_gcc', name] for name in clock_macros], 'clock phandles/order')
+    equal(dt_cells(uart, 'qcom,wrapper-core'), [['&qupv3_0']], 'wrapper phandle')
+    dt = {'se_base': se_base, 'se_window_bytes': se_bytes, 'wrapper_base': wrapper_base,
+          'wrapper_dt_window_bytes': wrapper_bytes, 'gcc_base': gcc_base, 'gcc_window_bytes': gcc_bytes,
+          'gic_spi': int(irq[0][2], 0), 'wake_gpio': int(irq[1][1], 0), 'wake_irq_flags': int(irq[1][2], 0),
+          'wake_byte': int(dt_cells(uart, 'qcom,wakeup-byte')[0][0], 0),
+          'iommu_sid': int(iommu[0][1], 0), 'iommu_flags': int(iommu[0][2], 0),
+          'clock_macros': clock_macros, 'clock_names': re.findall(r'"([^"\n]+)"', dt_property(uart, 'clock-names')),
+          'other_public_uart_bases': [dt_reg(dt_node(sources['vendor_qupv3'], label))[0]
+                                     for label in ('qupv3_se2_2uart', 'qupv3_se12_2uart')],
+          'vendor_node_status': dt_property(uart, 'status').strip('"'),
+          'wake_gpio_or_dma_behavior_implemented_by_this_manifest': False}
+    need(sorted(dt['other_public_uart_bases']) == sorted(facts['selection']['observed_static_configuration_bases']) and
+         se_base not in facts['selection']['observed_static_configuration_bases'], 'static selection does not establish SE6')
+    defs = {name: IntegerDefinitions(sources[name]) for name in
+            ('vendor_header', 'upstream_header', 'vendor_platform_se', 'vendor_se', 'upstream_se',
+             'vendor_gcc_h', 'current_gcc_h', 'current_uart_h')}
+    v, u = defs['vendor_header'], defs['upstream_header']
+    expected_registers = contract['expected_manifest']['public_register_definitions']
+    registers = {}
+    for name in expected_registers['offsets']:
+        registers[name] = (v if name in v.expressions else u).get(name)
+        if name in v.expressions and name in u.expressions:
+            need(v.get(name) == u.get(name), 'vendor/upstream register ' + name)
+    masks = {name: v.get(name) for name in expected_registers['fields']}
+    for name in ('FW_REV_PROTOCOL_MSK', 'FW_REV_PROTOCOL_SHFT'):
+        need(masks[name] == u.get(name), 'public protocol mask/shift')
+    tx = {name: v.get(name) for name in expected_registers['dma_tx_irq_fields']}
+    rx = {name: v.get(name) for name in expected_registers['dma_rx_irq_fields']}
+    tx_union = 0
+    for value in tx.values(): tx_union |= value
+    rx_union = 0
+    for value in rx.values(): rx_union |= value
+    wrapper_offset = v.get('QUPV3_HW_VER')
+    need(wrapper_offset == defs['vendor_se'].get('QUP_HW_VER_REG'), 'wrapper version offset public agreement')
+    vf = {name: defs['vendor_platform_se'].get(name) for name in expected_registers['wrapper_version_fields']}
+    reg_result = {'offsets': registers, 'fields': masks, 'wrapper_version_offset': wrapper_offset,
+                  'wrapper_version_fields': vf, 'dma_tx_irq_fields': tx, 'dma_rx_irq_fields': rx,
+                  'dma_tx_irq_defined_mask': tx_union, 'dma_rx_irq_defined_mask': rx_union,
+                  'public_definitions_do_not_assert_all_registers_implemented': True}
+    clock_rows = []
+    numbers = IntegerDefinitions()
+    need(defs['current_gcc_h'].get('SM8250_GCC_MMIO_SIZE') == gcc_bytes, 'GCC aperture')
+    for macro in clock_macros:
+        name = macro.lower()
+        vendor = block_after(r'\bstruct\s+clk_branch\s+' + name + r'\s*=\s*\{', sources['vendor_gcc'], name)
+        def field(key):
+            return numbers.expression(single(r'\.' + key + r'\s*=\s*([^,\n]+)', vendor, name + '.' + key)[1])
+        halt, vote, mask = field('halt_reg'), field('enable_reg'), field('enable_mask')
+        hardware = [field('hwcg_reg'), 1 << field('hwcg_bit')] if '.hwcg_reg' in vendor else [0, 0]
+        match = single(r'\[(\d+)\]\s*=\s*\{\s*"' + name + r'"\s*,', sources['current_gcc_data'], name + ' index')
+        index = int(match[1])
+        current = fields(block_after(r'\[' + str(index) + r'\]\s*=\s*\{\s*(?="' + name + r'")',
+                                     sources['current_gcc_data'], name + ' fields'))
+        need(len(current) == 12 and current[1] == 'GCC_BRANCH', 'current branch layout')
+        current_int = {i: numbers.expression(current[i]) for i in (2, 3, 4, 5, 8, 9, 11)}
+        equal([current_int[i] for i in (2, 3, 4, 8, 9)], [halt, vote, mask] + hardware, 'physical clock register agreement')
+        clock_rows.append({'name': name, 'vendor_dt_id': defs['vendor_gcc_h'].get(macro),
+                           'qemu_internal_index': index, 'halt_register': halt, 'vote_register': vote,
+                           'vote_mask': mask, 'hwcg_register': hardware[0], 'hwcg_mask': hardware[1],
+                           'parent_index': current_int[5], 'external_parent_index': current_int[11],
+                           'external_parent_name': name + '_parent' if current_int[11] >= 0 else None})
+    reset_index = defs['vendor_gcc_h'].get('GCC_QUPV3_WRAPPER_0_BCR')
+    reset_reg = int(single(r'\[GCC_QUPV3_WRAPPER_0_BCR\]\s*=\s*\{\s*(0x[0-9a-fA-F]+)\s*\}',
+                           sources['vendor_gcc'], 'vendor reset')[1], 0)
+    current_reset = single(r'\[' + str(reset_index) + r'\]\s*=\s*\{\s*(0x[0-9a-fA-F]+)\s*,\s*(0x[0-9a-fA-F]+)\s*\}',
+                           sources['current_gcc_data'], 'current reset')
+    need(reset_reg == int(current_reset[1], 0) and int(current_reset[2], 0) == 1, 'reset physical map')
+    clock_result = {'bindings': clock_rows, 'reset_index': reset_index, 'reset_register': reset_reg,
+                    'reset_mask': 1, 'clock_array_slots': defs['current_gcc_h'].get('GCC_CLOCKS'),
+                    'reset_array_slots': defs['current_gcc_h'].get('GCC_RESETS'),
+                    'vendor_ids_are_not_qemu_internal_indices': True}
+    for token in ('qdev_init_gpio_in_named(dev,gcc_hw_request,"hw-request",GCC_CLOCKS)',
+                  'qdev_init_gpio_out_named(dev,s->reset_out,"reset",GCC_RESETS)',
+                  'qdev_init_clock_out(dev,d->name)', 'g_strdup_printf("%s_parent",d->name)'):
+        need(token in re.sub(r'\s+', '', without_comments(sources['current_gcc'])), 'current GCC wiring ' + token)
+    protocols = enumeration(sources['vendor_header'], 'se_protocol_types')
+    upstream_protocols = enumeration(sources['upstream_header'], 'geni_se_protocol_type')
+    modes = enumeration(sources['vendor_header'], 'se_xfer_mode')
+    upstream_modes = enumeration(sources['upstream_header'], 'geni_se_xfer_mode')
+    protocol = protocols['UART']
+    need(protocol == upstream_protocols['GENI_SE_UART'] == facts['header_scalars']['protocol'], 'UART protocol arithmetic')
+    for name, register, mask in [('get_se_proto', 'GENI_FW_REVISION_RO', 'FW_REV_PROTOCOL_MSK'),
+                                ('get_se_m_fw', 'GENI_FW_REVISION_RO', 'FW_REV_VERSION_MSK'),
+                                ('get_se_s_fw', 'GENI_FW_S_REVISION_RO', 'FW_REV_VERSION_MSK')]:
+        body = re.sub(r'\s+', '', function_body(sources['vendor_platform_se'], name))
+        need('geni_read_reg(base,' + register + ')' in body and '&' + mask in body, name + ' consumer')
+    ordered_tokens(function_body(sources['vendor_platform_se'], 'se_geni_clks_on'),
+                   ['clk_prepare_enable(rsc->m_ahb_clk)', 'clk_prepare_enable(rsc->s_ahb_clk)',
+                    'clk_prepare_enable(rsc->se_clk)'], 'clock order')
+    info = function_body(sources['vendor-serial'], 'msm_geni_serial_get_ver_info')
+    ordered_tokens(info, ['get_se_proto(', 'get_se_m_fw(', 'get_se_s_fw(', 'geni_se_qupv3_hw_version('], 'vendor version order')
+    need('get_se_proto(uport->membase)!=UART' in re.sub(r'\s+', '', info), 'vendor UART test')
+    need('msm_port->xfer_mode=SE_DMA;' in re.sub(r'\s+', '', function_body(sources['vendor-serial'], 'msm_geni_serial_port_setup')), 'vendor startup DMA limit')
+    need('proto!=GENI_SE_UART' in re.sub(r'\s+', '', function_body(sources['upstream_serial'], 'qcom_geni_serial_port_setup')), 'upstream UART test')
+    need('readl_relaxed(wrapper->base+QUP_HW_VER_REG)' in re.sub(r'\s+', '', function_body(sources['vendor_se'], 'geni_se_get_qup_hw_version')), 'public wrapper consumer')
+    header = block_after(r'\bstruct\s+se_fw_hdr\s*\{', sources['upstream_se'], 'SEFW header')
+    header_fields, offset = {}, 0
+    for declaration in header.split(';'):
+        if not declaration.strip(): continue
+        match = re.fullmatch(r'\s*__le(16|32)\s+(\w+)\s*', declaration)
+        need(match and match[2] not in header_fields, 'SEFW declaration')
+        size = int(match[1]) // 8
+        need(offset % size == 0, 'SEFW alignment')
+        header_fields[match[2]] = {'offset': offset, 'bytes': size}; offset += size
+    header_facts = facts['header_scalars']
+    need(header_fields['serial_protocol']['offset'] == header_facts['protocol_byte_offset'] and
+         header_fields['fw_version']['offset'] == header_facts['firmware_low_byte_offset'], 'SEFW byte offsets')
+    producer = function_body(sources['upstream_se'], 'geni_write_fw_revision')
+    ordered_tokens(producer, ['FIELD_PREP(FW_REV_PROTOCOL_MSK,serial_protocol)',
+                   'FIELD_PREP(FW_REV_VERSION_MSK,fw_version)',
+                   'writel(reg,se->base+SE_GENI_FW_REVISION)', 'writel(reg,se->base+SE_GENI_S_FW_REVISION)'], 'public revision producer')
+    need(len(re.findall(r'\bwritel\s*\(', producer)) == 2, 'public producer writes')
+    fw = defs['upstream_se']
+    need(fw.get('FW_REV_VERSION_MSK') == masks['FW_REV_VERSION_MSK'], 'firmware mask agreement')
+    main, secondary = fw.get('SE_GENI_FW_REVISION'), fw.get('SE_GENI_S_FW_REVISION')
+    need(main == facts['producer']['main_programming_offset'] and secondary == facts['producer']['secondary_programming_offset'], 'producer offsets')
+    low = header_facts['firmware_version'] & masks['FW_REV_VERSION_MSK']
+    word = ((protocol << masks['FW_REV_PROTOCOL_SHFT']) & masks['FW_REV_PROTOCOL_MSK']) | low
+    need(word == facts['producer']['main_word'] == facts['producer']['secondary_word'], 'producer low-byte arithmetic')
+    producer_result = {'uart_protocol': protocol, 'vendor_fifo_mode': modes['FIFO_MODE'],
+                       'vendor_se_dma_mode': modes['SE_DMA'], 'upstream_fifo_mode': upstream_modes['GENI_SE_FIFO'],
+                       'upstream_se_dma_mode': upstream_modes['GENI_SE_DMA'], 'transfer_mode_enums_are_source_specific': True,
+                       'sefw_header_fields': header_fields, 'sefw_header_bytes': offset, 'sefw_magic': fw.get('SE_MAGIC_NUM'),
+                       'main_programming_offset': main, 'secondary_programming_offset': secondary,
+                       'revision_word': word, 'revision_low_byte': low, 'ignored_firmware_high_byte': header_facts['firmware_version'] >> 8,
+                       'configuration_revision_byte': header_facts['configuration_version'] & 255,
+                       'revision_formula': '(UART_protocol << protocol_shift) | (reviewed_header_firmware_version & version_mask)',
+                       'public_producer_consumer_interface_checked': True, 'withheld_header_values_publicly_reproduced': False,
+                       'public_vendor_source_is_whole_original_kernel_identity': False,
+                       'original_irq_helper_is_not_claimed_identical_to_vendor_helper': True,
+                       'later_vendor_nonconsole_startup_requires_unimplemented_dma': True}
+    old_enum = enumeration(sources['current_uart'])
+    for old, new in {'GENI_FW_REV': 'GENI_FW_REVISION_RO', 'GENI_FW_S_REV': 'GENI_FW_S_REVISION_RO',
+                     'GENI_M_EN': 'SE_GENI_M_IRQ_EN', 'GENI_S_EN': 'SE_GENI_S_IRQ_EN',
+                     'GENI_M_EN_SET': 'SE_GENI_M_IRQ_EN_SET', 'GENI_S_EN_SET': 'SE_GENI_S_IRQ_EN_SET'}.items():
+        need(old_enum[old] == registers[new], 'legacy public offset ' + old)
+    view = numbers.expression(single(r'case\s+GENI_HW_PARAM0:\s*case\s+GENI_HW_PARAM1:\s*return\s+([^;]+);',
+                                      without_comments(sources['current_uart']), 'legacy HW parameter')[1])
+    words = (view & masks['TX_FIFO_DEPTH_MSK']) >> masks['TX_FIFO_DEPTH_SHFT']
+    bits = (view & masks['TX_FIFO_WIDTH_MSK']) >> masks['TX_FIFO_WIDTH_SHFT']
+    fifo_bytes = defs['current_uart_h'].get('QCOM_GENI_UART_FIFO_SIZE')
+    need(bits % 8 == 0 and fifo_bytes == words * (bits // 8) and
+         words == policy['fifo_words'] and bits == policy['fifo_word_bits'], 'FIFO reference geometry')
+    ordered_tokens(function_body(sources['qdev_clock'], 'qdev_connect_clock_in'),
+                   ['assert(!dev->realized)', 'clock_set_source('], 'clock lifecycle')
+    need('qdev_prop_set_globals(DEVICE(obj));' in re.sub(r'\s+', '', function_body(sources['qdev_core'], 'device_post_init')), 'QOM globals lifecycle')
+    ordered_tokens(function_body(sources['vmstate_core'], 'vmstate_load_vmsd'),
+                   ['vmstate_subsection_load(', 'vmstate_post_load('], 'subsection lifecycle')
+    need('vmsd->post_load(opaque,version_id)' in re.sub(r'\s+', '', function_body(sources['vmstate_core'], 'vmstate_post_load')), 'parent post_load')
+    legacy = {'legacy_mmio_bytes': defs['current_uart_h'].get('QCOM_GENI_UART_MMIO_SIZE'),
+              'legacy_fifo_bytes': fifo_bytes, 'legacy_fifo_words': words, 'legacy_fifo_word_bits': bits,
+              'fifo_geometry_is_model_policy': True, 'globals_applied_in_device_post_init': True,
+              'clock_connection_requires_unrealized_device': True, 'migration_subsections_loaded_before_parent_post_load': True,
+              'source_contracts_are_not_compiled_or_runtime_acceptance': True}
+    wrapper_value = policy['wrapper_version_choice']
+    need(wrapper_value == header_facts['core_version'] and se_bytes == legacy['legacy_mmio_bytes'], 'reference compatibility choice')
+    version = {'major': (wrapper_value & vf['HW_VER_MAJOR_MASK']) >> vf['HW_VER_MAJOR_SHFT'],
+               'minor': (wrapper_value & vf['HW_VER_MINOR_MASK']) >> vf['HW_VER_MINOR_SHFT'],
+               'step': wrapper_value & vf['HW_VER_STEP_MASK'], 'live_hardware_read_claimed': False}
+    constants = {'GENI_HS_SE_BASE': se_base, 'GENI_HS_SE_WINDOW_BYTES': se_bytes,
+                 'GENI_HS_WRAPPER_VERSION_ADDRESS': wrapper_base + wrapper_offset,
+                 'GENI_HS_WRAPPER_WINDOW_BYTES': policy['wrapper_mapping_bytes'],
+                 'GENI_HS_MAIN_FW_REVISION': word, 'GENI_HS_SECONDARY_FW_REVISION': word,
+                 'GENI_HS_WRAPPER_VERSION': wrapper_value, 'GENI_HS_FIFO_BYTES': fifo_bytes,
+                 'GENI_HS_PROFILE_ID': policy['profile_id'], 'GENI_HS_DMA_TX_IRQ_MASK': tx_union,
+                 'GENI_HS_DMA_RX_IRQ_MASK': rx_union, 'GENI_HS_CFG_REVISION': header_facts['configuration_version'] & 255}
+    need(wrapper_base <= constants['GENI_HS_WRAPPER_VERSION_ADDRESS'] and
+         constants['GENI_HS_WRAPPER_VERSION_ADDRESS'] + 4 <= wrapper_base + wrapper_bytes, 'wrapper cell bounds')
+    result = {'public_dt': dt, 'public_clock_bindings': clock_result, 'public_register_definitions': reg_result,
+              'producer_consumer_contract': producer_result, 'legacy_policy_and_lifecycle': legacy,
+              'wrapper_profile_version': version}
+    for key, value in result.items():
+        equal(value, contract['expected_manifest'][key], 'independently derived ' + key)
+    equal(constants, contract['constants'], 'twelve independently derived constants')
+    return constants, result
+
+
+def independent_inc(constants, order):
+    lines = ['/* SPDX-License-Identifier: GPL-2.0-or-later */',
+             '/* Generated by tb371fc/scripts/gen_geni_hs_sm8250.py; do not edit. */',
+             '/* 19 full public inputs plus explicit policy and sanitized private facts. */',
+             '/* Reference identity only: physical SE6 firmware/reset state is unknown. */']
+    for name in order:
+        kind = 'UINT64_C' if name in ('GENI_HS_SE_BASE', 'GENI_HS_WRAPPER_VERSION_ADDRESS') else 'UINT32_C'
+        lines.append('#define %s %s(0x%08x)' % (name, kind, constants[name]))
+    return ('\n'.join(lines) + '\n').encode()
+
+
+def expected_mutants(contract, raw_inputs, references, sources, policy, facts, generated):
+    """Construct complete expected bytes independently from frozen operations."""
+    result = []
+    def append(category, name, raw, original=None, parser_rejected=False):
+        index = len(result) + 1
+        result.append({'category': category, 'name': name,
+                       'mutant_path': f'negative/{category}/{index:03d}-{name}.input',
+                       'raw': raw, 'original': original, 'independent_semantic_rejection': parser_rejected})
+    for pin in contract['public_inputs']:
+        original = raw_inputs[pin['id']]; value = bytearray(original); value[len(value)//2] ^= 1
+        append('complete-input-identity', pin['id'], bytes(value), original)
+    for pin in contract['reference_inputs']:
+        original = references[pin['role']]; value = bytearray(original); value[len(value)//2] ^= 1
+        append('reference-input-identity', pin['role'], bytes(value), original)
+    for source_id, pattern, replacement in contract['parser_mutations']:
+        changed, count = re.subn(pattern, replacement, sources[source_id])
+        need(count == 1 and changed != sources[source_id], 'one semantic mutation ' + source_id)
+        alternate = dict(sources); alternate[source_id] = changed
+        rejected = False
+        try: independent_primary(alternate, policy, facts, contract)
+        except (ValueError, KeyError): rejected = True
+        need(rejected, 'independent parser accepted ' + source_id)
+        append('parser-contract', source_id, changed.encode(), raw_inputs[source_id], True)
+    for name, owner, path, replacement in contract['scope_mutations']:
+        p, f = copy.deepcopy(policy), copy.deepcopy(facts)
+        target = p if owner == 'policy' else f
+        for key in path[:-1]: target = target[key]
+        target[path[-1]] = replacement
+        rejected = False
+        try: independent_primary(sources, p, f, contract)
+        except (ValueError, KeyError): rejected = True
+        need(rejected, 'independent scope checker accepted ' + name)
+        append('reference-scope', name, canonical({'policy': p, 'producer_facts': f}), parser_rejected=True)
+    inc, manifest = [row['path'] for row in contract['generated_outputs']]
+    changed, count = re.subn(rb'(GENI_HS_MAIN_FW_REVISION UINT32_C\()0x00000201', rb'\g<1>0x00000301', generated[inc])
+    need(count == 1, 'generated revision negative operation')
+    append('generated-output', 'wrong-main-revision', changed, generated[inc])
+    value = document(generated[manifest]); value['scope']['physical_se6_firmware_state_known'] = True
+    append('generated-output', 'false-physical-state-claim', canonical(value), generated[manifest])
+    need(len(result) == 51 and sum(len(row['raw']) for row in result) == 1700682, 'complete mutant geometry')
+    return result
+
+
+class Archive:
+    def __init__(self, path, expected_bytes, expected_sha256):
+        self.path = Path(path); self.verified = {}
+        digest, count = hashlib.sha256(), 0
+        with self.path.open('rb') as stream:
+            for block in iter(lambda: stream.read(4*1024*1024), b''):
+                digest.update(block); count += len(block)
+        need(count == expected_bytes and digest.hexdigest() == expected_sha256, 'full new ZIP identity')
+        self.identity = {'path': str(path), 'bytes': count, 'sha256': digest.hexdigest()}
+        self.archive = zipfile.ZipFile(path)
+        infos = self.archive.infolist(); names = [info.filename for info in infos]
+        need(len(names) == len(set(names)), 'duplicate ZIP members')
+        for info in infos:
+            path = PurePosixPath(info.filename)
+            need(not path.is_absolute() and '..' not in path.parts and '\\' not in info.filename,
+                 'unsafe ZIP member')
+            need(not stat.S_ISLNK(info.external_attr >> 16), 'ZIP symlink')
+        self.names = names
+
+    def read(self, name):
+        info = self.archive.getinfo(name)
+        need(not info.is_dir() and info.file_size <= SMALL_LIMIT, 'bounded complete member')
+        raw = self.archive.read(name)
+        need(len(raw) == info.file_size, 'full member length')
+        self.verified[name] = {'member': name, 'bytes': len(raw), 'sha256': sha(raw), 'git_blob_sha1': blob(raw)}
+        return raw
+
+    def binary(self, name, expected_bytes, expected_sha256):
+        info = self.archive.getinfo(name)
+        need(info.file_size == expected_bytes, 'QEMU member length')
+        digest = hashlib.sha256(); count = 0
+        with self.archive.open(name) as stream:
+            for block in iter(lambda: stream.read(4*1024*1024), b''):
+                if count == 0: need(block[:4] == b'\x7fELF', 'QEMU ELF magic')
+                count += len(block); digest.update(block)
+        need(count == expected_bytes and digest.hexdigest() == expected_sha256, 'full QEMU identity')
+        self.verified[name] = {'member': name, 'bytes': count, 'sha256': digest.hexdigest()}
+        return {**self.verified[name], 'executed': False}
+
+    def case(self, name):
+        matches = [path for path in self.names if re.search(r'(?:^|/)components/\d+-' + re.escape(name) + r'/case\.json$', path)]
+        need(len(matches) == 1, 'unique component ' + name)
+        member = matches[0]; folder = member.rsplit('/', 1)[0] + '/'
+        case = document(self.read(member))
+        need(case['name'] == name and case['passed'] is True and type(case['exit_code']) is int and case['exit_code'] == 0 and
+             not case.get('timed_out') and 'error' not in case and 'artifact_error' not in case, 'successful component ' + name)
+        logs = {label: self.read(folder + label + '.log') for label in ('stdout', 'stderr')}
+        equal(case['log_sha256'], {label + '.log': sha(raw) for label, raw in logs.items()}, 'complete case log hashes')
+        return member, folder, case, logs
+
+
+def audit(args, contract):
+    # This guard precedes all artifact, binary and case access.
+    need(contract['execution_requires_next_reviewed_contract'] is False and
+         contract['prepared_for_source_head'] != FAILED_B5_HEAD and contract['b5_actual_ci_known_failed'] is True,
+         'known-failed B5 preparation contract is disabled; reviewed successor required')
+    head, tree = contract['prepared_for_source_head'], contract['prepared_for_source_tree']
+    need(re.fullmatch('[0-9a-f]{40}', head) and re.fullmatch('[0-9a-f]{40}', tree), 'bound new source identity')
+    source_pins, references, generated = [], {}, {}
+    for pin in contract['runtime_sources'] + contract['reference_inputs'] + contract['generated_outputs']:
+        raw = (args.source_root / pin['path']).read_bytes(); identity(raw, pin, pin['path'])
+        source_pins.append(pin)
+        if 'role' in pin: references[pin['role']] = raw
+        if pin in contract['generated_outputs']: generated[pin['path']] = raw
+    policy, facts = document(references['policy']), document(references['producer_facts'])
+    archive = Archive(args.archive, args.archive_bytes, args.archive_sha256)
+    try:
+        qemu = archive.binary(args.qemu_member, args.qemu_bytes, args.qemu_sha256)
+        member, folder, case, logs = archive.case('geni-hs-source-generation')
+        unit_member, unit_folder, unit_case, unit_logs = archive.case('geni-hs-source-generation-unit')
+        need(case['timeout_seconds'] == unit_case['timeout_seconds'] == 180, 'source generation timeouts')
+        need(len(case['command']) == 4 and Path(case['command'][1]).name == 'verify_geni_hs_sm8250_generation.py' and
+             case['command'][2] == '--out' and case['command'][3] == case['fixture'] + '/data', 'verifier command')
+        need(len(unit_case['command']) == 2 and Path(unit_case['command'][1]).name == 'test_geni_hs_sm8250_generation.py', 'unit command')
+        root = member[:member.rindex('components/')]
+        need(unit_member.startswith(root + 'components/'), 'same component root')
+        source_commit_file = root + 'source-commit.txt'
+        need(archive.read(source_commit_file).decode().strip() == head, 'actual source commit')
+        need(archive.read(root + 'qemu.sha256').decode().split()[0] == args.qemu_sha256, 'recorded QEMU identity')
+        unit_stderr = unit_logs['stderr'].decode('utf-8')
+        counts = re.findall(r'^Ran (\d+) tests in [0-9.]+s$', unit_stderr, re.M)
+        need(counts == ['49'] and len(re.findall(r'^OK$', unit_stderr, re.M)) == 1 and
+             not re.search(r'FAILED|skipped=|^ERROR:|^FAIL:', unit_stderr, re.M), 'actual 49-unit verdict')
+        labels = re.findall(r'^(test_\w+) \([^\n]+\) \.\.\. ok$', unit_stderr, re.M)
+        equal(sorted(labels), contract['unit_method_names'], 'forty-nine exact actual unit methods')
+        data = folder + 'fixtures/data/'
+        report_member = data + 'result.json'; report = document(archive.read(report_member))
+        need(report['schema'] == 'tb371fc-geni-hs-sm8250-source-generation-v1' and report['passed'] is True and
+             report['public_source_pins_verified'] is True and report['reference_input_pins_verified'] is True and
+             report['private_binary_review_publicly_reproduced'] is False and report['devices_ssh_qemu_or_native_used'] is False,
+             'source report verdict/scope')
+        equal(document(logs['stdout']), {'passed': True, 'inputs': 19, 'outputs': 2, 'negatives': 51}, 'actual verifier stdout')
+        need(len(report['inputs']) == 19 and len(report['reference_inputs']) == 2 and len(report['checks']) == 2 and
+             len(report['negative_checks']) == 51, 'complete report cardinalities')
+        raw_inputs = {}; actual_inputs = []
+        for expected, row in zip(contract['public_inputs'], report['inputs']):
+            equal({key: row[key] for key in expected}, expected, 'public pin provenance')
+            raw = archive.read(data + 'inputs/' + expected['local_name']); identity(raw, expected, expected['id'])
+            need(row['verified_bytes'] == len(raw) and row['verified_sha256'] == sha(raw) and
+                 row['verified_git_blob_sha1'] == blob(raw), 'actual public source identity fields')
+            raw_inputs[expected['id']] = raw
+            actual_inputs.append({'id': expected['id'], 'member': data + 'inputs/' + expected['local_name'],
+                                  'bytes': len(raw), 'sha256': sha(raw), 'git_blob_sha1': blob(raw)})
+        equal(report['reference_inputs'], contract['reference_inputs'], 'reference input pins')
+        sources = {name: raw.decode('utf-8') for name, raw in raw_inputs.items()}
+        constants, primary = independent_primary(sources, policy, facts, contract)
+        outputs = []
+        for expected, row in zip(contract['generated_outputs'], report['checks']):
+            raw = archive.read(data + 'generated/' + expected['path']); identity(raw, expected, expected['path'])
+            need(raw == generated[expected['path']] and row['name'] == expected['path'] and row['passed'] is True and
+                 row['bytes'] == len(raw) and row['sha256'] == sha(raw) and row['git_blob_sha1'] == blob(raw), 'complete generated bytes')
+            outputs.append({'path': expected['path'], 'bytes': len(raw), 'sha256': sha(raw), 'git_blob_sha1': blob(raw)})
+        inc, manifest_name = [row['path'] for row in contract['generated_outputs']]
+        need(independent_inc(constants, contract['constant_order']) == generated[inc], 'independent include rendering')
+        manifest = document(generated[manifest_name]); equal(manifest, contract['expected_manifest'], 'complete reviewed generated manifest')
+        equal(manifest['reference_policy'], policy, 'manifest policy original')
+        equal(manifest['sanitized_private_producer_facts'], facts, 'manifest sanitized fact original')
+        generator_stdout = archive.read(data + 'generation.stdout'); generator_stderr = archive.read(data + 'generation.stderr')
+        equal(document(generator_stdout), {'source_inputs': 19, 'source_bytes': 810000,
+              'outputs': [row['path'] for row in contract['generated_outputs']], 'constants': constants}, 'actual generator stdout')
+        need(generator_stderr == b'' and report['generator_exit_code'] == 0 and
+             report['generator_stdout_sha256'] == sha(generator_stdout) and report['generator_stderr_bytes'] == 0, 'recorded regeneration exit/logs')
+        expected_negatives = expected_mutants(contract, raw_inputs, references, sources, policy, facts, generated)
+        negatives, recovered = [], []
+        for expected, row in zip(expected_negatives, report['negative_checks']):
+            for key in ('category', 'name', 'mutant_path'): need(row[key] == expected[key], 'negative identity/order')
+            raw = archive.read(data + row['mutant_path'])
+            need(raw == expected['raw'] and row['mutant_bytes'] == len(raw) and
+                 row['mutant_sha256'] == sha(raw) and row['mutant_git_blob_sha1'] == blob(raw), 'complete mutant bytes')
+            need(row['rejected'] is True and row['rejection_type'] == 'ValueError' and
+                 isinstance(row['rejection_reason'], str) and row['rejection_reason'], 'actual rejection record')
+            result = {'category': row['category'], 'name': row['name'], 'member': data + row['mutant_path'],
+                      'bytes': len(raw), 'sha256': sha(raw), 'git_blob_sha1': blob(raw),
+                      'whole_mutant_reconstructed': True,
+                      'independent_semantic_rejection': expected['independent_semantic_rejection']}
+            if row['category'] in ('complete-input-identity', 'reference-input-identity'):
+                original = expected['original']; index = len(original)//2
+                need(row['mutation_offset'] == index and row['same_full_byte_length'] is True and
+                     row['original_sha256'] == sha(original), 'whole-input one-bit metadata')
+                restored = bytearray(raw); restored[index] ^= 1
+                need(bytes(restored) == original and len(raw) == len(original), 'whole-input reverse bit proof')
+                result.update({'changed_byte_offset': index, 'xor': 1, 'all_other_bytes_equal': True})
+                if row['category'] == 'reference-input-identity':
+                    recovered.append({'role': row['name'], 'bytes': len(restored), 'sha256': sha(restored),
+                                      'git_blob_sha1': blob(restored), 'from_complete_mutant_member': result['member'],
+                                      'separate_original_member_claimed': False})
+            elif row['category'] == 'parser-contract':
+                need(row['complete_identity_bypassed_only_for_semantic_test'] is True and
+                     row['original_sha256'] == sha(expected['original']), 'semantic test identity boundary')
+            negatives.append(result)
+        equal(report['negative_counts'], contract['negative_category_counts'], 'all negative category counts')
+        equal(report['generated_contract'], {'source_input_count': 19, 'source_input_bytes': 810000,
+              'reference_input_count': 2, 'output_count': 2, 'constant_count': 12, 'window_count': 2,
+              'clock_binding_count': 3, 'fifo_bytes': 64, 'negative_check_count': 51, 'constants': constants}, 'generation report contract')
+        actual_data = {name for name in archive.names if name.startswith(data) and not name.endswith('/')}
+        verified_data = {name for name in archive.verified if name.startswith(data)}
+        need(actual_data == verified_data and len(actual_data) == 75, 'every complete data member and no unreviewed extra')
+        need(len(archive.verified) == 84, 'complete independent member set')
+        summary = {'public_inputs': 19, 'public_input_bytes': 810000, 'reference_inputs': 2,
+                   'reference_originals_reconstructed_from_full_mutants': 2, 'separate_reference_original_members': 0,
+                   'generated_outputs': 2, 'generated_output_bytes': 26355, 'constants': 12, 'windows': 2,
+                   'clock_bindings': 3, 'negative_mutants': 51, 'negative_mutant_bytes': 1700682,
+                   'complete_input_identity_negatives': 19, 'reference_identity_negatives': 2,
+                   'parser_contract_negatives': 19, 'reference_scope_negatives': 9, 'generated_output_negatives': 2,
+                   'unit_tests': 49, 'primary_fact_sections': 6,
+                   'generator_executed_by_auditor': False, 'qemu_executed': False,
+                   'private_binary_review_publicly_reproduced': False, 'native_probe_claimed': False, 'android_boot_claimed': False}
+        return {'schema': 'tb371fc-geni-hs-source-independent-artifact-audit-v1', 'passed': True,
+                'expected_head': head, 'expected_tree': tree, 'archive': archive.identity, 'qemu': qemu,
+                'component': {'case': member, 'report': report_member, 'head': head, 'checks': 2,
+                              'source_commit_file': source_commit_file, 'exit_code': 0},
+                'unit_component': {'case': unit_member, 'tests': 49, 'exit_code': 0},
+                'source_provenance': source_pins, 'inputs': actual_inputs, 'reference_inputs': recovered,
+                'outputs': outputs, 'negative_checks': negatives, 'primary_facts': primary, 'constants': constants,
+                'summary': summary, 'verified_members': list(archive.verified.values()),
+                'verified_member_count': len(archive.verified), 'qemu_executed': False,
+                'generator_or_verifier_imported_or_executed': False, 'guest_executed': False}
+    finally:
+        archive.archive.close()
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--contract', type=Path, required=True)
+    parser.add_argument('--source-root', type=Path, required=True)
+    parser.add_argument('--archive', type=Path, required=True)
+    parser.add_argument('--archive-bytes', type=int, required=True)
+    parser.add_argument('--archive-sha256', required=True)
+    parser.add_argument('--qemu-member', default='qemu-build/qemu-system-aarch64')
+    parser.add_argument('--qemu-bytes', type=int, required=True)
+    parser.add_argument('--qemu-sha256', required=True)
+    parser.add_argument('--out', type=Path, required=True)
+    args = parser.parse_args()
+    result = {'schema': 'tb371fc-geni-hs-source-independent-artifact-audit-v1', 'passed': False,
+              'auditor_sha256': sha(Path(__file__).read_bytes()), 'qemu_executed': False,
+              'generator_or_verifier_imported_or_executed': False, 'guest_executed': False}
+    try:
+        raw = args.contract.read_bytes()
+        need(sha(raw) == CONTRACT_SHA256, 'reviewed source audit contract identity')
+        contract = document(raw)
+        result.update(audit(args, contract))
+        result['contract'] = {'path': str(args.contract), 'bytes': len(raw), 'sha256': sha(raw)}
+    except Exception as error:
+        result['error'] = {'type': type(error).__name__, 'message': str(error)}
+    with args.out.open('xb') as output:
+        output.write(canonical(result))
+    print(json.dumps({'passed': result['passed'], 'receipt': str(args.out), 'error': result.get('error')}, sort_keys=True))
+    return 0 if result['passed'] else 1
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

@@ -1,0 +1,251 @@
+"""Pure complete Git tree overlay checks for the two GENI publications."""
+from pathlib import PurePosixPath
+import copy
+import hashlib
+import re
+
+
+def need(value, label):
+    if not value:
+        raise ValueError(label)
+
+
+def git_blob(raw):
+    return hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest()
+
+
+def normal_path(value, allow_root=False):
+    need(isinstance(value, str), 'path type')
+    if value == '' and allow_root:
+        return value
+    path = PurePosixPath(value)
+    need(not path.is_absolute() and '..' not in path.parts and '.' not in path.parts and
+         str(path) == value and value and '\0' not in value, 'relative normalized Git path')
+    return value
+
+
+def git_tree(entries):
+    need(isinstance(entries, list), 'complete tree entries')
+    seen = set()
+    ordered = []
+    for entry in entries:
+        name = normal_path(entry['path'])
+        need('/' not in name and name not in seen, 'nonrecursive unique Git basename')
+        seen.add(name)
+        mode, kind, digest = entry['mode'], entry['type'], entry['sha']
+        need(re.fullmatch('[0-9a-f]{40}', digest), 'Git SHA1')
+        need((mode, kind) in {('040000', 'tree'), ('40000', 'tree'), ('100644', 'blob'),
+                             ('100755', 'blob'), ('120000', 'blob'), ('160000', 'commit')}, 'Git mode/type')
+        order = name.encode('utf-8') + (b'/' if kind == 'tree' else b'')
+        body = format(int(mode, 8), 'o').encode() + b' ' + name.encode('utf-8') + b'\0' + bytes.fromhex(digest)
+        ordered.append((order, body))
+    raw = b''.join(body for _, body in sorted(ordered))
+    return hashlib.sha1(b'tree ' + str(len(raw)).encode() + b'\0' + raw).hexdigest()
+
+
+def verified_objects(objects, root_tree):
+    need('' in objects and objects['']['sha'] == root_tree, 'base root tree')
+    tables = {}
+    for path, obj in objects.items():
+        normal_path(path, True)
+        need(obj.get('truncated') is False and git_tree(obj['tree']) == obj['sha'], 'complete base tree recomputation: ' + path)
+        tables[path] = {row['path']: copy.deepcopy(row) for row in obj['tree']}
+    for path, obj in objects.items():
+        if not path:
+            continue
+        parent = str(PurePosixPath(path).parent)
+        parent = '' if parent == '.' else parent
+        need(parent in tables, 'tree ancestor omitted')
+        child = tables[parent].get(PurePosixPath(path).name)
+        need(child and child['type'] == 'tree' and child['sha'] == obj['sha'], 'tree parent edge')
+    return tables
+
+
+def publication(packet, base_objects, readback, expected):
+    need(set(packet) == {'base_tree_sha', 'repository_full_name', 'tree_elements'} and
+         packet['repository_full_name'] == 'cyjin-yl/qemu-tb371fc', 'complete publication packet')
+    need(packet['base_tree_sha'] == expected['parent_tree'], 'publication exact base')
+    need(readback['commit'] == expected['head'] and readback['parent'] == expected['parent'] and
+         readback['tree'] == expected['tree'], 'actual publication identity')
+    tables = verified_objects(base_objects, expected['parent_tree'])
+    originals = copy.deepcopy(tables)
+    changed_dirs = set(); files = []; paths = set()
+    for row in packet['tree_elements']:
+        need(set(row) == {'path', 'mode', 'type', 'content'} and row['mode'] in ('100644', '100755') and
+             row['type'] == 'blob' and isinstance(row['content'], str), 'text publication entry')
+        path = normal_path(row['path']); need(path not in paths, 'duplicate publication path'); paths.add(path)
+        parts = PurePosixPath(path).parts
+        parent = ''
+        for part in parts[:-1]:
+            current = part if not parent else parent + '/' + part
+            if current not in tables:
+                need(part not in tables[parent], 'existing subtree raw object omitted: ' + current)
+                tables[current] = {}
+            parent = current
+        previous = tables[parent].get(parts[-1])
+        need(previous is None or previous['type'] == 'blob', 'cannot overwrite a subtree')
+        raw = row['content'].encode('utf-8'); digest = git_blob(raw)
+        need(previous is None or previous['sha'] != digest or previous['mode'] != row['mode'], 'unchanged file listed as delta')
+        files.append({'path': path, 'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest(),
+                      'git_blob_sha1': digest, 'previous_git_blob_sha1': previous['sha'] if previous else None,
+                      'mode': row['mode']})
+        tables[parent][parts[-1]] = {'path': parts[-1], 'mode': row['mode'], 'type': 'blob', 'sha': digest}
+        changed_dirs.add('')
+        changed_dirs.update('/'.join(parts[:i]) for i in range(1, len(parts)))
+    new_hashes = {}
+    for path in sorted(changed_dirs, key=lambda p: (len(PurePosixPath(p).parts) if p else 0, p), reverse=True):
+        digest = git_tree(list(tables[path].values())); new_hashes[path] = digest
+        if path:
+            parent = str(PurePosixPath(path).parent); parent = '' if parent == '.' else parent
+            name = PurePosixPath(path).name
+            tables[parent][name] = {'path': name, 'mode': '040000', 'type': 'tree', 'sha': digest}
+    need(new_hashes[''] == expected['tree'], 'complete overlay root tree differs')
+    need(len(files) == expected['files'] and sum(row['previous_git_blob_sha1'] is None for row in files) == expected['added'] and
+         sum(row['previous_git_blob_sha1'] is not None for row in files) == expected['modified'], 'exact publication delta counts')
+    observed = {row['path']: row for row in readback['files']}
+    need(len(observed) == len(readback['files']) == len(files) and set(observed) == paths, 'all readback files present')
+    for row in files:
+        actual = observed[row['path']]
+        for key in ('bytes', 'sha256', 'git_blob_sha1'):
+            need(type(actual[key]) is type(row[key]) and actual[key] == row[key], 'actual complete readback ' + row['path'] + '/' + key)
+        need(actual.get('exact_content_and_git_blob_readback', actual.get('complete_content_matched')) is True,
+             'actual readback marker')
+        if 'mode' in actual:
+            need(actual['mode'] == row['mode'], 'readback file mode')
+        if 'previous_git_blob_sha1' in actual:
+            need(actual['previous_git_blob_sha1'] == row['previous_git_blob_sha1'], 'readback previous blob')
+    actual_trees = readback.get('trees', readback.get('changed_trees'))
+    need({row['path']: row['sha'] for row in actual_trees} == new_hashes and len(actual_trees) == len(new_hashes),
+         'all actual changed directory trees equal independent overlay')
+    need(all(row.get('non_truncated', row.get('complete')) is True for row in actual_trees), 'complete changed tree readbacks')
+    unchanged = 0
+    for path, table in originals.items():
+        for name, row in table.items():
+            now = tables[path].get(name)
+            if now and all(row[key] == now[key] for key in ('mode', 'type', 'sha')):
+                unchanged += 1
+    final_objects = {path: {'sha': git_tree(list(table.values())), 'tree': list(table.values()), 'truncated': False}
+                     for path, table in tables.items()}
+    verified_objects(final_objects, expected['tree'])
+    return {'head': expected['head'], 'parent': expected['parent'], 'tree': expected['tree'],
+            'parent_tree': expected['parent_tree'], 'files': files, 'file_count': len(files),
+            'published_bytes': sum(row['bytes'] for row in files), 'added_files': expected['added'],
+            'modified_files': expected['modified'], 'deleted_files': 0,
+            'base_tree_objects_recomputed': len(base_objects), 'new_tree_objects_recomputed': len(new_hashes),
+            'unchanged_direct_entries': unchanged, 'all_other_entries_unchanged': True,
+            'actual_full_readback_matched': True, 'tree_objects': final_objects}
+
+
+def source_chain(entries):
+    need(len(entries) == 2, 'initial GENI plus correction publication required')
+    results = [publication(*entry) for entry in entries]
+    first, last = results
+    need(first['head'] == last['parent'] and first['tree'] == last['parent_tree'], 'source commit/tree chain')
+    merged = dict(first['tree_objects']); merged.update(last['tree_objects'])
+    verified_objects(merged, last['tree'])
+    return results, merged
+
+
+def extend_current_objects(objects, extra, tree):
+    merged = dict(objects)
+    for path, value in extra.items():
+        if path in merged:
+            need(value['sha'] == merged[path]['sha'] and git_tree(value['tree']) == value['sha'], 'extra tree mismatch')
+        merged[path] = value
+    verified_objects(merged, tree)
+    return merged
+
+
+def current_blob(objects, path):
+    path = normal_path(path)
+    parent = str(PurePosixPath(path).parent); parent = '' if parent == '.' else parent
+    need(parent in objects, 'required current source parent object absent: ' + parent)
+    rows = [row for row in objects[parent]['tree'] if row['path'] == PurePosixPath(path).name]
+    need(len(rows) == 1 and rows[0]['type'] == 'blob', 'required current source blob absent')
+    return rows[0]['sha'], rows[0]['mode']
+
+
+def document_merge(base_objects, original, readback, expected):
+    """Verify one two-parent merge adding exactly the two pinned evidence docs.
+
+    The four historical single-parent publication checks above are unchanged.
+    This separate bounded operation proves the complete first-parent overlay
+    and the actual merge commit's ordered two-parent API identity.
+    """
+    parents = expected['parents']
+    need(type(parents) is list and len(parents) == len(set(parents)) == 2 and
+         all(re.fullmatch('[0-9a-f]{40}', p) for p in parents), 'exact two ordered source parents')
+    tables = verified_objects(base_objects, expected['parent_tree'])
+    originals = copy.deepcopy(tables)
+    need(type(readback) is list and len(readback) == 5, 'one full commit and four full tree replies')
+    commits = [row for row in readback if row['kind'] == 'commit']
+    trees = [row for row in readback if row['kind'] == 'tree']
+    need(len(commits) == 1 and len(trees) == 4, 'merge readback kinds')
+    commit = commits[0]['data']
+    need(commits[0]['sha'] == commit['sha'] == expected['head'] and
+         commit['tree']['sha'] == expected['tree'] and
+         [row['sha'] for row in commit['parents']] == parents, 'actual ordered two-parent source commit')
+    incoming = original['default_commit']
+    need(incoming['sha'] == parents[1], 'incoming default-parent commit identity')
+    rows = original['objects']
+    need(type(rows) is list and len(rows) == 3, 'two full incoming doc blobs and one prior PR root tree')
+    blobs = [row for row in rows if row['kind'] == 'blob']
+    roots = [row for row in rows if row['kind'] == 'tree']
+    need(len(blobs) == 2 and len(roots) == 1, 'incoming object kinds')
+    prior_merge = original['merge_commit']
+    need(prior_merge['sha'] == expected['prior_pr_merge_head'] and
+         prior_merge['tree']['sha'] == expected['tree'] and
+         [row['sha'] for row in prior_merge['parents']] == [parents[1], parents[0]],
+         'prior PR merge identity and ordered parents')
+    prior_merge_root = roots[0]
+    need(prior_merge_root['path'] == '' and
+         prior_merge_root['sha'] == prior_merge_root['data']['sha'] == prior_merge['tree']['sha'] and
+         prior_merge_root['data']['truncated'] is False and
+         git_tree(prior_merge_root['data']['tree']) == prior_merge_root['sha'], 'complete prior PR merge root object')
+    wanted = {row['path']: row for row in expected['files']}
+    need(len(wanted) == len(expected['files']) == 2 and
+         len({row['path'] for row in blobs}) == 2 and {row['path'] for row in blobs} == set(wanted),
+         'exact two bounded document paths')
+    directory = 'tb371fc/evidence/capture-storage-retirement-20261125'
+    need(directory not in tables and 'capture-storage-retirement-20261125' not in tables['tb371fc/evidence'],
+         'documents directory must be a new addition')
+    tables[directory] = {}
+    files = []
+    for row in sorted(blobs, key=lambda row: row['path']):
+        path = normal_path(row['path'])
+        need(str(PurePosixPath(path).parent) == directory and type(row['data']) is str,
+             'bounded complete document content')
+        data = row['data'].encode('utf-8')
+        actual = {'path': path, 'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest(),
+                  'git_blob_sha1': git_blob(data)}
+        need(actual == wanted[path] and row['sha'] == actual['git_blob_sha1'], 'full unchanged incoming document identity')
+        files.append(actual)
+        name = PurePosixPath(path).name
+        tables[directory][name] = {'path': name, 'mode': '100644', 'type': 'blob', 'sha': actual['git_blob_sha1']}
+    changed = {}
+    for path in (directory, 'tb371fc/evidence', 'tb371fc', ''):
+        changed[path] = git_tree(list(tables[path].values()))
+        if path:
+            parent = str(PurePosixPath(path).parent); parent = '' if parent == '.' else parent
+            name = PurePosixPath(path).name
+            tables[parent][name] = {'path': name, 'mode': '040000', 'type': 'tree', 'sha': changed[path]}
+    need(changed == expected['changed_trees'] and changed[''] == expected['tree'], 'complete document-only overlay root')
+    observed = {row['sha']: row['data'] for row in trees}
+    need(len(observed) == 4 and set(observed) == set(changed.values()), 'all four actual changed trees')
+    for digest, obj in observed.items():
+        need(obj['sha'] == digest and obj['truncated'] is False and git_tree(obj['tree']) == digest,
+             'actual complete merge tree object')
+    objects = {path: {'sha': git_tree(list(table.values())), 'tree': list(table.values()), 'truncated': False}
+               for path, table in tables.items()}
+    verified_objects(objects, expected['tree'])
+    unchanged = sum(1 for path, table in originals.items() for name, row in table.items()
+                    if name in tables[path] and all(row[key] == tables[path][name][key] for key in ('mode', 'type', 'sha')))
+    return {'head': expected['head'], 'tree': expected['tree'], 'ordered_source_parents': parents,
+            'first_parent_tree': expected['parent_tree'], 'files': files, 'added_files': 2,
+            'modified_files': 0, 'deleted_files': 0, 'runtime_source_files_changed': 0,
+            'base_tree_objects_recomputed': len(base_objects), 'current_tree_objects_recomputed': len(objects),
+            'new_tree_objects_recomputed': 4, 'prior_PR_merge_root_objects_recomputed': 1,
+            'unchanged_direct_entries': unchanged, 'all_other_entries_unchanged': True,
+            'actual_full_document_bytes_and_tree_readback_matched': True,
+            'actual_commit_API_ordered_parents_verified': True, 'commit_raw_Git_SHA_recomputation_claimed': False,
+            'tree_objects': objects}
