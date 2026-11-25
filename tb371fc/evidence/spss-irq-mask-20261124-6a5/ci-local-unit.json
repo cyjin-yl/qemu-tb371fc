@@ -1,0 +1,46 @@
+{
+  "schema": "tb371fc-spss-ci-local-unit-v1",
+  "test_mode": "local synthetic subprocesses only; no QEMU or guest",
+  "files": {
+    "tb371fc/scripts/ci_device_tests.py": {
+      "bytes": 75749,
+      "sha256": "22d0482115a1cb252161dce33d79355d93a435b4b8f4ca8df129e7bb3c721117"
+    },
+    "tb371fc/scripts/test_ci_device_tests.py": {
+      "bytes": 37215,
+      "sha256": "b907e6a6178148313424bc797944772be96aa94d8b8bba727e312aeaeb707799"
+    }
+  },
+  "runs": [
+    {
+      "suite": "plan",
+      "discovered": 14,
+      "run": 14,
+      "successful": true,
+      "failures": [],
+      "errors": [],
+      "skipped": [],
+      "duration_seconds": 0.05220447000465356,
+      "log": "/dev/shm/pil-tz-candidate-6a5/.work/spss-ci-unit-plan-001.log",
+      "log_sha256": "c033fc1a2386ec68160842722c126e0ad32a198b06d391fda650467f82f376f7"
+    },
+    {
+      "suite": "all",
+      "discovered": 33,
+      "run": 33,
+      "successful": false,
+      "failures": [],
+      "errors": [
+        {
+          "test": "test_ci_device_tests.VerdictTests.test_fixture_copy_ignores_sockets_and_symlinks",
+          "traceback": "Traceback (most recent call last):\n  File \"/dev/shm/pil-tz-candidate-6a5/tb371fc/scripts/test_ci_device_tests.py\", line 160, in test_fixture_copy_ignores_sockets_and_symlinks\n    control = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py\", line 233, in __init__\n    _socket.socket.__init__(self, family, type, proto, fileno)\nPermissionError: [Errno 1] Operation not permitted\n"
+        }
+      ],
+      "skipped": [],
+      "duration_seconds": 1.0947270239994396,
+      "log": "/dev/shm/pil-tz-candidate-6a5/.work/spss-ci-unit-all-001.log",
+      "log_sha256": "5eb576b52c277412b87cd2d078b287db331315c80c0e045cbf8bb1aafe46fafc"
+    }
+  ],
+  "compiled_device_tests_executed": false
+}

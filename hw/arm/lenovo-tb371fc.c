@@ -59,6 +59,7 @@
 #include "hw/misc/qcom-dcc.h"
 #include "hw/misc/qcom-ipcc.h"
 #include "hw/misc/qcom-qsee-irq.h"
+#include "hw/misc/qcom-sm8250-spss-irq-mask.h"
 #include "hw/misc/qcom-tcsr-mutex.h"
 #include "hw/misc/qcom-tsens24xx.h"
 #include "hw/misc/qcom-cpufreq-hw.h"
@@ -1610,6 +1611,7 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
     DeviceState *dcc = qdev_new(TYPE_QCOM_DCC);
     DeviceState *ipcc = qdev_new(TYPE_QCOM_IPCC);
     DeviceState *qsee = qdev_new(TYPE_QCOM_QSEE_IRQ);
+    DeviceState *spss_mask = qdev_new(TYPE_QCOM_SM8250_SPSS_IRQ_MASK);
     DeviceState *mutex = qdev_new(TYPE_QCOM_TCSR_MUTEX);
     DeviceState *smem = qdev_new(TYPE_QCOM_SMEM_HANDOFF);
     DeviceState *msgram = qdev_new(TYPE_QCOM_AOP_MSGRAM);
@@ -1650,6 +1652,11 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
         sysbus_connect_irq(SYS_BUS_DEVICE(qsee), i,
                            qdev_get_gpio_in(s->gic, 348 + i));
     }
+
+    /* Actual SPSS mask word only; no status, IRQ, PAS or secure-firmware peer. */
+    object_property_add_child(OBJECT(s), "spss-irq-mask", OBJECT(spss_mask));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(spss_mask), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(spss_mask), 0, 0x01881028);
 
     /* Captured SMEM hardware-lock geometry; initial owners remain unknown. */
     object_property_add_child(OBJECT(s), "tcsr-mutex", OBJECT(mutex));

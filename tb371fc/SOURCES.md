@@ -429,3 +429,42 @@ controller count remain unknown. No cache data, coherency traffic, active
 performance counters, ECC injection, physical power or clock provider is
 modeled. Source-generation checks, compiled-device CI, original-input native
 execution and Android acceptance remain distinct evidence stages.
+
+
+## SPSS SP2SOC interrupt-mask write control
+
+The [SPSS manifest](docs/spss-irq-mask-sm8250-registers.json) and
+[bounded device contract](docs/spss-irq-mask-sm8250.md) derive from two complete
+files at OnePlusOSS/android_kernel_oneplus_sm8250 commit
+`98719830b0de5584f5588bbe9f4c8304d97a64c6`:
+
+| File | Bytes | Git blob SHA-1 | SHA-256 |
+| --- | ---: | --- | --- |
+| `drivers/soc/qcom/subsys-pil-tz.c` | 32203 | `ed5e07c193b3841c60c94d92a4db259335d665c9` | `c574017a8f4e5ad5a4215434029d73bdc2c9ee9736b006429aa30a30ac219608` |
+| `arch/arm64/boot/dts/vendor/qcom/kona.dtsi` | 132499 | `e9651f09bd579616787894dc8514429063623b2d` | `12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55` |
+
+The driver's `mask_scsr_irqs()` writes `~0 & ~BIT(ERR_READY) & ~BIT(PBL_DONE)`
+before subsystem registration. The DT supplies bit indices 24 and 25 and the
+`sp2soc_irq_mask` resource `0x01881028/4`; truncating that expression to the
+32-bit store produces `0xfcffffff`. There is no mask readback operation in this
+driver. The generator parses the node resources, named bit properties and the
+source formula; the verifier checks both generated outputs byte-for-byte.
+
+The [actual DT and production probe extraction](evidence/spss-irq-mask-20261124-6a5/actual-dt-and-pil-probe.json)
+and [actual/source comparison](evidence/spss-irq-mask-20261124-6a5/actual-source-boundary-comparison.json)
+confirm the five resource addresses, bits 24/25, SPI 352 and PAS ID 14. The
+unchanged production `pil_tz_driver_probe` is 1928 bytes with SHA-256
+`e4776f8aa7ab65d93ec670dd08a95e34777ff438f04f6c25785ae79b85f5cf08`.
+Its faulting instruction at `+0x6bc` is `STR W8,[X10]`; the
+[actual native frame](evidence/spss-irq-mask-20261124-6a5/native-frontier-before-spss.json)
+contains W8=`0xfcffffff`. This establishes the bounded store correspondence,
+not whole-kernel source identity or successful SPSS firmware execution.
+
+The actual reserved-memory base is `0x8be00000`, while the reference DTS uses
+`0x92300000`; neither layout is synthesized by this device. Only the mask word
+is mapped. The other status, clear and error resources, additional spare words,
+IRQ delivery, QSEE banks, firmware, PAS authentication, physical reset value,
+clocks and power behavior remain outside this model. An internal unknown zero
+is tagged separately from a guest-programmed zero, and all MMIO reads remain
+errors. Component CI, unchanged original-kernel execution and Android boot
+remain separate acceptance stages.

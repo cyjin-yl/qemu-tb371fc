@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0-or-later
 """Exercise CI verdict handling with local synthetic subprocesses only."""
+import hashlib
 import json
 from pathlib import Path
 import socket
@@ -173,7 +174,7 @@ class PlanTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         plan = ci.plan(args, Path("/test/runtime"))
         cases = {case.name: case for case in plan}
-        self.assertEqual(len(plan), 93)
+        self.assertEqual(len(plan), 95)
         self.assertEqual(len(cases), len(plan))
         self.assertEqual(cases["tbu-reference-ecats"].expected_count, 17)
         self.assertEqual(cases["smmuv500-reference"].expected_count, 36)
@@ -189,7 +190,8 @@ class PlanTests(unittest.TestCase):
                      "videocc-source-generation", "dsi-pll-source-generation",
                      "dsi-pll-7nm-reference", "dp-pll-source-generation",
                      "dp-pll-7nm-reference", "llcc-source-generation",
-                     "llcc-sm8250-reference"):
+                     "llcc-sm8250-reference", "spss-irq-mask-source-generation",
+                     "spss-irq-mask-sm8250-reference"):
             self.assertIn(name, cases)
         npu = cases["npu-gdsc-reference"]
         self.assertEqual(npu.expected_count, 21)
@@ -343,7 +345,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 98)
+        self.assertEqual(len(cases), 100)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]
@@ -522,6 +524,119 @@ class PlanTests(unittest.TestCase):
                 self.assertEqual(Path(case.result), output / "result.json")
                 qemu = case.command[case.command.index("--qemu") + 1]
                 self.assertEqual(qemu, str(args.qemu))
+
+
+    def test_spss_contract_requires_complete_bounded_receipts(self):
+        args = SimpleNamespace(suite="components", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        cases = {item.name: item for item in ci.plan(args, Path("/test/runtime"))}
+        generation = cases["spss-irq-mask-source-generation"]
+        self.assertEqual(generation.expected_count, 2)
+        self.assertEqual(generation.expected_lengths, {"inputs": 2})
+        self.assertEqual(generation.expected_values,
+                         {"schema": "tb371fc-spss-irq-mask-generation-v1",
+                          "source_pins_verified": True})
+        case = cases["spss-irq-mask-sm8250-reference"]
+        self.assertEqual(case.expected_count, 21)
+        self.assertEqual(case.expected_values, {'schema': 'tb371fc-spss-irq-mask-sm8250-v1',
+                          'suite': 'spss-irq-mask-sm8250-reference',
+                          'expected_checks': 21,
+                          'expected_completed_migrations': 3,
+                          'expected_rejected_migrations': 2,
+                          'expected_corrupted_stream_rejections': 6,
+                          'expected_unmodified_streams': 4,
+                          'expected_stream_files': 10,
+                          'vmstate_version': 1,
+                          'vmstate_minimum_version': 1,
+                          'vmstate_payload_bytes': 25,
+                          'reference_identity': 1397771569,
+                          'physical_base': 25694248,
+                          'register_count': 1,
+                          'sparse_window_count': 1,
+                          'mapped_bytes': 4,
+                          'first_observation_qom_get_count': 18,
+                          'irq_output_count': 0,
+                          'input_clock_count': 0,
+                          'output_clock_count': 0,
+                          'timer_count': 0,
+                          'reference_enabled_by_default': False,
+                          'readback_supported': False,
+                          'ready_modeled': False,
+                          'firmware_modeled': False,
+                          'pas_modeled': False,
+                          'hardware_reset_value_known': False,
+                          'programmed_zero_distinct_from_unknown': True,
+                          'source_probe_mask': 4244635647,
+                          'guest_cpu_executed': False,
+                          'native_kernel_probe_observed': False,
+                          'android_boot_passed': False,
+                          'binary_unchanged': True})
+        self.assertEqual(case.expected_lengths,
+                         {"checks": 21, "migrations": 3, "rejected_migrations": 2,
+                          "corrupted_stream_rejections": 6,
+                          "migration_sources": 4, "actual_stream_files": 10})
+        with tempfile.TemporaryDirectory(prefix="tbci-spss-", dir="/tmp") as directory:
+            path = Path(directory)/"result.json"
+            case.result = str(path)
+            valid = {**case.expected_values, "passed": True,
+                     "checks": [{"name": f"synthetic_{i}", "passed": True} for i in range(21)],
+                     "migrations": [{} for _ in range(3)],
+                     "rejected_migrations": [{} for _ in range(2)],
+                     "corrupted_stream_rejections": [{} for _ in range(6)],
+                     "migration_sources": [{} for _ in range(4)],
+                     "actual_stream_files": [{} for _ in range(10)]}
+            path.write_text(json.dumps(valid))
+            ci.judge(case, path)
+            for key, value in (
+                    ("checks", valid["checks"][:-1]),
+                    ("checks", [{"name": "duplicate", "passed": True}] * 21),
+                    ("migrations", [{}, {}]),
+                    ("rejected_migrations", [{}]),
+                    ("corrupted_stream_rejections", [{}] * 5),
+                    ("migration_sources", [{}] * 3),
+                    ("actual_stream_files", [{}] * 9),
+                    ("vmstate_payload_bytes", 24),
+                    ("reference_identity", 0x53504d30),
+                    ("first_observation_qom_get_count", 17),
+                    ("first_observation_qom_get_count", True),
+                    ("readback_supported", True), ("ready_modeled", True),
+                    ("firmware_modeled", True), ("pas_modeled", True),
+                    ("hardware_reset_value_known", True),
+                    ("programmed_zero_distinct_from_unknown", False),
+                    ("native_kernel_probe_observed", True), ("binary_unchanged", False)):
+                with self.subTest(field=key, value=value):
+                    path.write_text(json.dumps(dict(valid, **{key: value})))
+                    with self.assertRaises(ValueError):
+                        ci.judge(case, path)
+
+    def test_spss_additions_preserve_all_prior_98_contracts_and_order(self):
+        # Exact normalized plan at parent 7372681; omit only the two new cases.
+        args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        retained = []
+        cases = ci.plan(args, Path("/test/runtime"))
+        for case in cases:
+            if case.name in {"spss-irq-mask-source-generation", "spss-irq-mask-sm8250-reference"}:
+                continue
+            def normalize(value):
+                if isinstance(value, Path):
+                    value = str(value)
+                if isinstance(value, str):
+                    for other in cases:
+                        physical, token = str(other.fixture), "@FIXTURE:"+other.name+"@"
+                        value = token if value == physical else value.replace(physical+"/", token+"/")
+                    return value.replace(str(ci.ROOT), "@ROOT@").replace(sys.executable, "@PYTHON@")
+                if isinstance(value, list):
+                    return [normalize(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: normalize(item) for key, item in value.items()}
+                return value
+            retained.append(normalize(vars(case)))
+        self.assertEqual(len(retained), 98)
+        fingerprint = hashlib.sha256(json.dumps(retained, sort_keys=True,
+                                                separators=(",", ":")).encode()).hexdigest()
+        self.assertEqual(fingerprint, "c37b44cd9cba85b593be878e97e98b4af8df15ff8bedae72ba001f00291c82c6")
+
 
 
 if __name__ == "__main__":

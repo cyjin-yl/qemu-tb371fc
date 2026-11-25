@@ -1,0 +1,86 @@
+{
+  "schema": "tb371fc-spss-irq-mask-test-ci-contract-v1",
+  "case_name": "spss-irq-mask-sm8250-reference",
+  "script": "tb371fc/tests/test_spss_irq_mask_sm8250.py",
+  "report": "result.json",
+  "check_count": 21,
+  "expected_values": {
+    "schema": "tb371fc-spss-irq-mask-sm8250-v1",
+    "suite": "spss-irq-mask-sm8250-reference",
+    "expected_checks": 21,
+    "expected_completed_migrations": 3,
+    "expected_rejected_migrations": 2,
+    "expected_corrupted_stream_rejections": 6,
+    "expected_unmodified_streams": 4,
+    "expected_stream_files": 10,
+    "vmstate_version": 1,
+    "vmstate_minimum_version": 1,
+    "vmstate_payload_bytes": 25,
+    "reference_identity": 1397771569,
+    "physical_base": 25694248,
+    "register_count": 1,
+    "sparse_window_count": 1,
+    "mapped_bytes": 4,
+    "first_observation_qom_get_count": 18,
+    "irq_output_count": 0,
+    "input_clock_count": 0,
+    "output_clock_count": 0,
+    "timer_count": 0,
+    "reference_enabled_by_default": false,
+    "readback_supported": false,
+    "ready_modeled": false,
+    "firmware_modeled": false,
+    "pas_modeled": false,
+    "hardware_reset_value_known": false,
+    "programmed_zero_distinct_from_unknown": true,
+    "source_probe_mask": 4244635647,
+    "guest_cpu_executed": false,
+    "native_kernel_probe_observed": false,
+    "android_boot_passed": false,
+    "binary_unchanged": true
+  },
+  "expected_lengths": {
+    "checks": 21,
+    "migrations": 3,
+    "rejected_migrations": 2,
+    "corrupted_stream_rejections": 6,
+    "migration_sources": 4,
+    "actual_stream_files": 10
+  },
+  "original_stream_files": [
+    "spss-mask-unknown.migration",
+    "spss-mask-driver.migration",
+    "spss-mask-known-zero.migration",
+    "spss-mask-disabled.migration"
+  ],
+  "corrupt_stream_files": [
+    "spss-mask-corrupt-identity.migration",
+    "spss-mask-corrupt-physical_base.migration",
+    "spss-mask-corrupt-window_bytes.migration",
+    "spss-mask-corrupt-programmed_flag.migration",
+    "spss-mask-corrupt-unknown_mask.migration",
+    "spss-mask-corrupt-disabled_programmed.migration"
+  ],
+  "first_observation_evidence": {
+    "snapshot_file": "destination-before-first-device-mmio.json",
+    "prewarm_file": "destination-before-incoming.json",
+    "qom_get_count": 18,
+    "prewarm_device_mmio_count": 1,
+    "device_mmio_delta": 0,
+    "cont_delta": 0,
+    "shared_log_timestamp_claimed": false
+  },
+  "source_generation": {
+    "case_name": "spss-irq-mask-source-generation",
+    "script": "tb371fc/scripts/verify_spss_irq_mask_generation.py",
+    "check_count": 2,
+    "expected_values": {
+      "schema": "tb371fc-spss-irq-mask-generation-v1",
+      "source_pins_verified": true
+    },
+    "expected_lengths": {
+      "inputs": 2
+    }
+  },
+  "scope": "Compiled QTest/QMP verification of one write-only SPSS mask word and its programming provenance. No guest CPU, hardware reset measurement, interrupt delivery, SPSS readiness, firmware or PAS execution claim."
+}
