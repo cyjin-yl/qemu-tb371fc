@@ -1,0 +1,228 @@
+{
+  "blocking_findings": [],
+  "contract": {
+    "bytes": 3391,
+    "exact_expected_values_equal_test_REPORT_CONSTANTS": true,
+    "path": "rpm-stats-offset-test-ci-contract.json",
+    "sha256": "2d137f7cd52b52c281414fd2508a04fde7c5ae567a123f6c3a2c7a31128e032a"
+  },
+  "device_RPC_or_SSH_used": false,
+  "dispatch_and_transport_sources": [
+    {
+      "bytes": 118660,
+      "repository_path": "system/memory.c",
+      "sha256": "09a3c9c186629f082f63b50b3ee7c54366c37a62584f6d9f897980cd276aca13"
+    },
+    {
+      "bytes": 140872,
+      "repository_path": "system/physmem.c",
+      "sha256": "3210a543353b435a146f7ae4a33608ea849aad038cd9e889ddb3a30c104c063f"
+    },
+    {
+      "bytes": 30014,
+      "repository_path": "system/qtest.c",
+      "sha256": "b9278555cbea97cfb0e4a13cf5a65ddf1fe9d9df1e1ff939cb7424ff41adc5f6"
+    },
+    {
+      "bytes": 74782,
+      "repository_path": "tb371fc/tests/test_camera_gdsc.py",
+      "sha256": "e187b3de97b5ae2d53376bd41d1f82099053c69bce9034af572830f8e1c1e619"
+    }
+  ],
+  "expected_groups": 20,
+  "local_QEMU_executed": false,
+  "migration": {
+    "all24bytes_equal_source_QOM_literal_layout": true,
+    "all_memory_and_device_MMIO_and_cont_deltas_before_both_snapshots": 0,
+    "bidirectional_profile_rejections": 2,
+    "completed_sameprofile": 2,
+    "failure_requires": "Actual destinationprocess exit1, specific model post_load diagnostic, load-of-migration-failed and error-while-loading-state logs; zero deviceMMIO/memory/cont commands",
+    "first_QOM_after_incoming": 17,
+    "first_post_observation_memory_read": "Source RAM witness must replace inverted targetRAM witness; checked after both17-field snapshots and before anycont",
+    "full_original_stream_hashes_retained_and_rechecked": true,
+    "immutable_device_truthful": "Prewarm does not pretend to dirty immutable device values. Target snapshots equal source because profile is the same. OnlyRAM witness is deliberately different.",
+    "mutants_change_exactly_one_bit_in_one_byte_of_full_stream": true,
+    "mutations": [
+      {
+        "changed_bits": 1,
+        "changed_payload_byte": 3,
+        "expected_diagnostic": "migrated profile mismatch",
+        "field_bytes": 4,
+        "field_offset": 0,
+        "name": "profile",
+        "old_value": 1,
+        "source": "enabled",
+        "target_enabled": true,
+        "xor": 2
+      },
+      {
+        "changed_bits": 1,
+        "changed_payload_byte": 7,
+        "expected_diagnostic": "migrated identity mismatch",
+        "field_bytes": 4,
+        "field_offset": 4,
+        "name": "identity",
+        "old_value": 1381191473,
+        "source": "enabled",
+        "target_enabled": true,
+        "xor": 1
+      },
+      {
+        "changed_bits": 1,
+        "changed_payload_byte": 15,
+        "expected_diagnostic": "migrated geometry mismatch",
+        "field_bytes": 8,
+        "field_offset": 8,
+        "name": "physical_base",
+        "old_value": 205455364,
+        "source": "enabled",
+        "target_enabled": true,
+        "xor": 4
+      },
+      {
+        "changed_bits": 1,
+        "changed_payload_byte": 19,
+        "expected_diagnostic": "migrated geometry mismatch",
+        "field_bytes": 4,
+        "field_offset": 16,
+        "name": "window_bytes",
+        "old_value": 4,
+        "source": "enabled",
+        "target_enabled": true,
+        "xor": 1
+      },
+      {
+        "changed_bits": 1,
+        "changed_payload_byte": 23,
+        "expected_diagnostic": "migrated offset mismatch",
+        "field_bytes": 4,
+        "field_offset": 20,
+        "name": "enabled_offset",
+        "old_value": 983112,
+        "source": "enabled",
+        "target_enabled": true,
+        "xor": 1
+      },
+      {
+        "changed_bits": 1,
+        "changed_payload_byte": 23,
+        "expected_diagnostic": "migrated offset mismatch",
+        "field_bytes": 4,
+        "field_offset": 20,
+        "name": "disabled_offset",
+        "old_value": 0,
+        "source": "disabled",
+        "target_enabled": false,
+        "xor": 1
+      }
+    ],
+    "original_streams": 2,
+    "postrestore_read_write_reset_and_time_semantics_checked": true,
+    "prewarm_cont": 0,
+    "prewarm_device_MMIO": 0,
+    "prewarm_ram_commands": 2,
+    "real_migration_transport": "Source migrate and target migrate-incoming over file channels, both require completed; sources stopped/postmigrate; target stopped until after firstQOM and witness checks",
+    "repeated_QOM_after_incoming": 17,
+    "singlebit_corruption_rejections": 6,
+    "source_QOM_unchanged_after_save": true,
+    "total_full_streams": 8,
+    "unique_section_header_version_and_footer_checked": true,
+    "wire_bytes": 24,
+    "wire_format": ">IIQII"
+  },
+  "model_or_test_modified_by_reviewer": false,
+  "pass_gate": "Requires exact20unique passed groups,2completions,2profile failures,6onebit failures,2unmodifiedsources and8exact stream filenames plus all first-observation/witness constraints and unchanged actualQEMU digest; exceptions retain failure and traceback.",
+  "report_boundaries": {
+    "Android_boot_passed": false,
+    "DDR_offset_modeled": false,
+    "READY_modeled": false,
+    "destination_RAM_witness_dirtied": true,
+    "destination_device_state_dirtied": false,
+    "firmware_modeled": false,
+    "guest_CPU_executed": false,
+    "native_kernel_probe_observed": false,
+    "statistics_payload_modeled": false
+  },
+  "review_revision": {
+    "changes": [
+      "Within enabled-read group, check raw5-byte read valid4-byte prefix and rejected fifth byte without interpreting failure bytes",
+      "Add last aligned statistics-payload word0x0c3f00a4 to existing hole checks"
+    ],
+    "only_two_review_requested_changes": true,
+    "original_test_bytes": 38086,
+    "original_test_sha256": "984439001f7c12ef7a8cbf4147ca78a70ed27b19e109979a72baeb969533bb83",
+    "reverse_exact_delta_recovers_original_sha256": true,
+    "test_group_counts_and_contract_unchanged": true
+  },
+  "reviewed_utc": "2026-11-25T02:15:18.525987+00:00",
+  "runtime_qualification_pending": [
+    "Exact candidate compiled CI",
+    "Actual callback widths and diagnostic counts",
+    "Actual raw buffer prefixes and neighboring holes",
+    "Actual migration streams and first-observation counters",
+    "Independent artifact audit"
+  ],
+  "schema": "tb371fc-rpm-stats-offset-independent-test-review-v1",
+  "scope": "Independent source and dispatch review only; no suite import/execution, QEMU, compile, native, device or SSH action.",
+  "scripts_imported_or_executed": false,
+  "source_and_target_state": {
+    "QOM_readonly_and_absence_of_mutating_fixture_checked": true,
+    "default_off_with_no_global_checked": true,
+    "disabled_placeholder_zero_not_guest_data": true,
+    "exact_named_leaf_bytes": 4,
+    "hole_read_and_write_expect_null_region_and_rejected": true,
+    "holes_checked": [
+      "0x0c3f0000",
+      "0x0c3f0008",
+      "0x0c3f001c",
+      "0x0c3f0048",
+      "0x0c3f004c",
+      "0x0c3f00a4"
+    ],
+    "paused_TCG_has_no_cont_or_memory_commands": true,
+    "reset_and_time_do_not_invent_statistics": true
+  },
+  "static_review_passed": true,
+  "test": {
+    "bytes": 39266,
+    "path": "tb371fc/tests/test_rpm_stats_offset_sm8250.py",
+    "sha256": "8e878e30ad978d7affb389573e4df4cc3bb3009843ac74b5d363ebd723eee39f"
+  },
+  "test_group_names": [
+    "cold_identity_and_pure_getters",
+    "enabled_reads_return_only_layout_offset",
+    "all_aligned_writes_are_readonly",
+    "narrow_unaligned_and_u64_reads_are_rejected",
+    "invalid_write_shapes_and_buffered_write_never_change_layout",
+    "reset_retains_enabled_layout_without_firmware_data",
+    "exact_single_leaf_and_unmodeled_neighbors",
+    "runtime_observers_are_readonly_and_time_has_no_effect",
+    "default_off_keeps_unknown_offset_and_rejects_all_access",
+    "paused_tcg_exposes_no_mutating_fixture_or_guest_execution",
+    "migration_enabled",
+    "migration_disabled",
+    "profile_on_to_off_rejected",
+    "profile_off_to_on_rejected",
+    "single_bit_profile_rejected",
+    "single_bit_identity_rejected",
+    "single_bit_physical_base_rejected",
+    "single_bit_window_bytes_rejected",
+    "single_bit_enabled_offset_rejected",
+    "single_bit_disabled_offset_rejected"
+  ],
+  "transport_helper_exact_baseline": {
+    "commit": "8d0bc64d8da6da18bf43b52a2a9547f28f44c3e9",
+    "fresh_GitHub_content_retrieved_and_hash_matches_reviewed_local_copy": true,
+    "git_blob": "c2972b2ad31b554e342b9b94d3e2fca67a1ee0a8",
+    "path": "tb371fc/tests/test_camera_gdsc.py"
+  },
+  "transport_oracles": {
+    "QTest_OK_not_used_as_MMIO_success": true,
+    "accepted_read": "Checks exactu32f0048 and rawlittle-endian48000f00; no callback/core rejection; all17QOM fields unchanged",
+    "delivered_reject": "Checks exactly one model-specific rejection line at exact offset and size, exactly one total model rejection, no generic core rejection, unchanged17QOM fields; ignores returned failed-read number",
+    "generic_core_log_boundary": "memory_region_access_valid logs genericInvalid for invalid accesses or unmapped holes; MEMTX_ERROR returned by a valid delivered device callback is propagated without an extra genericInvalid line",
+    "raw5byte_read": "pow2floor5 chooses4; legal prefix returns48000f00. Remaining one byte is an unmapped-hole read atBASE+4. Test checks prefix, length5, one generic hole rejection, no device rejection, unchangedQOM; failedsuffix contents are not interpreted.",
+    "raw5byte_write": "One exact4byte model read-only rejection, then one generic one-byte neighbor-hole write rejection; unchangedQOM. No mutable prefix or whole-buffer atomicity claimed.",
+    "typed8_and_unaligned4": "address_space_translate_internal does not clamp MMIO length to leaf size. impl.unaligned=true removes address-alignment size clamping;valid/implmax8 permit delivery as one callback, whose model logic rejects size8 or nonzerooffset."
+  }
+}

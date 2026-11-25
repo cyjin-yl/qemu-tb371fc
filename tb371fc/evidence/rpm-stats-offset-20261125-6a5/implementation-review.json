@@ -1,0 +1,282 @@
+{
+  "Android_success_claimed": false,
+  "Kconfig_and_meson_model_wiring_consistent": true,
+  "access_semantics": {
+    "disabled": "All reads return MEMTX_ERROR; offset-value0 is an unknown placeholder, offset-knownfalse",
+    "endianness": "DEVICE_LITTLE_ENDIAN",
+    "formal_delivery_verification_pending": true,
+    "invalid": "All narrow/wide/unaligned delivered reads reject; every delivered write rejects without state mutation",
+    "legal": "Only explicitly enabled, offset0, delivered size4 read returns fixed reference value and MEMTX_OK",
+    "memory_region_ops": "valid and impl both1..8 bytes with unalignedtrue, so callbacks can reject inappropriate delivered typed transactions without an intentional implementation-size split",
+    "raw_buffer_boundary": "Memory-buffer operations may be segmented by address-space region boundaries; a legal4-byte read prefix can be returned before the neighboring hole fails. No transaction atomicity or rollback claim is made."
+  },
+  "blocking_findings": [],
+  "collateral_scope": "All four reviewed baseline glue files are retained in order with only this device include/declaration/realize/map/select/build additions. Existing SPSS, AOP mailbox and other device logic in those files is unchanged.",
+  "compiled_or_runtime_success_claimed": false,
+  "device_RPC_or_SSH_used": false,
+  "glue_review": [
+    {
+      "additions": [
+        {
+          "added_lines": [
+            "#include \"hw/misc/qcom-sm8250-rpm-stats-offset.h\"\n"
+          ],
+          "after_baseline_line": 62
+        },
+        {
+          "added_lines": [
+            "    DeviceState *rpm_stats_offset = qdev_new(TYPE_QCOM_SM8250_RPM_STATS_OFFSET);\n"
+          ],
+          "after_baseline_line": 1614
+        },
+        {
+          "added_lines": [
+            "\n",
+            "    /* Exact reference offset word; no statistics payload or other AOP words. */\n",
+            "    object_property_add_child(OBJECT(s), \"rpm-stats-offset\",\n",
+            "                              OBJECT(rpm_stats_offset));\n",
+            "    sysbus_realize_and_unref(SYS_BUS_DEVICE(rpm_stats_offset), &error_fatal);\n",
+            "    sysbus_mmio_map(SYS_BUS_DEVICE(rpm_stats_offset), 0, 0x0c3f0004);\n"
+          ],
+          "after_baseline_line": 1659
+        }
+      ],
+      "baseline_bytes": 102388,
+      "baseline_lines_preserved_in_order": true,
+      "baseline_sha256": "8852236c0184f07e8c3958880dc8924193a3ccf1f5aea538cec90e3109560702",
+      "new_bytes": 102867,
+      "new_sha256": "ff2f8d8bc66826068a2bedbdc10145c7cc1dc3fe615c7a4a5fb558c8da5d4f7c",
+      "only_insertions": true,
+      "path": "hw/arm/lenovo-tb371fc.c"
+    },
+    {
+      "additions": [
+        {
+          "added_lines": [
+            "    select QCOM_SM8250_RPM_STATS_OFFSET\n"
+          ],
+          "after_baseline_line": 766
+        }
+      ],
+      "baseline_bytes": 15428,
+      "baseline_lines_preserved_in_order": true,
+      "baseline_sha256": "1cf0e30aa021f9f0297274d0366606b7f4b46850f4bbd985407d00c3afb1508f",
+      "new_bytes": 15468,
+      "new_sha256": "195baffbd21c9c2457bf97e7a5806825e95ce512afe1a624e4fcca30b97437b2",
+      "only_insertions": true,
+      "path": "hw/arm/Kconfig"
+    },
+    {
+      "additions": [
+        {
+          "added_lines": [
+            "config QCOM_SM8250_RPM_STATS_OFFSET\n",
+            "    bool\n",
+            "\n"
+          ],
+          "after_baseline_line": 309
+        }
+      ],
+      "baseline_bytes": 4147,
+      "baseline_lines_preserved_in_order": true,
+      "baseline_sha256": "97fa6af7413d790546d27bbd561369da4031c2aaa49ae275b4cd4c1c2947a509",
+      "new_bytes": 4193,
+      "new_sha256": "c63ddb724530945aaa4cd3373330b683627fa03e57a568d6a274cc361a8ff144",
+      "only_insertions": true,
+      "path": "hw/misc/Kconfig"
+    },
+    {
+      "additions": [
+        {
+          "added_lines": [
+            "system_ss.add(when: 'CONFIG_QCOM_SM8250_RPM_STATS_OFFSET', if_true: files('qcom-sm8250-rpm-stats-offset.c'))\n"
+          ],
+          "after_baseline_line": 186
+        }
+      ],
+      "baseline_bytes": 10717,
+      "baseline_lines_preserved_in_order": true,
+      "baseline_sha256": "a16626fb0b6eb88d44aadb4e8f387643cd7bffd54e3f59cc4fc7d3eb39fcf582",
+      "new_bytes": 10826,
+      "new_sha256": "f24d688b2364890bde05b4c1d81c1ba0600f1385c3b46c2e778216fded4d6e0f",
+      "only_insertions": true,
+      "path": "hw/misc/meson.build"
+    }
+  ],
+  "header_type_matches_registration_and_board": true,
+  "migration": {
+    "minimum_version": 1,
+    "payload_bytes": 24,
+    "post_load_does_not_repair_or_normalize_invalid_incoming_values": true,
+    "post_load_has_no_MMIO_or_clock_or_timer_activity": true,
+    "post_load_rejects": [
+      "Profile differs from configured targetbool, including invalid numeric profiles",
+      "Identity differs from RSO1",
+      "Base or size differs from exact generated geometry",
+      "Offset differs from enabledreferencef0048 or disabledunknown0"
+    ],
+    "same_profile_and_mismatch_and_corruption_runtime_tests_pending": true,
+    "target_enabled_reference_not_overwritten_from_stream": true,
+    "version": 1,
+    "wire_fields": [
+      {
+        "bytes": 4,
+        "name": "reference_profile",
+        "offset": 0
+      },
+      {
+        "bytes": 4,
+        "name": "reference_identity",
+        "offset": 4
+      },
+      {
+        "bytes": 8,
+        "name": "physical_base",
+        "offset": 8
+      },
+      {
+        "bytes": 4,
+        "name": "window_bytes",
+        "offset": 16
+      },
+      {
+        "bytes": 4,
+        "name": "offset_value",
+        "offset": 20
+      }
+    ]
+  },
+  "native_kernel_progress_claimed": false,
+  "qom": {
+    "bool_properties": [
+      "enabled-reference",
+      "offset-known",
+      "stats-payload-modeled",
+      "ddr-offset-modeled",
+      "firmware-modeled",
+      "ready-modeled"
+    ],
+    "enabled_reference_is_standard_device_configuration_property": true,
+    "getters_pure": true,
+    "no_MMIO_or_completion_in_getters": true,
+    "observed_property_count": 17,
+    "offset_known_derived_only_from_explicit_profile": true,
+    "uint64_properties": [
+      "enabled-profile",
+      "reference-identity",
+      "physical-base",
+      "window-bytes",
+      "offset-value",
+      "vmstate-bytes",
+      "register-count",
+      "irq-output-count",
+      "clock-input-count",
+      "clock-output-count",
+      "timer-count"
+    ],
+    "unsupported_capabilities_always_false": true
+  },
+  "required_following_validation": [
+    "Compile exact candidate",
+    "Actual typed MMIO delivery and hole rejection",
+    "Cold/reset QOM observations with disabled and enabledprofiles",
+    "Actual sameprofile migration before first guestMMIO",
+    "Profile mismatch and six singlebit wire corruption rejection",
+    "Unchanged existing component/Linux gates"
+  ],
+  "reviewed_utc": "2026-11-25T02:09:00.241035+00:00",
+  "schema": "tb371fc-rpm-stats-offset-independent-implementation-review-v1",
+  "scope": "Independent static C/header/generated-constant and four-glue-file review. No compile, QEMU, native, CI or device execution; test/harness/generator logic receive separate reviews.",
+  "source_bounds": {
+    "claim_limits_preserved": [
+      "Not a captured live word",
+      "Not a silicon reset value",
+      "No whole original-kernel/public-source identity claim",
+      "No generic AOP-local/APSS address alias claimed",
+      "APSS write rejection expresses a consumer-view boundary, not physical SRAM immutability"
+    ],
+    "default_enabled": false,
+    "existing_AOP_mailbox_unchanged": true,
+    "justification": "Captured full-DT resource and original compiled probe fix the exact4-byte read. Four pinned public consumer/DT sources derivef0048; bounded original-AOP producer arithmetic independently corroborates that reference layout.",
+    "mapped_bytes": 4,
+    "physical_word": "0x0c3f0004",
+    "reference_identity": "0x52534f31",
+    "reference_offset": "0x000f0048",
+    "unknown_apertures_retained": [
+      "Statistics payload0x0c3f0048..0x0c3f00a7",
+      "Neighbor fields0x0c3f0000 and0x0c3f0008",
+      "DDR pointer0x0c3f001c",
+      "Other SRAM/message RAM"
+    ]
+  },
+  "source_files": [
+    {
+      "bytes": 9377,
+      "path": "hw/misc/qcom-sm8250-rpm-stats-offset.c",
+      "sha256": "5144319fb0856c107512edbdfe86d48adef1237846da7c312394ff8ccae5db09"
+    },
+    {
+      "bytes": 359,
+      "path": "include/hw/misc/qcom-sm8250-rpm-stats-offset.h",
+      "sha256": "59a6434a4d33242710c993e068d5e2df89298b499f8405a7187217ce2161e1a9"
+    },
+    {
+      "bytes": 346,
+      "path": "hw/misc/qcom-sm8250-rpm-stats-offset-data.inc",
+      "sha256": "dc38191138f43d396b94971b15b9b6617924131669b602cb1bccf185f75d22e5"
+    },
+    {
+      "bytes": 102867,
+      "path": "hw/arm/lenovo-tb371fc.c",
+      "sha256": "ff2f8d8bc66826068a2bedbdc10145c7cc1dc3fe615c7a4a5fb558c8da5d4f7c"
+    },
+    {
+      "bytes": 15468,
+      "path": "hw/arm/Kconfig",
+      "sha256": "195baffbd21c9c2457bf97e7a5806825e95ce512afe1a624e4fcca30b97437b2"
+    },
+    {
+      "bytes": 4193,
+      "path": "hw/misc/Kconfig",
+      "sha256": "c63ddb724530945aaa4cd3373330b683627fa03e57a568d6a274cc361a8ff144"
+    },
+    {
+      "bytes": 10826,
+      "path": "hw/misc/meson.build",
+      "sha256": "f24d688b2364890bde05b4c1d81c1ba0600f1385c3b46c2e778216fded4d6e0f"
+    },
+    {
+      "bytes": 4870,
+      "path": "tb371fc/docs/rpm-stats-offset-sm8250-registers.json",
+      "sha256": "df0c4dad7572a918f579e98174663496893039d27315db6427726de9641a6adb"
+    }
+  ],
+  "source_files_modified_by_reviewer": false,
+  "state_and_reset": {
+    "disabled_offset_after_reset": 0,
+    "enabled_offset_after_reset": "0x000f0048",
+    "no_timers_irqs_clocks_ram_or_guest_side_effects": true,
+    "profile_identity_geometry_preserved": true,
+    "reset_reestablishes_profile_offset_only": true,
+    "runtime_read_write_callbacks_do_not_mutate_device_state": true,
+    "statistics_payload_not_initialized": true
+  },
+  "static_review_passed": true,
+  "supporting_scope_evidence": [
+    {
+      "bytes": 12108,
+      "name": "primary-reference-scope-001.json",
+      "sha256": "fdb76121152b13c644c696cba0765fb4e8bb589e6618ad71d0e361990ba953b3"
+    },
+    {
+      "bytes": 14620,
+      "name": "independent-aop-rpmstats-producer-review-001.json",
+      "sha256": "49e60b4d3d04377646a9dbc6b2b3b3f5f5c83d4cd42f62e040724d9cc44dae34"
+    },
+    {
+      "bytes": 17440,
+      "name": "actual-rpmstats-probe-disassembly.json",
+      "sha256": "70bab8603d285affc324620df2415005461f52d75653a288cdd281f604035f25"
+    }
+  ]
+}

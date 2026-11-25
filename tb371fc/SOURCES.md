@@ -468,3 +468,39 @@ clocks and power behavior remain outside this model. An internal unknown zero
 is tagged separately from a guest-programmed zero, and all MMIO reads remain
 errors. Component CI, unchanged original-kernel execution and Android boot
 remain separate acceptance stages.
+
+
+## RPM statistics offset reference
+
+The [generated manifest](docs/rpm-stats-offset-sm8250-registers.json) and
+[bounded interface contract](docs/rpm-stats-offset-sm8250.md) derive from four
+complete public inputs. The vendor revision is
+`98719830b0de5584f5588bbe9f4c8304d97a64c6` in
+`OnePlusOSS/android_kernel_oneplus_sm8250`; the upstream revision is
+`adc218676eef25575469234709c2d87185ca223a` in `torvalds/linux`.
+
+| Source | Bytes | SHA-256 |
+| --- | ---: | --- |
+| Vendor `drivers/soc/qcom/rpm_stats.c` | 11328 | `cb733f4433d6432187dd7faa31d8eff81e1b115ee20691eb53a3b1ca0eba0750` |
+| Vendor `arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi` | 2817 | `c1f3a89f461cf1381335ffb2e3066026c28a27642389f9f92fccf540646e5231` |
+| Upstream `drivers/soc/qcom/qcom_stats.c` | 7641 | `b62608854c3dbdef9b43d69a0e5b51b577624c583a80da6eeb5cd176752dd6c5` |
+| Upstream `arch/arm64/boot/dts/qcom/sm8250.dtsi` | 176883 | `8735b5d8bb61d6a3a579e5b088ff2a719132266cef57c91c319ec19e12770499` |
+
+The vendor consumer reads the four-byte `offset_addr` resource and adds its
+unsigned value to `phys_addr_base`. The actual TB371FC full DT and original
+456-byte `msm_rpmstats_probe` agree with this bounded operation; later sysfs
+setup differs from the reference driver's debugfs changes, so whole-function
+source identity is not claimed. The upstream SM8250 node places RPMh stats at
+`0x0c3f0000`, and its matching driver data starts three records at `+0x48`.
+Subtracting the vendor base `0x0c300000` derives `0x000f0048`.
+
+A separate bounded static analysis of the original AOP partition backup finds
+a producer computing and storing the same relative value. It corroborates the
+public layout, without establishing full reset-path reachability, a live
+register measurement, or a general AOP/APSS alias map. The private firmware
+is not included in the public source generator or CI downloads.
+
+Only the offset word at `0x0c3f0004/4` is implemented by an explicitly enabled
+reference profile. Statistics payload, adjacent words, DDR offset, readiness,
+firmware execution and physical reset state remain unknown. Rejecting APSS
+writes describes this consumer model's boundary, not hardware SRAM writability.

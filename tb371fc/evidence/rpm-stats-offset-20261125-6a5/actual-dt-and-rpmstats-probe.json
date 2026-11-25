@@ -1,0 +1,119 @@
+{
+  "dt": {
+    "bytes": 973052,
+    "nodes": {
+      "/soc/qcom,rpm-stats@c3f0004": {
+        "compatible": {
+          "raw_hex": "71636f6d2c72706d2d737461747300",
+          "strings": [
+            "qcom,rpm-stats"
+          ]
+        },
+        "qcom,num-records": {
+          "cells": [
+            "0x3"
+          ],
+          "raw_hex": "00000003"
+        },
+        "reg": {
+          "cells": [
+            "0xc300000",
+            "0x1000",
+            "0xc3f0004",
+            "0x4"
+          ],
+          "raw_hex": "0c300000000010000c3f000400000004"
+        },
+        "reg-names": {
+          "raw_hex": "706879735f616464725f62617365006f66667365745f6164647200",
+          "strings": [
+            "phys_addr_base",
+            "offset_addr"
+          ]
+        }
+      }
+    },
+    "parent_cells": {
+      "/soc": {
+        "#address-cells": {
+          "cells": [
+            "0x1"
+          ],
+          "raw_hex": "00000001"
+        },
+        "#size-cells": {
+          "cells": [
+            "0x1"
+          ],
+          "raw_hex": "00000001"
+        },
+        "ranges": {
+          "cells": [
+            "0x0",
+            "0x0",
+            "0x0",
+            "0xffffffff"
+          ],
+          "raw_hex": "000000000000000000000000ffffffff"
+        }
+      }
+    },
+    "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207"
+  },
+  "kernel": {
+    "bytes": 37445648,
+    "sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "text_base": "0xffffff8008080000"
+  },
+  "probe": {
+    "address": "0xffffff80086b0da8",
+    "bytes": 456,
+    "code_hex": "fd7bbca9f70b00f9fd030091f65702a9f44f03a915189052f30300aa150ca0720040009101028052e203152afdef0594200300b4c2a300b0f40300aa421c3091e00313aa0140805270e40594800200b4c2a300b0f60300aa42583091e00313aa0140805269e40594e00100b4000040f9e2e080d2020de0f28100805231eae797600900b4170040b96aeae797e803172a06000014600180123a000014a002801238000014e8031faac90240f9c1a300b0608641f92174319123008052e4031faa2801088b880200f9c80a40b9c90240b996320091e20316aa0801094b08050011880a00b9492418946000f83648008052c80200b968ec00f0c0a300b000b8319101e147f953263394600400b488b000f0f60300aa08012791e103152a02068052001d40f9678bef97600200b488248052a9a000f0f50300aa160000f91f5002a9e10300aa082000790800009008013f9129390b91e2031faa080c00f9e00316aa298c00f85db2f297e0031f2a756600f904000014e00316aada243394e0031f2af44f43a9f70b40f9f65742a9fd7bc4a8c0035fd6c0a300b0c1a300b000ec3191218432910b79ea97f5ffff17c0a300b0c1a300b000883091212831910579ea9740028012efffff17",
+    "fault_offset": "0x84",
+    "fault_opcode": "0xb9400017",
+    "kernel_offset": 6491560,
+    "sha256": "6dc0f200660834d96ecc6690c6b656d7ef9c8c9d140b97de407319bf159c164c",
+    "symbol": "msm_rpmstats_probe"
+  },
+  "related_symbols": [
+    {
+      "address": "0xffffff80086b0da8",
+      "name": "msm_rpmstats_probe",
+      "type": "t"
+    },
+    {
+      "address": "0xffffff80086b0f70",
+      "name": "msm_rpmstats_remove",
+      "type": "t"
+    },
+    {
+      "address": "0xffffff80086b0fc0",
+      "name": "rpmstats_show",
+      "type": "t"
+    },
+    {
+      "address": "0xffffff80097b5b48",
+      "name": "rpm_stats_table",
+      "type": "r"
+    },
+    {
+      "address": "0xffffff8009e3e848",
+      "name": "msm_rpmstats_driver_init",
+      "type": "t"
+    },
+    {
+      "address": "0xffffff8009f163f0",
+      "name": "__initcall_msm_rpmstats_driver_init6",
+      "type": "t"
+    },
+    {
+      "address": "0xffffff800a2b11b8",
+      "name": "msm_rpmstats_driver",
+      "type": "d"
+    }
+  ],
+  "schema": "tb371fc-bounded-actual-rpmstats-dt-and-probe-v1",
+  "scope": "Read-only extraction from the unchanged original full DT, kernel and matching symbols. Only RPM statistics geometry and bounded probe bytes are retained. Later actual sysfs setup differs from the vendor reference; whole-function source identity is not claimed.",
+  "source_extraction_sha256": "3aac2ef3edf088b363ef36f8c0b5668394fc06dbe500e8effeb1044f6a67e522",
+  "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0"
+}

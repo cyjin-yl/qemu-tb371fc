@@ -174,7 +174,7 @@ class PlanTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         plan = ci.plan(args, Path("/test/runtime"))
         cases = {case.name: case for case in plan}
-        self.assertEqual(len(plan), 95)
+        self.assertEqual(len(plan), 97)
         self.assertEqual(len(cases), len(plan))
         self.assertEqual(cases["tbu-reference-ecats"].expected_count, 17)
         self.assertEqual(cases["smmuv500-reference"].expected_count, 36)
@@ -191,7 +191,8 @@ class PlanTests(unittest.TestCase):
                      "dsi-pll-7nm-reference", "dp-pll-source-generation",
                      "dp-pll-7nm-reference", "llcc-source-generation",
                      "llcc-sm8250-reference", "spss-irq-mask-source-generation",
-                     "spss-irq-mask-sm8250-reference"):
+                     "spss-irq-mask-sm8250-reference", "rpm-stats-offset-source-generation",
+                     "rpm-stats-offset-sm8250-reference"):
             self.assertIn(name, cases)
         npu = cases["npu-gdsc-reference"]
         self.assertEqual(npu.expected_count, 21)
@@ -345,7 +346,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 100)
+        self.assertEqual(len(cases), 102)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]
@@ -610,13 +611,14 @@ class PlanTests(unittest.TestCase):
                         ci.judge(case, path)
 
     def test_spss_additions_preserve_all_prior_98_contracts_and_order(self):
-        # Exact normalized plan at parent 7372681; omit only the two new cases.
+        # Exact normalized plan at parent 7372681; omit the SPSS and later RPM-offset additions.
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         retained = []
         cases = ci.plan(args, Path("/test/runtime"))
         for case in cases:
-            if case.name in {"spss-irq-mask-source-generation", "spss-irq-mask-sm8250-reference"}:
+            if case.name in {"spss-irq-mask-source-generation", "spss-irq-mask-sm8250-reference",
+                             "rpm-stats-offset-source-generation", "rpm-stats-offset-sm8250-reference"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -637,6 +639,122 @@ class PlanTests(unittest.TestCase):
                                                 separators=(",", ":")).encode()).hexdigest()
         self.assertEqual(fingerprint, "c37b44cd9cba85b593be878e97e98b4af8df15ff8bedae72ba001f00291c82c6")
 
+
+
+    def test_rpm_stats_offset_contract_rejects_missing_or_false_boundaries(self):
+        args = SimpleNamespace(suite="components", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        cases = {item.name: item for item in ci.plan(args, Path("/test/runtime"))}
+        generation = cases["rpm-stats-offset-source-generation"]
+        self.assertEqual(generation.expected_count, 2)
+        self.assertEqual(generation.expected_lengths, {"inputs": 4})
+        self.assertEqual(generation.expected_values,
+                         {"schema": "tb371fc-rpm-stats-offset-generation-v1",
+                          "source_pins_verified": True})
+        case = cases["rpm-stats-offset-sm8250-reference"]
+        self.assertEqual(case.expected_count, 20)
+        self.assertEqual(case.expected_values, {'schema': 'tb371fc-rpm-stats-offset-sm8250-v1',
+                          'suite': 'rpm-stats-offset-sm8250-reference',
+                          'expected_checks': 20,
+                          'expected_completed_migrations': 2,
+                          'expected_rejected_migrations': 2,
+                          'expected_corrupted_stream_rejections': 6,
+                          'expected_unmodified_streams': 2,
+                          'expected_stream_files': 8,
+                          'vmstate_version': 1,
+                          'vmstate_minimum_version': 1,
+                          'vmstate_payload_bytes': 24,
+                          'reference_identity': 1381191473,
+                          'physical_base': 205455364,
+                          'register_count': 1,
+                          'sparse_window_count': 1,
+                          'mapped_bytes': 4,
+                          'source_offset_value': 983112,
+                          'first_observation_qom_get_count': 17,
+                          'irq_output_count': 0,
+                          'input_clock_count': 0,
+                          'output_clock_count': 0,
+                          'timer_count': 0,
+                          'reference_enabled_by_default': False,
+                          'readonly_offset_register': True,
+                          'mutable_device_state': False,
+                          'migration_destination_device_state_dirtied': False,
+                          'migration_destination_ram_witness_dirtied': True,
+                          'stats_payload_modeled': False,
+                          'ddr_offset_modeled': False,
+                          'firmware_modeled': False,
+                          'ready_modeled': False,
+                          'guest_cpu_executed': False,
+                          'native_kernel_probe_observed': False,
+                          'android_boot_passed': False,
+                          'binary_unchanged': True})
+        self.assertEqual(case.expected_lengths, {'checks': 20,
+                          'migrations': 2,
+                          'rejected_migrations': 2,
+                          'corrupted_stream_rejections': 6,
+                          'migration_sources': 2,
+                          'actual_stream_files': 8})
+        with tempfile.TemporaryDirectory(prefix="tbci-rpmoff-", dir="/tmp") as directory:
+            path = Path(directory) / "result.json"
+            case.result = str(path)
+            valid = {**case.expected_values, "passed": True,
+                     "checks": [{"name": f"synthetic_{i}", "passed": True} for i in range(20)],
+                     "migrations": [{} for _ in range(2)],
+                     "rejected_migrations": [{} for _ in range(2)],
+                     "corrupted_stream_rejections": [{} for _ in range(6)],
+                     "migration_sources": [{} for _ in range(2)],
+                     "actual_stream_files": [{} for _ in range(8)]}
+            path.write_text(json.dumps(valid))
+            ci.judge(case, path)
+            for key, value in (
+                    ("checks", valid["checks"][:-1]),
+                    ("checks", [{"name": "duplicate", "passed": True}] * 20),
+                    ("migrations", [{}]), ("rejected_migrations", [{}]),
+                    ("corrupted_stream_rejections", [{}] * 5),
+                    ("migration_sources", [{}]), ("actual_stream_files", [{}] * 7),
+                    ("vmstate_payload_bytes", 25), ("reference_identity", 0x52534f30),
+                    ("source_offset_value", 0x000f0049), ("mapped_bytes", 0x1000),
+                    ("first_observation_qom_get_count", 16),
+                    ("first_observation_qom_get_count", True),
+                    ("readonly_offset_register", False), ("mutable_device_state", True),
+                    ("migration_destination_device_state_dirtied", True),
+                    ("migration_destination_ram_witness_dirtied", False),
+                    ("stats_payload_modeled", True), ("ddr_offset_modeled", True),
+                    ("firmware_modeled", True), ("ready_modeled", True),
+                    ("native_kernel_probe_observed", True), ("android_boot_passed", True),
+                    ("binary_unchanged", False)):
+                with self.subTest(field=key, value=value):
+                    path.write_text(json.dumps(dict(valid, **{key: value})))
+                    with self.assertRaises(ValueError):
+                        ci.judge(case, path)
+
+    def test_rpm_stats_offset_preserves_all_prior_100_contracts_and_order(self):
+        # Every field and order position in the exact merged SPSS baseline.
+        args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        retained = []
+        cases = ci.plan(args, Path("/test/runtime"))
+        for case in cases:
+            if case.name in {"rpm-stats-offset-source-generation", "rpm-stats-offset-sm8250-reference"}:
+                continue
+            def normalize(value):
+                if isinstance(value, Path):
+                    value = str(value)
+                if isinstance(value, str):
+                    for other in cases:
+                        physical, token = str(other.fixture), "@FIXTURE:" + other.name + "@"
+                        value = token if value == physical else value.replace(physical + "/", token + "/")
+                    return value.replace(str(ci.ROOT), "@ROOT@").replace(sys.executable, "@PYTHON@")
+                if isinstance(value, list):
+                    return [normalize(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: normalize(item) for key, item in value.items()}
+                return value
+            retained.append(normalize(vars(case)))
+        self.assertEqual(len(retained), 100)
+        fingerprint = hashlib.sha256(json.dumps(retained, sort_keys=True,
+                                                separators=(",", ":")).encode()).hexdigest()
+        self.assertEqual(fingerprint, "c3a85b57e4a88b6c4378e479df0c3e1d6e083a21a6abec0ed432c40d2950c1af")
 
 
 if __name__ == "__main__":
