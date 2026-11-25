@@ -28,7 +28,10 @@ DEFAULT_MACHINE = 'tb371fc,ufs-enabled=off,gcc-boot-configured=off'
 DEFAULT_PROFILE = Path(__file__).resolve().parents[1] / 'docs/qce-bam-sm8250-reference-profile.json'
 GUARD_ERROR = TYPE + ': migrated identity, profile or geometry mismatch'
 MUTABLE_ERROR = TYPE + ': invalid migrated control state'
-RAM = 0x80010000
+# With no -kernel, the ARM boot loader restores the board DTB at RAM base
+# on every system reset.  Keep artificial rings/output witnesses away from
+# that ROM-backed range; their complete bytes must remain unchanged.
+RAM = 0x81010000
 
 
 def pure_twice(r, expected, label):

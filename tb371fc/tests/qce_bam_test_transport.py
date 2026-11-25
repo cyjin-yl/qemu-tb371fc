@@ -189,7 +189,11 @@ class Rig:
             self.count[{'qom-get': 'qom_get', 'qom-set': 'qom_set', 'cont': 'cont'}[execute]] += 1
         self.record({'qmp_send': request})
         peer = self.peers['qmp']
-        peer.send((json.dumps(request) + '\n').encode())
+        # A QMP object is complete at its closing brace.  Do not leave a
+        # trailing LF for the monitor to consume after quit starts shutdown;
+        # normal cleanup must still observe a real EOF, never accept reset.
+        frame = json.dumps(request) + ('' if execute == 'quit' else '\n')
+        peer.send(frame.encode())
         while True:
             response = json.loads(peer.receive())
             self.record({'qmp_receive': response})
