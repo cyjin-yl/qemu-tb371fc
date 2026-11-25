@@ -1,0 +1,50 @@
+{
+  "schema": "tb371fc-spmi-debug-fuse-virtual-policy-decision-v1",
+  "policy_name": "virtual-spmi-debug-unavailable-v1",
+  "decision_authority": "Explicit Root instruction in this session after complete driver/source and existing read-only metadata review",
+  "recorded_utc": "2026-11-25T18:59:58.273608+00:00",
+  "configuration": {
+    "model_type": "qcom-sm8250-spmi-debug-fuse",
+    "default_enabled": false,
+    "diagnostic_word_if_explicitly_enabled": "0x01000000",
+    "driver_consumed_mask": "0x01000000",
+    "driver_consumed_bit": 24,
+    "meaning": "This virtual platform does not provide the SPMI debug controller.",
+    "other_bits_mask": "0xfeffffff",
+    "other_bits_value": "0x00000000",
+    "other_bits_meaning": "Model-reserved zeros; no physical fuse contents are claimed."
+  },
+  "source_semantics": {
+    "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+    "commit": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+    "path": "drivers/spmi/spmi-pmic-arb-debug.c",
+    "bytes": 9243,
+    "sha256": "7fefc5438d2da8bba2cd1cf3fc58fa7f8aa065613f4244f0d4a8151f7c01ae3c",
+    "read_line": 273,
+    "gate_lines": [
+      276,
+      278
+    ],
+    "gate_result": "-ENODEV before debug controller allocation, core mapping or clock acquisition",
+    "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/spmi/spmi-pmic-arb-debug.c"
+  },
+  "physical_fuse_word_measured": false,
+  "physical_disable_bit_measured": false,
+  "driver_absence_used_to_infer_fuse": false,
+  "missing_log_used_to_infer_fuse": false,
+  "existing_metadata_scope": "Live DT provides resource location and bit index. Unbound platform driver and missing relevant retained logs do not establish any fuse value.",
+  "ordinary_spmi_changed": false,
+  "original_kernel_changed": false,
+  "original_dtb_changed": false,
+  "original_bootargs_changed": false,
+  "debug_core_available_or_success_claimed": false,
+  "native_enablement_performed": false,
+  "native_binding": {
+    "commit": "UNBOUND",
+    "artifact_id": "UNBOUND",
+    "qualification_sha256": "UNBOUND",
+    "launch_tag": "UNBOUND",
+    "result": "UNBOUND"
+  },
+  "runtime_binding_requirement": "Root reviews the integrated candidate and actual qualified artifact before any explicit native enablement. This document is a configuration decision, not a runtime receipt."
+}

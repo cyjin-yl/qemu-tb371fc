@@ -175,7 +175,7 @@ class PlanTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         plan = ci.plan(args, Path("/test/runtime"))
         cases = {case.name: case for case in plan}
-        self.assertEqual(len(plan), 105)
+        self.assertEqual(len(plan), 106)
         self.assertEqual(len(cases), len(plan))
         self.assertEqual(cases["tbu-reference-ecats"].expected_count, 17)
         self.assertEqual(cases["smmuv500-reference"].expected_count, 36)
@@ -350,7 +350,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 110)
+        self.assertEqual(len(cases), 111)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]
@@ -626,7 +626,7 @@ class PlanTests(unittest.TestCase):
                              "ddr-stats-offset-source-generation", "ddr-stats-offset-sm8250-reference",
                                    "geni-hs-source-generation-unit", "geni-hs-source-generation",
                                    "geni-hs-sm8250-reference", "qce-bam-source-generation",
-                                   "qce-bam-safety", "qce-bam-reference"}:
+                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -747,7 +747,7 @@ class PlanTests(unittest.TestCase):
                              "ddr-stats-offset-source-generation", "ddr-stats-offset-sm8250-reference",
                                    "geni-hs-source-generation-unit", "geni-hs-source-generation",
                                    "geni-hs-sm8250-reference", "qce-bam-source-generation",
-                                   "qce-bam-safety", "qce-bam-reference"}:
+                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -878,7 +878,7 @@ class PlanTests(unittest.TestCase):
                                    "ddr-stats-offset-sm8250-reference",
                                    "geni-hs-source-generation-unit", "geni-hs-source-generation",
                                    "geni-hs-sm8250-reference", "qce-bam-source-generation",
-                                   "qce-bam-safety", "qce-bam-reference"}:
+                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -1058,8 +1058,8 @@ class GeniContractTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
         additions = {"geni-hs-source-generation-unit", "geni-hs-source-generation", "geni-hs-sm8250-reference",
-                     "qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference"}
-        self.assertEqual(len(cases), 110)
+                     "qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference"}
+        self.assertEqual(len(cases), 111)
         def normalize(value):
             if isinstance(value, Path):
                 value = str(value)
@@ -1098,9 +1098,9 @@ class QceContractTests(unittest.TestCase):
         self.plan = ci.plan(self.args, Path("/test/runtime"))
 
     def test_qce_additions_preserve_all_107_prior_contracts_in_order(self):
-        additions = {"qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference"}
-        self.assertEqual(len(self.plan), 110)
-        self.assertEqual({c.name for c in self.plan[-3:]}, additions)
+        additions = {"qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference"}
+        self.assertEqual(len(self.plan), 111)
+        self.assertEqual({c.name for c in self.plan[-4:-1]}, additions - {"spmi-debug-fuse-reference"})
         def normalize(value):
             if isinstance(value, Path):
                 value = str(value)
@@ -1198,6 +1198,138 @@ class QceContractTests(unittest.TestCase):
         changed['process_cleanup'][1] = changed['process_cleanup'][0]
         with self.assertRaises(ValueError):
             judge_qce_details(case, changed)
+
+
+
+class SpmiDebugFuseContractTests(unittest.TestCase):
+    """Synthetic receipt fixtures test verdicts; they never claim QEMU execution."""
+    def setUp(self):
+        args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        self.plan = ci.plan(args, Path("/test/runtime"))
+        self.case = self.plan[-1]
+
+    def test_all_110_prior_contracts_remain_the_exact_ordered_prefix(self):
+        self.assertEqual(len(self.plan), 111)
+        self.assertEqual(self.case.name, 'spmi-debug-fuse-reference')
+        def normalize(value):
+            if isinstance(value, Path):value = str(value)
+            if isinstance(value, str):
+                for other in self.plan:
+                    physical, token = str(other.fixture), '@FIXTURE:' + other.name + '@'
+                    value = token if value == physical else value.replace(physical + '/', token + '/')
+                return value.replace(str(ci.ROOT), '@ROOT@').replace(sys.executable, '@PYTHON@')
+            if isinstance(value, list):return [normalize(x) for x in value]
+            if isinstance(value, dict):return {k:normalize(v) for k,v in value.items()}
+            return value
+        normalized = [normalize(vars(case)) for case in self.plan]
+        fingerprint = lambda rows: hashlib.sha256(json.dumps(rows, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+        self.assertEqual(fingerprint(normalized[:110]), '28eac5e25ea2c4720b47628c30d8b3b08407c96f476f75dc60f175912326b5a6')
+        self.assertEqual(fingerprint(normalized), '3bb17209275609d01562d59528c01b1000b011e84a7377f5114d408b5e22ddee')
+        self.assertEqual(self.case.expected_count, 22)
+        self.assertEqual(self.case.expected_lengths, {'admission_rejections':8, 'access_rejections':21,
+                         'migrations':3, 'rejected_migrations':4, 'corrupted_stream_rejections':2,
+                         'actual_stream_files':5, 'process_cleanup':22})
+
+    def receipt(self):
+        import struct
+        import spmi_debug_fuse_ci_contract as f
+        def state(word):return {'enabled':word is not None, 'bound-word':'UNBOUND' if word is None else f'{word:#010x}'}
+        def counts():return dict(qom_get=0,qom_set=0,qtest=0,memory=0,device_mmio=0,ram=0,cont=0)
+        def pure(word):return {'first':state(word),'repeated':state(word),'first_getters':2,'repeated_getters':2,
+                              'counters_before':counts(),'counters_after':dict(counts(),qom_get=4),'no_memory_or_cont':True}
+        def read(word):return {'command':'readl 0x7820a8','value':word}
+        def unmapped(address,write):
+            op='write' if write else 'read'
+            return {'command':f'{op}l {address:#x}'+(' 0' if write else ''),
+                    'core_diagnostic':[[op,address,4,'(null)','rejected']],
+                    'state_unchanged':True,'qtest_ok_is_memtx_result':False}
+        def rejection(name,word,message):
+            return {'name':name,'passed':True,'exit_code':1,'specific_diagnostic':message,
+                    'specific_diagnostic_observed':True,'preload':pure(word),
+                    'counters_before_incoming':dict(counts(),qom_get=4),'counters_after_exit':dict(counts(),qom_get=4),
+                    'no_device_or_ram_commands':True,'no_cont':True,'failed_process_postload_qom_claimed':False,
+                    'whole_machine_ram_not_loaded_claimed':False,'stderr_sha256':'f'*64}
+        report = dict(copy.deepcopy(self.case.expected_values), passed=True, qemu_sha256_before='f'*64,
+                      qemu_sha256_after='f'*64, checks=[{'name':n,'passed':True} for n in f.CHECKS])
+        for key in self.case.expected_lengths:report[key]=[]
+        for row,word in zip(report['checks'][:5], (None,None,f.A,f.B,f.POLICY)):
+            row.update(pure=pure(word),reset_preserved_configuration=True,
+                       mapping={'active_leaves':[[f.BASE,f.BASE+15,f.TYPE+'.decode-guard']] if word is not None else [],
+                                'decode_guard_bytes':16 if word is not None else 0,'readable_bytes':4 if word is not None else 0})
+            if word is None:row['unmapped']=[unmapped(f.BASE+o,w) for o in (0,8,12) for w in (False,True)]
+            else:row['first_read']=read(word)
+        report['checks'][4].update(reset_read=read(f.POLICY),virtual_policy_fixture_only=True)
+        report['checks'][2]['immutable_properties']=[{'path':p,'property':k,'error':{'class':'GenericError','desc':k},'state_unchanged':True}
+            for p,k in ((f.PATH,'enabled'),(f.PATH,'fuse-word'),(f.PATH,'bound-word'),('/machine','spmi-debug-fuse-enabled'),('/machine','spmi-debug-fuse-word'))]
+        report['checks'][2]['unmapped_neighbors_and_debug_core']=[unmapped(a,w) for a,w in
+            ((f.BASE-4,False),(f.BASE-4,True),(f.BASE+16,False),(f.BASE+16,True),(0x06b0f000,False))]
+        for write,items in ((False,[('b',8),('w',8),('q',8),('l',0),('l',4),('l',12),('l',9),('l',10),('l',11),('q',1)]),
+                            (True,[('b',8),('w',8),('l',8),('q',8),('l',0),('l',4),('l',12),('l',9),('l',10),('l',11),('q',1)])):
+            for width,offset in items:
+                size={'b':1,'w':2,'l':4,'q':8}[width];op='write' if write else 'read';value=0x12345678abcdef90&((1<<(8*size))-1)
+                report['access_rejections'].append({'command':f'{op}{width} {f.BASE+offset:#x}'+(f' {value:#x}' if write else ''),
+                    'diagnostic':[f'{f.TYPE}: rejected {op} offset={offset:#x} size={size}'],'before':state(f.A),'after':state(f.A),
+                    'preserved_read':read(f.A),'state_unchanged':True,'qtest_ok_is_memtx_result':False,'read_error_bytes_used_as_identity':False})
+        for name,enabled,word in f.ADMISSION:
+            message=(f.TYPE+': enabled profile requires explicit fuse-word=0xhhhhhhhh (eight lowercase hex digits); no word is bound by default') if enabled else f.TYPE+': fuse-word requires enabled=on'
+            report['admission_rejections'].append({'name':name,'passed':True,'enabled':enabled,'word':word,'exit_code':1,
+                'specific_diagnostic':message,'specific_diagnostic_observed':True})
+        for key,word in (('off',None),('a',f.A),('b',f.B)):
+            payload=struct.pack('>II',0x53444600|(word is not None),word or 0)
+            section={'section_name':f.TYPE,'section_type':4,'instance_id':0,'version':1,'payload_bytes':8,'mutable_bytes':0,
+                     'payload_offset':80,'payload_hex':payload.hex(),'payload_sha256':hashlib.sha256(payload).hexdigest(),
+                     'all_eight_bytes_verified':True,'whole_machine_payload_oracle_claimed':False}
+            source={'file':key+'.mig','bytes':100,'sha256':'a'*64,'snapshot':state(word),'section':section,
+                    'query_migrate':{'status':'completed'},'query_status':{'running':False,'status':'postmigrate'}}
+            target={'preload':pure(word),'first_postload':pure(word),'query_migrate':{'status':'completed'},'query_status':{'running':False},
+                    'reset_preserved_configuration':True,'whole_machine_ram_not_loaded_claimed':False}
+            report['migrations'].append({'name':'migration-'+key,'passed':True,'source':source,'observation':target})
+            report['actual_stream_files'].append({'file':'streams/'+key+'.mig','bytes':100,'sha256':'a'*64})
+        for name,word,file,message in [('off-to-on',f.A,'off.mig','53444601 != 53444600'),('on-to-off',None,'a.mig','53444600 != 53444601'),
+                                      ('a-to-b',f.B,'a.mig',f'{f.B:x} != {f.A:x}'),('b-to-a',f.A,'b.mig',f'{f.A:x} != {f.B:x}')]:
+            report['rejected_migrations'].append(dict(rejection(name,word,message),source_file=file))
+        for field,delta,old in (('profile',0,0x53444601),('word',4,f.A)):
+            name='corrupt-'+field
+            report['corrupted_stream_rejections'].append(dict(rejection(name,f.A,f'{old:x} != {old^1:x}'),field=field,field_offset=80+delta,
+                changed_bits=1,source_unchanged=True,source_sha256='a'*64,mutated_sha256='b'*64))
+            report['actual_stream_files'].append({'file':'streams/'+name+'.mig','bytes':100,'sha256':'b'*64})
+        for name in sorted(f.CHECKS):
+            code=int(name not in f.NORMAL);admission=name in {x[0] for x in f.ADMISSION}
+            report['process_cleanup'].append({'fixture':name,'expected_exit_code':code,'exit_code':code,'actually_waited_and_reaped':True,
+                'wait_calls':[{'called':'Popen.wait','returned_exit_code':code}],'forced_terminate':False,'forced_kill':False,
+                'signals_to_preexisting_processes':False,'quit_sent':not code,'quit_acknowledged':not code,'quit_error':None,
+                'quit_not_applicable':'already-exited' if code else None,'counters':counts(),'unexpected_qtest_drain_lines':[],'irq_events':[],
+                'drains':{c:({'not_opened':True} if admission else {'terminal':'eof','error':None}) for c in ('qmp','qtest')},
+                'stdio':{c:{'complete_after_actual_wait':True,'bytes':0,'sha256':'f'*64} for c in ('qemu.stdout','qemu.stderr')}})
+        return report
+
+    def test_complete_synthetic_receipt_and_real_boundary_negatives(self):
+        valid=self.receipt()
+        with tempfile.TemporaryDirectory(prefix='tbci-fuse-',dir='/tmp') as d:
+            path=Path(d)/'result.json';case=copy.copy(self.case);case.result=str(path)
+            path.write_text(json.dumps(valid));ci.judge(case,path)
+            changes=[(('process_cleanup',0,'actually_waited_and_reaped'),False),
+                     (('process_cleanup',0,'wait_calls'),[]),
+                     (('process_cleanup',0,'forced_terminate'),True),
+                     (('process_cleanup',0,'exit_code'),True),
+                     (('checks',0,'pure','counters_before','memory'),1),
+                     (('checks',4,'first_read','value'),0),
+                     (('access_rejections',0,'diagnostic'),[]),
+                     (('access_rejections',0,'after','bound-word'),'0x00000000'),
+                     (('migrations',0,'source','section','payload_hex'),'0000000000000000'),
+                     (('rejected_migrations',0,'no_cont'),False),
+                     (('corrupted_stream_rejections',0,'changed_bits'),2),
+                     (('physical_fuse_measured',),True),
+                     (('actual_stream_files',),valid['actual_stream_files'][:-1])]
+            normal_index=next(i for i,r in enumerate(valid['process_cleanup']) if r['fixture']=='default-off')
+            changes.append((('process_cleanup',normal_index,'drains','qmp','terminal'),'reset'))
+            for keys,value in changes:
+                changed=copy.deepcopy(valid);target=changed
+                for key in keys[:-1]:target=target[key]
+                target[keys[-1]]=value;path.write_text(json.dumps(changed))
+                with self.subTest(path=keys),self.assertRaises((ValueError,KeyError)):
+                    ci.judge(case,path)
 
 
 if __name__ == "__main__":

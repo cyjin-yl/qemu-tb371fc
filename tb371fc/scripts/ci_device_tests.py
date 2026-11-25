@@ -23,6 +23,7 @@ import time
 import traceback
 
 from qce_bam_ci_contract import judge_qce_details
+from spmi_debug_fuse_ci_contract import judge_spmi_debug_fuse_details
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -1328,6 +1329,26 @@ def plan(args, runtime):
                                  "corrupted_stream_rejections": 58,
                                  "structural_stream_rejections": 3,
                                  "actual_stream_files": 65, "process_cleanup": 76})
+    if args.suite in ("all", "components"):
+        device("spmi-debug-fuse-reference", "test_spmi_debug_fuse.py",
+               output="--out", result="file", count=22, timeout=360,
+               expected={"schema": "tb371fc-spmi-debug-fuse-v1", "expected_checks": 22,
+                         "scope": "immutable-availability-word-only",
+                         "synthetic_words": ["0xa5c3124f", "0x6a24c591"],
+                         "virtual_policy_fixture_word": "0x01000000",
+                         "vmstate_version": 1, "vmstate_payload_bytes": 8,
+                         "mutable_state_bytes": 0, "decode_guard_bytes": 16,
+                         "readable_bytes": 4, "word_address": 0x007820a8,
+                         "guest_cpu_executed": False, "native_kernel_executed": False,
+                         "physical_fuse_measured": False, "debug_controller_modeled": False,
+                         "normal_spmi_abi_changed": False, "automatic_test_retries": 0,
+                         "qtest_ok_is_memtx_result": False,
+                         "test_oracle_reads_device_implementation": False,
+                         "process_cleanup_verified": True, "binary_unchanged": True},
+               expected_lengths={"admission_rejections": 8, "access_rejections": 21,
+                                 "migrations": 3, "rejected_migrations": 4,
+                                 "corrupted_stream_rejections": 2,
+                                 "actual_stream_files": 5, "process_cleanup": 22})
     return cases
 
 
@@ -1529,6 +1550,7 @@ def judge(case, stdout):
             raise ValueError(f"Expected {key}={value!r}; got {data.get(key)!r}")
     judge_geni_hs_details(case, data)
     judge_qce_details(case, data)
+    judge_spmi_debug_fuse_details(case, data)
     return details
 
 

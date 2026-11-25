@@ -79,6 +79,7 @@
 #include "hw/misc/qcom-npu-gdsc.h"
 #include "hw/misc/qcom-video-gdsc.h"
 #include "hw/misc/qcom-spmi-pmic-arb.h"
+#include "hw/misc/qcom-sm8250-spmi-debug-fuse.h"
 #include "hw/gpio/qcom-tb371fc-tlmm.h"
 #include "hw/misc/qcom-sm8250-rpmh.h"
 #include "hw/ufs/qcom-sm8250-ufs.h"
@@ -190,6 +191,8 @@ struct TB371FCMachineState {
     Clock *board_xo;
     char *rpmh_profile, *rpmh_cmd_db;
     char *spmi_profile;
+    bool spmi_debug_fuse_enabled;
+    char *spmi_debug_fuse_word;
     char *smem_profile;
     char *aop_profile;
     char *tbu_profile;
@@ -1784,6 +1787,19 @@ static void tb371fc_create_pdc(TB371FCMachineState *s)
     }
 }
 
+static void tb371fc_create_spmi_debug_fuse(TB371FCMachineState *s)
+{
+    DeviceState *dev = qdev_new(TYPE_QCOM_SM8250_SPMI_DEBUG_FUSE);
+
+    object_property_add_child(OBJECT(s), "spmi-debug-fuse", OBJECT(dev));
+    qdev_prop_set_bit(dev, "enabled", s->spmi_debug_fuse_enabled);
+    if (s->spmi_debug_fuse_word) {
+        qdev_prop_set_string(dev, "fuse-word", s->spmi_debug_fuse_word);
+    }
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, QCOM_SPMI_DEBUG_FUSE_GUARD_BASE);
+}
+
 static void tb371fc_create_spmi(TB371FCMachineState *s)
 {
     static const hwaddr bases[QCOM_SPMI_PMIC_ARB_NUM_REGIONS] = {
@@ -1977,6 +1993,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_gic(s);
     tb371fc_create_pdc(s);
     tb371fc_create_spmi(s);
+    tb371fc_create_spmi_debug_fuse(s);
     tb371fc_create_mmio_timer(s);
     tb371fc_create_mpm2_sleep_counter(s);
     tb371fc_create_tsens(s);
@@ -2251,6 +2268,43 @@ static void tb371fc_set_smem_profile(Object *obj, const char *value, Error **err
     s->smem_profile = g_strdup(value);
 }
 
+static bool tb371fc_get_spmi_debug_fuse_enabled(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->spmi_debug_fuse_enabled;
+}
+
+static void tb371fc_set_spmi_debug_fuse_enabled(Object *obj, bool value,
+                                              Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "spmi-debug-fuse-enabled is fixed after machine creation");
+        return;
+    }
+    s->spmi_debug_fuse_enabled = value;
+}
+
+static char *tb371fc_get_spmi_debug_fuse_word(Object *obj, Error **errp)
+{
+    const char *word = TB371FC_MACHINE(obj)->spmi_debug_fuse_word;
+
+    return g_strdup(word ? word : "");
+}
+
+static void tb371fc_set_spmi_debug_fuse_word(Object *obj, const char *value,
+                                           Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "spmi-debug-fuse-word is fixed after machine creation");
+        return;
+    }
+    g_free(s->spmi_debug_fuse_word);
+    s->spmi_debug_fuse_word = g_strdup(value);
+}
+
 static char *tb371fc_get_spmi_profile(Object *obj, Error **errp)
 {
     return g_strdup(TB371FC_MACHINE(obj)->spmi_profile);
@@ -2334,6 +2388,8 @@ static void tb371fc_instance_init(Object *obj)
 
     s->rpmh_profile = g_strdup("off");
     s->spmi_profile = g_strdup("off");
+    s->spmi_debug_fuse_enabled = false;
+    s->spmi_debug_fuse_word = NULL;
     s->smem_profile = g_strdup("off");
     s->aop_profile = g_strdup("none");
     s->tbu_profile = g_strdup("off");
@@ -2350,6 +2406,7 @@ static void tb371fc_instance_finalize(Object *obj)
     g_free(s->rpmh_profile);
     g_free(s->rpmh_cmd_db);
     g_free(s->spmi_profile);
+    g_free(s->spmi_debug_fuse_word);
     g_free(s->smem_profile);
     g_free(s->aop_profile);
     g_free(s->tbu_profile);
@@ -2393,6 +2450,16 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
         tb371fc_get_spmi_profile, tb371fc_set_spmi_profile);
     object_class_property_set_description(oc, "spmi-profile",
         "off (default) or explicit reference APID/ownership/PMIC subset");
+    object_class_property_add_bool(oc, "spmi-debug-fuse-enabled",
+        tb371fc_get_spmi_debug_fuse_enabled, tb371fc_set_spmi_debug_fuse_enabled);
+    object_class_property_set_description(oc, "spmi-debug-fuse-enabled",
+        "Enable independent read-only debug fuse aperture (default off); "
+        "requires explicit spmi-debug-fuse-word");
+    object_class_property_add_str(oc, "spmi-debug-fuse-word",
+        tb371fc_get_spmi_debug_fuse_word, tb371fc_set_spmi_debug_fuse_word);
+    object_class_property_set_description(oc, "spmi-debug-fuse-word",
+        "Explicit immutable 32-bit word as 0xhhhhhhhh; no value is bound "
+        "by default and no physical fuse capture is implied");
     object_class_property_add_str(oc, "rpmh-profile",
         tb371fc_get_rpmh_profile, tb371fc_set_rpmh_profile);
     object_class_property_set_description(oc, "rpmh-profile",
