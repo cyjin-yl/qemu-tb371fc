@@ -10,6 +10,8 @@ on:
       - 'tb371fc/scripts/boot_qmp.py'
       - 'tb371fc/scripts/legacy_printk.py'
       - 'tb371fc/tests/test_boot_android_from_ready.py'
+      - 'tb371fc/tests/test_boot_android_from_mapped_ready.py'
+      - 'tb371fc/tools/storage-batch-v3/candidate/prepare_batch_attempt_v3.py'
       - 'tb371fc/tests/test_android_boot_inputs.py'
       - '.github/workflows/android-full-lun-ready.yml'
   pull_request:
@@ -21,6 +23,8 @@ on:
       - 'tb371fc/scripts/boot_qmp.py'
       - 'tb371fc/scripts/legacy_printk.py'
       - 'tb371fc/tests/test_boot_android_from_ready.py'
+      - 'tb371fc/tests/test_boot_android_from_mapped_ready.py'
+      - 'tb371fc/tools/storage-batch-v3/candidate/prepare_batch_attempt_v3.py'
       - 'tb371fc/tests/test_android_boot_inputs.py'
       - '.github/workflows/android-full-lun-ready.yml'
   workflow_dispatch:
@@ -58,11 +62,14 @@ jobs:
               "boot_android_from_ready.py", "boot_android.py",
               "android_boot_inputs.py", "boot_qmp.py", "legacy_printk.py")]
           source_paths += [Path("tb371fc/tests") / name for name in (
-              "test_boot_android_from_ready.py", "test_android_boot_inputs.py")]
+              "test_boot_android_from_ready.py", "test_boot_android_from_mapped_ready.py",
+              "test_android_boot_inputs.py")]
+          source_paths += [Path("tb371fc/tools/storage-batch-v3/candidate/prepare_batch_attempt_v3.py")]
           hashes = {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
                     for p in source_paths}
           sys.path.insert(0, str(Path("tb371fc/tests").resolve()))
-          suite = unittest.defaultTestLoader.loadTestsFromName("test_boot_android_from_ready")
+          suite = unittest.defaultTestLoader.loadTestsFromNames([
+              "test_boot_android_from_ready", "test_boot_android_from_mapped_ready"])
           expected = suite.countTestCases()
           result = unittest.TextTestRunner(verbosity=2).run(suite)
           passed = (expected > 0 and result.testsRun == expected
