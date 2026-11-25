@@ -9,11 +9,16 @@ and an interactive display were not observed.
 
 This directory is a retained evidence record containing a source/artifact
 manifest and selected observations. The raw native receipts and original
-inputs remain private. The full independent native input/binary rehash remains
-pending. A separate, completed evaluation of the original and PR32 pure
-cleanup/acceptance predicates on three small saved JSON files returns
-`cleanup=true, Android boot=false` for both sources. That evaluation does not
-claim a complete native input audit.
+inputs remain private. The later independent native audit completed at
+`2026-11-25T01:32:03.571512+00:00`: all **69 checks passed**, with no section
+errors. It fully read the deployed ELF, selected core inputs, saved original
+boot image, partial AOP command database, symbols, and actual logs; both pinned
+predicate sources still return `cleanup=true, Android boot=false`.
+
+The earlier limited inspection and three-small-JSON predicate evaluation
+remain separate historical receipts with their original scope. The new
+[native-audit-completion.json](native-audit-completion.json) records the full
+audit's exact checks, file-role coverage, source/AST identities, and limits.
 
 ## Exact source and compiled artifact
 
@@ -76,11 +81,15 @@ The corresponding QEMU log records a rejected four-byte read at
 the prior abort no longer blocked this run. It does not establish SPSS READY,
 IRQ delivery, firmware authentication, PAS success, or a complete SPSS model.
 
-The original coordinator and pinned runtime runner report that the kernel,
+The original coordinator and pinned runtime runner reported that the kernel,
 initrd, DTB, boot arguments, AOP input, symbols, and QEMU bytes remained
-unchanged. These are explicitly labeled **coordinator/runtime-reported**
-preservation claims here. The limited independent inspection did not yet
-rehash every original input and the complete deployed ELF.
+unchanged. Those retained reports now have a separate, completed independent
+check: the full native audit read and hashed the complete deployed ELF and
+selected original inputs against their pinned identities. It also checked
+the saved boot image, DTB, existing kernel extraction, partial AOP command
+database, and symbols. Original-input hash inventories and bytes remain
+private. This does not change the zero-LUN selection or establish storage
+completeness, snapshot consistency, or pristine factory provenance.
 
 The native result SHA256 is
 `f601f7b1b1ffb42f6f8bfab67997353a3718dccb94e34bc85135375dcb6561f3`.
@@ -125,8 +134,42 @@ receipt is
 `1d52c4824706d104d46f76e17be3d1dd86a16fea174aad20b0b2f6c1f7bf2b48`.
 The manifest records both sources, selected AST identities, input hashes,
 and actual function results. The complete remote native auditor, full original
-input/ELF rehash, log reclassification, and any guest replay remain outside
-this small predicate operation.
+input/ELF rehash, log reclassification, and guest replay were outside that
+small predicate operation. The later audit below completed the input/ELF and
+actual-log checks; it did not replay the guest.
+
+## Completed independent native audit
+
+The later auditor ran once from `2026-11-25T01:32:00.909247+00:00` to
+`2026-11-25T01:32:03.571512+00:00`. Its private result is 30052 bytes with
+SHA256 `e36718fb581ca57d566a992f1fecd2167eb60c3e83ac79561fb11382cfe84e38`.
+Auditor SHA256 is
+`00c621d99de61c9897eea55b4e9f1f8fa5a4d5a60a377786f746f6999847ca8e`.
+The completion JSON preserves all 69 check names and their passed verdicts;
+its role inventory identifies all 31 fully read regular files while separating
+complete-file digest comparisons from record-consistency comparisons.
+
+The audit matched the actual invocation and no-LUN argv to the recorded input
+selection and original policy, checked the complete deployed QEMU and five
+runner files, rehashed the selected core and saved original resources, and
+reclassified all four actual logs. Both unchanged pinned `analyze_logs`
+functions reproduced the retained observation. Their selected AST identities
+include this classifier; they therefore differ from the earlier smaller
+predicate-only selections. The completion JSON records both exact sets.
+
+Both runtime `ebba3b55...` and strict read-only `61093aab...` predicates again
+returned cleanup true and Android boot false on the original report and on
+the report aligned with the saved QMP history and independently read logs.
+The strict runner was not installed into or substituted for the native run.
+The original result file was read again and remained byte-for-byte unchanged.
+
+**This audit did not read or rehash the CI ZIP.** It compared recorded artifact
+identities and fully rehashed the deployed ELF; the earlier six-part CI ZIP
+qualification remains the separate evidence for that archive. The auditor
+opened no QMP connection, ran no guest, and created or modified no migration
+stream. Preparing this public completion record only read the existing audit;
+it did not rerun the auditor. No new hardware-success assertion follows from
+completion of this evidence audit.
 
 ## Relation to the active SPSS pull request
 
