@@ -1,0 +1,126 @@
+{
+  "schema": "tb371fc-spss-aggregate-independent-source-review-v1",
+  "reviewed_head": "3bd583f2079634d01c12160ab3e3f0c5a3e47e86",
+  "reviewed_auditor": {
+    "path": "/dev/shm/spss-ci-evidence/audit_spss_integration_artifact_3bd583f.py",
+    "bytes": 124667,
+    "sha256": "f0013bb387305a6ada32598bb9325ddb7ff8acc5e3390b05d56ab06824714f84"
+  },
+  "baseline": {
+    "path": "/workspace/scratch/6a5ea697094c/llcc-candidate/.work/audit_llcc_integration_artifact_c02f3d7.py",
+    "bytes": 115382,
+    "sha256": "16e3db8f18055edfa869838e73b8d95206449472e6b5685c0d9991943e4febe5"
+  },
+  "scope": "Read-only source/AST and exact local full-byte identity verification. No artifact CLI, QEMU, guest, network fetch or device RPC executed.",
+  "blocking_findings": [],
+  "bounded_source_review_passed": true,
+  "artifact_qualified": false,
+  "actual_ci_result_observed": false,
+  "old_contracts_preserved": 98,
+  "component_contracts": 95,
+  "linux_contracts": 5,
+  "all_100_projected_contracts_equal_frozen_ci_plan": true,
+  "comparison_fields": [
+    "name",
+    "kind",
+    "verdict",
+    "expected_count",
+    "count_field",
+    "expected_values",
+    "expected_lengths",
+    "tap_count",
+    "guest_errno"
+  ],
+  "unchanged_function_or_class_count": 36,
+  "unchanged_functions_or_classes": [
+    "AuditFailure",
+    "require",
+    "equal",
+    "integer",
+    "boolean",
+    "sha",
+    "file_sha",
+    "object_unique",
+    "parse_json",
+    "relative",
+    "basename",
+    "Artifact",
+    "check_verdicts",
+    "check_name",
+    "validate_json_case",
+    "validate_tap",
+    "audit_generation",
+    "audit_dsi_generation",
+    "audit_dp_generation",
+    "audit_llcc_generation",
+    "pack_values",
+    "videocc_wire",
+    "video_wire",
+    "derive_clocks",
+    "section",
+    "qmp_calls",
+    "execute",
+    "answer",
+    "flat_snapshot",
+    "verify_qom",
+    "migration_file_argument",
+    "qtest_commands",
+    "device_mmio",
+    "source_trace",
+    "target_trace",
+    "audit_video"
+  ],
+  "changed_functions": [
+    "audit_suite",
+    "main"
+  ],
+  "added_functions": [
+    "audit_spss_generation"
+  ],
+  "ci_unit_required_count": 33,
+  "source_full_bytes_rehashed": [
+    {
+      "path": "primary-r11/drivers/soc/qcom/subsys-pil-tz.c",
+      "bytes": 32203,
+      "sha256": "c574017a8f4e5ad5a4215434029d73bdc2c9ee9736b006429aa30a30ac219608",
+      "git_blob_sha": "ed5e07c193b3841c60c94d92a4db259335d665c9"
+    },
+    {
+      "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+      "bytes": 132499,
+      "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+      "git_blob_sha": "e9651f09bd579616787894dc8514429063623b2d"
+    }
+  ],
+  "generated_full_bytes_rehashed": [
+    {
+      "path": "hw/misc/qcom-sm8250-spss-irq-mask-data.inc",
+      "bytes": 410,
+      "sha256": "0bc4c9cbac7893f470ea1271274da41fa22b3fd0ea4b8e0fbd5ec1b4047c6cec"
+    },
+    {
+      "path": "tb371fc/docs/spss-irq-mask-sm8250-registers.json",
+      "bytes": 4019,
+      "sha256": "93cc367d15a60d82b8c765205791b16e3348c1a2b6e16e72d47c7d487b2627cb"
+    }
+  ],
+  "source_generation_review": {
+    "fixed_revision_and_urls": true,
+    "whole_source_size_sha256_and_git_blob": true,
+    "complete_ordered_two_input_set": true,
+    "actual_zip_input_bytes_read": true,
+    "complete_ordered_two_output_set": true,
+    "actual_zip_output_bytes_and_fixed_hashes": true,
+    "manifest_primary_identities_and_geometry": true,
+    "bounded_retry_policy_and_attempt_sequence": true,
+    "local_source_substitution_rejected": true,
+    "generator_exit_stdout_and_stderr_checked": true,
+    "scope_false_hardware_reset_and_firmware_pas_claims": true
+  },
+  "review_process_note": "Initial reviewer-side projection omitted guest_errno and comparison correctly failed. Corrected projection includes that existing contract key; no audited source or receipt was changed. All 100 complete contract projections then compare equal.",
+  "boundaries": [
+    "Artifact bytes and published CI results are not yet reviewed.",
+    "Network attempt information is retained producer evidence; the auditor verifies its bounded policy and independently hashes the actual saved input bytes, without claiming to replay HTTP.",
+    "The aggregate explicitly delegates SPSS 25B, LLCC 783B, DP 791+64B, DSI and DISPCC fullwire audits to separate scripts."
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "schema": "tb371fc-spss-mainline-readonly-reconciliation-v1",
+  "observed_utc": "2026-11-25T00:24:56.509527+00:00",
+  "repository": "cyjin-yl/qemu-tb371fc",
+  "main_commit": {
+    "sha": "d40638391637e918f3382092d64fba0a7a17cade",
+    "tree": "66c8cb6650b7b6b6e84389914a76effbdbc83407",
+    "message": "Merge pull request #29 from cyjin-yl/tb371fc-source-download-retry-20261125-64053\n\nci: retry transient public source downloads without relaxing pins",
+    "parents": [
+      "7372681f546a7ac1b816377480601ddd8e7c16f5",
+      "00c070dbdabc38e3fd744c68aa5b1c15826eeb2b"
+    ]
+  },
+  "main_ref": "d40638391637e918f3382092d64fba0a7a17cade",
+  "base": "7372681f546a7ac1b816377480601ddd8e7c16f5",
+  "spss_head": "3bd583f2079634d01c12160ab3e3f0c5a3e47e86",
+  "main_changed_paths": 15,
+  "spss_changed_paths": 30,
+  "overlapping_paths": [
+    "tb371fc/docs/ci.md"
+  ],
+  "duplicate_spss_model_found": false,
+  "main_scope": "PR29 source-download retry helper, seven existing verifier fetch calls, two pre-build Python test commands, CI documentation and four immutable evidence files. No device model, board, SPSS, or harness source changes.",
+  "three_way_merge_conflict_count": 1,
+  "conflict_location": "End of tb371fc/docs/ci.md: main appends public-download section where SPSS replaces the earlier pending-LLCC paragraph and adds its own section.",
+  "resolution": {
+    "all_spss_content_preserved_except_one_scope_sentence": true,
+    "all_main_added_content_preserved_except_first_scope_sentence": true,
+    "spss_retry_policy_unchanged": "429/5xx/timeouts, at most 3 attempts, 1 s then 2 s delay, no identity retry",
+    "public_helper_scope": "GCC, CAMCC, DISPCC, VIDEOCC, DSI PLL, DP PLL, LLCC only",
+    "existing_31_test_historical_evidence_modified": false,
+    "new_current_31_test_claim_added": false,
+    "source_or_test_code_changed_locally": false
+  },
+  "merged_document": {
+    "path": "/dev/shm/pil-tz-review-6a5/ci-merged-d406-with-spss.md",
+    "bytes": 68014,
+    "sha256": "193b8a85483802eeed3686d05a9204aaaa1c05beb506c76c989b900bf8c29598",
+    "git_blob": "1b1f185456822956be8dedca2baa2c997b685fe1",
+    "mode": "100644"
+  },
+  "real_git_modes": {
+    "path": "/dev/shm/pil-tz-review-6a5/mainline-d406-review/changed-path-modes.json",
+    "sha256": "35ab260dba6b3dd81a461b21f3bd57855dd3be56889cb6cfa4bae95608abbabf",
+    "paths": 15,
+    "mode100755": [
+      "tb371fc/scripts/verify_camcc_generation.py",
+      "tb371fc/scripts/verify_dispcc_generation.py"
+    ],
+    "remaining_paths_mode100644": 13,
+    "nonrecursive_subtree_reads_only": true
+  },
+  "integration_proposal": {
+    "path": "/dev/shm/pil-tz-review-6a5/mainline-d406-review/proposed-tree-entries.json",
+    "sha256": "440705b59b8642b36bd585d50844cac28b62d9c88c7bbcf006553d545239674a",
+    "exact_d406_blobs": 14,
+    "merged_document": 1
+  },
+  "evidence_files": {
+    "github-readonly-comparison.json": {
+      "bytes": 54388,
+      "sha256": "04d69bea8c1d244dfdebb171397b028cde6bab08b78160db01d071e56847a029"
+    },
+    "ci-threeway-with-markers.md": {
+      "bytes": 68371,
+      "sha256": "bed4d73b5e95b9db3c380bfdba1ed0bb6f163c841f9c7e5c3238d8461b62103e"
+    },
+    "ci-threeway.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ci-merged-vs-spss.patch": {
+      "bytes": 2326,
+      "sha256": "b3b5d063dfb63502cf8621ae296f714208f473c63b2355d7b6be3ab4096d1b34"
+    }
+  },
+  "existing_3bd_ci_and_audits_preserved": true,
+  "new_combination_ci_pass_claimed": false,
+  "new_combination_native_run_claimed": false,
+  "remote_writes": false,
+  "device_rpc": false
+}
