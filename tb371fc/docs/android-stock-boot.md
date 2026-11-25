@@ -259,7 +259,7 @@ After a successful scheduled stopped-guest printk capture (every 15 seconds by
 default, controlled by `--snapshot-interval`), the existing log classifier can
 end observation when it identifies an Internal error/Oops/panic or another
 recognized kernel failure. WARN messages, hardware diagnostics alone, and failed
-captures do not trigger this early stop. The guest stays paused while the runner
+captures do not trigger this early stop. The guest stays stopped while the runner
 takes its normal final capture, quits QEMU, drains QMP, collects logs, and checks
 the original inputs and backing files. A normally finalized early stop records
 `stop_reason` and `outcome` as `kernel-failure`; preservation and runner errors
@@ -276,6 +276,26 @@ host-controlled stop. Unexpected QMP closure, process exit, guest panic or
 shutdown, host termination, log truncation, and a run without original LUNs all
 prevent a successful boot observation.
 
+Normal cleanup separately permits an already stopped `shutdown` state only
+when the last relevant event before `quit` is a guest `SHUTDOWN` with
+`guest: true` and reason `guest-shutdown`, `guest-reset`, or `guest-panic`.
+With `-no-shutdown`, QEMU can acknowledge `stop` without changing this terminal
+state to `paused`. A missing guest event, a later `RESUME`, `RESET`,
+`GUEST_PANICKED`, `WATCHDOG`, or conflicting `SHUTDOWN`, and a shutdown state
+with running CPUs all fail confirmation. The saved report must match the actual
+quit-tail events and preserve the qualifying guest event before that tail.
+
+This path still requires the unique matching empty-object quit ACK, a fresh
+`host-qmp-quit` event, a complete drained tail, EOF or qualified connection
+reset, process return code zero, and no forced termination or command error.
+Android success continues to require a time-bound observation ending in
+`paused`, with no guest shutdown, panic, or kernel failure. The historical
+[run007 cleanup failure][run007-cleanup] remains failed: it raised before
+sending `quit` and ended through `host-signal`. A later fix does not change
+that preserved result. [Regression evidence][shutdown-provenance-validation]
+covers controlled QMP socket peers and read-only re-evaluation of retained
+results; these host checks do not execute a new original Android boot.
+
 Even a successful boot observation does not attest AVB, secure-world behavior,
 factory provenance, usable graphics, or complete-device equivalence. Preserve
 the detailed stage evidence and qualify those capabilities separately. The
@@ -283,3 +303,6 @@ tools' host tests use synthetic inputs and fake process/QMP objects; CI passing
 those tests is not an Android boot result.
 
 [native-units]: ../evidence/expansion-20261123/android-ufs-units.json
+
+[run007-cleanup]: https://github.com/cyjin-yl/qemu-tb371fc/blob/c1cee3cf3cc566bd5e7279c4234b5152d67bc2b7/tb371fc/evidence/videocc-20261124-e1a9/runner-shutdown-validation.json
+[shutdown-provenance-validation]: ../evidence/runner-shutdown-provenance-20261124-64053/validation.json
