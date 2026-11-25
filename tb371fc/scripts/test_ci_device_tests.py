@@ -174,7 +174,7 @@ class PlanTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         plan = ci.plan(args, Path("/test/runtime"))
         cases = {case.name: case for case in plan}
-        self.assertEqual(len(plan), 95)
+        self.assertEqual(len(plan), 97)
         self.assertEqual(len(cases), len(plan))
         self.assertEqual(cases["tbu-reference-ecats"].expected_count, 17)
         self.assertEqual(cases["smmuv500-reference"].expected_count, 36)
@@ -345,7 +345,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 100)
+        self.assertEqual(len(cases), 102)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]
@@ -610,13 +610,14 @@ class PlanTests(unittest.TestCase):
                         ci.judge(case, path)
 
     def test_spss_additions_preserve_all_prior_98_contracts_and_order(self):
-        # Exact normalized plan at parent 7372681; omit only the two new cases.
+        # Exact normalized plan at parent 7372681; omit subsequent additions.
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         retained = []
         cases = ci.plan(args, Path("/test/runtime"))
         for case in cases:
-            if case.name in {"spss-irq-mask-source-generation", "spss-irq-mask-sm8250-reference"}:
+            if case.name in {"spss-irq-mask-source-generation", "spss-irq-mask-sm8250-reference",
+                             "rpm-stats-source-generation", "rpm-stats-sm8250-reference"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -636,6 +637,150 @@ class PlanTests(unittest.TestCase):
         fingerprint = hashlib.sha256(json.dumps(retained, sort_keys=True,
                                                 separators=(",", ":")).encode()).hexdigest()
         self.assertEqual(fingerprint, "c37b44cd9cba85b593be878e97e98b4af8df15ff8bedae72ba001f00291c82c6")
+
+    def test_rpm_source_generation_requires_public_proof_without_private_claims(self):
+        args = SimpleNamespace(suite="components", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        case = next(item for item in ci.plan(args, Path("/test/runtime"))
+                    if item.name == "rpm-stats-source-generation")
+        self.assertEqual(case.expected_count, 2)
+        self.assertEqual(case.expected_lengths, {"inputs": 6, "checks": 2})
+        self.assertEqual(case.expected_values,
+                         {"schema": "tb371fc-rpm-stats-generation-v1",
+                          "contract_verified": True,
+                          "contract_sha256": "9aef5bfdf8c6c7ccbd01ef666f8c0f4cd9c4083365a06d27ca1d4bf979aa8337",
+                          "contract_bytes": 8530,
+                          "source_pins_verified": True,
+                          "public_source_count": 6,
+                          "private_firmware_evidence_verified": False,
+                          "firmware_is_pristine_stock": False})
+        self.assertIn(str(ci.ROOT / "tb371fc/scripts/verify_rpm_stats_generation.py"),
+                      case.command)
+        self.assertNotIn("--source-root", case.command)
+        with tempfile.TemporaryDirectory(prefix="tbci-rpm-src-", dir="/tmp") as directory:
+            path = Path(directory) / "result.json"
+            case.result = str(path)
+            valid = {**case.expected_values, "passed": True,
+                     "checks": [{"name": "header", "passed": True},
+                                {"name": "evidence", "passed": True}],
+                     "inputs": [{} for _ in range(6)]}
+            path.write_text(json.dumps(valid))
+            ci.judge(case, path)
+            for key, value in (
+                    ("contract_verified", False), ("contract_sha256", "0" * 64),
+                    ("contract_bytes", 8529), ("source_pins_verified", False),
+                    ("public_source_count", 5), ("public_source_count", True),
+                    ("private_firmware_evidence_verified", True),
+                    ("firmware_is_pristine_stock", True),
+                    ("checks", valid["checks"][:1]),
+                    ("inputs", valid["inputs"][:5])):
+                with self.subTest(field=key, value=value):
+                    path.write_text(json.dumps(dict(valid, **{key: value})))
+                    with self.assertRaises(ValueError):
+                        ci.judge(case, path)
+
+    def test_rpm_reference_requires_complete_immutable_readback_receipt(self):
+        args = SimpleNamespace(suite="components", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        case = next(item for item in ci.plan(args, Path("/test/runtime"))
+                    if item.name == "rpm-stats-sm8250-reference")
+        self.assertEqual(case.expected_count, 15)
+        self.assertEqual(case.expected_lengths, {"checks": 15, "record_tags": 3})
+        self.assertEqual(case.expected_values,
+                         {"schema": "tb371fc-rpm-stats-sm8250-v1",
+                          "suite": "rpm-stats-sm8250-reference",
+                          "expected_checks": 15,
+                          "reference_abi": 1,
+                          "contract_sha256": "9aef5bfdf8c6c7ccbd01ef666f8c0f4cd9c4083365a06d27ca1d4bf979aa8337",
+                          "offset_physical_base": 0x0c3f0004,
+                          "offset_window_bytes": 4,
+                          "offset_word_value": 0x000f0048,
+                          "record_physical_base": 0x0c3f0048,
+                          "record_count": 3, "record_stride": 32,
+                          "record_window_bytes": 96,
+                          "record_tags": [0x64736f61, 0x64737863, 0x20726464],
+                          "sparse_window_count": 2, "mapped_bytes": 100,
+                          "qom_property_count": 22,
+                          "vmstate_version": 1, "vmstate_minimum_version": 1,
+                          "vmstate_payload_bytes": 40,
+                          "reference_enabled_by_default": False,
+                          "immutable_reference": True,
+                          "aop_executed": False, "live_statistics": False,
+                          "runtime_updates_modeled": False, "ready_modeled": False,
+                          "firmware_is_pristine_stock": False,
+                          "guest_cpu_executed": False,
+                          "native_kernel_probe_observed": False,
+                          "android_boot_passed": False,
+                          "migration_tested": False,
+                          "migration_profile_mismatch_tested": False,
+                          "migration_wire_payload_verified": False,
+                          "migration_streams_created": 0,
+                          "migration_streams_modified": 0,
+                          "binary_unchanged": True})
+        self.assertIn(str(ci.ROOT / "tb371fc/tests/test_rpm_stats_sm8250.py"), case.command)
+        with tempfile.TemporaryDirectory(prefix="tbci-rpm-model-", dir="/tmp") as directory:
+            path = Path(directory) / "result.json"
+            case.result = str(path)
+            valid = {**case.expected_values, "passed": True,
+                     "checks": [{"name": f"synthetic_{index}", "passed": True}
+                                for index in range(15)]}
+            path.write_text(json.dumps(valid))
+            ci.judge(case, path)
+            for key, value in (
+                    ("checks", valid["checks"][:-1]),
+                    ("checks", [{"name": "duplicate", "passed": True}] * 15),
+                    ("contract_sha256", "0" * 64), ("record_stride", 48),
+                    ("record_window_bytes", 100), ("offset_word_value", 0x48),
+                    ("record_tags", [0x64736f61, 0x64737863, 0x00726464]),
+                    ("reference_abi", True), ("qom_property_count", 21),
+                    ("vmstate_payload_bytes", 136), ("immutable_reference", False),
+                    ("reference_enabled_by_default", True), ("aop_executed", True),
+                    ("live_statistics", True), ("runtime_updates_modeled", True),
+                    ("ready_modeled", True), ("firmware_is_pristine_stock", True),
+                    ("guest_cpu_executed", True), ("native_kernel_probe_observed", True),
+                    ("android_boot_passed", True), ("migration_tested", True),
+                    ("migration_profile_mismatch_tested", True),
+                    ("migration_wire_payload_verified", True),
+                    ("migration_streams_created", 1), ("migration_streams_modified", 1),
+                    ("binary_unchanged", False)):
+                with self.subTest(field=key, value=value):
+                    path.write_text(json.dumps(dict(valid, **{key: value})))
+                    with self.assertRaises(ValueError):
+                        ci.judge(case, path)
+
+    def test_rpm_additions_preserve_all_prior_100_contracts_and_order(self):
+        # Exact normalized 54ec7443 plan, including all prior fixtures/commands.
+        args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        cases = ci.plan(args, Path("/test/runtime"))
+        self.assertEqual([case.name for case in cases[-2:]],
+                         ["rpm-stats-source-generation", "rpm-stats-sm8250-reference"])
+        retained = []
+        for case in cases:
+            if case.name in {"rpm-stats-source-generation", "rpm-stats-sm8250-reference"}:
+                continue
+
+            def normalize(value):
+                if isinstance(value, Path):
+                    value = str(value)
+                if isinstance(value, str):
+                    for other in cases:
+                        physical, token = str(other.fixture), "@FIXTURE:" + other.name + "@"
+                        value = token if value == physical else value.replace(physical + "/", token + "/")
+                    return value.replace(str(ci.ROOT), "@ROOT@").replace(sys.executable, "@PYTHON@")
+                if isinstance(value, list):
+                    return [normalize(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: normalize(item) for key, item in value.items()}
+                return value
+
+            retained.append(normalize(vars(case)))
+        self.assertEqual(len(retained), 100)
+        self.assertEqual([case.fixture for case in cases[:100]],
+                         [Path("/test/runtime") / f"{index:02d}" for index in range(100)])
+        fingerprint = hashlib.sha256(json.dumps(retained, sort_keys=True,
+                                                separators=(",", ":")).encode()).hexdigest()
+        self.assertEqual(fingerprint, "c3a85b57e4a88b6c4378e479df0c3e1d6e083a21a6abec0ed432c40d2950c1af")
 
 
 

@@ -14,7 +14,7 @@
 
 ## 当前整合：原厂 Android 启动开发基线
 
-本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。精确 LLCC 源码 `c02f3d7` 已通过自己的 93+5 CI、五个独立产物审计和一次原始输入诊断，并合入 `7372681f`。本次在该基线上增加 SPSS 中断屏蔽控制及固定源码再生两个 gate，当前公开计划为 **100 项：95 项组件 + 5 项 Linux**，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。SPSS 组合的编译验收和原始输入运行仍须以新提交实际回执为准。
+本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。精确 LLCC 源码 `c02f3d7` 已通过自己的 93+5 CI、五个独立产物审计和一次原始输入诊断，并合入 `7372681f`。本次在含 SPSS 屏蔽字及固定源码再生的 100 项计划之后，追加 RPM statistics 初始化参考叶和来源再生两个 gate，当前公开计划为 **102 项：97 项组件 + 5 项 Linux**。既有命令、fixture 和顺序保留，另保留真实 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。新的 RPM 组合须以自身编译验收回执为准。
 
 两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
 
@@ -104,6 +104,14 @@ run005 的首个显示异常发生于 guest 3.697772 秒，CPU4、PID84 `kworker
 
 新 gate 要求 21 组、3 次完成迁移、双向 profile 拒绝及 6 次单 bit 损坏拒绝；四个原流和六个修改副本核对完整 25 B v1 状态，恢复后的首次观察为 18 次纯 QOM 查询。另一 gate 核对两份完整固定源码并再生两个输出。该计划仍需新组合自身的编译 CI、产物审计与原始输入运行。
 
+
+### RPM statistics：冻结的初始化参考叶
+
+[参考契约](tb371fc/docs/rpm-stats-sm8250-reference-contract.json)冻结了目录字 `0x0c3f0004/4` 返回完整无符号偏移 `0x000f0048`，以及 `0x0c3f0048/96` 的三个 32 B 记录。默认关闭，需显式 `qcom-sm8250-rpm-stats.enabled-reference=on`；目录只接受对齐 read32，记录只接受自然对齐 read32/read64，写入、空洞和其它访问继续拒绝。标签为 `aosd`、`cxsd` 和末字节为空格的 `ddr `；count 和三个时间字段固定为初始化后的零。[模型说明](tb371fc/docs/rpm-stats-reference.md)区分这一冻结快照、AOP 固件执行和真实运行中的统计值。
+
+[来源再生 gate](tb371fc/scripts/verify_rpm_stats_generation.py)逐一校验六份完整公开源码的长度、SHA-256 与 Git blob，再对生成头和[证据清单](tb371fc/docs/rpm-stats-sm8250-reference-evidence.json)进行逐字节比较。公开源码证明消费 ABI；标签和零初始化绑定私下研究回执的哈希，公开 CI 不重验固件字节。已保存的 AOP 输入明确标为 `firmware_is_pristine_stock=false`。契约的全部 8530 B（含末尾 LF）绑定 SHA-256 `9aef5bfdf8c6c7ccbd01ef666f8c0f4cd9c4083365a06d27ca1d4bf979aa8337`。
+
+[组件 gate](tb371fc/tests/test_rpm_stats_sm8250.py)要求 15 组普通 MMIO、边界、reset、时间不变性及暂停 TCG 身份检查。该套件不执行迁移、不创建或修改迁移流；40 B VMState 长度是模型声明，运行时 wire 验证仍为 false。它不报告 AOP 执行、实时睡眠统计或 Android 启动成功。
 
 ## 默认分支既有验收：2026-11-24 存储与电源修复
 

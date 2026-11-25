@@ -186,7 +186,7 @@ still apply to any future authorized consumer execution.
 
 ## Gates
 
-The current integration plan registers **100 gates: 95 component/parser gates
+The current integration plan registers **102 gates: 97 component/parser gates
 and five Linux integration gates**, plus separate active and runtime-suspended
 real-Linux UFS checkpoints and the A77/PCI UFS compatibility job. This union
 preserves the wholeboard reference peripherals and default-branch storage,
@@ -740,3 +740,70 @@ the normal source-generation gates still verify the actual pinned upstream
 inputs and reproduce the committed tables. The host step also runs
 `test_ci_device_tests.py`, so changes to the acceptance harness are exercised
 before the QEMU build.
+
+## RPM statistics initialized reference
+
+The `rpm-stats-source-generation` gate reads the complete immutable
+[reference contract](rpm-stats-sm8250-reference-contract.json). Its 8530 bytes,
+including the final LF, must have SHA-256
+`9aef5bfdf8c6c7ccbd01ef666f8c0f4cd9c4083365a06d27ca1d4bf979aa8337`.
+The generator rejects any changed contract before producing an output. It then
+verifies all six complete public files using their exact lengths, SHA-256 and
+Git blob SHA-1 identities. The four vendor files and two mainline files are
+pinned at the commits recorded in the contract; snippets are not accepted.
+
+The public files establish the non-SMD 32-byte consumer structure, the full
+unsigned vendor resource-plus-offset rule, the ARM64 aligned eight-byte IO
+read, the mainline three-record `qcom,rpmh-stats` selection, and its SM8250
+resource. The separate DDR residency consumer is recorded as a separate ABI.
+These source matches do not establish the production kernel's complete build
+provenance. The `aosd`, `cxsd` and `ddr ` tags and the zero initialized fields
+come from the frozen private initialization evidence. The generated
+[evidence manifest](rpm-stats-sm8250-reference-evidence.json) and every verifier
+receipt explicitly record `private_firmware_evidence_verified=false` and
+`firmware_is_pristine_stock=false`. Public CI verifies the public inputs and
+the frozen contract's identity; it does not download or reverify private
+firmware, a production kernel or a production device tree.
+
+The verifier uses the existing bounded `source_download.read_source` helper.
+Each request is bounded by that input's exact expected length plus one byte;
+the same three-attempt transport retry and 30-second retry-delay allowance
+apply. Size or digest errors fail outside the retry loop. The source gate has
+the existing 180-second process timeout and the generator has a 60-second
+timeout. There is no alternate input or automatic cache fallback.
+
+After all six inputs match, regeneration must reproduce both
+`include/hw/misc/qcom-sm8250-rpm-stats-reference.h` and the evidence manifest
+byte for byte. The header contains only geometry, field, tag and contract
+digest macros. The model owns its local reference ABI version. Output paths,
+timestamps and download attempts are absent from both generated outputs, so
+verified local inputs reproduce the same bytes as network inputs.
+
+To validate an already retained complete public source tree, run:
+
+```sh
+python3 tb371fc/scripts/verify_rpm_stats_generation.py \
+  --source-root /path/to/rpm-public-sources --out /tmp/rpm-stats-generation
+```
+
+The source tree uses `vendor/` followed by each OnePlus repository path and
+`mainline/` followed by each Linux repository path. Local mode still requires
+every complete source identity and the frozen contract digest. Without
+`--source-root`, the verifier fetches all six pinned raw GitHub URLs. The output
+directory must be new; it retains the complete verified source inputs, the
+contract, generator logs, generated outputs and `result.json`.
+
+The accompanying `rpm-stats-sm8250-reference` gate requires 15 check groups
+limited to the explicit, default-off initialized snapshot: ordinary MMIO
+readback and boundaries, rejection diagnostics, reset, time invariance and
+paused-TCG identity. It performs no migration commands and creates or modifies
+no migration streams. The declared 40-byte payload contains the enabled
+profile, local ABI version and all 32 contract digest bytes; the result keeps
+`migration_tested`, `migration_profile_mismatch_tested` and
+`migration_wire_payload_verified` false. The two new gates are appended after
+the pre-existing cases so earlier commands, fixtures and their relative order
+remain unchanged. The CI unit suite binds the normalized complete 100-case
+parent plan as well as the older 98-case preservation contract. Registration
+adds two gates to the plan; an actual compiled run requires its own receipt.
+Neither gate is evidence of AOP execution, live sleep statistics or Android
+boot completion.
