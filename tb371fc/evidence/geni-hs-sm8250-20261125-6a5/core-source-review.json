@@ -1,0 +1,522 @@
+{
+  "schema": "tb371fc-geni-hs-core-source-review-v1",
+  "source_only_checks_passed": true,
+  "source_parent": "a91cf67d09380c7f7fa8868f7068dba6b3956daa",
+  "baseline_sources_ref": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+  "source_parent_relationship": "Root verified merged a91 contains these unchanged baseline engine/board bytes; baseline bytes rehashed here.",
+  "owned_source_files": [
+    {
+      "path": "hw/char/qcom-geni-uart.c",
+      "bytes": 50414,
+      "sha256": "c1fe1af46ec3383f9a080d1ba10f60073dfd59696fccfa363a9567551ebb3e10",
+      "git_blob_sha1": "2a8132b46f5e55fe62f51bea8788d862be5c382a",
+      "baseline": {
+        "bytes": 22547,
+        "sha256": "ef1c5e6e9400f907f227327e995fbe25d4b7ca09bd88429100e146202e32aad9",
+        "git_blob_sha1": "a1b805d30c7bcfe59bdd9a3390654f623a6ca1d4"
+      }
+    },
+    {
+      "path": "include/hw/char/qcom-geni-uart.h",
+      "bytes": 2135,
+      "sha256": "f2efb7233b29ae2ece90de924b7d64e1f33a9f1fd04ed3da37298e0f6efd83bf",
+      "git_blob_sha1": "590531bb1e07ddd178e7bf5653ee7b811c99742b",
+      "baseline": {
+        "bytes": 1109,
+        "sha256": "3cdd539724bf4bf72052fb91d6e29f553aeeebfdcb31d9b4a443b8243aac1dc7",
+        "git_blob_sha1": "7ab464a234026dbf90c4f050faaa76609c83154f"
+      }
+    },
+    {
+      "path": "hw/arm/lenovo-tb371fc.c",
+      "bytes": 105293,
+      "sha256": "9119e88b7fcb6cdd103f4fad8ef11a4cc9ba7f8314e989a12747e7dd05017bda",
+      "git_blob_sha1": "8f6b6b2b694fb5456e0a63c4c64f79b93d646daa",
+      "baseline": {
+        "bytes": 103334,
+        "sha256": "51ee3224180a2e927572ee56f011b3d222f68fb97fef7e75ad188f972abaeaf1",
+        "git_blob_sha1": "b4a143925b2ffe64c1f142d3a337f1aa281fe425"
+      }
+    }
+  ],
+  "generated_include_observed": {
+    "bytes": 909,
+    "sha256": "4cc9babbdc75fd6006f39ce32a92b6161d1bcf2739de843005e02af19179b9a6",
+    "git_blob_sha1": "74d364f05a4c8f505ccc831f44ceaf4e89ed2b46"
+  },
+  "checks": [
+    {
+      "name": "vmstate_geni-exact",
+      "passed": true,
+      "detail": "Complete legacy declaration is byte-identical, including version and subsection list."
+    },
+    {
+      "name": "vmstate_geni_clocks-exact",
+      "passed": true,
+      "detail": "Complete legacy declaration is byte-identical, including version and subsection list."
+    },
+    {
+      "name": "legacy-pre-load-exact",
+      "passed": true,
+      "detail": "Existing legacy preload body is unchanged."
+    },
+    {
+      "name": "legacy-post-load-exact",
+      "passed": true,
+      "detail": "Existing legacy postload body and backend calls are unchanged."
+    },
+    {
+      "name": "legacy-core-write-exact",
+      "passed": true,
+      "detail": "Legacy switch and unsupported fallback remain byte-identical; native wrapper validates before dispatch."
+    },
+    {
+      "name": "legacy-reset-exact",
+      "passed": true,
+      "detail": "Legacy register/FIFO/counter reset implementation is unchanged."
+    },
+    {
+      "name": "board-additions-only",
+      "passed": true,
+      "detail": "Every preexisting board line remains, in order; new lines only add the HS child, conditional fabric/demand and its realization."
+    },
+    {
+      "name": "early-global-binding",
+      "passed": true,
+      "detail": "QOM child post-init applies globals before GCC clock parents are connected."
+    },
+    {
+      "name": "conditional-fabric-inputs",
+      "passed": true,
+      "detail": "Both wrap0 fabric parents are conditional and connected before provider realize; only enabled HS adds requests99/131/132."
+    },
+    {
+      "name": "explicit-clock-reset-irq-backend",
+      "passed": true,
+      "detail": "Separate backend serial1; named outputs with internal clock indices99/131/132; reset24 and SPI607."
+    },
+    {
+      "name": "mapping-configured-only",
+      "passed": true,
+      "detail": "Both regions are enabled only from the configured target bool during realize; migration never changes the mapping."
+    },
+    {
+      "name": "disabled-default",
+      "passed": true,
+      "detail": "Native reference is opt-in, with inactive SE and wrapper regions by default."
+    },
+    {
+      "name": "strict-transport-width",
+      "passed": true,
+      "detail": "SE and wrapper use core 4-byte aligned validity checking; callbacks cannot silently accept invalid access shapes."
+    },
+    {
+      "name": "strict-read-dispatch",
+      "passed": true,
+      "detail": "Native unsupported reads stop before the unchanged legacy zero fallback."
+    },
+    {
+      "name": "strict-write-dispatch",
+      "passed": true,
+      "detail": "Native format/register/mask/DMA errors stop before shared functional writes."
+    },
+    {
+      "name": "disconnected-tx-retained",
+      "passed": true,
+      "detail": "Disconnected native backend returns with queued bytes intact; legacy disconnected behavior stays in its existing branch."
+    },
+    {
+      "name": "pre-provider-load-backend-guard",
+      "passed": true,
+      "detail": "The paused/incoming guard is independent of native pre_load, covering provider callbacks and backend delivery before that callback."
+    },
+    {
+      "name": "native-preload-blocks",
+      "passed": true,
+      "detail": "Preload keeps all backend paths blocked, removes pending write watches and retracts IRQ before reading the stream."
+    },
+    {
+      "name": "guard-first",
+      "passed": true,
+      "detail": "The nested 48-byte profile validates before any functional register/FIFO/counter field is loaded."
+    },
+    {
+      "name": "fixed-native-wire",
+      "passed": true,
+      "detail": "Native fixed wire uses three raw period witnesses; existing ClockVMSD and optional ratio subsection stay legacy-only."
+    },
+    {
+      "name": "canonical-native-bools",
+      "passed": true,
+      "detail": "Four wire bytes remain exactly one byte each and reject noncanonical values before assigning live bools."
+    },
+    {
+      "name": "whole-register-allowlist",
+      "passed": true,
+      "detail": "All4096 register slots are checked; unsupported slots and write-one aliases must remain zero."
+    },
+    {
+      "name": "clock-witness-no-repair",
+      "passed": true,
+      "detail": "All restored input periods must equal the provider and ratios must be1; incoming data never repairs clocks."
+    },
+    {
+      "name": "native-postload-no-backend",
+      "passed": true,
+      "detail": "Successful validation updates IRQ only; backend work waits for a subsequent running transition."
+    },
+    {
+      "name": "pure-getter-callgraph",
+      "passed": true,
+      "detail": "All getter helpers and state-derived IRQ helpers read only; no backend, IRQ drive, MMIO or mutable-state assignment occurs."
+    },
+    {
+      "name": "no-native-runtime-claim",
+      "passed": true,
+      "detail": "Identity getters explicitly distinguish configured reference state from executed/captured physical firmware state."
+    },
+    {
+      "name": "fixed-packing-write-and-load",
+      "passed": true,
+      "detail": "The same exact format validator is applied before MMIO writes and to all restored register slots."
+    },
+    {
+      "name": "packing-default-and-canonical-only",
+      "passed": true,
+      "detail": "Only reset-zero model aliases and the source-derived8-bit/four-byte packing words are accepted; no arbitrary stored layout is supplied."
+    },
+    {
+      "name": "byte-format-only",
+      "passed": true,
+      "detail": "Byte granularity0 and UART word length8 are the only implemented formats."
+    },
+    {
+      "name": "explicit-unsupported-dma",
+      "passed": true,
+      "detail": "Exactly19 public DMA transfer/status registers get unsupported-dma errors; DMA IRQ masks remain separately supported and unknown holes remain unsupported-register."
+    },
+    {
+      "name": "pure-property-count",
+      "passed": true,
+      "detail": "Each two-engine world reads17 native dynamic,15 native immutable/configuration and17 legacy dynamic fields."
+    },
+    {
+      "name": "wire-count",
+      "passed": true,
+      "detail": "48-byte guard +16534-byte complete functional body +24 clock-witness bytes +2 flags =16608, big-endian scalar wire."
+    }
+  ],
+  "check_count": 32,
+  "legacy_vmsds": [
+    {
+      "name": "vmstate_geni",
+      "bytes": 1062,
+      "sha256": "8d9d4c2feb3a82d32d9cd07cb69a5334e3befce0106ca6559533efc5e40ec381",
+      "git_blob_sha1": "d45fe043f3d931c02536179b9cf8044399adfc08",
+      "byte_identical": true
+    },
+    {
+      "name": "vmstate_geni_clocks",
+      "bytes": 525,
+      "sha256": "299946cac92287ffc4211e0dc25e7573b18910f657a09f95e7aa9597a81e85c6",
+      "git_blob_sha1": "3a7b95de4738e4b221f6f61fee2071dfcf9ea4fe",
+      "byte_identical": true
+    }
+  ],
+  "legacy_functions": {
+    "complete_exact_body_comparison_count": 31,
+    "unchanged": [
+      "geni_class_init",
+      "geni_clock_running",
+      "geni_clock_state_needed",
+      "geni_config_register",
+      "geni_engine_available",
+      "geni_m_status",
+      "geni_post_load",
+      "geni_pre_load",
+      "geni_realize",
+      "geni_remove_tx_watch",
+      "geni_reset",
+      "geni_s_status",
+      "geni_tx_ready",
+      "geni_write",
+      "geni_write_ctrl",
+      "geni_write_tx"
+    ],
+    "changed_and_manually_reviewed": [
+      "geni_bus_available",
+      "geni_can_receive",
+      "geni_clock_changed",
+      "geni_drain_tx",
+      "geni_event",
+      "geni_finalize",
+      "geni_init",
+      "geni_read",
+      "geni_read_with_attrs",
+      "geni_receive",
+      "geni_register_types",
+      "geni_reset_input",
+      "geni_update_irq",
+      "geni_write_cmd",
+      "geni_write_with_attrs"
+    ],
+    "comparison_kind": "complete function text, not a compiler or semantic equivalence proof"
+  },
+  "native_wire": {
+    "section": "qcom-sm8250-geni-hs",
+    "version": 1,
+    "minimum_version": 1,
+    "bytes": 16608,
+    "guard_bytes": 48,
+    "fields": [
+      {
+        "name": "profile.enabled",
+        "offset": 0,
+        "count": 1,
+        "element_bytes": 4,
+        "bytes": 4
+      },
+      {
+        "name": "profile.identity",
+        "offset": 4,
+        "count": 1,
+        "element_bytes": 4,
+        "bytes": 4
+      },
+      {
+        "name": "profile.se_base",
+        "offset": 8,
+        "count": 1,
+        "element_bytes": 8,
+        "bytes": 8
+      },
+      {
+        "name": "profile.se_size",
+        "offset": 16,
+        "count": 1,
+        "element_bytes": 4,
+        "bytes": 4
+      },
+      {
+        "name": "profile.wrapper_address",
+        "offset": 20,
+        "count": 1,
+        "element_bytes": 8,
+        "bytes": 8
+      },
+      {
+        "name": "profile.wrapper_size",
+        "offset": 28,
+        "count": 1,
+        "element_bytes": 4,
+        "bytes": 4
+      },
+      {
+        "name": "profile.main_revision",
+        "offset": 32,
+        "count": 1,
+        "element_bytes": 4,
+        "bytes": 4
+      },
+      {
+        "name": "profile.secondary_revision",
+        "offset": 36,
+        "count": 1,
+        "element_bytes": 4,
+        "bytes": 4
+      },
+      {
+        "name": "profile.wrapper_version",
+        "offset": 40,
+        "count": 1,
+        "element_bytes": 4,
+        "bytes": 4
+      },
+      {
+        "name": "profile.fifo_bytes",
+        "offset": 44,
+        "count": 1,
+        "element_bytes": 4,
+        "bytes": 4
+      },
+      {
+        "name": "registers",
+        "offset": 48,
+        "count": 4096,
+        "element_bytes": 4,
+        "bytes": 16384
+      },
+      {
+        "name": "tx_fifo",
+        "offset": 16432,
+        "count": 64,
+        "element_bytes": 1,
+        "bytes": 64
+      },
+      {
+        "name": "rx_fifo",
+        "offset": 16496,
+        "count": 64,
+        "element_bytes": 1,
+        "bytes": 64
+      },
+      {
+        "name": "tx_count",
+        "offset": 16560,
+        "count": 1,
+        "element_bytes": 4,
+        "bytes": 4
+      },
+      {
+        "name": "rx_count",
+        "offset": 16564,
+        "count": 1,
+        "element_bytes": 4,
+        "bytes": 4
+      },
+      {
+        "name": "tx_remaining",
+        "offset": 16568,
+        "count": 1,
+        "element_bytes": 4,
+        "bytes": 4
+      },
+      {
+        "name": "tx_sent",
+        "offset": 16572,
+        "count": 1,
+        "element_bytes": 4,
+        "bytes": 4
+      },
+      {
+        "name": "rx_received",
+        "offset": 16576,
+        "count": 1,
+        "element_bytes": 4,
+        "bytes": 4
+      },
+      {
+        "name": "tx_active",
+        "offset": 16580,
+        "count": 1,
+        "element_bytes": 1,
+        "bytes": 1
+      },
+      {
+        "name": "rx_active",
+        "offset": 16581,
+        "count": 1,
+        "element_bytes": 1,
+        "bytes": 1
+      },
+      {
+        "name": "input_clock_periods",
+        "offset": 16582,
+        "count": 3,
+        "element_bytes": 8,
+        "bytes": 24
+      },
+      {
+        "name": "reset_held",
+        "offset": 16606,
+        "count": 1,
+        "element_bytes": 1,
+        "bytes": 1
+      },
+      {
+        "name": "tx_zero_pending",
+        "offset": 16607,
+        "count": 1,
+        "element_bytes": 1,
+        "bytes": 1
+      }
+    ],
+    "subsections": [],
+    "local_clock_ratios_required": [
+      1,
+      1
+    ],
+    "boolean_encoding": "uint8 with explicit0/1 validation"
+  },
+  "properties": {
+    "common_strings": [
+      "registers-hex",
+      "tx-fifo-hex",
+      "rx-fifo-hex"
+    ],
+    "common_uint64": [
+      "tx-count",
+      "rx-count",
+      "tx-remaining",
+      "tx-sent",
+      "rx-received",
+      "se-clock-period",
+      "m-ahb-clock-period",
+      "s-ahb-clock-period",
+      "fifo-bytes"
+    ],
+    "common_bools": [
+      "tx-active",
+      "rx-active",
+      "tx-zero-pending",
+      "reset-held",
+      "irq-level"
+    ],
+    "native_uint64": [
+      "reference-identity",
+      "physical-base",
+      "window-bytes",
+      "wrapper-address",
+      "wrapper-window-bytes",
+      "main-fw-revision",
+      "secondary-fw-revision",
+      "wrapper-version",
+      "vmstate-bytes",
+      "profile-wire-bytes"
+    ],
+    "native_bools": [
+      "enabled-reference",
+      "firmware-executed",
+      "dma-modeled",
+      "physical-state-captured",
+      "dma-mask-modeled"
+    ],
+    "per_world": 49
+  },
+  "mapping": {
+    "se_base": "0x00998000",
+    "se_bytes": 16384,
+    "wrapper_version_address": "0x009c0004",
+    "wrapper_bytes": 4,
+    "default_mapped_bytes": 0,
+    "enabled_mapped_bytes": 16388
+  },
+  "capability_scope": {
+    "firmware_executed": false,
+    "physical_state_captured": false,
+    "dma_transfer_or_completion_modeled": false,
+    "dma_irq_mask_storage_modeled": true,
+    "reference_uart_revision": "0x201",
+    "reference_wrapper_compatibility": "0x20050000"
+  },
+  "important_invariants_and_limits": [
+    "TX count<=remaining and<=64, RX count<=64; active/zero/reset consistency and valid command words are checked.",
+    "TX sent+remaining is bounded by0xffffff, but is not required to equal reprogrammable live TX_LEN.",
+    "RX received>=rx_count is not an invariant: a new RX command resets the counter while canceled-command FIFO data may remain; the uint32 counter can wrap.",
+    "Unused FIFO tail bytes are preserved and exposed; enabled-profile migration does not require them to be zero.",
+    "Disabled profile requires default register/FIFO/counter state and keeps both regions unmapped.",
+    "Backend work requires an enabled running reference with validated migration state; functional QTest work must resume before TX/RX.",
+    "Full actual original cold-probe IRQ masks are supported, including mode3 DMA IRQ-mask SET aliases; DMA enable and transfer/status paths remain explicit errors.",
+    "No live physical SE6 revision, reset, FIFO geometry, UART image assignment or wrapper hardware value is claimed."
+  ],
+  "known_unverified": [
+    "C compilation and linkage",
+    "Compiled QEMU functional and migration acceptance",
+    "All retained board CI contracts on the new binary",
+    "Any next original-kernel boot"
+  ],
+  "qemu_executed": false,
+  "device_or_ssh_accessed": false,
+  "native_probe_claimed": false,
+  "android_boot_claimed": false
+}

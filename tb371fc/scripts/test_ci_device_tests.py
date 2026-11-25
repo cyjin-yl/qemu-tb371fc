@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0-or-later
 """Exercise CI verdict handling with local synthetic subprocesses only."""
+import copy
 import hashlib
 import json
 from pathlib import Path
@@ -174,7 +175,7 @@ class PlanTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         plan = ci.plan(args, Path("/test/runtime"))
         cases = {case.name: case for case in plan}
-        self.assertEqual(len(plan), 99)
+        self.assertEqual(len(plan), 102)
         self.assertEqual(len(cases), len(plan))
         self.assertEqual(cases["tbu-reference-ecats"].expected_count, 17)
         self.assertEqual(cases["smmuv500-reference"].expected_count, 36)
@@ -194,7 +195,8 @@ class PlanTests(unittest.TestCase):
                      "spss-irq-mask-sm8250-reference", "rpm-stats-offset-source-generation",
                      "rpm-stats-offset-sm8250-reference",
                      "ddr-stats-offset-source-generation",
-                     "ddr-stats-offset-sm8250-reference"):
+                     "ddr-stats-offset-sm8250-reference", "geni-hs-source-generation-unit",
+                     "geni-hs-source-generation", "geni-hs-sm8250-reference"):
             self.assertIn(name, cases)
         npu = cases["npu-gdsc-reference"]
         self.assertEqual(npu.expected_count, 21)
@@ -348,7 +350,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 104)
+        self.assertEqual(len(cases), 107)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]
@@ -621,7 +623,9 @@ class PlanTests(unittest.TestCase):
         for case in cases:
             if case.name in {"spss-irq-mask-source-generation", "spss-irq-mask-sm8250-reference",
                              "rpm-stats-offset-source-generation", "rpm-stats-offset-sm8250-reference",
-                             "ddr-stats-offset-source-generation", "ddr-stats-offset-sm8250-reference"}:
+                             "ddr-stats-offset-source-generation", "ddr-stats-offset-sm8250-reference",
+                                   "geni-hs-source-generation-unit", "geni-hs-source-generation",
+                                   "geni-hs-sm8250-reference"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -739,7 +743,9 @@ class PlanTests(unittest.TestCase):
         cases = ci.plan(args, Path("/test/runtime"))
         for case in cases:
             if case.name in {"rpm-stats-offset-source-generation", "rpm-stats-offset-sm8250-reference",
-                             "ddr-stats-offset-source-generation", "ddr-stats-offset-sm8250-reference"}:
+                             "ddr-stats-offset-source-generation", "ddr-stats-offset-sm8250-reference",
+                                   "geni-hs-source-generation-unit", "geni-hs-source-generation",
+                                   "geni-hs-sm8250-reference"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -867,7 +873,9 @@ class PlanTests(unittest.TestCase):
         retained = []
         for prior_case in all_cases:
             if prior_case.name in {"ddr-stats-offset-source-generation",
-                                   "ddr-stats-offset-sm8250-reference"}:
+                                   "ddr-stats-offset-sm8250-reference",
+                                   "geni-hs-source-generation-unit", "geni-hs-source-generation",
+                                   "geni-hs-sm8250-reference"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -887,6 +895,195 @@ class PlanTests(unittest.TestCase):
         fingerprint = hashlib.sha256(json.dumps(retained, sort_keys=True,
                                                 separators=(",", ":")).encode()).hexdigest()
         self.assertEqual(fingerprint, "5ed8bc26826b07347d21ea3bf6dc5c392e449acb241e8007b20debe0f21ba1ea")
+
+
+class GeniContractTests(unittest.TestCase):
+    def setUp(self):
+        self.root = Path(tempfile.mkdtemp(prefix="tbci-geni-", dir="/tmp"))
+        args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        self.plan = ci.plan(args, self.root / "runtime")
+        self.cases = {case.name: case for case in self.plan}
+
+    def check(self, case, data, *, reject=False):
+        path = Path(case.result)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(data))
+        if reject:
+            with self.assertRaises(ValueError):
+                ci.judge(case, path)
+        else:
+            return ci.judge(case, path)
+
+    def baseline(self, case):
+        value = copy.deepcopy(case.expected_values)
+        value.update(passed=True, checks=[{"name": f"check-{i}", "passed": True}
+                                          for i in range(case.expected_count)])
+        for key, count in case.expected_lengths.items():
+            if key != "checks":
+                value[key] = [{} for _ in range(count)]
+        return value
+
+    def test_source_contract_rejects_false_missing_and_duplicated_negatives(self):
+        case = self.cases["geni-hs-source-generation"]
+        unit = self.cases["geni-hs-source-generation-unit"]
+        self.assertEqual(unit.result, "exit")
+        self.assertTrue(unit.command[-1].endswith("/test_geni_hs_sm8250_generation.py"))
+        self.assertEqual(case.expected_count, 2)
+        self.assertEqual(case.expected_lengths,
+                         {"checks": 2, "inputs": 19, "negative_checks": 51, "reference_inputs": 2})
+        self.assertEqual(case.expected_values["generated_contract"]["constants"]["GENI_HS_MAIN_FW_REVISION"], 0x201)
+        self.assertEqual(case.expected_values["generated_contract"]["constants"]["GENI_HS_WRAPPER_VERSION"], 0x20050000)
+        value = self.baseline(case)
+        value["negative_checks"] = [
+            {"category": category, "name": f"negative-{i}", "rejected": True,
+             "rejection_reason": "Rejected at the intended fixture boundary"}
+            for category, count in value["negative_counts"].items() for i in range(count)]
+        self.assertEqual(self.check(case, value)["check_count"], 2)
+        for key in case.expected_values:
+            changed = copy.deepcopy(value)
+            del changed[key]
+            with self.subTest(missing=key):
+                self.check(case, changed, reject=True)
+        for key in case.expected_lengths:
+            changed = copy.deepcopy(value)
+            changed[key].pop()
+            with self.subTest(short=key):
+                self.check(case, changed, reject=True)
+        for wrong in (False, 1, "true", None):
+            changed = copy.deepcopy(value)
+            changed["negative_checks"][0]["rejected"] = wrong
+            with self.subTest(rejected=wrong):
+                self.check(case, changed, reject=True)
+        for field, wrong in (("category", "unknown"), ("name", ""), ("rejection_reason", "")):
+            changed = copy.deepcopy(value)
+            changed["negative_checks"][0][field] = wrong
+            with self.subTest(field=field):
+                self.check(case, changed, reject=True)
+        changed = copy.deepcopy(value)
+        changed["negative_checks"][1] = copy.deepcopy(changed["negative_checks"][0])
+        self.check(case, changed, reject=True)
+        for field in ("error", "traceback"):
+            changed = copy.deepcopy(value)
+            changed[field] = ""
+            self.check(case, changed, reject=True)
+        changed = copy.deepcopy(value)
+        changed["generated_contract"]["constant_count"] = True
+        self.check(case, changed, reject=True)
+        changed = copy.deepcopy(value)
+        changed["private_binary_review_publicly_reproduced"] = True
+        self.check(case, changed, reject=True)
+
+    def test_compiled_contract_rejects_early_io_partial_and_repaired_migrations(self):
+        case = self.cases["geni-hs-sm8250-reference"]
+        self.assertEqual(case.expected_count, 55)
+        self.assertEqual(case.timeout, 900)
+        self.assertEqual(case.expected_values["vmstate_payload_bytes"], 16608)
+        self.assertEqual(case.expected_values["first_observation_qom_get_count"], 49)
+        value = self.baseline(case)
+        first = {"first_qom_get_count": 49, "repeated_qom_get_count": 49,
+                 "device_mmio_delta_before_observations": 0,
+                 "any_memory_delta_before_observations": 0, "cont_delta_before_observations": 0,
+                 "first_world_includes_both_engines": True,
+                 "no_backend_consumption_or_output_observed": True,
+                 "ram_loaded_after_two_worlds_before_cont": True}
+        value["migrations"] = [{"passed": True, "source_status": "completed", "target_status": "completed",
+                                "continued_after_restore": True, "complete_hs_wire_bytes_verified": 16608,
+                                "complete_legacy_wire_bytes_verified": 16587,
+                                "first_target_observation": copy.deepcopy(first)} for _ in range(2)]
+        rejected = {"passed": True, "specific_failure_observed": True,
+                    "no_early_backend_output": True, "no_destination_memory_commands": True,
+                    "no_cont_command": True, "accepted_after_state_repair": False,
+                    "changed_bits": 1, "original_stream_unchanged": True}
+        for key in ("rejected_migrations", "corrupted_stream_rejections", "structural_stream_rejections"):
+            value[key] = [copy.deepcopy(rejected) for _ in range(case.expected_lengths[key])]
+        value["process_cleanup"] = [
+            {"fixture": f"fixture-{index}", "expected_exit_code": int(index >= 28),
+             "exit_code": int(index >= 28), "forced_terminate": False, "forced_kill": False,
+             "quit_acknowledged": index < 28} for index in range(58)]
+        self.assertEqual(self.check(case, value)["check_count"], 55)
+        for key in case.expected_values:
+            changed = copy.deepcopy(value)
+            del changed[key]
+            with self.subTest(missing=key):
+                self.check(case, changed, reject=True)
+        for key in case.expected_lengths:
+            changed = copy.deepcopy(value)
+            changed[key].pop()
+            with self.subTest(short=key):
+                self.check(case, changed, reject=True)
+        for key, expected in first.items():
+            changed = copy.deepcopy(value)
+            changed["migrations"][0]["first_target_observation"][key] = (
+                not expected if type(expected) is bool else expected + 1)
+            with self.subTest(first_observation=key):
+                self.check(case, changed, reject=True)
+        for key in ("rejected_migrations", "corrupted_stream_rejections", "structural_stream_rejections"):
+            for field in ("passed", "specific_failure_observed", "no_early_backend_output",
+                          "no_destination_memory_commands", "no_cont_command", "accepted_after_state_repair"):
+                changed = copy.deepcopy(value)
+                changed[key][0][field] = not changed[key][0][field]
+                with self.subTest(list=key, boundary=field):
+                    self.check(case, changed, reject=True)
+        for wrong in (True, 0, 2, "1"):
+            changed = copy.deepcopy(value)
+            changed["corrupted_stream_rejections"][0]["changed_bits"] = wrong
+            with self.subTest(changed_bits=wrong):
+                self.check(case, changed, reject=True)
+        changed = copy.deepcopy(value)
+        changed["migrations"][0]["target_status"] = "active"
+        self.check(case, changed, reject=True)
+        changed = copy.deepcopy(value)
+        changed["migrations"][0]["complete_legacy_wire_bytes_verified"] -= 1
+        self.check(case, changed, reject=True)
+        for field, wrong in (("forced_terminate", True), ("forced_kill", True),
+                             ("exit_code", 1), ("quit_acknowledged", False),
+                             ("expected_exit_code", False)):
+            changed = copy.deepcopy(value)
+            changed["process_cleanup"][0][field] = wrong
+            with self.subTest(cleanup=field):
+                self.check(case, changed, reject=True)
+        changed = copy.deepcopy(value)
+        changed["process_cleanup"][1] = copy.deepcopy(changed["process_cleanup"][0])
+        self.check(case, changed, reject=True)
+        changed = copy.deepcopy(value)
+        changed["process_cleanup"][0].update(expected_exit_code=1, exit_code=1, quit_acknowledged=False)
+        self.check(case, changed, reject=True)
+
+    def test_geni_additions_preserve_every_prior_104_contract_in_order(self):
+        args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        cases = ci.plan(args, Path("/test/runtime"))
+        additions = {"geni-hs-source-generation-unit", "geni-hs-source-generation", "geni-hs-sm8250-reference"}
+        self.assertEqual(len(cases), 107)
+        def normalize(value):
+            if isinstance(value, Path):
+                value = str(value)
+            if isinstance(value, str):
+                for other in cases:
+                    physical, token = str(other.fixture), "@FIXTURE:" + other.name + "@"
+                    value = token if value == physical else value.replace(physical + "/", token + "/")
+                return value.replace(str(ci.ROOT), "@ROOT@").replace(sys.executable, "@PYTHON@")
+            if isinstance(value, list):
+                return [normalize(item) for item in value]
+            if isinstance(value, dict):
+                return {key: normalize(item) for key, item in value.items()}
+            return value
+        retained = [normalize(vars(case)) for case in cases if case.name not in additions]
+        self.assertEqual(len(retained), 104)
+        fingerprint = hashlib.sha256(json.dumps(retained, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        self.assertEqual(fingerprint, "2420779f94ded1adff2751ae2424764557a421b25f10784db9c69df4a4e5286a")
+
+    def test_source_cache_is_scoped_to_the_run_and_recorded(self):
+        fixture = self.root / "cache-run" / "01"
+        code = ('import os,json; print(json.dumps({"passed":True,'
+                '"cache":os.environ["TB371FC_PUBLIC_SOURCE_CACHE"]}))')
+        expected = str(fixture.parent / "public-source-cache")
+        case = ci.Case("subprocess", [sys.executable, "-c", code], fixture,
+                       expected_values={"cache": expected})
+        report = ci.run_case(case, self.root / "cache-artifacts", Path(sys.executable))
+        self.assertTrue(report["passed"], report)
+        self.assertEqual(report["environment"]["TB371FC_PUBLIC_SOURCE_CACHE"], expected)
 
 
 if __name__ == "__main__":

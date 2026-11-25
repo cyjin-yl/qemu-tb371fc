@@ -143,6 +143,44 @@ def plan(args, runtime):
             expected={"schema": "tb371fc-ddr-stats-offset-generation-v1",
                       "source_pins_verified": True},
             expected_lengths={"inputs": 4})
+        add("geni-hs-source-generation-unit", scripts / "test_geni_hs_sm8250_generation.py",
+            result="exit")
+        add("geni-hs-source-generation", scripts / "verify_geni_hs_sm8250_generation.py",
+            output="--out", result="file", count=2,
+            expected={'devices_ssh_qemu_or_native_used': False,
+                      'generator_exit_code': 0,
+                      'generator_stderr_bytes': 0,
+                      'private_binary_review_publicly_reproduced': False,
+                      'public_source_pins_verified': True,
+                      'reference_input_pins_verified': True,
+                      'schema': 'tb371fc-geni-hs-sm8250-source-generation-v1',
+                      'generated_contract': {'clock_binding_count': 3,
+                                             'constant_count': 12,
+                                             'constants': {'GENI_HS_CFG_REVISION': 8,
+                                                           'GENI_HS_DMA_RX_IRQ_MASK': 30719,
+                                                           'GENI_HS_DMA_TX_IRQ_MASK': 16399,
+                                                           'GENI_HS_FIFO_BYTES': 64,
+                                                           'GENI_HS_MAIN_FW_REVISION': 513,
+                                                           'GENI_HS_PROFILE_ID': 1195922225,
+                                                           'GENI_HS_SECONDARY_FW_REVISION': 513,
+                                                           'GENI_HS_SE_BASE': 10059776,
+                                                           'GENI_HS_SE_WINDOW_BYTES': 16384,
+                                                           'GENI_HS_WRAPPER_VERSION': 537198592,
+                                                           'GENI_HS_WRAPPER_VERSION_ADDRESS': 10223620,
+                                                           'GENI_HS_WRAPPER_WINDOW_BYTES': 4},
+                                             'fifo_bytes': 64,
+                                             'negative_check_count': 51,
+                                             'output_count': 2,
+                                             'reference_input_count': 2,
+                                             'source_input_bytes': 810000,
+                                             'source_input_count': 19,
+                                             'window_count': 2},
+                      'negative_counts': {'complete-input-identity': 19,
+                                          'generated-output': 2,
+                                          'parser-contract': 19,
+                                          'reference-input-identity': 2,
+                                          'reference-scope': 9}},
+            expected_lengths={'checks': 2, 'inputs': 19, 'negative_checks': 51, 'reference_inputs': 2})
         add("live-machine-profile", scripts / "validate_machine.py",
             ("--qemu", qemu, "--output", "@DATA@/result.json",
              "--dtb-output", "@DATA@/generated.dtb"), result="file")
@@ -150,6 +188,69 @@ def plan(args, runtime):
                verdict="success", count=14)
         device("geni-migration", "test_geni_migration.py",
                verdict="success", count=6)
+        device("geni-hs-sm8250-reference", "test_geni_hs_sm8250.py",
+               output="--out", result="file", count=55, timeout=900,
+               expected={'schema': 'tb371fc-geni-hs-sm8250-v1',
+                         'suite': 'geni-hs-sm8250-reference',
+                         'expected_checks': 55,
+                         'expected_completed_migrations': 2,
+                         'expected_rejected_migrations': 2,
+                         'expected_corrupted_stream_rejections': 25,
+                         'expected_structural_stream_rejections': 3,
+                         'expected_unmodified_streams': 2,
+                         'expected_stream_files': 30,
+                         'vmstate_version': 1,
+                         'vmstate_minimum_version': 1,
+                         'vmstate_payload_bytes': 16608,
+                         'profile_guard_bytes': 48,
+                         'legacy_functional_payload_bytes': 16534,
+                         'legacy_complete_payload_bytes': 16587,
+                         'first_observation_qom_get_count': 49,
+                         'repeated_observation_qom_get_count': 49,
+                         'pure_dynamic_getters_per_engine': 17,
+                         'pure_hs_identity_getters': 15,
+                         'reference_identity': 1195922225,
+                         'physical_base': 10059776,
+                         'window_bytes': 16384,
+                         'wrapper_address': 10223620,
+                         'wrapper_window_bytes': 4,
+                         'main_firmware_revision': 513,
+                         'secondary_firmware_revision': 513,
+                         'wrapper_version': 537198592,
+                         'fifo_capacity_bytes': 64,
+                         'fifo_width_bits': 32,
+                         'fifo_depth_words': 16,
+                         'cold_primary_irq_or_mask': 213909552,
+                         'cold_secondary_irq_or_mask': 201326640,
+                         'dma_tx_irq_valid_mask': 16399,
+                         'dma_rx_irq_valid_mask': 30719,
+                         'reference_enabled_by_default': False,
+                         'default_off_mapped_bytes': 0,
+                         'enabled_mapped_bytes': 16388,
+                         'two_engine_backend_isolation_tested': True,
+                         'migration_destination_ram_dirtied': True,
+                         'migration_destination_device_state_dirtied': False,
+                         'firmware_executed': False,
+                         'physical_state_captured': False,
+                         'dma_mask_modeled': True,
+                         'dma_transfer_modeled': False,
+                         'bluetooth_peer_modeled': False,
+                         'guest_cpu_executed': False,
+                         'native_kernel_probe_observed': False,
+                         'android_boot_passed': False,
+                         'full_migration_stream_hashes_verified': True,
+                         'test_oracle_reads_device_implementation': False,
+                         'process_cleanup_verified': True,
+                         'qtest_intercept_replaces_gic_connection': True,
+                         'gic_or_guest_interrupt_handling_verified': False,
+                         'binary_unchanged': True},
+               expected_lengths={'migrations': 2,
+                                 'rejected_migrations': 2,
+                                 'corrupted_stream_rejections': 25,
+                                 'structural_stream_rejections': 3,
+                                 'migration_sources': 2,
+                                 'actual_stream_files': 30,
+                                 'process_cleanup': 58})
         device("gcc-registers", "test_gcc_sm8250.py",
                output="--work-dir", verdict="success", count=19)
         device("gcc-migration", "test_gcc_sm8250.py", "--migration-only",
@@ -1247,6 +1348,78 @@ def check_identity(check, location, guest=False, guest_errno=False):
     return names[0]
 
 
+def judge_geni_hs_details(case, data):
+    """Reject contradictory detail rows in the new bounded GENI contracts."""
+    if case.name not in ("geni-hs-source-generation", "geni-hs-sm8250-reference"):
+        return
+    if "error" in data or "traceback" in data:
+        raise ValueError("GENI receipt contains a failure field")
+    if case.name == "geni-hs-source-generation":
+        seen, counts = set(), {}
+        for row in data["negative_checks"]:
+            if not isinstance(row, dict) or row.get("rejected") is not True:
+                raise ValueError("GENI source negative was not rejected")
+            identity = (row.get("category"), row.get("name"))
+            if any(not isinstance(x, str) or not x for x in identity) or identity in seen:
+                raise ValueError("GENI source negative identity is invalid or duplicated")
+            if not isinstance(row.get("rejection_reason"), str) or not row["rejection_reason"]:
+                raise ValueError("GENI source negative lacks a rejection reason")
+            seen.add(identity)
+            counts[identity[0]] = counts.get(identity[0], 0) + 1
+        if not expected_json_value(counts, data["negative_counts"]):
+            raise ValueError("GENI source negative category counts disagree")
+        return
+    cleanup_names, exit_counts = set(), {0: 0, 1: 0}
+    for row in data["process_cleanup"]:
+        if not isinstance(row, dict):
+            raise ValueError("GENI cleanup is not an object")
+        name, expected = row.get("fixture"), row.get("expected_exit_code")
+        if (not isinstance(name, str) or not name or name in cleanup_names or
+                type(expected) is not int or expected not in (0, 1) or
+                not expected_json_value(row.get("exit_code"), expected) or
+                row.get("forced_terminate") is not False or row.get("forced_kill") is not False or
+                row.get("quit_acknowledged") is not (expected == 0)):
+            raise ValueError("GENI cleanup did not finish normally with the required exit")
+        cleanup_names.add(name)
+        exit_counts[expected] += 1
+    if exit_counts != {0: 28, 1: 30}:
+        raise ValueError("GENI cleanup scenario exit counts disagree")
+    for row in data["migrations"]:
+        if not isinstance(row, dict) or row.get("passed") is not True:
+            raise ValueError("GENI completed migration lacks a pass")
+        if (row.get("source_status") != "completed" or row.get("target_status") != "completed" or
+                row.get("continued_after_restore") is not True or
+                not expected_json_value(row.get("complete_hs_wire_bytes_verified"), 16608) or
+                not expected_json_value(row.get("complete_legacy_wire_bytes_verified"), 16587)):
+            raise ValueError("GENI completed migration is incomplete")
+        first = row.get("first_target_observation", {})
+        if not isinstance(first, dict):
+            raise ValueError("GENI first observation is not an object")
+        for key, expected in {
+                "first_qom_get_count": 49, "repeated_qom_get_count": 49,
+                "device_mmio_delta_before_observations": 0,
+                "any_memory_delta_before_observations": 0, "cont_delta_before_observations": 0,
+                "first_world_includes_both_engines": True,
+                "no_backend_consumption_or_output_observed": True,
+                "ram_loaded_after_two_worlds_before_cont": True}.items():
+            if not expected_json_value(first.get(key), expected):
+                raise ValueError("GENI first observation boundary mismatch: " + key)
+    for key in ("rejected_migrations", "corrupted_stream_rejections", "structural_stream_rejections"):
+        for row in data[key]:
+            if not isinstance(row, dict) or row.get("passed") is not True:
+                raise ValueError("GENI rejection detail lacks a pass")
+            for field in ("specific_failure_observed", "no_early_backend_output",
+                          "no_destination_memory_commands", "no_cont_command"):
+                if row.get(field) is not True:
+                    raise ValueError("GENI rejection boundary mismatch: " + field)
+            if row.get("accepted_after_state_repair") is not False:
+                raise ValueError("GENI rejection accepted a repaired state")
+            if key == "corrupted_stream_rejections" and (
+                    not expected_json_value(row.get("changed_bits"), 1) or
+                    row.get("original_stream_unchanged") is not True):
+                raise ValueError("GENI corrupt stream is not a preserved one-bit negative")
+
+
 def judge(case, stdout):
     if case.result == "exit":
         return {"verdict": "successful test process"}
@@ -1293,6 +1466,7 @@ def judge(case, stdout):
     for key, value in case.expected_values.items():
         if not expected_json_value(data.get(key), value):
             raise ValueError(f"Expected {key}={value!r}; got {data.get(key)!r}")
+    judge_geni_hs_details(case, data)
     return details
 
 
@@ -1303,14 +1477,16 @@ def run_case(case, destination, qemu):
     temporary.mkdir()
     env = os.environ.copy()
     env.update(QTEST_QEMU_BINARY=str(qemu.resolve()), TMPDIR=str(temporary),
-               PYTHONDONTWRITEBYTECODE="1")
+               PYTHONDONTWRITEBYTECODE="1",
+               TB371FC_PUBLIC_SOURCE_CACHE=str(case.fixture.parent / "public-source-cache"))
     env.pop("PYTHONOPTIMIZE", None)
     stdout, stderr = destination / "stdout.log", destination / "stderr.log"
     report = {
         "name": case.name, "command": case.command, "started_utc": utc(),
         "timeout_seconds": case.timeout, "fixture": str(case.fixture),
         "environment": {key: env[key] for key in
-                        ("QTEST_QEMU_BINARY", "TMPDIR", "PYTHONDONTWRITEBYTECODE")},
+                        ("QTEST_QEMU_BINARY", "TMPDIR", "PYTHONDONTWRITEBYTECODE",
+                         "TB371FC_PUBLIC_SOURCE_CACHE")},
         "passed": False,
     }
     started = time.monotonic()

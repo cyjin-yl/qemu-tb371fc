@@ -176,6 +176,7 @@ struct TB371FCMachineState {
     ARMCPU *cpu[TB371FC_CPUS];
     DeviceState *gic;
     QcomGeniUartState uart;
+    QcomGeniUartState uart_hs;
     QcomSm8250GccState gcc;
     DeviceState *ufs;
     DeviceState *dsi_pll;
@@ -1478,6 +1479,12 @@ static void tb371fc_create_gcc(TB371FCMachineState *s)
                           s->fabric);
     qdev_connect_clock_in(gcc, "gcc_qupv3_wrap_2_s_ahb_clk_parent",
                           s->fabric);
+    if (s->uart_hs.hs_enabled) {
+        qdev_connect_clock_in(gcc, "gcc_qupv3_wrap_0_m_ahb_clk_parent",
+                              s->fabric);
+        qdev_connect_clock_in(gcc, "gcc_qupv3_wrap_0_s_ahb_clk_parent",
+                              s->fabric);
+    }
     if (s->ufs) {
         qdev_connect_clock_in(gcc, "gcc_ufs_phy_ahb_clk_parent", s->fabric);
         qdev_connect_clock_in(gcc, "gcc_ufs_1x_clkref_en_parent", s->xo);
@@ -1498,6 +1505,12 @@ static void tb371fc_create_gcc(TB371FCMachineState *s)
                                        TB371FC_GCC_QUP_M_AHB), 1);
     qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request",
                                        TB371FC_GCC_QUP_S_AHB), 1);
+    if (s->uart_hs.hs_enabled) {
+        /* QEMU table indices, not the vendor DT clock IDs 100/132/133. */
+        qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request", 99), 1);
+        qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request", 131), 1);
+        qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request", 132), 1);
+    }
 }
 
 
@@ -1967,6 +1980,9 @@ static void tb371fc_init(MachineState *ms)
         object_property_add_child(OBJECT(s), "ufs", OBJECT(s->ufs));
         s->ufs->id = g_strdup("ufs0");
     }
+    /* Apply the HS qdev global before conditional GCC parents are connected. */
+    object_initialize_child(OBJECT(s), "uart-hs", &s->uart_hs,
+                            TYPE_QCOM_SM8250_GENI_HS);
     tb371fc_create_gcc(s);
     tb371fc_create_cpufreq(s);
     tb371fc_create_devfreq(s);
@@ -2021,6 +2037,25 @@ static void tb371fc_init(MachineState *ms)
     memory_region_init_io(&s->qup_version, OBJECT(s), &tb371fc_qup_ops, s,
                           "tb371fc.synthetic-qup-version", TB371FC_QUP_SIZE);
     memory_region_add_subregion(sysmem, TB371FC_QUP_BASE, &s->qup_version);
+
+    qdev_prop_set_chr(DEVICE(&s->uart_hs), "chardev", serial_hd(1));
+    qdev_connect_clock_in(DEVICE(&s->uart_hs), "se-clk",
+                          qdev_get_clock_out(DEVICE(&s->gcc),
+                                              "gcc_qupv3_wrap0_s6_clk"));
+    qdev_connect_clock_in(DEVICE(&s->uart_hs), "m-ahb",
+                          qdev_get_clock_out(DEVICE(&s->gcc),
+                                              "gcc_qupv3_wrap_0_m_ahb_clk"));
+    qdev_connect_clock_in(DEVICE(&s->uart_hs), "s-ahb",
+                          qdev_get_clock_out(DEVICE(&s->gcc),
+                                              "gcc_qupv3_wrap_0_s_ahb_clk"));
+    qdev_connect_gpio_out_named(DEVICE(&s->gcc), "reset", 24,
+                                qdev_get_gpio_in_named(DEVICE(&s->uart_hs),
+                                                       "reset", 0));
+    uart = SYS_BUS_DEVICE(&s->uart_hs);
+    sysbus_realize(uart, &error_fatal);
+    sysbus_mmio_map(uart, 0, qcom_geni_hs_se_base());
+    sysbus_mmio_map(uart, 1, qcom_geni_hs_wrapper_version_address());
+    sysbus_connect_irq(uart, 0, qdev_get_gpio_in(s->gic, 607));
 
     s->bootinfo.ram_size = ms->ram_size;
     s->bootinfo.board_id = -1;

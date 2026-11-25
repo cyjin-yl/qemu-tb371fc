@@ -1,0 +1,115 @@
+{
+  "cache_freeze": "002",
+  "checks": [
+    {
+      "evidence": "Native profile is guard-first 48 bytes plus complete mutable state/period witnesses, 16608 bytes; legacy body and clock subsection are separately checked.",
+      "name": "frozen_core_contract",
+      "passed": true
+    },
+    {
+      "evidence": "Incoming deferred targets take exactly two 49-getter worlds for both engines before any post-incoming QTest/memory/cont; only then RAM witness and captured sysbus IRQ are observed.",
+      "name": "pure_observation_order",
+      "passed": true
+    },
+    {
+      "evidence": "Enabled source has live HS input clocks and pending HS TX/RX, target prequeues RX, and world/output checks precede cont; legacy pending output is separately clock-gated.",
+      "name": "early_io_exposure",
+      "passed": true
+    },
+    {
+      "evidence": "Both real peer sockets are observed from before migrate-incoming through process termination; any data or other socket error fails, EOF/reset accepted only with exit1 and specific failure.",
+      "name": "continuous_failure_observer",
+      "passed": true
+    },
+    {
+      "evidence": "All rejection tests require exact diagnostics and no destination memory/cont/backend data; no state readback is claimed after a dead process.",
+      "name": "failed_load_scope",
+      "passed": true
+    },
+    {
+      "evidence": "Two complete original streams, 25 independent one-bit corruptions, three structural corruptions and both profile directions are independently checked without state repair.",
+      "name": "wire_and_mutants",
+      "passed": true
+    },
+    {
+      "evidence": "GCC post_load validates source state and updates outputs without imposing missing-parent validity, so profile-direction rejection is not replaced by an invented clock repair.",
+      "name": "clock_and_profile_order",
+      "passed": true
+    },
+    {
+      "evidence": "Core-invalid width/alignment, callback errors, canonical byte packing, unsupported DMA, read-only and reserved fields match frozen core003.",
+      "name": "strict_access_and_format",
+      "passed": true
+    },
+    {
+      "evidence": "Absent/disconnected/backpressured HS backend preserves bytes; actual byte counts/order and independent legacy path are checked.",
+      "name": "backpressure_and_isolation",
+      "passed": true
+    },
+    {
+      "evidence": "Actual HS sysbus output is intercepted before incoming and crosschecked after pure observations; no GIC routing, guest interrupt handling, firmware execution or native boot is claimed.",
+      "name": "irq_scope",
+      "passed": true
+    },
+    {
+      "evidence": "PASS follows exact 58 cleanup records: 28 normal exit0 with quit ACK and 30 expected rejected-load exit1 without ACK, all without forced terminate or kill.",
+      "name": "cleanup_gate",
+      "passed": true
+    },
+    {
+      "evidence": "This is source-only review of exact frozen test/helper/core and inherited GCC behavior. No compiled test, artifact, QEMU, native guest, device or SSH action was executed.",
+      "name": "bounded_review",
+      "passed": true
+    }
+  ],
+  "compiled_runtime_pass_claimed": false,
+  "core_freeze": "003",
+  "created_utc": "2026-11-25T07:31:20.333778+00:00",
+  "expected_cleanup_records": 58,
+  "expected_compiled_groups": 55,
+  "expected_normal_exit0": 28,
+  "expected_rejected_exit1": 30,
+  "limitations": [
+    "Compiled QEMU execution and complete CI artifact validation remain required.",
+    "Review verifies the test protocol and declared model contract, not physical SE6 state or Android boot."
+  ],
+  "material_findings": [],
+  "reviewed_source_files": [
+    {
+      "bytes": 68816,
+      "git_blob_sha1": "c4cfd68eb84a4b5eec94da1ad33e9d1a7eac2b9b",
+      "path": "tb371fc/tests/test_geni_hs_sm8250.py",
+      "sha256": "e2935bb0a09cd8f3957f878ec4b4698f1eb391b3e2aa4031b0879a6147273055"
+    },
+    {
+      "bytes": 20048,
+      "git_blob_sha1": "711fdca5b89f9dace4d76d62984cf99bebd65276",
+      "path": "tb371fc/tests/geni_hs_test_transport.py",
+      "sha256": "32dae63e1604366615f43c6e8982a21050c5cb4aaf70ac8e54527822f9a332e9"
+    },
+    {
+      "bytes": 50414,
+      "git_blob_sha1": "2a8132b46f5e55fe62f51bea8788d862be5c382a",
+      "path": "hw/char/qcom-geni-uart.c",
+      "sha256": "c1fe1af46ec3383f9a080d1ba10f60073dfd59696fccfa363a9567551ebb3e10"
+    },
+    {
+      "bytes": 2135,
+      "path": "include/hw/char/qcom-geni-uart.h",
+      "sha256": "f2efb7233b29ae2ece90de924b7d64e1f33a9f1fd04ed3da37298e0f6efd83bf"
+    },
+    {
+      "bytes": 105293,
+      "path": "hw/arm/lenovo-tb371fc.c",
+      "sha256": "9119e88b7fcb6cdd103f4fad8ef11a4cc9ba7f8314e989a12747e7dd05017bda"
+    },
+    {
+      "bytes": 29024,
+      "path": "hw/misc/qcom-sm8250-gcc.c",
+      "sha256": "f9f0dc291e6a183298a0114082df1f5ea65a369dc4f1685dfc330996121da95a"
+    }
+  ],
+  "schema": "tb371fc-geni-hs-test-protocol-static-review-v1",
+  "source_files_modified_by_review": false,
+  "source_review_passed": true
+}

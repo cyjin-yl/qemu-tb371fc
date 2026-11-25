@@ -1,0 +1,49 @@
+{
+  "schema": "tb371fc-postmerge-a91-ci-failure-observation-v1",
+  "run_id": 45558827077,
+  "job_id": 139017312344,
+  "artifact_id": 14998056908,
+  "artifact_bytes": 50359699,
+  "artifact_sha256": "a4e3339f726ff2a20d24e58004ed179aaedb4c111b8f8561650d4b2d96e53ab7",
+  "source_commit": "a91cf67d09380c7f7fa8868f7068dba6b3956daa",
+  "qemu_sha256": "6c36c91266231ce634237d30a56f825bf34c22a75ccf3312860a0730dd2e6409",
+  "passed_gates": 98,
+  "total_gates": 99,
+  "failure_cause": "LLCC public source download exhausted existing bounded retries on HTTP 429. Seven of eight inputs downloaded; zero generation checks completed.",
+  "failed_gates": [
+    {
+      "name": "llcc-source-generation",
+      "exit_code": 1,
+      "error": "Traceback (most recent call last):\n  File \"/home/runner/work/qemu-tb371fc/qemu-tb371fc/tb371fc/scripts/ci_device_tests.py\", line 1334, in run_case\n    raise RuntimeError(f\"Gate exited {proc.returncode}\")\nRuntimeError: Gate exited 1\n"
+    }
+  ],
+  "linux_gates_executed": false,
+  "native_executed": false,
+  "files": [
+    {
+      "path": "tb371fc-results/components/result.json",
+      "bytes": 116803,
+      "sha256": "24313e47aa8e6eb671361aac5d0deecc729939fa53391e2ec4e2014386a7f2ce"
+    },
+    {
+      "path": "tb371fc-results/components/16-llcc-source-generation/case.json",
+      "bytes": 1094,
+      "sha256": "66fd5a9e0748534dc7e96f1baa9d7616c6ab5f6aac3dc9814a459555fd3b9421"
+    },
+    {
+      "path": "tb371fc-results/components/16-llcc-source-generation/stderr.log",
+      "bytes": 106,
+      "sha256": "987e59920727048a5d15e079489133d85aba167334a32d07fa2199406275c02e"
+    },
+    {
+      "path": "tb371fc-results/components/16-llcc-source-generation/fixtures/data/result.json",
+      "bytes": 7016,
+      "sha256": "4a362464e90eba81e16e832648c8529370feb0880a421ab44f55ea68213341be"
+    },
+    {
+      "path": "tb371fc-results/components/16-llcc-source-generation/stdout.log",
+      "bytes": 81,
+      "sha256": "e2125dfa6fe6ba49a34c498ad4cc9462908f3f01d766959ce1cece5ca4f19cee"
+    }
+  ]
+}

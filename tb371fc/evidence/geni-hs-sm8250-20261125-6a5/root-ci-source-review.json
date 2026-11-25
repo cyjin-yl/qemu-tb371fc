@@ -1,0 +1,270 @@
+{
+  "android_userspace_or_ui_claimed": false,
+  "component_cases": 102,
+  "files": [
+    {
+      "bytes": 93011,
+      "git_blob_sha1": "3941f270f42e8628c4f7cb720d014369987d6af9",
+      "path": "tb371fc/scripts/ci_device_tests.py",
+      "sha256": "affce15c868fbf2dd11d9f80d78736a601dfc634528f340f59b0ac6d1b9d62e9"
+    },
+    {
+      "bytes": 63932,
+      "git_blob_sha1": "a63fd34e3ae4182e2c56fd7d42796c16cd31907e",
+      "path": "tb371fc/scripts/test_ci_device_tests.py",
+      "sha256": "e1c1d5aed26224853f839922ddd791bf342eb2be0354691fdbf602a803e91b4e"
+    },
+    {
+      "bytes": 7419,
+      "git_blob_sha1": "da74d5344f0010d059efc8cc4aa055f920886a4f",
+      "path": "tb371fc/docs/geni-hs-sm8250-acceptance.md",
+      "sha256": "47c5ba2a101b5a9010183abddc5a0870a392d6ce2e88c704b89ec229bff469f1"
+    }
+  ],
+  "gic_or_guest_interrupt_handling_verified": false,
+  "linux_cases": 5,
+  "local_harness_attempts": [
+    {
+      "actual_passed": 39,
+      "actual_total": 40,
+      "attempt": "001",
+      "command": [
+        "python3",
+        "-B",
+        "tb371fc/scripts/test_ci_device_tests.py",
+        "-v"
+      ],
+      "complete_harness_pass_claimed": false,
+      "exit_code": 1,
+      "files": {
+        "stderr.log": {
+          "bytes": 6133,
+          "sha256": "af6c68300cc32933e754047c33da8f3bfbd13833c17eeec14233393df199bfb8"
+        },
+        "stdout.log": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finished_utc": "2026-11-25T06:59:35.229047+00:00",
+      "retained_error": "The pre-existing socket-preservation test received PermissionError errno 1 when this executor rejected socket(AF_UNIX, SOCK_STREAM).",
+      "scope": "complete local harness",
+      "started_utc": "2026-11-25T06:59:33.609895+00:00"
+    },
+    {
+      "actual_passed": 4,
+      "actual_total": 4,
+      "attempt": "002",
+      "command": [
+        "python3",
+        "-B",
+        "tb371fc/scripts/test_ci_device_tests.py",
+        "GeniContractTests",
+        "-v"
+      ],
+      "complete_harness_pass_claimed": false,
+      "exit_code": 0,
+      "files": {
+        "stderr.log": {
+          "bytes": 752,
+          "sha256": "e55e9bcf7e002eff5c276bca5c0489093631c923c5b3077a554e793216283f8d"
+        },
+        "stdout.log": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finished_utc": "2026-11-25T07:21:40.714917+00:00",
+      "retained_error": null,
+      "schema": "tb371fc-geni-ci-targeted-contract-unit-v1",
+      "scope": "four new contract tests after cleanup gating correction",
+      "started_utc": "2026-11-25T07:21:40.299113+00:00"
+    }
+  ],
+  "native_executed": false,
+  "new_contracts": [
+    {
+      "command": [
+        "@PYTHON@",
+        "@ROOT@/tb371fc/scripts/test_geni_hs_sm8250_generation.py"
+      ],
+      "count_field": "checks",
+      "expected_count": null,
+      "expected_lengths": {},
+      "expected_values": {},
+      "fixture": "@FIXTURE:geni-hs-source-generation-unit@",
+      "guest_errno": false,
+      "name": "geni-hs-source-generation-unit",
+      "result": "exit",
+      "tap_count": null,
+      "timeout": 180,
+      "verdict": "passed"
+    },
+    {
+      "command": [
+        "@PYTHON@",
+        "@ROOT@/tb371fc/scripts/verify_geni_hs_sm8250_generation.py",
+        "--out",
+        "@FIXTURE:geni-hs-source-generation@/data"
+      ],
+      "count_field": "checks",
+      "expected_count": 2,
+      "expected_lengths": {
+        "checks": 2,
+        "inputs": 19,
+        "negative_checks": 51,
+        "reference_inputs": 2
+      },
+      "expected_values": {
+        "devices_ssh_qemu_or_native_used": false,
+        "generated_contract": {
+          "clock_binding_count": 3,
+          "constant_count": 12,
+          "constants": {
+            "GENI_HS_CFG_REVISION": 8,
+            "GENI_HS_DMA_RX_IRQ_MASK": 30719,
+            "GENI_HS_DMA_TX_IRQ_MASK": 16399,
+            "GENI_HS_FIFO_BYTES": 64,
+            "GENI_HS_MAIN_FW_REVISION": 513,
+            "GENI_HS_PROFILE_ID": 1195922225,
+            "GENI_HS_SECONDARY_FW_REVISION": 513,
+            "GENI_HS_SE_BASE": 10059776,
+            "GENI_HS_SE_WINDOW_BYTES": 16384,
+            "GENI_HS_WRAPPER_VERSION": 537198592,
+            "GENI_HS_WRAPPER_VERSION_ADDRESS": 10223620,
+            "GENI_HS_WRAPPER_WINDOW_BYTES": 4
+          },
+          "fifo_bytes": 64,
+          "negative_check_count": 51,
+          "output_count": 2,
+          "reference_input_count": 2,
+          "source_input_bytes": 810000,
+          "source_input_count": 19,
+          "window_count": 2
+        },
+        "generator_exit_code": 0,
+        "generator_stderr_bytes": 0,
+        "negative_counts": {
+          "complete-input-identity": 19,
+          "generated-output": 2,
+          "parser-contract": 19,
+          "reference-input-identity": 2,
+          "reference-scope": 9
+        },
+        "private_binary_review_publicly_reproduced": false,
+        "public_source_pins_verified": true,
+        "reference_input_pins_verified": true,
+        "schema": "tb371fc-geni-hs-sm8250-source-generation-v1"
+      },
+      "fixture": "@FIXTURE:geni-hs-source-generation@",
+      "guest_errno": false,
+      "name": "geni-hs-source-generation",
+      "result": "@FIXTURE:geni-hs-source-generation@/data/result.json",
+      "tap_count": null,
+      "timeout": 180,
+      "verdict": "passed"
+    },
+    {
+      "command": [
+        "@PYTHON@",
+        "@ROOT@/tb371fc/tests/test_geni_hs_sm8250.py",
+        "--qemu",
+        "/test/qemu",
+        "--out",
+        "@FIXTURE:geni-hs-sm8250-reference@/data"
+      ],
+      "count_field": "checks",
+      "expected_count": 55,
+      "expected_lengths": {
+        "actual_stream_files": 30,
+        "corrupted_stream_rejections": 25,
+        "migration_sources": 2,
+        "migrations": 2,
+        "process_cleanup": 58,
+        "rejected_migrations": 2,
+        "structural_stream_rejections": 3
+      },
+      "expected_values": {
+        "android_boot_passed": false,
+        "binary_unchanged": true,
+        "bluetooth_peer_modeled": false,
+        "cold_primary_irq_or_mask": 213909552,
+        "cold_secondary_irq_or_mask": 201326640,
+        "default_off_mapped_bytes": 0,
+        "dma_mask_modeled": true,
+        "dma_rx_irq_valid_mask": 30719,
+        "dma_transfer_modeled": false,
+        "dma_tx_irq_valid_mask": 16399,
+        "enabled_mapped_bytes": 16388,
+        "expected_checks": 55,
+        "expected_completed_migrations": 2,
+        "expected_corrupted_stream_rejections": 25,
+        "expected_rejected_migrations": 2,
+        "expected_stream_files": 30,
+        "expected_structural_stream_rejections": 3,
+        "expected_unmodified_streams": 2,
+        "fifo_capacity_bytes": 64,
+        "fifo_depth_words": 16,
+        "fifo_width_bits": 32,
+        "firmware_executed": false,
+        "first_observation_qom_get_count": 49,
+        "full_migration_stream_hashes_verified": true,
+        "gic_or_guest_interrupt_handling_verified": false,
+        "guest_cpu_executed": false,
+        "legacy_complete_payload_bytes": 16587,
+        "legacy_functional_payload_bytes": 16534,
+        "main_firmware_revision": 513,
+        "migration_destination_device_state_dirtied": false,
+        "migration_destination_ram_dirtied": true,
+        "native_kernel_probe_observed": false,
+        "physical_base": 10059776,
+        "physical_state_captured": false,
+        "process_cleanup_verified": true,
+        "profile_guard_bytes": 48,
+        "pure_dynamic_getters_per_engine": 17,
+        "pure_hs_identity_getters": 15,
+        "qtest_intercept_replaces_gic_connection": true,
+        "reference_enabled_by_default": false,
+        "reference_identity": 1195922225,
+        "repeated_observation_qom_get_count": 49,
+        "schema": "tb371fc-geni-hs-sm8250-v1",
+        "secondary_firmware_revision": 513,
+        "suite": "geni-hs-sm8250-reference",
+        "test_oracle_reads_device_implementation": false,
+        "two_engine_backend_isolation_tested": true,
+        "vmstate_minimum_version": 1,
+        "vmstate_payload_bytes": 16608,
+        "vmstate_version": 1,
+        "window_bytes": 16384,
+        "wrapper_address": 10223620,
+        "wrapper_version": 537198592,
+        "wrapper_window_bytes": 4
+      },
+      "fixture": "@FIXTURE:geni-hs-sm8250-reference@",
+      "guest_errno": false,
+      "name": "geni-hs-sm8250-reference",
+      "result": "@FIXTURE:geni-hs-sm8250-reference@/data/result.json",
+      "tap_count": null,
+      "timeout": 900,
+      "verdict": "passed"
+    }
+  ],
+  "original_kernel_ramdisk_dtb_bootargs_or_five_native_runner_files_changed": false,
+  "previous_contracts_preserved": 104,
+  "previous_contracts_sha256": "2420779f94ded1adff2751ae2424764557a421b25f10784db9c69df4a4e5286a",
+  "process_cleanup_contract": {
+    "expected_rejection_exit_one": 30,
+    "forced_terminate_or_kill_allowed": false,
+    "normal_exit_zero_with_quit_ack": 28,
+    "total": 58
+  },
+  "qemu_executed": false,
+  "qtest_intercept_replaces_gic_connection": true,
+  "retained_a91_ci_failure_not_retried_or_promoted_to_pass": true,
+  "schema": "tb371fc-geni-hs-root-ci-source-review-v1",
+  "source_cache_environment_scope": "Each run_case records one private job-local TB371FC_PUBLIC_SOURCE_CACHE directory shared only by that plan runtime.",
+  "source_only_review": true,
+  "source_parent": "a91cf67d09380c7f7fa8868f7068dba6b3956daa",
+  "total_plan_cases": 107,
+  "workflow_changed": false
+}
