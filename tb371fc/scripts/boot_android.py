@@ -325,8 +325,31 @@ def quit_response(messages, request_id):
     return replies[0]
 
 
+def stopped_before_quit(status, messages):
+    """Accept a paused guest or an observed, still-stopped guest shutdown."""
+    if type(status) is not dict or status.get("running") is not False:
+        return False
+    if status.get("status") == "paused":
+        return True
+    if status.get("status") != "shutdown":
+        return False
+    # With -no-shutdown, stop ACKs without changing shutdown to paused:
+    # qmp_stop -> vm_stop -> do_vm_stop only changes a live runstate.
+    # Require the guest's SHUTDOWN, with no subsequent contradictory transition.
+    transition = None
+    for message in messages:
+        if type(message) is not dict:
+            return False
+        if message.get("event") in ("SHUTDOWN", "RESUME", "RESET", "GUEST_PANICKED", "WATCHDOG"):
+            transition = message
+    data = transition.get("data", {}) if transition else {}
+    return bool(transition and transition.get("event") == "SHUTDOWN" and
+                type(data) is dict and data.get("guest") is True and
+                data.get("reason") in ("guest-shutdown", "guest-reset", "guest-panic"))
+
+
 def normal_qmp_shutdown(report):
-    """Qualify a host-requested close after a paused or already shutdown guest."""
+    """Qualify a fully observed host-requested close; guest success is separate."""
     final, quit_info, drain = (report.get(key, {}) for key in
                               ("final_status", "qmp_quit", "qmp_drain"))
     if any(type(value) is not dict for value in (final, quit_info, drain)):
@@ -368,7 +391,16 @@ def normal_qmp_shutdown(report):
             if data.get("guest") is not False or data.get("reason") != "host-qmp-quit":
                 return False
             host_quit = True
-    return host_quit
+    if not host_quit or final["status"] == "paused":
+        return host_quit
+    events = report.get("qmp_events")
+    tail_events = [message for message in tail if "event" in message]
+    # The guest shutdown must precede this quit, not be manufactured from its
+    # host SHUTDOWN event or a contradictory later event in the drained tail.
+    if (type(events) is not list or not tail_events or
+            events[-len(tail_events):] != tail_events):
+        return False
+    return stopped_before_quit(final, events[:-len(tail_events)])
 
 
 def open_qmp(path, process, deadline):
@@ -480,9 +512,8 @@ def observe(plan, *, seconds, max_log_bytes, symbols=None, snapshot_interval=15,
                         qmp, symbols, out, len(result["printk"]), capture))
                 pause_start = len(qmp.messages)
                 result["final_status"] = qmp.command("query-status")
-                if (result["final_status"].get("running") is not False or
-                        result["final_status"].get("status") not in ("paused", "shutdown")):
-                    raise RuntimeError("QEMU was not stopped before quit")
+                if not stopped_before_quit(result["final_status"], qmp.messages):
+                    raise RuntimeError("QEMU did not reach a confirmed stopped state before quit")
                 if any(message.get("event") in
                        ("RESUME", "RESET", "GUEST_PANICKED", "WATCHDOG", "SHUTDOWN")
                        for message in qmp.messages[pause_start:]):

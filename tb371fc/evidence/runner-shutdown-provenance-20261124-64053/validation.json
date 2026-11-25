@@ -1,0 +1,123 @@
+{
+  "schema": "tb371fc-runner-shutdown-provenance-validation-v1",
+  "base_commit": "7372681f546a7ac1b816377480601ddd8e7c16f5",
+  "source_review": {
+    "retained_from_pr": 24,
+    "source_commit": "c1cee3cf3cc566bd5e7279c4234b5152d67bc2b7",
+    "new_runner_bytes_equal_reviewed_runner": true,
+    "scope": "pre-quit guest SHUTDOWN provenance at runtime and during saved-report qualification; existing strict host quit and boot-success contracts retained"
+  },
+  "files": {
+    "tb371fc/scripts/boot_android.py": "61093aab7176842ef14f592e90456c0c0b91206d594447474d0a02cbf3fb10d1",
+    "tb371fc/tests/test_boot_android.py": "cda111c0b37cbf2e6f9844fc3483ce0f75fda9ed78a98bcd21efeddb4fe89a75",
+    "tb371fc/docs/android-stock-boot.md": "e6622b76ee2395613d10f914dd2f15e1d98075db59f8e97bbe031b303cac7ae6"
+  },
+  "unchanged_dependencies": {
+    "tb371fc/scripts/boot_qmp.py": "b0d95776470110fd682371d393ffda4e2996fb295b1d3c81b41c46980be7a54c",
+    "tb371fc/scripts/boot_android_from_ready.py": "b2ef676a99c7064b9d31035d1b3e1e471d613500cba6373a0992b4c4f4e4154d",
+    "tb371fc/tests/test_boot_android_from_ready.py": "e449b67f19b4d143b03e0df072ec86d0e44dd0d01ce2f161ae26b05ac75373d7"
+  },
+  "baseline_regression": {
+    "base_commit": "7372681f546a7ac1b816377480601ddd8e7c16f5",
+    "runner_sha256": "ebba3b55ae4f931e5768717d635647dd855ab56a1efb19350acbaf1a4498b3eb",
+    "test_sha256": "cda111c0b37cbf2e6f9844fc3483ce0f75fda9ed78a98bcd21efeddb4fe89a75",
+    "tests_run": 2,
+    "failures": 20,
+    "errors": 0,
+    "expected_missing_provenance_reproduced": true,
+    "log_sha256": "498b5bf7705cd44b8f472109f3ad1c9b6ca8f19aa7f296f32935b5538ac501f9",
+    "qemu_started": false,
+    "completed_utc": "2026-11-24T23:50:13.195953+00:00",
+    "failed_subtests_by_method": {
+      "test_shutdown_without_current_guest_evidence_is_rejected": 9,
+      "test_shutdown_report_requires_matching_pre_quit_guest_history": 11
+    }
+  },
+  "host_suites": [
+    {
+      "file": "tb371fc/tests/test_boot_android.py",
+      "tests": 43,
+      "failures": 0,
+      "errors": 0,
+      "returncode": 0,
+      "elapsed_seconds": 1.683,
+      "log_sha256": "fe5d6a3fab04425e7b9b90b201adbb8a9aae3dcd1fb65337eb5fa49db76a7a8a"
+    },
+    {
+      "file": "tb371fc/tests/test_boot_android_from_ready.py",
+      "tests": 28,
+      "failures": 0,
+      "errors": 0,
+      "returncode": 0,
+      "elapsed_seconds": 14.617,
+      "log_sha256": "6381f3be7cec3760507285e99d9b9b61955c4d8dc7449aa52534bccc3e9a72f3"
+    }
+  ],
+  "consumer_first_attempt": {
+    "file": "tb371fc/tests/test_boot_android_from_ready.py",
+    "status": "timeout",
+    "timeout_seconds": 30,
+    "completed": false,
+    "passed": false,
+    "returncode": null,
+    "observed_exception": "subprocess.TimeoutExpired: consumer test process timed out after 30 seconds",
+    "partial_consumer_output_retained": false,
+    "runner_suite_completed_before_timeout": true,
+    "note": "The bounded test subprocess was terminated on timeout. This attempt is not counted as a pass."
+  },
+  "consumer_bounded_retry": {
+    "file": "tb371fc/tests/test_boot_android_from_ready.py",
+    "returncode": 0,
+    "timeout_seconds": 50,
+    "timed_out": false,
+    "elapsed_seconds": 14.805835601000581,
+    "log_sha256": "6381f3be7cec3760507285e99d9b9b61955c4d8dc7449aa52534bccc3e9a72f3",
+    "completed_utc": "2026-11-24T23:56:12.825035+00:00",
+    "diagnostic_trace_at_seconds": 10,
+    "diagnostic_stack_location": "boot_android_from_ready.py:120 write_json os.fsync(stream.fileno())",
+    "note": "The diagnostic timer printed a stack while file synchronization was in progress; the suite completed normally without changing its fixtures, storage location, or timeout behavior."
+  },
+  "retained_llcc_result_readonly_recheck": {
+    "artifact": "llcc-c02f3d7-diagnostic-f093/original-android-llcc",
+    "input_sha256": {
+      "result.json": "41a8823e2bd10dc2e938fe4ba5188677993044343fb3f4f62d7f69f2f75e4043",
+      "plan.json": "bc2736c13fff5eb00efd8bb1cbf02f897eaeaaef9ff9377b297765250505d1de",
+      "qmp-messages.json": "530543051cd629dc6c280325382e35f3a5ca8ca90631137c64dd27a2505a687a"
+    },
+    "saved_qmp_events_match": true,
+    "saved_quit_tail_matches": true,
+    "recorded_qmp_shutdown_normal": true,
+    "baseline_qmp_shutdown_normal": true,
+    "new_qmp_shutdown_normal": true,
+    "recorded_stock_android_boot_passed": false,
+    "baseline_stock_android_boot_passed": false,
+    "new_stock_android_boot_passed": false,
+    "outcome": "kernel-failure",
+    "final_status": {
+      "status": "shutdown",
+      "running": false
+    },
+    "inputs_unchanged": true
+  },
+  "historical_run007_summary_recheck": {
+    "input_kind": "published run007 cleanup summary, not raw result replay",
+    "source_commit": "c1cee3cf3cc566bd5e7279c4234b5152d67bc2b7",
+    "source_path": "tb371fc/evidence/videocc-20261124-e1a9/runner-shutdown-validation.json",
+    "original_result_sha256": "dcbb8acb4b73a6979ae97d553e4343c6f798b524fee085515c2dac1ddf01dd63",
+    "original_qmp_messages_sha256": "77174758721e1e147ad95f2b3dc1cdce9ee29ff0865d38c156203dc8ef71fcab",
+    "baseline_qmp_shutdown_normal": false,
+    "new_qmp_shutdown_normal": false,
+    "summary_unchanged": true,
+    "host_terminated_qemu": true,
+    "qmp_quit_present": false
+  },
+  "limits": {
+    "qemu_started_by_validation": false,
+    "new_original_android_run": false,
+    "android_boot_claim": false,
+    "workflow_changed": false,
+    "hardware_models_changed": false
+  },
+  "diff_check_passed": true,
+  "completed_utc": "2026-11-24T23:57:24.970599+00:00"
+}

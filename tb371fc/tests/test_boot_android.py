@@ -610,7 +610,7 @@ class QMPShutdownTests(unittest.TestCase):
     def observe_peer(self, *, reset=False, ack="valid", tail=None, event_before_ack=False,
                      early_reset=False, exit_code=0, forced=False, old_host_event=False,
                      pause_tail=b"", capture_failure=False, guest_shutdown=False,
-                     final_status=None):
+                     guest_events=None, final_status=None):
         client, peer = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
         finish = threading.Event()
         quit_received = threading.Event()
@@ -719,8 +719,10 @@ class QMPShutdownTests(unittest.TestCase):
                         raise AssertionError(name)
                     reply = self.wire({"return": returned, "id": identifier})
                     if name == "cont" and guest_shutdown:
-                        reply += self.wire({"event": "WATCHDOG", "data": {"action": "reset"}})
-                        reply += self.wire(self.GUEST_RESET) + self.wire({"event": "STOP"})
+                        events = guest_events if guest_events is not None else [
+                            {"event": "WATCHDOG", "data": {"action": "reset"}},
+                            self.GUEST_RESET, {"event": "STOP"}]
+                        reply += b"".join(self.wire(event) for event in events)
                     if name == "query-status" and status_queries == 2:
                         reply += pause_tail
                     peer.sendall(reply)
@@ -805,6 +807,49 @@ class QMPShutdownTests(unittest.TestCase):
         self.assertFalse(report["qmp_shutdown_normal"])
         self.assertFalse(boot.stock_boot_passed(report, plan))
 
+    def test_shutdown_guest_reasons_cleanup_without_claiming_android_boot(self):
+        for reason in ("guest-shutdown", "guest-reset", "guest-panic"):
+            with self.subTest(reason=reason):
+                guest = {"event": "SHUTDOWN", "data": {"guest": True, "reason": reason}}
+                report, plan = self.observe_peer(
+                    guest_shutdown=True, guest_events=[guest, {"event": "STOP"}])
+                self.assertTrue(report["qmp_shutdown_normal"])
+                self.assertIn(guest, report["qmp_events"])
+                self.assertNotIn(guest, report["qmp_quit"]["messages"])
+                self.assertFalse(boot.stock_boot_passed(report, plan))
+
+    def test_shutdown_without_current_guest_evidence_is_rejected(self):
+        sequences = [[], [self.HOST_QUIT],
+                     [{"event": "SHUTDOWN", "data": {"guest": True, "reason": "host-signal"}}],
+                     [{"event": "SHUTDOWN", "data": {"guest": 1, "reason": "guest-reset"}}],
+                     [self.GUEST_RESET, self.HOST_QUIT]]
+        sequences += [[self.GUEST_RESET, {"event": name}]
+                      for name in ("RESUME", "RESET", "GUEST_PANICKED", "WATCHDOG")]
+        for events in sequences:
+            with self.subTest(events=events):
+                report, plan = self.observe_peer(guest_shutdown=True, guest_events=events)
+                self.assertNotIn("qmp_quit", report)
+                self.assertIn("confirmed stopped state", report["error"])
+                self.assertFalse(report["qmp_shutdown_normal"])
+                self.assertFalse(boot.stock_boot_passed(report, plan))
+
+    def test_shutdown_report_requires_matching_pre_quit_guest_history(self):
+        report, _ = self.observe_peer(guest_shutdown=True)
+        self.assertTrue(boot.normal_qmp_shutdown(report))
+        histories = [None, [], [self.HOST_QUIT], [self.GUEST_RESET],
+                     [self.GUEST_RESET, self.HOST_QUIT, {"event": "STOP"}],
+                     [None, self.GUEST_RESET, self.HOST_QUIT],
+                     [self.GUEST_RESET,
+                      {"event": "SHUTDOWN", "data": {"guest": False, "reason": "host-signal"}},
+                      self.HOST_QUIT]]
+        histories += [[self.GUEST_RESET, {"event": name}, self.HOST_QUIT]
+                      for name in ("RESUME", "RESET", "GUEST_PANICKED", "WATCHDOG")]
+        for events in histories:
+            with self.subTest(events=events):
+                changed = copy.deepcopy(report)
+                changed["qmp_events"] = events
+                self.assertFalse(boot.normal_qmp_shutdown(changed))
+
     def test_running_or_inconsistent_final_status_never_sends_quit(self):
         for status in ({"status": "shutdown", "running": True},
                        {"status": "running", "running": False},
@@ -813,13 +858,15 @@ class QMPShutdownTests(unittest.TestCase):
             with self.subTest(status=status):
                 report, plan = self.observe_peer(guest_shutdown=True, final_status=status)
                 self.assertEqual(report["final_status"], status)
-                self.assertIn("QEMU was not stopped before quit", report["error"])
+                self.assertIn("confirmed stopped state", report["error"])
                 self.assertNotIn("qmp_quit", report)
                 self.assertFalse(report["qmp_shutdown_normal"])
                 self.assertFalse(boot.stock_boot_passed(report, plan))
 
     def test_shutdown_errors_and_incomplete_confirmation_remain_failures(self):
         cases = [{"ack": "absent"},
+                 {"tail": self.wire({"event": "SHUTDOWN",
+                                    "data": {"guest": False, "reason": "host-signal"}})},
                  {"tail": self.wire(self.HOST_QUIT) + b'{"event":"STOP"'},
                  {"capture_failure": True}]
         for options in cases:
@@ -856,7 +903,8 @@ class QMPShutdownTests(unittest.TestCase):
 
     def test_malformed_or_contradictory_quit_tail_is_rejected(self):
         tails = [b'{invalid JSON}\n', self.wire([])]
-        tails += [self.wire({"event": name}) for name in ("RESUME", "RESET", "GUEST_PANICKED")]
+        tails += [self.wire({"event": name})
+                  for name in ("RESUME", "RESET", "GUEST_PANICKED", "WATCHDOG")]
         tails.append(self.wire({"event": "SHUTDOWN", "data": {"guest": False, "reason": "host-error"}}))
         for tail in tails:
             with self.subTest(tail=tail):
