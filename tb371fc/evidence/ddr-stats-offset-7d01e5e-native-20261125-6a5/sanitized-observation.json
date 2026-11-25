@@ -1,0 +1,282 @@
+{
+  "artifact_archive": {
+    "bytes": 57340476,
+    "sha256": "1e6c37d205a9e130e4f197c068c93c756488b6b579ab06eadd429190b9b0bd6f"
+  },
+  "artifact_id": 14991304675,
+  "capture_integrity": {
+    "all_local_collected_file_bytes_and_sha256_recomputed": true,
+    "decoded_printk_bytes": 76194,
+    "independent_actual_review_sha256": "419fe8aec5f66a0167acea497b3511c30eb111da3f81df2cd9c5f68708189307",
+    "independent_printk_decode_verified": true,
+    "printk_records": 1141,
+    "printk_ring_bytes": 1048576,
+    "private_collected_bytes": 2236242,
+    "private_collected_files": 31,
+    "qemu_diagnostic_log_bytes": 710046,
+    "serial_output_bytes": 0,
+    "stderr_output_bytes": 0
+  },
+  "ci_evidence_commit": "6b11a65d4469486cd4ebb9be7283dee74f1b7c44",
+  "ci_run_attempt": 1,
+  "ci_run_id": 45544186469,
+  "collection_corrections": [
+    {
+      "inventory_emitted_before_failure": false,
+      "issue": "The first inventory treated the persistent once-claim directory as a regular file.",
+      "native_retry": false,
+      "resolution": "Inventory selected the existing attempt record within that directory."
+    },
+    {
+      "issue": "The first transfer exceeded the 65536-byte shell stdout bound and was not accepted.",
+      "native_retry": false,
+      "partial_transfer_accepted_as_complete": false,
+      "resolution": "Five deterministic chunks were assembled under one complete bundle hash and all 31 files were verified in full."
+    }
+  ],
+  "ddr_claim_boundary": {
+    "address_counts_case_insensitive_with_optional_leading_zeroes": true,
+    "complete_current_log_pattern_counts": {
+      "fatal_PC_ddr_stats_probe": 0,
+      "invalid_read_1c": 0,
+      "invalid_read_c3f001c": 0,
+      "printk_ddr_stats_probe_symbol_occurrences": 0
+    },
+    "ddr_driver_probe_success_claimed": false,
+    "ddr_statistics_payload_validated": false,
+    "observed_invalid_read_addresses_hex": [
+      "0x00998068"
+    ],
+    "printk_ddr_stats_substring_count": 0,
+    "prior_ddr_fault_observed_in_this_run": false,
+    "prior_fatal_symbol": "ddr_stats_probe+0x88/0x180",
+    "prior_invalid_read_diagnostic_addresses_hex": [
+      "0x0c3f001c",
+      "0x1c"
+    ],
+    "prior_native_review_bytes": 20263,
+    "prior_native_review_sha256": "18c4cfb5554c3286531f6aa3a5694e92ff36896471fac63e7002c02b3de0a366",
+    "scope": "The observed fatal failure progressed to GENI. Absence of the earlier DDR fault does not establish valid DDR statistics or successful DDR probing."
+  },
+  "execution": {
+    "actually_executed": true,
+    "automatic_retry_permitted": false,
+    "dry_run": false,
+    "host_job_exit_code": 2,
+    "host_job_finished_utc": "2026-11-25T05:35:00.096181+00:00",
+    "host_job_started_utc": "2026-11-25T05:34:10.271369+00:00",
+    "native_finished_utc": "2026-11-25T05:34:59.105705+00:00",
+    "native_invocation_exit_code": 2,
+    "native_started_utc": "2026-11-25T05:34:51.782663+00:00",
+    "outcome": "kernel-failure",
+    "qemu_exit_code": 0,
+    "recorded_native_attempts": 1,
+    "runner_elapsed_seconds": 6.323,
+    "runner_exit_code": 2,
+    "runner_started_utc": "2026-11-25T05:34:52.129113+00:00",
+    "stop_reason": "guest-shutdown-or-panic-event"
+  },
+  "fatal_failure": {
+    "cpu": 6,
+    "earlier_data_abort": {
+      "cpu": 4,
+      "esr_hex": "0x96000005",
+      "exception_return_observed": true,
+      "far_hex": "0x0",
+      "first_fatal_failure": false
+    },
+    "elr_hex": "0xffffff8008ce8194",
+    "esr_hex": "0x96000010",
+    "far_hex": "0xffffff800b3d8068",
+    "first_fatal_guest_seconds": 3.21641,
+    "function": "get_se_proto",
+    "function_offset_hex": "0x4",
+    "function_size_hex": "0x10",
+    "invalid_read_bytes": 4,
+    "invalid_read_physical_address_hex": "0x00998068",
+    "link_register_function": "msm_geni_serial_probe",
+    "link_register_function_size_hex": "0xc20",
+    "link_register_offset_hex": "0xa30",
+    "panic_guest_seconds": 3.219426,
+    "whole_log_data_abort_count": 2,
+    "whole_log_invalid_read_count": 1,
+    "whole_log_invalid_write_count": 0
+  },
+  "input_scope": {
+    "aop_and_symbols_unchanged": true,
+    "base_files_opened_read_only": true,
+    "block_nodes": 0,
+    "bootargs_modified": false,
+    "capture_flags": {
+      "all_backups_complete": false,
+      "android_boot_tested": false,
+      "pristine_factory_images": false,
+      "restore_tested": false,
+      "snapshot_consistent": false,
+      "source_immutable_claim_verified": false
+    },
+    "classification": "no-lun-diagnostic",
+    "original_kernel_ramdisk_full_device_tree_and_command_line_unchanged": true,
+    "original_luns_attached": 0,
+    "overlays_created": 0,
+    "ready_present_at_selection": false,
+    "snapshot_consistent": false,
+    "storage_complete": false,
+    "test_init_injected": false
+  },
+  "model_configuration": {
+    "ddr_stats_offset_reference_property": "qcom-sm8250-ddr-stats-offset.enabled-reference=on",
+    "global_properties": [
+      "qcom-refgen.boot-disabled-reference=on",
+      "qcom-tcsr-mutex.boot-unlocked-reference=on",
+      "qcom-gpu-cx-gdsc.boot-collapsed-reference=on",
+      "qcom-gdsc.enabled-reference=on",
+      "qcom-sm8250-gpucc.enabled-reference=on",
+      "qcom-sm8250-npucc.enabled-reference=on",
+      "qcom-noc-qos.enabled-reference=on",
+      "qcom-smmuv500.enabled-reference=on",
+      "qcom-smmuv500.reference-hw-version=0x02000000",
+      "qcom-tsens24xx.enabled-reference=on",
+      "qcom-tsens24xx.reference-boot-enable-mask=0xffff",
+      "qcom-tsens24xx.reference-temperature-millicelsius=25000",
+      "qcom-cpufreq-hw-epss.enabled-reference=on",
+      "qcom-cpufreq-hw-epss.reference-boot-perf-index=0",
+      "qcom-devfreq-fw.enabled-reference=on",
+      "qcom-devfreq-fw.reference-boot-perf-index=0",
+      "qcom-noc-sbm.enabled-reference=on",
+      "qcom-sm8250-rpmh.reference-wait-mask-reserved=on",
+      "qcom-camera-gdsc.enabled-reference=on",
+      "qcom-mdss-gdsc.enabled-reference=on",
+      "qcom-npu-gdsc.enabled-reference=on",
+      "qcom-video-gdsc.enabled-reference=on",
+      "qcom-sm8250-camcc.enabled-reference=on",
+      "qcom-sm8250-dispcc.enabled-reference=on",
+      "qcom-sm8250-videocc.enabled-reference=on",
+      "qcom-sm8250-dsi-pll.enabled-reference=on",
+      "qcom-sm8250-dp-pll.enabled-reference=on",
+      "qcom-sm8250-llcc.enabled-reference=on",
+      "qcom-sm8250-spss-irq-mask.enabled-reference=on",
+      "qcom-sm8250-rpm-stats-offset.enabled-reference=on",
+      "qcom-sm8250-ddr-stats-offset.enabled-reference=on"
+    ],
+    "global_property_count": 31
+  },
+  "observed_progress": {
+    "android_boot_completed_observed": false,
+    "android_userspace_observed": false,
+    "interactive_display_verified": false,
+    "kernel_entry_guest_seconds": 0.0,
+    "kernel_entry_observed": true,
+    "ramdisk_unpack_guest_seconds": 2.776272,
+    "ramdisk_unpack_observed": true,
+    "stock_android_boot_passed": false
+  },
+  "prepared_utc": "2026-11-25T06:02:49.177010+00:00",
+  "public_preparation_correction": {
+    "all_other_review_fields_and_original_bytes_preserved": true,
+    "cause": "The reviewer agent identifier matched the strict private absolute path guard.",
+    "changed_field_count": 1,
+    "changed_json_field": "reviewer",
+    "exact_reverse_substitution_verified": true,
+    "initial_scan_stopped_before_payload_staging": true,
+    "native_executed_or_retried": false,
+    "privacy_guard_weakened": false,
+    "publication_performed": false,
+    "resolution": "A versioned public review changed only the reviewer label to a semantic identifier."
+  },
+  "publication_scope": {
+    "binary_bytes_included": false,
+    "bootargs_text_included": false,
+    "device_tree_content_included": false,
+    "native_executed_by_preparer": false,
+    "network_or_device_access_by_preparer": false,
+    "private_paths_or_signed_urls_included": false,
+    "raw_private_files_included": false,
+    "serial_identities_included": false
+  },
+  "qemu_binary": {
+    "bytes": 63727664,
+    "sha256": "935549d9f359d04254f5627bdd8807fd8d1800ab2223ab52dea80c0cf7edecb6",
+    "unchanged_after_run": true
+  },
+  "qmp_completion": {
+    "events": [
+      {
+        "event": "RESUME"
+      },
+      {
+        "data": {
+          "action": "reset"
+        },
+        "event": "WATCHDOG"
+      },
+      {
+        "data": {
+          "guest": true,
+          "reason": "guest-reset"
+        },
+        "event": "SHUTDOWN"
+      },
+      {
+        "event": "STOP"
+      },
+      {
+        "data": {
+          "guest": false,
+          "reason": "host-qmp-quit"
+        },
+        "event": "SHUTDOWN"
+      }
+    ],
+    "greeting_messages": 1,
+    "interpretation": "The host quit acknowledgement and QEMU exit 0 confirm controlled process shutdown after the guest reset/panic; the native result remains kernel-failure with runner exit 2.",
+    "ordered_reply_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "prior_command_error": null,
+    "quit_acknowledged": true,
+    "quit_request_id": 16,
+    "residual_bytes": 0,
+    "shutdown_normal": true,
+    "terminal_errno": 104,
+    "terminal_transport": "reset",
+    "total_messages": 22
+  },
+  "qualification_sha256": "aacc8a4c439244e51e8b32a0cf8f4698c7cedbeab6aaafe02a6c9b91eaef9c28",
+  "schema": "tb371fc-ddrstats-native-sanitized-observation-v1",
+  "source_commit": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+  "source_tree": "5c25fff35bb41c3a8b018f0be965b4a9d3e9d5c4",
+  "terminal_file_permissions": {
+    "actual_observed_mode_octal": "0664",
+    "claimed_mode_0600": false,
+    "explanation": "The observed inherited default ACL accounts for the terminal file mode. The parent directory access ACL is restrictive; the terminal file itself was observed as 0664 and is not represented as 0600. Named identities are omitted.",
+    "inherited_default_acl_observed": true,
+    "parent_directory_access_acl": {
+      "mask": "---",
+      "other": "---"
+    },
+    "parent_directory_default_acl": {
+      "mask": "rwx",
+      "other": "r-x"
+    },
+    "terminal_access_acl": {
+      "mask": "rw-",
+      "other": "r--"
+    }
+  }
+}
