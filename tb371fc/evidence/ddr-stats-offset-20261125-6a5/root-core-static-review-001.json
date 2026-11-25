@@ -1,0 +1,104 @@
+{
+  "schema": "tb371fc-ddr-stats-root-core-static-review-v1",
+  "reviewed_utc": "2026-11-25T03:44:30.619052+00:00",
+  "passed": true,
+  "source_parent": "420819df9cfd76dc98cb4705987c269047d7f214",
+  "source_parent_tree": "7c13a3b85075e0eaefcc14d4f55c160bed699a08",
+  "core_freeze_sha256": "ca7a9a4729c906e80646a26e1996cb9e8b2da32e90dfe04df6a43286ff7a0e6a",
+  "all11_complete_file_sizes_SHA256_and_Git_blobs_rechecked": true,
+  "reviewed_files": [
+    {
+      "path": "hw/misc/qcom-sm8250-ddr-stats-offset.c",
+      "bytes": 9691,
+      "sha256": "4237cdc3a63263785c14a091f4eb92d14242ba79d114820c8ac3bb443ecaaced",
+      "git_blob_sha": "00aa81073cc8e6d7faa6cb763b6c1b36d4b78972"
+    },
+    {
+      "path": "include/hw/misc/qcom-sm8250-ddr-stats-offset.h",
+      "bytes": 364,
+      "sha256": "3f37eb47beb17f2f85af9b378a2400b8dc6fe93ff69d9f8cba9104bfad1c40dc",
+      "git_blob_sha": "297faf475adef09ed42f37b65c198a2ae56d79b3"
+    },
+    {
+      "path": "hw/misc/qcom-sm8250-ddr-stats-offset-data.inc",
+      "bytes": 346,
+      "sha256": "e6ec892f78dac7e3f87a06618a3cc69e9692fa819c2ea60027bdb5e526fccd4f",
+      "git_blob_sha": "ec47bc7b03ef3a4b13acfa1f09b46bebe8a96cd4"
+    },
+    {
+      "path": "tb371fc/docs/ddr-stats-offset-sm8250-registers.json",
+      "bytes": 5304,
+      "sha256": "682074c1299455fa482b870a4b2f841ea1c1c74aee9ed6dac131cc9dcff33b7d",
+      "git_blob_sha": "8e9027cae8c2eec93f5c2b38473053e89e5adad8"
+    },
+    {
+      "path": "tb371fc/scripts/gen_ddr_stats_offset.py",
+      "bytes": 21540,
+      "sha256": "6d2c03467242065e21cc34247a4e944928d924a5f96021aa44252b075ae3dcf2",
+      "git_blob_sha": "123862f7f645f2772357b32bea2857b5aac573f0"
+    },
+    {
+      "path": "tb371fc/scripts/verify_ddr_stats_offset_generation.py",
+      "bytes": 5139,
+      "sha256": "4529d753567592ce1dfb957c052f551e397069e266e2a6f11a70bc0572bb8ae6",
+      "git_blob_sha": "17a652b880d039f8947febf16173c7cfcd6bb54d"
+    },
+    {
+      "path": "tb371fc/scripts/source_download.py",
+      "bytes": 4642,
+      "sha256": "4fde0300dc4c8777531402dc700fbed6364f16b0550fc852c3031fe641fe7dd7",
+      "git_blob_sha": "1dad3f8f54658defe3e705fe9245ec0aa02c19bd"
+    },
+    {
+      "path": "hw/arm/lenovo-tb371fc.c",
+      "bytes": 103334,
+      "sha256": "51ee3224180a2e927572ee56f011b3d222f68fb97fef7e75ad188f972abaeaf1",
+      "git_blob_sha": "b4a143925b2ffe64c1f142d3a337f1aa281fe425"
+    },
+    {
+      "path": "hw/arm/Kconfig",
+      "bytes": 15508,
+      "sha256": "6cbe01a64aeea18706c4d255276819a6addf66bf6d4636381b75fbf12a6984af",
+      "git_blob_sha": "969b8b91a2d8633d9e1a4591a7084c01d2350022"
+    },
+    {
+      "path": "hw/misc/Kconfig",
+      "bytes": 4239,
+      "sha256": "451eb84dce84cb9dde20e65220a39314b5acb8e36885efd172d878549b10fa5d",
+      "git_blob_sha": "9390cc0216de6e3ebd66506802d7f0fe2e4b3189"
+    },
+    {
+      "path": "hw/misc/meson.build",
+      "bytes": 10935,
+      "sha256": "ca26e093985792bb0ece8c598cc83a384c455b8b693e950d83678327946f121a",
+      "git_blob_sha": "3138af8c4c16d5a6379c9131d18d628df3bf4a76"
+    }
+  ],
+  "findings": {
+    "board_and_build_glue_add_only_DDR_include_type_child_realize_mapping_and_build_selection": true,
+    "enabled_region_exact4_bytes_at_0c3f001c": true,
+    "disabled_region_unmapped_at_realize": true,
+    "only_mapping_enable_call_is_in_realize": true,
+    "configured_profile_remains_authoritative_during_load": true,
+    "postload_checks_all5_24byte_fields_without_repair": true,
+    "17_QOM_observations_remain_pure": true,
+    "typed_invalid_enabled_reads_and_all_enabled_writes_fail": true,
+    "read_success_returns_only_reference_relative_offset": true,
+    "no_payload_magic_entrycount_counter_or_duration_provided": true,
+    "header_uses_actual_hw_core_sysbus_path": true,
+    "original_inputs_and_prior_RPM_model_files_unchanged": true
+  },
+  "source_reasoning": {
+    "actual_original_probe_and_DT_independent_comparison": "e2ea81c92baf47ecd15129956491053c3f3eb4ddc32e54bccf0cd29b5ce127ff",
+    "public_value_derivation": "0x0c3f0000 + 0xb8 - 0x0c300000 = 0x000f00b8",
+    "private_static_AOP_is_corroboration_only": true,
+    "payload_span328_is_a_source_ABI_maximum_not_initialized_bytes": true,
+    "whole_input_pins_precede_parsing": true,
+    "vendor_and_upstream_cold_probe_access_patterns_distinguished": true
+  },
+  "scope": "Root static code and integration review with full frozen byte identities. DDR compiled tests and CI are still pending; this does not qualify a runtime artifact.",
+  "compiled_CI_passed": false,
+  "native_executed": false,
+  "Android_goal_achieved": false,
+  "blockers_in_reviewed_core": []
+}

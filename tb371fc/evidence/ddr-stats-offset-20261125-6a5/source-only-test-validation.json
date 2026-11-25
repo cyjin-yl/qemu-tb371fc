@@ -1,0 +1,122 @@
+{
+  "schema": "tb371fc-ddr-stats-offset-source-only-test-validation-v1",
+  "passed": true,
+  "source_parent": "420819df9cfd76dc98cb4705987c269047d7f214",
+  "scope": "Python syntax, pure metadata/wire packing, exact CI contract and prior-plan preservation only.",
+  "validated_files": [
+    {
+      "path": "tb371fc/tests/test_ddr_stats_offset_sm8250.py",
+      "bytes": 41779,
+      "sha256": "ec83a76070316b57fdf0590de152cb07dcb0b66464f1d5a30fc7a083527d0bc4"
+    },
+    {
+      "path": "tb371fc/scripts/ci_device_tests.py",
+      "bytes": 81555,
+      "sha256": "c1478cab27f3937d2935571a0727233ae23bb392380762db10c76cda978d4a90"
+    },
+    {
+      "path": "tb371fc/scripts/test_ci_device_tests.py",
+      "bytes": 52408,
+      "sha256": "9945c4a3fb45cfabf08fc27271243be8a72487d872aecfc56c9332c61b36f761"
+    },
+    {
+      "path": "ddr-stats-offset-test-ci-contract.json",
+      "bytes": 4628,
+      "sha256": "0f0363f4d50339667bb53d4d9b8c4e456ce337b581b7b2f719f57037fa386901"
+    }
+  ],
+  "ordinary_group_names": [
+    "cold_identity_and_pure_getters",
+    "enabled_reads_return_only_layout_offset",
+    "all_aligned_writes_are_readonly",
+    "narrow_unaligned_and_u64_reads_are_rejected",
+    "invalid_write_shapes_and_buffered_write_never_change_layout",
+    "reset_retains_enabled_layout_without_firmware_data",
+    "exact_single_leaf_and_unmodeled_neighbors",
+    "runtime_observers_are_readonly_and_time_has_no_effect"
+  ],
+  "total_group_count": 20,
+  "pure_qom_property_count": 17,
+  "pure_wire_examples": [
+    {
+      "profile_enabled": true,
+      "payload_hex": "0000000144534f31000000000c3f001c00000004000f00b8",
+      "bytes": 24,
+      "sha256": "50b3f7cb5503a3b08f24e362bfaf46b6506bb3da4778ea0a965145ffda1726b8"
+    },
+    {
+      "profile_enabled": false,
+      "payload_hex": "0000000044534f31000000000c3f001c0000000400000000",
+      "bytes": 24,
+      "sha256": "abc1ce7286a3c65759e4d37a91f95d16a9f745e7b1c2c373a556ba017dc1bb1c"
+    }
+  ],
+  "planned_one_bit_mutants_checked": [
+    {
+      "name": "profile",
+      "field_offset": 0,
+      "field_bytes": 4,
+      "changed_byte_offsets": [
+        3
+      ],
+      "changed_bits": 1,
+      "expected_diagnostic": "migrated profile mismatch"
+    },
+    {
+      "name": "identity",
+      "field_offset": 4,
+      "field_bytes": 4,
+      "changed_byte_offsets": [
+        7
+      ],
+      "changed_bits": 1,
+      "expected_diagnostic": "migrated identity mismatch"
+    },
+    {
+      "name": "physical_base",
+      "field_offset": 8,
+      "field_bytes": 8,
+      "changed_byte_offsets": [
+        15
+      ],
+      "changed_bits": 1,
+      "expected_diagnostic": "migrated geometry mismatch"
+    },
+    {
+      "name": "window_bytes",
+      "field_offset": 16,
+      "field_bytes": 4,
+      "changed_byte_offsets": [
+        19
+      ],
+      "changed_bits": 1,
+      "expected_diagnostic": "migrated geometry mismatch"
+    },
+    {
+      "name": "enabled_offset",
+      "field_offset": 20,
+      "field_bytes": 4,
+      "changed_byte_offsets": [
+        23
+      ],
+      "changed_bits": 1,
+      "expected_diagnostic": "migrated offset mismatch"
+    },
+    {
+      "name": "disabled_offset",
+      "field_offset": 20,
+      "field_bytes": 4,
+      "changed_byte_offsets": [
+        23
+      ],
+      "changed_bits": 1,
+      "expected_diagnostic": "migrated offset mismatch"
+    }
+  ],
+  "actual_qemu_migration_streams_created": false,
+  "actual_mmio_executed": false,
+  "qemu_executed": false,
+  "guest_cpu_executed": false,
+  "native_kernel_probe_observed": false,
+  "android_boot_passed": false
+}

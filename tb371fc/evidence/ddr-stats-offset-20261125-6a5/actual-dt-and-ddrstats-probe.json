@@ -1,0 +1,158 @@
+{
+  "schema": "tb371fc-ddrstats-original-dt-probe-public-evidence-v1",
+  "original_extraction_identity": {
+    "bytes": 5368,
+    "sha256": "bd3241f2aff4bc03eb0f68dae47cfe834271377b42dbe9770ce86c047a4e8905"
+  },
+  "comparison_identity": {
+    "bytes": 6285,
+    "sha256": "e2ea81c92baf47ecd15129956491053c3f3eb4ddc32e54bccf0cd29b5ce127ff"
+  },
+  "kernel": {
+    "bytes": 37445648,
+    "sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f",
+    "text_base": "0xffffff8008080000"
+  },
+  "full_input_identities": {
+    "full.dtb": {
+      "bytes": 973052,
+      "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207"
+    },
+    "kernel.bin": {
+      "bytes": 37445648,
+      "sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f"
+    }
+  },
+  "symbols": {
+    "bytes": 5226424,
+    "sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0"
+  },
+  "dt": {
+    "nodes": {
+      "/soc/qcom,ddr-stats@c3f0000": {
+        "compatible": {
+          "raw_hex": "71636f6d2c6464722d737461747300",
+          "strings": [
+            "qcom,ddr-stats"
+          ]
+        },
+        "reg": {
+          "cells": [
+            "0xc300000",
+            "0x1000",
+            "0xc3f001c",
+            "0x4"
+          ],
+          "raw_hex": "0c300000000010000c3f001c00000004"
+        },
+        "reg-names": {
+          "raw_hex": "706879735f616464725f62617365006f66667365745f6164647200",
+          "strings": [
+            "phys_addr_base",
+            "offset_addr"
+          ]
+        }
+      }
+    },
+    "parent_cells": {
+      "/soc": {
+        "#address-cells": {
+          "cells": [
+            "0x1"
+          ],
+          "raw_hex": "00000001"
+        },
+        "#size-cells": {
+          "cells": [
+            "0x1"
+          ],
+          "raw_hex": "00000001"
+        },
+        "ranges": {
+          "cells": [
+            "0x0",
+            "0x0",
+            "0x0",
+            "0xffffffff"
+          ],
+          "raw_hex": "000000000000000000000000ffffffff"
+        }
+      }
+    }
+  },
+  "probe": {
+    "symbol": "ddr_stats_probe",
+    "address": "0xffffff80086b23a8",
+    "bytes": 384,
+    "kernel_offset": 6497192,
+    "sha256": "3580ed24a60df64d576acd46f629efe21d43a828fa56e6c4e96b202f49e44423",
+    "fault_offset": "0x88",
+    "fault_opcode": "0xb9400018"
+  },
+  "source_equivalent_semantics": [
+    {
+      "actual_offsets": [
+        "0x4c",
+        "0x68"
+      ],
+      "source": "Two named IORESOURCE_MEM resource lookups; the actual DT defines phys_addr_base then offset_addr. External string bytes were not separately extracted, so the comparison relies on the original DT, named-lookup calls and observed physical fault for this binding."
+    },
+    {
+      "actual_offsets": [
+        "0x70",
+        "0x7c",
+        "0x80"
+      ],
+      "source": "Load second resource start and map exactly4 bytes; __ioremap call verified."
+    },
+    {
+      "actual_offsets": [
+        "0x84",
+        "0x88",
+        "0x8c"
+      ],
+      "source": "Check mapping result, read one32-bit offset word, then unmap; no payload read is interposed."
+    },
+    {
+      "actual_offsets": [
+        "0x90",
+        "0x164"
+      ],
+      "source": "Zero offset branches directly to -ENODEV. The observed bus abort occurs at the read, before this check can run."
+    },
+    {
+      "actual_offsets": [
+        "0x94",
+        "0xa8",
+        "0xac"
+      ],
+      "source": "Zero-extend the32-bit offset, add the first resource start, store pdata->phys_addr_base."
+    },
+    {
+      "actual_offsets": [
+        "0xb0",
+        "0xb4",
+        "0xb8",
+        "0xbc",
+        "0xc0"
+      ],
+      "source": "Derive end-start+1 and store payload resource size."
+    },
+    {
+      "actual_offsets": [
+        "0xc4",
+        "0xe4",
+        "0xfc",
+        "0x100",
+        "0x104",
+        "0x11c"
+      ],
+      "source": "Create sysfs object/attribute, mode0444, callback resolved to actual ddr_stats_show, then sysfs_create_file_ns. Payload is not dereferenced in cold probe."
+    }
+  ],
+  "all96_instructions_and10_BL_targets_independently_decoded": true,
+  "no_material_offset_consumer_mismatch": true,
+  "full_original_kernel_public_source_identity_claimed": false,
+  "raw_kernel_slice_included": false,
+  "kernel_executed_by_source_review": false
+}

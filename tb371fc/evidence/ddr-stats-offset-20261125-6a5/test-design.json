@@ -1,0 +1,273 @@
+{
+  "schema": "tb371fc-ddr-stats-offset-test-design-v1",
+  "source_only": true,
+  "compiled_or_QEMU_runtime_pass_claimed": false,
+  "device_rpc_or_ssh_used": false,
+  "scope": "Immutable configured DDR offset metadata, actual MMIO access shape, enabled-only mapping, unmodeled holes, and complete migration validation. Default/off has zero active leaves. No firmware or statistics payload data is provided.",
+  "test_groups": [
+    "cold_identity_and_pure_getters",
+    "enabled_reads_return_only_layout_offset",
+    "all_aligned_writes_are_readonly",
+    "narrow_unaligned_and_u64_reads_are_rejected",
+    "invalid_write_shapes_and_buffered_write_never_change_layout",
+    "reset_retains_enabled_layout_without_firmware_data",
+    "exact_single_leaf_and_unmodeled_neighbors",
+    "runtime_observers_are_readonly_and_time_has_no_effect",
+    "default_off_keeps_unknown_offset_and_rejects_all_access",
+    "paused_tcg_exposes_no_mutating_fixture_or_guest_execution",
+    "migration_enabled",
+    "migration_disabled",
+    "profile_on_to_off_rejected",
+    "profile_off_to_on_rejected",
+    "single_bit_profile_rejected",
+    "single_bit_identity_rejected",
+    "single_bit_physical_base_rejected",
+    "single_bit_window_bytes_rejected",
+    "single_bit_enabled_offset_rejected",
+    "single_bit_disabled_offset_rejected"
+  ],
+  "group_count": 20,
+  "qom_getter_count": 17,
+  "wire_payload_bytes": 24,
+  "complete_migrations": [
+    "enabled_to_enabled",
+    "disabled_to_disabled"
+  ],
+  "profile_rejections": [
+    "on_to_off",
+    "off_to_on"
+  ],
+  "original_streams": [
+    "ddr-stats-offset-enabled.migration",
+    "ddr-stats-offset-disabled.migration"
+  ],
+  "corrupt_streams": [
+    "ddr-stats-offset-corrupt-profile.migration",
+    "ddr-stats-offset-corrupt-identity.migration",
+    "ddr-stats-offset-corrupt-physical_base.migration",
+    "ddr-stats-offset-corrupt-window_bytes.migration",
+    "ddr-stats-offset-corrupt-enabled_offset.migration",
+    "ddr-stats-offset-corrupt-disabled_offset.migration"
+  ],
+  "one_bit_mutations": [
+    {
+      "name": "profile",
+      "source": "enabled",
+      "field_offset": 0,
+      "field_bytes": 4,
+      "old_value": 1,
+      "xor": 2,
+      "changed_payload_byte": 3,
+      "changed_bits": 1,
+      "target_reference": true,
+      "expected_diagnostic": "migrated profile mismatch"
+    },
+    {
+      "name": "identity",
+      "source": "enabled",
+      "field_offset": 4,
+      "field_bytes": 4,
+      "old_value": 1146310449,
+      "xor": 1,
+      "changed_payload_byte": 7,
+      "changed_bits": 1,
+      "target_reference": true,
+      "expected_diagnostic": "migrated identity mismatch"
+    },
+    {
+      "name": "physical_base",
+      "source": "enabled",
+      "field_offset": 8,
+      "field_bytes": 8,
+      "old_value": 205455388,
+      "xor": 4,
+      "changed_payload_byte": 15,
+      "changed_bits": 1,
+      "target_reference": true,
+      "expected_diagnostic": "migrated geometry mismatch"
+    },
+    {
+      "name": "window_bytes",
+      "source": "enabled",
+      "field_offset": 16,
+      "field_bytes": 4,
+      "old_value": 4,
+      "xor": 1,
+      "changed_payload_byte": 19,
+      "changed_bits": 1,
+      "target_reference": true,
+      "expected_diagnostic": "migrated geometry mismatch"
+    },
+    {
+      "name": "enabled_offset",
+      "source": "enabled",
+      "field_offset": 20,
+      "field_bytes": 4,
+      "old_value": 983224,
+      "xor": 1,
+      "changed_payload_byte": 23,
+      "changed_bits": 1,
+      "target_reference": true,
+      "expected_diagnostic": "migrated offset mismatch"
+    },
+    {
+      "name": "disabled_offset",
+      "source": "disabled",
+      "field_offset": 20,
+      "field_bytes": 4,
+      "old_value": 0,
+      "xor": 1,
+      "changed_payload_byte": 23,
+      "changed_bits": 1,
+      "target_reference": false,
+      "expected_diagnostic": "migrated offset mismatch"
+    }
+  ],
+  "first_observation": {
+    "snapshot_file": "destination-before-first-device-mmio.json",
+    "prewarm_file": "destination-before-incoming.json",
+    "qom_get_count": 17,
+    "repeated_qom_get_count": 17,
+    "prewarm_device_mmio_count": 0,
+    "prewarm_ram_command_count": 2,
+    "prewarm_device_state_mutable": false,
+    "prewarm_device_state_dirtied": false,
+    "prewarm_ram_witness_dirtied": true,
+    "device_mmio_delta": 0,
+    "all_memory_command_delta_before_observations": 0,
+    "cont_delta": 0,
+    "ram_witness_loaded_before_cont": true,
+    "shared_log_timestamp_claimed": false
+  },
+  "destination_prewarm": "Write and read back only an inverted RAM witness; device snapshot necessarily equals source because configuration is immutable. No device dirty-state claim.",
+  "transport_boundary": "QTest OK is transport-only. Enabled accepted reads check the exact u32 0xf00b8 or little-endian bytes b8000f00 and absence of both model and generic rejection. Enabled rejected callbacks require one exact model log with no generic access-valid line. Disabled addresses and true holes require actual generic Invalid diagnostics; failed read numeric values are never interpreted. All probes require unchanged 17-field QOM state.",
+  "dispatch_boundary": "Enabled valid/impl maximum 8 with impl.unaligned=true delivers typed 8-byte and unaligned 4-byte requests as one callback despite the 4-byte leaf. Raw 5-byte buffers deliver the 4-byte prefix then the unmapped byte at BASE+4. Read prefixes must be b8000f00; write prefixes are rejected as read-only. Default/off has no leaf, so unassigned maximum width 4 divides a qword at the four-byte-aligned BASE into two 4-byte generic rejections. No returned failed suffix, whole-buffer success, mutable prefix or atomicity is claimed.",
+  "reviewed_local_dispatch_source_pins": [
+    {
+      "path": "system/memory.c",
+      "bytes": 118660,
+      "sha256": "09a3c9c186629f082f63b50b3ee7c54366c37a62584f6d9f897980cd276aca13"
+    },
+    {
+      "path": "system/physmem.c",
+      "bytes": 140872,
+      "sha256": "3210a543353b435a146f7ae4a33608ea849aad038cd9e889ddb3a30c104c063f"
+    },
+    {
+      "path": "system/qtest.c",
+      "bytes": 30014,
+      "sha256": "b9278555cbea97cfb0e4a13cf5a65ddf1fe9d9df1e1ff939cb7424ff41adc5f6"
+    },
+    {
+      "path": "tb371fc/tests/test_camera_gdsc.py",
+      "bytes": 74782,
+      "sha256": "e187b3de97b5ae2d53376bd41d1f82099053c69bce9034af572830f8e1c1e619"
+    }
+  ],
+  "test_sha256": "ec83a76070316b57fdf0590de152cb07dcb0b66464f1d5a30fc7a083527d0bc4",
+  "contract_sha256": "0f0363f4d50339667bb53d4d9b8c4e456ce337b581b7b2f719f57037fa386901",
+  "independent_source_review_pending": false,
+  "formal_compiled_CI_pending": true,
+  "source_parent": "420819df9cfd76dc98cb4705987c269047d7f214",
+  "mapping": {
+    "reference_window_mapped_only_when_enabled": true,
+    "configured_geometry_bytes": 4,
+    "enabled_active_leaf_count": 1,
+    "enabled_active_mapped_bytes": 4,
+    "default_off_active_leaf_count": 0,
+    "default_off_mapped_bytes": 0,
+    "reset_and_post_load_do_not_enable_or_repair_mapping": true,
+    "default_off_observations": [
+      "after initial complete QOM snapshot",
+      "after reset and final QOM snapshot"
+    ],
+    "migration_observations": [
+      "after both pure QOM snapshots and actual RAM read, before cont",
+      "after final post-reset device-address read"
+    ],
+    "hmp_command": "info mtree -f"
+  },
+  "true_holes": [
+    "0x0c3f0000",
+    "0x0c3f0018",
+    "0x0c3f0020",
+    "0x0c3f00b8",
+    "0x0c3f00bc",
+    "0x0c3f01fc"
+  ],
+  "payload_last_word_is_only_maximum_abi_span_boundary": true,
+  "existing_rpm_offset_is_not_classified_as_hole": "0x0c3f0004",
+  "raw_five_byte_read": {
+    "exact_valid_prefix_hex": "b8000f00",
+    "returned_buffer_bytes": 5,
+    "generic_rejection": {
+      "access": "read",
+      "address": "0x0c3f0020",
+      "bytes": 1,
+      "region": "(null)"
+    },
+    "device_rejection_absent": true,
+    "state_unchanged": true,
+    "failed_suffix_value_interpreted": false,
+    "whole_buffer_succeeded": false,
+    "whole_buffer_atomicity_claimed": false
+  },
+  "ordinary_world_counts": {
+    "cold_identity_and_pure_getters": 2,
+    "enabled_reads_return_only_layout_offset": 10,
+    "all_aligned_writes_are_readonly": 18,
+    "narrow_unaligned_and_u64_reads_are_rejected": 24,
+    "invalid_write_shapes_and_buffered_write_never_change_layout": 26,
+    "reset_retains_enabled_layout_without_firmware_data": 10,
+    "exact_single_leaf_and_unmodeled_neighbors": 7,
+    "runtime_observers_are_readonly_and_time_has_no_effect": 3
+  },
+  "default_off_world_count": 22,
+  "default_off_requested_accesses": 10,
+  "default_off_generic_rejections": 12,
+  "default_off_device_callback_rejections": 0,
+  "successful_source_world_count": 3,
+  "successful_target_world_count": 11,
+  "successful_target_qom_getter_count": 187,
+  "successful_target_qtest_operations": [
+    "clock_set",
+    "RAM write",
+    "RAM read prewarm",
+    "RAM read after incoming",
+    "clock_step",
+    "device-address read",
+    "device-address write",
+    "clock_step",
+    "device-address read after reset"
+  ],
+  "ram_witness_values": [
+    "0x44534f00",
+    "0x44534f01"
+  ],
+  "device_mmio_operation_counter_scope": "Counts commands addressed to the configured four-byte window, including disabled/unmapped attempts; actual delivered callback counts are independently obtained from diagnostics.",
+  "independent_source_review": {
+    "path": "tb371fc/evidence/ddr-stats-offset-20261125-6a5/test-review.json",
+    "bytes": 9356,
+    "sha256": "5bda6eb021347aec89f5af48de439d877429d2d2c54c4dc28f1a369002e74a0c",
+    "git_blob_sha": "fe8e5201c50265660ebd0dde7b2462212f51bf9f"
+  },
+  "local_host_units": {
+    "executed": 36,
+    "passed_tests": 35,
+    "errors": 1,
+    "suite_passed": false,
+    "unmodified_socket_test_received_local_EPERM": true,
+    "failure_receipt": {
+      "path": "tb371fc/evidence/ddr-stats-offset-20261125-6a5/ci-local-unit-001.json",
+      "bytes": 1191,
+      "sha256": "9e1c7f2e4604a106bc3da29c59e98cf3e83222cde2430076f866c9b97317ccc8",
+      "git_blob_sha": "c0f311d83242bd981459f552f507dddcfd5e38ae"
+    },
+    "complete_stderr": {
+      "path": "tb371fc/evidence/ddr-stats-offset-20261125-6a5/ci-unit-all-001.stderr.log",
+      "bytes": 5480,
+      "sha256": "76db9d6e51e5bc747ecf8142f800c7073c897aad0065083efc40d9c6e995e3c7",
+      "git_blob_sha": "149e62a32f7d954eaf2fbd0dcf958d20d64fe8ae"
+    }
+  }
+}

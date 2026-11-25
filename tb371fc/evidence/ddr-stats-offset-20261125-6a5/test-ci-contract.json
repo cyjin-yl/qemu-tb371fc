@@ -1,0 +1,125 @@
+{
+  "schema": "tb371fc-ddr-stats-offset-test-ci-contract-v1",
+  "case_name": "ddr-stats-offset-sm8250-reference",
+  "script": "tb371fc/tests/test_ddr_stats_offset_sm8250.py",
+  "report": "result.json",
+  "check_count": 20,
+  "expected_values": {
+    "schema": "tb371fc-ddr-stats-offset-sm8250-v1",
+    "suite": "ddr-stats-offset-sm8250-reference",
+    "expected_checks": 20,
+    "expected_completed_migrations": 2,
+    "expected_rejected_migrations": 2,
+    "expected_corrupted_stream_rejections": 6,
+    "expected_unmodified_streams": 2,
+    "expected_stream_files": 8,
+    "vmstate_version": 1,
+    "vmstate_minimum_version": 1,
+    "vmstate_payload_bytes": 24,
+    "reference_identity": 1146310449,
+    "physical_base": 205455388,
+    "register_count": 1,
+    "sparse_window_count": 1,
+    "mapped_bytes": 4,
+    "source_offset_value": 983224,
+    "first_observation_qom_get_count": 17,
+    "irq_output_count": 0,
+    "input_clock_count": 0,
+    "output_clock_count": 0,
+    "timer_count": 0,
+    "reference_enabled_by_default": false,
+    "readonly_offset_register": true,
+    "mutable_device_state": false,
+    "migration_destination_device_state_dirtied": false,
+    "migration_destination_ram_witness_dirtied": true,
+    "stats_payload_modeled": false,
+    "rpm_offset_modeled": false,
+    "firmware_modeled": false,
+    "ready_modeled": false,
+    "guest_cpu_executed": false,
+    "native_kernel_probe_observed": false,
+    "android_boot_passed": false,
+    "binary_unchanged": true,
+    "reference_window_mapped_only_when_enabled": true,
+    "default_off_mapped_bytes": 0
+  },
+  "expected_lengths": {
+    "checks": 20,
+    "migrations": 2,
+    "rejected_migrations": 2,
+    "corrupted_stream_rejections": 6,
+    "migration_sources": 2,
+    "actual_stream_files": 8
+  },
+  "original_stream_files": [
+    "ddr-stats-offset-enabled.migration",
+    "ddr-stats-offset-disabled.migration"
+  ],
+  "corrupt_stream_files": [
+    "ddr-stats-offset-corrupt-profile.migration",
+    "ddr-stats-offset-corrupt-identity.migration",
+    "ddr-stats-offset-corrupt-physical_base.migration",
+    "ddr-stats-offset-corrupt-window_bytes.migration",
+    "ddr-stats-offset-corrupt-enabled_offset.migration",
+    "ddr-stats-offset-corrupt-disabled_offset.migration"
+  ],
+  "first_observation_evidence": {
+    "snapshot_file": "destination-before-first-device-mmio.json",
+    "prewarm_file": "destination-before-incoming.json",
+    "qom_get_count": 17,
+    "repeated_qom_get_count": 17,
+    "prewarm_device_mmio_count": 0,
+    "prewarm_ram_command_count": 2,
+    "prewarm_device_state_mutable": false,
+    "prewarm_device_state_dirtied": false,
+    "prewarm_ram_witness_dirtied": true,
+    "device_mmio_delta": 0,
+    "all_memory_command_delta_before_observations": 0,
+    "cont_delta": 0,
+    "ram_witness_loaded_before_cont": true,
+    "shared_log_timestamp_claimed": false
+  },
+  "source_generation": {
+    "case_name": "ddr-stats-offset-source-generation",
+    "script": "tb371fc/scripts/verify_ddr_stats_offset_generation.py",
+    "check_count": 2,
+    "expected_values": {
+      "schema": "tb371fc-ddr-stats-offset-generation-v1",
+      "source_pins_verified": true
+    },
+    "expected_lengths": {
+      "inputs": 4
+    }
+  },
+  "scope": "Compiled QTest/QMP verification of one configured read-only DDR statistics offset. The enabled profile maps four bytes; default/off leaves the address unmapped to preserve the prior RPM contract. No mutable device state: migration prewarming modifies RAM only. No statistics payload, RPM offset behavior, firmware, READY, guest CPU, native probe, or Android boot claim.",
+  "active_mapping_evidence": {
+    "enabled_active_leaf_count": 1,
+    "enabled_active_mapped_bytes": 4,
+    "disabled_active_leaf_count": 0,
+    "disabled_active_mapped_bytes": 0,
+    "flat_view_command": "info mtree -f",
+    "default_off_files": [
+      "mtree-before-reset.txt",
+      "mtree-after-reset.txt"
+    ],
+    "successful_target_files": [
+      "mtree-after-restore.txt",
+      "mtree-after-reset.txt"
+    ],
+    "target_first_mapping_query_after_two_qom_snapshots_and_ram_witness": true,
+    "target_first_mapping_query_before_cont": true,
+    "target_second_mapping_query_after_final_post_reset_device_read": true
+  },
+  "disabled_access_transport": {
+    "active_device_callback_count": 0,
+    "typed_u64_generic_chunks_bytes": [
+      4,
+      4
+    ],
+    "default_off_command_count": 10,
+    "default_off_generic_rejection_count": 12,
+    "successful_disabled_target_command_count": 3,
+    "successful_disabled_target_generic_rejection_count": 3,
+    "failed_numeric_read_value_used_as_oracle": false
+  }
+}

@@ -61,6 +61,7 @@
 #include "hw/misc/qcom-qsee-irq.h"
 #include "hw/misc/qcom-sm8250-spss-irq-mask.h"
 #include "hw/misc/qcom-sm8250-rpm-stats-offset.h"
+#include "hw/misc/qcom-sm8250-ddr-stats-offset.h"
 #include "hw/misc/qcom-tcsr-mutex.h"
 #include "hw/misc/qcom-tsens24xx.h"
 #include "hw/misc/qcom-cpufreq-hw.h"
@@ -1614,6 +1615,7 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
     DeviceState *qsee = qdev_new(TYPE_QCOM_QSEE_IRQ);
     DeviceState *spss_mask = qdev_new(TYPE_QCOM_SM8250_SPSS_IRQ_MASK);
     DeviceState *rpm_stats_offset = qdev_new(TYPE_QCOM_SM8250_RPM_STATS_OFFSET);
+    DeviceState *ddr_stats_offset = qdev_new(TYPE_QCOM_SM8250_DDR_STATS_OFFSET);
     DeviceState *mutex = qdev_new(TYPE_QCOM_TCSR_MUTEX);
     DeviceState *smem = qdev_new(TYPE_QCOM_SMEM_HANDOFF);
     DeviceState *msgram = qdev_new(TYPE_QCOM_AOP_MSGRAM);
@@ -1665,6 +1667,12 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
                               OBJECT(rpm_stats_offset));
     sysbus_realize_and_unref(SYS_BUS_DEVICE(rpm_stats_offset), &error_fatal);
     sysbus_mmio_map(SYS_BUS_DEVICE(rpm_stats_offset), 0, 0x0c3f0004);
+
+    /* DDR reference offset word only; no DDR statistics payload. */
+    object_property_add_child(OBJECT(s), "ddr-stats-offset",
+                              OBJECT(ddr_stats_offset));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(ddr_stats_offset), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(ddr_stats_offset), 0, 0x0c3f001c);
 
     /* Captured SMEM hardware-lock geometry; initial owners remain unknown. */
     object_property_add_child(OBJECT(s), "tcsr-mutex", OBJECT(mutex));

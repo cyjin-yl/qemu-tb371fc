@@ -1,0 +1,292 @@
+{
+  "ci_contract": {
+    "all_fields_and_order_unchanged": true,
+    "component_expected_values_match_test_and_contract": true,
+    "components": 99,
+    "host_unit_methods": 36,
+    "legacy_contracts_retained": 102,
+    "linux": 5,
+    "normalized_legacy_contracts_sha256": "5ed8bc26826b07347d21ea3bf6dc5c392e449acb241e8007b20debe0f21ba1ea",
+    "source_generation_count": 2,
+    "source_generation_input_count": 4,
+    "total": 104
+  },
+  "dispatch_sources": [
+    {
+      "bytes": 118660,
+      "path": "system/memory.c",
+      "sha256": "09a3c9c186629f082f63b50b3ee7c54366c37a62584f6d9f897980cd276aca13",
+      "source_revision": "66d9e20a9541b503ed4f5cac5c79c8a5b4a0809b"
+    },
+    {
+      "bytes": 140872,
+      "path": "system/physmem.c",
+      "sha256": "3210a543353b435a146f7ae4a33608ea849aad038cd9e889ddb3a30c104c063f",
+      "source_revision": "66d9e20a9541b503ed4f5cac5c79c8a5b4a0809b"
+    },
+    {
+      "bytes": 30014,
+      "path": "system/qtest.c",
+      "sha256": "b9278555cbea97cfb0e4a13cf5a65ddf1fe9d9df1e1ff939cb7424ff41adc5f6",
+      "source_revision": "66d9e20a9541b503ed4f5cac5c79c8a5b4a0809b"
+    }
+  ],
+  "findings": [],
+  "limits": {
+    "actual_artifact_audited": false,
+    "actual_migration_streams_created": false,
+    "android_boot_passed": false,
+    "compiled_qemu_executed": false,
+    "device_or_ssh_called": false,
+    "guest_cpu_executed": false,
+    "native_probe_observed": false,
+    "private_native_log_or_bootargs_or_firmware_bytes_included": false,
+    "producer_rig_imported": false,
+    "producer_wire_serializer_executed": false,
+    "runtime_pointer_or_payload_claimed": false,
+    "statistics_magic_or_record_count_supplied": false
+  },
+  "mapping_and_transport": {
+    "default_mapping_files": [
+      "mtree-before-reset.txt",
+      "mtree-after-reset.txt"
+    ],
+    "default_off_commands": 10,
+    "default_off_device_callbacks": 0,
+    "default_off_generic_rejections": 12,
+    "disabled_target_commands": 3,
+    "disabled_target_device_callbacks": 0,
+    "disabled_target_generic_rejections": 3,
+    "enabled_eight_byte_callback_not_split_into_two_valid_reads": true,
+    "enabled_invalid_typed_request_requires_one_device_callback_and_no_generic_core_line": true,
+    "enabled_mapping": {
+      "base": "0x0c3f001c",
+      "bytes": 4,
+      "readonly_value": "0x000f00b8"
+    },
+    "failed_numeric_reads_interpreted": false,
+    "flatview_command": "info mtree -f",
+    "off_active_leaf_count": 0,
+    "off_active_mapped_bytes": 0,
+    "off_actual_generic_chunk_bytes": [
+      4,
+      4
+    ],
+    "off_generic_chunk_addresses": [
+      "0x0c3f001c",
+      "0x0c3f0020"
+    ],
+    "off_typed_qword_request_bytes": 8,
+    "prior_rpm_offset_address_called_a_hole": false,
+    "raw_five_read_failed_suffix_address": "0x0c3f0020",
+    "raw_five_read_valid_prefix_hex": "b8000f00",
+    "raw_five_write_requires_one_readonly_four_byte_callback_and_one_generic_one_byte_suffix": true,
+    "six_holes": [
+      "0x0c3f0000",
+      "0x0c3f0018",
+      "0x0c3f0020",
+      "0x0c3f00b8",
+      "0x0c3f00bc",
+      "0x0c3f01fc"
+    ],
+    "target_mapping_files": [
+      "mtree-after-restore.txt",
+      "mtree-after-reset.txt"
+    ],
+    "whole_buffer_success_or_atomicity_claimed": false
+  },
+  "migration_observation": {
+    "all_memory_command_delta_before_both_snapshots": 0,
+    "cont_delta_before_both_snapshots": 0,
+    "default_off_world_snapshots": 22,
+    "device_mmio_delta_before_both_snapshots": 0,
+    "first_getters": 17,
+    "no_shared_qmp_qtest_timestamp_claim": true,
+    "prewarm_all_memory_commands": 2,
+    "prewarm_device_commands": 0,
+    "prewarm_device_state_dirtied": false,
+    "prewarm_ram_commands": 2,
+    "prewarm_ram_witness_dirtied": true,
+    "ram_address": "0x80010000",
+    "ram_witnesses": [
+      "0x44534f00",
+      "0x44534f01"
+    ],
+    "repeated_getters": 17,
+    "source_clock_ns": [
+      100000,
+      200000
+    ],
+    "source_qtest_commands": 3,
+    "target_first_flatview_query_after_both_qom_snapshots_and_restored_ram_read": true,
+    "target_first_flatview_query_before_cont": true,
+    "target_getters": 187,
+    "target_qtest_commands": 9,
+    "target_second_flatview_query_after_final_post_reset_device_access": true,
+    "target_world_snapshots": 11
+  },
+  "observed_utc": "2026-11-25T03:54:48.490739+00:00",
+  "ordinary_group_names": [
+    "cold_identity_and_pure_getters",
+    "enabled_reads_return_only_layout_offset",
+    "all_aligned_writes_are_readonly",
+    "narrow_unaligned_and_u64_reads_are_rejected",
+    "invalid_write_shapes_and_buffered_write_never_change_layout",
+    "reset_retains_enabled_layout_without_firmware_data",
+    "exact_single_leaf_and_unmodeled_neighbors",
+    "runtime_observers_are_readonly_and_time_has_no_effect"
+  ],
+  "passed": true,
+  "qom_properties": 17,
+  "retained_local_host_failure": {
+    "all_host_tests_passed_claimed": false,
+    "assertion_failures": 0,
+    "cause": "Existing AF_UNIX socket creation received PermissionError EPERM; no skip or assertion weakening.",
+    "errors": 1,
+    "exit_code": 1,
+    "passes": 35,
+    "receipt": {
+      "bytes": 1191,
+      "path": "ci-local-unit-001.json",
+      "sha256": "9e1c7f2e4604a106bc3da29c59e98cf3e83222cde2430076f866c9b97317ccc8"
+    },
+    "tests_run": 36
+  },
+  "retained_rpm_test": {
+    "bytes": 39266,
+    "path": "tb371fc/tests/test_rpm_stats_offset_sm8250.py",
+    "sha256": "8e878e30ad978d7affb389573e4df4cc3bb3009843ac74b5d363ebd723eee39f"
+  },
+  "reviewed_files": [
+    {
+      "bytes": 41779,
+      "path": "tb371fc/tests/test_ddr_stats_offset_sm8250.py",
+      "sha256": "ec83a76070316b57fdf0590de152cb07dcb0b66464f1d5a30fc7a083527d0bc4"
+    },
+    {
+      "bytes": 81555,
+      "path": "tb371fc/scripts/ci_device_tests.py",
+      "sha256": "c1478cab27f3937d2935571a0727233ae23bb392380762db10c76cda978d4a90"
+    },
+    {
+      "bytes": 52408,
+      "path": "tb371fc/scripts/test_ci_device_tests.py",
+      "sha256": "9945c4a3fb45cfabf08fc27271243be8a72487d872aecfc56c9332c61b36f761"
+    },
+    {
+      "bytes": 4628,
+      "path": "tb371fc/evidence/ddr-stats-offset-20261125-6a5/test-ci-contract.json",
+      "sha256": "0f0363f4d50339667bb53d4d9b8c4e456ce337b581b7b2f719f57037fa386901"
+    }
+  ],
+  "schema": "tb371fc-ddr-stats-offset-independent-static-test-review-v1",
+  "scope": "Independent source and metadata review only; compiled acceptance is pending.",
+  "source_parent": "420819df9cfd76dc98cb4705987c269047d7f214",
+  "total_groups": 20,
+  "unchanged_safety_critical_test_function_ASTs": [
+    "all_aligned_writes_are_readonly",
+    "assert_state",
+    "cold_identity_and_pure_getters",
+    "invalid_write_shapes_and_buffered_write_never_change_layout",
+    "load_failure",
+    "narrow_unaligned_and_u64_reads_are_rejected",
+    "offset_payload",
+    "prewarm_target",
+    "receive_source",
+    "reset_retains_enabled_layout_without_firmware_data",
+    "runtime_observers_are_readonly_and_time_has_no_effect",
+    "save_source",
+    "validate_world"
+  ],
+  "wire": {
+    "bytes": 24,
+    "completed_directions": [
+      "enabled_to_enabled",
+      "disabled_to_disabled"
+    ],
+    "field_layout": [
+      {
+        "bytes": 4,
+        "name": "profile",
+        "offset": 0
+      },
+      {
+        "bytes": 4,
+        "name": "identity",
+        "offset": 4
+      },
+      {
+        "bytes": 8,
+        "name": "physical_base",
+        "offset": 8
+      },
+      {
+        "bytes": 4,
+        "name": "window_bytes",
+        "offset": 16
+      },
+      {
+        "bytes": 4,
+        "name": "offset_value",
+        "offset": 20
+      }
+    ],
+    "fields": 5,
+    "full_stream_single_bit_difference_and_original_preservation_checked_by_test": true,
+    "literal_disabled_hex": "0000000044534f31000000000c3f001c0000000400000000",
+    "literal_enabled_hex": "0000000144534f31000000000c3f001c00000004000f00b8",
+    "minimum_version": 1,
+    "one_bit_mutation_cases": [
+      {
+        "changed_payload_byte": 3,
+        "expected_diagnostic": "migrated profile mismatch",
+        "field_bytes": 4,
+        "field_offset": 0,
+        "name": "profile"
+      },
+      {
+        "changed_payload_byte": 7,
+        "expected_diagnostic": "migrated identity mismatch",
+        "field_bytes": 4,
+        "field_offset": 4,
+        "name": "identity"
+      },
+      {
+        "changed_payload_byte": 15,
+        "expected_diagnostic": "migrated geometry mismatch",
+        "field_bytes": 8,
+        "field_offset": 8,
+        "name": "physical_base"
+      },
+      {
+        "changed_payload_byte": 19,
+        "expected_diagnostic": "migrated geometry mismatch",
+        "field_bytes": 4,
+        "field_offset": 16,
+        "name": "window_bytes"
+      },
+      {
+        "changed_payload_byte": 23,
+        "expected_diagnostic": "migrated offset mismatch",
+        "field_bytes": 4,
+        "field_offset": 20,
+        "name": "enabled_offset"
+      },
+      {
+        "changed_payload_byte": 23,
+        "expected_diagnostic": "migrated offset mismatch",
+        "field_bytes": 4,
+        "field_offset": 20,
+        "name": "disabled_offset"
+      }
+    ],
+    "original_streams": 2,
+    "postload_failure_requires_exit_1_specific_device_reason_and_both_migration_fatal_strings": true,
+    "total_streams": 8,
+    "unmodified_profile_rejects": [
+      "enabled_to_disabled",
+      "disabled_to_enabled"
+    ],
+    "version": 1
+  }
+}
