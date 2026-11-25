@@ -4,8 +4,10 @@
 
 Source identity validation belongs to the caller, outside this retry loop.  The
 three request attempts and 30-second aggregate retry-delay allowance supplement
-the source-generation gate's existing process timeout; a socket timeout is not
-an absolute wall-clock deadline for a slow response.
+the source-generation gate's existing process timeout. HTTP429 uses default
+waits of 10 and 20 seconds; other transient errors retain 1 and 2 seconds. A
+valid Retry-After remains a minimum and may exhaust the shared delay budget.
+A socket timeout is not an absolute wall-clock deadline for a slow response.
 """
 from email.utils import parsedate_to_datetime
 import errno
@@ -207,7 +209,7 @@ def _retry_after(error):
 
 
 def _read_source_network(url, *, max_bytes, timeout, caching=False):
-    """Use the original three-attempt/30-second-delay transport policy.
+    """Use three attempts and at most 30 seconds of aggregate retry delay.
 
 Every retry starts a new GET and discards the failed response.  HTTP status,
 certificate, and argument errors that are not explicitly transient propagate
@@ -242,6 +244,10 @@ without shortening the server's requested delay.
             if attempt == ATTEMPTS or not _transient(error):
                 raise
             delay = float(2 ** (attempt - 1))
+            if isinstance(error, urllib.error.HTTPError) and error.code == 429:
+                # Use the existing wait budget for rate limiting; do not add
+                # requests or shorten any server-requested minimum delay.
+                delay *= 10.0
             server_delay = _retry_after(error)
             if server_delay is not None:
                 delay = max(delay, server_delay)

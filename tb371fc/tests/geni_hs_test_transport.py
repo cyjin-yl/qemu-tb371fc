@@ -62,7 +62,7 @@ def wait_migration(rig, timeout=30):
 
 def file_channels(path):
     return {'channels': [{'channel-type': 'main', 'addr': {'transport': 'file',
-                                                         'filename': str(Path(path).resolve())}}]}
+                                                         'filename': str(Path(path).resolve()), 'offset': 0}}]}
 
 
 class HsRig:

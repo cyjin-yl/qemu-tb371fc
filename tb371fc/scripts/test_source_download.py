@@ -84,13 +84,13 @@ class DownloadTests(unittest.TestCase):
                 self.assertEqual(source_download.read_source(server.url + "/pin", max_bytes=100),
                                  b"complete source")
                 self.assertEqual(server.requests["/pin"], 2)
-                self.assertEqual(sleep.call_args_list[0].args, (1.0,))
+                self.assertEqual(sleep.call_args_list[0].args, (10.0 if code == 429 else 1.0,))
 
     def test_retry_after_delta_is_respected(self):
-        with HttpFixture({"/pin": [(429, b"", {"Retry-After": "7"}),
+        with HttpFixture({"/pin": [(429, b"", {"Retry-After": "17"}),
                                     (200, b"source", {})]}) as server, quick_retries() as sleep:
             self.assertEqual(source_download.read_source(server.url + "/pin", max_bytes=100), b"source")
-            self.assertEqual(sleep.call_args.args, (7.0,))
+            self.assertEqual(sleep.call_args.args, (17.0,))
 
     def test_retry_after_http_date_is_respected(self):
         now = 1700000000
@@ -180,6 +180,47 @@ class DownloadTests(unittest.TestCase):
             with self.assertRaises(urllib.error.HTTPError):
                 source_download.read_source("https://fixture.invalid", max_bytes=100)
         self.assertTrue(body.closed)
+
+
+@patch.dict(os.environ, {source_download.CACHE_ENV: ""})
+class RateLimitBackoffTests(unittest.TestCase):
+    """Bounded429 scheduling with full fresh responses and no public network."""
+    URL = "https://raw.githubusercontent.com/fixture/repo/" + "a" * 40 + "/source.c"
+
+    def test_429_default_budget_recovers_on_third_fresh_response(self):
+        for headers in (None, {}, {"Retry-After": "invalid"}, {"Retry-After": "0"}):
+            with self.subTest(headers=headers):
+                bodies = [io.BytesIO(b"first limited body"), io.BytesIO(b"second limited body")]
+                errors = [urllib.error.HTTPError(self.URL, 429, "limited", headers, body) for body in bodies]
+                response = CacheResponse(b"complete third response", self.URL)
+                with patch.object(source_download.urllib.request, "urlopen", side_effect=[*errors, response]) as opened, quick_retries() as sleep:
+                    self.assertEqual(source_download.read_source(self.URL, max_bytes=100), b"complete third response")
+                    self.assertEqual(opened.call_count, 3)
+                    self.assertEqual([x.args for x in sleep.call_args_list], [(10.0,), (20.0,)])
+                    self.assertTrue(all(body.closed for body in bodies))
+
+    def test_429_exhaustion_preserves_final_failure_after_three_attempts(self):
+        bodies = [io.BytesIO(b"limited") for _ in range(3)]
+        errors = [urllib.error.HTTPError(self.URL, 429, "limited", {}, body) for body in bodies]
+        with patch.object(source_download.urllib.request, "urlopen", side_effect=errors) as opened, quick_retries() as sleep:
+            with self.assertRaises(urllib.error.HTTPError) as caught:
+                source_download.read_source(self.URL, max_bytes=100)
+            self.assertIs(caught.exception, errors[-1])
+            self.assertEqual(opened.call_count, 3)
+            self.assertEqual([x.args for x in sleep.call_args_list], [(10.0,), (20.0,)])
+            self.assertTrue(all(body.closed for body in bodies))
+
+    def test_429_server_minimum_can_exhaust_remaining_budget_without_early_retry(self):
+        bodies = [io.BytesIO(b"limited"), io.BytesIO(b"still limited")]
+        errors = [urllib.error.HTTPError(self.URL, 429, "limited", {"Retry-After": "25"}, bodies[0]),
+                  urllib.error.HTTPError(self.URL, 429, "limited", {}, bodies[1])]
+        with patch.object(source_download.urllib.request, "urlopen", side_effect=errors) as opened, quick_retries() as sleep:
+            with self.assertRaises(urllib.error.HTTPError) as caught:
+                source_download.read_source(self.URL, max_bytes=100)
+            self.assertIs(caught.exception, errors[-1])
+            self.assertEqual(opened.call_count, 2)
+            sleep.assert_called_once_with(25.0)
+            self.assertTrue(all(body.closed for body in bodies))
 
 
 @patch.dict(os.environ, {source_download.CACHE_ENV: ""})
@@ -422,13 +463,13 @@ class PublicSourceCacheTests(unittest.TestCase):
 
     def test_uncacheable_tag_retains_original_transient_retry_policy(self):
         url = "https://raw.githubusercontent.com/gregkh/linux/v6.12.114/drivers/clk/qcom/gcc-sm8250.c"
-        error = urllib.error.HTTPError(url, 429, "limited", {"Retry-After": "5"}, io.BytesIO(b"limited"))
+        error = urllib.error.HTTPError(url, 429, "limited", {"Retry-After": "17"}, io.BytesIO(b"limited"))
         with patch.object(source_download, "_cache_directory") as directory, \
                 patch.object(source_download.urllib.request, "urlopen", side_effect=[
                     error, CacheResponse(b"complete tag response", url)]) as opened, quick_retries() as sleep:
             self.assertEqual(source_download.read_source(url, max_bytes=100), b"complete tag response")
             self.assertEqual(opened.call_count, 2)
-            sleep.assert_called_once_with(5.0)
+            sleep.assert_called_once_with(17.0)
             directory.assert_not_called()
         self.assertFalse(self.cache.exists())
 
