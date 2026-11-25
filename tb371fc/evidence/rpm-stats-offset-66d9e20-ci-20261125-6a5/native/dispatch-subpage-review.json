@@ -1,0 +1,98 @@
+{
+  "QEMU_executed": false,
+  "actual_evidence": {
+    "DDR_frontier_Data_Abort_events": 1,
+    "ELR": "0xffffff80086b2430",
+    "ESR": "0x96000010",
+    "FAR": "0xffffff800b18d01c",
+    "earlier_different_Data_Abort": {
+      "ELR": "0xffffff800818e10c",
+      "ESR": "0x96000005",
+      "FAR": "0x0",
+      "cpu": 4,
+      "exception_return_follows": true,
+      "line": 3280
+    },
+    "fault_cpu": 6,
+    "instruction": "LDR W24, [X0]",
+    "invalid_diagnostic_lines": 2,
+    "opcode": "b9400018",
+    "pc": "ddr_stats_probe+0x88/0x180",
+    "printk_sha256": "dd1b832a41c653e1fe31140dc20121df7a1c8c215aa29fbde800a3032fa17feb",
+    "qemu_log_sha256": "e95eca0ed60a8f5858220f6bdae7f1ae4a6088ccd8273bdaae4d7c0103daf40f",
+    "recorded_Data_Abort_events_total": 2
+  },
+  "bounded_claim": "Two adjacent Invalid diagnostic lines are source-explained nested rejection messages for one recorded DDR guest fault. The0x1c line does not establish a second guest instruction or a guest physical read of address0x1c. An earlier, different Data Abort remains recorded separately; no only-one-abort-in-the-entire-run claim is made. No offset value, DDR payload access, or firmware runtime producer state is inferred.",
+  "device_RPC_or_SSH_used": false,
+  "exact_head_GitHub_response": {
+    "bytes": 359009,
+    "sha256": "a3cb57b3d35ff32b2c65c60ab933c6e55706adaa51db4a4fdfb3a9f7559aa437"
+  },
+  "explanation": [
+    "The board maps only the4B RPM offset region at physical0x0c3f0004. flatview_add_to_dispatch/register_subpage create a subpage wrapper for the surrounding page; its other bytes remain unassigned.",
+    "The CPU IOTLB path calls address_space_translate_internal with resolve_subpage=false. The outer access is therefore expressed at wrapper offset0x1c, while subpage_accepts adds page base0x0c3f0000.",
+    "subpage_accepts calls flatview_access_valid at physical0x0c3f001c. The inner unassigned_mem_accepts returns false, and inner memory_region_access_valid emits the full-address rejection.",
+    "The false result propagates back to outer memory_region_access_valid for the subpage wrapper, which emits the second rejection using offset0x1c. Both wrappers have NULL region names in these diagnostics.",
+    "The outer memory_region_dispatch_read returns MEMTX_DECODE_ERROR. The captured trace then records one corresponding DDR Data Abort, whose ELR/FAR match the printk PC/X0. The observed ordering is explained by nested validity checks for the same recorded faulting32-bit guest load."
+  ],
+  "not_claimed": [
+    "instruction tracing of every guest operation",
+    "successful DDR offset read",
+    "DDR statistics payload availability",
+    "stock Android userspace/UI/boot completion"
+  ],
+  "raw_private_logs_or_bootargs_included": false,
+  "reviewed_utc": "2026-11-25T03:23:05.237058+00:00",
+  "schema": "tb371fc-rpmstats-66d9e20-native-subpage-diagnostic-review-v1",
+  "source_commit": "66d9e20a9541b503ed4f5cac5c79c8a5b4a0809b",
+  "source_modified": false,
+  "sources": [
+    {
+      "bytes": 118660,
+      "git_blob": "5fc36708ec349d94605f0503c647d7f9d1475a2d",
+      "repository_path": "system/memory.c",
+      "reviewed_functions": [
+        "unassigned_mem_accepts",
+        "memory_region_access_valid",
+        "memory_region_dispatch_read"
+      ],
+      "sha256": "09a3c9c186629f082f63b50b3ee7c54366c37a62584f6d9f897980cd276aca13",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/66d9e20a9541b503ed4f5cac5c79c8a5b4a0809b/system/memory.c"
+    },
+    {
+      "bytes": 140872,
+      "git_blob": "c21ea929153e5b67efa47432b1db0993e2690f9c",
+      "repository_path": "system/physmem.c",
+      "reviewed_functions": [
+        "address_space_translate_for_iotlb",
+        "address_space_translate_internal",
+        "flatview_add_to_dispatch",
+        "register_subpage",
+        "subpage_init",
+        "subpage_accepts",
+        "flatview_access_valid"
+      ],
+      "sha256": "3210a543353b435a146f7ae4a33608ea849aad038cd9e889ddb3a30c104c063f",
+      "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/66d9e20a9541b503ed4f5cac5c79c8a5b4a0809b/system/physmem.c"
+    },
+    {
+      "bytes": 102867,
+      "repository_path": "hw/arm/lenovo-tb371fc.c",
+      "sha256": "ff2f8d8bc66826068a2bedbdc10145c7cc1dc3fe615c7a4a5fb558c8da5d4f7c",
+      "source_identity_scope": "Previously independently checked against actual66d9 CI artifact source pins; rehashed here."
+    },
+    {
+      "bytes": 9377,
+      "repository_path": "hw/misc/qcom-sm8250-rpm-stats-offset.c",
+      "sha256": "5144319fb0856c107512edbdfe86d48adef1237846da7c312394ff8ccae5db09",
+      "source_identity_scope": "Previously independently checked against actual66d9 CI artifact source pins; rehashed here."
+    },
+    {
+      "bytes": 346,
+      "repository_path": "hw/misc/qcom-sm8250-rpm-stats-offset-data.inc",
+      "sha256": "dc38191138f43d396b94971b15b9b6617924131669b602cb1bccf185f75d22e5",
+      "source_identity_scope": "Previously independently checked against actual66d9 CI artifact source pins; rehashed here."
+    }
+  ],
+  "static_explanation_checked": true
+}
