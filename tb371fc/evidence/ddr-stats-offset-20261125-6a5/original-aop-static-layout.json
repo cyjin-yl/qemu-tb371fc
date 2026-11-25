@@ -1,0 +1,77 @@
+{
+  "schema": "tb371fc-ddrstats-original-aop-static-layout-public-v1",
+  "private_static_review_identity": {
+    "bytes": 4410,
+    "sha256": "9bc37da775a9f24d7a6eb800e02c3b628aba03790d02756bcffc0c48dcb27f93"
+  },
+  "firmware": {
+    "bytes": 524288,
+    "sha256": "3dbb0746d21100d124d76ee19b096d122d58c4aa534dec5828005835535b6671",
+    "format": "ELF32 little-endian EM_ARM",
+    "origin_qualification": "Existing private aop_a backup, not certified factory and not a live MSGRAM capture"
+  },
+  "verified_ranges": {
+    "writer": {
+      "elf_address": "0x8081a90c",
+      "file_offset": 195512,
+      "bytes": 36,
+      "sha256": "67bbbea5f77b78ba0c585d0526d6750dcd9f2e8db30d7ee232aa99db54199c7a"
+    },
+    "channel_table": {
+      "elf_address": "0xb0e1cc4",
+      "file_offset": 105428,
+      "bytes": 128,
+      "sha256": "e2404d1dc9306617efe07ccecd3be339a0bedaf88c88dbf099e9f9f954ac2fda"
+    },
+    "channel_table_pointer_literal": {
+      "elf_address": "0x8081a930",
+      "file_offset": 195548,
+      "bytes": 4,
+      "sha256": "813446dd3baf39b3fc0773c68a915dae342118d46d61a76a18341e71a5e508a4"
+    },
+    "ddr_addend_literal": {
+      "elf_address": "0x8081a944",
+      "file_offset": 195568,
+      "bytes": 4,
+      "sha256": "a8a8a64e6d120747fe42321c277898a6c65cb53964dbf7b3c84a839088925381"
+    },
+    "selected_channel_entry": {
+      "elf_address": "0xb0e1d3c",
+      "file_offset": 105548,
+      "bytes": 8,
+      "sha256": "391ed2fff53a903eec6fb10304991f4dc3388557e200102d63a016e2eb0f0c69"
+    }
+  },
+  "derivation": {
+    "firmware_local_channel_table_pointer": "0x000e1cc4",
+    "associated_initialized_ELF_data_address": "0xb0e1cc4",
+    "channel_index": 15,
+    "channel_entry_byte_offset": 120,
+    "initialized_channel_address": "0x13f0000",
+    "store_offset": "0x1c",
+    "destination_AOP_view": "0x13f001c",
+    "pc_relative_literal_address": "0x8081a944",
+    "literal_addend": "0xfed000b8",
+    "expression": "(0x013f0000 + 0xfed000b8) & 0xffffffff",
+    "statically_derived_word": "0xf00b8",
+    "equivalent_expression": "0x013f0000 + 0xb8 - 0x01300000"
+  },
+  "crosscheck": {
+    "upstream_rpmh_ddr_offset": "0xb8",
+    "upstream_SM8250_resource_base": "0x0c3f0000",
+    "vendor_consumer_resource_base": "0x0c300000",
+    "reference_relative_pointer": "0x000f00b8",
+    "static_values_agree": true
+  },
+  "qualifications": [
+    "The firmware-local data pointer is associated with the matching initialized ELF data using the image local/load relation, as in the prior static review; actual boot remapping was not executed or observed.",
+    "The derived word describes this static writer path with the ELF initialized channel table, not a live/reset APSS MMIO read.",
+    "The generic AOP-view 0x01300000 to APSS 0x0c300000 alias is not independently established by this firmware analysis.",
+    "Runtime DDR statistics, magic presence, entry count, counters, duration, freshness and synchronization are not modeled or claimed.",
+    "The actual original-kernel probe separately identifies the APSS offset-word read; neither source analysis establishes a live/reset value."
+  ],
+  "firmware_blob_included": false,
+  "full_disassembly_included": false,
+  "private_firmware_required_for_public_generation_or_CI": false,
+  "firmware_executed": false
+}

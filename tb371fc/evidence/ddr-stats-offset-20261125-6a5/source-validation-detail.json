@@ -1,0 +1,333 @@
+{
+  "schema": "tb371fc-ddr-stats-offset-source-validation-v1",
+  "passed": true,
+  "source_inputs": 4,
+  "outputs": 2,
+  "source_tamper_checks": [
+    {
+      "mutation": {
+        "path": "primary-r11/drivers/soc/qcom/ddr_stats.c",
+        "offset": 3221,
+        "xor": 1,
+        "bytes": 6442,
+        "sha256": "ab9765a753c619c5eb77889f5eb380e20f24b37bdcf4437713d3a63c90726bb7"
+      },
+      "generator_error": "Complete source identity mismatch: primary-r11/drivers/soc/qcom/ddr_stats.c",
+      "verifier_exit": 1,
+      "generator_not_run": true,
+      "verifier_result_sha256": "726834fb544e7da751822e5d0db5442b5735174a0bfb44c71fff3cc02b5918d7",
+      "passed": true
+    },
+    {
+      "mutation": {
+        "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi",
+        "offset": 1408,
+        "xor": 1,
+        "bytes": 2817,
+        "sha256": "430a236321452d5dbf176e660bad5ae7584cfb682dd91d65ce404051be8dd7f8"
+      },
+      "generator_error": "Complete source identity mismatch: primary-r11/arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi",
+      "verifier_exit": 1,
+      "generator_not_run": true,
+      "verifier_result_sha256": "a2432123a155c20b8a1b01140e0162ddbdc4627b6f50fd5ad4aa28e15a6e2284",
+      "passed": true
+    },
+    {
+      "mutation": {
+        "path": "primary-upstream/drivers/soc/qcom/qcom_stats.c",
+        "offset": 5848,
+        "xor": 1,
+        "bytes": 11697,
+        "sha256": "9dddd7df2a38f439150397654624be8b7b545ad31b00a916c41f5fdd33558b69"
+      },
+      "generator_error": "Complete source identity mismatch: primary-upstream/drivers/soc/qcom/qcom_stats.c",
+      "verifier_exit": 1,
+      "generator_not_run": true,
+      "verifier_result_sha256": "a2848f5fa5cd74e791fc6a9ac96f1d734098638643ce6fe81df9733a0f32107b",
+      "passed": true
+    },
+    {
+      "mutation": {
+        "path": "primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+        "offset": 88881,
+        "xor": 1,
+        "bytes": 177763,
+        "sha256": "6e27c6745b92124dc352e7394552f618e93a856baca03cbe94d25084a70aee1d"
+      },
+      "generator_error": "Complete source identity mismatch: primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+      "verifier_exit": 1,
+      "generator_not_run": true,
+      "verifier_result_sha256": "ea5856041a6fae7e961173b67ce4efe3c1e1d267343763b887e4976babc3d21e",
+      "passed": true
+    }
+  ],
+  "parser_negative_checks": [
+    {
+      "name": "vendor_write_instead_of_offset_read",
+      "error": "Vendor probe address contract changed: offset_addr=readl_relaxed(phys_ptr);",
+      "passed": true
+    },
+    {
+      "name": "vendor_mapping_is_eight_bytes",
+      "error": "Vendor offset branch is not the bounded map/read/unmap sequence",
+      "passed": true
+    },
+    {
+      "name": "vendor_address_formula_is_or",
+      "error": "Vendor probe address contract changed: pdata->phys_addr_base=res->start+offset_addr;",
+      "passed": true
+    },
+    {
+      "name": "vendor_duplicate_offset_read",
+      "error": "Vendor probe address contract changed: offset_addr=readl_relaxed(phys_ptr);",
+      "passed": true
+    },
+    {
+      "name": "vendor_zero_guard_returns_success",
+      "error": "Vendor probe address contract changed: if(!offset_addr)return-ENODEV;",
+      "passed": true
+    },
+    {
+      "name": "vendor_aperture_is_eight_bytes",
+      "error": "Unsupported four-byte DDR offset aperture",
+      "passed": true
+    },
+    {
+      "name": "vendor_resource_names_reordered",
+      "error": "Unexpected vendor resource geometry",
+      "passed": true
+    },
+    {
+      "name": "vendor_compatible_differs",
+      "error": "Unexpected vendor DDR statistics compatible",
+      "passed": true
+    },
+    {
+      "name": "vendor_record_width_changed",
+      "error": "Unsupported structure layout: stats_entry",
+      "passed": true
+    },
+    {
+      "name": "vendor_header_field_changed",
+      "error": "Vendor DDR header layout changed",
+      "passed": true
+    },
+    {
+      "name": "upstream_compatible_differs",
+      "error": "Unsupported upstream statistics compatible",
+      "passed": true
+    },
+    {
+      "name": "upstream_parent_address_cells_changed",
+      "error": "Upstream statistics parent cell geometry changed",
+      "passed": true
+    },
+    {
+      "name": "upstream_reg_cell_geometry_changed",
+      "error": "Upstream resource must have two address and two size cells",
+      "passed": true
+    },
+    {
+      "name": "upstream_match_points_to_other_config",
+      "error": "RPMh compatible points at another profile",
+      "passed": true
+    },
+    {
+      "name": "upstream_dynamic_offset_enabled",
+      "error": "RPMh fixed layout/profile contract changed",
+      "passed": true
+    },
+    {
+      "name": "upstream_appended_records_enabled",
+      "error": "RPMh fixed layout/profile contract changed",
+      "passed": true
+    },
+    {
+      "name": "upstream_duplicate_DDR_layout_field",
+      "error": "Duplicate configuration field: ddr_stats_offset",
+      "passed": true
+    },
+    {
+      "name": "upstream_record_width_changed",
+      "error": "Unsupported structure layout: ddr_stats_entry",
+      "passed": true
+    },
+    {
+      "name": "upstream_magic_disagrees_with_vendor",
+      "error": "Vendor/upstream DDR header contracts disagree",
+      "passed": true
+    },
+    {
+      "name": "upstream_maximum_count_disagrees_with_vendor",
+      "error": "Vendor/upstream DDR header contracts disagree",
+      "passed": true
+    },
+    {
+      "name": "upstream_entry_header_offset_changed",
+      "error": "Vendor/upstream DDR header contracts disagree",
+      "passed": true
+    },
+    {
+      "name": "upstream_magic_read_width_changed",
+      "error": "Upstream DDR offset/magic use changed",
+      "passed": true
+    },
+    {
+      "name": "upstream_record_stride_expression_changed",
+      "error": "Upstream DDR record use changed: memcpy_fromio(data,reg,sizeof(structddr_stats_entry)*entry_count);",
+      "passed": true
+    },
+    {
+      "name": "upstream_resource_macro_not_literal",
+      "error": "Only unsigned integer literals are supported",
+      "passed": true
+    },
+    {
+      "name": "upstream_cell_exceeds_uint32",
+      "error": "Integer literal exceeds uint32",
+      "passed": true
+    },
+    {
+      "name": "upstream_unknown_config_field",
+      "error": "Unexpected RPMh configuration fields",
+      "passed": true
+    },
+    {
+      "name": "upstream_maximum_payload_exceeds_region",
+      "error": "DDR reference span exceeds or overlaps the source pointer layout",
+      "passed": true
+    },
+    {
+      "name": "upstream_DDR_payload_is_unaligned",
+      "error": "DDR reference span exceeds or overlaps the source pointer layout",
+      "passed": true
+    },
+    {
+      "name": "upstream_DDR_offset_is_absent",
+      "error": "DDR reference span exceeds or overlaps the source pointer layout",
+      "passed": true
+    },
+    {
+      "name": "upstream_DDR_payload_overlaps_pointer",
+      "error": "DDR reference span exceeds or overlaps the source pointer layout",
+      "passed": true
+    },
+    {
+      "name": "upstream_QMP_requirement_not_in_reference",
+      "error": "This SM8250 reference does not establish QMP synchronization",
+      "passed": true
+    },
+    {
+      "name": "upstream_probe_uses_other_consumer",
+      "error": "Upstream probe binding changed: qcom_create_ddr_stat_files(root,reg,config);",
+      "passed": true
+    }
+  ],
+  "committed_output_tamper_checks": [
+    {
+      "path": "hw/misc/qcom-sm8250-ddr-stats-offset-data.inc",
+      "xor": 1,
+      "generator_exit": 0,
+      "verifier_exit": 1,
+      "only_mutated_output_failed": true,
+      "passed": true,
+      "result_sha256": "6818afd0c2e8babe6ad416f8f9ab65cab84bd467d91ee2f44b56905c4e5539c9"
+    },
+    {
+      "path": "tb371fc/docs/ddr-stats-offset-sm8250-registers.json",
+      "xor": 1,
+      "generator_exit": 0,
+      "verifier_exit": 1,
+      "only_mutated_output_failed": true,
+      "passed": true,
+      "result_sha256": "ea5576cdad71c188187038a20b65a99dcfde658ee198ae9fce7de5a465b90152"
+    }
+  ],
+  "network_used": false,
+  "firmware_executed": false,
+  "qemu_executed": false,
+  "device_RPC_used": false,
+  "SSH_used": false,
+  "complete_bad_response": {
+    "passed": true,
+    "transport_calls": 1,
+    "identity_mismatch_final": true,
+    "generator_not_run": true,
+    "result_sha256": "345a1f844ba482d2da0f3057cab09cb43f0de6f9c28439cfb24d328255ae0360"
+  },
+  "counts": {
+    "whole_source_one_bit_rejections": 4,
+    "parser_negative_rejections": 32,
+    "complete_bad_response_rejections_without_retry": 1,
+    "committed_output_one_bit_rejections": 2
+  },
+  "input_manifest": [
+    {
+      "path": "primary-r11/drivers/soc/qcom/ddr_stats.c",
+      "source_path": "drivers/soc/qcom/ddr_stats.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 6442,
+      "git_blob_sha": "49b020908d7b3b22d0590eea466860c4d42a3a18",
+      "sha256": "26d08430d1ae76562118e313f91f285a3bce8b4a71175082aee6441b4dd3ebfb",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/soc/qcom/ddr_stats.c"
+    },
+    {
+      "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi",
+      "source_path": "arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "bytes": 2817,
+      "git_blob_sha": "a5eba34468ee25209d8f07baf5efe9c53462ec2a",
+      "sha256": "c1f3a89f461cf1381335ffb2e3066026c28a27642389f9f92fccf540646e5231",
+      "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi"
+    },
+    {
+      "path": "primary-upstream/drivers/soc/qcom/qcom_stats.c",
+      "source_path": "drivers/soc/qcom/qcom_stats.c",
+      "repository": "torvalds/linux",
+      "revision": "75f2c0b3690702c90863c2e138cb5520670845ea",
+      "bytes": 11697,
+      "git_blob_sha": "2e380faf9080354fae120e74f0b9bd1f3786d3e5",
+      "sha256": "cf7447d3c9501203c699a403ea5f394ab9a809177f8b8b43e95699ff5dee5ed4",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/75f2c0b3690702c90863c2e138cb5520670845ea/drivers/soc/qcom/qcom_stats.c"
+    },
+    {
+      "path": "primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+      "source_path": "arch/arm64/boot/dts/qcom/sm8250.dtsi",
+      "repository": "torvalds/linux",
+      "revision": "75f2c0b3690702c90863c2e138cb5520670845ea",
+      "bytes": 177763,
+      "git_blob_sha": "7076720413ab2c34aaab618a4dcf7a27beb6076e",
+      "sha256": "ec9a5a3b9d9425475bf2fdaad772395ef2b331a9a4f92ac139bf83d0cad79ad0",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/75f2c0b3690702c90863c2e138cb5520670845ea/arch/arm64/boot/dts/qcom/sm8250.dtsi"
+    }
+  ],
+  "files": [
+    {
+      "path": "tb371fc/scripts/gen_ddr_stats_offset.py",
+      "bytes": 21540,
+      "sha256": "6d2c03467242065e21cc34247a4e944928d924a5f96021aa44252b075ae3dcf2"
+    },
+    {
+      "path": "tb371fc/scripts/verify_ddr_stats_offset_generation.py",
+      "bytes": 5139,
+      "sha256": "4529d753567592ce1dfb957c052f551e397069e266e2a6f11a70bc0572bb8ae6"
+    },
+    {
+      "path": "tb371fc/scripts/source_download.py",
+      "bytes": 4642,
+      "sha256": "4fde0300dc4c8777531402dc700fbed6364f16b0550fc852c3031fe641fe7dd7"
+    },
+    {
+      "path": "hw/misc/qcom-sm8250-ddr-stats-offset-data.inc",
+      "bytes": 346,
+      "sha256": "e6ec892f78dac7e3f87a06618a3cc69e9692fa819c2ea60027bdb5e526fccd4f"
+    },
+    {
+      "path": "tb371fc/docs/ddr-stats-offset-sm8250-registers.json",
+      "bytes": 5304,
+      "sha256": "682074c1299455fa482b870a4b2f841ea1c1c74aee9ed6dac131cc9dcff33b7d"
+    }
+  ]
+}

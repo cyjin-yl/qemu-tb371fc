@@ -1,0 +1,146 @@
+{
+  "schema": "tb371fc-ddr-stats-offset-static-implementation-review-v1",
+  "reviewed_utc": "2026-11-25T03:44:19.634271+00:00",
+  "passed": true,
+  "source_parent": "420819df9cfd76dc98cb4705987c269047d7f214",
+  "source_parent_tree": "7c13a3b85075e0eaefcc14d4f55c160bed699a08",
+  "checks": [
+    {
+      "name": "controlled_precedent_derivation",
+      "source": "hw/misc/qcom-sm8250-rpm-stats-offset.c",
+      "source_sha256": "5144319fb0856c107512edbdfe86d48adef1237846da7c312394ff8ccae5db09",
+      "target": "hw/misc/qcom-sm8250-ddr-stats-offset.c",
+      "target_sha256": "4237cdc3a63263785c14a091f4eb92d14242ba79d114820c8ac3bb443ecaaced",
+      "passed": true
+    },
+    {
+      "name": "controlled_precedent_derivation",
+      "source": "include/hw/misc/qcom-sm8250-rpm-stats-offset.h",
+      "source_sha256": "946df3bee216839b46001d4ea3065bda6563413a0c753a7b221fffea3b77ad0b",
+      "target": "include/hw/misc/qcom-sm8250-ddr-stats-offset.h",
+      "target_sha256": "3f37eb47beb17f2f85af9b378a2400b8dc6fe93ff69d9f8cba9104bfad1c40dc",
+      "passed": true
+    },
+    {
+      "name": "correct_core_sysbus_include",
+      "passed": true
+    },
+    {
+      "name": "default_off_region_absent_from_active_address_space",
+      "passed": true
+    },
+    {
+      "name": "single_mapping_selection_in_realize_before_board_map",
+      "passed": true
+    },
+    {
+      "name": "no_post_load_mapping_or_profile_repair",
+      "passed": true
+    },
+    {
+      "name": "reset_does_not_change_mapping",
+      "passed": true
+    },
+    {
+      "name": "distinct_DSO1_identity",
+      "passed": true
+    },
+    {
+      "name": "five_fields_exact24_bytes",
+      "passed": true
+    },
+    {
+      "name": "17_pure_observations",
+      "passed": true
+    },
+    {
+      "name": "strict_enabled_read32_and_rejecting_writes",
+      "passed": true
+    },
+    {
+      "name": "eight_byte_callback_not_silently_split",
+      "passed": true
+    },
+    {
+      "name": "exact_four_byte_board_aperture",
+      "passed": true
+    },
+    {
+      "name": "Kconfig_Meson_registration",
+      "passed": true
+    }
+  ],
+  "substantive_difference_from_RPM": "Default/off DDR region stays disabled/unmapped, preserving the frozen RPM hole check. Enabled profile maps the exact4B word. Mapping is selected once atrealize; post-load does not repair/enable.",
+  "wire_fields": [
+    {
+      "type": "UINT32",
+      "name": "reference_profile"
+    },
+    {
+      "type": "UINT32",
+      "name": "reference_identity"
+    },
+    {
+      "type": "UINT64",
+      "name": "physical_base"
+    },
+    {
+      "type": "UINT32",
+      "name": "window_bytes"
+    },
+    {
+      "type": "UINT32",
+      "name": "offset_value"
+    }
+  ],
+  "wire_bytes": 24,
+  "uint_properties": [
+    "enabled-profile",
+    "reference-identity",
+    "physical-base",
+    "window-bytes",
+    "offset-value",
+    "vmstate-bytes",
+    "register-count",
+    "irq-output-count",
+    "clock-input-count",
+    "clock-output-count",
+    "timer-count"
+  ],
+  "false_scope_properties": [
+    "stats-payload-modeled",
+    "rpm-offset-modeled",
+    "firmware-modeled",
+    "ready-modeled"
+  ],
+  "pure_observation_count": 17,
+  "legacy_files_unchanged_count": 69,
+  "changed_legacy_paths_at_review": [
+    "hw/arm/Kconfig",
+    "hw/arm/lenovo-tb371fc.c",
+    "hw/misc/Kconfig",
+    "hw/misc/meson.build"
+  ],
+  "all_RPM_named_source_test_generated_and_evidence_files_unchanged": true,
+  "final_CI_contract_preservation_review_pending_parallel_agent": true,
+  "derivation_patch": {
+    "name": "implementation-derivation-001.patch",
+    "bytes": 17820,
+    "sha256": "d593fedf3e1edf95427e75a1e5e6a99819b209535e56bf0436412b34f67e2f08"
+  },
+  "QEMU_executed": false,
+  "compiled_component_pass_claimed": false,
+  "new_native_probe_executed": false,
+  "device_RPC": false,
+  "SSH": false,
+  "source_published": false,
+  "runner_files_changed_by_this_candidate": false,
+  "runner_bytes_independently_readback_in_this_review": false,
+  "runner_source_readback_gate": "Exact-head runner inheritance/readback is a publication gate; the partial local candidate does not contain runner files.",
+  "metadata_scope_correction": {
+    "prior_receipt_bytes": 3893,
+    "prior_receipt_sha256": "8ffb712e1982f1a26e4a91235f89aad2f2ef454f9827a48b6cb464a505b703f8",
+    "prior_receipt_retained": true,
+    "reason": "The preliminary receipt overstated the runner verification scope. This local partial-source review establishes no runner edits, not independent readback of their complete bytes. Model and generator bytes are unchanged."
+  }
+}

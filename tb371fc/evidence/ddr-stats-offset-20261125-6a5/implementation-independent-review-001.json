@@ -1,0 +1,430 @@
+{
+  "Android_success_claimed": false,
+  "access_semantics": {
+    "all_writes_rejected": true,
+    "disabled_QTest_u64_expected_generic_fragments": [
+      {
+        "bytes": 4,
+        "offset": 0
+      },
+      {
+        "bytes": 4,
+        "offset": 4
+      }
+    ],
+    "disabled_failed_numeric_read_values_not_valid_offset_data": true,
+    "enabled_buffered_5B_read_has_valid_4B_prefix_and_failed_unmapped_suffix": true,
+    "enabled_buffered_5B_write_rejects_device_prefix_and_unmapped_suffix": true,
+    "enabled_narrow_unaligned_and_u64_delivered_callbacks_rejected": true,
+    "enabled_success": {
+      "offset": 0,
+      "size": 4,
+      "value": 983224
+    },
+    "enabled_typed_u64_does_not_split_into_successful_u32": true,
+    "endianness": "little",
+    "whole_buffer_success_or_atomicity_not_claimed": true
+  },
+  "blocking_findings": [],
+  "comparison_to_qualified_RPM_C": {
+    "only_remaining_code_change": "One memory_region_set_enabled call in realize.",
+    "remaining_code_tokens_equal_after_excluding_comments_and_normalizing_whitespace": true,
+    "scope_and_identity_renames": [
+      [
+        "rpm-stats-offset",
+        "ddr-stats-offset"
+      ],
+      [
+        "rpm_stats_offset",
+        "ddr_stats_offset"
+      ],
+      [
+        "RPM_STATS_OFFSET",
+        "DDR_STATS_OFFSET"
+      ],
+      [
+        "RpmStatsOffset",
+        "DdrStatsOffset"
+      ],
+      [
+        "RSO_PROP",
+        "DSO_PROP"
+      ],
+      [
+        "rso_",
+        "dso_"
+      ],
+      [
+        "0x52534f31",
+        "0x44534f31"
+      ],
+      [
+        "ddr-offset-modeled",
+        "rpm-offset-modeled"
+      ],
+      [
+        "AOP RPM statistics offset reference",
+        "AOP DDR statistics offset reference"
+      ]
+    ]
+  },
+  "compiled_or_runtime_success_claimed": false,
+  "default_off_mapping": {
+    "QOM_and_VMState_remain_present_in_both_profiles": true,
+    "approved_difference_from_RPM": true,
+    "configuration_window_metadata_bytes_in_both_profiles": 4,
+    "disabled_active_mapped_bytes": 0,
+    "enabled_active_mapped_bytes": 4,
+    "off_profile_generic_rejection_not_device_callback": true,
+    "post_load_can_enable_or_repair_mapping": false,
+    "purpose": "Preserve the pre-existing RPM compiled test and native policy which leave DDR offset address0x0c3f001c unassigned when the DDR profile is off.",
+    "reset_can_change_mapping": false,
+    "selection": "Configured enabled-reference property is applied once in realize, before board sysbus mapping.",
+    "set_enabled_calls": 1
+  },
+  "device_RPC_or_SSH_used": false,
+  "dispatch_source_scope": "Exact66d9 memory/physmem/qtest primary bytes reviewed; parent420819d has the same7c13a3 tree. Compiled DDR behavior remains to be verified by new CI and actual artifact evidence.",
+  "freeze_receipt": {
+    "bytes": 5761,
+    "sha256": "ca7a9a4729c906e80646a26e1996cb9e8b2da32e90dfe04df6a43286ff7a0e6a"
+  },
+  "glue_review": [
+    {
+      "existing_lines_removed_or_replaced": 0,
+      "inserted_lines": 8,
+      "only_insertions": true,
+      "path": "hw/arm/lenovo-tb371fc.c"
+    },
+    {
+      "existing_lines_removed_or_replaced": 0,
+      "inserted_lines": 1,
+      "only_insertions": true,
+      "path": "hw/arm/Kconfig"
+    },
+    {
+      "existing_lines_removed_or_replaced": 0,
+      "inserted_lines": 3,
+      "only_insertions": true,
+      "path": "hw/misc/Kconfig"
+    },
+    {
+      "existing_lines_removed_or_replaced": 0,
+      "inserted_lines": 1,
+      "only_insertions": true,
+      "path": "hw/misc/meson.build"
+    }
+  ],
+  "header_uses_current_hw_core_sysbus_path": true,
+  "local_QEMU_executed": false,
+  "migration": {
+    "cross_profile_and_any_field_corruption_fail_closed": true,
+    "disabled_wire_hex": "0000000044534f31000000000c3f001c0000000400000000",
+    "disabled_zero_is_not_guest_valid_reset_value": true,
+    "enabled_wire_hex": "0000000144534f31000000000c3f001c00000004000f00b8",
+    "minimum_version_id": 1,
+    "payload_bytes": 24,
+    "physical_field_count": 5,
+    "post_load_changes_mapping": false,
+    "post_load_repairs_state": false,
+    "post_load_validates": [
+      "configured destination profile",
+      "DSO1 identity",
+      "exact physical base",
+      "exact four-byte window",
+      "exact enabled value or unknown disabled zero placeholder"
+    ],
+    "reference_identity": "0x44534f31",
+    "version_id": 1,
+    "wire_fields": [
+      {
+        "name": "reference_profile",
+        "width_bits": 32
+      },
+      {
+        "name": "reference_identity",
+        "width_bits": 32
+      },
+      {
+        "name": "physical_base",
+        "width_bits": 64
+      },
+      {
+        "name": "window_bytes",
+        "width_bits": 32
+      },
+      {
+        "name": "offset_value",
+        "width_bits": 32
+      }
+    ]
+  },
+  "model_or_existing_source_modified_by_reviewer": false,
+  "native_kernel_progress_claimed": false,
+  "prior_RPM_files": [
+    {
+      "bytes": 9377,
+      "path": "hw/misc/qcom-sm8250-rpm-stats-offset.c",
+      "sha256": "5144319fb0856c107512edbdfe86d48adef1237846da7c312394ff8ccae5db09",
+      "unchanged": true
+    },
+    {
+      "bytes": 364,
+      "path": "include/hw/misc/qcom-sm8250-rpm-stats-offset.h",
+      "sha256": "946df3bee216839b46001d4ea3065bda6563413a0c753a7b221fffea3b77ad0b",
+      "unchanged": true
+    },
+    {
+      "bytes": 346,
+      "path": "hw/misc/qcom-sm8250-rpm-stats-offset-data.inc",
+      "sha256": "dc38191138f43d396b94971b15b9b6617924131669b602cb1bccf185f75d22e5",
+      "unchanged": true
+    },
+    {
+      "bytes": 39266,
+      "path": "tb371fc/tests/test_rpm_stats_offset_sm8250.py",
+      "sha256": "8e878e30ad978d7affb389573e4df4cc3bb3009843ac74b5d363ebd723eee39f",
+      "unchanged": true
+    },
+    {
+      "bytes": 19192,
+      "path": "tb371fc/scripts/gen_rpm_stats_offset.py",
+      "sha256": "47f77997d2708da12235cde157b25228ef75b93bb689a92f1338769dcc99537c",
+      "unchanged": true
+    },
+    {
+      "bytes": 4965,
+      "path": "tb371fc/scripts/verify_rpm_stats_offset_generation.py",
+      "sha256": "2673e6cc5457db0a1e281013c14d30941e7251bf7f40f2a4bf2265f40831630c",
+      "unchanged": true
+    },
+    {
+      "bytes": 4870,
+      "path": "tb371fc/docs/rpm-stats-offset-sm8250-registers.json",
+      "sha256": "df0c4dad7572a918f579e98174663496893039d27315db6427726de9641a6adb",
+      "unchanged": true
+    },
+    {
+      "bytes": 3391,
+      "path": "tb371fc/evidence/rpm-stats-offset-20261125-6a5/test-ci-contract.json",
+      "sha256": "2d137f7cd52b52c281414fd2508a04fde7c5ae567a123f6c3a2c7a31128e032a",
+      "unchanged": true
+    }
+  ],
+  "qom": {
+    "bool_properties": [
+      "offset-known",
+      "stats-payload-modeled",
+      "rpm-offset-modeled",
+      "firmware-modeled",
+      "ready-modeled",
+      "enabled-reference"
+    ],
+    "no_guest_mutable_or_qtest_override_property": true,
+    "offset_known_equals_configured_profile": true,
+    "pure_getters": true,
+    "readonly_observer_count": 17,
+    "uint64_properties": [
+      "enabled-profile",
+      "reference-identity",
+      "physical-base",
+      "window-bytes",
+      "offset-value",
+      "vmstate-bytes",
+      "register-count",
+      "irq-output-count",
+      "clock-input-count",
+      "clock-output-count",
+      "timer-count"
+    ],
+    "unsupported_behavior_booleans_always_false": [
+      "stats-payload-modeled",
+      "rpm-offset-modeled",
+      "firmware-modeled",
+      "ready-modeled"
+    ]
+  },
+  "required_following_validation": [
+    "Frozen DDR20-group test and CI contract independent review.",
+    "New compiled CI result and exact-head artifact audit, including both profile mappings and all migration invariants."
+  ],
+  "retained_prior_output_collision": {
+    "artifact_QEMU_or_native_executed": false,
+    "correction": "Use separate exclusive implementation-independent-review-001.json.",
+    "exception": "FileExistsError",
+    "existing_receipt_bytes": 4555,
+    "existing_receipt_name": "implementation-review.json",
+    "existing_receipt_overwritten": false,
+    "existing_receipt_sha256": "bd07a9bffc39dfbc02a33fc6071b76670c1e2abdb43b2303f9e66587d3b8097d",
+    "exit_code": 1,
+    "phase": "All bounded static checks completed; exclusive receipt creation then refused an occupied filename.",
+    "retained_source_sha256": "90fab1d6dac6bce6a231a204a8722795bc24bf2079b65cca4796b161010c75d3",
+    "schema": "tb371fc-ddr-stats-independent-static-review-output-collision-v1",
+    "source_or_original_inputs_modified": false
+  },
+  "reviewed_utc": "2026-11-25T03:46:58.443012+00:00",
+  "schema": "tb371fc-ddr-stats-offset-independent-static-implementation-review-v1",
+  "source_bounds": {
+    "full_production_kernel_source_identity_not_claimed": true,
+    "independent_derivation": {
+      "actual_payload_entry_count_known": false,
+      "captured_runtime_word_claimed": false,
+      "fixed_ddr_stats_offset": 184,
+      "generic_firmware_to_apss_alias_claimed": false,
+      "little_endian_word_hex": "b8000f00",
+      "native_reset_value_claimed": false,
+      "offset_window_bytes": 4,
+      "offset_word_address": 205455388,
+      "payload_magic_is_source_ABI_only": 2702539381,
+      "payload_mapped_by_this_device": false,
+      "payload_read_during_vendor_probe": false,
+      "reference_header_bytes": 8,
+      "reference_maximum_payload_bytes": 328,
+      "reference_maximum_records": 20,
+      "reference_payload_address": 205455544,
+      "reference_record_bytes": 16,
+      "relative_word": 983224,
+      "upstream_cold_probe_differs_from_vendor": true,
+      "upstream_region_base": 205455360,
+      "vendor_resource_base": 204472320,
+      "zero_vendor_offset_returns_ENODEV": true
+    },
+    "only_APSS_pointer_word_implemented": true,
+    "original_AOP_runtime_execution_or_live_word_not_claimed": true,
+    "public_inputs": [
+      {
+        "bytes": 6442,
+        "git_blob_sha": "49b020908d7b3b22d0590eea466860c4d42a3a18",
+        "path": "primary-r11/drivers/soc/qcom/ddr_stats.c",
+        "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+        "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+        "sha256": "26d08430d1ae76562118e313f91f285a3bce8b4a71175082aee6441b4dd3ebfb",
+        "source_path": "drivers/soc/qcom/ddr_stats.c",
+        "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/soc/qcom/ddr_stats.c"
+      },
+      {
+        "bytes": 2817,
+        "git_blob_sha": "a5eba34468ee25209d8f07baf5efe9c53462ec2a",
+        "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi",
+        "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+        "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+        "sha256": "c1f3a89f461cf1381335ffb2e3066026c28a27642389f9f92fccf540646e5231",
+        "source_path": "arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi",
+        "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi"
+      },
+      {
+        "bytes": 11697,
+        "git_blob_sha": "2e380faf9080354fae120e74f0b9bd1f3786d3e5",
+        "path": "primary-upstream/drivers/soc/qcom/qcom_stats.c",
+        "repository": "torvalds/linux",
+        "revision": "75f2c0b3690702c90863c2e138cb5520670845ea",
+        "sha256": "cf7447d3c9501203c699a403ea5f394ab9a809177f8b8b43e95699ff5dee5ed4",
+        "source_path": "drivers/soc/qcom/qcom_stats.c",
+        "url": "https://raw.githubusercontent.com/torvalds/linux/75f2c0b3690702c90863c2e138cb5520670845ea/drivers/soc/qcom/qcom_stats.c"
+      },
+      {
+        "bytes": 177763,
+        "git_blob_sha": "7076720413ab2c34aaab618a4dcf7a27beb6076e",
+        "path": "primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+        "repository": "torvalds/linux",
+        "revision": "75f2c0b3690702c90863c2e138cb5520670845ea",
+        "sha256": "ec9a5a3b9d9425475bf2fdaad772395ef2b331a9a4f92ac139bf83d0cad79ad0",
+        "source_path": "arch/arm64/boot/dts/qcom/sm8250.dtsi",
+        "url": "https://raw.githubusercontent.com/torvalds/linux/75f2c0b3690702c90863c2e138cb5520670845ea/arch/arm64/boot/dts/qcom/sm8250.dtsi"
+      }
+    ],
+    "source_ABI_profile_is_explicit_and_default_off": true,
+    "source_header_magic_and_maximum_count_not_fabricated_as_runtime_data": true
+  },
+  "source_files": [
+    {
+      "bytes": 9691,
+      "git_blob_sha": "00aa81073cc8e6d7faa6cb763b6c1b36d4b78972",
+      "path": "hw/misc/qcom-sm8250-ddr-stats-offset.c",
+      "sha256": "4237cdc3a63263785c14a091f4eb92d14242ba79d114820c8ac3bb443ecaaced"
+    },
+    {
+      "bytes": 364,
+      "git_blob_sha": "297faf475adef09ed42f37b65c198a2ae56d79b3",
+      "path": "include/hw/misc/qcom-sm8250-ddr-stats-offset.h",
+      "sha256": "3f37eb47beb17f2f85af9b378a2400b8dc6fe93ff69d9f8cba9104bfad1c40dc"
+    },
+    {
+      "bytes": 346,
+      "git_blob_sha": "ec47bc7b03ef3a4b13acfa1f09b46bebe8a96cd4",
+      "path": "hw/misc/qcom-sm8250-ddr-stats-offset-data.inc",
+      "sha256": "e6ec892f78dac7e3f87a06618a3cc69e9692fa819c2ea60027bdb5e526fccd4f"
+    },
+    {
+      "bytes": 5304,
+      "git_blob_sha": "8e9027cae8c2eec93f5c2b38473053e89e5adad8",
+      "path": "tb371fc/docs/ddr-stats-offset-sm8250-registers.json",
+      "sha256": "682074c1299455fa482b870a4b2f841ea1c1c74aee9ed6dac131cc9dcff33b7d"
+    },
+    {
+      "bytes": 21540,
+      "git_blob_sha": "123862f7f645f2772357b32bea2857b5aac573f0",
+      "path": "tb371fc/scripts/gen_ddr_stats_offset.py",
+      "sha256": "6d2c03467242065e21cc34247a4e944928d924a5f96021aa44252b075ae3dcf2"
+    },
+    {
+      "bytes": 5139,
+      "git_blob_sha": "17a652b880d039f8947febf16173c7cfcd6bb54d",
+      "path": "tb371fc/scripts/verify_ddr_stats_offset_generation.py",
+      "sha256": "4529d753567592ce1dfb957c052f551e397069e266e2a6f11a70bc0572bb8ae6"
+    },
+    {
+      "bytes": 4642,
+      "git_blob_sha": "1dad3f8f54658defe3e705fe9245ec0aa02c19bd",
+      "path": "tb371fc/scripts/source_download.py",
+      "sha256": "4fde0300dc4c8777531402dc700fbed6364f16b0550fc852c3031fe641fe7dd7"
+    },
+    {
+      "bytes": 103334,
+      "git_blob_sha": "b4a143925b2ffe64c1f142d3a337f1aa281fe425",
+      "path": "hw/arm/lenovo-tb371fc.c",
+      "sha256": "51ee3224180a2e927572ee56f011b3d222f68fb97fef7e75ad188f972abaeaf1"
+    },
+    {
+      "bytes": 15508,
+      "git_blob_sha": "969b8b91a2d8633d9e1a4591a7084c01d2350022",
+      "path": "hw/arm/Kconfig",
+      "sha256": "6cbe01a64aeea18706c4d255276819a6addf66bf6d4636381b75fbf12a6984af"
+    },
+    {
+      "bytes": 4239,
+      "git_blob_sha": "9390cc0216de6e3ebd66506802d7f0fe2e4b3189",
+      "path": "hw/misc/Kconfig",
+      "sha256": "451eb84dce84cb9dde20e65220a39314b5acb8e36885efd172d878549b10fa5d"
+    },
+    {
+      "bytes": 10935,
+      "git_blob_sha": "3138af8c4c16d5a6379c9131d18d628df3bf4a76",
+      "path": "hw/misc/meson.build",
+      "sha256": "ca26e093985792bb0ece8c598cc83a384c455b8b693e950d83678327946f121a"
+    }
+  ],
+  "source_generation": {
+    "all_four_linked_validation_evidence_files_rehashed": true,
+    "four_complete_SHA256_Git_blob_pins_checked_before_parse": true,
+    "generator_or_verifier_imported_or_executed_by_this_reviewer": false,
+    "maximum328B_payload_span_remains_unmapped_and_actual_count_unknown": true,
+    "own_independent_public_derivation_executed": true,
+    "producer_recorded_validation_counts": {
+      "committed_output_one_bit_rejections": 2,
+      "complete_bad_response_rejections_without_retry": 1,
+      "parser_negative_rejections": 32,
+      "whole_source_one_bit_rejections": 4
+    },
+    "producer_validation_not_rerun_by_reviewer": true,
+    "producer_validation_receipt_sha256": "22a4e9328abc2b9fe3213f02ff3a6b7ccabe59bc0fbf8ead71855634f14c9b5c"
+  },
+  "source_parent": "420819df9cfd76dc98cb4705987c269047d7f214",
+  "source_parent_tree": "7c13a3b85075e0eaefcc14d4f55c160bed699a08",
+  "state_and_reset": {
+    "DDR_payload_or_neighboring_RPM_word_mapped": false,
+    "clock_IRQ_timer_firmware_or_READY_behavior_added": false,
+    "configured_metadata_immutable_during_guest_operations": true,
+    "reset_retains_profile_and_reference_offset": true
+  },
+  "static_review_passed": true
+}

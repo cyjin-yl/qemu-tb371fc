@@ -1,0 +1,113 @@
+{
+  "schema": "tb371fc-ddrstats-preceding-native-frontier-public-v1",
+  "source_commit": "66d9e20a9541b503ed4f5cac5c79c8a5b4a0809b",
+  "source_tree": "7c13a3b85075e0eaefcc14d4f55c160bed699a08",
+  "independent_native_review_identity": {
+    "bytes": 20263,
+    "sha256": "18c4cfb5554c3286531f6aa3a5694e92ff36896471fac63e7002c02b3de0a366"
+  },
+  "immutable_native_evidence": "https://github.com/cyjin-yl/qemu-tb371fc/blob/ec36e1d92d28da62882d3ad915e04c13738a7935/tb371fc/evidence/rpm-stats-offset-66d9e20-ci-20261125-6a5/native/README.md",
+  "execution": {
+    "host_exit_code": 2,
+    "host_finished_utc": "2026-11-25T03:04:27.158882+00:00",
+    "host_started_utc": "2026-11-25T03:03:41.462327+00:00",
+    "native_invocation_finished_utc": "2026-11-25T03:04:26.195739+00:00",
+    "native_invocation_started_utc": "2026-11-25T03:04:17.734319+00:00",
+    "native_invoked": true,
+    "observation_limit_seconds": 120,
+    "outcome": "kernel-failure",
+    "qemu_exit_code": 0,
+    "runner_elapsed_seconds": 6.592,
+    "runner_exit_code": 2,
+    "runner_started_utc": "2026-11-25T03:04:18.330488+00:00"
+  },
+  "bounded_frontier": {
+    "DDR_frontier_Data_Abort_records": 1,
+    "ESR": "0x96000010",
+    "X0_and_FAR": "0xffffff800b18d01c",
+    "diagnostics": [
+      {
+        "access": "read",
+        "address": "0x0c3f001c",
+        "role": "Inner full physical address rejection",
+        "size_bytes": 4
+      },
+      {
+        "access": "read",
+        "address": "0x1c",
+        "role": "Outer subpage-relative rejection",
+        "size_bytes": 4
+      }
+    ],
+    "earlier_different_Data_Abort": {
+      "ELR": "0xffffff800818e10c",
+      "ESR": "0x96000005",
+      "FAR": "0x0",
+      "cpu": 4,
+      "exception_return_follows": true,
+      "line": 3280
+    },
+    "explicit_RPM_probe_success_or_payload_read_not_established": true,
+    "faulting_opcode": "b9400018",
+    "first_kernel_failure_guest_seconds": 3.218093,
+    "instruction": "LDR W24, [X0]",
+    "invalid_diagnostic_line_count": 2,
+    "lr": "ddr_stats_probe+0x84/0x180",
+    "panic_guest_seconds": 3.220608,
+    "pc": "ddr_stats_probe+0x88/0x180",
+    "pc_virtual_address": "0xffffff80086b2430",
+    "prior_rpm_offset_0x0c3f0004_invalid_access_absent": true,
+    "total_Data_Abort_records_in_QEMU_log": 2,
+    "two_guest_instructions_or_physical_read_0x1c_not_inferred": true
+  },
+  "nested_dispatch": {
+    "claim": "Exact-head subpage validation adds the page base for the inner check, then propagates its rejection to the outer check. This explains the two adjacent diagnostics for the one recorded DDR fault. It does not establish a second guest access at physical address0x1c.",
+    "exact_head_sources": [
+      {
+        "bytes": 118660,
+        "git_blob": "5fc36708ec349d94605f0503c647d7f9d1475a2d",
+        "repository_path": "system/memory.c",
+        "reviewed_functions": [
+          "unassigned_mem_accepts",
+          "memory_region_access_valid",
+          "memory_region_dispatch_read"
+        ],
+        "sha256": "09a3c9c186629f082f63b50b3ee7c54366c37a62584f6d9f897980cd276aca13",
+        "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/66d9e20a9541b503ed4f5cac5c79c8a5b4a0809b/system/memory.c"
+      },
+      {
+        "bytes": 140872,
+        "git_blob": "c21ea929153e5b67efa47432b1db0993e2690f9c",
+        "repository_path": "system/physmem.c",
+        "reviewed_functions": [
+          "address_space_translate_for_iotlb",
+          "address_space_translate_internal",
+          "flatview_add_to_dispatch",
+          "register_subpage",
+          "subpage_init",
+          "subpage_accepts",
+          "flatview_access_valid"
+        ],
+        "sha256": "3210a543353b435a146f7ae4a33608ea849aad038cd9e889ddb3a30c104c063f",
+        "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/66d9e20a9541b503ed4f5cac5c79c8a5b4a0809b/system/physmem.c"
+      }
+    ],
+    "review_bytes": 5072,
+    "review_sha256": "02d9906328f360be695b6558ce7b560d5b7d7a14a84c0b71f3b5b522bb5f0f76"
+  },
+  "android_outcome": {
+    "OEM_PBL_XBL_ABL_executed": false,
+    "boot_completed_observed": false,
+    "interactive_display_verified": false,
+    "stock_android_boot_passed": false,
+    "userspace_observed": false
+  },
+  "original_append_equal_to_original_bootargs": true,
+  "bootargs_modified": false,
+  "full_dtb_retained": true,
+  "test_init_injected": false,
+  "QMP_cleanup_normal": true,
+  "bounded_claim": "This single pinned native execution preserves original direct-kernel inputs and progresses beyond the prior RPM statistics offset fault to the unmapped DDR statistics offset at physical0x0c3f001c. It does not establish successful DDR offset or payload reads, firmware producer runtime state, Android userspace/UI/boot completion, or complete storage backups.",
+  "raw_private_bootargs_or_logs_included": false,
+  "new_DDR_model_executed": false
+}

@@ -16,7 +16,9 @@
 
 本组合并 `42144e8` 的 wholeboard/相机门禁修正与默认分支 `95e5ced` 的存储、电源和 HYP timer 修复。精确 LLCC 源码 `c02f3d7` 已通过自己的 93+5 CI、五个独立产物审计和一次原始输入诊断，并合入 `7372681f`。随后 SPSS 源码 `54ec744` 实际通过 push/PR 两套 95+5 gate、A77/PCI UFS 和六个产物审计；同一产物的一次原始输入运行越过 `0x01881028` 写异常，停在 RPM statistics 的 `0x0c3f0004` 读异常，原始 kernel／ramdisk／完整 DT／bootargs 保持不变。该修复已合入 `8d0bc64`；[完整编译与有界原生证据](https://github.com/cyjin-yl/qemu-tb371fc/tree/310fa06c7031bdbda063b3fe4e4f8689e37dde98/tb371fc/evidence/spss-54ec744-ci-20261125-6a5)保留了实际 kernel-failure、0 LUN 和 Android 未通过的结论。
 
-本次增加 [RPM statistics offset 参考接口](tb371fc/docs/rpm-stats-offset-sm8250.md)及四份固定公开源码再生 gate，当前计划为 **102 项：97 项组件 + 5 项 Linux**，另保留 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。默认关闭的 `qcom-sm8250-rpm-stats-offset.enabled-reference` 只在 `0x0c3f0004/4` 接受对齐 32 位读，返回源码及原机 AOP 静态分析共同支持的 `0x000f0048`。统计记录、DDR offset、相邻 SRAM、READY 和固件运行仍未实现；新组合须取得自己的编译产物和原始输入运行回执。
+随后 [RPM statistics offset 参考接口](tb371fc/docs/rpm-stats-offset-sm8250.md)的精确源码 `66d9e20` 已实际通过 97+5 CI、七个独立产物审计及额外 UFS 检查，并合入同树的 `420819d`。同一已审计产物的一次原始输入诊断越过 `0x0c3f0004` 的拒绝读取，停在 `ddr_stats_probe+0x88/0x180` 对 `0x0c3f001c` 的 32 位读取；原始输入保持不变，QMP 正常清理，仍为 kernel-failure。相邻日志中的 `0x1c` 是同一次 DDR 读取的外层 subpage 相对地址诊断，不代表第二条来宾指令。见[不可变 CI 与原始运行证据](https://github.com/cyjin-yl/qemu-tb371fc/tree/ec36e1d92d28da62882d3ad915e04c13738a7935/tb371fc/evidence/rpm-stats-offset-66d9e20-ci-20261125-6a5)。
+
+本次增加 [DDR statistics offset 参考接口](tb371fc/docs/ddr-stats-offset-sm8250.md)及四份固定公开源码再生 gate，当前计划为 **104 项：99 项组件 + 5 项 Linux**，另保留 Linux UFS 活跃／runtime-suspended 迁移、A77 和 PCI UFS 检查。`qcom-sm8250-ddr-stats-offset.enabled-reference` 默认关闭，关闭时该 4 B 区域不进入活动地址空间，保留既有 RPM 测试对该地址的空洞约定。显式启用后，只在 `0x0c3f001c/4` 接受对齐 32 位读，返回公开布局及原机 AOP 静态分析共同支持的 `0x000f00b8`。`0x0c3f00b8` 的 DDR 统计 payload、计数器、READY 与固件运行仍未实现。原有 102 项合同和顺序、RPM 模型与测试保持不变；新组合仍须取得自身的编译产物审计和后续原始输入运行回执，未声称 Android 用户态或界面成功。
 
 两个 TBU 参考协议保持独立：`tbu-profile=reference-ecats` 使用 ANOC1/2 严格翻译；`qcom-smmuv500.enabled-reference=on` 使用十域 companion。它们共享物理窗口，同时启用会明确拒绝。RPMh 主状态为 v3，保留旧 v2 接收、忙碌时 sleep/wake 输入和独立 WAIT 参考子节；对应真实流 oracle 校验全部 19424 B 主状态及 24 B 可选子节。
 

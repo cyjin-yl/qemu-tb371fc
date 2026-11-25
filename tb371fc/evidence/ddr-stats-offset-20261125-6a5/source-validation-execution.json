@@ -1,0 +1,69 @@
+{
+  "schema": "tb371fc-ddr-stats-final-source-verification-execution-v1",
+  "reason": "Final default-off mapping contract added after preserving the frozen RPM hole test",
+  "passed": true,
+  "runs": [
+    {
+      "name": "generate",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "/dev/shm/ddrstats-candidate-6a5/tb371fc/scripts/gen_ddr_stats_offset.py",
+        "--source-root",
+        "/dev/shm/ddrstats-review-6a5/source-inputs-001",
+        "--output-root",
+        "/dev/shm/ddrstats-candidate-6a5"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.088980904998607,
+      "stdout_sha256": "cbcfdc16afdacbed77d7fc725057d891063445dfe5765f9f8f1e8bd90f2ec7fe",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "verify",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-S",
+        "-B",
+        "/dev/shm/ddrstats-candidate-6a5/tb371fc/scripts/verify_ddr_stats_offset_generation.py",
+        "--source-root",
+        "/dev/shm/ddrstats-review-6a5/source-inputs-001",
+        "--out",
+        "/dev/shm/ddrstats-review-6a5/generation-verify-002"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.14085730200167745,
+      "stdout_sha256": "b2792a4acb509116c4847ae6ff4bb1f173304a355aa8fe7f896985dc53ff1132",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "validate",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "/dev/shm/ddrstats-candidate-6a5/tb371fc/evidence/ddr-stats-offset-20261125-6a5/validate-source-generation.py",
+        "--candidate",
+        "/dev/shm/ddrstats-candidate-6a5",
+        "--source-root",
+        "/dev/shm/ddrstats-review-6a5/source-inputs-001",
+        "--out",
+        "/dev/shm/ddrstats-review-6a5/source-validation-run-002"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.7519427770021139,
+      "stdout_sha256": "db5136e5b68dbe6e8c55ac805057b05521235becac96706bf6ae8add4f7242e8",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "QEMU_executed": false,
+  "network_used": false,
+  "device_RPC": false,
+  "SSH": false
+}

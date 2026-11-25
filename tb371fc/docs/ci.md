@@ -723,14 +723,15 @@ SPSS model had executed at that earlier point. Android acceptance remains unpass
 
 ## Public source download retries
 
-The GCC, CAMCC, DISPCC, VIDEOCC, DSI PLL, DP PLL, LLCC and RPM statistics offset source-generation
+The GCC, CAMCC, DISPCC, VIDEOCC, DSI PLL, DP PLL, LLCC, RPM statistics offset and DDR statistics offset source-generation
 gates use the shared downloader for each immutable public input, with at most
 three requests. Only temporary HTTP 408/429/500/502/503/504 and selected transport
 failures are retried. Retry delays share a 30-second allowance per input; a
 server `Retry-After` exceeding the remaining allowance fails without an early
 retry. Certificate failures and permanent HTTP errors fail immediately.
 
-Each retry starts a complete new request, with the existing 512 KiB size bound.
+Each retry starts a complete new request within the verifier's input size bound.
+The shared default is 512 KiB; the RPM and DDR offset gates each set 256 KiB.
 Source SHA-256, Git blob and exact-size checks retain each verifier's existing
 contract outside the retry loop; identity mismatches are never retried. The
 existing 180-second source-generation process timeout and 60-second generator
@@ -777,3 +778,51 @@ normalized fingerprint separately preserves every field and the relative order
 of the preceding 100 gate contracts; the earlier 98-case preservation check
 also remains enforced. The new combined source still needs its own compiled
 CI receipts, actual-artifact audits and original-input diagnostic.
+
+The later exact RPM source `66d9e20` passed both public board/A77 runs and all
+seven actual-artifact audits, with its extra UFS observation. Its one guarded
+original-input diagnostic retained the original inputs and advanced to the
+DDR offset read at `0x0c3f001c`, where the kernel failed. Normal QMP cleanup
+was verified; Android userspace, UI and boot completion were not observed.
+The [immutable native append and earlier CI snapshot](https://github.com/cyjin-yl/qemu-tb371fc/tree/ec36e1d92d28da62882d3ad915e04c13738a7935/tb371fc/evidence/rpm-stats-offset-66d9e20-ci-20261125-6a5)
+retain those separate outcomes. Merge `420819d` has the same tree as that
+qualified RPM source and is the source parent for the following increment.
+
+## DDR statistics offset reference
+
+The `ddr-stats-offset-source-generation` gate verifies four complete public
+inputs and reproduces two complete outputs. The vendor revision remains
+`98719830b0de5584f5588bbe9f4c8304d97a64c6`; the independently pinned DDR
+upstream reference is `75f2c0b3690702c90863c2e138cb5520670845ea`. The existing
+RPM generation inputs and outputs remain unchanged. Matching the SM8250
+resource to `rpmh_data.ddr_stats_offset` derives
+`0x0c3f0000 + 0xb8 - 0x0c300000 = 0x000f00b8`. The source's 328-byte maximum
+DDR ABI span is a consistency check, not an actual record count or modeled
+payload. Whole-file identity failures remain final without retry or fallback.
+
+The `ddr-stats-offset-sm8250-reference` compiled gate requires 20 groups,
+two completed migrations, two profile rejections and six one-bit corruption
+rejections. It retains two original streams and six mutated copies, checking
+the complete 24-byte `DSO1` / version-1 state. There are five serialized fields:
+profile, identity, physical base, configured window size and offset word.
+Each successful destination must supply 17 first and 17 repeated pure QOM
+observations, with no device MMIO or continuation before those snapshots.
+The RAM witness is changed before incoming; immutable device state is not.
+
+The DDR default/off profile leaves its four-byte address **unmapped**. QOM
+identity and migration state still exist, while the active DDR leaf count is
+zero. This preserves the unchanged RPM test's generic-hole checks at
+`0x0c3f001c`. The enabled profile alone maps exactly four bytes there. The
+gate and its contract require `reference_window_mapped_only_when_enabled=true`
+and `default_off_mapped_bytes=0`, checking active mapping after migration and
+reset as well as actual disabled-access rejection. Post-load never enables or
+repairs a region. Invalid enabled transactions retain the strict device
+callback checks, separately from unassigned dispatch and its size splitting.
+
+These two registrations make 99 component plus five Linux gates. All 102
+preceding normalized contracts and their order are preserved, and the harness
+has 36 host unit methods. [The DDR contract](ddr-stats-offset-sm8250.md) and
+[local source-only verification](../evidence/ddr-stats-offset-20261125-6a5/source-validation.json)
+do not establish a compiled artifact or a new native result. This combined
+source requires its own public CI and exact-artifact qualification before any
+subsequent original-input diagnostic.
