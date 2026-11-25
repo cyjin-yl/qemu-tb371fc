@@ -1,0 +1,1288 @@
+{
+  "schema": "tb371fc-llcc-independent-artifact-audit-v1",
+  "passed": true,
+  "observed_utc": "2026-11-25T00:16:49.338246+00:00",
+  "auditor_sha256": "a4a077fc17464c9192aaad7ce146b4794e9f375ef8adbe900a6f66a207c8a609",
+  "head": "3bd583f2079634d01c12160ab3e3f0c5a3e47e86",
+  "read_only_archive": true,
+  "qemu_executed": false,
+  "guest_executed": false,
+  "extracted_members": [],
+  "test_serializer_imported": false,
+  "model_imported": false,
+  "whole_workflow_verdict_claimed": false,
+  "native_android_passed": false,
+  "shared_log_timestamp_claimed": false,
+  "reviewed_source_pins": {
+    "test": {
+      "path": "/workspace/scratch/6a5ea697094c/llcc-candidate/tb371fc/tests/test_llcc_sm8250.py",
+      "sha256": "4472734a675049a4a0f18e4699617ceecde6b293e6b8ede7f4a0825f403d48e3"
+    },
+    "model": {
+      "path": "/workspace/scratch/6a5ea697094c/llcc-candidate/hw/misc/qcom-sm8250-llcc.c",
+      "sha256": "1312474d66959cc70188a76769765014779b999602b8885f3c9658927d563f04"
+    }
+  },
+  "archive": {
+    "path": "/dev/shm/tb371fc-spss-3bd583f-14978715300.zip",
+    "bytes": 55529329,
+    "sha256": "b857eb4e34ac954159ad8aaca1d43979879aa035e5966dbd03c0ca41c27a71d8"
+  },
+  "qemu": {
+    "member": "qemu-build/qemu-system-aarch64",
+    "bytes": 63675912,
+    "sha256": "fbb1081261d2dea28b267142db7fe48e8e80853fbc9dc53513e82b543087aea5",
+    "executed": false,
+    "host_elf_machine": 62
+  },
+  "component": {
+    "case": "tb371fc-results/components/62-llcc-sm8250-reference/case.json",
+    "report": "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/result.json",
+    "source_commit_file": "tb371fc-results/source-commit.txt",
+    "head": "3bd583f2079634d01c12160ab3e3f0c5a3e47e86",
+    "check_count": 32,
+    "exit_code": 0,
+    "test_sha256": "4472734a675049a4a0f18e4699617ceecde6b293e6b8ede7f4a0825f403d48e3"
+  },
+  "source_generation": {
+    "case": "tb371fc-results/components/16-llcc-source-generation/case.json",
+    "inputs": 8,
+    "outputs": 2,
+    "all_actual_bytes_and_git_blobs_verified": true,
+    "source_table_bytes": 640,
+    "source_table_sha256": "1ae851c29537ec405b15db1bd151710c25ad0f063a74970253f9d16754dc5d55",
+    "literal_source_capacity_arithmetic_verified": true,
+    "four_named_banks_verified": true,
+    "physical_bank_count_measured": false,
+    "output_sha256": {
+      "hw/misc/qcom-sm8250-llcc-data.inc": "f3f7979c7973b2fbf9d8d398c064b8a404a290fbdd9d5a141407c0b28f974a46",
+      "tb371fc/docs/llcc-sm8250-registers.json": "9b9989a04b3719665439dab6287be8ced18511021c58ef5c7011f36a587b4772"
+    }
+  },
+  "ordinary": {
+    "cases": [
+      {
+        "name": "cold_geometry_identity_and_pure_getters",
+        "qmp_requests": 1098,
+        "qtest_commands": 2,
+        "actual_device_mmio": 2
+      },
+      {
+        "name": "original_kona_probe_order_and_all_bank_mirrors",
+        "qmp_requests": 919,
+        "qtest_commands": 438,
+        "actual_device_mmio": 435
+      },
+      {
+        "name": "all_sixteen_slices_activate_and_deactivate",
+        "qmp_requests": 466,
+        "qtest_commands": 256,
+        "actual_device_mmio": 224
+      },
+      {
+        "name": "trigger_high_is_armed_until_matching_falling_edge",
+        "qmp_requests": 28,
+        "qtest_commands": 11,
+        "actual_device_mmio": 8
+      },
+      {
+        "name": "deactivation_preserves_active_until_deadline",
+        "qmp_requests": 34,
+        "qtest_commands": 14,
+        "actual_device_mmio": 10
+      },
+      {
+        "name": "explicit_zero_write_credit_is_required",
+        "qmp_requests": 28,
+        "qtest_commands": 11,
+        "actual_device_mmio": 9
+      },
+      {
+        "name": "incomplete_or_wrong_slice_recipe_cannot_activate",
+        "qmp_requests": 83,
+        "qtest_commands": 83,
+        "actual_device_mmio": 74
+      },
+      {
+        "name": "related_configuration_change_cancels_armed_and_pending",
+        "qmp_requests": 80,
+        "qtest_commands": 37,
+        "actual_device_mmio": 32
+      },
+      {
+        "name": "unrelated_slice_and_other_global_bits_preserve_transaction",
+        "qmp_requests": 40,
+        "qtest_commands": 15,
+        "actual_device_mmio": 12
+      },
+      {
+        "name": "own_global_bit_change_cancels_but_restore_does_not_restart",
+        "qmp_requests": 67,
+        "qtest_commands": 36,
+        "actual_device_mmio": 29
+      },
+      {
+        "name": "wrong_or_duplicate_falling_edges_cancel_without_replay",
+        "qmp_requests": 63,
+        "qtest_commands": 30,
+        "actual_device_mmio": 21
+      },
+      {
+        "name": "concurrent_slice_deadlines_are_independent",
+        "qmp_requests": 57,
+        "qtest_commands": 92,
+        "actual_device_mmio": 87
+      },
+      {
+        "name": "all_bank_words_are_readonly_views",
+        "qmp_requests": 1312,
+        "qtest_commands": 718,
+        "actual_device_mmio": 715
+      },
+      {
+        "name": "dynamic_status_and_reserved_bits_are_not_writable",
+        "qmp_requests": 636,
+        "qtest_commands": 35,
+        "actual_device_mmio": 34
+      },
+      {
+        "name": "exact_sparse_ownership_and_true_holes",
+        "qmp_requests": 629,
+        "qtest_commands": 52,
+        "actual_device_mmio": 48
+      },
+      {
+        "name": "subword_unaligned_and_wide_accesses_reject_atomically",
+        "qmp_requests": 628,
+        "qtest_commands": 36,
+        "actual_device_mmio": 36
+      },
+      {
+        "name": "polling_and_qom_reads_do_not_advance_time",
+        "qmp_requests": 756,
+        "qtest_commands": 139,
+        "actual_device_mmio": 137
+      },
+      {
+        "name": "active_state_survives_bad_configuration_and_can_deactivate",
+        "qmp_requests": 47,
+        "qtest_commands": 15,
+        "actual_device_mmio": 12
+      },
+      {
+        "name": "reset_clears_armed_pending_active_and_all_programming",
+        "qmp_requests": 1630,
+        "qtest_commands": 444,
+        "actual_device_mmio": 440
+      },
+      {
+        "name": "unknown_version_mc_and_observers_remain_readonly",
+        "qmp_requests": 654,
+        "qtest_commands": 18,
+        "actual_device_mmio": 17
+      }
+    ],
+    "count": 20,
+    "default_off_physical_words": 349,
+    "paused_tcg_no_cont_or_mmio": true,
+    "exact_139_leaves": true,
+    "true_hole_count": 26,
+    "all_actual_protocol_files_read": true
+  },
+  "sources": [
+    {
+      "scenario": "steady",
+      "file": "llcc-steady.migration",
+      "bytes": 2286313,
+      "sha256": "48153b584108fc7dfbc9c78b1232832a5359048c098d6dbda4889d2d73c70cf1",
+      "payload_sha256": "35155a119041ba737054fa75f57a1675258e6f211223f2c4e0684e7b224df520",
+      "all_783_bytes_match": true,
+      "all_source_fields_and_derived_state_verified": true,
+      "actual_source_getters": 626,
+      "source_stop_and_postmigrate_verified": true,
+      "virtual_epoch": 100000,
+      "qmp_requests": 708,
+      "qtest_commands": 95,
+      "no_resume_after_source_stop": true
+    },
+    {
+      "scenario": "armed",
+      "file": "llcc-armed.migration",
+      "bytes": 2286313,
+      "sha256": "71f9ac24e8eaa452cf41c34102d562e1844750abb8695b7741b8baa129cf8337",
+      "payload_sha256": "4fa09d9d27ea1b4e8391d9c4e01d93de74d94d74f77932d2c99a0a878ae6799b",
+      "all_783_bytes_match": true,
+      "all_source_fields_and_derived_state_verified": true,
+      "actual_source_getters": 626,
+      "source_stop_and_postmigrate_verified": true,
+      "virtual_epoch": 205000,
+      "qmp_requests": 697,
+      "qtest_commands": 93,
+      "no_resume_after_source_stop": true
+    },
+    {
+      "scenario": "activate-pending",
+      "file": "llcc-activate-pending.migration",
+      "bytes": 2286313,
+      "sha256": "b1f8c26b94de592b94f9067f28883f40b02b90e911d1dbddcea9d3313e47cacd",
+      "payload_sha256": "6bab464576f0b986eb93cd0de0f4fb130ddb6132c81cca32dd3df6d958fe7986",
+      "all_783_bytes_match": true,
+      "all_source_fields_and_derived_state_verified": true,
+      "actual_source_getters": 626,
+      "source_stop_and_postmigrate_verified": true,
+      "virtual_epoch": 300300,
+      "qmp_requests": 697,
+      "qtest_commands": 94,
+      "no_resume_after_source_stop": true
+    },
+    {
+      "scenario": "deactivate-pending",
+      "file": "llcc-deactivate-pending.migration",
+      "bytes": 2286313,
+      "sha256": "4a8d804492a6c658484465de5095c7a92ae2d4597e1429338bd3f9ab7f888840",
+      "payload_sha256": "c1842201adb0255b85aba8e96538c32cb90843350068ed7ba5950055f7b66e46",
+      "all_783_bytes_match": true,
+      "all_source_fields_and_derived_state_verified": true,
+      "actual_source_getters": 626,
+      "source_stop_and_postmigrate_verified": true,
+      "virtual_epoch": 400300,
+      "qmp_requests": 711,
+      "qtest_commands": 97,
+      "no_resume_after_source_stop": true
+    },
+    {
+      "scenario": "disabled",
+      "file": "llcc-disabled.migration",
+      "bytes": 2286313,
+      "sha256": "d418eac751927d7ae595d57498d4bcf623b089729f6e70814a0873b60e751b1e",
+      "payload_sha256": "54ad4737f24394d00d6028c5a925bf2e587d975e3f713fb4243b155e66ccfecc",
+      "all_783_bytes_match": true,
+      "all_source_fields_and_derived_state_verified": true,
+      "actual_source_getters": 626,
+      "source_stop_and_postmigrate_verified": true,
+      "virtual_epoch": 500000,
+      "qmp_requests": 634,
+      "qtest_commands": 2,
+      "no_resume_after_source_stop": true
+    }
+  ],
+  "completed": [
+    {
+      "name": "migration_steady_control_state",
+      "file": "llcc-steady.migration",
+      "passed": true,
+      "first_actual_getters": 313,
+      "prewarm_actual_mmio": 82,
+      "first_mmio_delta": 0,
+      "first_cont_delta": 0,
+      "full_source_world_restored": true,
+      "post_resume_protocol_and_timer_verified": true,
+      "final_virtual_ns": 112000,
+      "shared_timestamps_claimed": false,
+      "ordering_basis": "Actual per-file protocol, counter receipts and exact pinned harness order."
+    },
+    {
+      "name": "migration_armed_edge",
+      "file": "llcc-armed.migration",
+      "passed": true,
+      "first_actual_getters": 313,
+      "prewarm_actual_mmio": 82,
+      "first_mmio_delta": 0,
+      "first_cont_delta": 0,
+      "full_source_world_restored": true,
+      "post_resume_protocol_and_timer_verified": true,
+      "final_virtual_ns": 217000,
+      "shared_timestamps_claimed": false,
+      "ordering_basis": "Actual per-file protocol, counter receipts and exact pinned harness order."
+    },
+    {
+      "name": "migration_pending_activation",
+      "file": "llcc-activate-pending.migration",
+      "passed": true,
+      "first_actual_getters": 313,
+      "prewarm_actual_mmio": 82,
+      "first_mmio_delta": 0,
+      "first_cont_delta": 0,
+      "full_source_world_restored": true,
+      "post_resume_protocol_and_timer_verified": true,
+      "final_virtual_ns": 301000,
+      "shared_timestamps_claimed": false,
+      "ordering_basis": "Actual per-file protocol, counter receipts and exact pinned harness order."
+    },
+    {
+      "name": "migration_pending_deactivation",
+      "file": "llcc-deactivate-pending.migration",
+      "passed": true,
+      "first_actual_getters": 313,
+      "prewarm_actual_mmio": 82,
+      "first_mmio_delta": 0,
+      "first_cont_delta": 0,
+      "full_source_world_restored": true,
+      "post_resume_protocol_and_timer_verified": true,
+      "final_virtual_ns": 401000,
+      "shared_timestamps_claimed": false,
+      "ordering_basis": "Actual per-file protocol, counter receipts and exact pinned harness order."
+    }
+  ],
+  "profile_rejections": [
+    {
+      "name": "on_to_off",
+      "passed": true,
+      "exit_code": 1,
+      "specific_stderr_verified": true,
+      "incoming_file": "llcc-steady.migration",
+      "device_mmio_commands": 0,
+      "cont_commands": 0,
+      "process_exit_evidence": "reviewed harness process.wait receipt; actual stderr independently checked",
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "off_to_on",
+      "passed": true,
+      "exit_code": 1,
+      "specific_stderr_verified": true,
+      "incoming_file": "llcc-disabled.migration",
+      "device_mmio_commands": 0,
+      "cont_commands": 0,
+      "process_exit_evidence": "reviewed harness process.wait receipt; actual stderr independently checked",
+      "query_migrate_failed_response_required": false
+    }
+  ],
+  "corruption_rejections": [
+    {
+      "name": "physical_base",
+      "passed": true,
+      "file": "llcc-corrupt-physical_base.migration",
+      "sha256": "5fc9738586c0e98fbd49d00111bbf15b25da7a44b9a6428ce584124a2296d884",
+      "payload_field_offset": 52,
+      "byte_offset": 2134244,
+      "before": 0,
+      "after": 4,
+      "changed_bits": 1,
+      "all_other_stream_bytes_equal": true,
+      "original_stream_sha256_unchanged": true,
+      "exit_code": 1,
+      "specific_stderr_verified": true,
+      "incoming_file": "llcc-corrupt-physical_base.migration",
+      "device_mmio_commands": 0,
+      "cont_commands": 0,
+      "process_exit_evidence": "reviewed harness process.wait receipt; actual stderr independently checked",
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "captured_attr",
+      "passed": true,
+      "file": "llcc-corrupt-captured_attr.migration",
+      "sha256": "9173c1c126bf50ade63bf1ee70c3978b626514e047e673cf950a97e70ae38ad2",
+      "payload_field_offset": 483,
+      "byte_offset": 2134671,
+      "before": 0,
+      "after": 1,
+      "changed_bits": 1,
+      "all_other_stream_bytes_equal": true,
+      "original_stream_sha256_unchanged": true,
+      "exit_code": 1,
+      "specific_stderr_verified": true,
+      "incoming_file": "llcc-corrupt-captured_attr.migration",
+      "device_mmio_commands": 0,
+      "cont_commands": 0,
+      "process_exit_evidence": "reviewed harness process.wait receipt; actual stderr independently checked",
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "written",
+      "passed": true,
+      "file": "llcc-corrupt-written.migration",
+      "sha256": "b426b24dd59aa19af434e33e46246c56f8032863057b71d86f95a54deac06a44",
+      "payload_field_offset": 429,
+      "byte_offset": 2134614,
+      "before": 0,
+      "after": 1,
+      "changed_bits": 1,
+      "all_other_stream_bytes_equal": true,
+      "original_stream_sha256_unchanged": true,
+      "exit_code": 1,
+      "specific_stderr_verified": true,
+      "incoming_file": "llcc-corrupt-written.migration",
+      "device_mmio_commands": 0,
+      "cont_commands": 0,
+      "process_exit_evidence": "reviewed harness process.wait receipt; actual stderr independently checked",
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "pending_deadline",
+      "passed": true,
+      "file": "llcc-corrupt-pending_deadline.migration",
+      "sha256": "aa6667643daa55af3473725f2edd4daa15be75be87ebec634289a210f76ec852",
+      "payload_field_offset": 759,
+      "byte_offset": 2134944,
+      "before": 0,
+      "after": 128,
+      "changed_bits": 1,
+      "all_other_stream_bytes_equal": true,
+      "original_stream_sha256_unchanged": true,
+      "exit_code": 1,
+      "specific_stderr_verified": true,
+      "incoming_file": "llcc-corrupt-pending_deadline.migration",
+      "device_mmio_commands": 0,
+      "cont_commands": 0,
+      "process_exit_evidence": "reviewed harness process.wait receipt; actual stderr independently checked",
+      "query_migrate_failed_response_required": false
+    }
+  ],
+  "verified_members": {
+    "qemu-build/qemu-system-aarch64": {
+      "bytes": 63675912,
+      "sha256": "fbb1081261d2dea28b267142db7fe48e8e80853fbc9dc53513e82b543087aea5"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/case.json": {
+      "bytes": 982,
+      "sha256": "241d70f0d607111b458dd61f94cb783ddfe55c3a32c2fe3876bfd83ab18e36b7"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/fixtures/data/generated/hw/misc/qcom-sm8250-llcc-data.inc": {
+      "bytes": 10514,
+      "sha256": "f3f7979c7973b2fbf9d8d398c064b8a404a290fbdd9d5a141407c0b28f974a46"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/fixtures/data/generated/tb371fc/docs/llcc-sm8250-registers.json": {
+      "bytes": 84889,
+      "sha256": "9b9989a04b3719665439dab6287be8ced18511021c58ef5c7011f36a587b4772"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/fixtures/data/generation.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/fixtures/data/generation.stdout": {
+      "bytes": 286,
+      "sha256": "e79f25c71f4505add4488488be2c8770748787ab67fa2f744c2672415bb2d081"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/fixtures/data/inputs/primary-r11/arch/arm64/boot/dts/vendor/qcom/kona.dtsi": {
+      "bytes": 132499,
+      "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/fixtures/data/inputs/primary-r11/drivers/edac/qcom_edac.c": {
+      "bytes": 11972,
+      "sha256": "ae3c0da558345d3c471fd35a5ae7f878a84c61d21093056d4ac66359f2486a24"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/fixtures/data/inputs/primary-r11/drivers/soc/qcom/llcc-kona.c": {
+      "bytes": 3764,
+      "sha256": "140c5774139c0827003754bb083d0b6945fbd9982bc5538105084614eac1b2a9"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/fixtures/data/inputs/primary-r11/drivers/soc/qcom/llcc-slice.c": {
+      "bytes": 10965,
+      "sha256": "5a49480bebfa84ca94240202abc3fc3bc8eaf6379df9f4b71a92640e140eb1c5"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/fixtures/data/inputs/primary-r11/drivers/soc/qcom/llcc_perfmon.c": {
+      "bytes": 37150,
+      "sha256": "38f1df996a946b0a6ce8f4cd71559367d1f4498d475605bc9089311d63defeeb"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/fixtures/data/inputs/primary-r11/drivers/soc/qcom/llcc_perfmon.h": {
+      "bytes": 9820,
+      "sha256": "536de10d400093fa406b88f7a3ebfaf30966b43e15f88533be98c85ac5baebfd"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/fixtures/data/inputs/primary-r11/include/linux/soc/qcom/llcc-qcom.h": {
+      "bytes": 5789,
+      "sha256": "1d348978460ba7a32087af7567c80ddeaa98399855c719e7c0c2b1fcc4d7f093"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/fixtures/data/inputs/primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi": {
+      "bytes": 176883,
+      "sha256": "8735b5d8bb61d6a3a579e5b088ff2a719132266cef57c91c319ec19e12770499"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/fixtures/data/result.json": {
+      "bytes": 7374,
+      "sha256": "343759cf2d5bbac85a47dbbb219b702928871fbe9f714539b3a4aa60091ba7cb"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/16-llcc-source-generation/stdout.log": {
+      "bytes": 80,
+      "sha256": "6d5fea9da1c2e4f97bd973b2cdc8a5c3bef4134feacd2c194f2b7f9e41f77f0b"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/case.json": {
+      "bytes": 1209,
+      "sha256": "30ad395f844d9cb10e1662d92c4f9c01ef10fc17743a992a58efd593abf5f767"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/default-off/command.json": {
+      "bytes": 548,
+      "sha256": "97dd2c21236efe1b971989e0d3d94a4f490369029a161b40607791dbff400a45"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/default-off/qemu.stderr": {
+      "bytes": 58137,
+      "sha256": "4654bc1b0d5d0f398bc755ebc7e08c68d298045fc00657d3e69bcc9d0ac18f0b"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/default-off/qmp.jsonl": {
+      "bytes": 97076,
+      "sha256": "0ec9032e5353d2e3a08de447ff6d6dc03cb2f9f7b20e672c6688b90850d7c6d6"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/default-off/qtest.jsonl": {
+      "bytes": 57315,
+      "sha256": "6329aa913456c5afc68aa167cfa062007280c40b7fdc2a2678654d69844f3b92"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-activate-pending.migration": {
+      "bytes": 2286313,
+      "sha256": "b1f8c26b94de592b94f9067f28883f40b02b90e911d1dbddcea9d3313e47cacd"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-activate-pending.migration.llcc-v1.payload.bin": {
+      "bytes": 783,
+      "sha256": "6bab464576f0b986eb93cd0de0f4fb130ddb6132c81cca32dd3df6d958fe7986"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-activate-pending.migration.sections.json": {
+      "bytes": 476,
+      "sha256": "87c95a7a6042eb97d975fea3a402b436084a83b23d1b1ea3ed0b2d0347d57883"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-armed.migration": {
+      "bytes": 2286313,
+      "sha256": "71f9ac24e8eaa452cf41c34102d562e1844750abb8695b7741b8baa129cf8337"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-armed.migration.llcc-v1.payload.bin": {
+      "bytes": 783,
+      "sha256": "4fa09d9d27ea1b4e8391d9c4e01d93de74d94d74f77932d2c99a0a878ae6799b"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-armed.migration.sections.json": {
+      "bytes": 465,
+      "sha256": "ff9ef27f837b861ecd982abb357d6b6fd75b8fdfddc6ec7d2834a576a54dec80"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-corrupt-captured_attr.migration": {
+      "bytes": 2286313,
+      "sha256": "9173c1c126bf50ade63bf1ee70c3978b626514e047e673cf950a97e70ae38ad2"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-corrupt-pending_deadline.migration": {
+      "bytes": 2286313,
+      "sha256": "aa6667643daa55af3473725f2edd4daa15be75be87ebec634289a210f76ec852"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-corrupt-physical_base.migration": {
+      "bytes": 2286313,
+      "sha256": "5fc9738586c0e98fbd49d00111bbf15b25da7a44b9a6428ce584124a2296d884"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-corrupt-written.migration": {
+      "bytes": 2286313,
+      "sha256": "b426b24dd59aa19af434e33e46246c56f8032863057b71d86f95a54deac06a44"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-deactivate-pending.migration": {
+      "bytes": 2286313,
+      "sha256": "4a8d804492a6c658484465de5095c7a92ae2d4597e1429338bd3f9ab7f888840"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-deactivate-pending.migration.llcc-v1.payload.bin": {
+      "bytes": 783,
+      "sha256": "c1842201adb0255b85aba8e96538c32cb90843350068ed7ba5950055f7b66e46"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-deactivate-pending.migration.sections.json": {
+      "bytes": 478,
+      "sha256": "6e073580d0dc837ac93b597846dfa2950398c89b4f4d8e6ca7b88cdd186bb447"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-disabled.migration": {
+      "bytes": 2286313,
+      "sha256": "d418eac751927d7ae595d57498d4bcf623b089729f6e70814a0873b60e751b1e"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-disabled.migration.llcc-v1.payload.bin": {
+      "bytes": 783,
+      "sha256": "54ad4737f24394d00d6028c5a925bf2e587d975e3f713fb4243b155e66ccfecc"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-disabled.migration.sections.json": {
+      "bytes": 468,
+      "sha256": "cc7a6bdc4bf7a38bd7a4275618b38cad4dd77d85f2a01a52fa6a2360dc771c73"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-steady.migration": {
+      "bytes": 2286313,
+      "sha256": "48153b584108fc7dfbc9c78b1232832a5359048c098d6dbda4889d2d73c70cf1"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-steady.migration.llcc-v1.payload.bin": {
+      "bytes": 783,
+      "sha256": "35155a119041ba737054fa75f57a1675258e6f211223f2c4e0684e7b224df520"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/llcc-steady.migration.sections.json": {
+      "bytes": 466,
+      "sha256": "aab854e819c077f70555bfbf253cd780b6c75174d1d82c4e1501590770bf167a"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-activate-pending-source/command.json": {
+      "bytes": 604,
+      "sha256": "ff9be9792a605aae063e9133889e2bac635c403206af64dbf1fd75a29f638339"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-activate-pending-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-activate-pending-source/qmp.jsonl": {
+      "bytes": 109186,
+      "sha256": "c7a9752bc786de9a26b79a7db1dd17db86453127645a8e7bbf6891862af60132"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-activate-pending-source/qtest.jsonl": {
+      "bytes": 7617,
+      "sha256": "14eadb49f8dd79f2a25fefce5394f2869acb9f6a2153d8ee173e849bff0940af"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-activate-pending-source/source-after-save.json": {
+      "bytes": 7544,
+      "sha256": "87eaf15f45c9b79befee479a4f6cd1e9599f71e4ab79ffe651628a82f717ba67"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-activate-pending-source/source-before-save.json": {
+      "bytes": 7544,
+      "sha256": "87eaf15f45c9b79befee479a4f6cd1e9599f71e4ab79ffe651628a82f717ba67"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-activate-pending-source/source-query-migrate.json": {
+      "bytes": 543,
+      "sha256": "a51a9aeabb7b9665403d6b4f3064cf8fa4abcc4ef4721122fefa684f8adbcfce"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-activate-pending-target/command.json": {
+      "bytes": 630,
+      "sha256": "32994bb608173df866bf23eacc0fba6d137a47299efa34924cc3ef4b939ae8c0"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-activate-pending-target/destination-before-first-device-mmio.json": {
+      "bytes": 8829,
+      "sha256": "5257e98cf0988cd5a43a9ced704487f123d54ca7000dd3da3e3dfd992f63c6a7"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-activate-pending-target/destination-before-incoming.json": {
+      "bytes": 8414,
+      "sha256": "72433ef4f90797d613dc8666b7e7bc6b95302e4acb189cab4b549f846a69c2a0"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-activate-pending-target/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-activate-pending-target/qmp.jsonl": {
+      "bytes": 103481,
+      "sha256": "7d1ef45a5929d6175491ce577660c1915cd10c9587892b25c81cc4e9f15b937e"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-activate-pending-target/qtest.jsonl": {
+      "bytes": 7823,
+      "sha256": "2d2adc1ea9acf28e7d44cf92151286c59e86e2230ae5d88c653afb2468968e65"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-armed-source/command.json": {
+      "bytes": 604,
+      "sha256": "5cc295f9c0a7d8ed39800e7f7794994db804a946896ab36d002a8d80a2704f9a"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-armed-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-armed-source/qmp.jsonl": {
+      "bytes": 109164,
+      "sha256": "832d72bb9787480de62de52b2ba7bfbac130483467707a4da27d421ef191e2ca"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-armed-source/qtest.jsonl": {
+      "bytes": 7538,
+      "sha256": "3fc2dcbd2eb2743b881a8d06129b794dbe3ba91e8fad0cbebe2fa4bacb483eba"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-armed-source/source-after-save.json": {
+      "bytes": 7540,
+      "sha256": "9b3c339e91faad3f8f0730d20666c2acf8487b1d1997ec04eaaab0ec9c00bda0"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-armed-source/source-before-save.json": {
+      "bytes": 7540,
+      "sha256": "9b3c339e91faad3f8f0730d20666c2acf8487b1d1997ec04eaaab0ec9c00bda0"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-armed-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "e1e4145ee448bcdb7533b6086c9174802247a6a0151d7951fc5f766e12318f9d"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-armed-target/command.json": {
+      "bytes": 630,
+      "sha256": "44b06a5560df6630964e804591552980749f99dfde45681a8bf5b2929d98d1aa"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-armed-target/destination-before-first-device-mmio.json": {
+      "bytes": 8825,
+      "sha256": "4f4b877e974b85216c1043998634081ccc8ddc428145affe243a5352cb9bcf4d"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-armed-target/destination-before-incoming.json": {
+      "bytes": 8414,
+      "sha256": "8ca850fb0980b644859942f74ad1459cdc8b7e23fdc3005f02742d4aec1a473f"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-armed-target/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-armed-target/qmp.jsonl": {
+      "bytes": 106435,
+      "sha256": "9b946ddb970020141b5b20652619626ccba710184a7d2a8dd6834ceaf5c139e0"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-armed-target/qtest.jsonl": {
+      "bytes": 7758,
+      "sha256": "4b9e0ee5c138ab2d9ecd82ecd071afccdc5aef0de465516d0ad825fbc2c533e8"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-deactivate-pending-source/command.json": {
+      "bytes": 604,
+      "sha256": "0332ce0504319787064d9c9315d1d6cff31231d879caa98371a01153988807ce"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-deactivate-pending-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-deactivate-pending-source/qmp.jsonl": {
+      "bytes": 111360,
+      "sha256": "47174fac960ec2aecefbd0387280aa8f31c5dc858693497684987eda8af38ee2"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-deactivate-pending-source/qtest.jsonl": {
+      "bytes": 7851,
+      "sha256": "55112d50655823bdb23279431af229cb4764c40e8faec60841da803c30fdcc18"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-deactivate-pending-source/source-after-save.json": {
+      "bytes": 7534,
+      "sha256": "414a96a12198e3dfa247b087759e7858fb9905e816d4ff00b29b7b00ddeef13b"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-deactivate-pending-source/source-before-save.json": {
+      "bytes": 7534,
+      "sha256": "414a96a12198e3dfa247b087759e7858fb9905e816d4ff00b29b7b00ddeef13b"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-deactivate-pending-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "87fc95d6128bb73d82561f55ad5e0612755fdedad63bafaba257d65ec2f65215"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-deactivate-pending-target/command.json": {
+      "bytes": 630,
+      "sha256": "011781031c50aaf9993b3aa713b2932b8126d5703918a053b9d9b302460b6e6c"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-deactivate-pending-target/destination-before-first-device-mmio.json": {
+      "bytes": 8819,
+      "sha256": "dee3939dac7cf023d0bb270128c7b6e1a48fdb8daf6b001ebf541644ec39d6c9"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-deactivate-pending-target/destination-before-incoming.json": {
+      "bytes": 8414,
+      "sha256": "43489f328ee30e3ae4540eecc1b9a71a9f51bb64cafc906d4061f179179bb498"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-deactivate-pending-target/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-deactivate-pending-target/qmp.jsonl": {
+      "bytes": 103473,
+      "sha256": "465f8d67a007826a6c06b49877190f570736073f2a8bbf917f9e70fbbc216629"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-deactivate-pending-target/qtest.jsonl": {
+      "bytes": 7823,
+      "sha256": "f03611e58dcbc4ccae22849bfd3e565268141e389b08821fd4bd5f0826ebbbf1"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-disabled-source/command.json": {
+      "bytes": 605,
+      "sha256": "b5299e623771457d997d3700344dbe475223f630d6b46af80edc4bf025c8e9d4"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-disabled-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-disabled-source/qmp.jsonl": {
+      "bytes": 98858,
+      "sha256": "20426d3e5f7e0e35a1ab882d6a40030b55ed75eb95451a1e3c3c9c036f6c9b2e"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-disabled-source/qtest.jsonl": {
+      "bytes": 166,
+      "sha256": "13f76a00a651e41ead568f67fa5b9f624717c0e2c05a2280d0bdd7621a378869"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-disabled-source/source-after-save.json": {
+      "bytes": 7339,
+      "sha256": "15c95be0248432ca062fe7b3f1b7c1a6f814a4b7cd83f8a697acbe6f5d5ccf4a"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-disabled-source/source-before-save.json": {
+      "bytes": 7339,
+      "sha256": "15c95be0248432ca062fe7b3f1b7c1a6f814a4b7cd83f8a697acbe6f5d5ccf4a"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-disabled-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "e1e4145ee448bcdb7533b6086c9174802247a6a0151d7951fc5f766e12318f9d"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-steady-source/command.json": {
+      "bytes": 604,
+      "sha256": "1ff3ba73336da6c50859e361e9adcd9efd5521cb9996f96cd60e349cf8354e56"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-steady-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-steady-source/qmp.jsonl": {
+      "bytes": 110864,
+      "sha256": "afdb7c0877120a9ac1047b85603d5dccc58cb61057517e9d23b4299dc36b44b4"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-steady-source/qtest.jsonl": {
+      "bytes": 7688,
+      "sha256": "5bc4c84f44078bdb0f4fe36769d922069bfee474449336787f23cb51f40f6170"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-steady-source/source-after-save.json": {
+      "bytes": 7524,
+      "sha256": "adf8f38e450260352cf4bf792cae97cc8766aaebb6d45626377dbb789aa170d8"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-steady-source/source-before-save.json": {
+      "bytes": 7524,
+      "sha256": "adf8f38e450260352cf4bf792cae97cc8766aaebb6d45626377dbb789aa170d8"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-steady-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "6fb2fa9d7d02defd691a1d1b139de4376869afce1f3c174588a2ec46396747c0"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-steady-target/command.json": {
+      "bytes": 630,
+      "sha256": "5ca44d1089f9b3e33607624f500f716a3600145f6ab73f38d35216780f052093"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-steady-target/destination-before-first-device-mmio.json": {
+      "bytes": 8809,
+      "sha256": "cc46ad5aac184a7088583ca79cabb77600e870ee06ecd3835458dfb29949ac20"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-steady-target/destination-before-incoming.json": {
+      "bytes": 8414,
+      "sha256": "e25738fd7cd5e6a72f49e565076b55540f13b6aaa099e77111275b1db51e239a"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-steady-target/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-steady-target/qmp.jsonl": {
+      "bytes": 204936,
+      "sha256": "3e5d3263d7757ed11e6c42861e1eb8543538df38ba3a96406f5bd3bdd2dc4705"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/migration-steady-target/qtest.jsonl": {
+      "bytes": 40806,
+      "sha256": "c96e1f203bc4512d0a76c958d40088cb15da8b3038ab91c3061003e5b537ec7e"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-00-cold_geometry_identity_and_pure_getters/command.json": {
+      "bytes": 604,
+      "sha256": "9eedbd98d7aead7d5b3ec059169fb1d4048c60a05ff749995676ce1399576d90"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-00-cold_geometry_identity_and_pure_getters/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-00-cold_geometry_identity_and_pure_getters/qmp.jsonl": {
+      "bytes": 170386,
+      "sha256": "7fd315fbdd9589de310fac8fe51549eb5adbdff8180c83bfa4017a08c4759c85"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-00-cold_geometry_identity_and_pure_getters/qtest.jsonl": {
+      "bytes": 178,
+      "sha256": "f5d05017d3243f12442208447f6aac24eb0e633436991632ab1dc960bf670d33"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-01-original_kona_probe_order_and_all_bank_mirrors/command.json": {
+      "bytes": 604,
+      "sha256": "f9c91c8d8c3ee51b11af20357bcc6a4a0f68756f47b8afa4b6ba764f893ec63b"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-01-original_kona_probe_order_and_all_bank_mirrors/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-01-original_kona_probe_order_and_all_bank_mirrors/qmp.jsonl": {
+      "bytes": 142883,
+      "sha256": "30aefb32a85b9cf817b43671a4c8f24c59479125522684529ee28c1d115cfd53"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-01-original_kona_probe_order_and_all_bank_mirrors/qtest.jsonl": {
+      "bytes": 39315,
+      "sha256": "1e73c5477ffe0144558d6e83e2f47b9d2353ba30fbf43aaaf8822c640ef30d16"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-02-all_sixteen_slices_activate_and_deactivate/command.json": {
+      "bytes": 604,
+      "sha256": "7eb2e55dcc546293da77a21372f59d237c52c1777378c7849f740e6811a8b11f"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-02-all_sixteen_slices_activate_and_deactivate/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-02-all_sixteen_slices_activate_and_deactivate/qmp.jsonl": {
+      "bytes": 72782,
+      "sha256": "75ab988ccb48896d13132c05642470a1e33320f56811eefb1e81d86a9ff34a9a"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-02-all_sixteen_slices_activate_and_deactivate/qtest.jsonl": {
+      "bytes": 21273,
+      "sha256": "1d12d1917e01c018c62bef3ac6c940ee59666345ef10b6c44ccacc3bc0a27e51"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-03-trigger_high_is_armed_until_matching_falling_edge/command.json": {
+      "bytes": 604,
+      "sha256": "5279ee566ae8b622311dff2367ec143dceff4ca6134daee7589b6a0856dc9c47"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-03-trigger_high_is_armed_until_matching_falling_edge/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-03-trigger_high_is_armed_until_matching_falling_edge/qmp.jsonl": {
+      "bytes": 4403,
+      "sha256": "239b41b8db742ea8a37e757928c859a5a7705c1318fe45b3bfc0bb3b01f3d71a"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-03-trigger_high_is_armed_until_matching_falling_edge/qtest.jsonl": {
+      "bytes": 886,
+      "sha256": "3f34585ebe239033c8aacd2a96214b59f9fdea28fe791c1d942dd761ddb36b7f"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-04-deactivation_preserves_active_until_deadline/command.json": {
+      "bytes": 604,
+      "sha256": "aeece2727a4376c803f8236704344e084671d7548c0235ea108e90d4c488cd0c"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-04-deactivation_preserves_active_until_deadline/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-04-deactivation_preserves_active_until_deadline/qmp.jsonl": {
+      "bytes": 5307,
+      "sha256": "410a1819bca769fd8826a56f335084fc7c2311e7cf433ae3096bcc299d29b368"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-04-deactivation_preserves_active_until_deadline/qtest.jsonl": {
+      "bytes": 1102,
+      "sha256": "40a29cee816dc2046313b3162010fe58fd28e042b7fba12cb570c790683e389a"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-05-explicit_zero_write_credit_is_required/command.json": {
+      "bytes": 604,
+      "sha256": "2b324d5528f0a98a64b5b5a1f3f0fb3bc80c40f243a8f7acf8029892081f1391"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-05-explicit_zero_write_credit_is_required/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-05-explicit_zero_write_credit_is_required/qmp.jsonl": {
+      "bytes": 4366,
+      "sha256": "b225093c198266f2cb868a088855c947dfcee5472251c59e18c769ff969630a8"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-05-explicit_zero_write_credit_is_required/qtest.jsonl": {
+      "bytes": 867,
+      "sha256": "ce88d4c5a894728a3bc3e0447edbb6c99314b8436ab194edd31099093a5e782d"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-06-incomplete_or_wrong_slice_recipe_cannot_activate/command.json": {
+      "bytes": 604,
+      "sha256": "d3330d0caed42561a064970f77ad6cc8df66fa02adbb0d581110727c3ff6da73"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-06-incomplete_or_wrong_slice_recipe_cannot_activate/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-06-incomplete_or_wrong_slice_recipe_cannot_activate/qmp.jsonl": {
+      "bytes": 13301,
+      "sha256": "2d6cffd442d0d9914e8752483b030a085b4e9d5b35033ee40d25d599a772c906"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-06-incomplete_or_wrong_slice_recipe_cannot_activate/qtest.jsonl": {
+      "bytes": 6852,
+      "sha256": "4931a27495f307566f76ed00d526dc738debcdcae3a4ad3554258c21748d3225"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-07-related_configuration_change_cancels_armed_and_pending/command.json": {
+      "bytes": 604,
+      "sha256": "28ecae7867b88c714e17ee10264b920530e06476fcbf859c9346fbb341280500"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-07-related_configuration_change_cancels_armed_and_pending/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-07-related_configuration_change_cancels_armed_and_pending/qmp.jsonl": {
+      "bytes": 12380,
+      "sha256": "8b29f950fc1c17ee65ff9e4410b98ee0debe90c1e2f97065247167f689e5eb83"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-07-related_configuration_change_cancels_armed_and_pending/qtest.jsonl": {
+      "bytes": 2984,
+      "sha256": "3fa7f355ef42adee966bfb5164793b0f731fbc623db79fe9bda59b5446667fcd"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-08-unrelated_slice_and_other_global_bits_preserve_transaction/command.json": {
+      "bytes": 604,
+      "sha256": "0e60074cab5d9e18d02d97deed4a8f12803046eb008aed790eb805705aa5bed6"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-08-unrelated_slice_and_other_global_bits_preserve_transaction/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-08-unrelated_slice_and_other_global_bits_preserve_transaction/qmp.jsonl": {
+      "bytes": 6184,
+      "sha256": "e51acb443f5e0a02f9d368bf0be1f9b09276221c88c4655448190774a7357c9f"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-08-unrelated_slice_and_other_global_bits_preserve_transaction/qtest.jsonl": {
+      "bytes": 1179,
+      "sha256": "575189d739b16e57579cae0bc24123bfb1a52ca9966ce4c31156d1cc077f3a40"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-09-own_global_bit_change_cancels_but_restore_does_not_restart/command.json": {
+      "bytes": 604,
+      "sha256": "57dc3109bd1f136b7b8fbb01f9bb39abd3e4138d2ea9212cf1928031395e28e8"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-09-own_global_bit_change_cancels_but_restore_does_not_restart/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-09-own_global_bit_change_cancels_but_restore_does_not_restart/qmp.jsonl": {
+      "bytes": 10425,
+      "sha256": "1106e1928bc8e5b6966012f180eaae8a22cbfdf0c83d9b1863f0735092e57538"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-09-own_global_bit_change_cancels_but_restore_does_not_restart/qtest.jsonl": {
+      "bytes": 2900,
+      "sha256": "331076d4f910dd2df22fc39738077b45c1c52b0075a77eb37f38075b1b660498"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-10-wrong_or_duplicate_falling_edges_cancel_without_replay/command.json": {
+      "bytes": 604,
+      "sha256": "6a46924e9ce582c8c38f8b2ab59ebdf654be28695b291dad230cde16672c31e0"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-10-wrong_or_duplicate_falling_edges_cancel_without_replay/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-10-wrong_or_duplicate_falling_edges_cancel_without_replay/qmp.jsonl": {
+      "bytes": 9821,
+      "sha256": "24342fa66093cbe2a1ac1f356e68dd50a1d0b2e304704b3b59c390104a60fff8"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-10-wrong_or_duplicate_falling_edges_cancel_without_replay/qtest.jsonl": {
+      "bytes": 2380,
+      "sha256": "8560accfaf894f820f88d8a8c044b5455074f3b1552616ec1bb745269f8f5611"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-11-concurrent_slice_deadlines_are_independent/command.json": {
+      "bytes": 604,
+      "sha256": "083a55e3c1dff62386a3ac8f43c4ceab898268680dddf1e99ef47095a5057414"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-11-concurrent_slice_deadlines_are_independent/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-11-concurrent_slice_deadlines_are_independent/qmp.jsonl": {
+      "bytes": 8906,
+      "sha256": "7bac275e68ba2dbc3a4f891308209be71794f36db64816e9703be6fa9fafdde9"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-11-concurrent_slice_deadlines_are_independent/qtest.jsonl": {
+      "bytes": 7198,
+      "sha256": "eb89e642cbad67de88d0eeb3a6ea8beacf305aa39301aac24d54b45263501371"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-12-all_bank_words_are_readonly_views/command.json": {
+      "bytes": 604,
+      "sha256": "b0cbfd5d696a69a46218e47e0afd34230f1f1842ee72d6e3e4f8208ea90cfdd0"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-12-all_bank_words_are_readonly_views/qemu.stderr": {
+      "bytes": 21280,
+      "sha256": "23450633cff4d4e8f39b2bb85d5eaf8e1043b1fd773b6422fdb632c5239913ae"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-12-all_bank_words_are_readonly_views/qmp.jsonl": {
+      "bytes": 204476,
+      "sha256": "90c1598ca3aa11f97c749fc885d2bf95dc94ebcc70bef36f3072a0c9d893dba0"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-12-all_bank_words_are_readonly_views/qtest.jsonl": {
+      "bytes": 61155,
+      "sha256": "2dca77e6ef98c7f488e116e35d09d4159f95819a8c7e62c167732a8498fa38cf"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-13-dynamic_status_and_reserved_bits_are_not_writable/command.json": {
+      "bytes": 604,
+      "sha256": "33e8899b96f9de7fae7c7251281ff5b49b55712ed5ec7f4325afe752b0a760bb"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-13-dynamic_status_and_reserved_bits_are_not_writable/qemu.stderr": {
+      "bytes": 2079,
+      "sha256": "a9eaabe8cac5c178a747625caa1cbbfd8a9dde4aaef046e6db093856b14bca05"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-13-dynamic_status_and_reserved_bits_are_not_writable/qmp.jsonl": {
+      "bytes": 98368,
+      "sha256": "db34ccea5b622ac4bc765a26551cc682c0aa4e697b3206ab88eee10f78784449"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-13-dynamic_status_and_reserved_bits_are_not_writable/qtest.jsonl": {
+      "bytes": 2779,
+      "sha256": "3ddff6b43efa9369f83c9a3b297919781e8441393b6dd77aa4d8b07946093209"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-14-exact_sparse_ownership_and_true_holes/command.json": {
+      "bytes": 604,
+      "sha256": "42ccac6c2cff46396f75749beb2d10e28bf646228402f6df33c1575b2ec5479b"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-14-exact_sparse_ownership_and_true_holes/mtree.txt": {
+      "bytes": 55205,
+      "sha256": "e8bb14b3c6fc977535cc14bf4490303cc2d582d96f5415585b1a3fb56c26ac34"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-14-exact_sparse_ownership_and_true_holes/qemu.stderr": {
+      "bytes": 3874,
+      "sha256": "a5ce130c0d05bc7a639bf099b5cbc7c419072c6c27659ad83d549f2e83fe65c6"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-14-exact_sparse_ownership_and_true_holes/qmp.jsonl": {
+      "bytes": 153894,
+      "sha256": "5a1ca62e4a8e14e7359313f964f41f548b4ec873cf3d9260bf6f95ab1f673b5e"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-14-exact_sparse_ownership_and_true_holes/qtest.jsonl": {
+      "bytes": 4446,
+      "sha256": "4fe0646c2eb703487f1707d7e4d3734afa0d8bdb9d313f9e2345be9f0e28d54f"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-15-subword_unaligned_and_wide_accesses_reject_atomically/command.json": {
+      "bytes": 604,
+      "sha256": "d2607d57c3dbe2893ac62d8b2233f3ec08eb5302c571b8858c7435f631b0d6ee"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-15-subword_unaligned_and_wide_accesses_reject_atomically/qemu.stderr": {
+      "bytes": 2515,
+      "sha256": "6fbbbc60eea2c0fd04dd3824f24b7107123bae9c0a7e2e8ff76bbc2173175de7"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-15-subword_unaligned_and_wide_accesses_reject_atomically/qmp.jsonl": {
+      "bytes": 97116,
+      "sha256": "298e1aee8a9ab1605a25a373faccf964e50f7b356c325afed0bb5be278b9f0b5"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-15-subword_unaligned_and_wide_accesses_reject_atomically/qtest.jsonl": {
+      "bytes": 2978,
+      "sha256": "19c8eeae23b81d1725a60a4f6253bca3648af347fa83986caa0b85b2b723ced4"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-16-polling_and_qom_reads_do_not_advance_time/command.json": {
+      "bytes": 604,
+      "sha256": "ff37edb1299331e5794b6c410f39eff5a688e85ef124432e46603749195bd3d1"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-16-polling_and_qom_reads_do_not_advance_time/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-16-polling_and_qom_reads_do_not_advance_time/qmp.jsonl": {
+      "bytes": 116576,
+      "sha256": "83e0f75798373e0ce279414d148a39275acee82c3739ccc7b98699cfbfd2dc6e"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-16-polling_and_qom_reads_do_not_advance_time/qtest.jsonl": {
+      "bytes": 12270,
+      "sha256": "12906024257e6416a366e782edf0c31f5e5739e08d283275164239d2798f49ed"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-17-active_state_survives_bad_configuration_and_can_deactivate/command.json": {
+      "bytes": 604,
+      "sha256": "7835e86a7fb27102f27cdc23f1d3556923755a47b5ebfdac2133a15c8b7d1e40"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-17-active_state_survives_bad_configuration_and_can_deactivate/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-17-active_state_survives_bad_configuration_and_can_deactivate/qmp.jsonl": {
+      "bytes": 7333,
+      "sha256": "ddfe10b5fe0a7f62491a8db746df35d08dc66bc8beb8149b3746d6fa72979d1f"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-17-active_state_survives_bad_configuration_and_can_deactivate/qtest.jsonl": {
+      "bytes": 1171,
+      "sha256": "850e8d7ce44e063ce8f2ed4252d812e79b85bc2305224c076ccd032f0afd4d9d"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-18-reset_clears_armed_pending_active_and_all_programming/command.json": {
+      "bytes": 604,
+      "sha256": "c79540e551ba65fa7d77ac8cb8dd1e88f6e159bd7cd13ea5b32bdb39e8ef262e"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-18-reset_clears_armed_pending_active_and_all_programming/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-18-reset_clears_armed_pending_active_and_all_programming/qmp.jsonl": {
+      "bytes": 253581,
+      "sha256": "e03a59735873659428df257a407ba4df851aa8cdb3ed7948f3920cc4ca3a56b3"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-18-reset_clears_armed_pending_active_and_all_programming/qtest.jsonl": {
+      "bytes": 40134,
+      "sha256": "0a674cfe66bf0d48b5e2895a1fb35c18cb7d49aaa7c84d3738b94dbb678f66ec"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-19-unknown_version_mc_and_observers_remain_readonly/command.json": {
+      "bytes": 604,
+      "sha256": "a060badb694bc9e2ccb0c33c33eb6c33d319005e1a3dc7528865300198668afb"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-19-unknown_version_mc_and_observers_remain_readonly/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-19-unknown_version_mc_and_observers_remain_readonly/qmp.jsonl": {
+      "bytes": 101904,
+      "sha256": "6a22c5b82967b88f92e1ad5d6f67ba683768e3a2be22ba7454fa2706be4a33f8"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/ordinary-19-unknown_version_mc_and_observers_remain_readonly/qtest.jsonl": {
+      "bytes": 1543,
+      "sha256": "ed6d8fdb9b1a3d1a0a6abee081bfd3bcb9ca3342997258d0af7203081d51794d"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/paused-tcg/command.json": {
+      "bytes": 488,
+      "sha256": "dcb116ed4adec723f92b6251f8384e464c07143ca74247dd54cd73672cbb7f24"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/paused-tcg/qemu.stderr": {
+      "bytes": 80,
+      "sha256": "5458cdda283b11e9b0085cb273f48b1609097dc3f277f25eee3079d2864d9319"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/paused-tcg/qmp.jsonl": {
+      "bytes": 123060,
+      "sha256": "d63425219da5c9a23ecff11a309865d8fade2c58d2d77bbf48549edc8ab390b4"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/paused-tcg/qtest.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-captured_attr/command.json": {
+      "bytes": 630,
+      "sha256": "cf09e5086601d8014e2f2fb9aa5b18e765f0a143469675305ee3d0aa635f2975"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-captured_attr/qemu.stderr": {
+      "bytes": 291,
+      "sha256": "e16122b32949995aef44cfbbf3d41ac0540616bfca552601b7fa354779801181"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-captured_attr/qmp.jsonl": {
+      "bytes": 477,
+      "sha256": "a258daecc42016e91639137d1326c4aa172a17644b29b4c67e28d48a14e14a82"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-captured_attr/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "443628b7724f51b7343a2ade1441b2247ee8ab620bdd99785d0a86b2f670eae3"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-pending_deadline/command.json": {
+      "bytes": 630,
+      "sha256": "b1498bc6cd5eeeebd68b55eed8e9b8aab916cb1cf6b4c5a8ef40e90b88d8ae1b"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-pending_deadline/qemu.stderr": {
+      "bytes": 294,
+      "sha256": "014e8be0e69b038bf951cc9a0ef969f761ee7e1980f24fd6f60cdbbe7213c6ee"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-pending_deadline/qmp.jsonl": {
+      "bytes": 480,
+      "sha256": "e1d35546253f4c8a5e2661bce7eafad85ac5e884fb4ba00197855825e4474bea"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-pending_deadline/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "1f94bc1c1c291199127844e9c3ac6ddc7a533bc059ef730fdceb42d1ad061342"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-physical_base/command.json": {
+      "bytes": 630,
+      "sha256": "11946b47038ab20fed05dccde3f23be08653f1cdf74cd1378520efe0dbb24c33"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-physical_base/qemu.stderr": {
+      "bytes": 157,
+      "sha256": "d8b3c67a56845cdf02b5d5524b474c6b96ef06776ec86cbb03d5580e91d202da"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-physical_base/qmp.jsonl": {
+      "bytes": 477,
+      "sha256": "9ca3bff16da3bf680f2b0920d5f199b7c0f8b70b72912096c120a5fe06ae7fa8"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-physical_base/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "c65d88940c3f66de8ad6d3b9f15bf8f537550d206971760125bf52d3df1bcad3"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-written/command.json": {
+      "bytes": 630,
+      "sha256": "ff53ca2735048e934d53bf6d53d1112a1a5dd3707eaf6efa94ee1b53bcc4472e"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-written/qemu.stderr": {
+      "bytes": 291,
+      "sha256": "aaa93629e79885c76b999f11835aa5f5828c95d66d5bf339724834cfc410d299"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-written/qmp.jsonl": {
+      "bytes": 471,
+      "sha256": "344fe6f56555afeffdfd3b5fa668802173dbe05930d070628b2ab2c0d5b381ec"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-corrupt-written/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "c65d88940c3f66de8ad6d3b9f15bf8f537550d206971760125bf52d3df1bcad3"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-profile-off_to_on/command.json": {
+      "bytes": 630,
+      "sha256": "f8a5021d2928f6a75ea8700886e0864c9d5ad0d8cf7459b3b2c27ecc3ed36216"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-profile-off_to_on/qemu.stderr": {
+      "bytes": 145,
+      "sha256": "bca0b5158627f07190170af1b5af2de7f06631b0f9fe4f218ba3cb1fc6a3c6de"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-profile-off_to_on/qmp.jsonl": {
+      "bytes": 464,
+      "sha256": "a440d73802311ff8a452301945924fd7319c0116e897c1b20ff4e380df694902"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-profile-off_to_on/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "ab43d3a40ce54a34044c2341ee7a5e2cfd0cc233195f46956d9c30440112a09c"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-profile-on_to_off/command.json": {
+      "bytes": 631,
+      "sha256": "4bd07117c726c828f98a8ddd06be69bbb8a8086212c2febc2ded2204f82e2163"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-profile-on_to_off/qemu.stderr": {
+      "bytes": 145,
+      "sha256": "65022482c59ddcb5a7a503827ce2d6f083c2b800fd268a8aceebb0be62440d6d"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-profile-on_to_off/qmp.jsonl": {
+      "bytes": 462,
+      "sha256": "533f42d295367aae8854bd71053a80b030e411772f4f25e79b9d2cf566ce38c3"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/reject-profile-on_to_off/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "c65d88940c3f66de8ad6d3b9f15bf8f537550d206971760125bf52d3df1bcad3"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/fixtures/data/result.json": {
+      "bytes": 120566,
+      "sha256": "e59b7e904bede0ab2a666897c55cd769d86247ed735fe2712fda367fdb2985a9"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/62-llcc-sm8250-reference/stdout.log": {
+      "bytes": 120566,
+      "sha256": "e59b7e904bede0ab2a666897c55cd769d86247ed735fe2712fda367fdb2985a9"
+    },
+    "tb371fc-results/source-commit.txt": {
+      "bytes": 41,
+      "sha256": "ac7456bb266290612d1fa404762267c510295b78304986143b077a57a99ba81d"
+    }
+  },
+  "verified_member_count": 213
+}
