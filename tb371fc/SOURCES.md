@@ -468,3 +468,54 @@ clocks and power behavior remain outside this model. An internal unknown zero
 is tagged separately from a guest-programmed zero, and all MMIO reads remain
 errors. Component CI, unchanged original-kernel execution and Android boot
 remain separate acceptance stages.
+
+## RPM statistics firmware-initialized reference
+
+The [frozen reference contract](docs/rpm-stats-sm8250-reference-contract.json)
+is the complete 8530-byte canonical UTF-8 JSON file, including one final LF,
+with SHA-256
+`9aef5bfdf8c6c7ccbd01ef666f8c0f4cd9c4083365a06d27ca1d4bf979aa8337`.
+It has no self-digest field. The
+[generator](scripts/generate_rpm_stats_reference.py) first binds those exact
+bytes, then checks every complete source below by length, SHA-256 and Git blob
+SHA-1 before producing the header and
+[public evidence manifest](docs/rpm-stats-sm8250-reference-evidence.json).
+All complete source identities and pinned URLs are retained in that contract.
+
+| Repository and pinned commit | Complete source file | Bytes |
+| --- | --- | ---: |
+| OnePlusOSS/android_kernel_oneplus_sm8250 `94304e12a3509eac7b3716bf574ce0b1fcaacbae` | `arch/arm64/include/asm/io.h` | 10424 |
+| Same vendor commit | `arch/arm64/kernel/io.c` | 2208 |
+| Same vendor commit | `drivers/soc/qcom/ddr_stats.c` | 6442 |
+| Same vendor commit | `drivers/soc/qcom/rpm_stats.c` | 7686 |
+| torvalds/linux `e739acbe05b06de78ef7089470f122432f651faa` | `arch/arm64/boot/dts/qcom/sm8250.dtsi` | 177763 |
+| Same mainline commit | `drivers/soc/qcom/qcom_stats.c` | 11697 |
+
+The vendor structure with `CONFIG_MSM_RPM_SMD` unset and the mainline
+`sleep_stats` structure both have fields at 0/4/8/16/24 and a 32-byte stride.
+The vendor driver adds its full unsigned 32-bit directory value to the
+resource base. Its eight-byte timestamp copies reach aligned 64-bit IO reads
+in the pinned ARM64 implementation. The mainline `qcom,rpmh-stats` binding
+selects `rpmh_data`, with three records at global-resource offset `0x48`;
+the separate two-record SDM845 configuration is not used. The SM8250 DTS
+places that resource at `0x0c3f0000/0x400`. The separate DDR residency driver
+does not grant this leaf ownership of DDR residency data or other directory
+words.
+
+These public sources verify the consumer ABI and independent address
+correspondence. They do not establish complete production-kernel build
+provenance or reproduce the private AOP initialization research. The three
+type tags (`aosd`, `cxsd`, `ddr `) and initialized zero count/time fields are
+bound to private research receipt SHA-256
+`188e5b934dde823814bfae6434ad8568b5dcb8c9bb989698099eb6d1fb09590e`.
+The identified saved AOP input has
+`firmware_is_pristine_stock=false`; no untouched factory-image claim is made.
+The public generation receipt explicitly keeps
+`private_firmware_evidence_verified=false`. Raw private bytes, disassembly,
+input paths and production boot arguments are not public-generation inputs.
+
+The initialized reference is immutable and default-off. It represents the
+identified state immediately after initialization, before runtime updates;
+it does not execute AOP or report live physical sleep statistics. See the
+[model boundary](docs/rpm-stats-reference.md) and
+[CI generation contract](docs/ci.md#rpm-statistics-initialized-reference).
