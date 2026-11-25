@@ -1,0 +1,222 @@
+name: TB371FC public functional gates
+
+on:
+  push:
+    branches: [tb371fc, 'tb371fc-verified-*']
+  pull_request:
+    branches: [tb371fc]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tb371fc-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  board-components-and-linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install build and public test dependencies
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/tb371fc-results"
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential git ca-certificates \
+            python3 python3-venv python3-distlib ninja-build meson pkg-config \
+            libglib2.0-dev libpixman-1-dev zlib1g-dev libfdt-dev device-tree-compiler \
+            gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu libc6-dev-arm64-cross \
+            curl xz-utils bc bison flex libssl-dev libelf-dev util-linux
+      - name: Validate original Android input preservation and bounded orchestration
+        run: |
+          set -euo pipefail
+          python3 tb371fc/scripts/test_source_download.py
+          python3 tb371fc/scripts/test_ci_device_tests.py
+          python3 tb371fc/tests/test_android_boot_inputs.py
+          python3 tb371fc/tests/test_boot_android.py
+          python3 tb371fc/tests/test_acquire_block_ranges.py
+          python3 tb371fc/tests/test_assemble_lun.py
+      - name: Build the dedicated machine and C QTests
+        run: |
+          set -euo pipefail
+          BUILD_DIR="$RUNNER_TEMP/qemu-build" JOBS=2 sh tb371fc/scripts/build.sh \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/qemu-build.log"
+          ninja -C "$RUNNER_TEMP/qemu-build" -j2 \
+            tests/qtest/tb371fc-smmuv2-test tests/qtest/tb371fc-tlmm-test \
+            tests/qtest/tb371fc-pdc-test \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/c-qtest-build.log"
+          "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" --version \
+            > "$RUNNER_TEMP/tb371fc-results/qemu-version.txt"
+          sha256sum "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            > "$RUNNER_TEMP/tb371fc-results/qemu.sha256"
+          git rev-parse HEAD > "$RUNNER_TEMP/tb371fc-results/source-commit.txt"
+      - name: Run quiescent UFS process checkpoints and rejection gates
+        run: |
+          set -euo pipefail
+          python3 tb371fc/tests/test_ufs_migration.py \
+            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            --out "$RUNNER_TEMP/tb371fc-results/ufs-migration" \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/ufs-migration.log"
+      - name: Run every public component gate sequentially
+        run: |
+          set -euo pipefail
+          python3 tb371fc/scripts/ci_device_tests.py \
+            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            --build-dir "$RUNNER_TEMP/qemu-build" --suite components \
+            --out "$RUNNER_TEMP/tb371fc-results/components" \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/components.log"
+      - name: Build the pinned unpatched Linux input
+        run: |
+          set -euo pipefail
+          SMOKE_JOBS=2 bash tb371fc/scripts/build_smoke_kernel.sh "$RUNNER_TEMP/clean-linux" \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/linux-build.log"
+      - name: Run five Linux user-space, UFS, SMMU, RPMh and runtime-PM gates
+        run: |
+          set -euo pipefail
+          python3 tb371fc/scripts/ci_device_tests.py \
+            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            --build-dir "$RUNNER_TEMP/qemu-build" --suite linux \
+            --kernel "$RUNNER_TEMP/clean-linux/artifacts/Image" \
+            --out "$RUNNER_TEMP/tb371fc-results/linux" \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/linux.log"
+      - name: Build the full-DTB user-space fixture without executing a guest
+        run: |
+          set -euo pipefail
+          python3 tb371fc/scripts/build_actual_dt_fixture.py \
+            --out "$RUNNER_TEMP/tb371fc-results/full-dtb-user-fixture" \
+            --dt-identity-receipt tb371fc/evidence/wholeboard-20261123-a47/actual-dt-model-3b31e8.json \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/full-dtb-user-fixture-build.log"
+          printf '%s\n' \
+            'The full-DTB eight-check initramfs was built and its ELF/ABI inspected; no production kernel, guest user-space or shutdown was executed by this build-only step.' \
+            >> "$GITHUB_STEP_SUMMARY"
+      - name: Continue real Linux UFS I/O across a quiescent process checkpoint
+        run: |
+          set -euo pipefail
+          python3 tb371fc/scripts/boot_ufs_migration.py \
+            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            --kernel "$RUNNER_TEMP/clean-linux/artifacts/Image" \
+            --out "$RUNNER_TEMP/tb371fc-results/linux-ufs-migration" \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/linux-ufs-migration.log"
+      - name: Continue suspended Linux UFS by ordinary I/O after a process checkpoint
+        run: |
+          set -euo pipefail
+          python3 tb371fc/scripts/boot_ufs_migration.py \
+            --runtime-suspended \
+            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            --kernel "$RUNNER_TEMP/clean-linux/artifacts/Image" \
+            --out "$RUNNER_TEMP/tb371fc-results/linux-ufs-pm-migration" \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/linux-ufs-pm-migration.log"
+      - name: Upload receipts, logs and public runnable inputs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: tb371fc-public-gates-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/tb371fc-results/
+            !${{ runner.temp }}/tb371fc-results/linux-ufs-migration/checkpoint.migration
+            !${{ runner.temp }}/tb371fc-results/linux-ufs-migration/disk.raw
+            !${{ runner.temp }}/tb371fc-results/linux-ufs-pm-migration/checkpoint.migration
+            !${{ runner.temp }}/tb371fc-results/linux-ufs-pm-migration/disk.raw
+            ${{ runner.temp }}/clean-linux/artifacts/
+            ${{ runner.temp }}/qemu-build/qemu-system-aarch64
+            ${{ runner.temp }}/qemu-build/tests/qtest/tb371fc-smmuv2-test
+            ${{ runner.temp }}/qemu-build/tests/qtest/tb371fc-tlmm-test
+            ${{ runner.temp }}/qemu-build/tests/qtest/tb371fc-pdc-test
+      - name: State the measured boundary
+        if: always()
+        run: |
+          printf '%s\n' \
+            'This workflow requires public component gates, five clean-Linux gates including UFS runtime suspend/read-wake and active plus runtime-suspended real Linux UFS checkpoint/continuation; read each result.json for its actual verdict.' \
+            'Missing binaries, skipped C QTests, failed checks, timeouts or changed QEMU binaries fail the job.' \
+            'The board uses an architectural Cortex-A77 model and A55 small-core substitutes; exact counter rate is measured in QEMU virtual time.' \
+            'GENI, GCC, timers, SMMUv2, reference RPMh, UFS, watchdog, TLMM, PDC, IMEM, PS_HOLD, DCC, IPCC and reference SPMI gates test their implemented digital contracts.' \
+            'Linux checks use eight CPUs, 8 GiB RAM, a generated device tree and a synthetic disk. The UFS I/O gates end with host QMP quit after 19 ordinary, 23 RPMh-enabled or 40 runtime-PM guest checks.' \
+            'The runtime-PM gate requires host/LUN/device-WLUN suspend, ordinary direct-I/O wake, gated core/iface/unipro clocks and complete 64 MiB media comparison; it does not test system suspend.' \
+            'The UFS checkpoint gates resume the same PID 1, nonce and boot ID in a new process, then perform direct block I/O; only quiescent UFS queues are supported.' \
+            'The runtime-suspended mode adds 22 guest checks and preserves the open fd, Hibern8 and gated clocks before ordinary read wake; neither mode establishes system suspend or in-flight request serialization.' \
+            'Additional component gates require crypto rejection, Auto-Hibern8, retained RPMh wake requests and opt-in TBU HALT/ECATS with process checkpoint rejection tests.' \
+            'No private production Image or AOP input is used. Stock Android, full native-DT boot, analog behavior, Adreno and complete-device equivalence are not attested.' \
+            >> "$GITHUB_STEP_SUMMARY"
+
+  cortex-a77-architecture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install CPU probe build dependencies
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/a77-results"
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential git ca-certificates \
+            python3 python3-venv python3-distlib ninja-build meson pkg-config \
+            libglib2.0-dev libpixman-1-dev zlib1g-dev libfdt-dev \
+            gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
+      - name: Build the CPU test configuration with the generic loader
+        run: |
+          set -euo pipefail
+          repo="$PWD"
+          mkdir -p "$RUNNER_TEMP/a77-build"
+          cd "$RUNNER_TEMP/a77-build"
+          "$repo/configure" --target-list=aarch64-softmmu \
+            --with-devices-aarch64=a77-test --without-default-devices \
+            --without-default-features --enable-system --enable-tcg --enable-fdt \
+            --disable-docs --disable-tools --disable-guest-agent \
+            2>&1 | tee "$RUNNER_TEMP/a77-results/configure.log"
+          ninja -j2 qemu-system-aarch64 tests/qtest/qos-test \
+            2>&1 | tee "$RUNNER_TEMP/a77-results/build.log"
+      - name: Run every shared UFS PCI regression without skips
+        run: |
+          set -euo pipefail
+          python3 tb371fc/scripts/run_ufs_pci_compat.py \
+            --qemu "$RUNNER_TEMP/a77-build/qemu-system-aarch64" \
+            --qos-test "$RUNNER_TEMP/a77-build/tests/qtest/qos-test" \
+            --out "$RUNNER_TEMP/ufs-pci-results" \
+            2>&1 | tee "$RUNNER_TEMP/a77-results/ufs-pci.log"
+      - name: Execute A77 feature, instruction, cache-ID and PMU probes
+        run: |
+          set -euo pipefail
+          python3 tb371fc/tests/test_a77_cpu.py \
+            --qemu "$RUNNER_TEMP/a77-build/qemu-system-aarch64" \
+            --output "$RUNNER_TEMP/a77-probe" \
+            2>&1 | tee "$RUNNER_TEMP/a77-results/probe.log"
+          python3 - "$RUNNER_TEMP/a77-probe/result.json" <<'PY'
+          import json, sys
+          result = json.load(open(sys.argv[1]))
+          assert result["passed"] is True
+          assert len(result["variants"]) == 9
+          assert sum(v["passed_checks"] for v in result["variants"]) == 852
+          assert len(result["invalid_configurations"]) == 2
+          assert all(v["passed"] for v in result["invalid_configurations"])
+          print("Verified 852 real guest checks and 2 rejected CPU configurations")
+          PY
+      - name: Upload CPU evidence and the tested binary
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: tb371fc-a77-gates-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/a77-results/
+            ${{ runner.temp }}/a77-probe/
+            ${{ runner.temp }}/ufs-pci-results/
+            ${{ runner.temp }}/a77-build/qemu-system-aarch64
+            ${{ runner.temp }}/a77-build/tests/qtest/qos-test
+      - name: State the CPU scope
+        if: always()
+        run: |
+          printf '%s\n' \
+            'The isolated A77 job requires 852 guest instruction/ID/PMU checks across nine configurations and two invalid-configuration rejections.' \
+            'A separate 17-case PCI UFS regression covers the shared controller core, legacy and MCQ crypto rejection without skips.' \
+            'These architectural checks do not validate silicon cache capacities, cache timing, DSU behavior or performance.' \
+            >> "$GITHUB_STEP_SUMMARY"

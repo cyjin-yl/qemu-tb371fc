@@ -1,0 +1,1180 @@
+{
+  "schema": "tb371fc-rpm-stats-offset-independent-artifact-audit-v1",
+  "passed": true,
+  "observed_utc": "2026-11-25T02:47:41.062251+00:00",
+  "auditor_sha256": "7eb65a626ce253f3f8469948ddb0669d6bb5256f186f0ef9ffbb3c76b55b10f0",
+  "expected_head": "66d9e20a9541b503ed4f5cac5c79c8a5b4a0809b",
+  "expected_tree": "7c13a3b85075e0eaefcc14d4f55c160bed699a08",
+  "expected_zip_sha256": "809199bd6f39181dfe9340a60bf58fde4544b536d752736f0f475fbc89e46ec4",
+  "read_only_archive": true,
+  "qemu_executed": false,
+  "guest_executed": false,
+  "extracted_members": [],
+  "producer_serializer_imported": false,
+  "model_imported": false,
+  "generator_imported": false,
+  "whole_workflow_verdict_claimed": false,
+  "native_android_passed": false,
+  "shared_log_timestamp_claimed": false,
+  "scope": "Actual compiled RPM offset component: 20 groups, two original plus six complete one-bit streams, full 24-byte wire, raw QMP/QTest/log evidence, and the separate four-input source-generation case. Aggregate and retained legacy workflow audits remain separate.",
+  "protocol_limit": "Separate QMP/QTest logs have no shared timestamp. Exact per-file order, actual counter receipts, the restored RAM witness and pinned producer order are combined without inventing a global timestamp.",
+  "mmio_limit": "A typed invalid operation reaches one rejecting device callback. A raw five-byte read returns only a valid four-byte prefix; its failed hole suffix is not data. A raw five-byte write rejects its four-byte device prefix and its one-byte unmapped suffix. Whole-buffer success or atomicity is not claimed.",
+  "state_limit": "The device is immutable configured metadata. Migration prewarm changes RAM only; no mutable device state or real firmware reset value is claimed.",
+  "source_tree_binding_basis": "Exact published head/tree supplied by the coordinator; archive source-commit.txt is independently checked. An absent archive tree file is not invented.",
+  "prior_failed_head": {
+    "head": "75cc1dc83600784afa06e81c9998d8d39aba6af2",
+    "board_job": 138930599415,
+    "qualified": false,
+    "reason": "Actual compile failed on obsolete hw/sysbus.h include; corrected source uses hw/core/sysbus.h."
+  },
+  "reviewed_source_pins": {
+    "hw/misc/qcom-sm8250-rpm-stats-offset.c": {
+      "bytes": 9377,
+      "sha256": "5144319fb0856c107512edbdfe86d48adef1237846da7c312394ff8ccae5db09"
+    },
+    "include/hw/misc/qcom-sm8250-rpm-stats-offset.h": {
+      "bytes": 364,
+      "sha256": "946df3bee216839b46001d4ea3065bda6563413a0c753a7b221fffea3b77ad0b"
+    },
+    "hw/misc/qcom-sm8250-rpm-stats-offset-data.inc": {
+      "bytes": 346,
+      "sha256": "dc38191138f43d396b94971b15b9b6617924131669b602cb1bccf185f75d22e5"
+    },
+    "hw/arm/lenovo-tb371fc.c": {
+      "bytes": 102867,
+      "sha256": "ff2f8d8bc66826068a2bedbdc10145c7cc1dc3fe615c7a4a5fb558c8da5d4f7c"
+    },
+    "hw/arm/Kconfig": {
+      "bytes": 15468,
+      "sha256": "195baffbd21c9c2457bf97e7a5806825e95ce512afe1a624e4fcca30b97437b2"
+    },
+    "hw/misc/Kconfig": {
+      "bytes": 4193,
+      "sha256": "c63ddb724530945aaa4cd3373330b683627fa03e57a568d6a274cc361a8ff144"
+    },
+    "hw/misc/meson.build": {
+      "bytes": 10826,
+      "sha256": "f24d688b2364890bde05b4c1d81c1ba0600f1385c3b46c2e778216fded4d6e0f"
+    },
+    "tb371fc/docs/rpm-stats-offset-sm8250-registers.json": {
+      "bytes": 4870,
+      "sha256": "df0c4dad7572a918f579e98174663496893039d27315db6427726de9641a6adb"
+    },
+    "tb371fc/tests/test_rpm_stats_offset_sm8250.py": {
+      "bytes": 39266,
+      "sha256": "8e878e30ad978d7affb389573e4df4cc3bb3009843ac74b5d363ebd723eee39f"
+    },
+    "tb371fc/scripts/gen_rpm_stats_offset.py": {
+      "bytes": 19192,
+      "sha256": "47f77997d2708da12235cde157b25228ef75b93bb689a92f1338769dcc99537c"
+    },
+    "tb371fc/scripts/verify_rpm_stats_offset_generation.py": {
+      "bytes": 4965,
+      "sha256": "2673e6cc5457db0a1e281013c14d30941e7251bf7f40f2a4bf2265f40831630c"
+    },
+    "tb371fc/scripts/source_download.py": {
+      "bytes": 4642,
+      "sha256": "4fde0300dc4c8777531402dc700fbed6364f16b0550fc852c3031fe641fe7dd7"
+    },
+    "tb371fc/scripts/ci_device_tests.py": {
+      "bytes": 78585,
+      "sha256": "a69c1916407867d25b5484b45d25b427bb4921adc04b15b1f7c7589a758c1faa"
+    },
+    "tb371fc/scripts/test_ci_device_tests.py": {
+      "bytes": 44460,
+      "sha256": "ed7e8d5ad970e7f138fe418db026f0b1825ee5b037d6d58b15044e59ddf5602b"
+    },
+    "tb371fc/evidence/rpm-stats-offset-20261125-6a5/test-ci-contract.json": {
+      "bytes": 3391,
+      "sha256": "2d137f7cd52b52c281414fd2508a04fde7c5ae567a123f6c3a2c7a31128e032a"
+    },
+    "inherited-test_camera_gdsc.py": {
+      "bytes": 74782,
+      "sha256": "e187b3de97b5ae2d53376bd41d1f82099053c69bce9034af572830f8e1c1e619",
+      "reviewed_at_ancestor": "8d0bc64d8da6da18bf43b52a2a9547f28f44c3e9"
+    }
+  },
+  "archive": {
+    "path": "/dev/shm/tb371fc-rpmstats-66d9e20-14986446678.zip",
+    "bytes": 56393004,
+    "sha256": "809199bd6f39181dfe9340a60bf58fde4544b536d752736f0f475fbc89e46ec4"
+  },
+  "qemu": {
+    "member": "qemu-build/qemu-system-aarch64",
+    "bytes": 63700664,
+    "sha256": "019c56322a1dfd64a5db9d82719b93d49f7e6c7a5891e708f6f9f4c535aa703e",
+    "executed": false,
+    "host_elf_machine": 62,
+    "externally_pinned": true
+  },
+  "component": {
+    "case": "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/case.json",
+    "report": "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/result.json",
+    "source_commit_file": "tb371fc-results/source-commit.txt",
+    "head": "66d9e20a9541b503ed4f5cac5c79c8a5b4a0809b",
+    "checks": 20,
+    "producer_test_sha256": "8e878e30ad978d7affb389573e4df4cc3bb3009843ac74b5d363ebd723eee39f",
+    "exit_code": 0
+  },
+  "source_generation": {
+    "case": "tb371fc-results/components/18-rpm-stats-offset-source-generation/case.json",
+    "report": "tb371fc-results/components/18-rpm-stats-offset-source-generation/fixtures/data/result.json",
+    "checks": 2,
+    "inputs": [
+      {
+        "path": "primary-r11/drivers/soc/qcom/rpm_stats.c",
+        "bytes": 11328,
+        "sha256": "cb733f4433d6432187dd7faa31d8eff81e1b115ee20691eb53a3b1ca0eba0750",
+        "git_blob_sha": "3c493aed9975865203e5e3e2b2cbd95b8357bb47",
+        "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+        "complete_file_rehashed": true
+      },
+      {
+        "path": "primary-r11/arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi",
+        "bytes": 2817,
+        "sha256": "c1f3a89f461cf1381335ffb2e3066026c28a27642389f9f92fccf540646e5231",
+        "git_blob_sha": "a5eba34468ee25209d8f07baf5efe9c53462ec2a",
+        "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+        "complete_file_rehashed": true
+      },
+      {
+        "path": "primary-upstream/drivers/soc/qcom/qcom_stats.c",
+        "bytes": 7641,
+        "sha256": "b62608854c3dbdef9b43d69a0e5b51b577624c583a80da6eeb5cd176752dd6c5",
+        "git_blob_sha": "c429d5154aaec2c3115ccefd1c23d712bf6817f7",
+        "revision": "adc218676eef25575469234709c2d87185ca223a",
+        "complete_file_rehashed": true
+      },
+      {
+        "path": "primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+        "bytes": 176883,
+        "sha256": "8735b5d8bb61d6a3a579e5b088ff2a719132266cef57c91c319ec19e12770499",
+        "git_blob_sha": "630f4eff20bf810e347685066dce74ab92a23b56",
+        "revision": "adc218676eef25575469234709c2d87185ca223a",
+        "complete_file_rehashed": true
+      }
+    ],
+    "outputs": [
+      {
+        "path": "hw/misc/qcom-sm8250-rpm-stats-offset-data.inc",
+        "bytes": 346,
+        "sha256": "dc38191138f43d396b94971b15b9b6617924131669b602cb1bccf185f75d22e5",
+        "exact_source_output_bytes": true
+      },
+      {
+        "path": "tb371fc/docs/rpm-stats-offset-sm8250-registers.json",
+        "bytes": 4870,
+        "sha256": "df0c4dad7572a918f579e98174663496893039d27315db6427726de9641a6adb",
+        "exact_source_output_bytes": true
+      }
+    ],
+    "independent_derivation": {
+      "vendor_resource_base": 204472320,
+      "offset_word_address": 205455364,
+      "offset_window_bytes": 4,
+      "upstream_region_base": 205455360,
+      "fixed_stats_offset": 72,
+      "reference_payload_address": 205455432,
+      "relative_word": 983112,
+      "little_endian_word_hex": "48000f00",
+      "reference_num_records": 3,
+      "reference_record_bytes": 32,
+      "reference_payload_bytes": 96,
+      "payload_mapped_by_this_device": false,
+      "captured_runtime_word_claimed": false,
+      "native_reset_value_claimed": false,
+      "generic_firmware_to_apss_alias_claimed": false
+    },
+    "actual_archived_inputs_and_outputs_rehashed": true,
+    "generator_executed_by_auditor": false,
+    "generator_imported": false
+  },
+  "ordinary_and_special": [
+    {
+      "name": "cold_identity_and_pure_getters",
+      "actual_qom_snapshots": 2,
+      "actual_pure_getters": 34,
+      "actual_qtest_commands": 0,
+      "actual_device_rejections": 0,
+      "actual_hole_rejections": 0,
+      "valid_four_byte_reads_or_prefixes": 0,
+      "raw_five_byte_read_count": 0,
+      "rejected_read_numeric_values_interpreted": false,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "enabled_reads_return_only_layout_offset",
+      "actual_qom_snapshots": 10,
+      "actual_pure_getters": 170,
+      "actual_qtest_commands": 5,
+      "actual_device_rejections": 0,
+      "actual_hole_rejections": 1,
+      "valid_four_byte_reads_or_prefixes": 5,
+      "raw_five_byte_read_count": 1,
+      "rejected_read_numeric_values_interpreted": false,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "all_aligned_writes_are_readonly",
+      "actual_qom_snapshots": 18,
+      "actual_pure_getters": 306,
+      "actual_qtest_commands": 9,
+      "actual_device_rejections": 8,
+      "actual_hole_rejections": 0,
+      "valid_four_byte_reads_or_prefixes": 1,
+      "raw_five_byte_read_count": 0,
+      "rejected_read_numeric_values_interpreted": false,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "narrow_unaligned_and_u64_reads_are_rejected",
+      "actual_qom_snapshots": 24,
+      "actual_pure_getters": 408,
+      "actual_qtest_commands": 12,
+      "actual_device_rejections": 11,
+      "actual_hole_rejections": 0,
+      "valid_four_byte_reads_or_prefixes": 1,
+      "raw_five_byte_read_count": 0,
+      "rejected_read_numeric_values_interpreted": false,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "invalid_write_shapes_and_buffered_write_never_change_layout",
+      "actual_qom_snapshots": 26,
+      "actual_pure_getters": 442,
+      "actual_qtest_commands": 13,
+      "actual_device_rejections": 12,
+      "actual_hole_rejections": 1,
+      "valid_four_byte_reads_or_prefixes": 1,
+      "raw_five_byte_read_count": 0,
+      "rejected_read_numeric_values_interpreted": false,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "reset_retains_enabled_layout_without_firmware_data",
+      "actual_qom_snapshots": 10,
+      "actual_pure_getters": 170,
+      "actual_qtest_commands": 4,
+      "actual_device_rejections": 1,
+      "actual_hole_rejections": 0,
+      "valid_four_byte_reads_or_prefixes": 2,
+      "raw_five_byte_read_count": 0,
+      "rejected_read_numeric_values_interpreted": false,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "exact_single_leaf_and_unmodeled_neighbors",
+      "actual_qom_snapshots": 7,
+      "actual_pure_getters": 119,
+      "actual_qtest_commands": 12,
+      "actual_device_rejections": 0,
+      "actual_hole_rejections": 12,
+      "valid_four_byte_reads_or_prefixes": 0,
+      "raw_five_byte_read_count": 0,
+      "rejected_read_numeric_values_interpreted": false,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "runtime_observers_are_readonly_and_time_has_no_effect",
+      "actual_qom_snapshots": 3,
+      "actual_pure_getters": 51,
+      "actual_qtest_commands": 1,
+      "actual_device_rejections": 0,
+      "actual_hole_rejections": 0,
+      "valid_four_byte_reads_or_prefixes": 0,
+      "raw_five_byte_read_count": 0,
+      "rejected_read_numeric_values_interpreted": false,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "default_off_keeps_unknown_offset_and_rejects_all_access",
+      "actual_pure_getters": 374,
+      "actual_rejections": 10,
+      "no_global_profile_override": true,
+      "unknown_zero_not_treated_as_valid_read": true
+    },
+    {
+      "name": "paused_tcg_exposes_no_mutating_fixture_or_guest_execution",
+      "actual_pure_getters": 34,
+      "actual_status_running": [
+        false,
+        false
+      ],
+      "qtest_commands": 0,
+      "cont_commands": 0
+    }
+  ],
+  "original_streams": [
+    {
+      "name": "rpm-stats-offset-enabled.migration",
+      "bytes": 2286802,
+      "sha256": "5afc99e6245d4f776be05128ae42fc6eaf223466811e014061856427eb802dea",
+      "section": {
+        "name": "qcom-sm8250-rpm-stats-offset",
+        "instance_id": 0,
+        "version": 1,
+        "header_offset": 406643,
+        "section_id": 31,
+        "payload_offset": 406685,
+        "payload_bytes": 24,
+        "footer_offset": 406709,
+        "footer_hex": "7e0000001f"
+      },
+      "payload_hex": "0000000152534f31000000000c3f000400000004000f0048",
+      "source_qom": {
+        "enabled-profile": 1,
+        "reference-identity": 1381191473,
+        "physical-base": 205455364,
+        "window-bytes": 4,
+        "offset-value": 983112,
+        "vmstate-bytes": 24,
+        "register-count": 1,
+        "irq-output-count": 0,
+        "clock-input-count": 0,
+        "clock-output-count": 0,
+        "timer-count": 0,
+        "offset-known": true,
+        "stats-payload-modeled": false,
+        "ddr-offset-modeled": false,
+        "firmware-modeled": false,
+        "ready-modeled": false,
+        "enabled-reference": true
+      },
+      "trace": {
+        "qmp_requests": 59,
+        "qtest_commands": 3,
+        "actual_pure_getters": 51,
+        "source_stop_and_postmigrate_verified": true,
+        "virtual_epoch": 100000,
+        "ram_witness": 1381191424,
+        "actual_device_mmio_commands": 0,
+        "actual_ram_commands": 2,
+        "full_source_snapshot_and_after_save_equal": true
+      }
+    },
+    {
+      "name": "rpm-stats-offset-disabled.migration",
+      "bytes": 2286802,
+      "sha256": "40ade8e354e5307c889a49b072da57a285a2932495896e6ac28ecca9617c1e2a",
+      "section": {
+        "name": "qcom-sm8250-rpm-stats-offset",
+        "instance_id": 0,
+        "version": 1,
+        "header_offset": 406643,
+        "section_id": 31,
+        "payload_offset": 406685,
+        "payload_bytes": 24,
+        "footer_offset": 406709,
+        "footer_hex": "7e0000001f"
+      },
+      "payload_hex": "0000000052534f31000000000c3f00040000000400000000",
+      "source_qom": {
+        "enabled-profile": 0,
+        "reference-identity": 1381191473,
+        "physical-base": 205455364,
+        "window-bytes": 4,
+        "offset-value": 0,
+        "vmstate-bytes": 24,
+        "register-count": 1,
+        "irq-output-count": 0,
+        "clock-input-count": 0,
+        "clock-output-count": 0,
+        "timer-count": 0,
+        "offset-known": false,
+        "stats-payload-modeled": false,
+        "ddr-offset-modeled": false,
+        "firmware-modeled": false,
+        "ready-modeled": false,
+        "enabled-reference": false
+      },
+      "trace": {
+        "qmp_requests": 59,
+        "qtest_commands": 3,
+        "actual_pure_getters": 51,
+        "source_stop_and_postmigrate_verified": true,
+        "virtual_epoch": 200000,
+        "ram_witness": 1381191425,
+        "actual_device_mmio_commands": 0,
+        "actual_ram_commands": 2,
+        "full_source_snapshot_and_after_save_equal": true
+      }
+    }
+  ],
+  "completed_migrations": [
+    {
+      "name": "migration_enabled",
+      "first_getter_request_id": 23,
+      "last_first_getter_request_id": 39,
+      "first_pure_getters": 17,
+      "repeated_pure_getters": 17,
+      "actual_qom_getters_total": 187,
+      "prewarm_actual_device_mmio": 0,
+      "prewarm_actual_memory_commands": 2,
+      "prewarm_actual_ram_commands": 2,
+      "first_device_mmio_delta": 0,
+      "first_memory_command_delta": 0,
+      "first_cont_delta": 0,
+      "repeated_device_mmio_delta": 0,
+      "repeated_memory_command_delta": 0,
+      "repeated_cont_delta": 0,
+      "device_state_mutable": false,
+      "destination_device_state_dirtied": false,
+      "destination_ram_witness_dirtied": true,
+      "ram_witness_before": 2913775871,
+      "actual_ram_witness": 1381191424,
+      "ram_witness_checked_after_both_observations": true,
+      "ram_witness_checked_before_cont": true,
+      "qmp_requests": 194,
+      "qtest_commands": 9,
+      "source_snapshot_restored_before_cont": true,
+      "payload_bytes_verified": 24,
+      "post_restore_layout_and_read_semantics_checked": true,
+      "post_restore_reset_retains_profile": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "shared_timestamp_used": false,
+      "cross_file_order_basis": "Pinned producer sequence plus actual before/after counters, RAM witness, and independent per-file request/response order; no shared timestamp is invented."
+    },
+    {
+      "name": "migration_disabled",
+      "first_getter_request_id": 23,
+      "last_first_getter_request_id": 39,
+      "first_pure_getters": 17,
+      "repeated_pure_getters": 17,
+      "actual_qom_getters_total": 187,
+      "prewarm_actual_device_mmio": 0,
+      "prewarm_actual_memory_commands": 2,
+      "prewarm_actual_ram_commands": 2,
+      "first_device_mmio_delta": 0,
+      "first_memory_command_delta": 0,
+      "first_cont_delta": 0,
+      "repeated_device_mmio_delta": 0,
+      "repeated_memory_command_delta": 0,
+      "repeated_cont_delta": 0,
+      "device_state_mutable": false,
+      "destination_device_state_dirtied": false,
+      "destination_ram_witness_dirtied": true,
+      "ram_witness_before": 2913775870,
+      "actual_ram_witness": 1381191425,
+      "ram_witness_checked_after_both_observations": true,
+      "ram_witness_checked_before_cont": true,
+      "qmp_requests": 194,
+      "qtest_commands": 9,
+      "source_snapshot_restored_before_cont": true,
+      "payload_bytes_verified": 24,
+      "post_restore_layout_and_read_semantics_checked": true,
+      "post_restore_reset_retains_profile": true,
+      "source_status": "completed",
+      "target_status": "completed",
+      "shared_timestamp_used": false,
+      "cross_file_order_basis": "Pinned producer sequence plus actual before/after counters, RAM witness, and independent per-file request/response order; no shared timestamp is invented."
+    }
+  ],
+  "profile_rejections": [
+    {
+      "name": "on_to_off",
+      "actual_stderr_diagnostic": "qcom-sm8250-rpm-stats-offset: migrated profile mismatch",
+      "destination_exit": 1,
+      "incoming_file": "rpm-stats-offset-enabled.migration",
+      "device_mmio_commands": 0,
+      "memory_commands": 0,
+      "cont_commands": 0,
+      "process_exit_evidence": "Pinned producer process.wait receipt plus actual fatal load stderr; auditor never re-executes the process.",
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "off_to_on",
+      "actual_stderr_diagnostic": "qcom-sm8250-rpm-stats-offset: migrated profile mismatch",
+      "destination_exit": 1,
+      "incoming_file": "rpm-stats-offset-disabled.migration",
+      "device_mmio_commands": 0,
+      "memory_commands": 0,
+      "cont_commands": 0,
+      "process_exit_evidence": "Pinned producer process.wait receipt plus actual fatal load stderr; auditor never re-executes the process.",
+      "query_migrate_failed_response_required": false
+    }
+  ],
+  "one_bit_rejections": [
+    {
+      "name": "profile",
+      "bytes": 2286802,
+      "sha256": "e0736ec615c9145ff01e927af8ee00aa7c13aac0f7b559632b9d523d41b263d0",
+      "original": "rpm-stats-offset-enabled.migration",
+      "payload_hex": "0000000352534f31000000000c3f000400000004000f0048",
+      "whole_stream_comparison": {
+        "byte_offset": 406688,
+        "before": 1,
+        "after": 3,
+        "changed_bits": 1,
+        "all_other_stream_bytes_equal": true,
+        "original_stream_sha256_unchanged": true
+      },
+      "actual_stderr_diagnostic": "qcom-sm8250-rpm-stats-offset: migrated profile mismatch",
+      "destination_exit": 1,
+      "incoming_file": "rpm-stats-offset-corrupt-profile.migration",
+      "device_mmio_commands": 0,
+      "memory_commands": 0,
+      "cont_commands": 0,
+      "process_exit_evidence": "Pinned producer process.wait receipt plus actual fatal load stderr; auditor never re-executes the process.",
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "identity",
+      "bytes": 2286802,
+      "sha256": "062a64be6bf88e2f349c66d9acb6bdb140b03d6ae02263f3ec305af869fe2ad8",
+      "original": "rpm-stats-offset-enabled.migration",
+      "payload_hex": "0000000152534f30000000000c3f000400000004000f0048",
+      "whole_stream_comparison": {
+        "byte_offset": 406692,
+        "before": 49,
+        "after": 48,
+        "changed_bits": 1,
+        "all_other_stream_bytes_equal": true,
+        "original_stream_sha256_unchanged": true
+      },
+      "actual_stderr_diagnostic": "qcom-sm8250-rpm-stats-offset: migrated identity mismatch",
+      "destination_exit": 1,
+      "incoming_file": "rpm-stats-offset-corrupt-identity.migration",
+      "device_mmio_commands": 0,
+      "memory_commands": 0,
+      "cont_commands": 0,
+      "process_exit_evidence": "Pinned producer process.wait receipt plus actual fatal load stderr; auditor never re-executes the process.",
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "physical_base",
+      "bytes": 2286802,
+      "sha256": "1f2592b0a82972f38ecd464b615d290ebe168ec2d0ff68c2cfbab9019933bc1a",
+      "original": "rpm-stats-offset-enabled.migration",
+      "payload_hex": "0000000152534f31000000000c3f000000000004000f0048",
+      "whole_stream_comparison": {
+        "byte_offset": 406700,
+        "before": 4,
+        "after": 0,
+        "changed_bits": 1,
+        "all_other_stream_bytes_equal": true,
+        "original_stream_sha256_unchanged": true
+      },
+      "actual_stderr_diagnostic": "qcom-sm8250-rpm-stats-offset: migrated geometry mismatch",
+      "destination_exit": 1,
+      "incoming_file": "rpm-stats-offset-corrupt-physical_base.migration",
+      "device_mmio_commands": 0,
+      "memory_commands": 0,
+      "cont_commands": 0,
+      "process_exit_evidence": "Pinned producer process.wait receipt plus actual fatal load stderr; auditor never re-executes the process.",
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "window_bytes",
+      "bytes": 2286802,
+      "sha256": "129ca196cc03a4d989278166df1af20206b972f72250049d76b438e947049caf",
+      "original": "rpm-stats-offset-enabled.migration",
+      "payload_hex": "0000000152534f31000000000c3f000400000005000f0048",
+      "whole_stream_comparison": {
+        "byte_offset": 406704,
+        "before": 4,
+        "after": 5,
+        "changed_bits": 1,
+        "all_other_stream_bytes_equal": true,
+        "original_stream_sha256_unchanged": true
+      },
+      "actual_stderr_diagnostic": "qcom-sm8250-rpm-stats-offset: migrated geometry mismatch",
+      "destination_exit": 1,
+      "incoming_file": "rpm-stats-offset-corrupt-window_bytes.migration",
+      "device_mmio_commands": 0,
+      "memory_commands": 0,
+      "cont_commands": 0,
+      "process_exit_evidence": "Pinned producer process.wait receipt plus actual fatal load stderr; auditor never re-executes the process.",
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "enabled_offset",
+      "bytes": 2286802,
+      "sha256": "1b6a83970ba71134e9fd3a00efeef926b54571718e74c152126a9adcf50492b1",
+      "original": "rpm-stats-offset-enabled.migration",
+      "payload_hex": "0000000152534f31000000000c3f000400000004000f0049",
+      "whole_stream_comparison": {
+        "byte_offset": 406708,
+        "before": 72,
+        "after": 73,
+        "changed_bits": 1,
+        "all_other_stream_bytes_equal": true,
+        "original_stream_sha256_unchanged": true
+      },
+      "actual_stderr_diagnostic": "qcom-sm8250-rpm-stats-offset: migrated offset mismatch",
+      "destination_exit": 1,
+      "incoming_file": "rpm-stats-offset-corrupt-enabled_offset.migration",
+      "device_mmio_commands": 0,
+      "memory_commands": 0,
+      "cont_commands": 0,
+      "process_exit_evidence": "Pinned producer process.wait receipt plus actual fatal load stderr; auditor never re-executes the process.",
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "disabled_offset",
+      "bytes": 2286802,
+      "sha256": "e37b1f6591e18cc7645ce445f69c3c0a15da119215c0b1c8357d0aa2dd805040",
+      "original": "rpm-stats-offset-disabled.migration",
+      "payload_hex": "0000000052534f31000000000c3f00040000000400000001",
+      "whole_stream_comparison": {
+        "byte_offset": 406708,
+        "before": 0,
+        "after": 1,
+        "changed_bits": 1,
+        "all_other_stream_bytes_equal": true,
+        "original_stream_sha256_unchanged": true
+      },
+      "actual_stderr_diagnostic": "qcom-sm8250-rpm-stats-offset: migrated offset mismatch",
+      "destination_exit": 1,
+      "incoming_file": "rpm-stats-offset-corrupt-disabled_offset.migration",
+      "device_mmio_commands": 0,
+      "memory_commands": 0,
+      "cont_commands": 0,
+      "process_exit_evidence": "Pinned producer process.wait receipt plus actual fatal load stderr; auditor never re-executes the process.",
+      "query_migrate_failed_response_required": false
+    }
+  ],
+  "summary": {
+    "checks": 20,
+    "ordinary_and_special_groups": 10,
+    "original_streams": 2,
+    "completed_migrations": 2,
+    "profile_rejections": 2,
+    "one_bit_rejections": 6,
+    "total_stream_files": 8,
+    "payload_bytes": 24,
+    "first_getters": 17,
+    "repeated_getters": 17,
+    "prewarm_device_mmio": 0,
+    "prewarm_ram_commands": 2,
+    "first_memory_command_delta": 0,
+    "first_device_mmio_delta": 0,
+    "first_cont_delta": 0,
+    "device_state_dirtied": false,
+    "ram_witness_dirtied": true,
+    "source_generation_checks": 2,
+    "source_generation_inputs": 4,
+    "actual_archive_evidence_verified": true,
+    "native_probe_claimed": false,
+    "android_boot_claimed": false
+  },
+  "verified_members": {
+    "qemu-build/qemu-system-aarch64": {
+      "bytes": 63700664,
+      "sha256": "019c56322a1dfd64a5db9d82719b93d49f7e6c7a5891e708f6f9f4c535aa703e"
+    },
+    "tb371fc-results/components/18-rpm-stats-offset-source-generation/case.json": {
+      "bytes": 1006,
+      "sha256": "abec66824fbab994fefd55927173532050701e7db5f917ea06f7f74a005f409e"
+    },
+    "tb371fc-results/components/18-rpm-stats-offset-source-generation/fixtures/data/generated/hw/misc/qcom-sm8250-rpm-stats-offset-data.inc": {
+      "bytes": 346,
+      "sha256": "dc38191138f43d396b94971b15b9b6617924131669b602cb1bccf185f75d22e5"
+    },
+    "tb371fc-results/components/18-rpm-stats-offset-source-generation/fixtures/data/generated/tb371fc/docs/rpm-stats-offset-sm8250-registers.json": {
+      "bytes": 4870,
+      "sha256": "df0c4dad7572a918f579e98174663496893039d27315db6427726de9641a6adb"
+    },
+    "tb371fc-results/components/18-rpm-stats-offset-source-generation/fixtures/data/generation.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/18-rpm-stats-offset-source-generation/fixtures/data/generation.stdout": {
+      "bytes": 209,
+      "sha256": "c0cd842b929921a92d6519d329fef4d5072d1284b6dffaee8cfd53b7ea6502af"
+    },
+    "tb371fc-results/components/18-rpm-stats-offset-source-generation/fixtures/data/inputs/primary-r11/arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi": {
+      "bytes": 2817,
+      "sha256": "c1f3a89f461cf1381335ffb2e3066026c28a27642389f9f92fccf540646e5231"
+    },
+    "tb371fc-results/components/18-rpm-stats-offset-source-generation/fixtures/data/inputs/primary-r11/drivers/soc/qcom/rpm_stats.c": {
+      "bytes": 11328,
+      "sha256": "cb733f4433d6432187dd7faa31d8eff81e1b115ee20691eb53a3b1ca0eba0750"
+    },
+    "tb371fc-results/components/18-rpm-stats-offset-source-generation/fixtures/data/inputs/primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi": {
+      "bytes": 176883,
+      "sha256": "8735b5d8bb61d6a3a579e5b088ff2a719132266cef57c91c319ec19e12770499"
+    },
+    "tb371fc-results/components/18-rpm-stats-offset-source-generation/fixtures/data/inputs/primary-upstream/drivers/soc/qcom/qcom_stats.c": {
+      "bytes": 7641,
+      "sha256": "b62608854c3dbdef9b43d69a0e5b51b577624c583a80da6eeb5cd176752dd6c5"
+    },
+    "tb371fc-results/components/18-rpm-stats-offset-source-generation/fixtures/data/result.json": {
+      "bytes": 4476,
+      "sha256": "6f85433fd8dc1faef59d78bd95530f80b92e8c5e3b15aa8da3fab8fdaf94ca31"
+    },
+    "tb371fc-results/components/18-rpm-stats-offset-source-generation/stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/18-rpm-stats-offset-source-generation/stdout.log": {
+      "bytes": 80,
+      "sha256": "fc4b46db3d5179432a5da3cb245bdf64c52a8a08b4a89cafe39fd1adbacc5618"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/case.json": {
+      "bytes": 1231,
+      "sha256": "d9b2ba51269bfae85755e79e56755696fa07657920eeacbdecab464dfd7007fc"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/default-off/command.json": {
+      "bytes": 552,
+      "sha256": "b597170e8a0f1393d219b523d0d624bb815c15fb216dbb75bd03bec822e2ebe8"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/default-off/qemu.stderr": {
+      "bytes": 868,
+      "sha256": "05cb62527408f563f60c346c886605e7557bbbc9c606f267cbf0ac079f70b5fd"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/default-off/qmp.jsonl": {
+      "bytes": 63072,
+      "sha256": "e9be03e06d806071f5a53485d8acbfb3430448e567342388c3bf20ae76a67bc5"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/default-off/qtest.jsonl": {
+      "bytes": 894,
+      "sha256": "46739d18ae07876f98439320f36e3ada4845b4f8507a8756275c6b88d3753a7f"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-disabled-source/command.json": {
+      "bytes": 621,
+      "sha256": "72e35baaf83baf45a8daeb0b952e5e0e9e0303f46856ae70413607a86386d492"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-disabled-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-disabled-source/qmp.jsonl": {
+      "bytes": 10583,
+      "sha256": "f766d7d1c36f184dc57e86a0eac2b4262eac13ad2f0799f68ca7702e67e81d59"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-disabled-source/qtest.jsonl": {
+      "bytes": 261,
+      "sha256": "2daad0a55478208182a1af0c9da46352cc5b28a74927c524cfa153f631ee04f0"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-disabled-source/source-after-save.json": {
+      "bytes": 454,
+      "sha256": "53d5a6dd32d96862f2cc9e2f733d7d2c9320462805104b7bedeee6dd282e2def"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-disabled-source/source-before-save.json": {
+      "bytes": 454,
+      "sha256": "53d5a6dd32d96862f2cc9e2f733d7d2c9320462805104b7bedeee6dd282e2def"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-disabled-source/source-query-migrate.json": {
+      "bytes": 535,
+      "sha256": "37540362097b7cb99b8b7682394f295ccb4bddbe88489d635268aa24d48ff7cb"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-disabled-target/command.json": {
+      "bytes": 647,
+      "sha256": "85c26b8f9e7d9c6d3a7055a92675f0ad76b28ae106e100ceedca07c4b384a250"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-disabled-target/destination-before-first-device-mmio.json": {
+      "bytes": 1997,
+      "sha256": "14a7ca6c7c4001f6a16952057975567b460faf35f20ef0656e251360ad1b2433"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-disabled-target/destination-before-incoming.json": {
+      "bytes": 841,
+      "sha256": "48963409046eb855a5c7389245fabb2db30fb6b8a492933b42e638013ccc2e8c"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-disabled-target/qemu.stderr": {
+      "bytes": 266,
+      "sha256": "d84576a6176ef574daac6d131f3fa5abf22099e05659a3b4e240d9291e748275"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-disabled-target/qmp.jsonl": {
+      "bytes": 32355,
+      "sha256": "207f044df1449d1760d48c62c45f0b0cb75e91965e130f094620708a917a2153"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-disabled-target/qtest.jsonl": {
+      "bytes": 797,
+      "sha256": "41e575c09005eae7176a05a3c5f39114de02106d7f7adfbd751c4e9762ddca42"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-enabled-source/command.json": {
+      "bytes": 620,
+      "sha256": "66d855b1acb239cee9d866d3166591c8f937fddd53ef5a41b67be613a8e4b120"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-enabled-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-enabled-source/qmp.jsonl": {
+      "bytes": 10591,
+      "sha256": "fca9abf78be722a3670384c634bfe68f344c5f8c7f2a1ad125de702c8bd21260"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-enabled-source/qtest.jsonl": {
+      "bytes": 261,
+      "sha256": "d47b09ac6542108ebcac87e84bc7568861a31d3209717d4a92c49e3d5c983c1c"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-enabled-source/source-after-save.json": {
+      "bytes": 457,
+      "sha256": "aa7eefc6d636f23f3396d661def83c74b27ea9ea1b8b6e1b3209db25206422c6"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-enabled-source/source-before-save.json": {
+      "bytes": 457,
+      "sha256": "aa7eefc6d636f23f3396d661def83c74b27ea9ea1b8b6e1b3209db25206422c6"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-enabled-source/source-query-migrate.json": {
+      "bytes": 535,
+      "sha256": "a720fe10a1af274daa4b58e854fc55743f8c9abfe98979dee5391e7ac0a5dd2c"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-enabled-target/command.json": {
+      "bytes": 646,
+      "sha256": "096718a20364c93eee893848f66d70d997fe91641bed4509f205414b80f904ae"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-enabled-target/destination-before-first-device-mmio.json": {
+      "bytes": 2003,
+      "sha256": "034c2d9e73b41c788d8edf50f7702c82585802aeacf0ccb4745ae86471954029"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-enabled-target/destination-before-incoming.json": {
+      "bytes": 844,
+      "sha256": "8e33292380b1b22c6d5385090e908769b13c8fbf68cdc60f4f6c8ea344646599"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-enabled-target/qemu.stderr": {
+      "bytes": 84,
+      "sha256": "9d9ae06489884e88b669e076c809d756eeac3c68258ca9604c174d99c440d799"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-enabled-target/qmp.jsonl": {
+      "bytes": 32387,
+      "sha256": "b0762f2e36bf11401b2a7fe16625e3204567c7748161c38978e7082e4c4cf683"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/migration-enabled-target/qtest.jsonl": {
+      "bytes": 797,
+      "sha256": "ae88769cab966779d2aad333a5bb459e56188bc9010688b7645a7ec0459bee9b"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-00-cold_identity_and_pure_getters/command.json": {
+      "bytes": 620,
+      "sha256": "2e2213fe394aaa8fc7420ca9112a64d1ca9fae25920199313c39ba9f78ab022b"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-00-cold_identity_and_pure_getters/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-00-cold_identity_and_pure_getters/qmp.jsonl": {
+      "bytes": 7207,
+      "sha256": "33fff1993e8d3d59fb8c1fa437149348e8be2f7da6fa4199d0724b586bba835f"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-00-cold_identity_and_pure_getters/qtest.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-01-enabled_reads_return_only_layout_offset/command.json": {
+      "bytes": 620,
+      "sha256": "1933ca7a2fa7e9de4a4404c8ad12a2082ebf00372c1d9e5e207acacd5d41e60a"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-01-enabled_reads_return_only_layout_offset/qemu.stderr": {
+      "bytes": 74,
+      "sha256": "bab33b666f7f718b15c049ec890edc81b2e3d6fb7bd54d3da4074f5605cf75f2"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-01-enabled_reads_return_only_layout_offset/qmp.jsonl": {
+      "bytes": 28682,
+      "sha256": "bb92e2a5dbcd9b35dea027debc220df48385b69a4565e20dfa977b1896343af0"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-01-enabled_reads_return_only_layout_offset/qtest.jsonl": {
+      "bytes": 433,
+      "sha256": "97e3bef928edadb36e6a782f12df7961cc5bccf935b61752bf705897563f7917"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-02-all_aligned_writes_are_readonly/command.json": {
+      "bytes": 620,
+      "sha256": "3269138a35224044f600565b452e4489c2bd9f21af6a0529c2a4c2ef6cd9bdee"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-02-all_aligned_writes_are_readonly/qemu.stderr": {
+      "bytes": 672,
+      "sha256": "45a37b93e17c49d3e85e22ebb0b4786c11cf2097b90d21aa06486fc2a9ef647c"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-02-all_aligned_writes_are_readonly/qmp.jsonl": {
+      "bytes": 51492,
+      "sha256": "a622b5a9782b229a1feb0205a80473ccf9784598b3facbeab4730c8b3d3e61e1"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-02-all_aligned_writes_are_readonly/qtest.jsonl": {
+      "bytes": 727,
+      "sha256": "1e4089d4aff2ee1b0c188b75d34ad0955f1b50b20ff3d1aa591923428b20a16f"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-03-narrow_unaligned_and_u64_reads_are_rejected/command.json": {
+      "bytes": 620,
+      "sha256": "4998a6d5d56dba45a454346570fc1d4c69a28f97699995fdf8bb0d4326469b93"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-03-narrow_unaligned_and_u64_reads_are_rejected/qemu.stderr": {
+      "bytes": 1001,
+      "sha256": "521b484ba57a30ae6c3689553243428a7825765fe7e6524e70b86fbef5e196c9"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-03-narrow_unaligned_and_u64_reads_are_rejected/qmp.jsonl": {
+      "bytes": 68598,
+      "sha256": "cf49599c67c0109692469a61fd5e2d971f9d8fc75f159dcf9990dfb438cab9dc"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-03-narrow_unaligned_and_u64_reads_are_rejected/qtest.jsonl": {
+      "bytes": 1068,
+      "sha256": "73ace3cdf40751be3ab10ff2af49af370abf654250a0ef74d5e5cce9eacb82bf"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-04-invalid_write_shapes_and_buffered_write_never_change_layout/command.json": {
+      "bytes": 620,
+      "sha256": "f886ca7ee6be0266c8bfd12f5bec41fdd5defa3702b186026f05059fc9930377"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-04-invalid_write_shapes_and_buffered_write_never_change_layout/qemu.stderr": {
+      "bytes": 1083,
+      "sha256": "feaa025a9a368ce82fd0861587c3c904d797a875d176420d3c6817eb64d8f17f"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-04-invalid_write_shapes_and_buffered_write_never_change_layout/qmp.jsonl": {
+      "bytes": 74300,
+      "sha256": "b44889484474a62ed97fc916985c34112bfabe2b31f50b32d1a7e513068b42e6"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-04-invalid_write_shapes_and_buffered_write_never_change_layout/qtest.jsonl": {
+      "bytes": 1048,
+      "sha256": "52a5ead3f401d514a49d93361f1e5316004128e8d804a756c6e45dc879f90115"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-05-reset_retains_enabled_layout_without_firmware_data/command.json": {
+      "bytes": 620,
+      "sha256": "cce2dc517d4cd08768e216cdd70896a1b850e60932a780bc63d48f13535ed55e"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-05-reset_retains_enabled_layout_without_firmware_data/qemu.stderr": {
+      "bytes": 84,
+      "sha256": "9d9ae06489884e88b669e076c809d756eeac3c68258ca9604c174d99c440d799"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-05-reset_retains_enabled_layout_without_firmware_data/qmp.jsonl": {
+      "bytes": 29170,
+      "sha256": "30f846e004422d73e188df435eb8a1d7720a12257801b6fd87ede5b1d338aedb"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-05-reset_retains_enabled_layout_without_firmware_data/qtest.jsonl": {
+      "bytes": 334,
+      "sha256": "88181a371013107626310052e0573c77d286434cf50a54546710afbe3e033b16"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-06-exact_single_leaf_and_unmodeled_neighbors/command.json": {
+      "bytes": 620,
+      "sha256": "30cb53ef2e5c4f8b3fe0e18f1a457b90e43a98f88e630e5a154adbb21262ea67"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-06-exact_single_leaf_and_unmodeled_neighbors/mtree.txt": {
+      "bytes": 55293,
+      "sha256": "8060b7ff01b5aaea556466c0b6c839df8aef7a7fbf5a49fc9541eacb7122d72b"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-06-exact_single_leaf_and_unmodeled_neighbors/qemu.stderr": {
+      "bytes": 894,
+      "sha256": "40c7287fb0cb7011353cf18bb4cd45d76a874e4507e6f3b8f2f17d9c594fe62b"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-06-exact_single_leaf_and_unmodeled_neighbors/qmp.jsonl": {
+      "bytes": 77075,
+      "sha256": "435d2c966adbe5bdaea8e2a302ed7ea7a4fb43c1f2996fcf9ab1d43cc8e02c61"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-06-exact_single_leaf_and_unmodeled_neighbors/qtest.jsonl": {
+      "bytes": 1026,
+      "sha256": "e23d9722a1bba907608bd60cf15733daf06f4f2c90641fa35a4f970bdb1139c6"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-07-runtime_observers_are_readonly_and_time_has_no_effect/command.json": {
+      "bytes": 620,
+      "sha256": "9f06e0c37f8f689b8c5fc28de5960db81424099bf857a6f5db46867fa8766b6a"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-07-runtime_observers_are_readonly_and_time_has_no_effect/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-07-runtime_observers_are_readonly_and_time_has_no_effect/qmp.jsonl": {
+      "bytes": 13691,
+      "sha256": "38711101cf4c8af3213868a148e5be6b0555b15b15e66117c309478fc97dfcac"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/ordinary-07-runtime_observers_are_readonly_and_time_has_no_effect/qtest.jsonl": {
+      "bytes": 81,
+      "sha256": "1ed430e989970ba02465d2f9fbbc516ea4b836895fd2ace755888b9736286188"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/paused-tcg/command.json": {
+      "bytes": 502,
+      "sha256": "b1400193b0cf168bbe677e288c2e9f50abb59d79d935b3a8ce3f3cbac1a46dba"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/paused-tcg/qemu.stderr": {
+      "bytes": 80,
+      "sha256": "1b09b4ccd4a5a87ae0b7674933e7ebdb3cf6e208a5f236695b85e857da3c70f6"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/paused-tcg/qmp.jsonl": {
+      "bytes": 8119,
+      "sha256": "24b393733c557cc1a3c901d2e0b9ea2259ec85bc90c928e166c901e13e0e54dc"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/paused-tcg/qtest.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-disabled_offset/command.json": {
+      "bytes": 647,
+      "sha256": "c01bcc22f02516b2b481c00cfa2b587b75b95a36f10a5d60a764f162ecfd1afa"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-disabled_offset/qemu.stderr": {
+      "bytes": 327,
+      "sha256": "933077ed11d5eaee500f51901b0e9b0312c92d4eca38a2095a30699c232404a6"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-disabled_offset/qmp.jsonl": {
+      "bytes": 491,
+      "sha256": "3dd3d1ac28783264c87f72ad0939b3dbdffbfb0b9025123abd9d3cbd86e7ae65"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-disabled_offset/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "946afcbcdce9ce1557690e71a44852e9b2a42b4651041533c3d060283a2f27d1"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-enabled_offset/command.json": {
+      "bytes": 646,
+      "sha256": "b86b418351c1464d3197f0c3b32cede795493b23fdd24cd502228cf682f545db"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-enabled_offset/qemu.stderr": {
+      "bytes": 327,
+      "sha256": "933077ed11d5eaee500f51901b0e9b0312c92d4eca38a2095a30699c232404a6"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-enabled_offset/qmp.jsonl": {
+      "bytes": 490,
+      "sha256": "5829988d448f6945d9ec683fd35b482229a9262fdc2b59bf3be767292bb4d4af"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-enabled_offset/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "c65d88940c3f66de8ad6d3b9f15bf8f537550d206971760125bf52d3df1bcad3"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-identity/command.json": {
+      "bytes": 646,
+      "sha256": "b1dc8e9ee8379b3ea7b9c0618b8732312f178b42ef92820415fc900daa943544"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-identity/qemu.stderr": {
+      "bytes": 329,
+      "sha256": "f43cf0e3184c5268383f5ca858522890ea8d5082d0d419784a87a18fb36ce9fb"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-identity/qmp.jsonl": {
+      "bytes": 484,
+      "sha256": "2672621da6f9a9d3b6040f55627c960f94d0ed87ae0842a353ec83689d56b0cb"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-identity/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "c65d88940c3f66de8ad6d3b9f15bf8f537550d206971760125bf52d3df1bcad3"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-physical_base/command.json": {
+      "bytes": 646,
+      "sha256": "62a14b367f41d1e53d07a97aa8f4021018e4777f2d4c08fef08864d516358800"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-physical_base/qemu.stderr": {
+      "bytes": 329,
+      "sha256": "b907d7eb4d9ce9eda478a356c81ee0d421c6c50acbd2c2062a73e725bbbab9c3"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-physical_base/qmp.jsonl": {
+      "bytes": 489,
+      "sha256": "17e33b8fa3f34e617ecca9e1858cb8cfacccb4a3be68283c1a5dfd6acfbae671"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-physical_base/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "c65d88940c3f66de8ad6d3b9f15bf8f537550d206971760125bf52d3df1bcad3"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-profile/command.json": {
+      "bytes": 646,
+      "sha256": "208915208e8c62f5c7054d3999640cd0489526781cc5ca8c3bd0523b7d7e6b97"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-profile/qemu.stderr": {
+      "bytes": 328,
+      "sha256": "c4032ec33b7defe294115fa56a340b13cc1d62aff1bb351bd2672837547835de"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-profile/qmp.jsonl": {
+      "bytes": 483,
+      "sha256": "095440053b576268530a1b069d53d4dcdb0ca65206a6f1131a1f265df0b9efd5"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-profile/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "c65d88940c3f66de8ad6d3b9f15bf8f537550d206971760125bf52d3df1bcad3"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-window_bytes/command.json": {
+      "bytes": 646,
+      "sha256": "fa61a486efa02f1d936cd80bed17f3d5dac1d9754419390c17d23564f50ccde3"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-window_bytes/qemu.stderr": {
+      "bytes": 329,
+      "sha256": "b907d7eb4d9ce9eda478a356c81ee0d421c6c50acbd2c2062a73e725bbbab9c3"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-window_bytes/qmp.jsonl": {
+      "bytes": 488,
+      "sha256": "cec06928e2cbc15478138b80cb9584ba67e5e3f8d441214d3388883f0b53aee7"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-corrupt-window_bytes/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "c65d88940c3f66de8ad6d3b9f15bf8f537550d206971760125bf52d3df1bcad3"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-profile-off_to_on/command.json": {
+      "bytes": 646,
+      "sha256": "efbd24ee2cce51fcfb8a69e6d424a62f8d8f85a9dd5b51d391d33bcb501544e8"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-profile-off_to_on/qemu.stderr": {
+      "bytes": 328,
+      "sha256": "c4032ec33b7defe294115fa56a340b13cc1d62aff1bb351bd2672837547835de"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-profile-off_to_on/qmp.jsonl": {
+      "bytes": 476,
+      "sha256": "9ba87d5b42305d930dfea110cd37f41f57d9a1dde4d8dc52faa1d50ac73f0696"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-profile-off_to_on/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "946afcbcdce9ce1557690e71a44852e9b2a42b4651041533c3d060283a2f27d1"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-profile-on_to_off/command.json": {
+      "bytes": 647,
+      "sha256": "c8f16f55e755df05a28b61db8cd597de57d24fe6d5d47ebf4e170207c4afad1e"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-profile-on_to_off/qemu.stderr": {
+      "bytes": 328,
+      "sha256": "c4032ec33b7defe294115fa56a340b13cc1d62aff1bb351bd2672837547835de"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-profile-on_to_off/qmp.jsonl": {
+      "bytes": 475,
+      "sha256": "fb5e86a2f231063ae3307b26d233ab37911b6d23815c310c0315277054928149"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/reject-profile-on_to_off/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "c65d88940c3f66de8ad6d3b9f15bf8f537550d206971760125bf52d3df1bcad3"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/result.json": {
+      "bytes": 51085,
+      "sha256": "bac73c8ed4a586075721b95ed65cf2c5f965f13ab0afea0d783ec6f4387afa83"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/rpm-stats-offset-corrupt-disabled_offset.migration": {
+      "bytes": 2286802,
+      "sha256": "e37b1f6591e18cc7645ce445f69c3c0a15da119215c0b1c8357d0aa2dd805040"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/rpm-stats-offset-corrupt-enabled_offset.migration": {
+      "bytes": 2286802,
+      "sha256": "1b6a83970ba71134e9fd3a00efeef926b54571718e74c152126a9adcf50492b1"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/rpm-stats-offset-corrupt-identity.migration": {
+      "bytes": 2286802,
+      "sha256": "062a64be6bf88e2f349c66d9acb6bdb140b03d6ae02263f3ec305af869fe2ad8"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/rpm-stats-offset-corrupt-physical_base.migration": {
+      "bytes": 2286802,
+      "sha256": "1f2592b0a82972f38ecd464b615d290ebe168ec2d0ff68c2cfbab9019933bc1a"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/rpm-stats-offset-corrupt-profile.migration": {
+      "bytes": 2286802,
+      "sha256": "e0736ec615c9145ff01e927af8ee00aa7c13aac0f7b559632b9d523d41b263d0"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/rpm-stats-offset-corrupt-window_bytes.migration": {
+      "bytes": 2286802,
+      "sha256": "129ca196cc03a4d989278166df1af20206b972f72250049d76b438e947049caf"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/rpm-stats-offset-disabled.migration": {
+      "bytes": 2286802,
+      "sha256": "40ade8e354e5307c889a49b072da57a285a2932495896e6ac28ecca9617c1e2a"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/rpm-stats-offset-disabled.migration.rpm-stats-offset-v1.payload.bin": {
+      "bytes": 24,
+      "sha256": "b98950610b185af852e3c48a54bb32212c807a85e5209dea68b38bfa38559364"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/rpm-stats-offset-disabled.migration.sections.json": {
+      "bytes": 511,
+      "sha256": "16f352d33da85168b5e7b97e026065515e45ce951e8276a1267e4dcd8d9ec3ce"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/rpm-stats-offset-enabled.migration": {
+      "bytes": 2286802,
+      "sha256": "5afc99e6245d4f776be05128ae42fc6eaf223466811e014061856427eb802dea"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/rpm-stats-offset-enabled.migration.rpm-stats-offset-v1.payload.bin": {
+      "bytes": 24,
+      "sha256": "7089b4d3a679dc8558a623ceab944370a1373e1e9699edec748d6d65227c0af3"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/fixtures/data/rpm-stats-offset-enabled.migration.sections.json": {
+      "bytes": 510,
+      "sha256": "c0d8f3f9d3a0b99e6e64f25eb3d5cac8803ccb94bb48b0b711aa1d59924c75af"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/65-rpm-stats-offset-sm8250-reference/stdout.log": {
+      "bytes": 51085,
+      "sha256": "bac73c8ed4a586075721b95ed65cf2c5f965f13ab0afea0d783ec6f4387afa83"
+    },
+    "tb371fc-results/source-commit.txt": {
+      "bytes": 41,
+      "sha256": "1c551feeb842c4a14fef47b996e37a3916778f1212263e30aeb7c6f6cd8b73cc"
+    }
+  },
+  "verified_member_count": 129
+}
