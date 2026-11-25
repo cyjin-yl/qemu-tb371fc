@@ -7,7 +7,7 @@ unpacking initramfs, and reached a new fatal 32-bit read at `0x0c3f0004` in
 This was a zero-LUN kernel diagnostic; Android userspace, boot completion,
 and an interactive display were not observed.
 
-This directory is a small publication draft containing a source/artifact
+This directory is a retained evidence record containing a source/artifact
 manifest and selected observations. The raw native receipts and original
 inputs remain private. The full independent native input/binary rehash remains
 pending. A separate, completed evaluation of the original and PR32 pure
