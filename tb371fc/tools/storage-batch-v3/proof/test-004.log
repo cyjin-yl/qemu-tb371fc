@@ -1,0 +1,87 @@
+test_budget_mismatch_rejects_before_output_creation (__main__.BatchTests.test_budget_mismatch_rejects_before_output_creation) ... ok
+test_capture_lock_conflict_and_release (__main__.BatchTests.test_capture_lock_conflict_and_release) ... {"event": "chunk-verified", "chunk": 1, "chunks": 6, "label": "userdata-test", "source_offset": 0, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 2, "chunks": 6, "label": "userdata-test", "source_offset": 4096, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 3, "chunks": 6, "label": "userdata-test", "source_offset": 8192, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 4, "chunks": 6, "label": "userdata-test", "source_offset": 12288, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 1, "chunks": 6, "label": "userdata-test", "source_offset": 0, "bytes": 4096, "resumed": true}
+{"event": "chunk-verified", "chunk": 2, "chunks": 6, "label": "userdata-test", "source_offset": 4096, "bytes": 4096, "resumed": true}
+{"event": "chunk-verified", "chunk": 3, "chunks": 6, "label": "userdata-test", "source_offset": 8192, "bytes": 4096, "resumed": true}
+{"event": "chunk-verified", "chunk": 4, "chunks": 6, "label": "userdata-test", "source_offset": 12288, "bytes": 4096, "resumed": true}
+{"event": "chunk-verified", "chunk": 5, "chunks": 6, "label": "userdata-test", "source_offset": 16384, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 6, "chunks": 6, "label": "userdata-test", "source_offset": 20480, "bytes": 4096, "resumed": false}
+ok
+test_complete_zero_new_resume_preserves_manifest_identity (__main__.BatchTests.test_complete_zero_new_resume_preserves_manifest_identity) ... {"event": "chunk-verified", "chunk": 1, "chunks": 3, "label": "userdata-test", "source_offset": 0, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 2, "chunks": 3, "label": "userdata-test", "source_offset": 4096, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 3, "chunks": 3, "label": "userdata-test", "source_offset": 8192, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 1, "chunks": 3, "label": "userdata-test", "source_offset": 0, "bytes": 4096, "resumed": true}
+{"event": "chunk-verified", "chunk": 2, "chunks": 3, "label": "userdata-test", "source_offset": 4096, "bytes": 4096, "resumed": true}
+{"event": "chunk-verified", "chunk": 3, "chunks": 3, "label": "userdata-test", "source_offset": 8192, "bytes": 4096, "resumed": true}
+ok
+test_existing_api_default_still_one_chunk (__main__.BatchTests.test_existing_api_default_still_one_chunk) ... {"event": "chunk-verified", "chunk": 1, "chunks": 3, "label": "userdata-test", "source_offset": 0, "bytes": 4096, "resumed": false}
+ok
+test_four_chunks_pause_at_exact_budget (__main__.BatchTests.test_four_chunks_pause_at_exact_budget) ... {"event": "chunk-verified", "chunk": 1, "chunks": 6, "label": "userdata-test", "source_offset": 0, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 2, "chunks": 6, "label": "userdata-test", "source_offset": 4096, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 3, "chunks": 6, "label": "userdata-test", "source_offset": 8192, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 4, "chunks": 6, "label": "userdata-test", "source_offset": 12288, "bytes": 4096, "resumed": false}
+ok
+test_guard_budget_and_plan_identity_before_capture (__main__.BatchTests.test_guard_budget_and_plan_identity_before_capture) ... ok
+test_interrupted_third_chunk_retains_two_then_resumes (__main__.BatchTests.test_interrupted_third_chunk_retains_two_then_resumes) ... {"event": "chunk-verified", "chunk": 1, "chunks": 6, "label": "userdata-test", "source_offset": 0, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 2, "chunks": 6, "label": "userdata-test", "source_offset": 4096, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 1, "chunks": 6, "label": "userdata-test", "source_offset": 0, "bytes": 4096, "resumed": true}
+{"event": "chunk-verified", "chunk": 2, "chunks": 6, "label": "userdata-test", "source_offset": 4096, "bytes": 4096, "resumed": true}
+{"event": "chunk-verified", "chunk": 3, "chunks": 6, "label": "userdata-test", "source_offset": 8192, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 4, "chunks": 6, "label": "userdata-test", "source_offset": 12288, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 5, "chunks": 6, "label": "userdata-test", "source_offset": 16384, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 6, "chunks": 6, "label": "userdata-test", "source_offset": 20480, "bytes": 4096, "resumed": false}
+ok
+test_invalid_budget_types_and_values_rejected (__main__.BatchTests.test_invalid_budget_types_and_values_rejected) ... ok
+test_legacy_peer_rejects_new_protocol_before_output (__main__.BatchTests.test_legacy_peer_rejects_new_protocol_before_output) ... ok
+test_named_fifo_batch_waits_for_real_eof_and_drains (__main__.BatchTests.test_named_fifo_batch_waits_for_real_eof_and_drains) ... {"event": "chunk-verified", "chunk": 1, "chunks": 6, "label": "userdata-test", "source_offset": 0, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 2, "chunks": 6, "label": "userdata-test", "source_offset": 4096, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 3, "chunks": 6, "label": "userdata-test", "source_offset": 8192, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 4, "chunks": 6, "label": "userdata-test", "source_offset": 12288, "bytes": 4096, "resumed": false}
+ok
+test_new_source_caller_requires_budget_and_new_namespace (__main__.BatchTests.test_new_source_caller_requires_budget_and_new_namespace) ... ok
+test_next_attempt_cannot_bypass_operator_release (__main__.BatchTests.test_next_attempt_cannot_bypass_operator_release) ... ok
+test_production_plan_cannot_exceed_256MiB_batch (__main__.BatchTests.test_production_plan_cannot_exceed_256MiB_batch) ... ok
+test_receiver_corrupt_old_chunk_rejects_resume (__main__.BatchTests.test_receiver_corrupt_old_chunk_rejects_resume) ... {"event": "chunk-verified", "chunk": 1, "chunks": 6, "label": "userdata-test", "source_offset": 0, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 2, "chunks": 6, "label": "userdata-test", "source_offset": 4096, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 3, "chunks": 6, "label": "userdata-test", "source_offset": 8192, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 4, "chunks": 6, "label": "userdata-test", "source_offset": 12288, "bytes": 4096, "resumed": false}
+ok
+test_request_budget_is_exactly_bound (__main__.BatchTests.test_request_budget_is_exactly_bound) ... ok
+test_short_remainder_finishes_and_preserves_v1_manifest (__main__.BatchTests.test_short_remainder_finishes_and_preserves_v1_manifest) ... {"event": "chunk-verified", "chunk": 1, "chunks": 6, "label": "userdata-test", "source_offset": 0, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 2, "chunks": 6, "label": "userdata-test", "source_offset": 4096, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 3, "chunks": 6, "label": "userdata-test", "source_offset": 8192, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 4, "chunks": 6, "label": "userdata-test", "source_offset": 12288, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 1, "chunks": 6, "label": "userdata-test", "source_offset": 0, "bytes": 4096, "resumed": true}
+{"event": "chunk-verified", "chunk": 2, "chunks": 6, "label": "userdata-test", "source_offset": 4096, "bytes": 4096, "resumed": true}
+{"event": "chunk-verified", "chunk": 3, "chunks": 6, "label": "userdata-test", "source_offset": 8192, "bytes": 4096, "resumed": true}
+{"event": "chunk-verified", "chunk": 4, "chunks": 6, "label": "userdata-test", "source_offset": 12288, "bytes": 4096, "resumed": true}
+{"event": "chunk-verified", "chunk": 5, "chunks": 6, "label": "userdata-test", "source_offset": 16384, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 6, "chunks": 6, "label": "userdata-test", "source_offset": 20480, "bytes": 4096, "resumed": false}
+ok
+test_source_prefix_mismatch_rejects_new_work (__main__.BatchTests.test_source_prefix_mismatch_rejects_new_work) ... {"event": "chunk-verified", "chunk": 1, "chunks": 6, "label": "userdata-test", "source_offset": 0, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 2, "chunks": 6, "label": "userdata-test", "source_offset": 4096, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 3, "chunks": 6, "label": "userdata-test", "source_offset": 8192, "bytes": 4096, "resumed": false}
+{"event": "chunk-verified", "chunk": 4, "chunks": 6, "label": "userdata-test", "source_offset": 12288, "bytes": 4096, "resumed": false}
+ok
+test_supervisor_deadline_releases_lock_and_records_failure (__main__.BatchTests.test_supervisor_deadline_releases_lock_and_records_failure) ... ok
+test_unchanged_integrity_and_release_functions (__main__.BatchTests.test_unchanged_integrity_and_release_functions) ... ok
+test_original_ram_guards_and_preparation_release_guards_unchanged (batch_preparation_tests.PreparationTests.test_original_ram_guards_and_preparation_release_guards_unchanged) ... ok
+test_preparation_explicit_one_remains_supported (batch_preparation_tests.PreparationTests.test_preparation_explicit_one_remains_supported) ... ok
+test_preparation_generated_guards_refuse_changed_receipts_or_existing_next_id (batch_preparation_tests.PreparationTests.test_preparation_generated_guards_refuse_changed_receipts_or_existing_next_id) ... ok
+test_preparation_identity_and_deadlines_are_explicit (batch_preparation_tests.PreparationTests.test_preparation_identity_and_deadlines_are_explicit) ... ok
+test_preparation_legacy_to_four_budget_full_chain (batch_preparation_tests.PreparationTests.test_preparation_legacy_to_four_budget_full_chain) ... ok
+test_preparation_never_overwrites_existing_output (batch_preparation_tests.PreparationTests.test_preparation_never_overwrites_existing_output) ... ok
+test_preparation_rejects_invalid_typed_budgets (batch_preparation_tests.PreparationTests.test_preparation_rejects_invalid_typed_budgets) ... ok
+test_preparation_rejects_running_source_or_unreaped_worker (batch_preparation_tests.PreparationTests.test_preparation_rejects_running_source_or_unreaped_worker) ... ok
+test_preparation_source_jobs_and_code_pins_remain_fixed (batch_preparation_tests.PreparationTests.test_preparation_source_jobs_and_code_pins_remain_fixed) ... ok
+test_preparation_synthetic_v2_previous_chain (batch_preparation_tests.PreparationTests.test_preparation_synthetic_v2_previous_chain) ... ok
+test_preparation_v2_rejects_missing_budget_and_legacy_source_downgrade (batch_preparation_tests.PreparationTests.test_preparation_v2_rejects_missing_budget_and_legacy_source_downgrade) ... ok
+test_ram_launcher_and_controller_reject_unpinned_or_unbounded_input (batch_preparation_tests.PreparationTests.test_ram_launcher_and_controller_reject_unpinned_or_unbounded_input) ... ok
+
+----------------------------------------------------------------------
+Ran 31 tests in 1.978s
+
+OK
