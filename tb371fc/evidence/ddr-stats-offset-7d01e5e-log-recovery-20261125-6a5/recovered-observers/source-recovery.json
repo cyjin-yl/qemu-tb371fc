@@ -1,0 +1,233 @@
+{
+  "schema": "tb371fc-ddr-stats-offset-observer-source-recovery-v1",
+  "repository": "cyjin-yl/qemu-tb371fc",
+  "source_head": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+  "source_tree": "5c25fff35bb41c3a8b018f0be965b4a9d3e9d5c4",
+  "source_base": "420819df9cfd76dc98cb4705987c269047d7f214",
+  "pr_merge": "da1fd3e190faeb5e2cf4dfb3634c54c18987fae8",
+  "prior_log_recovery_commit": "6bee0321ce9892c9448d062e54abaf499a54faa5",
+  "baseline_evidence_commit": "d103750ca2a191559daeb9eff4341b8c80013dc6",
+  "recovery_method": "Fetch complete immutable RPM predecessor sources; apply the recorded ordered text transformations; compare complete UTF-8 bytes and SHA256 with both original frozen DDR source identities.",
+  "full_original_source_identity_recovered": true,
+  "sources": [
+    {
+      "role": "board",
+      "recovered_path": "tb371fc/evidence/ddr-stats-offset-7d01e5e-log-recovery-20261125-6a5/recovered-observers/audit_board_rawlogs_7d01e5e.py",
+      "bytes": 16288,
+      "sha256": "0dc1140336be191caef99046745c23e13ff48bb9fe51eab397da7a25a754bbbd",
+      "preinterruption_frozen_identity_matches": true,
+      "baseline_path": "tb371fc/evidence/rpm-stats-offset-66d9e20-ci-20261125-6a5/observers/audit_board_rawlogs_66d9e20.py",
+      "baseline_bytes": 15203,
+      "baseline_sha256": "ed506405db9e4e9dfab37f6679576ed29bd36a1f583b4f31e1adc1dbad2c1e0b"
+    },
+    {
+      "role": "a77",
+      "recovered_path": "tb371fc/evidence/ddr-stats-offset-7d01e5e-log-recovery-20261125-6a5/recovered-observers/audit_a77_rawlogs_7d01e5e.py",
+      "bytes": 8932,
+      "sha256": "f2e491852c385ac2286f225ef79570fbc9c6792c52dc8405335925f3eeabe740",
+      "preinterruption_frozen_identity_matches": true,
+      "baseline_path": "tb371fc/evidence/rpm-stats-offset-66d9e20-ci-20261125-6a5/observers/audit_a77_rawlogs_66d9e20.py",
+      "baseline_bytes": 7310,
+      "baseline_sha256": "67dc1240cfb1c623cbc7faa623f40c0f25423d3298e358093e868580336f3ba8"
+    }
+  ],
+  "binding_scope": {
+    "push_run": 45544186469,
+    "pull_request_run": 45544202260,
+    "push_board_job": 138969695072,
+    "pull_request_board_job": 138969745149,
+    "push_a77_job": 138969695369,
+    "pull_request_a77_job": 138969744777,
+    "run_attempt": 1,
+    "component_gates": 99,
+    "linux_gates": 5,
+    "ordered_host_suite_counts": [
+      15,
+      36,
+      28,
+      43,
+      16,
+      15
+    ],
+    "a77_variants": 9,
+    "a77_guest_checks": 852,
+    "a77_rejected_configurations": 2,
+    "a77_pci_ufs_cases": 17
+  },
+  "validation_scope_preserved": {
+    "board_push_unit_zip_check": true,
+    "a77_all_nine_variant_and_17_pci_validators": true,
+    "exact_head_merge_tree_parent_and_run_job_guards": true
+  },
+  "ordered_transformations": {
+    "apply_common_to_each": [
+      [
+        "/dev/shm/rpmstats-ci-review",
+        "/dev/shm/ddrstats-ci-review"
+      ],
+      [
+        "66d9e20a9541b503ed4f5cac5c79c8a5b4a0809b",
+        "7d01e5e294b788f97a8120c2d34122ddb25e6343"
+      ],
+      [
+        "c7ba198d6bf9bd5e3255e207d07efd85a026a1a9",
+        "da1fd3e190faeb5e2cf4dfb3634c54c18987fae8"
+      ]
+    ],
+    "then_board_only": [
+      [
+        "RPM statistics CI",
+        "DDR statistics CI"
+      ],
+      [
+        "7c13a3b85075e0eaefcc14d4f55c160bed699a08",
+        "5c25fff35bb41c3a8b018f0be965b4a9d3e9d5c4"
+      ],
+      [
+        "8d0bc64d8da6da18bf43b52a2a9547f28f44c3e9",
+        "420819df9cfd76dc98cb4705987c269047d7f214"
+      ],
+      [
+        "JOBS = {'push': (45533031476, 138932791819, HEAD), 'pr': (45533037101, 138932812241, MERGE)}",
+        "SOURCE_LABEL = '7d01e5e'\nJOBS = {'push': (45544186469, 138969695072, HEAD), 'pr': (45544202260, 138969745149, MERGE)}"
+      ],
+      [
+        "def pin(path):",
+        "def require_bindings():\n    for name, value in [('HEAD', HEAD), ('MERGE', MERGE), ('TREE', TREE), ('BASE', BASE)]:\n        require(type(value) is str and re.fullmatch('[0-9a-f]{40}', value) is not None,\n                name + ' remains unbound or invalid')\n    require(SOURCE_LABEL == HEAD[:7], 'Source filename label differs from bound head')\n    require(HEAD != MERGE and HEAD != BASE, 'Distinct source, merge and base identities required')\n    require(set(JOBS) == {'push', 'pr'}, 'Exactly push and PR job bindings required')\n    for role, checkout in [('push', HEAD), ('pr', MERGE)]:\n        run, job, actual_checkout = JOBS[role]\n        require(type(run) is int and run > 0 and type(job) is int and job > 0,\n                role + ' run/job remain unbound or invalid')\n        require(actual_checkout == checkout, role + ' checkout binding differs')\n    require(JOBS['push'][0] != JOBS['pr'][0] and JOBS['push'][1] != JOBS['pr'][1],\n            'Distinct push and PR run/job bindings required')\n\ndef pin(path):"
+      ],
+      [
+        "[15, 35, 28, 43, 16, 15]",
+        "[15, 36, 28, 43, 16, 15]"
+      ],
+      [
+        "97/5 gate",
+        "99/5 gate"
+      ],
+      [
+        "f'rpmstats-66d9e20-{role}-board-{job_id}.log'",
+        "f'ddrstats-{SOURCE_LABEL}-{role}-board-{job_id}.log'"
+      ],
+      [
+        "== 102",
+        "== 104"
+      ],
+      [
+        "102 distinct PASS",
+        "104 distinct PASS"
+      ],
+      [
+        "{97: [], 5: []}",
+        "{99: [], 5: []}"
+      ],
+      [
+        "(97|5)",
+        "(99|5)"
+      ],
+      [
+        "[97, 5]",
+        "[99, 5]"
+      ],
+      [
+        "'component_gates': 97",
+        "'component_gates': 99"
+      ],
+      [
+        "'distinct_PASS_gate_lines': 102",
+        "'distinct_PASS_gate_lines': 104"
+      ],
+      [
+        "categories[97]",
+        "categories[99]"
+      ],
+      [
+        "== '35'",
+        "== '36'"
+      ],
+      [
+        "CI unit actual 35 OK",
+        "CI unit actual 36 OK"
+      ],
+      [
+        "Both host job logs separately show 35 tests.",
+        "Both host job logs separately show 36 tests."
+      ],
+      [
+        "'unittest_count': 35",
+        "'unittest_count': 36"
+      ],
+      [
+        "ROOT / 'rpmstats-66d9e20-board-rawlog-observation-001.json'",
+        "ROOT / f'ddrstats-{SOURCE_LABEL}-board-rawlog-observation-001.json'"
+      ],
+      [
+        "tb371fc-rpm-stats-offset-board-rawlog-observation-v2",
+        "tb371fc-ddr-stats-offset-board-rawlog-observation-v1"
+      ],
+      [
+        "    try:\n        metadata_path = ROOT / 'rpmstats-66d9e20-final-ci-github-metadata.json'",
+        "    try:\n        require_bindings()\n        metadata_path = ROOT / f'ddrstats-{SOURCE_LABEL}-final-ci-github-metadata.json'"
+      ]
+    ],
+    "then_a77_only": [
+      [
+        "MERGE = 'da1fd3e190faeb5e2cf4dfb3634c54c18987fae8'\n",
+        "MERGE = 'da1fd3e190faeb5e2cf4dfb3634c54c18987fae8'\nTREE = '5c25fff35bb41c3a8b018f0be965b4a9d3e9d5c4'\nBASE = '420819df9cfd76dc98cb4705987c269047d7f214'\nSOURCE_LABEL = '7d01e5e'\nJOBS = {'push': (45544186469, 138969695369, HEAD), 'pr': (45544202260, 138969744777, MERGE)}\n"
+      ],
+      [
+        "def observe(run, job, event, checkout):",
+        "def require_bindings():\n    for name, value in [('HEAD', HEAD), ('MERGE', MERGE), ('TREE', TREE), ('BASE', BASE)]:\n        require(type(value) is str and re.fullmatch('[0-9a-f]{40}', value) is not None,\n                name + ' remains unbound or invalid')\n    require(SOURCE_LABEL == HEAD[:7], 'Source filename label differs from bound head')\n    require(HEAD != MERGE and HEAD != BASE, 'Distinct source, merge and base identities required')\n    require(set(JOBS) == {'push', 'pr'}, 'Exactly push and PR job bindings required')\n    for role, checkout in [('push', HEAD), ('pr', MERGE)]:\n        run, job, actual_checkout = JOBS[role]\n        require(type(run) is int and run > 0 and type(job) is int and job > 0,\n                role + ' run/job remain unbound or invalid')\n        require(actual_checkout == checkout, role + ' checkout binding differs')\n    require(JOBS['push'][0] != JOBS['pr'][0] and JOBS['push'][1] != JOBS['pr'][1],\n            'Distinct push and PR run/job bindings required')\n\ndef observe(run, job, event, checkout):"
+      ],
+      [
+        "    require(metadata['head_sha'] == HEAD and metadata['event'] == event, 'Run head/event identity mismatch')",
+        "    require(metadata['head_sha'] == HEAD and metadata['event'] == event, 'Run head/event identity mismatch')\n    require(metadata['id'] == run and metadata['run_attempt'] == 1, 'Exact A77 run and attempt identity mismatch')\n    require(metadata['status'] == 'completed' and metadata['conclusion'] == 'success', 'A77 workflow run is not terminal success')"
+      ],
+      [
+        "ROOT / 'rpmstats-66d9e20-a77-rawlog-audit-001.json'",
+        "ROOT / f'ddrstats-{SOURCE_LABEL}-a77-rawlog-audit-001.json'"
+      ],
+      [
+        "tb371fc-rpm-stats-offset-a77-rawlog-observation-v1",
+        "tb371fc-ddr-stats-offset-a77-rawlog-observation-v1"
+      ],
+      [
+        "    try:\n        head =",
+        "    try:\n        require_bindings()\n        head ="
+      ],
+      [
+        "        require(head['tree']['sha'] == merge['tree']['sha'], 'PR merge tree differs from qualified head')\n        require([p['sha'] for p in merge['parents']] == ['8d0bc64d8da6da18bf43b52a2a9547f28f44c3e9', HEAD], 'PR merge parents differ')",
+        "        require(head['sha'] == HEAD and merge['sha'] == MERGE, 'Source and merge commit identities differ')\n        require(head['tree']['sha'] == merge['tree']['sha'] == TREE, 'PR merge tree differs from bound qualified head')\n        require([p['sha'] for p in merge['parents']] == [BASE, HEAD], 'PR merge parents differ')"
+      ],
+      [
+        "observe(45533031476, 138932792020, 'push', HEAD)",
+        "observe(JOBS['push'][0], JOBS['push'][1], 'push', JOBS['push'][2])"
+      ],
+      [
+        "observe(45533037101, 138932812391, 'pull_request', MERGE)",
+        "observe(JOBS['pr'][0], JOBS['pr'][1], 'pull_request', JOBS['pr'][2])"
+      ]
+    ],
+    "finally_each": [
+      ", HEAD), 'pr':",
+      ", HEAD),\n        'pr':"
+    ]
+  },
+  "original_observation_receipt_bodies_restored": false,
+  "historical_unrestored_observation_pins": [
+    {
+      "role": "board",
+      "bytes": 16460,
+      "sha256": "d14396bc920abf9f58f53647e3e374910c29bd964266b12a8b28fdc72fc62965"
+    },
+    {
+      "role": "a77",
+      "bytes": 15679,
+      "sha256": "3b4f87b5f5d0df65f2356ecc554d7e56482736c6acc87a719ea497b12c4854df"
+    }
+  ],
+  "recovered_observers_executed_by_this_recovery": false,
+  "CI_jobs_rerun": false,
+  "QEMU_executed": false,
+  "native_executed": false,
+  "new_qualification_claimed": false,
+  "privacy_scope": "Only previously public observer logic, public source/CI identities, expected contract counts and reconstruction instructions; no signed artifact URLs, private firmware, native logs, host control data or credentials."
+}
