@@ -62,6 +62,7 @@
 #include "hw/misc/qcom-sm8250-spss-irq-mask.h"
 #include "hw/misc/qcom-sm8250-rpm-stats-offset.h"
 #include "hw/misc/qcom-sm8250-ddr-stats-offset.h"
+#include "hw/misc/qcom-sm8250-qce-bam.h"
 #include "hw/misc/qcom-tcsr-mutex.h"
 #include "hw/misc/qcom-tsens24xx.h"
 #include "hw/misc/qcom-cpufreq-hw.h"
@@ -1629,6 +1630,7 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
     DeviceState *spss_mask = qdev_new(TYPE_QCOM_SM8250_SPSS_IRQ_MASK);
     DeviceState *rpm_stats_offset = qdev_new(TYPE_QCOM_SM8250_RPM_STATS_OFFSET);
     DeviceState *ddr_stats_offset = qdev_new(TYPE_QCOM_SM8250_DDR_STATS_OFFSET);
+    DeviceState *qce_bam = qdev_new(TYPE_QCOM_SM8250_QCE_BAM);
     DeviceState *mutex = qdev_new(TYPE_QCOM_TCSR_MUTEX);
     DeviceState *smem = qdev_new(TYPE_QCOM_SMEM_HANDOFF);
     DeviceState *msgram = qdev_new(TYPE_QCOM_AOP_MSGRAM);
@@ -1686,6 +1688,13 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
                               OBJECT(ddr_stats_offset));
     sysbus_realize_and_unref(SYS_BUS_DEVICE(ddr_stats_offset), &error_fatal);
     sysbus_mmio_map(SYS_BUS_DEVICE(ddr_stats_offset), 0, 0x0c3f001c);
+
+    /* One strict shared QCE/BAM union; reference profile is default off. */
+    object_property_add_child(OBJECT(s), "qce-bam", OBJECT(qce_bam));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(qce_bam), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(qce_bam), 0, QCOM_SM8250_QCE_BAM_BASE);
+    sysbus_connect_irq(SYS_BUS_DEVICE(qce_bam), 0,
+                       qdev_get_gpio_in(s->gic, 272));
 
     /* Captured SMEM hardware-lock geometry; initial owners remain unknown. */
     object_property_add_child(OBJECT(s), "tcsr-mutex", OBJECT(mutex));

@@ -175,7 +175,7 @@ class PlanTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         plan = ci.plan(args, Path("/test/runtime"))
         cases = {case.name: case for case in plan}
-        self.assertEqual(len(plan), 102)
+        self.assertEqual(len(plan), 105)
         self.assertEqual(len(cases), len(plan))
         self.assertEqual(cases["tbu-reference-ecats"].expected_count, 17)
         self.assertEqual(cases["smmuv500-reference"].expected_count, 36)
@@ -350,7 +350,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 107)
+        self.assertEqual(len(cases), 110)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]
@@ -625,7 +625,8 @@ class PlanTests(unittest.TestCase):
                              "rpm-stats-offset-source-generation", "rpm-stats-offset-sm8250-reference",
                              "ddr-stats-offset-source-generation", "ddr-stats-offset-sm8250-reference",
                                    "geni-hs-source-generation-unit", "geni-hs-source-generation",
-                                   "geni-hs-sm8250-reference"}:
+                                   "geni-hs-sm8250-reference", "qce-bam-source-generation",
+                                   "qce-bam-safety", "qce-bam-reference"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -745,7 +746,8 @@ class PlanTests(unittest.TestCase):
             if case.name in {"rpm-stats-offset-source-generation", "rpm-stats-offset-sm8250-reference",
                              "ddr-stats-offset-source-generation", "ddr-stats-offset-sm8250-reference",
                                    "geni-hs-source-generation-unit", "geni-hs-source-generation",
-                                   "geni-hs-sm8250-reference"}:
+                                   "geni-hs-sm8250-reference", "qce-bam-source-generation",
+                                   "qce-bam-safety", "qce-bam-reference"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -875,7 +877,8 @@ class PlanTests(unittest.TestCase):
             if prior_case.name in {"ddr-stats-offset-source-generation",
                                    "ddr-stats-offset-sm8250-reference",
                                    "geni-hs-source-generation-unit", "geni-hs-source-generation",
-                                   "geni-hs-sm8250-reference"}:
+                                   "geni-hs-sm8250-reference", "qce-bam-source-generation",
+                                   "qce-bam-safety", "qce-bam-reference"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -1054,8 +1057,9 @@ class GeniContractTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        additions = {"geni-hs-source-generation-unit", "geni-hs-source-generation", "geni-hs-sm8250-reference"}
-        self.assertEqual(len(cases), 107)
+        additions = {"geni-hs-source-generation-unit", "geni-hs-source-generation", "geni-hs-sm8250-reference",
+                     "qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference"}
+        self.assertEqual(len(cases), 110)
         def normalize(value):
             if isinstance(value, Path):
                 value = str(value)
@@ -1084,6 +1088,116 @@ class GeniContractTests(unittest.TestCase):
         report = ci.run_case(case, self.root / "cache-artifacts", Path(sys.executable))
         self.assertTrue(report["passed"], report)
         self.assertEqual(report["environment"]["TB371FC_PUBLIC_SOURCE_CACHE"], expected)
+
+
+class QceContractTests(unittest.TestCase):
+    """Synthetic receipt-verdict tests, never an emulated-device result."""
+    def setUp(self):
+        self.args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
+                                    build_dir=Path("/test/build"), kernel=None)
+        self.plan = ci.plan(self.args, Path("/test/runtime"))
+
+    def test_qce_additions_preserve_all_107_prior_contracts_in_order(self):
+        additions = {"qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference"}
+        self.assertEqual(len(self.plan), 110)
+        self.assertEqual({c.name for c in self.plan[-3:]}, additions)
+        def normalize(value):
+            if isinstance(value, Path):
+                value = str(value)
+            if isinstance(value, str):
+                for other in self.plan:
+                    physical, token = str(other.fixture), "@FIXTURE:" + other.name + "@"
+                    value = token if value == physical else value.replace(physical + "/", token + "/")
+                return value.replace(str(ci.ROOT), "@ROOT@").replace(sys.executable, "@PYTHON@")
+            if isinstance(value, list):
+                return [normalize(item) for item in value]
+            if isinstance(value, dict):
+                return {key: normalize(item) for key, item in value.items()}
+            return value
+        retained = [normalize(vars(case)) for case in self.plan if case.name not in additions]
+        self.assertEqual(len(retained), 107)
+        fingerprint = hashlib.sha256(json.dumps(retained, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        self.assertEqual(fingerprint, "53489eaf9a4141bc48c69b910ac86fae384065c637829c2ce7f990da0b5365f8")
+        self.args.suite = "linux"
+        self.assertEqual(len(ci.plan(self.args, Path("/test/runtime"))), 5)
+
+    def test_qce_gate_counts_and_explicit_scope_are_strict(self):
+        cases = {case.name: case for case in self.plan}
+        safety, reference = cases['qce-bam-safety'], cases['qce-bam-reference']
+        source = cases['qce-bam-source-generation']
+        self.assertEqual(source.expected_count, 2)
+        self.assertEqual(source.expected_lengths,
+                         {'inputs': 12, 'outputs': 2, 'negative_checks': 127,
+                          'parser_positive_checks': 2})
+        self.assertEqual(source.expected_values['negative_count'], 127)
+        self.assertEqual(sum(source.expected_values['negative_category_counts'].values()), 127)
+        self.assertIs(source.expected_values['production_pins_modified_by_tests'], False)
+        self.assertEqual(safety.expected_count, 4)
+        self.assertEqual(reference.expected_count, 74)
+        self.assertEqual(reference.expected_lengths,
+                         {'migrations': 4, 'rejected_migrations': 2,
+                          'corrupted_stream_rejections': 58, 'structural_stream_rejections': 3,
+                          'actual_stream_files': 65, 'process_cleanup': 76})
+        for gate in (safety, reference):
+            self.assertIs(gate.expected_values['profile_bound'], True)
+            self.assertEqual(gate.expected_values['reference_profile_sha256'],
+                             'f9809a8de0e6b91c57e7baf3d675dfd16c4ce1bc6e2797a0d866ec42bebf1c3b')
+            self.assertEqual(gate.expected_values['reference_profile_file_sha256'],
+                             '6bb5bff5a445a73fab54261376ef73a820c6b2ac050048e5fca45715755f76be')
+            self.assertEqual(gate.expected_values['vmstate_payload_bytes'], 248)
+            self.assertEqual(gate.expected_values['pure_observation_getters'], 70)
+            self.assertIs(gate.expected_values['qtest_ok_is_memtx_result'], False)
+            self.assertIs(gate.expected_values['native_kernel_probe_observed'], False)
+            self.assertIs(gate.expected_values['test_oracle_reads_device_implementation'], False)
+            self.assertEqual(gate.expected_values['automatic_test_retries'], 0)
+
+    def safety_receipt(self):
+        rows = []
+        for index, name in enumerate(('default-off', 'explicit-off',
+                                     'paused-tcg-pure-observation', 'unbound-enable-fails-closed')):
+            code = int(index == 3)
+            channel = {'terminal': 'eof', 'error': None}
+            drains = {'qmp': dict(channel), 'qtest': dict(channel)}
+            if index == 2:
+                drains['qtest'] = {'not_opened': True}
+            if index == 3:
+                drains = {'qmp': {'not_opened': True}, 'qtest': {'not_opened': True}}
+            rows.append({'fixture': name, 'expected_exit_code': code, 'exit_code': code,
+                         'actually_waited_and_reaped': True,
+                         'wait_calls': [{'called': 'Popen.wait', 'returned_exit_code': code}],
+                         'forced_terminate': False, 'forced_kill': False,
+                         'signals_to_preexisting_processes': False,
+                         'quit_sent': not code, 'quit_acknowledged': not code,
+                         'quit_not_applicable': 'already-exited' if code else None,
+                         'quit_error': None, 'counters': {'cont': 0}, 'irq_events': [],
+                         'unexpected_qtest_drain_lines': [], 'drains': drains,
+                         'stdio': {name: {'complete_after_actual_wait': True, 'bytes': 0, 'sha256': '0' * 64}
+                                   for name in ('qemu.stdout', 'qemu.stderr')}})
+        return {'profile': {'bound': False}, 'process_cleanup': rows}
+
+    def test_qce_cleanup_cannot_be_replaced_by_poll_or_aggregate_true(self):
+        from qce_bam_ci_contract import judge_qce_details
+        case = next(c for c in self.plan if c.name == 'qce-bam-safety')
+        valid = self.safety_receipt()
+        judge_qce_details(case, valid)
+        for field, bad in (('actually_waited_and_reaped', False), ('wait_calls', []),
+                           ('forced_terminate', True), ('forced_kill', True),
+                           ('signals_to_preexisting_processes', True), ('quit_sent', False),
+                           ('quit_acknowledged', False), ('exit_code', True),
+                           ('expected_exit_code', False), ('irq_events', [{'action': 'raise', 'number': 0}])):
+            changed = copy.deepcopy(valid)
+            changed['process_cleanup'][0][field] = bad
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                judge_qce_details(case, changed)
+        for terminal in (None, 'timeout', 'reset'):
+            changed = copy.deepcopy(valid)
+            changed['process_cleanup'][0]['drains']['qmp']['terminal'] = terminal
+            with self.subTest(terminal=terminal), self.assertRaises(ValueError):
+                judge_qce_details(case, changed)
+        changed = copy.deepcopy(valid)
+        changed['process_cleanup'][1] = changed['process_cleanup'][0]
+        with self.assertRaises(ValueError):
+            judge_qce_details(case, changed)
 
 
 if __name__ == "__main__":

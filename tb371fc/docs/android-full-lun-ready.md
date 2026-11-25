@@ -55,6 +55,78 @@ The binding must be complete before invocation. A bounded wait can accommodate
 an already bound ready receipt being delivered to the execution filesystem;
 it does not guess hashes or pick the newest available generation.
 
+## Explicit mapped generation2 handoff
+
+An assembly that explicitly selects replacement captures uses binding schema
+`tb371fc-full-lun-boot-binding-v2`. Select that schema and one exact ready path
+in the private binding; the consumer does not infer an upgrade from directory
+names or search for a latest ready file. The original v1 binding, receipt checks
+and runner behavior remain available unchanged.
+
+The v2 ready schema is `tb371fc-mapped-generation2-ready-v1`. Its completion is
+`tb371fc-generation2-mapped-verification-v1`, published as
+`ready.parent/mapped-generation2-complete.json`. It records explicit selected
+captures and byte-verification results. Neither a legacy
+`generation2_capture_complete` marker nor a `generation_completion` binding may
+be substituted for it.
+
+V2 keeps the common boot inputs, six LUNs, baseline and LU0 assembly bindings
+above, and replaces the legacy completion binding with these fields:
+
+| Field | Required identity |
+| --- | --- |
+| `mapped_generation_completion` | Full `{path, bytes, sha256}` pin of the new completion in the selected assembly |
+| `selection_map` | Full pin of the frozen selection-map bytes selected by the evidence index |
+| `frozen_evidence_index` | Full pin of `ready.parent/selected-evidence-index.json` |
+| `evidence_dependencies` | Explicit one-element list containing the full original pin of the reviewed `prepare_batch_attempt_v3.py` source |
+
+The completion pins its original selection map and the index digest. Each index
+row maps a canonical historical `original` full pin to a unique
+`frozen_path` under `ready.parent/selected-evidence/NNNN.bin`. Host paths in
+these receipts are provenance identifiers. The consumer resolves them through
+the exact index, opens only the frozen files in its execution filesystem, and
+requires every indexed file to be consumed by the receipt chain or explicitly
+declared in `evidence_dependencies`. Missing, conflicting, duplicate or
+unreferenced mappings fail preflight. All frozen files join the existing input
+identity/digest recheck before and after the observation.
+
+Evidence dependencies are read as bytes only. The consumer does not import or
+execute the frozen assembler, acquisition runtime or provenance preparer.
+They are separate from `runner_dependencies`: the existing four-module runner
+execution boundary is unchanged. The preparer and both admitted acquisition
+runtime profiles must match the reviewed byte lengths and SHA-256 values;
+rebuilding request and index hashes cannot admit a substituted runtime.
+
+This mapped profile requires all 107 ordered jobs, 108 assembly manifests and
+1,842 chunks: 1,794 job chunks plus 48 retained super chunks. Prefix and tails
+000 through 080 remain at their original selected locations; tails 081 through
+105 use explicit fresh-capture locations and complete acquisition evidence.
+Chunk counts follow each exact range list. The first tail has 128 separate
+8 MiB ranges, while the retained super capture uses its own 256 MiB chunk
+geometry; neither is treated as a single 64 MiB chunk sequence. Replacement
+jobs retain the original 64 MiB per-chunk bound.
+
+Each selected manifest is checked against the original job, the logical frozen
+capture path, its saved plan and frozen-copy provenance, the full worker-result
+pin and the worker's hash-bound plan. Replacement evidence binds the request,
+typed one- or four-chunk budget, final receiver acknowledgement, drained relay,
+RAM source result and exact source/controller/SSH termination identities, plus
+the retained host observation and its endpoint identities. A paused attempt is
+insufficient. The common whole-LUN range coverage and six-LUN baseline gates
+still run after this metadata validation.
+
+V2 emits `tb371fc-full-lun-boot-plan-v2` and
+`tb371fc-full-lun-boot-result-v2`, retaining the common outcome fields and adding
+the explicit binding schema. The plan also records the selected-map, mapped
+completion and frozen-index digests. A successful metadata dry run proves this
+handoff's consistency; complete raw-byte digest verification remains the
+existing runner's responsibility before QEMU can start.
+
+The private native coordinator needs a separate owner-selected v2 binding and
+once-run invocation for this exact ready path. Publishing this consumer or a
+mapped ready receipt does not wire that coordinator automatically, authorize a
+retry, or establish a device boot result.
+
 ## Execute once under the native-run lock
 
 Use new private output paths for every attempt:

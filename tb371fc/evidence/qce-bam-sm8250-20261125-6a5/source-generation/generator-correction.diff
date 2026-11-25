@@ -1,0 +1,27 @@
+--- first-run-source.py
++++ second-run-source.py
+@@ -467,6 +467,7 @@
+     unique_match(r'^\s+- const: qcom,bam-v1\.7\.0\s*$', compatible, 'binding fallback')
+     for prop, description in (('num-channels', 'DMA channels'), ('qcom,num-ees', 'Execution Environments')):
+         body = unique_match(r'^  ' + re.escape(prop) + r':\n(.*?)(?=^  [^ ]|\Z)', binding_props, 'binding ' + prop, re.S)[1]
++        body = re.sub(r'\s+', ' ', body)
+         require(description in body and 'remotely controlled bam' in body, 'binding topology meaning: ' + prop)
+ 
+     version_fields = []
+@@ -550,14 +551,14 @@
+     require(len(re.findall(r'\breadl_relaxed\s*\(', get_bam)) == 1, 'first registration CNFG read count')
+     unique_match(r'if\s*\(!pce_dev->support_cmd_dscr\s*\|\|\s*pce_dev->is_shared\)\s*bam.manage\s*=\s*SPS_BAM_MGR_DEVICE_REMOTE', get_bam, 'remote BAM management branch')
+     setup = block(source['vendor_qce'], r'\bqce_setup_ce_sps_data\s*\([^;{}]*\)\s*\{', 'QCE setup data')
+-    unique_match(r'if\s*\(pce_dev->support_cmd_dscr\)\s*\{\s*rc\s*=\s*qce_setup_cmdlistptrs\(pce_dev\)', setup, 'conditional command-list setup')
++    unique_match(r'if\s*\(pce_dev->support_cmd_dscr\)\s*qce_setup_cmdlistptrs\(pce_dev,\s*i,\s*&vaddr\)\s*;', setup, 'conditional command-list setup call')
+     require(re.search(r'\b(?:writel|writel_relaxed|readl|readl_relaxed|sps_transfer|sps_transfer_one)\s*\(', setup) is None, 'unexpected setup MMIO/submit')
+     dummy = block(source['vendor_qce'], r'\bsetup_dummy_req\s*\([^;{}]*\)\s*\{', 'dummy request RAM preparation')
+     require(re.search(r'\b(?:writel|writel_relaxed|readl|readl_relaxed|sps_transfer|sps_transfer_one)\s*\(', dummy) is None, 'unexpected dummy MMIO/submit')
+     support = block(source['vendor_qce'], r'\bqce_hw_support\s*\([^;{}]*\)\s*\{', 'QCE software support')
+     hardcoded = []
+     for name in ('sha_hmac', 'cmac', 'aes_xts', 'bam', 'aes_ccm'):
+-        unique_match(r'support->' + name + r'\s*=\s*true\s*;', support, 'hardcoded software support ' + name)
++        unique_match(r'\bce_support->' + name + r'\s*=\s*true\s*;', support, 'hardcoded software support ' + name)
+         hardcoded.append(name)
+     geometry = dict(bam_base=bam_reg[1], bam_bytes=bam_reg[3], qce_base=0x1de0000,
+                     qce_bytes=0x20000, union_base=bam_reg[1],

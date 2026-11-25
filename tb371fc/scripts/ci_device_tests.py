@@ -22,6 +22,8 @@ import tempfile
 import time
 import traceback
 
+from qce_bam_ci_contract import judge_qce_details
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -1267,6 +1269,65 @@ def plan(args, runtime):
                       "system_suspend_tested": False,
                       "inflight_checkpoint_tested": False},
             expected_lengths={"host_observations": 3})
+    # Append only: every existing component and Linux gate keeps its position,
+    # command and strict acceptance contract. UNBOUND may pass the safety
+    # gate, but the independent complete reference gate remains a hard failure.
+    if args.suite in ("all", "components"):
+        add("qce-bam-source-generation", scripts / "verify_qce_bam_sm8250_generation.py",
+            output="--out", result="file", count=2,
+            expected={"schema": "tb371fc-qce-bam-source-generation-v1",
+                      "qemu_device_network_used": False,
+                      "physical_identity_measured": False,
+                      "automatic_test_retries": 0, "profile_bound": True,
+                      "reference_profile_sha256": "f9809a8de0e6b91c57e7baf3d675dfd16c4ce1bc6e2797a0d866ec42bebf1c3b",
+                      "reference_profile_file_sha256": "6bb5bff5a445a73fab54261376ef73a820c6b2ac050048e5fca45715755f76be",
+                      "reference_scope": "cold-control-only",
+                      "public_source_pins_verified": True,
+                      "all_source_identities_verified_before_source_parse": True,
+                      "production_pins_modified_by_tests": False,
+                      "negative_count": 127,
+                      "negative_category_counts": {
+                          "profile-policy": 36, "profile-json": 3,
+                          "complete-input-identity": 24, "complete-input-container": 3,
+                          "parser-fixture": 42, "integer-expression": 12,
+                          "derived-profile-comparison": 7},
+                      "outputs": [
+                          {"path": "hw/misc/qcom-sm8250-qce-bam-profile.inc", "bytes": 1115,
+                           "sha256": "263aea301635e787eb3aa5c353f025756fd9227ba68523e969eae297bf774430",
+                           "git_blob": "8b7dece5352eafb1c97697367b4437de79e2a2e3"},
+                          {"path": "tb371fc/docs/qce-bam-sm8250-source-manifest.json", "bytes": 34389,
+                           "sha256": "04494414fc9d4f7102a26f5f3e1d6b0df36177a7c1465a226e7012f01e03bcf9",
+                           "git_blob": "0f8bda09f89ff62f8b546313bdf8af49fa8e4fe3"}]},
+            expected_lengths={"inputs": 12, "outputs": 2, "negative_checks": 127,
+                              "parser_positive_checks": 2})
+        qce_expected = {"schema": "tb371fc-qce-bam-sm8250-v1",
+                        "profile_bound": True,
+                        "reference_profile_sha256": "f9809a8de0e6b91c57e7baf3d675dfd16c4ce1bc6e2797a0d866ec42bebf1c3b",
+                        "reference_profile_file_sha256": "6bb5bff5a445a73fab54261376ef73a820c6b2ac050048e5fca45715755f76be",
+                        "vmstate_version": 1, "vmstate_minimum_version": 1,
+                        "vmstate_payload_bytes": 248, "profile_guard_bytes": 116,
+                        "pure_observation_getters": 70, "readonly_properties": 69,
+                        "guest_cpu_executed": False, "native_kernel_probe_observed": False,
+                        "android_boot_passed": False, "dma_execution_modeled": False,
+                        "crypto_execution_modeled": False, "secure_firmware_executed": False,
+                        "physical_identity_measured": False, "gic_handling_verified": False,
+                        "test_oracle_reads_device_implementation": False,
+                        "qtest_ok_is_memtx_result": False, "automatic_test_retries": 0,
+                        "process_cleanup_verified": True, "binary_unchanged": True}
+        device("qce-bam-safety", "test_qce_bam_sm8250.py", "--mode", "safety",
+               output="--out", result="file", count=4,
+               expected={**qce_expected, "suite": "qce-bam-safety", "expected_checks": 4},
+               expected_lengths={"migrations": 0, "rejected_migrations": 0,
+                                 "corrupted_stream_rejections": 0,
+                                 "structural_stream_rejections": 0,
+                                 "actual_stream_files": 0, "process_cleanup": 4})
+        device("qce-bam-reference", "test_qce_bam_sm8250.py", "--mode", "reference",
+               output="--out", result="file", count=74, timeout=900,
+               expected={**qce_expected, "suite": "qce-bam-reference", "expected_checks": 74},
+               expected_lengths={"migrations": 4, "rejected_migrations": 2,
+                                 "corrupted_stream_rejections": 58,
+                                 "structural_stream_rejections": 3,
+                                 "actual_stream_files": 65, "process_cleanup": 76})
     return cases
 
 
@@ -1467,6 +1528,7 @@ def judge(case, stdout):
         if not expected_json_value(data.get(key), value):
             raise ValueError(f"Expected {key}={value!r}; got {data.get(key)!r}")
     judge_geni_hs_details(case, data)
+    judge_qce_details(case, data)
     return details
 
 

@@ -1,0 +1,95 @@
+{
+  "schema": "tb371fc-qce-bam-compiled-acceptance-preparation-v3",
+  "status": "NOT-EXECUTED",
+  "requires_bound_successor": false,
+  "mandatory_groups": [
+    {
+      "name": "default-off-and-bound-admission",
+      "requirements": [
+        "omitted and explicit off preserve previous machine behavior",
+        "bound admission reports the exact reviewed virtual words and digest",
+        "no numeric profile override"
+      ]
+    },
+    {
+      "name": "exact-source-cold-sequences",
+      "requirements": [
+        "qcedev7/6 and qcrypto5/4 literal RMW order",
+        "both client orders share identities and independent pipe state",
+        "final EE mask (M0 & ~0xf0) | 0xa0",
+        "descriptor LO/4-bit HI/fifo0x9000/threshold0x10 exact reads",
+        "no MMIO in private inputs or physical device"
+      ]
+    },
+    {
+      "name": "strict-access-and-atomic-failures",
+      "requirements": [
+        "1/2/8 byte and unaligned access rejection",
+        "readonly identities and status; writeonly W1C",
+        "unsupported pipe/EE/control/register holes",
+        "reserved bits/stream/BAM2BAM/held-reset/invalid ring reject",
+        "before-after complete pure state equality",
+        "each single-MR aligned1/2/8-byte or unaligned4-byte operation produces exactly one matching device rejection diagnostic",
+        "qtest OK is protocol acknowledgement, not MEMTX success"
+      ]
+    },
+    {
+      "name": "no-submission-or-guest-output",
+      "requirements": [
+        "each pipe EVNT_REG writes0/8/max all reject",
+        "QCE ordinary/QC/OEM GO and key/data/IV reject",
+        "complete descriptor/output/adjacent-RAM witnesses unchanged",
+        "zero completion status and IRQ; no claim of guest GIC route"
+      ]
+    },
+    {
+      "name": "reset-and-isolation",
+      "requirements": [
+        "per-pipe assert/release clears only that pipe",
+        "EE global mask and other pipes retained",
+        "held-reset writes reject",
+        "system reset explicit reference initial state",
+        "no clock/timer/backend activity"
+      ]
+    },
+    {
+      "name": "pure-observation-and-migration",
+      "requirements": [
+        "all own read-only getters repeated without MMIO/continue",
+        "complete248-byte payload source-to-target state equality",
+        "116-byte guard validates before mutable state load",
+        "profile0to1 and1to0 mismatch rejection",
+        "individual immutable-field corruption rejected",
+        "invalid pending/reset/feature/width/ring state rejected before IRQ update",
+        "complete stream bytes retained; no absent evidence inferred",
+        "normal processes acknowledge QMP quit and are drained and reaped without kill",
+        "expected fatal rejected loads retain pre-load pure snapshots, zero pre-load memory/MMIO/cont counts, exact diagnostic and nonzero exit, complete drain and reap",
+        "no post-exit observer value is fabricated; guard ordering claim is limited to this device payload"
+      ]
+    },
+    {
+      "name": "source-and-preservation",
+      "requirements": [
+        "complete pinned public inputs and source-only generation/negative checks",
+        "base64-file tree/current actual source gate",
+        "previous107 complete normalized CI contracts retained in order",
+        "all five original native runners unchanged",
+        "natural push and PR full successfulCI then independent artifact review"
+      ]
+    }
+  ],
+  "compiled_test_results": null,
+  "native_result": null,
+  "profile_bound": true,
+  "profile_name": "virtual-qce-bam-cold-control-v1",
+  "virtual_only": true,
+  "unbound_runtime_scope": {
+    "historical_candidates": [
+      "001",
+      "002"
+    ],
+    "separate_unbound_QEMU_build_executed": false,
+    "unbound_realize_runtime_success_claimed": false,
+    "bound_binary_only_covers_actual_off_and_bound_admission": true
+  }
+}

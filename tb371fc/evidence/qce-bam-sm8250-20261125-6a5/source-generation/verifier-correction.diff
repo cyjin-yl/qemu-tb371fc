@@ -1,0 +1,13 @@
+--- verifier-first-run-source.py
++++ verifier-second-run-source.py
+@@ -241,7 +241,9 @@
+     add('parser-command-bit-mismatch', 'vendor_regs', change_macro(texts['vendor_regs'], 'CRYPTO_BAM_CD_ENABLE', '26'))
+     add('parser-CNFG-not-source-term-expression', 'linux_bam', change_once(texts['linux_bam'], '#define BAM_CNFG_BITS_DEFAULT\t(BAM_PIPE_CNFG |\t\\', '#define BAM_CNFG_BITS_DEFAULT\t(0x4 |\t\\'))
+     add('parser-CNFG-duplicate-term', 'linux_bam', change_once(texts['linux_bam'], '#define BAM_CNFG_BITS_DEFAULT\t(BAM_PIPE_CNFG |\t\\', '#define BAM_CNFG_BITS_DEFAULT\t(BAM_PIPE_CNFG | BAM_PIPE_CNFG |\t\\'))
+-    add('parser-MTI-boundary-duplicate', 'vendor_sps_bam', change_once(texts['vendor_sps_bam'], '#define BAM_VERSION_MTI_SUPPORT(ver) (ver <= 2)', '#define BAM_VERSION_MTI_SUPPORT(ver) (ver <= 2)\n#define BAM_VERSION_MTI_SUPPORT(ver) (ver <= 2)'))
++    mti_rows = re.findall(r'^#define\s+BAM_VERSION_MTI_SUPPORT\(ver\)[^\n]*$', texts['vendor_sps_bam'], re.M)
++    check(len(mti_rows) == 1, 'fixture MTI macro match')
++    add('parser-MTI-boundary-duplicate', 'vendor_sps_bam', change_once(texts['vendor_sps_bam'], mti_rows[0], mti_rows[0] + '\n' + mti_rows[0]))
+     add('parser-high-address-only-in-other-scope', 'vendor_sps_api', change_once(texts['vendor_sps_api'], '#define SPS_GET_UPPER_ADDR(addr) ((addr & 0xF00000000ULL) >> 32)', '#define SPS_OTHER_UPPER_ADDR(addr) ((addr & 0xF00000000ULL) >> 32)'))
+     add('parser-high-address-widened', 'vendor_sps_api', change_once(texts['vendor_sps_api'], '#define SPS_GET_UPPER_ADDR(addr) ((addr & 0xF00000000ULL) >> 32)', '#define SPS_GET_UPPER_ADDR(addr) ((addr & 0xFF00000000ULL) >> 32)'))
+     add('parser-BAM-node-missing', 'linux_dt', change_once(dtsi, 'cryptobam: dma-controller@1dc4000 {', 'otherbam: dma-controller@1dc4000 {'))
