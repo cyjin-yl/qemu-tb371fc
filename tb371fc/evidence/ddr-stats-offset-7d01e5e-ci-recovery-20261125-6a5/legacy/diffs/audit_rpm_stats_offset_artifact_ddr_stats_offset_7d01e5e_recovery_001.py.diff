@@ -1,0 +1,46 @@
+--- /dev/shm/rpmstats-ci-publication-001/payload/auditors/audit_rpm_stats_offset_artifact.py
++++ /dev/shm/ddrstats-legacy-recovery-001/auditors/audit_rpm_stats_offset_artifact_ddr_stats_offset_7d01e5e_recovery_001.py
+@@ -22,8 +22,8 @@
+     raise SystemExit("Independent audit requires assertions enabled; do not use Python -O.")
+ 
+ CHUNK, MAX_SMALL = 1024 * 1024, 64 * 1024 * 1024
+-HEAD = "66d9e20a9541b503ed4f5cac5c79c8a5b4a0809b"
+-TREE = "7c13a3b85075e0eaefcc14d4f55c160bed699a08"
++HEAD = "7d01e5e294b788f97a8120c2d34122ddb25e6343"
++TREE = "5c25fff35bb41c3a8b018f0be965b4a9d3e9d5c4"
+ FAILED_HEAD = "75cc1dc83600784afa06e81c9998d8d39aba6af2"
+ TYPE, DEVICE = "qcom-sm8250-rpm-stats-offset", "/machine/rpm-stats-offset"
+ BASE, RAM, IDENTITY, OFFSET_VALUE = 0x0c3f0004, 0x80010000, 0x52534f31, 0x000f0048
+@@ -65,17 +65,17 @@
+     "hw/misc/qcom-sm8250-rpm-stats-offset.c": (9377, MODEL_SHA),
+     "include/hw/misc/qcom-sm8250-rpm-stats-offset.h": (364, "946df3bee216839b46001d4ea3065bda6563413a0c753a7b221fffea3b77ad0b"),
+     "hw/misc/qcom-sm8250-rpm-stats-offset-data.inc": (346, "dc38191138f43d396b94971b15b9b6617924131669b602cb1bccf185f75d22e5"),
+-    "hw/arm/lenovo-tb371fc.c": (102867, "ff2f8d8bc66826068a2bedbdc10145c7cc1dc3fe615c7a4a5fb558c8da5d4f7c"),
+-    "hw/arm/Kconfig": (15468, "195baffbd21c9c2457bf97e7a5806825e95ce512afe1a624e4fcca30b97437b2"),
+-    "hw/misc/Kconfig": (4193, "c63ddb724530945aaa4cd3373330b683627fa03e57a568d6a274cc361a8ff144"),
+-    "hw/misc/meson.build": (10826, "f24d688b2364890bde05b4c1d81c1ba0600f1385c3b46c2e778216fded4d6e0f"),
++    "hw/arm/lenovo-tb371fc.c": (103334, "51ee3224180a2e927572ee56f011b3d222f68fb97fef7e75ad188f972abaeaf1"),
++    "hw/arm/Kconfig": (15508, "6cbe01a64aeea18706c4d255276819a6addf66bf6d4636381b75fbf12a6984af"),
++    "hw/misc/Kconfig": (4239, "451eb84dce84cb9dde20e65220a39314b5acb8e36885efd172d878549b10fa5d"),
++    "hw/misc/meson.build": (10935, "ca26e093985792bb0ece8c598cc83a384c455b8b693e950d83678327946f121a"),
+     "tb371fc/docs/rpm-stats-offset-sm8250-registers.json": (4870, "df0c4dad7572a918f579e98174663496893039d27315db6427726de9641a6adb"),
+     "tb371fc/tests/test_rpm_stats_offset_sm8250.py": (39266, TEST_SHA),
+     "tb371fc/scripts/gen_rpm_stats_offset.py": (19192, "47f77997d2708da12235cde157b25228ef75b93bb689a92f1338769dcc99537c"),
+     "tb371fc/scripts/verify_rpm_stats_offset_generation.py": (4965, "2673e6cc5457db0a1e281013c14d30941e7251bf7f40f2a4bf2265f40831630c"),
+     "tb371fc/scripts/source_download.py": (4642, "4fde0300dc4c8777531402dc700fbed6364f16b0550fc852c3031fe641fe7dd7"),
+-    "tb371fc/scripts/ci_device_tests.py": (78585, "a69c1916407867d25b5484b45d25b427bb4921adc04b15b1f7c7589a758c1faa"),
+-    "tb371fc/scripts/test_ci_device_tests.py": (44460, "ed7e8d5ad970e7f138fe418db026f0b1825ee5b037d6d58b15044e59ddf5602b"),
++    "tb371fc/scripts/ci_device_tests.py": (81555, "c1478cab27f3937d2935571a0727233ae23bb392380762db10c76cda978d4a90"),
++    "tb371fc/scripts/test_ci_device_tests.py": (52408, "9945c4a3fb45cfabf08fc27271243be8a72487d872aecfc56c9332c61b36f761"),
+     "tb371fc/evidence/rpm-stats-offset-20261125-6a5/test-ci-contract.json": (3391, "2d137f7cd52b52c281414fd2508a04fde7c5ae567a123f6c3a2c7a31128e032a"),
+ }
+ PUBLIC_INPUTS = (
+@@ -1359,7 +1359,7 @@
+     parser.add_argument("--expected-zip-sha256", required=True)
+     parser.add_argument("--out", type=Path, required=True)
+     parser.add_argument("--expected-qemu-sha256")
+-    parser.add_argument("--source-root", type=Path, default=Path("/dev/shm/rpmstats-candidate-6a5"))
++    parser.add_argument("--source-root", type=Path, default=Path("/dev/shm/ddrstats-candidate-6a5"))
+     args = parser.parse_args()
+     if args.out.exists():
+         raise SystemExit("Refusing to overwrite existing independent audit evidence: " + str(args.out))

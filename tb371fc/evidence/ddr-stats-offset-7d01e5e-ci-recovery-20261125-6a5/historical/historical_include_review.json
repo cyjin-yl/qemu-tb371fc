@@ -1,0 +1,72 @@
+{
+  "schema": "tb371fc-rpm-stats-offset-include-path-correction-review-v1",
+  "observed_utc": "2026-11-25T02:26:39.745959+00:00",
+  "classification": "independent static correction review; compiled validation pending",
+  "static_correction_accepted": true,
+  "runtime_pass_claimed": false,
+  "compiled_pass_claimed": false,
+  "failed_head": "75cc1dc83600784afa06e81c9998d8d39aba6af2",
+  "failed_job_id": 138930599415,
+  "failure_basis": "Root reported the actual board build failed because hw/sysbus.h was absent. This review independently verifies the correction bytes and retrieves the target header at that exact source head; it does not reclassify the failed build.",
+  "prior_review": {
+    "file": "implementation-review.json",
+    "sha256": "f4cab89199de9e618947895ae05639c550a349c003d2fc97494d06939b0af95a",
+    "preserved": true,
+    "limitation_disclosed": "The prior static review missed the repository-specific SysBus include path and therefore did not establish compilability."
+  },
+  "change": {
+    "path": "include/hw/misc/qcom-sm8250-rpm-stats-offset.h",
+    "old_include": "hw/sysbus.h",
+    "new_include": "hw/core/sysbus.h",
+    "line": 5,
+    "old_bytes": 359,
+    "old_sha256": "59a6434a4d33242710c993e068d5e2df89298b499f8405a7187217ce2161e1a9",
+    "new_bytes": 364,
+    "new_sha256": "946df3bee216839b46001d4ea3065bda6563413a0c753a7b221fffea3b77ad0b",
+    "exact_single_replacement_verified_by_reversal": true,
+    "other_header_bytes_unchanged": true
+  },
+  "independently_retrieved_target": {
+    "repository": "cyjin-yl/qemu-tb371fc",
+    "ref": "75cc1dc83600784afa06e81c9998d8d39aba6af2",
+    "path": "include/hw/core/sysbus.h",
+    "bytes": 3534,
+    "sha256": "0ee0714477509f135aba94d2d3ab859eb6b047276681b67cda7292b882108bc9",
+    "git_blob_sha": "f3c4259d291f9e616ccd021a32a1826a82ceeb39",
+    "git_blob_recomputed": true,
+    "sysbus_device_declaration_and_structure_present": true
+  },
+  "local_consistency": {
+    "existing_board_uses_corrected_include": true,
+    "existing_spss_header_uses_corrected_include": true
+  },
+  "unchanged_runtime_test_and_harness_pins": {
+    "hw/misc/qcom-sm8250-rpm-stats-offset.c": {
+      "bytes": 9377,
+      "sha256": "5144319fb0856c107512edbdfe86d48adef1237846da7c312394ff8ccae5db09",
+      "unchanged_from_published_candidate": true
+    },
+    "hw/misc/qcom-sm8250-rpm-stats-offset-data.inc": {
+      "bytes": 346,
+      "sha256": "dc38191138f43d396b94971b15b9b6617924131669b602cb1bccf185f75d22e5",
+      "unchanged_from_published_candidate": true
+    },
+    "tb371fc/tests/test_rpm_stats_offset_sm8250.py": {
+      "bytes": 39266,
+      "sha256": "8e878e30ad978d7affb389573e4df4cc3bb3009843ac74b5d363ebd723eee39f",
+      "unchanged_from_published_candidate": true
+    },
+    "tb371fc/scripts/ci_device_tests.py": {
+      "bytes": 78585,
+      "sha256": "a69c1916407867d25b5484b45d25b427bb4921adc04b15b1f7c7589a758c1faa",
+      "unchanged_from_published_candidate": true
+    }
+  },
+  "limits": [
+    "No QEMU was executed.",
+    "No device RPC or SSH was performed.",
+    "The correction supplies the existing repository header location; runtime and migration semantics remain subject to the new exact-head compiled artifact.",
+    "The original failed head is not qualified by this correction receipt."
+  ],
+  "local_preparation_note": "The first local serialization of the fetched target included an extra trailing newline and failed its exact-size check. That scratch copy is retained; a separate exact 3534-byte copy matches the fetched Git blob and is the only copy used for this receipt."
+}

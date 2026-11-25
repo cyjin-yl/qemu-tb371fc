@@ -1,0 +1,199 @@
+--- assemble_ddr_stats_offset_7d01e5e_recovery_qualification_unbound_001.py
++++ assemble_ddr_stats_offset_7d01e5e_recovery_qualification_unbound_002.py
+@@ -24,6 +24,9 @@
+ TREE = '5c25fff35bb41c3a8b018f0be965b4a9d3e9d5c4'
+ SOURCE_PARENT = BASE_HEAD = '420819df9cfd76dc98cb4705987c269047d7f214'
+ PARENT_TREE = '7c13a3b85075e0eaefcc14d4f55c160bed699a08'
++OBSERVED_DEFAULT_HEAD = 'b5819654a07b2048bb1088cb0c7dfe3625d474ef'
++OBSERVED_DEFAULT_TREE = '8571f7d3b099dcb02e29a0e84ed4503ba9ebdb2e'
++DOCUMENTATION_COMMIT = 'cfec387558972fdd82bb166a913d18e4e11da100'
+ MERGE = 'da1fd3e190faeb5e2cf4dfb3634c54c18987fae8'
+ PR_NUMBER, PUSH_RUN_ID, PR_RUN_ID = 38, 45544186469, 45544202260
+ PUSH_BOARD_JOB, PUSH_A77_JOB, PR_BOARD_JOB, PR_A77_JOB = 138969695072, 138969695369, 138969745149, 138969744777
+@@ -53,8 +56,20 @@
+     'historical_prior_spss_qualification', 'historical_earlier_spss_qualification',
+     'new_ddr_derivation', 'new_ddr_source_validation', 'new_ddr_independent_review', 'new_aggregate_review',
+     'source_materialization_failure', 'source_derivation_failure',
++    'default_ref_advance_proof',
++    'default_ref_advance_raw',
++    'failed_qualification_execution',
++    'failed_qualification_stdout',
++    'failed_qualification_stderr',
++    'failed_qualification_independent_observation',
+ ]
+ FIXED_ASSET_IDENTITIES = {
++    'default_ref_advance_proof': (3040, '7807ca018aa4dbaa251f02cb36c7fa02bf5292b5f2d29a15d1c2a033e58c57fc'),
++    'default_ref_advance_raw': (157269, 'dd80202e1dd5ef0e1cda5fc51695cb365b61f7f768b42953e6733b736e4f64c9'),
++    'failed_qualification_execution': (1103, 'a83e04ba10ab5f32eb709fc57930103eda636313d588026cf0a72a4658106d47'),
++    'failed_qualification_stdout': (0, 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'),
++    'failed_qualification_stderr': (351, '916e692c50a3dfdf9242da1581209349dd7864e09f4eb24931c03f2eda9b86f0'),
++    'failed_qualification_independent_observation': (2839, '103730ee9e9deb644823b502f1601e301c3721d7ed7e7b9f3409bd703cc1a449'),
+     'source_recovery': (48999, '63f5efb9a14a6b82d3be01849a9d32360864fd32068a50ce1fdd67bd115ada68'),
+     'dependency_recovery': (1176, 'c075d77ce31fad923b4c5ab9e2d2ca390daa87f4858bfd4d7a4c9fa9294d07c9'),
+     'historical_rpm_qualification': (31589, '4272efca70e43f31de1ed0ef9db20e3478d8157b64fbb44f84fa853dabf576d6'),
+@@ -122,6 +137,140 @@
+             exact(a, b, label + '.' + str(index))
+     else:
+         assert value == expected, (label, value, expected)
++
++def validate_documentation_advance(refs, gh):
++    """Verify the observed mutable reference without treating it as the CI source."""
++    proof = read(asset_path('default_ref_advance_proof'))
++    raw = read(asset_path('default_ref_advance_raw'))
++    assert proof['schema'] == 'tb371fc-default-ref-documentation-advance-v1' and proof['passed'] is True
++    expected = {
++        'immutable_CI_source_head': HEAD, 'immutable_CI_source_tree': TREE,
++        'immutable_CI_PR_base': BASE_HEAD, 'immutable_CI_PR_base_tree': PARENT_TREE,
++        'observed_default_head': OBSERVED_DEFAULT_HEAD, 'observed_default_tree': OBSERVED_DEFAULT_TREE,
++        'default_commit_parents': [BASE_HEAD, DOCUMENTATION_COMMIT],
++        'evidence_commit': DOCUMENTATION_COMMIT, 'evidence_commit_parent': BASE_HEAD,
++        'default_commit_time': '2026-11-25T04:33:05Z', 'evidence_commit_time': '2026-11-25T04:32:03Z',
++        'tree_objects_recomputed': 7, 'unchanged_file_or_subtree_entries': 235,
++        'added_file_count': 3, 'modified_files': 0, 'deleted_files': 0,
++        'all_changes_are_three_public_evidence_documents': True,
++        'executable_model_runner_workflow_changes': False,
++        'original_PR_source_or_CI_merge_changed': False, 'current_main_is_qualified_source_claimed': False,
++        'qualification_scope_is_exact_original_artifact': True,
++        'failed_qualification_not_reclassified_as_pass': True,
++        'CI_rerun': False, 'QEMU_executed': False, 'native_executed': False,
++    }
++    for key, value in expected.items():
++        exact(proof[key], value, 'documentation-advance.' + key)
++    exact(proof['raw_evidence'], asset_pins['default_ref_advance_raw'], 'documentation-advance.raw identity')
++    assert raw['default_ref']['ref'] == refs['main_ref']['ref'] == 'refs/heads/tb371fc'
++    assert raw['default_ref']['object']['type'] == refs['main_ref']['object']['type'] == 'commit'
++    assert raw['default_ref']['object']['sha'] == refs['main_ref']['object']['sha'] == OBSERVED_DEFAULT_HEAD
++    for key, commit, tree, parents in [
++        ('default_merge', OBSERVED_DEFAULT_HEAD, OBSERVED_DEFAULT_TREE, [BASE_HEAD, DOCUMENTATION_COMMIT]),
++        ('evidence_commit', DOCUMENTATION_COMMIT, OBSERVED_DEFAULT_TREE, [BASE_HEAD]),
++        ('source_base_commit', BASE_HEAD, PARENT_TREE, None),
++    ]:
++        row = raw[key]
++        assert row['sha'] == commit and row['tree']['sha'] == tree
++        if parents is not None:
++            exact([p['sha'] for p in row['parents']], parents, 'documentation-advance.' + key + '.parents')
++    assert raw['default_merge']['committer']['date'] == proof['default_commit_time']
++    assert raw['evidence_commit']['committer']['date'] == proof['evidence_commit_time']
++    parse_time = lambda value: datetime.datetime.fromisoformat(value.replace('Z', '+00:00'))
++    assert parse_time(proof['evidence_commit_time']) > max(parse_time(gh[role]['run']['updated_at']) for role in ['push', 'pr'])
++    assert parse_time(proof['default_commit_time']) > parse_time(proof['evidence_commit_time'])
++
++    # Recompute the complete Git tree objects and then compare every changed
++    # subtree. Identical subtrees keep their immutable identities; no unseen
++    # subtree is assumed to have unchanged contents merely from a PASS flag.
++    trees = raw['trees']
++    assert type(trees) is dict and len(trees) == 7
++    for identity, tree in trees.items():
++        assert tree['sha'] == identity and tree['truncated'] is False
++        rows = tree['tree']
++        assert type(rows) is list and len({r['path'] for r in rows}) == len(rows)
++        encoded = bytearray()
++        for row in sorted(rows, key=lambda r: (r['path'] + ('/' if r['type'] == 'tree' else '')).encode()):
++            assert '/' not in row['path'] and '\0' not in row['path']
++            assert re.fullmatch('[0-9a-f]{40}', row['sha'])
++            assert row['mode'] in ['040000', '100644', '100755', '120000', '160000']
++            encoded += row['mode'].lstrip('0').encode() + b' ' + row['path'].encode() + b'\0' + bytes.fromhex(row['sha'])
++        digest = hashlib.sha1(b'tree ' + str(len(encoded)).encode() + b'\0' + encoded).hexdigest()
++        assert digest == identity, ('documentation-advance actual Git tree', identity, digest)
++    delta, unchanged = [], 0
++    def walk(previous, current, prefix=''):
++        nonlocal unchanged
++        before = {r['path']: r for r in trees[previous]['tree']} if previous is not None else {}
++        after = {r['path']: r for r in trees[current]['tree']} if current is not None else {}
++        for name in sorted(set(before) | set(after)):
++            a, b = before.get(name), after.get(name)
++            path = prefix + name
++            if a is not None and b is not None and all(a[k] == b[k] for k in ['mode', 'type', 'sha']):
++                unchanged += 1
++            elif (a is None or a['type'] == 'tree') and (b is None or b['type'] == 'tree'):
++                walk(a['sha'] if a is not None else None, b['sha'] if b is not None else None, path + '/')
++            else:
++                delta.append({'path': path, 'previous': a, 'current': b})
++    walk(PARENT_TREE, OBSERVED_DEFAULT_TREE)
++    assert unchanged == 235
++    exact(delta, proof['added_files'], 'documentation-advance complete independently compared delta')
++    exact(raw['reported_delta'], {'diff': delta, 'same': unchanged}, 'documentation-advance recorded versus recomputed delta')
++    expected_added = {
++        'tb371fc/evidence/rpm-stats-8e8eeb-native-20261125/README.md': (10895, '2dda3fba351e9290bfe53ec693838bf6194102a7'),
++        'tb371fc/evidence/rpm-stats-8e8eeb-native-20261125/manifest.json': (15800, '8f136785976cdfa4c53cabf535ce4c44f629438f'),
++        'tb371fc/evidence/rpm-stats-8e8eeb-native-20261125/native-audit-completion.json': (29270, '806e2516f09b9b559540d0b712867dff17bcf13a'),
++    }
++    assert len(delta) == 3 and {r['path'] for r in delta} == set(expected_added)
++    for row in delta:
++        assert row['previous'] is None
++        assert row['current']['type'] == 'blob' and row['current']['mode'] == '100644'
++        assert (row['current']['size'], row['current']['sha']) == expected_added[row['path']]
++    return {
++        'proof': asset_pins['default_ref_advance_proof'], 'raw_evidence': asset_pins['default_ref_advance_raw'],
++        'observed_default_ref': 'refs/heads/tb371fc', 'observed_default_head': OBSERVED_DEFAULT_HEAD,
++        'observed_default_tree': OBSERVED_DEFAULT_TREE, 'immutable_PR_base': BASE_HEAD,
++        'immutable_qualified_head': HEAD, 'immutable_qualified_tree': TREE,
++        'documentation_commit': DOCUMENTATION_COMMIT, 'documentation_added_after_completed_CI': True,
++        'actual_Git_tree_objects_recomputed': 7, 'unchanged_file_or_subtree_entries': unchanged,
++        'exact_added_paths': sorted(expected_added), 'modified_files': 0, 'deleted_files': 0,
++        'executable_model_runner_workflow_changes': False, 'original_PR_source_or_CI_merge_changed': False,
++        'PR_state_observed': 'open', 'PR_draft_observed': True, 'PR_merged_observed': False,
++        'current_default_head_is_qualified_source': False, 'current_default_head_CI_or_mergeability_claimed': False,
++    }
++
++
++def retain_failed_qualification():
++    failure = read(asset_path('failed_qualification_execution'))
++    assert failure['schema'] == 'tb371fc-ddr-recovery-qualification-execution-v1'
++    assert failure['exit_code'] == 1 and failure['qualification'] is None
++    for key in ['CI_rerun', 'QEMU_executed', 'native_executed', 'original_lost_qualification_recreated']:
++        assert failure[key] is False
++    assert failure['argv'][1:4] == ['-I', '-S', '-B']
++    assert failure['argv'][5] == '--binding' and len(failure['argv']) == 7
++    old_source = pin(failure['argv'][4], '41f801c970a26e3e6e161d919c6922c71569a74caf32723f63c2a4616b1ae5e6')
++    old_binding = pin(failure['argv'][6], '1d7854e9c0fc0a9981fa2d80256def314dd31053ff969e91bcdf52aec057ba14')
++    assert old_source['bytes'] == 50775 and old_binding['bytes'] == 12413
++    exact(failure['logs'], [asset_pins['failed_qualification_stdout'], asset_pins['failed_qualification_stderr']],
++          'failed qualification complete retained logs')
++    assert asset_path('failed_qualification_stdout').read_bytes() == b''
++    assert "assert refs['main_ref']['object']['sha'] == refs['pr']['base']['sha'] == BASE_HEAD" in asset_path('failed_qualification_stderr').read_text()
++    observation = read(asset_path('failed_qualification_independent_observation'))
++    assert observation['schema'] == 'tb371fc-ddr-qualification-main-ref-failure-independent-observation-v1'
++    assert observation['mutable_main_ref_observed'] == OBSERVED_DEFAULT_HEAD
++    assert observation['qualification_output_absent_at_review'] is True
++    assert observation['assertion_failure_is_expected_for_observed_values'] is True
++    assert observation['source_changed_by_reviewer'] is False and observation['qualifier_reexecuted_by_reviewer'] is False
++    assert observation['old_failure_reclassified_or_erased'] is False
++    return {
++        'execution': asset_pins['failed_qualification_execution'],
++        'stdout': asset_pins['failed_qualification_stdout'], 'stderr': asset_pins['failed_qualification_stderr'],
++        'independent_observation': asset_pins['failed_qualification_independent_observation'],
++        'source': old_source, 'binding': old_binding, 'exit_code': 1, 'qualification_created': False,
++        'failure_reason': 'The prior guard equated the mutable default ref with the immutable CI PR base.',
++        'failed_execution_reclassified_as_pass': False, 'failed_evidence_overwritten': False,
++        'scope_of_correction': 'Separate the observed documentation-only default-ref advance from unchanged exact artifact and PR/CI identities.',
++    }
++
+ 
+ parser = argparse.ArgumentParser(description=__doc__)
+ parser.add_argument('--binding', type=Path, required=True)
+@@ -382,9 +531,14 @@
+ assert [r['sha'] for r in gh['head']['parents']] == [SOURCE_PARENT]
+ assert gh['merge']['sha'] == MERGE and gh['merge']['tree']['sha'] == TREE
+ assert [r['sha'] for r in gh['merge']['parents']] == [BASE_HEAD, HEAD]
+-assert refs['main_ref']['object']['sha'] == refs['pr']['base']['sha'] == BASE_HEAD
++assert refs['pr']['base']['sha'] == BASE_HEAD
++assert refs['main_ref']['object']['sha'] == OBSERVED_DEFAULT_HEAD
++assert refs['pr']['state'] == 'open'
++assert refs['pr']['draft'] is True and refs['pr']['merged'] is False
+ assert refs['pr']['head']['sha'] == HEAD and refs['pr']['number'] == PR_NUMBER
+ assert refs['pr']['base']['ref'] == 'tb371fc' and refs['pr']['merge_commit_sha'] == MERGE
++default_ref_advance_observation = validate_documentation_advance(refs, gh)
++retained_failed_qualification = retain_failed_qualification()
+ workflow_runs = []
+ for prefix, run_id, event, board_job, cpu_job in [
+     ('push', PUSH_RUN_ID, 'push', PUSH_BOARD_JOB, PUSH_A77_JOB),
+@@ -630,6 +784,8 @@
+     'workflow_runs': workflow_runs, 'github_evidence': asset_pins['github_metadata'],
+     'pr_base_evidence': asset_pins['pr_base_identity'], 'artifact_api_evidence': asset_pins['artifact_api'],
+     'assembler': pin(__file__), 'qualification_binding': binding_pin,
++    'mutable_default_ref_observation': default_ref_advance_observation,
++    'retained_failed_qualification': retained_failed_qualification,
+     'bounded_artifact_download_evidence': asset_pins['artifact_download'],
+     'all_eight_independent_audits_passed': True, 'audits': audits,
+     'a77_actual_raw_log_audit': asset_pins['a77_receipt'], 'a77_each_job_executed_in_this_attempt': True,

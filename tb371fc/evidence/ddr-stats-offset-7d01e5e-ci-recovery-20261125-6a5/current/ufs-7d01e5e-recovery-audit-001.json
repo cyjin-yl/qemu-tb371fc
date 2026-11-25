@@ -1,0 +1,514 @@
+{
+  "schema": "tb371fc-extra-linux-ufs-artifact-observation-v2",
+  "passed": true,
+  "started_utc": "2026-11-25T05:07:03.758078+00:00",
+  "auditor_sha256": "356dcedd4ea1eae96263db67e549bd9506f8a28c8a0d9393199bafc23ce5be80",
+  "head": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+  "run_id": 45544186469,
+  "artifact_id": 14991304675,
+  "qemu_executed_by_this_review": false,
+  "guest_executed_by_this_review": false,
+  "read_only_archive": true,
+  "extracted_members": 0,
+  "cases": [
+    {
+      "name": "linux-ufs-migration",
+      "passed": true,
+      "check_count": 39,
+      "source_checks": 21,
+      "target_checks": 18,
+      "same_pid1_boot_nonce_verified": true,
+      "nonce": "3ef785712294efa1586cebebca450088",
+      "boot_id": "b956697c-90dd-49e2-a888-d88721013f2b",
+      "source_monotonic_guest_ns": 641263541,
+      "source_exit_before_target_start_seconds": 0.0007486790000257315,
+      "processes": {
+        "source": {
+          "pid": 33789,
+          "started_monotonic": 1528.451587332,
+          "exited_monotonic": 1532.095727962,
+          "exit_code": 0,
+          "serial_sha256": "b0e4a7f9f109237abb4e5a137ead42205ef2f06b5cba8f7da158842bb305166f",
+          "serial_bytes": 13144,
+          "actual_pass_names": [
+            "procfs",
+            "sysfs",
+            "devtmpfs",
+            "eight_online_cpus",
+            "qcom_host_driver",
+            "qmp_phy_driver",
+            "gcc_driver",
+            "apps_smmu_driver",
+            "ufs_translated_dma_domain_before",
+            "ufs_block_discovered",
+            "logical_sector_4096_before",
+            "capacity_64_mib_before",
+            "aligned_buffers",
+            "source_direct_write",
+            "source_flush",
+            "source_direct_readback",
+            "source_close",
+            "source_boot_id",
+            "source_monotonic",
+            "control_tty_raw",
+            "stored_host_nonce"
+          ],
+          "qmp_completed": true,
+          "qmp_request_count": 35,
+          "own_host_qmp_quit_ack_and_shutdown": true
+        },
+        "target": {
+          "pid": 33802,
+          "started_monotonic": 1532.096476641,
+          "exited_monotonic": 1533.247337021,
+          "exit_code": 0,
+          "serial_sha256": "90c25f5b789b29ad0da74b82a8206f692988ab963e65f3ddef6703c58a032276",
+          "serial_bytes": 1178,
+          "actual_pass_names": [
+            "resume_control_received",
+            "preserved_pid1",
+            "preserved_boot_id",
+            "preserved_monotonic",
+            "eight_online_cpus_after",
+            "ufs_translated_dma_domain_after",
+            "target_open",
+            "logical_sector_4096_after",
+            "capacity_64_mib_after",
+            "target_reads_source_payload",
+            "target_direct_write",
+            "target_flush",
+            "target_direct_readback",
+            "target_close",
+            "target_reopen",
+            "target_reopen_source_payload",
+            "target_reopen_target_payload",
+            "target_final_close"
+          ],
+          "qmp_completed": true,
+          "qmp_request_count": 13,
+          "own_host_qmp_quit_ack_and_shutdown": true
+        }
+      },
+      "source_disk_comparison_receipt": {
+        "passed": true,
+        "size_bytes": 67108864,
+        "bytes_compared": 67108864,
+        "first_mismatch_offset": null,
+        "sha256": "cd8fa520c10bf1662c14b1289d4cad803758599aa546452592319d5a9e1b93cd",
+        "expected_sha256": "cd8fa520c10bf1662c14b1289d4cad803758599aa546452592319d5a9e1b93cd",
+        "payloads": [
+          {
+            "offset": 4194304,
+            "length": 32768,
+            "sha256": "faf3511fec2180665df534811d7ed01fdf14127f1d0596c46b34fb9ba6ee466e"
+          }
+        ],
+        "all_other_bytes_expected": 0
+      },
+      "target_disk_comparison_receipt": {
+        "passed": true,
+        "size_bytes": 67108864,
+        "bytes_compared": 67108864,
+        "first_mismatch_offset": null,
+        "sha256": "ffa6c370e3673bc23fe97c8f1c54be181d9bacb54999a44317cd5cd7f47376b4",
+        "expected_sha256": "ffa6c370e3673bc23fe97c8f1c54be181d9bacb54999a44317cd5cd7f47376b4",
+        "payloads": [
+          {
+            "offset": 4194304,
+            "length": 32768,
+            "sha256": "faf3511fec2180665df534811d7ed01fdf14127f1d0596c46b34fb9ba6ee466e"
+          },
+          {
+            "offset": 8388608,
+            "length": 32768,
+            "sha256": "3bc36b53bcd42aefb59c22a24a423f300ab98f3947656909c1eaa1a6a697d6e7"
+          }
+        ],
+        "all_other_bytes_expected": 0
+      },
+      "recorded_migration_bytes": 191070914,
+      "recorded_migration_sha256": "6c9e5fd5cef4d1dcf20a988d7f586b6336d7d71076741d888d1c6283a68d5692",
+      "qmp_transferred_matches_recorded_migration_bytes": true,
+      "migration_archive_bytes_available": false,
+      "disk_archive_bytes_available": false,
+      "runtime_pm_observations": []
+    },
+    {
+      "name": "linux-ufs-pm-migration",
+      "passed": true,
+      "check_count": 61,
+      "source_checks": 34,
+      "target_checks": 27,
+      "same_pid1_boot_nonce_verified": true,
+      "nonce": "da63aee1f636c153cc9c37b169a9fafa",
+      "boot_id": "c0c767c7-86f9-40a2-951e-ea75dffc2d84",
+      "source_monotonic_guest_ns": 628441822,
+      "source_exit_before_target_start_seconds": 0.000660064000157945,
+      "processes": {
+        "source": {
+          "pid": 33823,
+          "started_monotonic": 1534.169359138,
+          "exited_monotonic": 1539.283435745,
+          "exit_code": 0,
+          "serial_sha256": "14babf1fcb4e68ccd85bf9226f5941fc55893e2983e0075a6ec67558db744683",
+          "serial_bytes": 19006,
+          "actual_pass_names": [
+            "procfs",
+            "sysfs",
+            "devtmpfs",
+            "eight_online_cpus",
+            "qcom_host_driver",
+            "qmp_phy_driver",
+            "gcc_driver",
+            "apps_smmu_driver",
+            "ufs_translated_dma_domain_before",
+            "ufs_block_discovered",
+            "logical_sector_4096_before",
+            "capacity_64_mib_before",
+            "aligned_buffers",
+            "source_direct_write",
+            "source_flush",
+            "source_direct_readback",
+            "source_close",
+            "source_boot_id",
+            "source_monotonic",
+            "control_tty_raw",
+            "stored_host_nonce",
+            "pm_source_reopen",
+            "pm_source_block_identity",
+            "pm_host_control_on",
+            "pm_lun_control_on",
+            "pm_host_active",
+            "pm_lun_active",
+            "pm_target_hibern8",
+            "pm_scsi_autosuspend",
+            "pm_host_control_auto",
+            "pm_source_host_suspended",
+            "pm_source_lun_suspended",
+            "pm_source_wlun_suspended",
+            "pm_source_stays_suspended"
+          ],
+          "qmp_completed": true,
+          "qmp_request_count": 44,
+          "own_host_qmp_quit_ack_and_shutdown": true
+        },
+        "target": {
+          "pid": 33836,
+          "started_monotonic": 1539.284095809,
+          "exited_monotonic": 1540.471113563,
+          "exit_code": 0,
+          "serial_sha256": "b11494b80add786455869533c946b18ffdfb20084fba233af63fc5941eda527a",
+          "serial_bytes": 4783,
+          "actual_pass_names": [
+            "resume_control_received",
+            "preserved_pid1",
+            "preserved_boot_id",
+            "preserved_monotonic",
+            "eight_online_cpus_after",
+            "ufs_translated_dma_domain_after",
+            "pm_target_host_suspended",
+            "pm_target_lun_suspended",
+            "pm_target_wlun_suspended",
+            "pm_suspended_time_preserved",
+            "pm_open_fd_preserved",
+            "pm_direct_read_wakes",
+            "pm_target_host_active",
+            "pm_target_lun_active",
+            "pm_retained_fd_close",
+            "target_open",
+            "logical_sector_4096_after",
+            "capacity_64_mib_after",
+            "target_reads_source_payload",
+            "target_direct_write",
+            "target_flush",
+            "target_direct_readback",
+            "target_close",
+            "target_reopen",
+            "target_reopen_source_payload",
+            "target_reopen_target_payload",
+            "target_final_close"
+          ],
+          "qmp_completed": true,
+          "qmp_request_count": 21,
+          "own_host_qmp_quit_ack_and_shutdown": true
+        }
+      },
+      "source_disk_comparison_receipt": {
+        "passed": true,
+        "size_bytes": 67108864,
+        "bytes_compared": 67108864,
+        "first_mismatch_offset": null,
+        "sha256": "cd8fa520c10bf1662c14b1289d4cad803758599aa546452592319d5a9e1b93cd",
+        "expected_sha256": "cd8fa520c10bf1662c14b1289d4cad803758599aa546452592319d5a9e1b93cd",
+        "payloads": [
+          {
+            "offset": 4194304,
+            "length": 32768,
+            "sha256": "faf3511fec2180665df534811d7ed01fdf14127f1d0596c46b34fb9ba6ee466e"
+          }
+        ],
+        "all_other_bytes_expected": 0
+      },
+      "target_disk_comparison_receipt": {
+        "passed": true,
+        "size_bytes": 67108864,
+        "bytes_compared": 67108864,
+        "first_mismatch_offset": null,
+        "sha256": "ffa6c370e3673bc23fe97c8f1c54be181d9bacb54999a44317cd5cd7f47376b4",
+        "expected_sha256": "ffa6c370e3673bc23fe97c8f1c54be181d9bacb54999a44317cd5cd7f47376b4",
+        "payloads": [
+          {
+            "offset": 4194304,
+            "length": 32768,
+            "sha256": "faf3511fec2180665df534811d7ed01fdf14127f1d0596c46b34fb9ba6ee466e"
+          },
+          {
+            "offset": 8388608,
+            "length": 32768,
+            "sha256": "3bc36b53bcd42aefb59c22a24a423f300ab98f3947656909c1eaa1a6a697d6e7"
+          }
+        ],
+        "all_other_bytes_expected": 0
+      },
+      "recorded_migration_bytes": 191570504,
+      "recorded_migration_sha256": "7b1ebab560542c27e7232ff8d531c5b5e72363f14b1907d84a0bf9ec623e77ef",
+      "qmp_transferred_matches_recorded_migration_bytes": true,
+      "migration_archive_bytes_available": false,
+      "disk_archive_bytes_available": false,
+      "runtime_pm_observations": [
+        {
+          "phase": "source_baseline",
+          "vm": {
+            "status": "running",
+            "running": true
+          },
+          "link_state": "active",
+          "clocks": {
+            "core-clk": "37.5 MHz",
+            "iface-clk": "100 MHz",
+            "unipro-clk": "37.5 MHz"
+          },
+          "qtree_sha256": "d85df7677a320f7a0a14d6648073ee8e5d59b783f32c5f76c12e41a8c7cffb4a",
+          "raw_qtree_crlf_count": 1360,
+          "exact_contiguous_block_lines": 78,
+          "actual_raw_qmp_correlated": true
+        },
+        {
+          "phase": "source_suspended_running",
+          "vm": {
+            "status": "running",
+            "running": true
+          },
+          "link_state": "hibern8",
+          "clocks": {
+            "core-clk": "0 Hz",
+            "iface-clk": "0 Hz",
+            "unipro-clk": "0 Hz"
+          },
+          "qtree_sha256": "36fc09952bc0b171034e9f9e6940c8bcd20e04509502906b49e204cda45e66c7",
+          "raw_qtree_crlf_count": 1360,
+          "exact_contiguous_block_lines": 78,
+          "actual_raw_qmp_correlated": true
+        },
+        {
+          "phase": "source_suspended_paused",
+          "vm": {
+            "status": "paused",
+            "running": false
+          },
+          "link_state": "hibern8",
+          "clocks": {
+            "core-clk": "0 Hz",
+            "iface-clk": "0 Hz",
+            "unipro-clk": "0 Hz"
+          },
+          "qtree_sha256": "36fc09952bc0b171034e9f9e6940c8bcd20e04509502906b49e204cda45e66c7",
+          "raw_qtree_crlf_count": 1360,
+          "exact_contiguous_block_lines": 78,
+          "actual_raw_qmp_correlated": true
+        },
+        {
+          "phase": "target_loaded_paused",
+          "vm": {
+            "status": "paused",
+            "running": false
+          },
+          "link_state": "hibern8",
+          "clocks": {
+            "core-clk": "0 Hz",
+            "iface-clk": "0 Hz",
+            "unipro-clk": "0 Hz"
+          },
+          "qtree_sha256": "36fc09952bc0b171034e9f9e6940c8bcd20e04509502906b49e204cda45e66c7",
+          "raw_qtree_crlf_count": 1360,
+          "exact_contiguous_block_lines": 78,
+          "actual_raw_qmp_correlated": true
+        },
+        {
+          "phase": "target_running_before_io",
+          "vm": {
+            "status": "running",
+            "running": true
+          },
+          "link_state": "hibern8",
+          "clocks": {
+            "core-clk": "0 Hz",
+            "iface-clk": "0 Hz",
+            "unipro-clk": "0 Hz"
+          },
+          "qtree_sha256": "36fc09952bc0b171034e9f9e6940c8bcd20e04509502906b49e204cda45e66c7",
+          "raw_qtree_crlf_count": 1360,
+          "exact_contiguous_block_lines": 78,
+          "actual_raw_qmp_correlated": true
+        },
+        {
+          "phase": "target_after_io",
+          "vm": {
+            "status": "running",
+            "running": true
+          },
+          "link_state": "active",
+          "clocks": {
+            "core-clk": "37.5 MHz",
+            "iface-clk": "100 MHz",
+            "unipro-clk": "37.5 MHz"
+          },
+          "qtree_sha256": "d85df7677a320f7a0a14d6648073ee8e5d59b783f32c5f76c12e41a8c7cffb4a",
+          "raw_qtree_crlf_count": 1360,
+          "exact_contiguous_block_lines": 78,
+          "actual_raw_qmp_correlated": true
+        }
+      ]
+    }
+  ],
+  "archive": {
+    "bytes": 57340476,
+    "sha256": "1e6c37d205a9e130e4f197c068c93c756488b6b579ab06eadd429190b9b0bd6f"
+  },
+  "qemu": {
+    "bytes": 63727664,
+    "sha256": "935549d9f359d04254f5627bdd8807fd8d1800ab2223ab52dea80c0cf7edecb6"
+  },
+  "clean_linux": {
+    "bytes": 4458504,
+    "sha256": "f4e00305947da98b7ed38d66ab46411b35fc3f317cf462233f0be17d10257299"
+  },
+  "boundary": {
+    "full_migration_wire_decoded": false,
+    "external_disk_bytes_rehashed_from_archive": false,
+    "host_full_media_comparison_receipts_reviewed": true,
+    "migration_hash_immutability_is_receipt_evidence": true,
+    "source_process_ordering_is_recorded_host_monotonic_evidence": true,
+    "stock_android_boot_claimed": false,
+    "system_suspend_tested": false,
+    "inflight_ufs_migration_tested": false,
+    "workflow_git_blob": "df5d3d9bca9c5908dfda73181932e18e8a0e2173",
+    "workflow_exclusion_lines": [
+      123,
+      124,
+      125,
+      126
+    ],
+    "workflow_excluded_members": [
+      "tb371fc-results/linux-ufs-migration/checkpoint.migration",
+      "tb371fc-results/linux-ufs-migration/disk.raw",
+      "tb371fc-results/linux-ufs-pm-migration/checkpoint.migration",
+      "tb371fc-results/linux-ufs-pm-migration/disk.raw"
+    ]
+  },
+  "actual_members_read": {
+    "tb371fc-results/source-commit.txt": {
+      "bytes": 41,
+      "sha256": "3403353ebfcb8ff305feac9b2b6fa23a99f3eec2b70460a38949b4bb6a5fafd5"
+    },
+    "qemu-build/qemu-system-aarch64": {
+      "bytes": 63727664,
+      "sha256": "935549d9f359d04254f5627bdd8807fd8d1800ab2223ab52dea80c0cf7edecb6"
+    },
+    "clean-linux/artifacts/Image": {
+      "bytes": 4458504,
+      "sha256": "f4e00305947da98b7ed38d66ab46411b35fc3f317cf462233f0be17d10257299"
+    },
+    "clean-linux/artifacts/build.json": {
+      "bytes": 2611,
+      "sha256": "38987de1a1aa3cd73d228c08822df64f70664cac3cd950b3054d495cafea5b4f"
+    },
+    "tb371fc-results/linux-ufs-migration/result.json": {
+      "bytes": 56848,
+      "sha256": "b31f8be35bbcd2f2ebb20c0d8f1f368ccc518baaaf38e69b6f46f145815d1f43"
+    },
+    "tb371fc-results/linux-ufs-migration/init": {
+      "bytes": 636536,
+      "sha256": "825047c52957cbe23569c100e0ff019dc1c2ea4602df76be8a1e6625bacf9994"
+    },
+    "tb371fc-results/linux-ufs-migration/initramfs.cpio.gz": {
+      "bytes": 283966,
+      "sha256": "f22517617188bc0e3b8432c356935cedebfc55efb6482fa3566f42ced3e30106"
+    },
+    "tb371fc-results/linux-ufs-migration/source/receipt.json": {
+      "bytes": 34090,
+      "sha256": "0a0e93f7de1848c7b3ff290a8682a4ad0649c192bef043d006040ca5dee123da"
+    },
+    "tb371fc-results/linux-ufs-migration/source/serial.log": {
+      "bytes": 13144,
+      "sha256": "b0e4a7f9f109237abb4e5a137ead42205ef2f06b5cba8f7da158842bb305166f"
+    },
+    "tb371fc-results/linux-ufs-migration/source/qemu-debug.log": {
+      "bytes": 170,
+      "sha256": "1068099ff15a38dd0e0e83f3f1c5e18c33b9d4c2d052243767db3a2a14e3ae90"
+    },
+    "tb371fc-results/linux-ufs-migration/target/receipt.json": {
+      "bytes": 7022,
+      "sha256": "5047e7181a1ac1fec5b98ad3481eddc175eb87cb2c240ba3ca8a1b2d1480a440"
+    },
+    "tb371fc-results/linux-ufs-migration/target/serial.log": {
+      "bytes": 1178,
+      "sha256": "90c25f5b789b29ad0da74b82a8206f692988ab963e65f3ddef6703c58a032276"
+    },
+    "tb371fc-results/linux-ufs-migration/target/qemu-debug.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/linux-ufs-pm-migration/result.json": {
+      "bytes": 484608,
+      "sha256": "22637d8de5e39d6963db24fbaad104e4d9deb1e4667720947546d569b371602d"
+    },
+    "tb371fc-results/linux-ufs-pm-migration/init": {
+      "bytes": 774120,
+      "sha256": "d4de2e2081fb61c118a5ea405a8b84c3dfbf9cd2b67a3a72b2087187488045a0"
+    },
+    "tb371fc-results/linux-ufs-pm-migration/initramfs.cpio.gz": {
+      "bytes": 325231,
+      "sha256": "29aa3f4bc1fc503d0832e2d6b150d8732807f53973783ee73e28b6298d80f1ec"
+    },
+    "clean-linux/artifacts/kernel.config": {
+      "bytes": 56323,
+      "sha256": "da11e8b874ec5e9a4a23a117eb09a4e3faeb2c0b38086fa1adec9fe4abdc5554"
+    },
+    "tb371fc-results/linux-ufs-pm-migration/source/receipt.json": {
+      "bytes": 233817,
+      "sha256": "3c0bb6448eb1f622bfb5011f5c898a320d5211a7061edf79a03285d27ae6b3be"
+    },
+    "tb371fc-results/linux-ufs-pm-migration/source/serial.log": {
+      "bytes": 19006,
+      "sha256": "14babf1fcb4e68ccd85bf9226f5941fc55893e2983e0075a6ec67558db744683"
+    },
+    "tb371fc-results/linux-ufs-pm-migration/source/qemu-debug.log": {
+      "bytes": 170,
+      "sha256": "1068099ff15a38dd0e0e83f3f1c5e18c33b9d4c2d052243767db3a2a14e3ae90"
+    },
+    "tb371fc-results/linux-ufs-pm-migration/target/receipt.json": {
+      "bytes": 206318,
+      "sha256": "6fce4746a4e2bbb313b38ff9573cf93525de7d8364ae53eab1301cad85c1c699"
+    },
+    "tb371fc-results/linux-ufs-pm-migration/target/serial.log": {
+      "bytes": 4783,
+      "sha256": "b11494b80add786455869533c946b18ffdfb20084fba233af63fc5941eda527a"
+    },
+    "tb371fc-results/linux-ufs-pm-migration/target/qemu-debug.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "finished_utc": "2026-11-25T05:07:04.580590+00:00"
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "tb371fc-ddr-source-recovery-derivation-failure-v1",
+  "phase": "source-only-derivation",
+  "failed_preparer": {
+    "path": "/dev/shm/ddrstats-recovery-6a5/derive_ddr_auditor_recovery_001.py",
+    "bytes": 28043,
+    "sha256": "aea91c55e07b63dc7bea57fc2e225a732c65dd8d1cc6765c0f2bbc71728cce07"
+  },
+  "error": "AssertionError in function replacement helper: leading newline on a triple-quoted source fragment was not removed before checking its def prefix.",
+  "secondary_warning": "Non-raw old-block string contained regex escapes; made it raw without altering target semantics.",
+  "new_preparer": {
+    "path": "/dev/shm/ddrstats-recovery-6a5/derive_ddr_auditor_recovery_002.py",
+    "bytes": 28041,
+    "sha256": "28404ea0886be849acd0c4402fed1ef31fc08276e966b2739240e7210f1330af"
+  },
+  "corrections": [
+    "Use new.strip() for function fragment boundary normalization.",
+    "Use a raw triple-quoted old source block for regex text."
+  ],
+  "generated_auditor_existed": false,
+  "artifact_opened": false,
+  "auditor_executed": false,
+  "producer_executed": false
+}

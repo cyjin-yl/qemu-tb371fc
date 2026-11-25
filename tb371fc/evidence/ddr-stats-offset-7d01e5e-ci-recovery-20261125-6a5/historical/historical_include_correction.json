@@ -1,0 +1,38 @@
+{
+  "schema": "tb371fc-rpmstats-ci-include-path-correction-v1",
+  "observed_utc": "2026-11-25T02:25:48.499678+00:00",
+  "failed_source_commit": "75cc1dc83600784afa06e81c9998d8d39aba6af2",
+  "failed_source_tree": "5ba0440e3aea2545169f95e684ede61b9d372c2d",
+  "push_run": 45532378559,
+  "push_board_job": 138930599415,
+  "attempt": 1,
+  "failed_step": "Build the dedicated machine and C QTests",
+  "exact_failure_line": "2026-11-25T02:24:10.4685311Z /home/runner/work/qemu-tb371fc/qemu-tb371fc/include/hw/misc/qcom-sm8250-rpm-stats-offset.h:5:10: fatal error: hw/sysbus.h: No such file or directory",
+  "complete_board_log": {
+    "bytes": 236458,
+    "sha256": "69ced3dabe3203c4f89aef959bd0980b6e04947053727a9e472433d209dbedde"
+  },
+  "header": {
+    "path": "include/hw/misc/qcom-sm8250-rpm-stats-offset.h",
+    "old_bytes": 359,
+    "old_sha256": "59a6434a4d33242710c993e068d5e2df89298b499f8405a7187217ce2161e1a9",
+    "new_bytes": 364,
+    "new_sha256": "946df3bee216839b46001d4ea3065bda6563413a0c753a7b221fffea3b77ad0b",
+    "exact_change": "#include \"hw/sysbus.h\" -> #include \"hw/core/sysbus.h\""
+  },
+  "existing_repository_header": {
+    "commit": "75cc1dc83600784afa06e81c9998d8d39aba6af2",
+    "path": "include/hw/core/sysbus.h",
+    "bytes": 3534,
+    "git_blob_sha1": "f3c4259d291f9e616ccd021a32a1826a82ceeb39"
+  },
+  "all_other_35_published_files_unchanged": true,
+  "c_behavior_unchanged": true,
+  "test_bytes_unchanged": true,
+  "harness_requirements_unchanged": true,
+  "initial_static_review_missed_header_path_integration": true,
+  "compiled_ci_for_correction_pending": true,
+  "compiled_device_pass_claimed": false,
+  "native_started": false,
+  "android_boot_passed": false
+}

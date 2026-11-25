@@ -1,0 +1,688 @@
+--- public-d103750c/audit_rpm_stats_offset_artifact.py
++++ audit_ddr_stats_offset_artifact_7d01e5e_recovery_001.py
+@@ -1,9 +1,9 @@
+ #!/usr/bin/env python3
+-"""Independent exact-head RPM statistics offset actual-ZIP audit.
++"""Independent exact-head DDR statistics offset actual-ZIP audit.
+ 
+ Never extracts or executes archive members, QEMU, producer tests or generators.
+ The five-field 24-byte wire is reconstructed from explicit byte offsets. Generic
+-strict ZIP/JSON/protocol parsers come from the reviewed SPSS auditor; all RPM
++strict ZIP/JSON/protocol parsers come from the reviewed SPSS auditor; all DDR
+ state, ordinary-access and migration oracles are independently stated here.
+ Separate QMP/QTest files do not provide a shared timestamp: per-file order is
+ combined with exact producer source pins, counter receipts and a real RAM witness.
+@@ -22,24 +22,24 @@
+     raise SystemExit("Independent audit requires assertions enabled; do not use Python -O.")
+ 
+ CHUNK, MAX_SMALL = 1024 * 1024, 64 * 1024 * 1024
+-HEAD = "66d9e20a9541b503ed4f5cac5c79c8a5b4a0809b"
+-TREE = "7c13a3b85075e0eaefcc14d4f55c160bed699a08"
++HEAD = '7d01e5e294b788f97a8120c2d34122ddb25e6343'
++TREE = '5c25fff35bb41c3a8b018f0be965b4a9d3e9d5c4'
+ FAILED_HEAD = "75cc1dc83600784afa06e81c9998d8d39aba6af2"
+-TYPE, DEVICE = "qcom-sm8250-rpm-stats-offset", "/machine/rpm-stats-offset"
+-BASE, RAM, IDENTITY, OFFSET_VALUE = 0x0c3f0004, 0x80010000, 0x52534f31, 0x000f0048
++TYPE, DEVICE = "qcom-sm8250-ddr-stats-offset", "/machine/ddr-stats-offset"
++BASE, RAM, IDENTITY, OFFSET_VALUE = 0x0c3f001c, 0x80010000, 0x44534f31, 0x000f00b8
+ PAYLOAD, GETTERS = 24, 17
+ PRIMARY = "98719830b0de5584f5588bbe9f4c8304d97a64c6"
+-UPSTREAM = "adc218676eef25575469234709c2d87185ca223a"
++UPSTREAM = '75f2c0b3690702c90863c2e138cb5520670845ea'
+ DEFAULT_MACHINE = "tb371fc,gcc-boot-configured=off,ufs-enabled=off,rpmh-profile=off,rpmh-boot-configured=off"
+-CASE = "rpm-stats-offset-sm8250-reference"
+-GENERATION_CASE = "rpm-stats-offset-source-generation"
+-TEST_SHA = "8e878e30ad978d7affb389573e4df4cc3bb3009843ac74b5d363ebd723eee39f"
+-MODEL_SHA = "5144319fb0856c107512edbdfe86d48adef1237846da7c312394ff8ccae5db09"
++CASE = "ddr-stats-offset-sm8250-reference"
++GENERATION_CASE = "ddr-stats-offset-source-generation"
++TEST_SHA = 'ec83a76070316b57fdf0590de152cb07dcb0b66464f1d5a30fc7a083527d0bc4'
++MODEL_SHA = '4237cdc3a63263785c14a091f4eb92d14242ba79d114820c8ac3bb443ecaaced'
+ FIELDS = (
+     "enabled-profile", "reference-identity", "physical-base", "window-bytes",
+     "offset-value", "vmstate-bytes", "register-count", "irq-output-count",
+     "clock-input-count", "clock-output-count", "timer-count", "offset-known",
+-    "stats-payload-modeled", "ddr-offset-modeled", "firmware-modeled",
++    "stats-payload-modeled", "rpm-offset-modeled", "firmware-modeled",
+     "ready-modeled", "enabled-reference",
+ )
+ ORDINARY = (
+@@ -61,43 +61,62 @@
+ )
+ LENGTHS = {"checks": 20, "migrations": 2, "rejected_migrations": 2,
+            "corrupted_stream_rejections": 6, "migration_sources": 2, "actual_stream_files": 8}
+-SOURCE_PINS = {
+-    "hw/misc/qcom-sm8250-rpm-stats-offset.c": (9377, MODEL_SHA),
+-    "include/hw/misc/qcom-sm8250-rpm-stats-offset.h": (364, "946df3bee216839b46001d4ea3065bda6563413a0c753a7b221fffea3b77ad0b"),
+-    "hw/misc/qcom-sm8250-rpm-stats-offset-data.inc": (346, "dc38191138f43d396b94971b15b9b6617924131669b602cb1bccf185f75d22e5"),
+-    "hw/arm/lenovo-tb371fc.c": (102867, "ff2f8d8bc66826068a2bedbdc10145c7cc1dc3fe615c7a4a5fb558c8da5d4f7c"),
+-    "hw/arm/Kconfig": (15468, "195baffbd21c9c2457bf97e7a5806825e95ce512afe1a624e4fcca30b97437b2"),
+-    "hw/misc/Kconfig": (4193, "c63ddb724530945aaa4cd3373330b683627fa03e57a568d6a274cc361a8ff144"),
+-    "hw/misc/meson.build": (10826, "f24d688b2364890bde05b4c1d81c1ba0600f1385c3b46c2e778216fded4d6e0f"),
+-    "tb371fc/docs/rpm-stats-offset-sm8250-registers.json": (4870, "df0c4dad7572a918f579e98174663496893039d27315db6427726de9641a6adb"),
+-    "tb371fc/tests/test_rpm_stats_offset_sm8250.py": (39266, TEST_SHA),
+-    "tb371fc/scripts/gen_rpm_stats_offset.py": (19192, "47f77997d2708da12235cde157b25228ef75b93bb689a92f1338769dcc99537c"),
+-    "tb371fc/scripts/verify_rpm_stats_offset_generation.py": (4965, "2673e6cc5457db0a1e281013c14d30941e7251bf7f40f2a4bf2265f40831630c"),
+-    "tb371fc/scripts/source_download.py": (4642, "4fde0300dc4c8777531402dc700fbed6364f16b0550fc852c3031fe641fe7dd7"),
+-    "tb371fc/scripts/ci_device_tests.py": (78585, "a69c1916407867d25b5484b45d25b427bb4921adc04b15b1f7c7589a758c1faa"),
+-    "tb371fc/scripts/test_ci_device_tests.py": (44460, "ed7e8d5ad970e7f138fe418db026f0b1825ee5b037d6d58b15044e59ddf5602b"),
+-    "tb371fc/evidence/rpm-stats-offset-20261125-6a5/test-ci-contract.json": (3391, "2d137f7cd52b52c281414fd2508a04fde7c5ae567a123f6c3a2c7a31128e032a"),
+-}
+-PUBLIC_INPUTS = (
+-    ("primary-r11", "OnePlusOSS/android_kernel_oneplus_sm8250", PRIMARY,
+-     "drivers/soc/qcom/rpm_stats.c", 11328,
+-     "3c493aed9975865203e5e3e2b2cbd95b8357bb47",
+-     "cb733f4433d6432187dd7faa31d8eff81e1b115ee20691eb53a3b1ca0eba0750"),
+-    ("primary-r11", "OnePlusOSS/android_kernel_oneplus_sm8250", PRIMARY,
+-     "arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi", 2817,
+-     "a5eba34468ee25209d8f07baf5efe9c53462ec2a",
+-     "c1f3a89f461cf1381335ffb2e3066026c28a27642389f9f92fccf540646e5231"),
+-    ("primary-upstream", "torvalds/linux", UPSTREAM,
+-     "drivers/soc/qcom/qcom_stats.c", 7641,
+-     "c429d5154aaec2c3115ccefd1c23d712bf6817f7",
+-     "b62608854c3dbdef9b43d69a0e5b51b577624c583a80da6eeb5cd176752dd6c5"),
+-    ("primary-upstream", "torvalds/linux", UPSTREAM,
+-     "arch/arm64/boot/dts/qcom/sm8250.dtsi", 176883,
+-     "630f4eff20bf810e347685066dce74ab92a23b56",
+-     "8735b5d8bb61d6a3a579e5b088ff2a719132266cef57c91c319ec19e12770499"),
+-)
+-OUTPUTS = ("hw/misc/qcom-sm8250-rpm-stats-offset-data.inc",
+-           "tb371fc/docs/rpm-stats-offset-sm8250-registers.json")
++SOURCE_PINS = {'hw/misc/qcom-sm8250-ddr-stats-offset.c': (9691,
++                                            '4237cdc3a63263785c14a091f4eb92d14242ba79d114820c8ac3bb443ecaaced'),
++ 'include/hw/misc/qcom-sm8250-ddr-stats-offset.h': (364,
++                                                    '3f37eb47beb17f2f85af9b378a2400b8dc6fe93ff69d9f8cba9104bfad1c40dc'),
++ 'hw/misc/qcom-sm8250-ddr-stats-offset-data.inc': (346,
++                                                   'e6ec892f78dac7e3f87a06618a3cc69e9692fa819c2ea60027bdb5e526fccd4f'),
++ 'hw/arm/lenovo-tb371fc.c': (103334, '51ee3224180a2e927572ee56f011b3d222f68fb97fef7e75ad188f972abaeaf1'),
++ 'hw/arm/Kconfig': (15508, '6cbe01a64aeea18706c4d255276819a6addf66bf6d4636381b75fbf12a6984af'),
++ 'hw/misc/Kconfig': (4239, '451eb84dce84cb9dde20e65220a39314b5acb8e36885efd172d878549b10fa5d'),
++ 'hw/misc/meson.build': (10935, 'ca26e093985792bb0ece8c598cc83a384c455b8b693e950d83678327946f121a'),
++ 'tb371fc/docs/ddr-stats-offset-sm8250-registers.json': (5304,
++                                                         '682074c1299455fa482b870a4b2f841ea1c1c74aee9ed6dac131cc9dcff33b7d'),
++ 'tb371fc/tests/test_ddr_stats_offset_sm8250.py': (41779,
++                                                   'ec83a76070316b57fdf0590de152cb07dcb0b66464f1d5a30fc7a083527d0bc4'),
++ 'tb371fc/scripts/gen_ddr_stats_offset.py': (21540,
++                                             '6d2c03467242065e21cc34247a4e944928d924a5f96021aa44252b075ae3dcf2'),
++ 'tb371fc/scripts/verify_ddr_stats_offset_generation.py': (5139,
++                                                           '4529d753567592ce1dfb957c052f551e397069e266e2a6f11a70bc0572bb8ae6'),
++ 'tb371fc/scripts/source_download.py': (4642,
++                                        '4fde0300dc4c8777531402dc700fbed6364f16b0550fc852c3031fe641fe7dd7'),
++ 'tb371fc/scripts/ci_device_tests.py': (81555,
++                                        'c1478cab27f3937d2935571a0727233ae23bb392380762db10c76cda978d4a90'),
++ 'tb371fc/scripts/test_ci_device_tests.py': (52408,
++                                             '9945c4a3fb45cfabf08fc27271243be8a72487d872aecfc56c9332c61b36f761'),
++ 'tb371fc/evidence/ddr-stats-offset-20261125-6a5/test-ci-contract.json': (4628,
++                                                                          '0f0363f4d50339667bb53d4d9b8c4e456ce337b581b7b2f719f57037fa386901')}
++PUBLIC_INPUTS = (('primary-r11',
++  'OnePlusOSS/android_kernel_oneplus_sm8250',
++  '98719830b0de5584f5588bbe9f4c8304d97a64c6',
++  'drivers/soc/qcom/ddr_stats.c',
++  6442,
++  '49b020908d7b3b22d0590eea466860c4d42a3a18',
++  '26d08430d1ae76562118e313f91f285a3bce8b4a71175082aee6441b4dd3ebfb'),
++ ('primary-r11',
++  'OnePlusOSS/android_kernel_oneplus_sm8250',
++  '98719830b0de5584f5588bbe9f4c8304d97a64c6',
++  'arch/arm64/boot/dts/vendor/qcom/kona-pm.dtsi',
++  2817,
++  'a5eba34468ee25209d8f07baf5efe9c53462ec2a',
++  'c1f3a89f461cf1381335ffb2e3066026c28a27642389f9f92fccf540646e5231'),
++ ('primary-upstream',
++  'torvalds/linux',
++  '75f2c0b3690702c90863c2e138cb5520670845ea',
++  'drivers/soc/qcom/qcom_stats.c',
++  11697,
++  '2e380faf9080354fae120e74f0b9bd1f3786d3e5',
++  'cf7447d3c9501203c699a403ea5f394ab9a809177f8b8b43e95699ff5dee5ed4'),
++ ('primary-upstream',
++  'torvalds/linux',
++  '75f2c0b3690702c90863c2e138cb5520670845ea',
++  'arch/arm64/boot/dts/qcom/sm8250.dtsi',
++  177763,
++  '7076720413ab2c34aaab618a4dcf7a27beb6076e',
++  'ec9a5a3b9d9425475bf2fdaad772395ef2b331a9a4f92ac139bf83d0cad79ad0'))
++OUTPUTS = ("hw/misc/qcom-sm8250-ddr-stats-offset-data.inc",
++           "tb371fc/docs/ddr-stats-offset-sm8250-registers.json")
+ 
+ 
+ class AuditFailure(RuntimeError):
+@@ -423,7 +442,7 @@
+             tail = block[-4096:]
+     same(magic, b"QEVM\x00\x00\x00\x03", path + ".stream magic/version")
+     same(total, store.size(path), path + ".actual whole length")
+-    same(len(candidates), 1, path + ".unique complete RPM offset section")
++    same(len(candidates), 1, path + ".unique complete DDR offset section")
+     item = next(iter(candidates.values()))
+     need(item is not None, path + ": truncated section")
+     result = {"bytes": total, "sha256": digest.hexdigest(), "section": item[0], "payload": item[1]}
+@@ -516,7 +535,7 @@
+ def device_rejections(stderr):
+     pattern = re.escape(TYPE) + r": rejected (read|write) offset=0x([0-9a-f]+) size ([0-9]+) \(([^)]+)\)"
+     found = re.findall(pattern, stderr)
+-    same(len(found), stderr.count(TYPE + ": rejected"), "No malformed/unaccounted RPM offset diagnostic")
++    same(len(found), stderr.count(TYPE + ": rejected"), "No malformed/unaccounted DDR offset diagnostic")
+     return [(op, int(offset, 16), int(size), reason) for op, offset, size, reason in found]
+ 
+ 
+@@ -556,7 +575,7 @@
+ 
+ 
+ def scenario_world(name):
+-    need(name in SCENARIOS, "Unknown RPM scenario")
++    need(name in SCENARIOS, "Unknown DDR scenario")
+     return world(name == "enabled")
+ 
+ 
+@@ -610,22 +629,50 @@
+     return op, command[1] - BASE, width, reason
+ 
+ 
+-def probe_receipt(command):
++def disabled_core_expected(command):
++    """Off-profile has no DDR leaf; actual unassigned transport chunks are checked."""
++    op = "write" if command[0].startswith("write") else "read"
++    width = {"b": 1, "w": 2, "l": 4, "q": 8}[command[0][-1]]
++    same(command[1], BASE, "Disabled probes use the configured four-byte-aligned base")
++    chunks = ((BASE, 4), (BASE + 4, 4)) if width == 8 else ((BASE, width),)
++    return [(op, address, length, "(null)", "rejected") for address, length in chunks]
++
++
++def active_mapping(store, directory, filename, profile):
++    """Read the saved active FlatView and later bind it to the complete QMP reply."""
++    boolean(profile, directory + ".configured profile")
++    tree = store.text(directory + "/" + filename)
++    need("FlatView #" in tree, directory + ": active flat-view header absent")
++    pattern = r"([0-9a-fA-F]+)-([0-9a-fA-F]+) .*: (" + re.escape(TYPE) + r"\.[^\s]+)(?:\s|$)"
++    leaves = {(int(a, 16), int(b, 16), name) for a, b, name in re.findall(pattern, tree)}
++    same(leaves, {(BASE, BASE + 3, TYPE + ".offset")} if profile else set(),
++         directory + ": exact active four-byte reference leaf or absent disabled leaf")
++    return tree, {"active_leaf_count": len(leaves), "active_mapped_bytes": 4 * len(leaves),
++                  "mtree_file": filename, "configured_profile_enabled": profile}
++
++
++def probe_receipt(command, profile=True):
+     op, offset, width, reason = expected_rejection(command)
+     text = command[0] + " " + hex(command[1])
+     if op == "write":
+         text += " " + hex(command[2])
+-    return {"command": text, "callback_offset": offset, "callback_size": width,
+-            "specific_diagnostic": f"{TYPE}: rejected {op} offset={offset:#x} size {width} ({reason})",
+-            "device_callback_rejection_count": 1, "actual_core_rejections": [],
+-            "state_unchanged": True, "error_numeric_value_used_as_oracle": False}
++    if profile:
++        observation = {"callback_offset": offset, "callback_size": width,
++                       "specific_diagnostic": f"{TYPE}: rejected {op} offset={offset:#x} size {width} ({reason})",
++                       "device_callback_rejection_count": 1, "actual_core_rejections": []}
++    else:
++        observation = {"requested_address": BASE, "requested_size": width,
++                       "unassigned_transport": True, "device_callback_rejection_count": 0,
++                       "actual_core_rejections": core_rows(disabled_core_expected(command))}
++    return {"command": text, **observation, "state_unchanged": True,
++            "error_numeric_value_used_as_oracle": False}
+ 
+ 
+ def accepted_receipt(raw=False):
+     return {"command": f"read {BASE:#x} 4" if raw else f"readl {BASE:#x}",
+             "actual_read_data_checked": True, "specific_rejection_absent": True,
+             "state_unchanged": True,
+-            **({"returned_bytes_hex": "48000f00"} if raw else {"returned_u32": OFFSET_VALUE})}
++            **({"returned_bytes_hex": "b8000f00"} if raw else {"returned_u32": OFFSET_VALUE})}
+ 
+ 
+ def reply_value(call, where):
+@@ -660,7 +707,7 @@
+                      where + ".raw data format")
+                 returned = bytes.fromhex(parts[1][2:])
+                 same(len(returned), cmd[2], where + ".actual raw response length")
+-                same(returned[:4], bytes.fromhex("48000f00"), where + ".valid 4-byte prefix")
++                same(returned[:4], bytes.fromhex("b8000f00"), where + ".valid 4-byte prefix")
+                 facts["valid_four_byte_reads_or_prefixes"] += 1
+                 if cmd[2] == 5:
+                     facts["raw_five_byte_read_count"] += 1
+@@ -697,7 +744,7 @@
+             holes = [("read", BASE + 4, 1, "(null)", "rejected")]
+             detail = {"actual_reads": [accepted_receipt()] * 3 + [accepted_receipt(True)],
+                       "byte_order": "little", "buffered_read_command": f"read {BASE:#x} 5",
+-                      "buffered_read_valid_prefix_hex": "48000f00",
++                      "buffered_read_valid_prefix_hex": "b8000f00",
+                       "buffered_read_actual_core_rejections": core_rows(holes),
+                       "buffered_read_failed_suffix_interpreted": False,
+                       "buffered_read_whole_buffer_succeeded": False,
+@@ -734,11 +781,8 @@
+             detail = {"reset_preserves_configured_profile_and_offset": True,
+                       "statistics_or_firmware_data_invented": False}
+         elif index == 6:
+-            tree = store.text(directory + "/mtree.txt")
+-            pattern = r"([0-9a-fA-F]+)-([0-9a-fA-F]+) .*: (" + re.escape(TYPE) + r"\.[^\s]+)(?:\s|$)"
+-            leaves = {(int(a, 16), int(b, 16), n) for a, b, n in re.findall(pattern, tree)}
+-            same(leaves, {(BASE, BASE + 3, TYPE + ".offset")}, directory + ".one exact 4-byte leaf")
+-            addresses = [0x0c3f0000, 0x0c3f0008, 0x0c3f001c, 0x0c3f0048, 0x0c3f004c, 0x0c3f00a4]
++            tree, mapping = active_mapping(store, directory, "mtree.txt", True)
++            addresses = [0x0c3f0000, 0x0c3f0018, 0x0c3f0020, 0x0c3f00b8, 0x0c3f00bc, 0x0c3f01fc]
+             observations = []
+             for address in addresses:
+                 commands += [("readl", address), ("writel", address, 0xa55a5aa5)]
+@@ -746,8 +790,8 @@
+                 holes += pair
+                 observations.append({"address": address, "actual_core_rejections": core_rows(pair)})
+             sequence += [("hmp", tree)] + [state] * 7
+-            detail = {"exact_leaves": 1, "mapped_bytes": 4, "true_holes": addresses,
+-                      "hole_observations": observations, "ddr_offset_added": False, "statistics_payload_added": False}
++            detail = {"exact_leaves": 1, "mapped_bytes": 4, "active_mapping": mapping, "true_holes": addresses,
++                      "hole_observations": observations, "rpm_offset_added": False, "statistics_payload_added": False}
+         elif index == 7:
+             commands = [("clock_step", 1000000)]
+             sequence += [state] + [("set-error", field,
+@@ -781,14 +825,24 @@
+     same([tokens(call) for call in tc], rejected + [("clock_step", 10000)], directory + ".complete QTest trace")
+     qtest_time(tc, directory)
+     verify_qtest_responses(tc, directory)
+-    worlds = qmp_sequence(qc, ["qmp_capabilities", "cont"] + [off] * 21 + ["system_reset", off], directory)
+-    same(device_rejections(stderr), [expected_rejection(cmd) for cmd in rejected], directory + ".10 disabled rejections")
+-    same(core_rejections(stderr), [], directory + ".no false core callback or hole diagnostics")
++    before_tree, before_mapping = active_mapping(store, directory, "mtree-before-reset.txt", False)
++    after_tree, after_mapping = active_mapping(store, directory, "mtree-after-reset.txt", False)
++    worlds = qmp_sequence(qc, ["qmp_capabilities", "cont", off, ("hmp", before_tree)] + [off] * 20 +
++                          ["system_reset", off, ("hmp", after_tree)], directory)
++    generic = [row for command in rejected for row in disabled_core_expected(command)]
++    same(len(generic), 12, directory + ".ten commands include two split qword operations")
++    same(device_rejections(stderr), [], directory + ".no disabled device callback")
++    same(core_rejections(stderr), generic, directory + ".all twelve exact unassigned chunks")
+     same(checks[name], {"name": name, "passed": True, "default_profile_used": True,
+-                       "actual_rejections": [probe_receipt(c) for c in rejected],
++                       "actual_rejections": [probe_receipt(c, False) for c in rejected],
++                       "active_mapping_before_reset": before_mapping, "active_mapping_after_reset": after_mapping,
++                       "default_off_mapped_bytes": 0,
+                        "unknown_zero_is_not_a_valid_guest_offset": True}, directory + ".default-off report")
+-    results.append({"name": name, "actual_pure_getters": len(worlds) * GETTERS,
+-                    "actual_rejections": len(rejected), "no_global_profile_override": True,
++    results.append({"name": name, "actual_qom_snapshots": len(worlds), "actual_pure_getters": len(worlds) * GETTERS,
++                    "actual_rejections": len(rejected), "actual_device_rejections": 0,
++                    "actual_hole_rejections": len(generic), "actual_qtest_commands": len(tc),
++                    "active_mapping_before_reset": before_mapping, "active_mapping_after_reset": after_mapping,
++                    "default_off_mapped_bytes": 0, "no_global_profile_override": True,
+                     "unknown_zero_not_treated_as_valid_read": True})
+ 
+     name, directory = "paused_tcg_exposes_no_mutating_fixture_or_guest_execution", data + "/paused-tcg"
+@@ -834,7 +888,7 @@
+     qmp_sequence(qc[end:], ["query-status", state], directory + ".postmigrate tail")
+     same(reply(qc[end]).get("status"), "postmigrate", directory + ".actual postmigrate status")
+     index = SCENARIOS.index(scenario)
+-    epoch, witness = (index + 1) * 100000, 0x52534f00 + index
++    epoch, witness = (index + 1) * 100000, 0x44534f00 + index
+     same([tokens(call) for call in tc],
+          [("clock_set", epoch), ("writel", RAM, witness), ("readl", RAM)],
+          directory + ".complete source QTest trace")
+@@ -854,12 +908,14 @@
+     epoch, witness = saved["source_virtual_ns"], saved["ram_witness"]
+     dirty = witness ^ 0xffffffff
+     stderr = command_contract(store, directory, report, profile, incoming=True)
+-    expected_rejections = [("write", 0, 4, "read-only-register")]
+-    if not profile:
+-        expected_rejections = [("read", 0, 4, "disabled-or-invalid-access")] + expected_rejections + [
+-            ("read", 0, 4, "disabled-or-invalid-access")]
+-    same(device_rejections(stderr), expected_rejections, directory + ".restored access diagnostics")
+-    same(core_rejections(stderr), [], directory + ".no generic callback or hole rejection")
++    expected_rejections = [("write", 0, 4, "read-only-register")] if profile else []
++    expected_holes = [] if profile else [(op, BASE, 4, "(null)", "rejected") for op in ("read", "write", "read")]
++    same(device_rejections(stderr), expected_rejections, directory + ".exact enabled callback or no disabled callback")
++    same(core_rejections(stderr), expected_holes, directory + ".exact disabled unassigned reads and write")
++    restored_tree, restored_mapping = active_mapping(store, directory, "mtree-after-restore.txt", profile)
++    reset_tree, reset_mapping = active_mapping(store, directory, "mtree-after-reset.txt", profile)
++    same(migration["active_mapping_after_restore"], restored_mapping, directory + ".reported restored active mapping")
++    same(migration["active_mapping_after_reset"], reset_mapping, directory + ".reported reset active mapping")
+     pre = store.json(directory + "/destination-before-incoming.json")
+     same(pre, {"snapshot": state, "device_mmio_count": 0, "memory_command_count": 2,
+                "ram_command_count": 2, "qmp_cont_count": 0, "qom_get_count": GETTERS,
+@@ -900,7 +956,7 @@
+     end = status_at[0]
+     completed_polls(qc[at + 1:end], first["query_migrate"], directory)
+     same(reply(qc[end]).get("running"), False, directory + ".target stays stopped")
+-    tail = ["query-status", state, state, "cont"] + [state] * 5 + ["system_reset"] + [state] * 3
++    tail = ["query-status", state, state, ("hmp", restored_tree), "cont"] + [state] * 5 + ["system_reset"] + [state] * 3 + [("hmp", reset_tree)]
+     qmp_sequence(qc[end:], tail, directory + ".entire post-incoming QMP trace")
+     first_calls = qc[end + 1:end + 1 + GETTERS]
+     repeated_calls = qc[end + 1 + GETTERS:end + 1 + 2 * GETTERS]
+@@ -944,6 +1000,10 @@
+         "source_snapshot_restored_before_cont": True, "payload_bytes_verified": PAYLOAD,
+         "post_restore_layout_and_read_semantics_checked": True, "post_restore_reset_retains_profile": True,
+         "source_status": "completed", "target_status": "completed", "shared_timestamp_used": False,
++        "active_mapping_after_restore": restored_mapping, "active_mapping_after_reset": reset_mapping,
++        "actual_device_rejections": len(expected_rejections), "actual_hole_rejections": len(expected_holes),
++        "first_flatview_after_both_qom_snapshots_and_restored_ram_witness": True,
++        "first_flatview_before_cont": True, "second_flatview_after_final_post_reset_device_read": True,
+         "cross_file_order_basis": "Pinned producer sequence plus actual before/after counters, RAM witness, and independent per-file request/response order; no shared timestamp is invented.",
+     }
+ 
+@@ -986,18 +1046,18 @@
+                          "device_state_mutable": False}, path)
+     same(result["payload"], wire(state), path + ".all independently encoded 24 bytes")
+     section = dict(result["section"])
+-    section.update(payload_file=PurePosixPath(path).name + ".rpm-stats-offset-v1.payload.bin",
++    section.update(payload_file=PurePosixPath(path).name + ".ddr-stats-offset-v1.payload.bin",
+                    payload_sha256=sha(result["payload"]), all_bytes_match_stopped_source_qom=True)
+-    expected = {"rpm_stats_offset": section}
++    expected = {"ddr_stats_offset": section}
+     same(saved["sections"], expected, path + ".producer section metadata versus independent framing")
+     same(store.json(path + ".sections.json"), expected, path + ".retained section sidecar")
+-    same(store.read(path + ".rpm-stats-offset-v1.payload.bin"), result["payload"], path + ".complete retained payload")
++    same(store.read(path + ".ddr-stats-offset-v1.payload.bin"), result["payload"], path + ".complete retained payload")
+     return result
+ 
+ 
+ def audit_migrations(store, data, report, receipt):
+-    expected_names = ["rpm-stats-offset-" + name + ".migration" for name in SCENARIOS]
+-    expected_names += ["rpm-stats-offset-corrupt-" + m[0] + ".migration" for m in MUTATIONS]
++    expected_names = ["ddr-stats-offset-" + name + ".migration" for name in SCENARIOS]
++    expected_names += ["ddr-stats-offset-corrupt-" + m[0] + ".migration" for m in MUTATIONS]
+     actual_names = sorted(PurePosixPath(path).name for path in store.entries
+                           if path.startswith(data + "/") and "/" not in path[len(data) + 1:]
+                           and path.endswith(".migration"))
+@@ -1008,10 +1068,10 @@
+     originals, saved_by_name = {}, {}
+     receipt["original_streams"] = []
+     for index, (scenario, saved) in enumerate(zip(SCENARIOS, report["migration_sources"])):
+-        filename, state = "rpm-stats-offset-" + scenario + ".migration", scenario_world(scenario)
++        filename, state = "ddr-stats-offset-" + scenario + ".migration", scenario_world(scenario)
+         fields_equal(saved, {"file": filename, "source_directory": "migration-" + scenario + "-source",
+                              "source_virtual_ns": (index + 1) * 100000,
+-                             "ram_witness": 0x52534f00 + index, "snapshot": state}, scenario)
++                             "ram_witness": 0x44534f00 + index, "snapshot": state}, scenario)
+         result = original_stream(store, data + "/" + filename, saved, state)
+         same(actual_index[filename], {"name": filename, "bytes": result["bytes"], "sha256": result["sha256"]},
+              scenario + ".actual original stream inventory")
+@@ -1050,7 +1110,7 @@
+     receipt["one_bit_rejections"] = []
+     for row, (name, scenario, offset, width, old, xor, profile, diagnostic) in zip(report["corrupted_stream_rejections"], MUTATIONS):
+         saved, original = saved_by_name[scenario], originals[scenario]
+-        filename = "rpm-stats-offset-corrupt-" + name + ".migration"
++        filename = "ddr-stats-offset-corrupt-" + name + ".migration"
+         result = scan_stream(store, data + "/" + filename)
+         same(result["section"], original["section"], name + ".unchanged complete framing")
+         same(int.from_bytes(original["payload"][offset:offset + width], "big"), old, name + ".actual old value")
+@@ -1086,60 +1146,86 @@
+ 
+ 
+ def independent_public_derivation(texts):
+-    """Fixed pinned-source structural extraction, independent of generator imports."""
++    """Independent structural reads of all four pinned complete public sources."""
+     vendor, vendor_dt, upstream, upstream_dt = texts
+-    node = one_match(r"\bqcom,rpm-stats@c3f0004\s*\{([^{}]*)\};", vendor_dt,
+-                     "vendor offset node", re.S).group(1)
++    node = one_match(r"\bqcom,ddr-stats@c3f0000\s*\{([^{}]*)\};", vendor_dt,
++                     "vendor DDR offset node", re.S).group(1)
+     regs = one_match(r"\breg\s*=\s*([^;]+);", node, "vendor reg").group(1)
+     cells = [int(n, 0) for n in re.findall(r"0x[0-9a-fA-F]+|\b[0-9]+\b", regs)]
+-    same(cells, [0x0c300000, 0x1000, BASE, 4], "actual four pinned vendor resource cells")
+-    names = re.findall(r'"([^"]+)"', one_match(r"\breg-names\s*=\s*([^;]+);", node, "vendor reg-names").group(1))
+-    same(names, ["phys_addr_base", "offset_addr"], "actual vendor resource names")
+-    records = int(one_match(r"\bqcom,num-records\s*=\s*<\s*(\d+)\s*>;", node, "vendor records").group(1))
+-    same(records, 3, "vendor record count")
+-    probe = one_match(r"static int msm_rpmstats_probe\b(.*?)static int msm_rpmstats_remove\b",
+-                      vendor, "bounded vendor probe", re.S).group(1)
++    same(cells, [0x0c300000, 0x1000, BASE, 4], "pinned vendor resource cells")
++    names = re.findall(r'"([^"]+)"', one_match(r"\breg-names\s*=\s*([^;]+);", node, "vendor resource names").group(1))
++    same(names, ["phys_addr_base", "offset_addr"], "vendor named resources")
++    same(one_match(r'\bcompatible\s*=\s*"([^"]+)"\s*;', node, "vendor compatible").group(1),
++         "qcom,ddr-stats", "vendor consumer compatible")
++    probe = one_match(r"static int ddr_stats_probe\b(.*?)static int ddr_stats_remove\b",
++                      vendor, "bounded vendor DDR probe", re.S).group(1)
++    need(re.search(r"phys_ptr\s*=\s*ioremap_nocache\s*\(\s*offset->start\s*,\s*SZ_4\s*\)", probe) is not None,
++         "Vendor maps exactly the four-byte offset resource")
+     need(re.search(r"offset_addr\s*=\s*readl_relaxed\s*\(\s*phys_ptr\s*\)", probe) is not None,
+          "Vendor uint32 offset read absent")
++    need(re.search(r"if\s*\(\s*!offset_addr\s*\)\s*return\s+-ENODEV\s*;", probe) is not None,
++         "Vendor zero-offset rejection absent")
+     need(re.search(r"pdata->phys_addr_base\s*=\s*res->start\s*\+\s*offset_addr\s*;", probe) is not None,
+          "Vendor base-plus-offset consumer absent")
+-    mmio = re.findall(r"\b((?:read|write)[bwlq](?:_relaxed)?|__raw_(?:read|write)[bwlq]|ioread\w*|iowrite\w*|memcpy_(?:from|to)io)\s*\(", probe)
+-    same(mmio, ["readl_relaxed"], "Only one direct MMIO operation in bounded vendor probe")
++    mmio_pattern = r"\b((?:read|write)[bwlq](?:_relaxed)?|__raw_(?:read|write)[bwlq]|ioread\w*|iowrite\w*|memcpy_(?:from|to)io)\s*\("
++    same(re.findall(mmio_pattern, probe), ["readl_relaxed"], "Only one direct MMIO operation in vendor probe")
++    sysfs = one_match(r"static int ddr_stats_create_sysfs\b(.*?)static int ddr_stats_probe\b",
++                      vendor, "bounded vendor sysfs construction", re.S).group(1)
++    same(re.findall(mmio_pattern, sysfs), [], "Sysfs construction has no direct payload MMIO")
++    need(re.search(r"\.show\s*=\s*ddr_stats_show\s*;", sysfs) is not None,
++         "Vendor payload reader is registered as sysfs callback")
++    need(re.search(r"\bddr_stats_show\s*\(", sysfs) is None, "Sysfs construction does not invoke payload reader")
+     upstream_node = one_match(r"\bsram@c3f0000\s*\{([^{}]*)\};", upstream_dt,
+                               "upstream SM8250 stats node", re.S).group(1)
+-    compatible = one_match(r'\bcompatible\s*=\s*"([^"]+)"\s*;', upstream_node, "upstream compatible").group(1)
+-    same(compatible, "qcom,rpmh-stats", "upstream fixed layout compatible")
++    same(one_match(r'\bcompatible\s*=\s*"([^"]+)"\s*;', upstream_node, "upstream compatible").group(1),
++         "qcom,rpmh-stats", "upstream layout compatible")
+     regs = one_match(r"\breg\s*=\s*([^;]+);", upstream_node, "upstream reg").group(1)
+     cells_upstream = [int(n, 0) for n in re.findall(r"0x[0-9a-fA-F]+|\b[0-9]+\b", regs)]
+-    same(cells_upstream, [0, 0x0c3f0000, 0, 0x400], "upstream actual 64-bit address/size cells")
+-    config_name = one_match(r'\{\s*\.compatible\s*=\s*"qcom,rpmh-stats"\s*,\s*\.data\s*=\s*&(\w+)\s*\}',
+-                            upstream, "upstream compatible dispatch").group(1)
+-    same(config_name, "rpmh_data", "actual selected config")
++    same(cells_upstream, [0, 0x0c3f0000, 0, 0x400], "upstream complete resource")
++    same(one_match(r'\{\s*\.compatible\s*=\s*"qcom,rpmh-stats"\s*,\s*\.data\s*=\s*&(\w+)\s*\}',
++                   upstream, "upstream compatible dispatch").group(1), "rpmh_data", "actual config selector")
+     config = one_match(r"\bstatic const struct stats_config rpmh_data\s*=\s*\{([^{}]*)\};",
+-                       upstream, "upstream fixed RPMh config", re.S).group(1)
+-    stats_offset = int(one_match(r"\.stats_offset\s*=\s*(0x[0-9a-fA-F]+|\d+)\s*,", config,
+-                                 "fixed stats offset").group(1), 0)
+-    count = int(one_match(r"\.num_records\s*=\s*(\d+)\s*,", config, "fixed record count").group(1))
+-    same((stats_offset, count), (0x48, 3), "upstream fixed offset and record count")
++                       upstream, "upstream RPMh config", re.S).group(1)
++    fixed = {}
++    for field, expected in (("stats_offset", 0x48), ("ddr_stats_offset", 0xb8), ("num_records", 3)):
++        fixed[field] = int(one_match(r"\." + field + r"\s*=\s*(0x[0-9a-fA-F]+|\d+)\s*,", config, field).group(1), 0)
++        same(fixed[field], expected, "upstream fixed " + field)
+     for field, expected in (("dynamic_offset", "false"), ("appended_stats_avail", "false"),
+-                             ("subsystem_stats_in_smem", "true")):
+-        same(one_match(r"\." + field + r"\s*=\s*(true|false)\s*,", config, field).group(1),
+-             expected, "upstream config." + field)
+-    stat = one_match(r"\bstruct sleep_stats\s*\{([^{}]*)\};", upstream, "sleep_stats record", re.S).group(1)
+-    record_fields = re.findall(r"\b(u32|u64)\s+(\w+)\s*;", stat)
+-    same(record_fields, [("u32", "stat_type"), ("u32", "count"), ("u64", "last_entered_at"),
+-                         ("u64", "last_exited_at"), ("u64", "accumulated")], "actual upstream record layout")
+-    record_bytes = sum(4 if kind == "u32" else 8 for kind, name in record_fields)
+-    same(record_bytes, 32, "record size without appended stats")
+-    payload_address = cells_upstream[1] + stats_offset
++                            ("subsystem_stats_in_smem", "true")):
++        same(one_match(r"\." + field + r"\s*=\s*(true|false)\s*,", config, field).group(1), expected,
++             "upstream config." + field)
++    def macro(source, name):
++        return int(one_match(r"^#define\s+" + name + r"\s+(0x[0-9a-fA-F]+|\d+)\s*$",
++                             source, name, re.M).group(1), 0)
++    header, maximum, magic = macro(upstream, "DDR_STATS_ENTRY_START_ADDR"), macro(upstream, "DDR_STATS_MAX_NUM_MODES"), macro(upstream, "DDR_STATS_MAGIC_KEY")
++    same((header, maximum, magic, macro(upstream, "DDR_STATS_MAGIC_KEY_ADDR"), macro(upstream, "DDR_STATS_NUM_MODES_ADDR")),
++         (8, 20, 0xa1157a75, 0, 4), "upstream DDR header and maximum ABI bounds")
++    same((macro(vendor, "MAX_NUM_MODES"), macro(vendor, "MAGIC_KEY1")), (maximum, magic), "vendor ABI agrees")
++    record = one_match(r"\bstruct ddr_stats_entry\s*\{([^{}]*)\};", upstream, "upstream DDR entry", re.S).group(1)
++    same(re.findall(r"\b(u32|u64)\s+(\w+)\s*;", record),
++         [("u32", "name"), ("u32", "count"), ("u64", "duration")], "upstream DDR record fields")
++    vendor_record = one_match(r"\bstruct stats_entry\s*\{([^{}]*)\};", vendor, "vendor DDR entry", re.S).group(1)
++    same(re.findall(r"\b(uint32_t|uint64_t)\s+(\w+)\s*;", vendor_record),
++         [("uint32_t", "name"), ("uint32_t", "count"), ("uint64_t", "duration")], "vendor DDR record fields")
++    vendor_header = one_match(r"\bstruct ddr_stats_data\s*\{([^{}]*)\};", vendor, "vendor DDR header", re.S).group(1)
++    same(re.findall(r"\buint32_t\s+(\w+)\s*;", vendor_header), ["key", "entry_count"], "two-word vendor header")
++    init = one_match(r"static void qcom_create_ddr_stat_files\b(.*?)static void qcom_create_soc_sleep_stat_files\b",
++                     upstream, "upstream DDR construction", re.S).group(1)
++    need(re.search(r"readl_relaxed\s*\(\s*reg\s*\+\s*config->ddr_stats_offset\s*\+\s*DDR_STATS_MAGIC_KEY_ADDR\s*\)", init) is not None,
++         "Upstream construction differs: it probes payload magic")
++    payload_address = cells_upstream[1] + fixed["ddr_stats_offset"]
+     relative = payload_address - cells[0]
+-    same((payload_address, relative), (0x0c3f0048, OFFSET_VALUE), "independent cross-source pointer arithmetic")
++    same((payload_address, relative), (0x0c3f00b8, OFFSET_VALUE), "independent reference pointer arithmetic")
+     return {"vendor_resource_base": cells[0], "offset_word_address": cells[2], "offset_window_bytes": cells[3],
+-            "upstream_region_base": cells_upstream[1], "fixed_stats_offset": stats_offset,
++            "vendor_probe_direct_mmio_reads": 1, "vendor_probe_direct_mmio_writes": 0,
++            "vendor_zero_offset_returns": "-ENODEV", "vendor_probe_payload_read": False,
++            "upstream_region_base": cells_upstream[1], "fixed_ddr_stats_offset": fixed["ddr_stats_offset"],
+             "reference_payload_address": payload_address, "relative_word": relative,
+             "little_endian_word_hex": relative.to_bytes(4, "little").hex(),
+-            "reference_num_records": count, "reference_record_bytes": record_bytes,
+-            "reference_payload_bytes": count * record_bytes, "payload_mapped_by_this_device": False,
++            "reference_header_bytes": header, "reference_maximum_records": maximum,
++            "reference_record_bytes": 16, "reference_maximum_payload_bytes": header + maximum * 16,
++            "payload_bytes_are_maximum_abi_span": True, "runtime_record_count_known": False,
++            "upstream_cold_probe_differs_from_vendor": True, "payload_mapped_by_this_device": False,
+             "captured_runtime_word_claimed": False, "native_reset_value_claimed": False,
+             "generic_firmware_to_apss_alias_claimed": False}
+ 
+@@ -1177,7 +1263,7 @@
+     same(source_head(store, root), expected_source_head_file, "Both new cases share exact source provenance")
+     data = root + "/fixtures/data"
+     report = store.json(data + "/result.json")
+-    fields_equal(report, {"schema": "tb371fc-rpm-stats-offset-generation-v1", "passed": True,
++    fields_equal(report, {"schema": "tb371fc-ddr-stats-offset-generation-v1", "passed": True,
+                          "source_revision": PRIMARY, "geometry_source_revision": UPSTREAM,
+                          "source_pins_verified": True, "generator_exit": 0}, "Actual generation report")
+     need("error" not in report, "Generation report recorded an exception")
+@@ -1187,7 +1273,7 @@
+                                    "verified_lengths": {"inputs": 4}}, "Generation strict harness contract")
+     command = case["command"]
+     same(len(command), 4, "Complete generation harness argv")
+-    same(PurePosixPath(command[1]).name, "verify_rpm_stats_offset_generation.py", "Generation producer path")
++    same(PurePosixPath(command[1]).name, "verify_ddr_stats_offset_generation.py", "Generation producer path")
+     same(command[2], "--out", "Generation output flag")
+     same(PurePosixPath(command[3]), PurePosixPath(case["fixture"]) / "data", "Generation fixture path")
+     same(json_value(logs["stdout.log"], "generation harness stdout"),
+@@ -1221,16 +1307,22 @@
+     same(report["generated_contract"], contract, "Actual source generation contract")
+     fields_equal(manifest, contract, "Actual generated manifest")
+     fields_equal(manifest["reference_scope"], {
+-        "default_enabled": False, "enabled_aligned_read32_supported": True, "writes_supported": False,
++        "default_enabled": False, "enabled_aligned_read32_supported": True,
++        "reference_window_mapped_only_when_enabled": True, "default_off_mapped_bytes": 0,
++        "statistics_magic_implemented": False, "statistics_entry_count_implemented": False,
++        "writes_supported": False,
+         "disabled_reads_supported": False, "statistics_payload_implemented": False,
+         "statistics_counters_implemented": False, "statistics_names_implemented": False,
+         "firmware_ready_implemented": False, "aop_execution_implemented": False,
+         "irq_output_implemented": False, "clock_implemented": False, "timer_implemented": False,
+-        "ddr_statistics_pointer_implemented": False, "mailbox_aperture_modified": False,
++        "rpm_statistics_pointer_implemented": False, "mailbox_aperture_modified": False,
+         "native_reset_value_known": False, "whole_production_kernel_source_identity_claimed": False},
+         "Generated unsupported behavior boundaries")
+     fields_equal(manifest["upstream_layout"], {"payload_mapped_by_this_device": False,
+-                 "payload_base": 0x0c3f0048, "payload_bytes": 96, "record_bytes": 32, "num_records": 3},
++                 "payload_base": 0x0c3f00b8, "payload_bytes": 328, "record_bytes": 16,
++                 "header_bytes": 8, "maximum_records": 20, "ddr_stats_offset": 0xb8,
++                 "payload_bytes_is_maximum_abi_span": True,
++                 "cold_probe_differs_from_vendor_sysfs_consumer": True},
+                  "Generated reference payload remains unmapped")
+     same(manifest["derivation"]["captured_runtime_word_claimed"], False, "No captured runtime word claim")
+     generator_stdout = json_value(store.read(data + "/generation.stdout"), "generator stdout")
+@@ -1246,7 +1338,7 @@
+ 
+ def report_constants():
+     return {
+-        "schema": "tb371fc-rpm-stats-offset-sm8250-v1", "suite": CASE, "expected_checks": 20,
++        "schema": "tb371fc-ddr-stats-offset-sm8250-v1", "suite": CASE, "expected_checks": 20,
+         "expected_completed_migrations": 2, "expected_rejected_migrations": 2,
+         "expected_corrupted_stream_rejections": 6, "expected_unmodified_streams": 2, "expected_stream_files": 8,
+         "vmstate_version": 1, "vmstate_minimum_version": 1, "vmstate_payload_bytes": PAYLOAD,
+@@ -1256,9 +1348,10 @@
+         "reference_enabled_by_default": False, "readonly_offset_register": True,
+         "mutable_device_state": False, "migration_destination_device_state_dirtied": False,
+         "migration_destination_ram_witness_dirtied": True, "stats_payload_modeled": False,
+-        "ddr_offset_modeled": False, "firmware_modeled": False, "ready_modeled": False,
++        "rpm_offset_modeled": False, "firmware_modeled": False, "ready_modeled": False,
+         "guest_cpu_executed": False, "native_kernel_probe_observed": False, "android_boot_passed": False,
+-        "binary_unchanged": True,
++        "binary_unchanged": True, "reference_window_mapped_only_when_enabled": True,
++        "default_off_mapped_bytes": 0,
+     }
+ 
+ 
+@@ -1268,8 +1361,9 @@
+         "source_revision": PRIMARY, "geometry_source_revision": UPSTREAM, "test_script_sha256": TEST_SHA,
+         "actual_dt_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+         "qemu_sha256_before": qemu_sha, "qemu_sha256_after": qemu_sha,
+-        "scope": "One configured read-only RPM statistics offset word. No statistics payload, "
+-                 "DDR offset, firmware, READY, clock or timer behavior. No mutable device state "
++        "scope": "One configured read-only DDR statistics offset word, mapped only when enabled. "
++                 "The default-off address remains unmapped. No statistics payload, "
++                 "RPM offset, firmware, READY, clock or timer behavior. No mutable device state "
+                  "is claimed: incoming prewarming changes RAM only. No guest CPU, native probe "
+                  "or Android boot claim.",
+     }
+@@ -1302,7 +1396,7 @@
+                                    "check_count": 20, "verified_lengths": LENGTHS}, "Strict CI component contract")
+     command = case["command"]
+     same(len(command), 6, "Complete component harness argv")
+-    same(PurePosixPath(command[1]).name, "test_rpm_stats_offset_sm8250.py", "Exact component script name")
++    same(PurePosixPath(command[1]).name, "test_ddr_stats_offset_sm8250.py", "Exact component script name")
+     same(command[2:], ["--qemu", report["qemu"], "--out", report["work_dir"]], "Exact compiled producer flags")
+     same(PurePosixPath(report["work_dir"]), PurePosixPath(case["fixture"]) / "data", "Actual fixture directory")
+     head_path = source_head(store, root)
+@@ -1322,7 +1416,7 @@
+         results[relative] = {"bytes": size, "sha256": expected}
+         if relative.endswith(".py"):
+             compile(raw, str(path), "exec")
+-    contract = json_value((root / "tb371fc/evidence/rpm-stats-offset-20261125-6a5/test-ci-contract.json").read_bytes(),
++    contract = json_value((root / "tb371fc/evidence/ddr-stats-offset-20261125-6a5/test-ci-contract.json").read_bytes(),
+                           "local pinned compiled-test contract")
+     same(contract["expected_values"], report_constants(), "Independent constants equal pinned CI contract")
+     same(contract["expected_lengths"], LENGTHS, "Independent lengths equal pinned CI contract")
+@@ -1338,9 +1432,9 @@
+ 
+ 
+ def static_self_check():
+-    same(wire(world()).hex(), "0000000152534f31000000000c3f000400000004000f0048",
++    same(wire(world()).hex(), "0000000144534f31000000000c3f001c00000004000f00b8",
+          "Literal independent enabled 24-byte wire")
+-    same(wire(world(False)).hex(), "0000000052534f31000000000c3f00040000000400000000",
++    same(wire(world(False)).hex(), "0000000044534f31000000000c3f001c0000000400000000",
+          "Literal independent disabled 24-byte wire")
+     same(len(FIELDS), GETTERS, "17 exact observer names")
+     same(len(set(FIELDS)), GETTERS, "17 unique observer names")
+@@ -1348,7 +1442,7 @@
+          ("migrations", "rejected_migrations", "corrupted_stream_rejections")), 20, "20 group arithmetic")
+     same([offset + width - 1 for name, scenario, offset, width, old, xor, profile, reason in MUTATIONS],
+          [3, 7, 15, 19, 23, 23], "Exact single-bit byte positions")
+-    same(0x0c3f0000 + 0x48 - 0x0c300000, OFFSET_VALUE, "Independent reference pointer arithmetic")
++    same(0x0c3f0000 + 0xb8 - 0x0c300000, OFFSET_VALUE, "Independent reference pointer arithmetic")
+ 
+ 
+ def main():
+@@ -1359,12 +1453,12 @@
+     parser.add_argument("--expected-zip-sha256", required=True)
+     parser.add_argument("--out", type=Path, required=True)
+     parser.add_argument("--expected-qemu-sha256")
+-    parser.add_argument("--source-root", type=Path, default=Path("/dev/shm/rpmstats-candidate-6a5"))
++    parser.add_argument("--source-root", type=Path, default=Path("/dev/shm/ddrstats-candidate-6a5"))
+     args = parser.parse_args()
+     if args.out.exists():
+         raise SystemExit("Refusing to overwrite existing independent audit evidence: " + str(args.out))
+     receipt = {
+-        "schema": "tb371fc-rpm-stats-offset-independent-artifact-audit-v1", "passed": False,
++        "schema": "tb371fc-ddr-stats-offset-independent-artifact-audit-v1", "passed": False,
+         "observed_utc": datetime.now(timezone.utc).isoformat(), "auditor_sha256": file_hash(__file__),
+         "expected_head": args.expected_head, "expected_tree": args.expected_tree,
+         "expected_zip_sha256": args.expected_zip_sha256, "read_only_archive": True,
+@@ -1372,9 +1466,15 @@
+         "producer_serializer_imported": False, "model_imported": False, "generator_imported": False,
+         "whole_workflow_verdict_claimed": False, "native_android_passed": False,
+         "shared_log_timestamp_claimed": False,
+-        "scope": "Actual compiled RPM offset component: 20 groups, two original plus six complete one-bit streams, full 24-byte wire, raw QMP/QTest/log evidence, and the separate four-input source-generation case. Aggregate and retained legacy workflow audits remain separate.",
++        "source_recovery": {"new_derivation": True,
++                            "original_lost_auditor_sha256": "e083e95d5087a71416afecf87c921255433306bb6c7b2c0ba10ae586f528a024",
++                            "original_source_byte_identity_claimed": False,
++                            "predecessor_commit": "d103750ca2a191559daeb9eff4341b8c80013dc6",
++                            "predecessor_auditor_sha256": "7eb65a626ce253f3f8469948ddb0669d6bb5256f186f0ef9ffbb3c76b55b10f0",
++                            "lost_actual_receipts_recreated": False},
++        "scope": "Actual compiled DDR offset component: 20 groups, two original plus six complete one-bit streams, full 24-byte wire, raw QMP/QTest/log evidence, and the separate four-input source-generation case. Aggregate and retained legacy workflow audits remain separate.",
+         "protocol_limit": "Separate QMP/QTest logs have no shared timestamp. Exact per-file order, actual counter receipts, the restored RAM witness and pinned producer order are combined without inventing a global timestamp.",
+-        "mmio_limit": "A typed invalid operation reaches one rejecting device callback. A raw five-byte read returns only a valid four-byte prefix; its failed hole suffix is not data. A raw five-byte write rejects its four-byte device prefix and its one-byte unmapped suffix. Whole-buffer success or atomicity is not claimed.",
++        "mmio_limit": "Enabled typed invalid operations reach one rejecting device callback. Disabled DDR has no active leaf and uses exact generic unassigned chunks, including two four-byte chunks for qword requests. A raw five-byte read returns only a valid four-byte prefix; its failed hole suffix is not data. A raw five-byte write rejects its four-byte device prefix and its one-byte unmapped suffix. Whole-buffer success or atomicity is not claimed.",
+         "state_limit": "The device is immutable configured metadata. Migration prewarm changes RAM only; no mutable device state or real firmware reset value is claimed.",
+         "source_tree_binding_basis": "Exact published head/tree supplied by the coordinator; archive source-commit.txt is independently checked. An absent archive tree file is not invented.",
+         "prior_failed_head": {"head": FAILED_HEAD, "board_job": 138930599415,
+@@ -1419,6 +1519,10 @@
+             "first_memory_command_delta": 0, "first_device_mmio_delta": 0, "first_cont_delta": 0,
+             "device_state_dirtied": False, "ram_witness_dirtied": True,
+             "source_generation_checks": 2, "source_generation_inputs": 4,
++            "enabled_active_mapped_bytes": 4, "default_off_active_mapped_bytes": 0,
++            "default_off_device_callback_count": 0, "default_off_generic_rejection_count": 12,
++            "disabled_target_device_callback_count": 0, "disabled_target_generic_rejection_count": 3,
++            "active_mapping_queries_verified": 7, "target_pure_getters_total_per_direction": 187,
+             "actual_archive_evidence_verified": True, "native_probe_claimed": False, "android_boot_claimed": False,
+         }
+         receipt["verified_members"] = dict(sorted(store.observed.items()))

@@ -1,0 +1,27 @@
+{
+  "schema": "tb371fc-ddr-auditor-source-recovery-status-v1",
+  "status": "source-recovery-in-progress",
+  "old_frozen_sources": {
+    "ddr_auditor": {
+      "bytes": 96847,
+      "sha256": "e083e95d5087a71416afecf87c921255433306bb6c7b2c0ba10ae586f528a024",
+      "original_bytes_available": false
+    },
+    "qualification_preartifact": {
+      "bytes": 45057,
+      "sha256": "130334bf01b28ab41616ddf9f051f28b6db0c574426f557e8377b7cbb5e1ba3b",
+      "original_bytes_available": false
+    }
+  },
+  "constraints": [
+    "Do not reconstruct or invent lost receipt bytes.",
+    "Attempt exact source recovery; otherwise produce a distinctly identified new derivation for independent review.",
+    "No source publication, device, SSH, QEMU, native or CI execution.",
+    "Do not run an artifact auditor until separately authorized after source review."
+  ],
+  "source_predecessor_commit": "d103750ca2a191559daeb9eff4341b8c80013dc6",
+  "load_cache_candidate_keys_checked": 30,
+  "matching_complete_source_cache_found": false,
+  "recovery_artifact_audits_executed": false,
+  "qualified_artifact_claimed": false
+}

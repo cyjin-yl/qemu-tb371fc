@@ -1,0 +1,120 @@
+{
+  "schema": "tb371fc-pr32-runner-independent-source-review-v1",
+  "reviewed_utc": "2026-11-25T00:57:14.756939+00:00",
+  "base": "d40638391637e918f3382092d64fba0a7a17cade",
+  "head": "28def523ecd39c90bdedee7a2b38ba71353b5f88",
+  "combined_head": "54ec7443bc75460baa35a0c0b0502ae6cb4d8fa7",
+  "fetched_inputs": {
+    "path": "/dev/shm/native-spss-coordinator-review-6a5/pr32-fetched-source-inputs-001.json",
+    "bytes": 166105,
+    "sha256": "872985f6ffc8863580f5c72ec2479ae8ccd48b1892ed15e723d9d38c239b582d",
+    "git_blob": "c9833b5abae19c1da63bbf66926c82a45f2f0373"
+  },
+  "comparison_inputs": {
+    "path": "/dev/shm/native-spss-coordinator-review-6a5/pr32-github-comparison-inputs-001.json",
+    "bytes": 43820,
+    "sha256": "cf5e3bd4682845594afe37686a42e6eeffca101fa85effd341feba170774b7a7",
+    "git_blob": "0d32e9c62c8c39fe917c0c2f967ea1d87358b6d7"
+  },
+  "source_files": [
+    {
+      "path": "tb371fc/docs/android-stock-boot.md",
+      "bytes": 16785,
+      "sha256": "e6622b76ee2395613d10f914dd2f15e1d98075db59f8e97bbe031b303cac7ae6",
+      "git_blob": "ed29366f3c073ad06f6b0a7d369120bf4c2bff67",
+      "ref": "28def523ecd39c90bdedee7a2b38ba71353b5f88"
+    },
+    {
+      "path": "tb371fc/evidence/runner-shutdown-provenance-20261124-64053/validation.json",
+      "bytes": 5541,
+      "sha256": "8fedfbb7c46fa244503a9cce8c1fa10c2d2fbe731f3bbb1743853e35fe0d936a",
+      "git_blob": "7f9f344f485906ef1a880ff313687cc3fb5a7013",
+      "ref": "28def523ecd39c90bdedee7a2b38ba71353b5f88"
+    },
+    {
+      "path": "tb371fc/scripts/boot_android.py",
+      "bytes": 40941,
+      "sha256": "61093aab7176842ef14f592e90456c0c0b91206d594447474d0a02cbf3fb10d1",
+      "git_blob": "1614a9c6032457fecf370559ed66c45823f16a3f",
+      "ref": "28def523ecd39c90bdedee7a2b38ba71353b5f88"
+    },
+    {
+      "path": "tb371fc/tests/test_boot_android.py",
+      "bytes": 52167,
+      "sha256": "cda111c0b37cbf2e6f9844fc3483ce0f75fda9ed78a98bcd21efeddb4fe89a75",
+      "git_blob": "b4a2dc464718354d91191b320d4732a3b7012c09",
+      "ref": "28def523ecd39c90bdedee7a2b38ba71353b5f88"
+    },
+    {
+      "path": "tb371fc/scripts/boot_android.py",
+      "bytes": 39384,
+      "sha256": "ebba3b55ae4f931e5768717d635647dd855ab56a1efb19350acbaf1a4498b3eb",
+      "git_blob": "6c33791612349fbac303436fcbc1eea206c3ac9a",
+      "ref": "d40638391637e918f3382092d64fba0a7a17cade"
+    }
+  ],
+  "changed_file_count": 4,
+  "runner_added_functions": [
+    "stopped_before_quit"
+  ],
+  "runner_changed_functions": [
+    "normal_qmp_shutdown",
+    "observe"
+  ],
+  "runner_unchanged_functions": [
+    "digest",
+    "write_json",
+    "regular_path",
+    "executable",
+    "fingerprint",
+    "validate_inputs",
+    "build_plan",
+    "prepare_overlays",
+    "validate_qmp_message",
+    "quit_response",
+    "open_qmp",
+    "check_backing_nodes",
+    "capture_stopped_printk",
+    "analyze_logs",
+    "collect_logs",
+    "verify_preserved",
+    "printk_capture_failed",
+    "stock_boot_passed",
+    "main"
+  ],
+  "unchanged_entire_module_except_reviewed_functions": true,
+  "prior_normal_shutdown_checks_AST_unchanged": true,
+  "observe_AST_only_stop_guard_replaced": true,
+  "findings": [
+    {
+      "source": "tb371fc/scripts/boot_android.py:328-348",
+      "conclusion": "Paused+running false is retained; shutdown+running false now also requires the last relevant event to be SHUTDOWN with guest strictly True and reason guest-shutdown, guest-reset or guest-panic. Later RESUME/RESET/GUEST_PANICKED/WATCHDOG/conflicting SHUTDOWN rejects it."
+    },
+    {
+      "source": "tb371fc/scripts/boot_android.py:351-403",
+      "conclusion": "Existing unique matching empty-object quit ACK, tail completeness and terminal EOF/qualified ECONNRESET, integer process exit 0, absence of errors/forced termination and fresh host-qmp-quit requirements are unchanged. Shutdown-state reports additionally require exact quit-tail suffix in qmp_events and qualifying guest event before it."
+    },
+    {
+      "source": "tb371fc/scripts/boot_android.py:512-525",
+      "conclusion": "Runtime calls the same stop-provenance predicate before quit; the existing post-query state-transition rejection remains byte-for-byte."
+    },
+    {
+      "source": "tb371fc/scripts/boot_android.py:633-669 and main",
+      "conclusion": "verify_preserved, stock_boot_passed, input planning/protection, printk failure handling and main exit-code selection are AST-identical. Guest shutdown/panic remains adverse; original nonempty LUNs, Android completion, time-bound paused end, preservation, unchanged QEMU, no truncation and normal host quit are still required."
+    },
+    {
+      "source": "tb371fc/tests/test_boot_android.py",
+      "conclusion": "43 test methods are present. Three additions exercise permitted guest cleanup without Android pass, missing/stale/contradictory guest evidence, and saved-history/tail mismatch. Existing malformed ACK/tail cases gain host-signal and WATCHDOG coverage."
+    },
+    {
+      "source": "tb371fc/docs/android-stock-boot.md and validation.json",
+      "conclusion": "Documentation separates cleanup from Android success and preserves failed run007. Published evidence records 43 runner and 28 consumer host tests, including the failed timed-out first consumer attempt; those counts are producer evidence, not independently rerun in this review."
+    }
+  ],
+  "blocking_findings": [],
+  "tests_executed_by_reviewer": false,
+  "runner_or_coordinator_imported_or_executed": false,
+  "host_or_native_or_device_called": false,
+  "new_original_android_run": false,
+  "qualified_new_artifact": false
+}

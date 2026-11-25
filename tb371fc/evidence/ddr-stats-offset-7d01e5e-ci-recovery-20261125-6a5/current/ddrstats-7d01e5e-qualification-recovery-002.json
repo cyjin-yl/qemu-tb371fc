@@ -1,0 +1,961 @@
+{
+  "a77_actual_raw_log_audit": {
+    "bytes": 15679,
+    "path": "/dev/shm/ddrstats-ci-review/ddrstats-7d01e5e-a77-rawlog-audit-001.json",
+    "sha256": "3b4f87b5f5d0df65f2356ecc554d7e56482736c6acc87a719ea497b12c4854df"
+  },
+  "a77_each_job_executed_in_this_attempt": true,
+  "additional_host_unit_suites_each_board_job": {
+    "boot_android": 43,
+    "ci_device_tests": 36,
+    "included_in_component_gate_count": false,
+    "source_download": 15
+  },
+  "additional_optional_tests_run": false,
+  "all_eight_independent_audits_passed": true,
+  "android_boot_established": false,
+  "android_userspace_established": false,
+  "artifact": {
+    "api_url": "https://api.github.com/repos/cyjin-yl/qemu-tb371fc/actions/artifacts/14991304675",
+    "archive_bytes": 57340476,
+    "archive_sha256": "1e6c37d205a9e130e4f197c068c93c756488b6b579ab06eadd429190b9b0bd6f",
+    "artifact_name": "tb371fc-public-gates-7d01e5e294b788f97a8120c2d34122ddb25e6343",
+    "id": 14991304675,
+    "qemu_bytes": 63727664,
+    "qemu_member": "qemu-build/qemu-system-aarch64",
+    "qemu_sha256": "935549d9f359d04254f5627bdd8807fd8d1800ab2223ab52dea80c0cf7edecb6",
+    "run_id": 45544186469
+  },
+  "artifact_api_evidence": {
+    "bytes": 1793,
+    "path": "/dev/shm/ddrstats-recovery-6a5/ddrstats-7d01e5e-recovery-artifacts-api-001.json",
+    "sha256": "de2c6fa7fd625e79471760931e81acacdee99c1cd044e6cd35e102e85a5559bb"
+  },
+  "assembler": {
+    "bytes": 62005,
+    "path": "/dev/shm/ddrstats-recovery-6a5/assemble_ddr_stats_offset_7d01e5e_recovery_qualification_002.py",
+    "sha256": "5335ef86a55528ab85d6d857789e82a68f716a2e081c58458e79a337e941fd66"
+  },
+  "audits": [
+    {
+      "auditor": {
+        "bytes": 156745,
+        "path": "/dev/shm/ddrstats-recovery-6a5/audit_ddr_stats_offset_integration_artifact_7d01e5e_recovery_001.py",
+        "sha256": "074fcc1b61e338b448e8ca7a735031f7090b061288b769ead06cb8e8a8c00905"
+      },
+      "name": "integration",
+      "passed": true,
+      "receipt": {
+        "bytes": 151438,
+        "path": "/dev/shm/ddrstats-recovery-6a5/integration-7d01e5e-recovery-audit-001.json",
+        "sha256": "276176df2da0c6caed19bd414c249af5054fd234cd5750018f9d3c10188f49f0"
+      },
+      "scope": {
+        "actual_archive_and_elf_bytes_hashed": true,
+        "ci_harness_unittests_from_actual_push_artifact": 36,
+        "component_gates": 99,
+        "description": "All 104 gate contracts and real aggregate/individual receipts, actual QEMU/clean-Linux bytes, VIDEOCC complete streams, VIDEOCC, DSI, DP, LLCC, SPSS, RPM offset and DDR offset source regeneration",
+        "linux_gates": 5,
+        "source_generation": {
+          "ddr_stats_offset_generation": {
+            "committed_output_pins": {
+              "hw/misc/qcom-sm8250-ddr-stats-offset-data.inc": {
+                "bytes": 346,
+                "sha256": "e6ec892f78dac7e3f87a06618a3cc69e9692fa819c2ea60027bdb5e526fccd4f"
+              },
+              "tb371fc/docs/ddr-stats-offset-sm8250-registers.json": {
+                "bytes": 5304,
+                "sha256": "682074c1299455fa482b870a4b2f841ea1c1c74aee9ed6dac131cc9dcff33b7d"
+              }
+            },
+            "geometry_source_revision": "75f2c0b3690702c90863c2e138cb5520670845ea",
+            "inputs_verified_from_actual_bytes": 4,
+            "outputs_verified_from_actual_bytes": 2,
+            "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6"
+          },
+          "dp_generation": {
+            "committed_output_pins": {
+              "hw/misc/qcom-sm8250-dp-pll-data.inc": "36871a517d97b694252bfee383adf781878ac013215b98fd17089e7e73a5dd0d",
+              "tb371fc/docs/dp-pll-7nm-registers.json": "a9150fda61e16a0deb6acabe17f9e3b532963a61453fb98c125dab0cf08ec101"
+            },
+            "inputs_verified_from_actual_bytes": 17,
+            "outputs_verified_from_actual_bytes": 2,
+            "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6"
+          },
+          "dsi_generation": {
+            "committed_output_pins": {
+              "hw/misc/qcom-sm8250-dsi-pll-data.inc": "c193666bb41923063ca295cdb0f0327cea5f0e5b917c23d1b4b94d16bff23c16",
+              "tb371fc/docs/dsi-pll-7nm-registers.json": "c73a7e5ad6f36c008f2e9991c8d7a56d3b30cb2781b015a46fd3c13ca0d5b6df"
+            },
+            "inputs_verified_from_actual_bytes": 13,
+            "outputs_verified_from_actual_bytes": 2,
+            "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6"
+          },
+          "generation": {
+            "committed_output_pins": {
+              "hw/misc/qcom-sm8250-videocc-data.inc": "7e98e8885f0cca0781063890c7e0011dac370f60c4ebb8e885f31fa1fd84cbc8",
+              "tb371fc/docs/videocc-sm8250-registers.json": "ffbfd3bacb39d4fc22780b42a161b64142a784fda05b595bbb933c117ab44a14"
+            },
+            "inputs_verified_from_actual_bytes": 10,
+            "outputs_verified_from_actual_bytes": 2,
+            "source_revision": "94304e12a3509eac7b3716bf574ce0b1fcaacbae"
+          },
+          "llcc_generation": {
+            "committed_output_pins": {
+              "hw/misc/qcom-sm8250-llcc-data.inc": "f3f7979c7973b2fbf9d8d398c064b8a404a290fbdd9d5a141407c0b28f974a46",
+              "tb371fc/docs/llcc-sm8250-registers.json": "9b9989a04b3719665439dab6287be8ced18511021c58ef5c7011f36a587b4772"
+            },
+            "geometry_source_revision": "adc218676eef25575469234709c2d87185ca223a",
+            "inputs_verified_from_actual_bytes": 8,
+            "outputs_verified_from_actual_bytes": 2,
+            "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6"
+          },
+          "rpm_stats_offset_generation": {
+            "committed_output_pins": {
+              "hw/misc/qcom-sm8250-rpm-stats-offset-data.inc": {
+                "bytes": 346,
+                "sha256": "dc38191138f43d396b94971b15b9b6617924131669b602cb1bccf185f75d22e5"
+              },
+              "tb371fc/docs/rpm-stats-offset-sm8250-registers.json": {
+                "bytes": 4870,
+                "sha256": "df0c4dad7572a918f579e98174663496893039d27315db6427726de9641a6adb"
+              }
+            },
+            "geometry_source_revision": "adc218676eef25575469234709c2d87185ca223a",
+            "inputs_verified_from_actual_bytes": 4,
+            "outputs_verified_from_actual_bytes": 2,
+            "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6"
+          },
+          "spss_generation": {
+            "committed_output_pins": {
+              "hw/misc/qcom-sm8250-spss-irq-mask-data.inc": "0bc4c9cbac7893f470ea1271274da41fa22b3fd0ea4b8e0fbd5ec1b4047c6cec",
+              "tb371fc/docs/spss-irq-mask-sm8250-registers.json": "93cc367d15a60d82b8c765205791b16e3348c1a2b6e16e72d47c7d487b2627cb"
+            },
+            "inputs_verified_from_actual_bytes": 2,
+            "outputs_verified_from_actual_bytes": 2,
+            "source_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6"
+          }
+        },
+        "supplementary_wire_audits": [
+          "DSI 2926 + MDSS 64",
+          "DISPCC 1676 + MDSS 64",
+          "DP 791 + MDSS 64",
+          "LLCC 783",
+          "SPSS 25",
+          "RPM offset 24",
+          "DDR offset 24"
+        ],
+        "videocc": {
+          "all_source_and_target_qom_replies_checked": true,
+          "checks": 41,
+          "completed": 3,
+          "original_files": 4,
+          "profile_rejections": 2,
+          "single_bit_rejections": 2,
+          "source_and_target_output_rates_recomputed": true,
+          "total_stream_files": 6
+        }
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 95924,
+        "path": "/dev/shm/ddrstats-recovery-6a5/audit_ddr_stats_offset_artifact_7d01e5e_recovery_001.py",
+        "sha256": "4a347b0f0962b21e8653b7ef39db66fadce5b6f8385bded8fb7ea12ddefc521b"
+      },
+      "name": "ddr_stats_offset",
+      "passed": true,
+      "receipt": {
+        "bytes": 62526,
+        "path": "/dev/shm/ddrstats-recovery-6a5/ddr-7d01e5e-recovery-audit-001.json",
+        "sha256": "09d18f10acc97ac2a452fc321f907c65fc5a7af1e41619e0acfc10143921169d"
+      },
+      "scope": {
+        "aop_execution_claimed": false,
+        "bytes_per_original_payload": 24,
+        "captured_runtime_word_claimed": false,
+        "checks": 20,
+        "completed_migrations": 2,
+        "default_off_mapped_bytes": 0,
+        "destination_device_state_dirtied": false,
+        "destination_ram_witness_dirtied": true,
+        "first_target_actual_cont_count_each": 0,
+        "first_target_actual_mmio_delta_each": 0,
+        "first_target_qom_getters_each": 17,
+        "independent_summary": {
+          "active_mapping_queries_verified": 7,
+          "actual_archive_evidence_verified": true,
+          "android_boot_claimed": false,
+          "checks": 20,
+          "completed_migrations": 2,
+          "default_off_active_mapped_bytes": 0,
+          "default_off_device_callback_count": 0,
+          "default_off_generic_rejection_count": 12,
+          "device_state_dirtied": false,
+          "disabled_target_device_callback_count": 0,
+          "disabled_target_generic_rejection_count": 3,
+          "enabled_active_mapped_bytes": 4,
+          "first_cont_delta": 0,
+          "first_device_mmio_delta": 0,
+          "first_getters": 17,
+          "first_memory_command_delta": 0,
+          "native_probe_claimed": false,
+          "one_bit_rejections": 6,
+          "ordinary_and_special_groups": 10,
+          "original_streams": 2,
+          "payload_bytes": 24,
+          "prewarm_device_mmio": 0,
+          "prewarm_ram_commands": 2,
+          "profile_rejections": 2,
+          "ram_witness_dirtied": true,
+          "repeated_getters": 17,
+          "source_generation_checks": 2,
+          "source_generation_inputs": 4,
+          "target_pure_getters_total_per_direction": 187,
+          "total_stream_files": 8
+        },
+        "mapped_bytes_when_enabled": 4,
+        "native_reset_value_known": false,
+        "new_source_recovery_audit": true,
+        "offset_value": 983224,
+        "physical_base": 205455388,
+        "profile_rejections": 2,
+        "repeated_target_qom_getters_each": 17,
+        "rpm_offset_behavior_modeled": false,
+        "single_bit_rejections": 6,
+        "statistics_payload_implemented": false,
+        "stream_files": 8,
+        "target_getters_each": 187,
+        "unmodified_streams": 2
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 87901,
+        "path": "/dev/shm/ddrstats-legacy-recovery-001/auditors/audit_rpm_stats_offset_artifact_ddr_stats_offset_7d01e5e_recovery_001.py",
+        "sha256": "5a921af17d8bca1557d21d7b1bc1001b008a5185abfe531d6efca19fec32eda0"
+      },
+      "name": "rpm_stats_offset",
+      "passed": true,
+      "receipt": {
+        "bytes": 57832,
+        "path": "/dev/shm/ddrstats-recovery-6a5/rpm-7d01e5e-recovery-audit-001.json",
+        "sha256": "fb8fb2286f63a577027cf55e8c2b86316f35dfaf513988698c6b64f92d8c6cb3"
+      },
+      "scope": {
+        "aop_execution_claimed": false,
+        "bytes_per_original_payload": 24,
+        "captured_runtime_word_claimed": false,
+        "checks": 20,
+        "completed_migrations": 2,
+        "destination_device_state_dirtied": false,
+        "destination_ram_witness_dirtied": true,
+        "first_target_actual_cont_count_each": 0,
+        "first_target_actual_mmio_delta_each": 0,
+        "first_target_qom_getters_each": 17,
+        "independent_summary": {
+          "actual_archive_evidence_verified": true,
+          "android_boot_claimed": false,
+          "checks": 20,
+          "completed_migrations": 2,
+          "device_state_dirtied": false,
+          "first_cont_delta": 0,
+          "first_device_mmio_delta": 0,
+          "first_getters": 17,
+          "first_memory_command_delta": 0,
+          "native_probe_claimed": false,
+          "one_bit_rejections": 6,
+          "ordinary_and_special_groups": 10,
+          "original_streams": 2,
+          "payload_bytes": 24,
+          "prewarm_device_mmio": 0,
+          "prewarm_ram_commands": 2,
+          "profile_rejections": 2,
+          "ram_witness_dirtied": true,
+          "repeated_getters": 17,
+          "source_generation_checks": 2,
+          "source_generation_inputs": 4,
+          "total_stream_files": 8
+        },
+        "mapped_bytes": 4,
+        "native_reset_value_known": false,
+        "offset_value": 983112,
+        "ordinary_and_special_cases": 10,
+        "physical_base": 205455364,
+        "profile_rejections": 2,
+        "ready_or_ddr_offset_modeled": false,
+        "repeated_target_qom_getters_each": 17,
+        "single_bit_rejections": 6,
+        "statistics_payload_implemented": false,
+        "stream_files": 8,
+        "unmodified_streams": 2
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 63293,
+        "path": "/dev/shm/ddrstats-legacy-recovery-001/auditors/audit_spss_irq_mask_artifact_ddr_stats_offset_7d01e5e.py",
+        "sha256": "564659b41ba380b56b4827b50f8188f04fd6cc59c13bf9fac0cd5a2b177cb572"
+      },
+      "name": "spss",
+      "passed": true,
+      "receipt": {
+        "bytes": 54576,
+        "path": "/dev/shm/ddrstats-recovery-6a5/spss-7d01e5e-recovery-audit-001.json",
+        "sha256": "14ae5c8d0205bd65932150c7fe642bae04549e3d8304851429b505cf343cd0f5"
+      },
+      "scope": {
+        "buffered_five_byte_write_commits_valid_four_byte_prefix": true,
+        "buffered_write_whole_transfer_atomicity_claimed": false,
+        "bytes_per_original_payload": 25,
+        "checks": 21,
+        "completed_migrations": 3,
+        "first_target_actual_cont_count_each": 0,
+        "first_target_actual_mmio_delta_each": 0,
+        "first_target_qom_getters_each": 18,
+        "ordinary_and_special_cases": 10,
+        "prewarm_actual_device_mmio_each": 1,
+        "profile_rejections": 2,
+        "programmed_zero_distinct_from_unknown": true,
+        "readback_supported": false,
+        "ready_firmware_pas_effects_modeled": false,
+        "single_bit_rejections": 6,
+        "stream_files": 10,
+        "target_qom_getters_total_each": 144,
+        "unmodified_streams": 4
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 77024,
+        "path": "/dev/shm/ddrstats-legacy-recovery-001/auditors/audit_llcc_artifact_ddr_stats_offset_7d01e5e.py",
+        "sha256": "effdcfdd31bbe388c3436eac700e394169409a18930ab9363ab304dd842fa3ce"
+      },
+      "name": "llcc",
+      "passed": true,
+      "receipt": {
+        "bytes": 65910,
+        "path": "/dev/shm/ddrstats-recovery-6a5/llcc-7d01e5e-recovery-audit-001.json",
+        "sha256": "ac8abe176e69947e4da53e7884cc6f6b17d74213f8ea0a42c14e7e376571a40b"
+      },
+      "scope": {
+        "bytes_per_original_payload": 783,
+        "checks": 32,
+        "completed_migrations": 4,
+        "first_target_actual_cont_count_each": 0,
+        "first_target_actual_mmio_delta_each": 0,
+        "first_target_qom_getters_each": 313,
+        "profile_rejections": 2,
+        "single_bit_rejections": 4,
+        "source_generation": {
+          "all_actual_bytes_and_git_blobs_verified": true,
+          "case": "tb371fc-results/components/16-llcc-source-generation/case.json",
+          "four_named_banks_verified": true,
+          "inputs": 8,
+          "literal_source_capacity_arithmetic_verified": true,
+          "output_sha256": {
+            "hw/misc/qcom-sm8250-llcc-data.inc": "f3f7979c7973b2fbf9d8d398c064b8a404a290fbdd9d5a141407c0b28f974a46",
+            "tb371fc/docs/llcc-sm8250-registers.json": "9b9989a04b3719665439dab6287be8ced18511021c58ef5c7011f36a587b4772"
+          },
+          "outputs": 2,
+          "physical_bank_count_measured": false,
+          "source_table_bytes": 640,
+          "source_table_sha256": "1ae851c29537ec405b15db1bd151710c25ad0f063a74970253f9d16754dc5d55"
+        },
+        "stream_files": 9,
+        "unmodified_streams": 5
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 87087,
+        "path": "/dev/shm/ddrstats-legacy-recovery-001/auditors/audit_dp_pll_artifact_ddr_stats_offset_7d01e5e.py",
+        "sha256": "f848dce3f15c277738313e719590f4f69fc76d19bf2f690e7529fc5f7d3f296f"
+      },
+      "name": "dp",
+      "passed": true,
+      "receipt": {
+        "bytes": 48747,
+        "path": "/dev/shm/ddrstats-recovery-6a5/dp-7d01e5e-recovery-audit-001.json",
+        "sha256": "9e10d125083b0885016902a37d72cb5f3943de6ee4e14c18884d436bf37dfeef"
+      },
+      "scope": {
+        "checks": 36,
+        "clock_views_per_source_and_first_target": 6,
+        "completed_migrations": 4,
+        "dp_bytes_per_original": 791,
+        "first_target_actual_cont_count_each": 0,
+        "first_target_actual_mmio_delta_each": 0,
+        "first_target_qom_getters_each": 304,
+        "mdss_bytes_per_original": 64,
+        "power_loss_credit_invariant_checked_on_legal_states_and_actual_target_observation": true,
+        "power_loss_credit_invariant_claimed_as_isolated_corruption_case": false,
+        "profile_rejections": 2,
+        "single_bit_rejections": 4,
+        "stream_files": 9,
+        "unmodified_streams": 5
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 91462,
+        "path": "/dev/shm/ddrstats-legacy-recovery-001/auditors/audit_dsi_pll_artifact.py",
+        "sha256": "0e0b7e6ebe3a9486383c2946669629a97d4d037414be9d6e5ea28970462954fe"
+      },
+      "name": "dsi",
+      "passed": true,
+      "receipt": {
+        "bytes": 42432,
+        "path": "/dev/shm/ddrstats-recovery-6a5/dsi-7d01e5e-recovery-audit-001.json",
+        "sha256": "93cdb7fd631984b5ed63e383800accb40092b9abb5a1878d0155d3544536a1c4"
+      },
+      "scope": {
+        "checks": 36,
+        "clock_views_per_source_and_first_target": 52,
+        "completed_migrations": 3,
+        "dsi_bytes_per_original": 2926,
+        "first_target_actual_cont_count_each": 0,
+        "first_target_actual_mmio_delta_each": 0,
+        "first_target_qom_getters_each": 1163,
+        "mdss_bytes_per_original": 64,
+        "profile_rejections": 2,
+        "single_bit_rejections": 4,
+        "stream_files": 8,
+        "unmodified_streams": 4
+      }
+    },
+    {
+      "auditor": {
+        "bytes": 52957,
+        "path": "/dev/shm/ddrstats-legacy-recovery-001/auditors/audit_dispcc_wide_artifact_rootpath.py",
+        "sha256": "62837675b808db7ed5671e9cff7653f7b76d4c295d668919ffff10a4134fc4c8"
+      },
+      "name": "dispcc",
+      "passed": true,
+      "receipt": {
+        "bytes": 20617,
+        "path": "/dev/shm/ddrstats-recovery-6a5/dispcc-7d01e5e-recovery-audit-001.json",
+        "sha256": "ea2eb11e29efd40d73da12bd33dbbee3aea7b0860cb6c4800a20a1c9e099953e"
+      },
+      "scope": {
+        "all_1676_dispcc_and_64_mdss_bytes_independently_decoded": true,
+        "all_61_source_and_first_target_clocks_recomputed": true,
+        "checks": 42,
+        "completed_migrations": 3,
+        "original_streams": 4,
+        "profile_rejections": 2,
+        "single_bit_rejections": 3,
+        "source_receipts": [
+          {
+            "file": "dispcc-v1-steady.migration",
+            "mdss_bytes_decoded": 64,
+            "output_clocks_recomputed": 61,
+            "sha256": "f5a2073533141afc85eac109cc8e06cc5b61a28707e195765eddb0d4dc75e020",
+            "source_trace": {
+              "actual_source_completed": true,
+              "actual_stopped_qom_getters": 556
+            },
+            "target_trace": {
+              "actual_first_qom_getters": 556,
+              "cont_before_full_first_observation": 0,
+              "cross_channel_association": "reviewed test hash, persisted equal counters, exact QMP ordering and QTest epoch/witness sequence",
+              "mmio_between_epoch_and_witness_drain": 0,
+              "persisted_counter_pair_verified": true,
+              "prewarm_device_mmio_recounted": 200,
+              "raw_ram_witness_verified": true,
+              "shared_cross_channel_timestamp_available": false
+            },
+            "wire_bytes_decoded": 1676
+          },
+          {
+            "file": "dispcc-v1-two-locks-22-rcgs.migration",
+            "mdss_bytes_decoded": 64,
+            "output_clocks_recomputed": 61,
+            "sha256": "d95a6df346f3bb369f373be1d0fd6d5ca4eb9cdef00f8f5e33a7ae10677cb10d",
+            "source_trace": {
+              "actual_source_completed": true,
+              "actual_stopped_qom_getters": 556
+            },
+            "target_trace": {
+              "actual_first_qom_getters": 556,
+              "cont_before_full_first_observation": 0,
+              "cross_channel_association": "reviewed test hash, persisted equal counters, exact QMP ordering and QTest epoch/witness sequence",
+              "mmio_between_epoch_and_witness_drain": 0,
+              "persisted_counter_pair_verified": true,
+              "prewarm_device_mmio_recounted": 200,
+              "raw_ram_witness_verified": true,
+              "shared_cross_channel_timestamp_available": false
+            },
+            "wire_bytes_decoded": 1676
+          },
+          {
+            "file": "dispcc-v1-two-latches-six-mnd.migration",
+            "mdss_bytes_decoded": 64,
+            "output_clocks_recomputed": 61,
+            "sha256": "0ffac680fd92a2f21978524db0b9bef7dd6c7bbe1fda24266652adbaf85321b0",
+            "source_trace": {
+              "actual_source_completed": true,
+              "actual_stopped_qom_getters": 556
+            },
+            "target_trace": {
+              "actual_first_qom_getters": 556,
+              "cont_before_full_first_observation": 0,
+              "cross_channel_association": "reviewed test hash, persisted equal counters, exact QMP ordering and QTest epoch/witness sequence",
+              "mmio_between_epoch_and_witness_drain": 0,
+              "persisted_counter_pair_verified": true,
+              "prewarm_device_mmio_recounted": 200,
+              "raw_ram_witness_verified": true,
+              "shared_cross_channel_timestamp_available": false
+            },
+            "wire_bytes_decoded": 1676
+          },
+          {
+            "file": "dispcc-v1-default.migration",
+            "mdss_bytes_decoded": 64,
+            "output_clocks_recomputed": 61,
+            "sha256": "cbb35fa267b15087ee6dc9c3eadfd61e8d17cc00be0e44f0a98fa450fecee4dd",
+            "source_trace": {
+              "actual_source_completed": true,
+              "actual_stopped_qom_getters": 556
+            },
+            "wire_bytes_decoded": 1676
+          }
+        ],
+        "total_streams": 7,
+        "wide_pixel_evidence": [
+          {
+            "clock": "disp_cc_mdss_pclk0_clk_src",
+            "clock_hz": 4500000004,
+            "clock_period": 954437176,
+            "input": "dsi0_phy_pll_out_dsiclk",
+            "input_period": 954437176
+          },
+          {
+            "clock": "disp_cc_mdss_pclk1_clk_src",
+            "clock_hz": 5000000001,
+            "clock_period": 858993459,
+            "input": "dsi1_phy_pll_out_dsiclk",
+            "input_period": 858993459
+          }
+        ]
+      }
+    }
+  ],
+  "bounded_artifact_download_evidence": {
+    "bytes": 762,
+    "path": "/dev/shm/ddrstats-recovery-6a5/artifact-download-recovery-001.json",
+    "sha256": "533750226852a57d0c9c3a985a857e3523cd9673c05ff51bc2ca02d48186eb05"
+  },
+  "ci_attempts_observed": 1,
+  "ci_failure_observed_for_this_head": false,
+  "commit": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+  "coordinator_deployed": false,
+  "current_head_publication_review": {
+    "all_41_actual_retained_readback_bytes_and_git_blobs_rechecked": true,
+    "all_other_tree_entries_unchanged": true,
+    "final_publication_path_count": 41,
+    "fresh_recovery_proof": true,
+    "git_tree_objects_recomputed": 25,
+    "original_lost_readback_receipt_recreated": false,
+    "raw_API_record_count": 73,
+    "receipt": {
+      "bytes": 48999,
+      "path": "/dev/shm/ddrstats-source-recovery-001/fresh-source-recovery-001.json",
+      "sha256": "63f5efb9a14a6b82d3be01849a9d32360864fd32068a50ce1fdd67bd115ada68"
+    },
+    "source_commit": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+    "source_tree": "5c25fff35bb41c3a8b018f0be965b4a9d3e9d5c4",
+    "total_published_bytes": 645747,
+    "unchanged_file_or_subtree_entries": 1091
+  },
+  "current_head_runner_readback": {
+    "current_head_bytes_established_by_historical_review_alone": false,
+    "exact_file_count": 5,
+    "files": [
+      {
+        "bytes": 40941,
+        "path": "/dev/shm/ddrstats-candidate-6a5/tb371fc/scripts/boot_android.py",
+        "sha256": "61093aab7176842ef14f592e90456c0c0b91206d594447474d0a02cbf3fb10d1"
+      },
+      {
+        "bytes": 31692,
+        "path": "/dev/shm/ddrstats-candidate-6a5/tb371fc/scripts/boot_android_from_ready.py",
+        "sha256": "b2ef676a99c7064b9d31035d1b3e1e471d613500cba6373a0992b4c4f4e4154d"
+      },
+      {
+        "bytes": 36402,
+        "path": "/dev/shm/ddrstats-candidate-6a5/tb371fc/scripts/android_boot_inputs.py",
+        "sha256": "08affe8ef5c40c7350be9e4c0f0482c4c5e594a3dcff7e3a88cf7887ea1eb5d8"
+      },
+      {
+        "bytes": 2822,
+        "path": "/dev/shm/ddrstats-candidate-6a5/tb371fc/scripts/boot_qmp.py",
+        "sha256": "b0d95776470110fd682371d393ffda4e2996fb295b1d3c81b41c46980be7a54c"
+      },
+      {
+        "bytes": 4275,
+        "path": "/dev/shm/ddrstats-candidate-6a5/tb371fc/scripts/legacy_printk.py",
+        "sha256": "6b7d18188ef8987c32135fef179f271dcf7284766a233626d09269696cada27d"
+      }
+    ],
+    "receipt": {
+      "bytes": 48999,
+      "path": "/dev/shm/ddrstats-source-recovery-001/fresh-source-recovery-001.json",
+      "sha256": "63f5efb9a14a6b82d3be01849a9d32360864fd32068a50ce1fdd67bd115ada68"
+    },
+    "runner_behavior_review_is_historical_and_byte_identity_is_current": true,
+    "source_commit": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+    "source_tree": "5c25fff35bb41c3a8b018f0be965b4a9d3e9d5c4"
+  },
+  "device_rpc_used_for_qualification": false,
+  "evidence_recovery": {
+    "fresh_current_read_only_audits": 8,
+    "new_qualification_source_and_receipt": true,
+    "new_source_review_assets": {
+      "new_aggregate_review": {
+        "bytes": 3714,
+        "path": "/dev/shm/ddrstats-recovery-6a5/aggregate-recovery-independent-static-review-001.json",
+        "sha256": "fb43132599e2a56b47bb0234e812cd2838b971d58e134ccef92609dc17efa4d4"
+      },
+      "new_ddr_derivation": {
+        "bytes": 27500,
+        "path": "/dev/shm/ddrstats-recovery-6a5/ddr-auditor-recovery-derivation-001.json",
+        "sha256": "5f4193bdcc93346606ed48d0e794e9ee2eb63cf6818224269cc126da8c03f80e"
+      },
+      "new_ddr_independent_review": {
+        "bytes": 16363,
+        "path": "/dev/shm/ddrstats-recovery-6a5/independent-ddr-auditor-static-review-recovery-001.json",
+        "sha256": "9c4f8aa5e9a93ce9b9180d81a502e1a72ac516fbb3cf58cf848775f19f7d28c6"
+      },
+      "new_ddr_source_validation": {
+        "bytes": 5282,
+        "path": "/dev/shm/ddrstats-recovery-6a5/source-only-validation-001.json",
+        "sha256": "9a296acb3f955c790f65a8710b0c9d30cd39d740ddccf04c984d5576d0f20b5f"
+      }
+    },
+    "original_lost_DDR_auditor_sha256_from_conversation": "e083e95d5087a71416afecf87c921255433306bb6c7b2c0ba10ae586f528a024",
+    "original_lost_qualifier_source_sha256_from_conversation": "130334bf01b28ab41616ddf9f051f28b6db0c574426f557e8377b7cbb5e1ba3b",
+    "original_lost_receipt_bytes_recreated": false,
+    "original_lost_source_byte_identity_claimed": false,
+    "preparation_failures_retained": {
+      "source_derivation_failure": {
+        "bytes": 1086,
+        "path": "/dev/shm/ddrstats-recovery-6a5/derivation-failure-001.json",
+        "sha256": "541ed1babaabe18424fb4027532cae55947060bc5e9ee4a5030ff6c5ae0cc61c"
+      },
+      "source_materialization_failure": {
+        "bytes": 411,
+        "path": "/dev/shm/ddrstats-recovery-6a5/source-materialization-failure-001.json",
+        "sha256": "cb8ed6e2b939ca5b57c091fa3c0a25c3655e2ebcfdf414bac6e0d0929137774e"
+      }
+    },
+    "recovery_CI_rerun": false,
+    "recovery_QEMU_or_native_rerun": false,
+    "same_immutable_artifact": true
+  },
+  "extra_linux_ufs_observation": {
+    "boundary": {
+      "external_disk_bytes_rehashed_from_archive": false,
+      "full_migration_wire_decoded": false,
+      "host_full_media_comparison_receipts_reviewed": true,
+      "inflight_ufs_migration_tested": false,
+      "migration_hash_immutability_is_receipt_evidence": true,
+      "source_process_ordering_is_recorded_host_monotonic_evidence": true,
+      "stock_android_boot_claimed": false,
+      "system_suspend_tested": false,
+      "workflow_excluded_members": [
+        "tb371fc-results/linux-ufs-migration/checkpoint.migration",
+        "tb371fc-results/linux-ufs-migration/disk.raw",
+        "tb371fc-results/linux-ufs-pm-migration/checkpoint.migration",
+        "tb371fc-results/linux-ufs-pm-migration/disk.raw"
+      ],
+      "workflow_exclusion_lines": [
+        123,
+        124,
+        125,
+        126
+      ],
+      "workflow_git_blob": "df5d3d9bca9c5908dfda73181932e18e8a0e2173"
+    },
+    "checks": [
+      39,
+      61
+    ],
+    "receipt": {
+      "bytes": 18738,
+      "path": "/dev/shm/ddrstats-recovery-6a5/ufs-7d01e5e-recovery-audit-001.json",
+      "sha256": "4872c0865dce4e17247c4c175ea2d81d65f160f2d4c51173000bbe01fa100408"
+    }
+  },
+  "github_evidence": {
+    "bytes": 85015,
+    "path": "/dev/shm/ddrstats-recovery-6a5/ddrstats-7d01e5e-recovery-ci-github-metadata-001.json",
+    "sha256": "ccff7362bca11ab9a8eb2ba7d93e0c8c66bb316931f637eeb65c7ee8fcf3660c"
+  },
+  "historical_runner_behavior_review": {
+    "bytes": 5578,
+    "path": "/dev/shm/rpmstats-ci-publication-001/payload/historical/pr32-runner-source-review.json",
+    "sha256": "a3583e1cce51b346ec8c952f8d3bc95613dd1f2d004da6b9bbb7854b6faf4d73"
+  },
+  "historical_runner_template_review": {
+    "bytes": 5366,
+    "path": "/dev/shm/rpmstats-ci-publication-001/payload/historical/pr32-runner-template-review.json",
+    "sha256": "65079790c5026729b3010c862ef98c883ca3221876e5688df63605efe85ad2db"
+  },
+  "host_boot_guard_bound": false,
+  "independent_board_log_observation": {
+    "bytes": 16476,
+    "path": "/dev/shm/ddrstats-ci-review/ddrstats-7d01e5e-board-rawlog-observation-001.json",
+    "sha256": "a3abd6defe297802108acac6debf3ebce853268a3c355ca98ad48c39dd2076a9"
+  },
+  "local_unit_limitation": {
+    "actual_local_logs": [
+      {
+        "bytes": 0,
+        "path": "/dev/shm/ddrstats-candidate-6a5/tb371fc/evidence/ddr-stats-offset-20261125-6a5/ci-unit-all-001.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 5480,
+        "path": "/dev/shm/ddrstats-candidate-6a5/tb371fc/evidence/ddr-stats-offset-20261125-6a5/ci-unit-all-001.stderr.log",
+        "sha256": "76db9d6e51e5bc747ecf8142f800c7073c897aad0065083efc40d9c6e995e3c7"
+      }
+    ],
+    "actual_local_run_receipt": {
+      "bytes": 1191,
+      "path": "/dev/shm/ddrstats-candidate-6a5/tb371fc/evidence/ddr-stats-offset-20261125-6a5/ci-local-unit-001.json",
+      "sha256": "9e1c7f2e4604a106bc3da29c59e98cf3e83222cde2430076f866c9b97317ccc8"
+    },
+    "actual_local_test_count": 36,
+    "formal_push_actual_36_pass_0_skip": true,
+    "historical_RPM_import_failure_receipt": {
+      "bytes": 576,
+      "path": "/dev/shm/rpmstats-ci-publication-001/payload/failures/ci-local-unit-001.json",
+      "sha256": "865984016a4bf612a93203e0728d9ec1a619a88e478b61a32ef68146c7176739"
+    },
+    "historical_RPM_socket_failure_receipt": {
+      "bytes": 766,
+      "path": "/dev/shm/rpmstats-ci-publication-001/payload/failures/ci-local-unit-002.json",
+      "sha256": "8fd999774fba3548d99a2a58326ce4f697f21e61ed0b8ebf8f142444e9a38273"
+    },
+    "local_all_pass_claimed": false,
+    "local_environment_error_count": 1,
+    "local_pass_count": 35,
+    "local_socket_eperm_retained": true
+  },
+  "mutable_default_ref_observation": {
+    "PR_draft_observed": true,
+    "PR_merged_observed": false,
+    "PR_state_observed": "open",
+    "actual_Git_tree_objects_recomputed": 7,
+    "current_default_head_CI_or_mergeability_claimed": false,
+    "current_default_head_is_qualified_source": false,
+    "deleted_files": 0,
+    "documentation_added_after_completed_CI": true,
+    "documentation_commit": "cfec387558972fdd82bb166a913d18e4e11da100",
+    "exact_added_paths": [
+      "tb371fc/evidence/rpm-stats-8e8eeb-native-20261125/README.md",
+      "tb371fc/evidence/rpm-stats-8e8eeb-native-20261125/manifest.json",
+      "tb371fc/evidence/rpm-stats-8e8eeb-native-20261125/native-audit-completion.json"
+    ],
+    "executable_model_runner_workflow_changes": false,
+    "immutable_PR_base": "420819df9cfd76dc98cb4705987c269047d7f214",
+    "immutable_qualified_head": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+    "immutable_qualified_tree": "5c25fff35bb41c3a8b018f0be965b4a9d3e9d5c4",
+    "modified_files": 0,
+    "observed_default_head": "b5819654a07b2048bb1088cb0c7dfe3625d474ef",
+    "observed_default_ref": "refs/heads/tb371fc",
+    "observed_default_tree": "8571f7d3b099dcb02e29a0e84ed4503ba9ebdb2e",
+    "original_PR_source_or_CI_merge_changed": false,
+    "proof": {
+      "bytes": 3040,
+      "path": "/dev/shm/ddrstats-recovery-6a5/default-ref-documentation-advance-proof-001.json",
+      "sha256": "7807ca018aa4dbaa251f02cb36c7fa02bf5292b5f2d29a15d1c2a033e58c57fc"
+    },
+    "raw_evidence": {
+      "bytes": 157269,
+      "path": "/dev/shm/ddrstats-recovery-6a5/default-ref-documentation-advance-raw-001.json",
+      "sha256": "dd80202e1dd5ef0e1cda5fc51695cb365b61f7f768b42953e6733b736e4f64c9"
+    },
+    "unchanged_file_or_subtree_entries": 235
+  },
+  "native_executed": false,
+  "native_started": false,
+  "passed": true,
+  "pr_base_evidence": {
+    "bytes": 24787,
+    "path": "/dev/shm/ddrstats-recovery-6a5/ddrstats-7d01e5e-recovery-pr-base-identity-001.json",
+    "sha256": "13da6dae96c8a1701f5aa8346c651c235c154cb9f51c67ff15caca1e06e181fb"
+  },
+  "qualification": "Exact-head push and PR CI plus eight new read-only recovery audits of the same immutable push ZIP passed",
+  "qualification_binding": {
+    "bytes": 13899,
+    "path": "/dev/shm/ddrstats-recovery-6a5/qualification-recovery-binding-002.json",
+    "sha256": "5bd4895ccf4333e95b135e9d17c896b7114df922de4b8d8d828ecc613267b3a7"
+  },
+  "qualification_evidence_observed_utc": "2026-11-25T05:28:03.725113+00:00",
+  "read_only_qualification_assembly": true,
+  "repository": "cyjin-yl/qemu-tb371fc",
+  "retained_earlier_head_ci": {
+    "bytes": 3020,
+    "path": "/dev/shm/rpmstats-ci-publication-001/payload/historical/spss-a3a6183-reviewed-ci-before-runner-advance.json",
+    "sha256": "41dd65062d5be0e68c8f7d0ad2cdb404fc6419a2920e5ed7f1f61a755b5922f9"
+  },
+  "retained_failed_qualification": {
+    "binding": {
+      "bytes": 12413,
+      "path": "/dev/shm/ddrstats-recovery-6a5/qualification-recovery-binding-001.json",
+      "sha256": "1d7854e9c0fc0a9981fa2d80256def314dd31053ff969e91bcdf52aec057ba14"
+    },
+    "execution": {
+      "bytes": 1103,
+      "path": "/dev/shm/ddrstats-recovery-6a5/qualification-recovery-execution-001.json",
+      "sha256": "a83e04ba10ab5f32eb709fc57930103eda636313d588026cf0a72a4658106d47"
+    },
+    "exit_code": 1,
+    "failed_evidence_overwritten": false,
+    "failed_execution_reclassified_as_pass": false,
+    "failure_reason": "The prior guard equated the mutable default ref with the immutable CI PR base.",
+    "independent_observation": {
+      "bytes": 2839,
+      "path": "/dev/shm/ddrstats-recovery-6a5/qualification-main-ref-failure-independent-observation-001.json",
+      "sha256": "103730ee9e9deb644823b502f1601e301c3721d7ed7e7b9f3409bd703cc1a449"
+    },
+    "qualification_created": false,
+    "scope_of_correction": "Separate the observed documentation-only default-ref advance from unchanged exact artifact and PR/CI identities.",
+    "source": {
+      "bytes": 50775,
+      "path": "/dev/shm/ddrstats-recovery-6a5/assemble_ddr_stats_offset_7d01e5e_recovery_qualification_001.py",
+      "sha256": "41f801c970a26e3e6e161d919c6922c71569a74caf32723f63c2a4616b1ae5e6"
+    },
+    "stderr": {
+      "bytes": 351,
+      "path": "/dev/shm/ddrstats-recovery-6a5/qualification-recovery-execution-001.stderr.log",
+      "sha256": "916e692c50a3dfdf9242da1581209349dd7864e09f4eb24931c03f2eda9b86f0"
+    },
+    "stdout": {
+      "bytes": 0,
+      "path": "/dev/shm/ddrstats-recovery-6a5/qualification-recovery-execution-001.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "retained_failed_source_head": {
+    "actual_terminal_failure_observation": {
+      "bytes": 1957,
+      "path": "/dev/shm/rpmstats-ci-publication-001/payload/failures/rpmstats-75cc1dc-failed-ci-observation-001.json",
+      "sha256": "0ef5b40ffe9fb06aba132c310bc8dabf94aabcb708a9f3388c8f7b0484878a6a"
+    },
+    "earlier_failed_build_reclassified_as_pass": false,
+    "earlier_head_native_qualified": false,
+    "failure_and_correction_receipt": {
+      "bytes": 1696,
+      "path": "/dev/shm/rpmstats-ci-publication-001/payload/failures/ci-include-path-correction.json",
+      "sha256": "c83c59a3d4076007c26a02b39e21707bbe42fe9a994fe8e327541cc4a9fd4468"
+    },
+    "independent_correction_review": {
+      "bytes": 3570,
+      "path": "/dev/shm/rpmstats-ci-publication-001/payload/failures/include-path-correction-review.json",
+      "sha256": "2ded18bc3ddb68f4960c707fbbd0b345af3887ff3f81173f5d32606f2c22a44c"
+    },
+    "pr_run_id": 45532462773,
+    "push_board_job_id": 138930599415,
+    "push_run_id": 45532378559,
+    "source_commit": "75cc1dc83600784afa06e81c9998d8d39aba6af2"
+  },
+  "retained_prior_RPM_CI": {
+    "bytes": 31589,
+    "path": "/dev/shm/rpmstats-ci-publication-001/payload/qualification/rpmstats-66d9e20-qualification.json",
+    "sha256": "4272efca70e43f31de1ed0ef9db20e3478d8157b64fbb44f84fa853dabf576d6"
+  },
+  "retained_prior_RPM_native": {
+    "android_boot_established": false,
+    "current_DDR_outcome_inferred_from_prior_native": false,
+    "outcome": "kernel-failure",
+    "qemu_exit": 0,
+    "receipt": {
+      "bytes": 20263,
+      "path": "/dev/shm/rpmstats-ci-publication-001/payload/native/independent-review.json",
+      "sha256": "18c4cfb5554c3286531f6aa3a5694e92ff36896471fac63e7002c02b3de0a366"
+    },
+    "runner_exit": 2,
+    "source_head": "66d9e20a9541b503ed4f5cac5c79c8a5b4a0809b"
+  },
+  "retained_prior_head_ci": {
+    "bytes": 22044,
+    "path": "/dev/shm/rpmstats-ci-publication-001/payload/historical/spss-54ec744-qualification.json",
+    "sha256": "0a52a79598ff4f57e1697b7e8327d5229b3b2491e8947f7142c1e2bbc97d5206"
+  },
+  "runner_source_sha256": "61093aab7176842ef14f592e90456c0c0b91206d594447474d0a02cbf3fb10d1",
+  "schema": "tb371fc-ddr-stats-offset-7d01e5e-qualified-artifact-v1",
+  "scope": "Compiled CI artifact qualification for one later original-input native attempt. No original Android userspace, UI or boot completion, DDR/RPM statistics payload or live data, firmware/PAS/READY events, AOP execution, or physical reset/readback behavior is established.",
+  "tree": "5c25fff35bb41c3a8b018f0be965b4a9d3e9d5c4",
+  "ui_established": false,
+  "workflow_runs": [
+    {
+      "conclusion": "success",
+      "event": "push",
+      "head_branch": "tb371fc-verified-ddr-stats-offset-20261125-6a5",
+      "head_sha": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+      "html_url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45544186469",
+      "id": 45544186469,
+      "jobs": [
+        {
+          "completed_at": "2026-11-25T04:29:39Z",
+          "conclusion": "success",
+          "head_sha": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+          "id": 138969695072,
+          "name": "board-components-and-linux",
+          "run_attempt": 1,
+          "started_at": "2026-11-25T04:03:53Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-11-25T04:07:44Z",
+          "conclusion": "success",
+          "head_sha": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+          "id": 138969695369,
+          "name": "cortex-a77-architecture",
+          "run_attempt": 1,
+          "started_at": "2026-11-25T04:03:53Z",
+          "status": "completed"
+        }
+      ],
+      "run_attempt": 1,
+      "status": "completed",
+      "updated_at": "2026-11-25T04:29:40Z"
+    },
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_branch": "tb371fc-verified-ddr-stats-offset-20261125-6a5",
+      "head_sha": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+      "html_url": "https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45544202260",
+      "id": 45544202260,
+      "jobs": [
+        {
+          "completed_at": "2026-11-25T04:08:00Z",
+          "conclusion": "success",
+          "head_sha": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+          "id": 138969744777,
+          "name": "cortex-a77-architecture",
+          "run_attempt": 1,
+          "started_at": "2026-11-25T04:04:02Z",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-11-25T04:27:51Z",
+          "conclusion": "success",
+          "head_sha": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+          "id": 138969745149,
+          "name": "board-components-and-linux",
+          "run_attempt": 1,
+          "started_at": "2026-11-25T04:04:02Z",
+          "status": "completed"
+        }
+      ],
+      "run_attempt": 1,
+      "status": "completed",
+      "updated_at": "2026-11-25T04:27:51Z"
+    }
+  ]
+}

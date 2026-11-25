@@ -1,0 +1,1147 @@
+{
+  "aggregate_and_qemu_bytes_audit_delegated": true,
+  "android_boot_established": false,
+  "auditor_sha256": "f848dce3f15c277738313e719590f4f69fc76d19bf2f690e7529fc5f7d3f296f",
+  "compiled_qemu_executed_by_auditor": false,
+  "completed_migrations": [
+    {
+      "actual_stream_sha256": "abdbf2cd5b6fd86599120304d08074e3c072bdad3c0df999c47ed6f695857a05",
+      "name": "migration_steady_high_carriers",
+      "source_file": "dp-steady.migration",
+      "trace": {
+        "actual_mmio_count_before_first_ram_read": 65,
+        "actual_mmio_count_before_incoming": 65,
+        "actual_mmio_delta": 0,
+        "actual_post_restore_deadline_steps_ns": [],
+        "actual_post_restore_output_blocks": 2,
+        "actual_post_restore_phases": [
+          0
+        ],
+        "actual_qmp_cont_before_observation": 0,
+        "actual_ram_witness_matches": true,
+        "all_first_values_match_stopped_source": true,
+        "physical_clocks_per_block": 6,
+        "qmp_first_observation_getters": 304,
+        "qmp_sequence_completed_status_then_getters_then_cont": true,
+        "qtest_trace_has_no_intervening_commands": true,
+        "shared_timestamp_inferred": false
+      }
+    },
+    {
+      "actual_stream_sha256": "b639541c9221c3d6dabc775d2bf0a0f2d2bff99776d2f17cb8911cd85b012d82",
+      "name": "migration_pending_pll",
+      "source_file": "dp-pll-pending.migration",
+      "trace": {
+        "actual_mmio_count_before_first_ram_read": 65,
+        "actual_mmio_count_before_incoming": 65,
+        "actual_mmio_delta": 0,
+        "actual_post_restore_deadline_steps_ns": [
+          2333,
+          1,
+          3334
+        ],
+        "actual_post_restore_output_blocks": 3,
+        "actual_post_restore_phases": [
+          1,
+          2
+        ],
+        "actual_qmp_cont_before_observation": 0,
+        "actual_ram_witness_matches": true,
+        "all_first_values_match_stopped_source": true,
+        "physical_clocks_per_block": 6,
+        "qmp_first_observation_getters": 304,
+        "qmp_sequence_completed_status_then_getters_then_cont": true,
+        "qtest_trace_has_no_intervening_commands": true,
+        "shared_timestamp_inferred": false
+      }
+    },
+    {
+      "actual_stream_sha256": "82172fa7015ea8616f42b71d79a28ed0c92ce27f4b000775e60cbba85e4bda03",
+      "name": "migration_pending_phy",
+      "source_file": "dp-phy-pending.migration",
+      "trace": {
+        "actual_mmio_count_before_first_ram_read": 65,
+        "actual_mmio_count_before_incoming": 65,
+        "actual_mmio_delta": 0,
+        "actual_post_restore_deadline_steps_ns": [
+          2333,
+          1
+        ],
+        "actual_post_restore_output_blocks": 3,
+        "actual_post_restore_phases": [
+          3,
+          4,
+          0
+        ],
+        "actual_qmp_cont_before_observation": 0,
+        "actual_ram_witness_matches": true,
+        "all_first_values_match_stopped_source": true,
+        "physical_clocks_per_block": 6,
+        "qmp_first_observation_getters": 304,
+        "qmp_sequence_completed_status_then_getters_then_cont": true,
+        "qtest_trace_has_no_intervening_commands": true,
+        "shared_timestamp_inferred": false
+      }
+    },
+    {
+      "actual_stream_sha256": "d49dcba1f04ef146566197808431d89984f50d3fb03e11ef94dada511abc2940",
+      "name": "migration_late_phy_wait",
+      "source_file": "dp-late-phy-wait.migration",
+      "trace": {
+        "actual_mmio_count_before_first_ram_read": 65,
+        "actual_mmio_count_before_incoming": 65,
+        "actual_mmio_delta": 0,
+        "actual_post_restore_deadline_steps_ns": [
+          1499999,
+          1,
+          3333,
+          1
+        ],
+        "actual_post_restore_output_blocks": 3,
+        "actual_post_restore_phases": [
+          5,
+          2,
+          3
+        ],
+        "actual_qmp_cont_before_observation": 0,
+        "actual_ram_witness_matches": true,
+        "all_first_values_match_stopped_source": true,
+        "physical_clocks_per_block": 6,
+        "qmp_first_observation_getters": 304,
+        "qmp_sequence_completed_status_then_getters_then_cont": true,
+        "qtest_trace_has_no_intervening_commands": true,
+        "shared_timestamp_inferred": false
+      }
+    }
+  ],
+  "completed_utc": "2026-11-25T05:07:04.489947+00:00",
+  "component": {
+    "case": "tb371fc-results/components/63-dp-pll-7nm-reference/case.json",
+    "exact_checks": 36,
+    "harness_exit": 0,
+    "head": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+    "qemu_sha256_from_separately_audited_binary": "935549d9f359d04254f5627bdd8807fd8d1800ab2223ab52dea80c0cf7edecb6",
+    "result": "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/result.json",
+    "source_commit_file": "tb371fc-results/source-commit.txt",
+    "test_sha256": "1a04d27e40f81360a23c53dfa075f3baf80573912ba2e68d8aef859d0e482f14"
+  },
+  "first_observation_evidence_boundary": "Exact reviewed harness order plus raw QMP in-file order, actual QTest command counts, saved before/after counters and complete state equality. Separate logs contain no shared timestamps; this audit does not infer a cross-file total event order.",
+  "input": {
+    "bytes": 57340476,
+    "kind": "zip",
+    "path": "/dev/shm/tb371fc-ddrstats-7d01e5e-14991304675-recovery-001.zip",
+    "sha256": "1e6c37d205a9e130e4f197c068c93c756488b6b579ab06eadd429190b9b0bd6f"
+  },
+  "members_read": {
+    "tb371fc-results/components/63-dp-pll-7nm-reference/case.json": {
+      "bytes": 1207,
+      "sha256": "b6a7f6aeed6738f528bcf120870e04465609e2bc747402a6b4285f550d92a13a"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-corrupt-captured_recipe.migration": {
+      "bytes": 2287291,
+      "sha256": "24b2445a7cca8967603cf85379215fd0fcf26440dc49bdf953b95028455271e1"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-corrupt-last_xo_period.migration": {
+      "bytes": 2287291,
+      "sha256": "372321863fcf6f197f57a32c2dee934a02e894ad51f4762818ca854a12048b2f"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-corrupt-late_deadline.migration": {
+      "bytes": 2287291,
+      "sha256": "c28a8d2765c318fab699b5a01847e9439313ae8789d17c8201551632c67ca0f4"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-corrupt-physical_base.migration": {
+      "bytes": 2287291,
+      "sha256": "f6c5613f64527ddfccb62eaaa8c3c46ec2dccb8c79b5fd7048f2df1377db2154"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-disabled.migration": {
+      "bytes": 2287291,
+      "sha256": "e235b4d13651ec410d44683deb48d92eeca990dd39047d756fd965d466e91614"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-disabled.migration.dp-v1.payload.bin": {
+      "bytes": 791,
+      "sha256": "53507694db99ca8c32f1c60bd5da5af239f52bd818d47d7c888fb1c317613bde"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-disabled.migration.mdss-v1.payload.bin": {
+      "bytes": 64,
+      "sha256": "0aa337b965d66084a610b1f1ce5ed36d3db630657c5aa3c6dc99df2595ec929d"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-disabled.migration.sections.json": {
+      "bytes": 924,
+      "sha256": "6025ce0b4deef233eb8fa9fdcbe51a169ac40aa4c4ccb56a16da5e09fd7771a6"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-late-phy-wait.migration": {
+      "bytes": 2287291,
+      "sha256": "d49dcba1f04ef146566197808431d89984f50d3fb03e11ef94dada511abc2940"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-late-phy-wait.migration.dp-v1.payload.bin": {
+      "bytes": 791,
+      "sha256": "e841987f5d22ca54fc01518f6fb8531728e078fe459cad72d8e6a47b31669b05"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-late-phy-wait.migration.mdss-v1.payload.bin": {
+      "bytes": 64,
+      "sha256": "0aa337b965d66084a610b1f1ce5ed36d3db630657c5aa3c6dc99df2595ec929d"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-late-phy-wait.migration.sections.json": {
+      "bytes": 934,
+      "sha256": "a77f33faa8c7543d3c123c24bb6090a77daaed4b016ddcd8c9a1584e201ba96e"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-phy-pending.migration": {
+      "bytes": 2287291,
+      "sha256": "82172fa7015ea8616f42b71d79a28ed0c92ce27f4b000775e60cbba85e4bda03"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-phy-pending.migration.dp-v1.payload.bin": {
+      "bytes": 791,
+      "sha256": "abcc96c30125144b4d1a904ada40a4f9692e2572c7568023af010ef19a6a7ff6"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-phy-pending.migration.mdss-v1.payload.bin": {
+      "bytes": 64,
+      "sha256": "0aa337b965d66084a610b1f1ce5ed36d3db630657c5aa3c6dc99df2595ec929d"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-phy-pending.migration.sections.json": {
+      "bytes": 930,
+      "sha256": "16751e1cef0873488c7f25f0b12ba399985259738e9cf555187ab06057b52c09"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-pll-pending.migration": {
+      "bytes": 2287291,
+      "sha256": "b639541c9221c3d6dabc775d2bf0a0f2d2bff99776d2f17cb8911cd85b012d82"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-pll-pending.migration.dp-v1.payload.bin": {
+      "bytes": 791,
+      "sha256": "a63c048eccd1d6d2ef4e039ecc422740c11691c7f432a0ad9901938fef6c5438"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-pll-pending.migration.mdss-v1.payload.bin": {
+      "bytes": 64,
+      "sha256": "0aa337b965d66084a610b1f1ce5ed36d3db630657c5aa3c6dc99df2595ec929d"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-pll-pending.migration.sections.json": {
+      "bytes": 930,
+      "sha256": "5563af442e346bf6c0b3c60e67fcb92373ccd6ad96a1c3b36776a8a7d08cc204"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-steady.migration": {
+      "bytes": 2287291,
+      "sha256": "abdbf2cd5b6fd86599120304d08074e3c072bdad3c0df999c47ed6f695857a05"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-steady.migration.dp-v1.payload.bin": {
+      "bytes": 791,
+      "sha256": "d091d8d88f1a30bd51b9c5e3d99b7f96bcf0639b85f7aede3d177b70e41c8b2b"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-steady.migration.mdss-v1.payload.bin": {
+      "bytes": 64,
+      "sha256": "0aa337b965d66084a610b1f1ce5ed36d3db630657c5aa3c6dc99df2595ec929d"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/dp-steady.migration.sections.json": {
+      "bytes": 920,
+      "sha256": "2b0b8af230b309bf918564a131e0fdda63457b2050535d795db3cd219544a297"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-disabled-source/command.json": {
+      "bytes": 721,
+      "sha256": "0c4b8ed754a5e83413c49c0f9703d65f158754ec8e9742f95566598f2736e445"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-disabled-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-disabled-source/qmp.jsonl": {
+      "bytes": 98627,
+      "sha256": "50a6115930116e861b119d5ef01df04753c934fabd101a56d09a3cdf07ab4b55"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-disabled-source/qtest.jsonl": {
+      "bytes": 443,
+      "sha256": "ef90a8078926e8f510ed9265e0fd3ddf8bfe44d4de0b30770c6e13b7301777a7"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-disabled-source/source-after-save.json": {
+      "bytes": 7655,
+      "sha256": "4e841f2892f788084c608c0887527352e71365bf37c52dba56d429ead441458f"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-disabled-source/source-before-save.json": {
+      "bytes": 7655,
+      "sha256": "4e841f2892f788084c608c0887527352e71365bf37c52dba56d429ead441458f"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-disabled-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "715775404ff82bdae68160baf9e8844d660df3ef6965c3cf38a40cfddd2e848c"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-late-phy-wait-source/command.json": {
+      "bytes": 720,
+      "sha256": "8bcf510841200d8a90635f9ea1717ddca5aeaab214d35daa52adbf4357260e38"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-late-phy-wait-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-late-phy-wait-source/qmp.jsonl": {
+      "bytes": 108950,
+      "sha256": "83172d8e5edb52c9e931c4c1bea81fcb4917d52203187c3f05553aa6af1113d8"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-late-phy-wait-source/qtest.jsonl": {
+      "bytes": 5867,
+      "sha256": "c20de84188d5a1f0185e953fcde51959d2a1edcce4f200fed3c1c6b68711e0c8"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-late-phy-wait-source/source-after-save.json": {
+      "bytes": 7798,
+      "sha256": "3cbcc0b6da0dff0b14435dc802fc368d527b9020e76c1176068f98764a72ab72"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-late-phy-wait-source/source-before-save.json": {
+      "bytes": 7798,
+      "sha256": "3cbcc0b6da0dff0b14435dc802fc368d527b9020e76c1176068f98764a72ab72"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-late-phy-wait-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "715775404ff82bdae68160baf9e8844d660df3ef6965c3cf38a40cfddd2e848c"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-late-phy-wait-target/command.json": {
+      "bytes": 746,
+      "sha256": "978e73dc0f36b7ce1c1e00e99312da43a21ea7320807ae9d11cd5f1ce961e80f"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-late-phy-wait-target/destination-before-first-device-mmio.json": {
+      "bytes": 9045,
+      "sha256": "b68206f49ac9eebcea5d4aed2d4c025eed1d3fd529f2fad606cc4308e8d4dbad"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-late-phy-wait-target/destination-before-incoming.json": {
+      "bytes": 8528,
+      "sha256": "04a5bddced97cc22f1c3461b902a978871c50c30e247e9e55d97e379ddaa8b5b"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-late-phy-wait-target/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-late-phy-wait-target/qmp.jsonl": {
+      "bytes": 109434,
+      "sha256": "b0c751ae62b71f141ae8d7231940082777d8d29623b91c0001dce51ba30db899"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-late-phy-wait-target/qtest.jsonl": {
+      "bytes": 6196,
+      "sha256": "e2edef9f726389621d33edf865c215a3c32364070fd9198485e668c7a09e5489"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-phy-pending-source/command.json": {
+      "bytes": 720,
+      "sha256": "72f1ffc96e09e05ed7c1c01b893ac2022942911ef5cdd44b814865d862ee65fd"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-phy-pending-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-phy-pending-source/qmp.jsonl": {
+      "bytes": 98922,
+      "sha256": "3d1955e6314dd08c59aa8064df371a5430ecdde030438a0bf60ab7d3e341f6a1"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-phy-pending-source/qtest.jsonl": {
+      "bytes": 5460,
+      "sha256": "f80c3215ec4d8000ffdd2b6c3bc562ad152387f5565eaf73b9a21d5c29ccdc38"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-phy-pending-source/source-after-save.json": {
+      "bytes": 7800,
+      "sha256": "52ce1c59959f0f619f27e642657ebeec76520d313d837bd00f79d37ebdbe450a"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-phy-pending-source/source-before-save.json": {
+      "bytes": 7800,
+      "sha256": "52ce1c59959f0f619f27e642657ebeec76520d313d837bd00f79d37ebdbe450a"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-phy-pending-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "715775404ff82bdae68160baf9e8844d660df3ef6965c3cf38a40cfddd2e848c"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-phy-pending-target/command.json": {
+      "bytes": 746,
+      "sha256": "418ea8da803759e262f7ee446ff99b66c718aedbee4c6effcb4175a53bf9685c"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-phy-pending-target/destination-before-first-device-mmio.json": {
+      "bytes": 9047,
+      "sha256": "337764fe4d3b204db585d9411c6f68adcfc7da0489a99e43992ba62d324ea6a7"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-phy-pending-target/destination-before-incoming.json": {
+      "bytes": 8528,
+      "sha256": "09e06f2f227179dbc80287ec1e87cd86c864d7a2880964ca545f149e82e9c8f3"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-phy-pending-target/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-phy-pending-target/qmp.jsonl": {
+      "bytes": 134208,
+      "sha256": "564f70568101322bafdb5f53f2e88ca062713fbc4a62d9aaf0c6c57496304428"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-phy-pending-target/qtest.jsonl": {
+      "bytes": 6232,
+      "sha256": "6daa3371d033928bd226695864934732f8fce5a2e386fc3924dd3ce616d2af7a"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-pll-pending-source/command.json": {
+      "bytes": 720,
+      "sha256": "cfebe90bda38b51a0a0261a6142041087c857fc8b96d24ab1cf2d58bff1368ee"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-pll-pending-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-pll-pending-source/qmp.jsonl": {
+      "bytes": 98706,
+      "sha256": "f18edb18db97cb9049ef79d73ce4ffcef57dc2646ee6495b8ccd69939357b124"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-pll-pending-source/qtest.jsonl": {
+      "bytes": 5298,
+      "sha256": "ce3f6c5bcd6ff7134e5da1cff7e52408fab82e84d3b2923475ce8d002dee679e"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-pll-pending-source/source-after-save.json": {
+      "bytes": 7692,
+      "sha256": "0a697ccb5a9c58869cad1151c214d7165d3059f1226a2a374c4dd76a6d3241e1"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-pll-pending-source/source-before-save.json": {
+      "bytes": 7692,
+      "sha256": "0a697ccb5a9c58869cad1151c214d7165d3059f1226a2a374c4dd76a6d3241e1"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-pll-pending-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "5d5a55dde141dd7a15179d9b654ddb95e7861c9d6f4b2c5a64a841dee2b668ff"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-pll-pending-target/command.json": {
+      "bytes": 746,
+      "sha256": "54896e44a5671c3d537527331bd0f897ce59ced3d331f634cef50ca73c086d13"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-pll-pending-target/destination-before-first-device-mmio.json": {
+      "bytes": 8939,
+      "sha256": "39dfbd719892f7efe43404be11fa9e59c1e5dfd74ded237982b3bdace49004e7"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-pll-pending-target/destination-before-incoming.json": {
+      "bytes": 8528,
+      "sha256": "bebcaf8c310bec9b494a41096d956cca8444f1b8218e088d21c8cc71eed8959b"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-pll-pending-target/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-pll-pending-target/qmp.jsonl": {
+      "bytes": 109076,
+      "sha256": "7521bbd0b609a46a28bc8336f177939efa4c04abfbb92367a9d792fdae143d0a"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-pll-pending-target/qtest.jsonl": {
+      "bytes": 6106,
+      "sha256": "dccdc7e29e315aa6a0e59d875744e324cf187d5c5f83fed9e1de6827cf5b50dd"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-steady-source/command.json": {
+      "bytes": 720,
+      "sha256": "c5f17793e91b45f0f697245f43546e270c12134fb009084e7e53c243d7e6536d"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-steady-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-steady-source/qmp.jsonl": {
+      "bytes": 110281,
+      "sha256": "02ae616cbd5b7b6281ad5502c6da9f770e8d99fdbb075720d61eed34aa6f04e5"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-steady-source/qtest.jsonl": {
+      "bytes": 6805,
+      "sha256": "c3699251f3aa3c1373df3f1508b15f336da3a8e0df596c98d7462530d40f0557"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-steady-source/source-after-save.json": {
+      "bytes": 7902,
+      "sha256": "747d7ebcc1891c57f602698b0441b30f2724ac3a975413fce866f470dc1b42e7"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-steady-source/source-before-save.json": {
+      "bytes": 7902,
+      "sha256": "747d7ebcc1891c57f602698b0441b30f2724ac3a975413fce866f470dc1b42e7"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-steady-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "5d5a55dde141dd7a15179d9b654ddb95e7861c9d6f4b2c5a64a841dee2b668ff"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-steady-target/command.json": {
+      "bytes": 746,
+      "sha256": "a7e32a05f68348eae818a56785474ade84a3776318c6177da62fd74687c1f0ac"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-steady-target/destination-before-first-device-mmio.json": {
+      "bytes": 9149,
+      "sha256": "f5799a5bf6b7608c8eebb7f880b537abb5bc3d84788a614636320ff9e79cb6f5"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-steady-target/destination-before-incoming.json": {
+      "bytes": 8528,
+      "sha256": "4ca0a7d6c8009ff816019c7e4ece43d6d250e5a7ba797ca7d43490225c04ea1f"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-steady-target/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-steady-target/qmp.jsonl": {
+      "bytes": 119310,
+      "sha256": "c64c2c2a427cdb0e974608f2365673b6c3263304a9d22b206737d144396fda1d"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/migration-steady-target/qtest.jsonl": {
+      "bytes": 6144,
+      "sha256": "cbbc2c5c7a499ecf8989c7412c0ffe24bb9e2c04a2cbab22ffa4ce2f428d27d0"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/ordinary-11-real_rpmh_xo_votes_revoke_pending_and_ready_captures/command.json": {
+      "bytes": 726,
+      "sha256": "4da2fda574e4bc22f6355ccaecfe569a3972ca203efb54bffccb4b986ec0854e"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/ordinary-11-real_rpmh_xo_votes_revoke_pending_and_ready_captures/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/ordinary-11-real_rpmh_xo_votes_revoke_pending_and_ready_captures/qmp.jsonl": {
+      "bytes": 115153,
+      "sha256": "d906d005e25a10f485d8833933b2afd5b6a74f295c194ffaf16399fd520967bb"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/ordinary-11-real_rpmh_xo_votes_revoke_pending_and_ready_captures/qtest.jsonl": {
+      "bytes": 29074,
+      "sha256": "be632304140c70262f6a7c582ef3052041e966939ffae82d44b61d2f59e076ec"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-captured_recipe/command.json": {
+      "bytes": 746,
+      "sha256": "75b91086c9ab644821765f3ee20119d57613379758e3e45957cfca7d739867f1"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-captured_recipe/qemu.stderr": {
+      "bytes": 297,
+      "sha256": "a4ff71ed0cac4297715c1fe7ef6fa28a75df5f1fa0116d9cdc89c53250618da9"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-captured_recipe/qmp.jsonl": {
+      "bytes": 477,
+      "sha256": "2b5cf9aa9b625e39972afb147bc6684f952dc61f358f713e41da5a330b9c8510"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-captured_recipe/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "a9081e523e3e65846cbaf0d7a90fb083599dfc162247f0a843a64dea10498d4d"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-last_xo_period/command.json": {
+      "bytes": 746,
+      "sha256": "4370c80819c5599194cf4990ce8af863cd09793654ed8cc41ae383291b1bfa33"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-last_xo_period/qemu.stderr": {
+      "bytes": 305,
+      "sha256": "16446edc9d38bfdfeab2a5042f74add5f1d7035cb4b3f5b4e30c5c500f91394c"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-last_xo_period/qmp.jsonl": {
+      "bytes": 476,
+      "sha256": "ad1be9fa3890094ee73b1eff4df0516b77f5bbe005dda3cce3f4bf82043d5b94"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-last_xo_period/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "1f260fe1b905e0ac2505b3f5a91e3b597c974cfa946c12c745e29b7d31230a79"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-late_deadline/command.json": {
+      "bytes": 746,
+      "sha256": "c0e743946772337fdbaf50992db6a696e393e81e79364f074476610ea263af68"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-late_deadline/qemu.stderr": {
+      "bytes": 300,
+      "sha256": "90083b5c2942ad8fc9af7083cd7caeef1c85994ec0964b1c23b0713efe37a392"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-late_deadline/qmp.jsonl": {
+      "bytes": 475,
+      "sha256": "ad535d434a305fbea628528dfd35ebf45a9213b2a6e0d258be0854f0dd8923bc"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-late_deadline/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "e90f4b8cd96228c528ab8c5f815d6dae060a6e2cebbb5a2d22049688aa1d611e"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-physical_base/command.json": {
+      "bytes": 746,
+      "sha256": "b96407c519d06c65c6734f56454e887930d67fb438956b212c81e26c7a9a3295"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-physical_base/qemu.stderr": {
+      "bytes": 159,
+      "sha256": "8afa3fafd60ac29ab713f5d15e63d8ca8b1834c25ba1357406f45fd89f96689a"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-physical_base/qmp.jsonl": {
+      "bytes": 475,
+      "sha256": "3d6108730c9195905529753fc5ac73af4c7faad5d1d0cdc63d17d94c9fb884d3"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-corrupt-physical_base/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "a61732a838259c97582bbbe48e9dbe490517b94ded95b5771332addf84cf24f9"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-profile-off_to_on/command.json": {
+      "bytes": 746,
+      "sha256": "b1a2aa53e1c0b4416eaaab4c3ccbbf35f1042b198a236d2d1c11ba4f2fe95d7f"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-profile-off_to_on/qemu.stderr": {
+      "bytes": 147,
+      "sha256": "0d932d55a6aed6a85e83efcaf5c04fed2405f9ea84131f9ab40acd7ff54854ac"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-profile-off_to_on/qmp.jsonl": {
+      "bytes": 462,
+      "sha256": "8815f3dc2c7c4974b5f4743ccbba46fb66505cfb11aba7f1f5ca7b2ab47d22e4"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-profile-off_to_on/qtest.jsonl": {
+      "bytes": 80,
+      "sha256": "48284b3bcd86099e1604a7ccdca64e7c00748e170387d174186cef5dc239e243"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-profile-on_to_off/command.json": {
+      "bytes": 747,
+      "sha256": "ec25f0f5327196b71bb2c772747cc0a35d6ff14a2f5f26a413f00c013ceb9023"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-profile-on_to_off/qemu.stderr": {
+      "bytes": 147,
+      "sha256": "b82e17fe7e13bae00bff8b9b9869e81f30f2e9e7e1a738c4196be8b64c03dcc1"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-profile-on_to_off/qmp.jsonl": {
+      "bytes": 460,
+      "sha256": "c76ebc158c4e54a1602181a81d298a07d25d11724c19339e50bb42f0ef948116"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/reject-profile-on_to_off/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "a61732a838259c97582bbbe48e9dbe490517b94ded95b5771332addf84cf24f9"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/fixtures/data/result.json": {
+      "bytes": 127616,
+      "sha256": "0dca9234b4afdcb82c3932e36bcff838d32fce78e7ab5c6b9d30ae12c189d1b4"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-dp-pll-7nm-reference/stdout.log": {
+      "bytes": 127616,
+      "sha256": "0dca9234b4afdcb82c3932e36bcff838d32fce78e7ab5c6b9d30ae12c189d1b4"
+    },
+    "tb371fc-results/source-commit.txt": {
+      "bytes": 41,
+      "sha256": "3403353ebfcb8ff305feac9b2b6fa23a99f3eec2b70460a38949b4bb6a5fafd5"
+    }
+  },
+  "native_guest_executed_by_auditor": false,
+  "original_streams": [
+    {
+      "bytes": 2287291,
+      "complete_dp_bytes": 791,
+      "complete_mdss_bytes": 64,
+      "literal_field_groups_checked": [
+        "globals",
+        "physical_bases",
+        "raw_words",
+        "written",
+        "captured",
+        "captured_xo",
+        "last_xo",
+        "deadline",
+        "phase",
+        "sequence",
+        "rate_khz",
+        "power",
+        "input_clock_period"
+      ],
+      "name": "dp-steady.migration",
+      "sections": {
+        "dp": {
+          "footer_hex": "7e0000006a",
+          "footer_offset": 2132579,
+          "header_offset": 2131756,
+          "instance_id": 0,
+          "name": "qcom-sm8250-dp-pll",
+          "payload_bytes": 791,
+          "payload_offset": 2131788,
+          "section_id": 106,
+          "version": 1
+        },
+        "mdss": {
+          "footer_hex": "7e00000067",
+          "footer_offset": 2128611,
+          "header_offset": 2128519,
+          "instance_id": 0,
+          "name": "qcom-mdss-gdsc",
+          "payload_bytes": 64,
+          "payload_offset": 2128547,
+          "section_id": 103,
+          "version": 1
+        }
+      },
+      "sha256": "abdbf2cd5b6fd86599120304d08074e3c072bdad3c0df999c47ed6f695857a05",
+      "trace": {
+        "actual_source_getters": 608,
+        "no_resume_after_source_stop": true,
+        "qmp_requests": 684,
+        "qtest_commands": 83,
+        "source_stop_and_postmigrate_verified": true,
+        "virtual_epoch": 108668
+      },
+      "world": {
+        "connected_dispcc_inputs": 2,
+        "dp_complete_bytes": 791,
+        "dp_payload_sha256": "d091d8d88f1a30bd51b9c5e3d99b7f96bcf0639b85f7aede3d177b70e41c8b2b",
+        "mdss_complete_bytes": 64,
+        "mdss_payload_sha256": "0aa337b965d66084a610b1f1ce5ed36d3db630657c5aa3c6dc99df2595ec929d",
+        "physical_clock_periods": 6,
+        "source_recipe_and_model_state_invariants": true
+      }
+    },
+    {
+      "bytes": 2287291,
+      "complete_dp_bytes": 791,
+      "complete_mdss_bytes": 64,
+      "literal_field_groups_checked": [
+        "globals",
+        "physical_bases",
+        "raw_words",
+        "written",
+        "captured",
+        "captured_xo",
+        "last_xo",
+        "deadline",
+        "phase",
+        "sequence",
+        "rate_khz",
+        "power",
+        "input_clock_period"
+      ],
+      "name": "dp-pll-pending.migration",
+      "sections": {
+        "dp": {
+          "footer_hex": "7e0000006a",
+          "footer_offset": 2132579,
+          "header_offset": 2131756,
+          "instance_id": 0,
+          "name": "qcom-sm8250-dp-pll",
+          "payload_bytes": 791,
+          "payload_offset": 2131788,
+          "section_id": 106,
+          "version": 1
+        },
+        "mdss": {
+          "footer_hex": "7e00000067",
+          "footer_offset": 2128611,
+          "header_offset": 2128519,
+          "instance_id": 0,
+          "name": "qcom-mdss-gdsc",
+          "payload_bytes": 64,
+          "payload_offset": 2128547,
+          "section_id": 103,
+          "version": 1
+        }
+      },
+      "sha256": "b639541c9221c3d6dabc775d2bf0a0f2d2bff99776d2f17cb8911cd85b012d82",
+      "trace": {
+        "actual_source_getters": 608,
+        "no_resume_after_source_stop": true,
+        "qmp_requests": 620,
+        "qtest_commands": 69,
+        "source_stop_and_postmigrate_verified": true,
+        "virtual_epoch": 201000
+      },
+      "world": {
+        "connected_dispcc_inputs": 2,
+        "dp_complete_bytes": 791,
+        "dp_payload_sha256": "a63c048eccd1d6d2ef4e039ecc422740c11691c7f432a0ad9901938fef6c5438",
+        "mdss_complete_bytes": 64,
+        "mdss_payload_sha256": "0aa337b965d66084a610b1f1ce5ed36d3db630657c5aa3c6dc99df2595ec929d",
+        "physical_clock_periods": 6,
+        "source_recipe_and_model_state_invariants": true
+      }
+    },
+    {
+      "bytes": 2287291,
+      "complete_dp_bytes": 791,
+      "complete_mdss_bytes": 64,
+      "literal_field_groups_checked": [
+        "globals",
+        "physical_bases",
+        "raw_words",
+        "written",
+        "captured",
+        "captured_xo",
+        "last_xo",
+        "deadline",
+        "phase",
+        "sequence",
+        "rate_khz",
+        "power",
+        "input_clock_period"
+      ],
+      "name": "dp-phy-pending.migration",
+      "sections": {
+        "dp": {
+          "footer_hex": "7e0000006a",
+          "footer_offset": 2132579,
+          "header_offset": 2131756,
+          "instance_id": 0,
+          "name": "qcom-sm8250-dp-pll",
+          "payload_bytes": 791,
+          "payload_offset": 2131788,
+          "section_id": 106,
+          "version": 1
+        },
+        "mdss": {
+          "footer_hex": "7e00000067",
+          "footer_offset": 2128611,
+          "header_offset": 2128519,
+          "instance_id": 0,
+          "name": "qcom-mdss-gdsc",
+          "payload_bytes": 64,
+          "payload_offset": 2128547,
+          "section_id": 103,
+          "version": 1
+        }
+      },
+      "sha256": "82172fa7015ea8616f42b71d79a28ed0c92ce27f4b000775e60cbba85e4bda03",
+      "trace": {
+        "actual_source_getters": 608,
+        "no_resume_after_source_stop": true,
+        "qmp_requests": 620,
+        "qtest_commands": 71,
+        "source_stop_and_postmigrate_verified": true,
+        "virtual_epoch": 304334
+      },
+      "world": {
+        "connected_dispcc_inputs": 2,
+        "dp_complete_bytes": 791,
+        "dp_payload_sha256": "abcc96c30125144b4d1a904ada40a4f9692e2572c7568023af010ef19a6a7ff6",
+        "mdss_complete_bytes": 64,
+        "mdss_payload_sha256": "0aa337b965d66084a610b1f1ce5ed36d3db630657c5aa3c6dc99df2595ec929d",
+        "physical_clock_periods": 6,
+        "source_recipe_and_model_state_invariants": true
+      }
+    },
+    {
+      "bytes": 2287291,
+      "complete_dp_bytes": 791,
+      "complete_mdss_bytes": 64,
+      "literal_field_groups_checked": [
+        "globals",
+        "physical_bases",
+        "raw_words",
+        "written",
+        "captured",
+        "captured_xo",
+        "last_xo",
+        "deadline",
+        "phase",
+        "sequence",
+        "rate_khz",
+        "power",
+        "input_clock_period"
+      ],
+      "name": "dp-late-phy-wait.migration",
+      "sections": {
+        "dp": {
+          "footer_hex": "7e0000006a",
+          "footer_offset": 2132579,
+          "header_offset": 2131756,
+          "instance_id": 0,
+          "name": "qcom-sm8250-dp-pll",
+          "payload_bytes": 791,
+          "payload_offset": 2131788,
+          "section_id": 106,
+          "version": 1
+        },
+        "mdss": {
+          "footer_hex": "7e00000067",
+          "footer_offset": 2128611,
+          "header_offset": 2128519,
+          "instance_id": 0,
+          "name": "qcom-mdss-gdsc",
+          "payload_bytes": 64,
+          "payload_offset": 2128547,
+          "section_id": 103,
+          "version": 1
+        }
+      },
+      "sha256": "d49dcba1f04ef146566197808431d89984f50d3fb03e11ef94dada511abc2940",
+      "trace": {
+        "actual_source_getters": 608,
+        "no_resume_after_source_stop": true,
+        "qmp_requests": 678,
+        "qtest_commands": 76,
+        "source_stop_and_postmigrate_verified": true,
+        "virtual_epoch": 900000
+      },
+      "world": {
+        "connected_dispcc_inputs": 2,
+        "dp_complete_bytes": 791,
+        "dp_payload_sha256": "e841987f5d22ca54fc01518f6fb8531728e078fe459cad72d8e6a47b31669b05",
+        "mdss_complete_bytes": 64,
+        "mdss_payload_sha256": "0aa337b965d66084a610b1f1ce5ed36d3db630657c5aa3c6dc99df2595ec929d",
+        "physical_clock_periods": 6,
+        "source_recipe_and_model_state_invariants": true
+      }
+    },
+    {
+      "bytes": 2287291,
+      "complete_dp_bytes": 791,
+      "complete_mdss_bytes": 64,
+      "literal_field_groups_checked": [
+        "globals",
+        "physical_bases",
+        "raw_words",
+        "written",
+        "captured",
+        "captured_xo",
+        "last_xo",
+        "deadline",
+        "phase",
+        "sequence",
+        "rate_khz",
+        "power",
+        "input_clock_period"
+      ],
+      "name": "dp-disabled.migration",
+      "sections": {
+        "dp": {
+          "footer_hex": "7e0000006a",
+          "footer_offset": 2132579,
+          "header_offset": 2131756,
+          "instance_id": 0,
+          "name": "qcom-sm8250-dp-pll",
+          "payload_bytes": 791,
+          "payload_offset": 2131788,
+          "section_id": 106,
+          "version": 1
+        },
+        "mdss": {
+          "footer_hex": "7e00000067",
+          "footer_offset": 2128611,
+          "header_offset": 2128519,
+          "instance_id": 0,
+          "name": "qcom-mdss-gdsc",
+          "payload_bytes": 64,
+          "payload_offset": 2128547,
+          "section_id": 103,
+          "version": 1
+        }
+      },
+      "sha256": "e235b4d13651ec410d44683deb48d92eeca990dd39047d756fd965d466e91614",
+      "trace": {
+        "actual_source_getters": 608,
+        "no_resume_after_source_stop": true,
+        "qmp_requests": 620,
+        "qtest_commands": 5,
+        "source_stop_and_postmigrate_verified": true,
+        "virtual_epoch": 1000000
+      },
+      "world": {
+        "connected_dispcc_inputs": 2,
+        "dp_complete_bytes": 791,
+        "dp_payload_sha256": "53507694db99ca8c32f1c60bd5da5af239f52bd818d47d7c888fb1c317613bde",
+        "mdss_complete_bytes": 64,
+        "mdss_payload_sha256": "0aa337b965d66084a610b1f1ce5ed36d3db630657c5aa3c6dc99df2595ec929d",
+        "physical_clock_periods": 6,
+        "source_recipe_and_model_state_invariants": true
+      }
+    }
+  ],
+  "passed": true,
+  "rejected_migrations": [
+    {
+      "name": "on_to_off",
+      "source_file": "dp-steady.migration",
+      "stream_sha256": "abdbf2cd5b6fd86599120304d08074e3c072bdad3c0df999c47ed6f695857a05",
+      "trace": {
+        "cont_commands": 0,
+        "device_mmio_commands": 0,
+        "exit_code": 1,
+        "incoming_file": "dp-steady.migration",
+        "process_exit_evidence": "reviewed harness process.wait receipt; actual stderr independently checked",
+        "query_migrate_failed_response_required": false,
+        "specific_stderr_verified": true
+      }
+    },
+    {
+      "name": "off_to_on",
+      "source_file": "dp-disabled.migration",
+      "stream_sha256": "e235b4d13651ec410d44683deb48d92eeca990dd39047d756fd965d466e91614",
+      "trace": {
+        "cont_commands": 0,
+        "device_mmio_commands": 0,
+        "exit_code": 1,
+        "incoming_file": "dp-disabled.migration",
+        "process_exit_evidence": "reviewed harness process.wait receipt; actual stderr independently checked",
+        "query_migrate_failed_response_required": false,
+        "specific_stderr_verified": true
+      }
+    }
+  ],
+  "reviewed_sources": {
+    "model": {
+      "path": "/dev/shm/ddrstats-candidate-6a5/hw/misc/qcom-sm8250-dp-pll.c",
+      "sha256": "9a876a06787f1b847bf732801283a03963dd6a482fdcc5c57c0b77af8af860b2"
+    },
+    "primary_reference": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+    "primary_reference_is_not_entire_original_firmware_source_identity": true,
+    "test": {
+      "path": "/dev/shm/ddrstats-candidate-6a5/tb371fc/tests/test_dp_pll_7nm.py",
+      "sha256": "1a04d27e40f81360a23c53dfa075f3baf80573912ba2e68d8aef859d0e482f14"
+    }
+  },
+  "runtime_xo_evidence": {
+    "actual_clock_steps_ns": [
+      1000,
+      1000,
+      1000,
+      1000,
+      10000,
+      3334,
+      3334,
+      1000,
+      1000,
+      3334,
+      3334,
+      1000,
+      1000,
+      2000000,
+      3334,
+      3334
+    ],
+    "actual_input_period_samples": [
+      0,
+      223696213333,
+      0
+    ],
+    "actual_mdss_power_observations": 6,
+    "actual_output_blocks": 11,
+    "actual_phase_sequence": [
+      1,
+      0,
+      0,
+      1,
+      2,
+      3,
+      4,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      0,
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "actual_rpmh_drv2_write_count": 80,
+    "capture_cancellation_phases": [
+      1,
+      4,
+      5
+    ],
+    "input_sample_scope": "initial-off, first-on, first-loss",
+    "new_source_sequences_required_after_loss": true,
+    "no_connected_provider_override": true,
+    "physical_clocks_per_block": 6
+  },
+  "schema": "tb371fc-dp-pll-independent-artifact-audit-v1",
+  "shared_qmp_qtest_timestamp_claimed": false,
+  "single_bit_rejections": [
+    {
+      "actual_difference": {
+        "after": 4,
+        "all_other_stream_bytes_equal": true,
+        "before": 0,
+        "byte_offset": 2131847,
+        "changed_bits": 1,
+        "original_stream_sha256_unchanged": true
+      },
+      "bytes": 2287291,
+      "file": "dp-corrupt-physical_base.migration",
+      "name": "physical_base",
+      "sha256": "f6c5613f64527ddfccb62eaaa8c3c46ec2dccb8c79b5fd7048f2df1377db2154",
+      "source_file": "dp-steady.migration",
+      "source_sha256": "abdbf2cd5b6fd86599120304d08074e3c072bdad3c0df999c47ed6f695857a05",
+      "trace": {
+        "cont_commands": 0,
+        "device_mmio_commands": 0,
+        "exit_code": 1,
+        "incoming_file": "dp-corrupt-physical_base.migration",
+        "process_exit_evidence": "reviewed harness process.wait receipt; actual stderr independently checked",
+        "query_migrate_failed_response_required": false,
+        "specific_stderr_verified": true
+      }
+    },
+    {
+      "actual_difference": {
+        "after": 141,
+        "all_other_stream_bytes_equal": true,
+        "before": 140,
+        "byte_offset": 2132296,
+        "changed_bits": 1,
+        "original_stream_sha256_unchanged": true
+      },
+      "bytes": 2287291,
+      "file": "dp-corrupt-captured_recipe.migration",
+      "name": "captured_recipe",
+      "sha256": "24b2445a7cca8967603cf85379215fd0fcf26440dc49bdf953b95028455271e1",
+      "source_file": "dp-pll-pending.migration",
+      "source_sha256": "b639541c9221c3d6dabc775d2bf0a0f2d2bff99776d2f17cb8911cd85b012d82",
+      "trace": {
+        "cont_commands": 0,
+        "device_mmio_commands": 0,
+        "exit_code": 1,
+        "incoming_file": "dp-corrupt-captured_recipe.migration",
+        "process_exit_evidence": "reviewed harness process.wait receipt; actual stderr independently checked",
+        "query_migrate_failed_response_required": false,
+        "specific_stderr_verified": true
+      }
+    },
+    {
+      "actual_difference": {
+        "after": 84,
+        "all_other_stream_bytes_equal": true,
+        "before": 85,
+        "byte_offset": 2132544,
+        "changed_bits": 1,
+        "original_stream_sha256_unchanged": true
+      },
+      "bytes": 2287291,
+      "file": "dp-corrupt-last_xo_period.migration",
+      "name": "last_xo_period",
+      "sha256": "372321863fcf6f197f57a32c2dee934a02e894ad51f4762818ca854a12048b2f",
+      "source_file": "dp-phy-pending.migration",
+      "source_sha256": "82172fa7015ea8616f42b71d79a28ed0c92ce27f4b000775e60cbba85e4bda03",
+      "trace": {
+        "cont_commands": 0,
+        "device_mmio_commands": 0,
+        "exit_code": 1,
+        "incoming_file": "dp-corrupt-last_xo_period.migration",
+        "process_exit_evidence": "reviewed harness process.wait receipt; actual stderr independently checked",
+        "query_migrate_failed_response_required": false,
+        "specific_stderr_verified": true
+      }
+    },
+    {
+      "actual_difference": {
+        "after": 128,
+        "all_other_stream_bytes_equal": true,
+        "before": 0,
+        "byte_offset": 2132545,
+        "changed_bits": 1,
+        "original_stream_sha256_unchanged": true
+      },
+      "bytes": 2287291,
+      "file": "dp-corrupt-late_deadline.migration",
+      "name": "late_deadline",
+      "sha256": "c28a8d2765c318fab699b5a01847e9439313ae8789d17c8201551632c67ca0f4",
+      "source_file": "dp-late-phy-wait.migration",
+      "source_sha256": "d49dcba1f04ef146566197808431d89984f50d3fb03e11ef94dada511abc2940",
+      "trace": {
+        "cont_commands": 0,
+        "device_mmio_commands": 0,
+        "exit_code": 1,
+        "incoming_file": "dp-corrupt-late_deadline.migration",
+        "process_exit_evidence": "reviewed harness process.wait receipt; actual stderr independently checked",
+        "query_migrate_failed_response_required": false,
+        "specific_stderr_verified": true
+      }
+    }
+  ],
+  "stages_completed": [
+    "exact_reviewed_source_and_artifact_identity",
+    "actual_dp_process_logs_and_exact_36_check_contract",
+    "nine_actual_streams_complete_791_plus_64_payloads_and_protocol_evidence",
+    "actual_connected_rpmh_xo_loss_and_capture_cancellation_transcripts"
+  ],
+  "started_utc": "2026-11-25T05:07:03.908568+00:00",
+  "summary": {
+    "checks": 36,
+    "clock_views_per_source_and_first_target": 6,
+    "completed_migrations": 4,
+    "dp_bytes_per_original": 791,
+    "first_target_actual_cont_count_each": 0,
+    "first_target_actual_mmio_delta_each": 0,
+    "first_target_qom_getters_each": 304,
+    "mdss_bytes_per_original": 64,
+    "power_loss_credit_invariant_checked_on_legal_states_and_actual_target_observation": true,
+    "power_loss_credit_invariant_claimed_as_isolated_corruption_case": false,
+    "profile_rejections": 2,
+    "single_bit_rejections": 4,
+    "stream_files": 9,
+    "unmodified_streams": 5
+  }
+}
