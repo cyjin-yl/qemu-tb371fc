@@ -8,7 +8,7 @@ from pathlib import Path
 import subprocess
 import sys
 import traceback
-import urllib.request
+from source_download import read_source
 
 import generate_llcc_sm8250 as generator
 
@@ -33,8 +33,7 @@ def run(args):
             local = prefix+"/"+relative
             url = f"https://raw.githubusercontent.com/{repository}/{revision}/{relative}"
             if args.source_root is None:
-                with urllib.request.urlopen(url, timeout=30) as response:
-                    raw = response.read(MAX_INPUT_BYTES+1)
+                raw = read_source(url, max_bytes=MAX_INPUT_BYTES)
             else:
                 raw = (args.source_root/local).read_bytes()
             if len(raw) > MAX_INPUT_BYTES:

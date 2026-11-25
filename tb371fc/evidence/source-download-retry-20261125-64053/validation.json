@@ -1,0 +1,52 @@
+{
+  "schema": "tb371fc-source-download-retry-validation-v1",
+  "base_commit": "7372681f546a7ac1b816377480601ddd8e7c16f5",
+  "observed_utc": "2026-11-24T23:46:06.198537+00:00",
+  "environment": {
+    "host": "doesvm",
+    "lxc": 102,
+    "container": "qemu-tb371fc-dev",
+    "worktree": "/work/stockboot-64053-ci-retry",
+    "python": "3.13.5",
+    "container_memory_bytes": 4294967296,
+    "container_memory_swap_bytes": 6442450944,
+    "heavy_work_admission": "existing agent-heavy helper; initial busy exit75 retained; successful runs admitted without bypass"
+  },
+  "host_tests": [
+    {
+      "suite": "test_source_download.py",
+      "tests": 15,
+      "passed": true,
+      "log_sha256": "5dc3774dc0f82ba62ab184e324dcb1d03a560dba782e6c145834bf72bffec1b6",
+      "scope": "real loopback HTTP; synthetic 8-pin LLCC verifier admission with generation stubbed"
+    },
+    {
+      "suite": "test_ci_device_tests.py",
+      "tests": 31,
+      "passed": true,
+      "log_sha256": "46496ca3e3b0ac5b660e70d24cdc2a5fb862bf7c28c2964458e7be3e6393d7df"
+    }
+  ],
+  "actual_llcc_integration": "actual-llcc-integration.json",
+  "actual_llcc_generator_stubbed": false,
+  "source_pin_contracts_unchanged": true,
+  "source_generation_process_timeout_seconds": 180,
+  "generator_timeout_seconds": 60,
+  "component_plan_unchanged": true,
+  "qemu_device_runtime_changed": false,
+  "qemu_runtime_tests_reexecuted": false,
+  "stock_android_boot_passed": false,
+  "changed_file_sha256": {
+    "tb371fc/scripts/source_download.py": "4fde0300dc4c8777531402dc700fbed6364f16b0550fc852c3031fe641fe7dd7",
+    "tb371fc/scripts/test_source_download.py": "b61b03821aeef22bd2bd0bb724c7a4bc7974dee426b495647cede3bed63fe6fd",
+    "tb371fc/scripts/verify_gcc_generation.py": "a380251b1e429df458749c7e01a4ee5753b38c7148ff7811497e8a4924454c67",
+    "tb371fc/scripts/verify_camcc_generation.py": "30e39aa8d1c5c4e864f4274eccfdb0a8e7e483de08aa4ecfe79b0bdaa4beec32",
+    "tb371fc/scripts/verify_dispcc_generation.py": "d54c18377056813ad54539603562c317284df27c3990c1a2e47717a391210933",
+    "tb371fc/scripts/verify_videocc_generation.py": "07c17de4d85c051fff47289b7195e6f290da42dcf455776d9d1f5314b040ded2",
+    "tb371fc/scripts/verify_dsi_pll_generation.py": "dfd0490e755e123e29ec9656b22c8ee30b0ef983b302402307adcfafd5c0be64",
+    "tb371fc/scripts/verify_dp_pll_generation.py": "447b76ec9f7dcace9c7ca6afc6b95574894d08fe53eff09a4c478ff864b57775",
+    "tb371fc/scripts/verify_llcc_generation.py": "aae05a4bf3c84d4d7970e593c1c27756866b689753c5e0408e6738179ef8a898",
+    ".github/workflows/tb371fc.yml": "6f0545c1893f7b0914c4ab5b90e6f43cb90cfa8abc708a2edb12b51fae2e3be0",
+    "tb371fc/docs/ci.md": "b7634c0487f4b680a3431427c4e34e23fcf6706824eddf18ab07e21c5f321e46"
+  }
+}

@@ -668,3 +668,26 @@ within the driver's 100 us polling budget, not measured silicon timing.
 
 This newly registered LLCC combination still requires its own compiled CI
 artifact, complete artifact review and subsequent original-input diagnostic.
+
+## Public source download retries
+
+Source-generation gates fetch each immutable public input with at most three
+requests. Only temporary HTTP 408/429/500/502/503/504 and selected transport
+failures are retried. Retry delays share a 30-second allowance per input; a
+server `Retry-After` exceeding the remaining allowance fails without an early
+retry. Certificate failures and permanent HTTP errors fail immediately.
+
+Each retry starts a complete new request, with the existing 512 KiB size bound.
+Source SHA-256, Git blob and exact-size checks retain each verifier's existing
+contract outside the retry loop; identity mismatches are never retried. The
+existing 180-second source-generation process timeout and 60-second generator
+timeout are unchanged. Socket timeouts do not establish a whole-response
+wall-clock deadline.
+
+Host validation runs `test_source_download.py` against a local HTTP server,
+including an eighth-source LLCC rate-limit recovery and identity-rejection
+cases. These admission tests use synthetic source pins and stub generation;
+the normal source-generation gates still verify the actual pinned upstream
+inputs and reproduce the committed tables. The host step also runs
+`test_ci_device_tests.py`, so changes to the acceptance harness are exercised
+before the QEMU build.
