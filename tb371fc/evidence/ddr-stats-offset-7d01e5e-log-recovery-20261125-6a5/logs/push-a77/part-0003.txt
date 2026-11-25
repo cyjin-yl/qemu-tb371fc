@@ -1,0 +1,125 @@
+Z [1527/1535] Compiling C object tests/qtest/qos-test.p/virtio-iommu-test.c.o
+2026-11-25T04:07:13.1655929Z [1528/1535] Compiling C object tests/qtest/qos-test.p/vmxnet3-test.c.o
+2026-11-25T04:07:13.2722686Z [1529/1535] Compiling C object tests/qtest/qos-test.p/igb-test.c.o
+2026-11-25T04:07:13.8186323Z [1530/1535] Compiling C object tests/qtest/qos-test.p/ufs-test.c.o
+2026-11-25T04:07:13.9196760Z [1531/1535] Compiling C object tests/qtest/qos-test.p/riscv-iommu-test.c.o
+2026-11-25T04:07:14.0220822Z [1532/1535] Compiling C object tests/qtest/qos-test.p/e1000e-test.c.o
+2026-11-25T04:07:14.1187282Z [1533/1535] Linking target tests/qtest/qos-test
+2026-11-25T04:07:31.0910803Z [1534/1535] Compiling C object libqemu-aarch64-softmmu.a.p/target_arm_tcg_sve_helper.c.o
+2026-11-25T04:07:31.5825961Z [1535/1535] Linking target qemu-system-aarch64
+2026-11-25T04:07:31.5872014Z ##[group]Run set -euo pipefail
+2026-11-25T04:07:31.5872258Z [36;1mset -euo pipefail[0m
+2026-11-25T04:07:31.5872887Z [36;1mpython3 tb371fc/scripts/run_ufs_pci_compat.py \[0m
+2026-11-25T04:07:31.5873271Z [36;1m  --qemu "$RUNNER_TEMP/a77-build/qemu-system-aarch64" \[0m
+2026-11-25T04:07:31.5873568Z [36;1m  --qos-test "$RUNNER_TEMP/a77-build/tests/qtest/qos-test" \[0m
+2026-11-25T04:07:31.5873844Z [36;1m  --out "$RUNNER_TEMP/ufs-pci-results" \[0m
+2026-11-25T04:07:31.5874094Z [36;1m  2>&1 | tee "$RUNNER_TEMP/a77-results/ufs-pci.log"[0m
+2026-11-25T04:07:31.5899976Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-25T04:07:31.5900232Z ##[endgroup]
+2026-11-25T04:07:32.2165526Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/reg-read
+2026-11-25T04:07:32.5458129Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/init
+2026-11-25T04:07:32.8760830Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-read-write
+2026-11-25T04:07:33.2052325Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-read-write
+2026-11-25T04:07:33.5343107Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/legacy-crypto-rejected
+2026-11-25T04:07:33.8661812Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-crypto-rejected
+2026-11-25T04:07:34.1938873Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/no-prdt
+2026-11-25T04:07:34.5218958Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/sync-cache
+2026-11-25T04:07:34.8526102Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/long-prdt
+2026-11-25T04:07:35.1816669Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/short-prdt
+2026-11-25T04:07:35.5132326Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/mcq-cq-wraparound
+2026-11-25T04:07:35.8430789Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-flag
+2026-11-25T04:07:36.1743196Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-attribute
+2026-11-25T04:07:36.5055938Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/query-desciptor
+2026-11-25T04:07:36.8359353Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-init
+2026-11-25T04:07:37.2744945Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/wb-read-write
+2026-11-25T04:07:39.2039263Z PASS /aarch64/virt/generic-pcihost/pci-bus-generic/pci-bus/ufs/ufs-tests/hid
+2026-11-25T04:07:39.2568088Z {"passed": true, "checks": 17, "elapsed_seconds": 7.633}
+2026-11-25T04:07:39.2655877Z ##[group]Run set -euo pipefail
+2026-11-25T04:07:39.2656146Z [36;1mset -euo pipefail[0m
+2026-11-25T04:07:39.2656347Z [36;1mpython3 tb371fc/tests/test_a77_cpu.py \[0m
+2026-11-25T04:07:39.2656639Z [36;1m  --qemu "$RUNNER_TEMP/a77-build/qemu-system-aarch64" \[0m
+2026-11-25T04:07:39.2656896Z [36;1m  --output "$RUNNER_TEMP/a77-probe" \[0m
+2026-11-25T04:07:39.2657137Z [36;1m  2>&1 | tee "$RUNNER_TEMP/a77-results/probe.log"[0m
+2026-11-25T04:07:39.2657403Z [36;1mpython3 - "$RUNNER_TEMP/a77-probe/result.json" <<'PY'[0m
+2026-11-25T04:07:39.2657638Z [36;1mimport json, sys[0m
+2026-11-25T04:07:39.2657826Z [36;1mresult = json.load(open(sys.argv[1]))[0m
+2026-11-25T04:07:39.2658038Z [36;1massert result["passed"] is True[0m
+2026-11-25T04:07:39.2658257Z [36;1massert len(result["variants"]) == 9[0m
+2026-11-25T04:07:39.2658523Z [36;1massert sum(v["passed_checks"] for v in result["variants"]) == 852[0m
+2026-11-25T04:07:39.2658864Z [36;1massert len(result["invalid_configurations"]) == 2[0m
+2026-11-25T04:07:39.2659149Z [36;1massert all(v["passed"] for v in result["invalid_configurations"])[0m
+2026-11-25T04:07:39.2659486Z [36;1mprint("Verified 852 real guest checks and 2 rejected CPU configurations")[0m
+2026-11-25T04:07:39.2659765Z [36;1mPY[0m
+2026-11-25T04:07:39.2685630Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-25T04:07:39.2685885Z ##[endgroup]
+2026-11-25T04:07:39.4310904Z PASS default: 94 guest checks
+2026-11-25T04:07:39.5270801Z PASS observed-revidr: 94 guest checks
+2026-11-25T04:07:39.6099909Z PASS l2-128k: 94 guest checks
+2026-11-25T04:07:39.6938113Z PASS l2-256k: 94 guest checks
+2026-11-25T04:07:39.7810672Z PASS l3-512k: 95 guest checks
+2026-11-25T04:07:39.8726257Z PASS l3-1m: 95 guest checks
+2026-11-25T04:07:39.9626167Z PASS l3-2m: 95 guest checks
+2026-11-25T04:07:40.0489152Z PASS l3-4m: 95 guest checks
+2026-11-25T04:07:40.1283852Z PASS crypto-off: 96 guest checks
+2026-11-25T04:07:40.1321998Z PASS rejected ,l2-cache-size=1M
+2026-11-25T04:07:40.1380227Z PASS rejected ,l3-cache-size=128K
+2026-11-25T04:07:40.1580589Z Verified 852 real guest checks and 2 rejected CPU configurations
+2026-11-25T04:07:40.1673368Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-25T04:07:40.1673664Z with:
+2026-11-25T04:07:40.1673891Z   name: tb371fc-a77-gates-7d01e5e294b788f97a8120c2d34122ddb25e6343
+2026-11-25T04:07:40.1674150Z   retention-days: 14
+2026-11-25T04:07:40.1674315Z   if-no-files-found: warn
+2026-11-25T04:07:40.1674925Z   path: /home/runner/work/_temp/a77-results/
+/home/runner/work/_temp/a77-probe/
+/home/runner/work/_temp/ufs-pci-results/
+/home/runner/work/_temp/a77-build/qemu-system-aarch64
+/home/runner/work/_temp/a77-build/tests/qtest/qos-test
+
+2026-11-25T04:07:40.1675565Z   compression-level: 6
+2026-11-25T04:07:40.1675723Z   overwrite: false
+2026-11-25T04:07:40.1675885Z   include-hidden-files: false
+2026-11-25T04:07:40.1676061Z ##[endgroup]
+2026-11-25T04:07:40.2937952Z (node:10083) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-25T04:07:40.2938849Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-25T04:07:40.3065881Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-11-25T04:07:40.3068031Z The least common ancestor is /home/runner/work/_temp. This will be the root directory of the artifact
+2026-11-25T04:07:40.3068599Z With the provided path, there will be 72 files uploaded
+2026-11-25T04:07:40.3071702Z Artifact name is valid!
+2026-11-25T04:07:40.3072120Z Root directory input is valid!
+2026-11-25T04:07:40.7608940Z Beginning upload of artifact content to blob storage
+2026-11-25T04:07:41.3349016Z (node:10083) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-25T04:07:41.6016663Z Uploaded bytes 8388608
+2026-11-25T04:07:42.0252863Z Uploaded bytes 16777216
+2026-11-25T04:07:42.6585835Z Uploaded bytes 25165824
+2026-11-25T04:07:42.8829349Z Uploaded bytes 28325433
+2026-11-25T04:07:42.9010777Z Finished uploading artifact content to blob storage!
+2026-11-25T04:07:42.9011430Z SHA256 digest of uploaded artifact zip is ae9b6e29f537c0943f21378ffc06ff2720145f603b9ba072f226042b9ca53174
+2026-11-25T04:07:42.9011980Z Finalizing artifact upload
+2026-11-25T04:07:43.2287257Z Artifact tb371fc-a77-gates-7d01e5e294b788f97a8120c2d34122ddb25e6343.zip successfully finalized. Artifact ID 14990193713
+2026-11-25T04:07:43.2287987Z Artifact tb371fc-a77-gates-7d01e5e294b788f97a8120c2d34122ddb25e6343 has been successfully uploaded! Final size is 28325433 bytes. Artifact ID is 14990193713
+2026-11-25T04:07:43.2293668Z Artifact download URL: https://github.com/cyjin-yl/qemu-tb371fc/actions/runs/45544186469/artifacts/14990193713
+2026-11-25T04:07:43.2436470Z ##[group]Run printf '%s\n' \
+2026-11-25T04:07:43.2436697Z [36;1mprintf '%s\n' \[0m
+2026-11-25T04:07:43.2437127Z [36;1m  'The isolated A77 job requires 852 guest instruction/ID/PMU checks across nine configurations and two invalid-configuration rejections.' \[0m
+2026-11-25T04:07:43.2437776Z [36;1m  'A separate 17-case PCI UFS regression covers the shared controller core, legacy and MCQ crypto rejection without skips.' \[0m
+2026-11-25T04:07:43.2438348Z [36;1m  'These architectural checks do not validate silicon cache capacities, cache timing, DSU behavior or performance.' \[0m
+2026-11-25T04:07:43.2438746Z [36;1m  >> "$GITHUB_STEP_SUMMARY"[0m
+2026-11-25T04:07:43.2466071Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-25T04:07:43.2466323Z ##[endgroup]
+2026-11-25T04:07:43.2599987Z Post job cleanup.
+2026-11-25T04:07:43.3243227Z [command]/usr/bin/git version
+2026-11-25T04:07:43.3274144Z git version 2.56.1
+2026-11-25T04:07:43.3298711Z Temporarily overriding HOME='/home/runner/work/_temp/92476a6f-b776-4ae7-9cf2-b3605da5cd7f' before making global git config changes
+2026-11-25T04:07:43.3299632Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-25T04:07:43.3302799Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/qemu-tb371fc/qemu-tb371fc
+2026-11-25T04:07:43.3330289Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-25T04:07:43.3353717Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-25T04:07:43.3544790Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-25T04:07:43.3566127Z http.https://github.com/.extraheader
+2026-11-25T04:07:43.3574849Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-25T04:07:43.3596974Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-25T04:07:43.3770239Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-25T04:07:43.3793147Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-25T04:07:43.4093842Z Cleaning up orphan processes
+2026-11-25T04:07:43.4287564Z Terminate orphan process: pid (3275) (catatonit)
+2026-11-25T04:07:43.4340486Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

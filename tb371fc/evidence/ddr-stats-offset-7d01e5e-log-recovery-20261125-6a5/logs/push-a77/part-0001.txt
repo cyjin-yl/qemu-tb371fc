@@ -1,0 +1,1303 @@
+﻿2026-11-25T04:03:54.4750299Z Current runner version: '2.338.2'
+2026-11-25T04:03:54.4774734Z ##[group]Runner Image Provisioner
+2026-11-25T04:03:54.4775599Z Hosted Compute Agent
+2026-11-25T04:03:54.4776303Z Version: 20261111.635
+2026-11-25T04:03:54.4776921Z Commit: b8a594ea514ff44cadb5342986c68b1eac6e22ed
+2026-11-25T04:03:54.4777689Z Build Date: 2026-11-11T01:49:01Z
+2026-11-25T04:03:54.4778380Z Worker ID: {924abe80-97ce-4c4f-a894-a39d636f82ea}
+2026-11-25T04:03:54.4779118Z Region: us-east-1
+2026-11-25T04:03:54.4779728Z Cloud: AWS
+2026-11-25T04:03:54.4780264Z ##[endgroup]
+2026-11-25T04:03:54.4781621Z ##[group]Operating System
+2026-11-25T04:03:54.4782283Z Ubuntu
+2026-11-25T04:03:54.4783077Z 24.04.5
+2026-11-25T04:03:54.4783640Z LTS
+2026-11-25T04:03:54.4784140Z ##[endgroup]
+2026-11-25T04:03:54.4784941Z ##[group]Runner Image
+2026-11-25T04:03:54.4785592Z Image: ubuntu-24.04
+2026-11-25T04:03:54.4786125Z Version: 20261116.133.1
+2026-11-25T04:03:54.4787385Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261116.133/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-25T04:03:54.4788828Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261116.133
+2026-11-25T04:03:54.4789778Z ##[endgroup]
+2026-11-25T04:03:54.4790853Z ##[group]GITHUB_TOKEN Permissions
+2026-11-25T04:03:54.4793386Z Contents: read
+2026-11-25T04:03:54.4794028Z Metadata: read
+2026-11-25T04:03:54.4794575Z ##[endgroup]
+2026-11-25T04:03:54.4796529Z Secret source: Actions
+2026-11-25T04:03:54.4797484Z Cache mode: write
+2026-11-25T04:03:54.4798230Z Prepare workflow directory
+2026-11-25T04:03:54.5187211Z Prepare all required actions
+2026-11-25T04:03:54.5239701Z Getting action download info
+2026-11-25T04:03:54.7066621Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-25T04:03:56.7217558Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-25T04:03:57.0870250Z Complete job name: cortex-a77-architecture
+2026-11-25T04:03:57.1613688Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-25T04:03:57.1615136Z with:
+2026-11-25T04:03:57.1615906Z   repository: cyjin-yl/qemu-tb371fc
+2026-11-25T04:03:57.1622882Z   token: ***
+2026-11-25T04:03:57.1623629Z   ssh-strict: true
+2026-11-25T04:03:57.1624408Z   ssh-user: git
+2026-11-25T04:03:57.1625172Z   persist-credentials: true
+2026-11-25T04:03:57.1625993Z   clean: true
+2026-11-25T04:03:57.1626753Z   sparse-checkout-cone-mode: true
+2026-11-25T04:03:57.1627690Z   fetch-depth: 1
+2026-11-25T04:03:57.1628669Z   fetch-tags: false
+2026-11-25T04:03:57.1629417Z   show-progress: true
+2026-11-25T04:03:57.1630170Z   lfs: false
+2026-11-25T04:03:57.1630897Z   submodules: false
+2026-11-25T04:03:57.1631689Z   set-safe-directory: true
+2026-11-25T04:03:57.1632701Z   allow-unsafe-pr-checkout: false
+2026-11-25T04:03:57.1633823Z ##[endgroup]
+2026-11-25T04:04:00.2705587Z Syncing repository: cyjin-yl/qemu-tb371fc
+2026-11-25T04:04:00.2707710Z ##[group]Getting Git version info
+2026-11-25T04:04:00.2708392Z Working directory is '/home/runner/work/qemu-tb371fc/qemu-tb371fc'
+2026-11-25T04:04:00.2709225Z [command]/usr/bin/git version
+2026-11-25T04:04:00.4534277Z git version 2.56.1
+2026-11-25T04:04:00.4547856Z ##[endgroup]
+2026-11-25T04:04:00.4558345Z Temporarily overriding HOME='/home/runner/work/_temp/81c7a814-f231-4503-bc93-f9fa38baba93' before making global git config changes
+2026-11-25T04:04:00.4559018Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-25T04:04:00.4561540Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/qemu-tb371fc/qemu-tb371fc
+2026-11-25T04:04:00.4614135Z Deleting the contents of '/home/runner/work/qemu-tb371fc/qemu-tb371fc'
+2026-11-25T04:04:00.4616648Z ##[group]Initializing the repository
+2026-11-25T04:04:00.4619896Z [command]/usr/bin/git init /home/runner/work/qemu-tb371fc/qemu-tb371fc
+2026-11-25T04:04:00.5495388Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-25T04:04:00.5496200Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-25T04:04:00.5496801Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-25T04:04:00.5497235Z hint: call:
+2026-11-25T04:04:00.5497476Z hint:
+2026-11-25T04:04:00.5497820Z hint: 	git config --global init.defaultBranch <name>
+2026-11-25T04:04:00.5498128Z hint:
+2026-11-25T04:04:00.5498492Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-25T04:04:00.5498942Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-25T04:04:00.5499299Z hint:
+2026-11-25T04:04:00.5499569Z hint: 	git branch -m <name>
+2026-11-25T04:04:00.5499874Z hint:
+2026-11-25T04:04:00.5500400Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-25T04:04:00.5511864Z Initialized empty Git repository in /home/runner/work/qemu-tb371fc/qemu-tb371fc/.git/
+2026-11-25T04:04:00.5519414Z [command]/usr/bin/git remote add origin https://github.com/cyjin-yl/qemu-tb371fc
+2026-11-25T04:04:00.5572681Z ##[endgroup]
+2026-11-25T04:04:00.5573368Z ##[group]Disabling automatic garbage collection
+2026-11-25T04:04:00.5575342Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-25T04:04:00.5598227Z ##[endgroup]
+2026-11-25T04:04:00.5598783Z ##[group]Setting up auth
+2026-11-25T04:04:00.5603075Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-25T04:04:00.5629632Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-25T04:04:00.8351952Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-25T04:04:00.8378208Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-25T04:04:00.8528398Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-25T04:04:00.8552088Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-25T04:04:00.8700314Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-25T04:04:00.8726780Z ##[endgroup]
+2026-11-25T04:04:00.8727421Z ##[group]Fetching the repository
+2026-11-25T04:04:00.8739376Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +7d01e5e294b788f97a8120c2d34122ddb25e6343:refs/remotes/origin/tb371fc-verified-ddr-stats-offset-20261125-6a5
+2026-11-25T04:04:06.3425785Z From https://github.com/cyjin-yl/qemu-tb371fc
+2026-11-25T04:04:06.3426355Z  * [new ref]         7d01e5e294b788f97a8120c2d34122ddb25e6343 -> origin/tb371fc-verified-ddr-stats-offset-20261125-6a5
+2026-11-25T04:04:06.3429611Z ##[endgroup]
+2026-11-25T04:04:06.3430204Z ##[group]Determining the checkout info
+2026-11-25T04:04:06.3431591Z ##[endgroup]
+2026-11-25T04:04:06.3436838Z [command]/usr/bin/git sparse-checkout disable
+2026-11-25T04:04:06.3524014Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-25T04:04:06.3544019Z ##[group]Checking out the ref
+2026-11-25T04:04:06.3547886Z [command]/usr/bin/git checkout --progress --force -B tb371fc-verified-ddr-stats-offset-20261125-6a5 refs/remotes/origin/tb371fc-verified-ddr-stats-offset-20261125-6a5
+2026-11-25T04:04:07.0426807Z Switched to a new branch 'tb371fc-verified-ddr-stats-offset-20261125-6a5'
+2026-11-25T04:04:07.0435348Z branch 'tb371fc-verified-ddr-stats-offset-20261125-6a5' set up to track 'origin/tb371fc-verified-ddr-stats-offset-20261125-6a5'.
+2026-11-25T04:04:07.0457811Z ##[endgroup]
+2026-11-25T04:04:07.0496059Z [command]/usr/bin/git log -1 --format=%H
+2026-11-25T04:04:07.0517236Z 7d01e5e294b788f97a8120c2d34122ddb25e6343
+2026-11-25T04:04:07.0684220Z ##[group]Run set -euo pipefail
+2026-11-25T04:04:07.0684606Z [36;1mset -euo pipefail[0m
+2026-11-25T04:04:07.0684924Z [36;1mmkdir -p "$RUNNER_TEMP/a77-results"[0m
+2026-11-25T04:04:07.0685225Z [36;1msudo apt-get update[0m
+2026-11-25T04:04:07.0685643Z [36;1msudo apt-get install -y --no-install-recommends build-essential git ca-certificates \[0m
+2026-11-25T04:04:07.0686122Z [36;1m  python3 python3-venv python3-distlib ninja-build meson pkg-config \[0m
+2026-11-25T04:04:07.0686529Z [36;1m  libglib2.0-dev libpixman-1-dev zlib1g-dev libfdt-dev \[0m
+2026-11-25T04:04:07.0686917Z [36;1m  gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu[0m
+2026-11-25T04:04:07.3384661Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-25T04:04:07.3385082Z ##[endgroup]
+2026-11-25T04:04:07.4987825Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [152 B]
+2026-11-25T04:04:07.5293003Z Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2026-11-25T04:04:07.5398985Z Hit:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble InRelease
+2026-11-25T04:04:07.5533902Z Get:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2026-11-25T04:04:07.5816097Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [794 kB]
+2026-11-25T04:04:07.6199999Z Get:4 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2026-11-25T04:04:07.6332202Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [869 kB]
+2026-11-25T04:04:07.6355559Z Get:5 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2026-11-25T04:04:07.7071862Z Get:9 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1492 kB]
+2026-11-25T04:04:07.7611098Z Get:10 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [321 kB]
+2026-11-25T04:04:07.7775652Z Get:11 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1716 kB]
+2026-11-25T04:04:07.8200392Z Get:12 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [346 kB]
+2026-11-25T04:04:07.8373157Z Get:13 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1949 kB]
+2026-11-25T04:04:07.8820785Z Get:14 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [448 kB]
+2026-11-25T04:04:07.8988068Z Get:15 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1228 kB]
+2026-11-25T04:04:07.9305038Z Get:16 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/main Translation-en [242 kB]
+2026-11-25T04:04:07.9474353Z Get:17 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1232 kB]
+2026-11-25T04:04:07.9812898Z Get:18 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [249 kB]
+2026-11-25T04:04:08.0116614Z Get:19 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1842 kB]
+2026-11-25T04:04:08.0555087Z Get:20 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/restricted Translation-en [429 kB]
+2026-11-25T04:04:20.7415408Z Fetched 13.5 MB in 1s (11.4 MB/s)
+2026-11-25T04:04:21.7257566Z Reading package lists...
+2026-11-25T04:04:21.7544509Z Reading package lists...
+2026-11-25T04:04:21.9481622Z Building dependency tree...
+2026-11-25T04:04:21.9486644Z Reading state information...
+2026-11-25T04:04:22.0916470Z git is already the newest version (1:2.56.1-0ppa1~ubuntu24.04.1).
+2026-11-25T04:04:22.0917232Z git set to manually installed.
+2026-11-25T04:04:22.0917620Z ca-certificates is already the newest version (20260816ubuntu0.24.04.2).
+2026-11-25T04:04:22.0918059Z python3 is already the newest version (3.12.3-0ubuntu2.1).
+2026-11-25T04:04:22.0918435Z python3-venv is already the newest version (3.12.3-0ubuntu2.1).
+2026-11-25T04:04:22.0918821Z pkg-config is already the newest version (1.8.1-2build1).
+2026-11-25T04:04:22.0919933Z zlib1g-dev is already the newest version (1:1.3.dfsg-3.1ubuntu2.3).
+2026-11-25T04:04:22.0920287Z The following additional packages will be installed:
+2026-11-25T04:04:22.0920658Z   cpp-13-aarch64-linux-gnu cpp-aarch64-linux-gnu gcc-13-aarch64-linux-gnu
+2026-11-25T04:04:22.0921091Z   gcc-13-aarch64-linux-gnu-base gcc-13-cross-base gcc-14-cross-base
+2026-11-25T04:04:22.0921540Z   libasan8-arm64-cross libatomic1-arm64-cross libblkid-dev libc6-arm64-cross
+2026-11-25T04:04:22.0922067Z   libfdt1 libgcc-13-dev-arm64-cross libgcc-s1-arm64-cross
+2026-11-25T04:04:22.0922426Z   libgirepository-2.0-0 libglib2.0-dev-bin libgomp1-arm64-cross
+2026-11-25T04:04:22.0923081Z   libhwasan0-arm64-cross libitm1-arm64-cross liblsan0-arm64-cross libmount-dev
+2026-11-25T04:04:22.0923508Z   libselinux1-dev libsepol-dev libstdc++6-arm64-cross libtsan2-arm64-cross
+2026-11-25T04:04:22.0923839Z   libubsan1-arm64-cross uuid-dev
+2026-11-25T04:04:22.0928773Z Suggested packages:
+2026-11-25T04:04:22.0929201Z   binutils-doc gcc-13-locales cpp-13-doc cpp-doc gcc-13-doc manpages-dev
+2026-11-25T04:04:22.0929701Z   gdb-aarch64-linux-gnu gcc-doc gir1.2-glib-2.0-dev libglib2.0-doc
+2026-11-25T04:04:22.0930025Z   libgdk-pixbuf2.0-bin libxml2-utils
+2026-11-25T04:04:22.0930273Z Recommended packages:
+2026-11-25T04:04:22.0930592Z   libc6-dev-arm64-cross libc6-dev-arm64-cross | libc-dev-arm64-cross
+2026-11-25T04:04:22.3691007Z The following NEW packages will be installed:
+2026-11-25T04:04:22.3691648Z   binutils-aarch64-linux-gnu build-essential cpp-13-aarch64-linux-gnu
+2026-11-25T04:04:22.3692256Z   cpp-aarch64-linux-gnu gcc-13-aarch64-linux-gnu gcc-13-aarch64-linux-gnu-base
+2026-11-25T04:04:22.3693224Z   gcc-13-cross-base gcc-14-cross-base gcc-aarch64-linux-gnu
+2026-11-25T04:04:22.3693728Z   libasan8-arm64-cross libatomic1-arm64-cross libblkid-dev libc6-arm64-cross
+2026-11-25T04:04:22.3694271Z   libfdt-dev libfdt1 libgcc-13-dev-arm64-cross libgcc-s1-arm64-cross
+2026-11-25T04:04:22.3703755Z   libgirepository-2.0-0 libglib2.0-dev libglib2.0-dev-bin libgomp1-arm64-cross
+2026-11-25T04:04:22.3723705Z   libhwasan0-arm64-cross libitm1-arm64-cross liblsan0-arm64-cross libmount-dev
+2026-11-25T04:04:22.3733358Z   libpixman-1-dev libselinux1-dev libsepol-dev libstdc++6-arm64-cross
+2026-11-25T04:04:22.3733973Z   libtsan2-arm64-cross libubsan1-arm64-cross meson ninja-build python3-distlib
+2026-11-25T04:04:22.3734436Z   uuid-dev
+2026-11-25T04:04:22.3871666Z 0 upgraded, 35 newly installed, 0 to remove and 74 not upgraded.
+2026-11-25T04:04:22.3872170Z Need to get 46.4 MB of archives.
+2026-11-25T04:04:22.3872868Z After this operation, 183 MB of additional disk space will be used.
+2026-11-25T04:04:22.3873374Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [152 B]
+2026-11-25T04:04:22.4491473Z Get:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 build-essential amd64 12.10ubuntu1 [4928 B]
+2026-11-25T04:04:22.4895213Z Get:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 gcc-13-aarch64-linux-gnu-base amd64 13.3.0-6ubuntu2~24.04.1cross1 [51.9 kB]
+2026-11-25T04:04:22.5543673Z Get:4 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 cpp-13-aarch64-linux-gnu amd64 13.3.0-6ubuntu2~24.04.1cross1 [10.8 MB]
+2026-11-25T04:04:22.8071703Z Get:5 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 cpp-aarch64-linux-gnu amd64 4:13.2.0-7ubuntu1 [5332 B]
+2026-11-25T04:04:22.8478098Z Get:6 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 binutils-aarch64-linux-gnu amd64 2.42-4ubuntu2.10 [3711 kB]
+2026-11-25T04:04:22.9759170Z Get:7 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 gcc-13-cross-base all 13.3.0-6ubuntu2~24.04.1cross1 [46.5 kB]
+2026-11-25T04:04:23.0133975Z Get:8 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 gcc-14-cross-base all 14.2.0-4ubuntu2~24.04.1cross1 [46.1 kB]
+2026-11-25T04:04:23.0509452Z Get:9 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libc6-arm64-cross all 2.39-0ubuntu8cross1 [1197 kB]
+2026-11-25T04:04:23.1078997Z Get:10 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libgcc-s1-arm64-cross all 14.2.0-4ubuntu2~24.04.1cross1 [61.9 kB]
+2026-11-25T04:04:23.1483767Z Get:11 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libgomp1-arm64-cross all 14.2.0-4ubuntu2~24.04.1cross1 [110 kB]
+2026-11-25T04:04:23.1895833Z Get:12 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libitm1-arm64-cross all 14.2.0-4ubuntu2~24.04.1cross1 [31.1 kB]
+2026-11-25T04:04:23.2283638Z Get:13 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libatomic1-arm64-cross all 14.2.0-4ubuntu2~24.04.1cross1 [11.5 kB]
+2026-11-25T04:04:23.2699897Z Get:14 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libasan8-arm64-cross all 14.2.0-4ubuntu2~24.04.1cross1 [524 kB]
+2026-11-25T04:04:23.3165300Z Get:15 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 liblsan0-arm64-cross all 14.2.0-4ubuntu2~24.04.1cross1 [238 kB]
+2026-11-25T04:04:23.3590514Z Get:16 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libtsan2-arm64-cross all 14.2.0-4ubuntu2~24.04.1cross1 [500 kB]
+2026-11-25T04:04:23.4055859Z Get:17 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libstdc++6-arm64-cross all 14.2.0-4ubuntu2~24.04.1cross1 [659 kB]
+2026-11-25T04:04:23.4670032Z Get:18 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libubsan1-arm64-cross all 14.2.0-4ubuntu2~24.04.1cross1 [219 kB]
+2026-11-25T04:04:23.5127233Z Get:19 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libhwasan0-arm64-cross all 14.2.0-4ubuntu2~24.04.1cross1 [304 kB]
+2026-11-25T04:04:23.5548960Z Get:20 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libgcc-13-dev-arm64-cross all 13.3.0-6ubuntu2~24.04.1cross1 [2616 kB]
+2026-11-25T04:04:23.6413750Z Get:21 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 gcc-13-aarch64-linux-gnu amd64 13.3.0-6ubuntu2~24.04.1cross1 [21.1 MB]
+2026-11-25T04:04:24.0594121Z Get:22 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 gcc-aarch64-linux-gnu amd64 4:13.2.0-7ubuntu1 [1210 B]
+2026-11-25T04:04:24.0996083Z Get:23 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libgirepository-2.0-0 amd64 2.80.0-6ubuntu3.10 [73.5 kB]
+2026-11-25T04:04:24.1395949Z Get:24 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libglib2.0-dev-bin amd64 2.80.0-6ubuntu3.10 [138 kB]
+2026-11-25T04:04:24.1799107Z Get:25 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 uuid-dev amd64 2.39.3-9ubuntu6.6 [33.5 kB]
+2026-11-25T04:04:24.2203542Z Get:26 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libblkid-dev amd64 2.39.3-9ubuntu6.6 [205 kB]
+2026-11-25T04:04:24.2673887Z Get:27 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libsepol-dev amd64 3.5-2build1 [384 kB]
+2026-11-25T04:04:24.3134818Z Get:28 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libselinux1-dev amd64 3.5-2ubuntu2.1 [164 kB]
+2026-11-25T04:04:24.3549789Z Get:29 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libmount-dev amd64 2.39.3-9ubuntu6.6 [14.9 kB]
+2026-11-25T04:04:24.3947284Z Get:30 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libglib2.0-dev amd64 2.80.0-6ubuntu3.10 [1861 kB]
+2026-11-25T04:04:24.4621596Z Get:31 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libpixman-1-dev amd64 0.42.2-1build1 [296 kB]
+2026-11-25T04:04:24.5033498Z Get:32 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 ninja-build amd64 1.11.1-2 [129 kB]
+2026-11-25T04:04:24.5468953Z Get:33 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 meson all 1.3.2-1ubuntu1 [604 kB]
+2026-11-25T04:04:24.5975662Z Get:34 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 python3-distlib all 0.3.8-1 [318 kB]
+2026-11-25T04:04:24.6417968Z Get:35 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libfdt1 amd64 1.7.0-2build1 [20.1 kB]
+2026-11-25T04:04:24.6945355Z Get:36 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 libfdt-dev amd64 1.7.0-2build1 [32.4 kB]
+2026-11-25T04:04:25.8986571Z Fetched 46.4 MB in 2s (20.0 MB/s)
+2026-11-25T04:04:26.0284241Z Selecting previously unselected package build-essential.
+2026-11-25T04:04:26.1864547Z (Reading database ... 
+2026-11-25T04:04:26.1865234Z (Reading database ... 5%
+2026-11-25T04:04:26.1865495Z (Reading database ... 10%
+2026-11-25T04:04:26.1865728Z (Reading database ... 15%
+2026-11-25T04:04:26.1866048Z (Reading database ... 20%
+2026-11-25T04:04:26.1866282Z (Reading database ... 25%
+2026-11-25T04:04:26.1866523Z (Reading database ... 30%
+2026-11-25T04:04:26.1866767Z (Reading database ... 35%
+2026-11-25T04:04:26.1866992Z (Reading database ... 40%
+2026-11-25T04:04:26.1867278Z (Reading database ... 45%
+2026-11-25T04:04:26.1867513Z (Reading database ... 50%
+2026-11-25T04:04:26.2356601Z (Reading database ... 55%
+2026-11-25T04:04:26.8668859Z (Reading database ... 60%
+2026-11-25T04:04:27.0596612Z (Reading database ... 65%
+2026-11-25T04:04:27.2293793Z (Reading database ... 70%
+2026-11-25T04:04:27.3629713Z (Reading database ... 75%
+2026-11-25T04:04:27.5614254Z (Reading database ... 80%
+2026-11-25T04:04:28.9844759Z (Reading database ... 85%
+2026-11-25T04:04:31.2320158Z (Reading database ... 90%
+2026-11-25T04:04:32.4880419Z (Reading database ... 95%
+2026-11-25T04:04:32.4880802Z (Reading database ... 100%
+2026-11-25T04:04:32.4881121Z (Reading database ... 216720 files and directories currently installed.)
+2026-11-25T04:04:32.4924081Z Preparing to unpack .../00-build-essential_12.10ubuntu1_amd64.deb ...
+2026-11-25T04:04:32.4949163Z Unpacking build-essential (12.10ubuntu1) ...
+2026-11-25T04:04:32.5098835Z Selecting previously unselected package gcc-13-aarch64-linux-gnu-base:amd64.
+2026-11-25T04:04:32.5197827Z Preparing to unpack .../01-gcc-13-aarch64-linux-gnu-base_13.3.0-6ubuntu2~24.04.1cross1_amd64.deb ...
+2026-11-25T04:04:32.5202702Z Unpacking gcc-13-aarch64-linux-gnu-base:amd64 (13.3.0-6ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:32.5695501Z Selecting previously unselected package cpp-13-aarch64-linux-gnu.
+2026-11-25T04:04:32.5793209Z Preparing to unpack .../02-cpp-13-aarch64-linux-gnu_13.3.0-6ubuntu2~24.04.1cross1_amd64.deb ...
+2026-11-25T04:04:32.5814152Z Unpacking cpp-13-aarch64-linux-gnu (13.3.0-6ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:32.7440414Z Selecting previously unselected package cpp-aarch64-linux-gnu.
+2026-11-25T04:04:32.7540387Z Preparing to unpack .../03-cpp-aarch64-linux-gnu_4%3a13.2.0-7ubuntu1_amd64.deb ...
+2026-11-25T04:04:32.7545408Z Unpacking cpp-aarch64-linux-gnu (4:13.2.0-7ubuntu1) ...
+2026-11-25T04:04:32.7689987Z Selecting previously unselected package binutils-aarch64-linux-gnu.
+2026-11-25T04:04:32.7788580Z Preparing to unpack .../04-binutils-aarch64-linux-gnu_2.42-4ubuntu2.10_amd64.deb ...
+2026-11-25T04:04:32.7808561Z Unpacking binutils-aarch64-linux-gnu (2.42-4ubuntu2.10) ...
+2026-11-25T04:04:32.9532958Z Selecting previously unselected package gcc-13-cross-base.
+2026-11-25T04:04:32.9634939Z Preparing to unpack .../05-gcc-13-cross-base_13.3.0-6ubuntu2~24.04.1cross1_all.deb ...
+2026-11-25T04:04:32.9638978Z Unpacking gcc-13-cross-base (13.3.0-6ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:32.9767830Z Selecting previously unselected package gcc-14-cross-base.
+2026-11-25T04:04:32.9864975Z Preparing to unpack .../06-gcc-14-cross-base_14.2.0-4ubuntu2~24.04.1cross1_all.deb ...
+2026-11-25T04:04:32.9869040Z Unpacking gcc-14-cross-base (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:32.9993308Z Selecting previously unselected package libc6-arm64-cross.
+2026-11-25T04:04:33.0083831Z Preparing to unpack .../07-libc6-arm64-cross_2.39-0ubuntu8cross1_all.deb ...
+2026-11-25T04:04:33.0088055Z Unpacking libc6-arm64-cross (2.39-0ubuntu8cross1) ...
+2026-11-25T04:04:33.0342080Z Selecting previously unselected package libgcc-s1-arm64-cross.
+2026-11-25T04:04:33.0431427Z Preparing to unpack .../08-libgcc-s1-arm64-cross_14.2.0-4ubuntu2~24.04.1cross1_all.deb ...
+2026-11-25T04:04:33.0435340Z Unpacking libgcc-s1-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:33.0563718Z Selecting previously unselected package libgomp1-arm64-cross.
+2026-11-25T04:04:33.0652402Z Preparing to unpack .../09-libgomp1-arm64-cross_14.2.0-4ubuntu2~24.04.1cross1_all.deb ...
+2026-11-25T04:04:33.0657039Z Unpacking libgomp1-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:33.0791698Z Selecting previously unselected package libitm1-arm64-cross.
+2026-11-25T04:04:33.0878667Z Preparing to unpack .../10-libitm1-arm64-cross_14.2.0-4ubuntu2~24.04.1cross1_all.deb ...
+2026-11-25T04:04:33.0882754Z Unpacking libitm1-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:33.1009398Z Selecting previously unselected package libatomic1-arm64-cross.
+2026-11-25T04:04:33.1096178Z Preparing to unpack .../11-libatomic1-arm64-cross_14.2.0-4ubuntu2~24.04.1cross1_all.deb ...
+2026-11-25T04:04:33.1100792Z Unpacking libatomic1-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:33.1223085Z Selecting previously unselected package libasan8-arm64-cross.
+2026-11-25T04:04:33.1310550Z Preparing to unpack .../12-libasan8-arm64-cross_14.2.0-4ubuntu2~24.04.1cross1_all.deb ...
+2026-11-25T04:04:33.1314352Z Unpacking libasan8-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:33.1520918Z Selecting previously unselected package liblsan0-arm64-cross.
+2026-11-25T04:04:33.1607653Z Preparing to unpack .../13-liblsan0-arm64-cross_14.2.0-4ubuntu2~24.04.1cross1_all.deb ...
+2026-11-25T04:04:33.1613588Z Unpacking liblsan0-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:33.1768363Z Selecting previously unselected package libtsan2-arm64-cross.
+2026-11-25T04:04:33.1856141Z Preparing to unpack .../14-libtsan2-arm64-cross_14.2.0-4ubuntu2~24.04.1cross1_all.deb ...
+2026-11-25T04:04:33.1859507Z Unpacking libtsan2-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:33.2062695Z Selecting previously unselected package libstdc++6-arm64-cross.
+2026-11-25T04:04:33.2149839Z Preparing to unpack .../15-libstdc++6-arm64-cross_14.2.0-4ubuntu2~24.04.1cross1_all.deb ...
+2026-11-25T04:04:33.2153497Z Unpacking libstdc++6-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:33.2388326Z Selecting previously unselected package libubsan1-arm64-cross.
+2026-11-25T04:04:33.2476004Z Preparing to unpack .../16-libubsan1-arm64-cross_14.2.0-4ubuntu2~24.04.1cross1_all.deb ...
+2026-11-25T04:04:33.2479389Z Unpacking libubsan1-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:33.2631825Z Selecting previously unselected package libhwasan0-arm64-cross.
+2026-11-25T04:04:33.2721269Z Preparing to unpack .../17-libhwasan0-arm64-cross_14.2.0-4ubuntu2~24.04.1cross1_all.deb ...
+2026-11-25T04:04:33.2729051Z Unpacking libhwasan0-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:33.2884075Z Selecting previously unselected package libgcc-13-dev-arm64-cross.
+2026-11-25T04:04:33.2971115Z Preparing to unpack .../18-libgcc-13-dev-arm64-cross_13.3.0-6ubuntu2~24.04.1cross1_all.deb ...
+2026-11-25T04:04:33.2975686Z Unpacking libgcc-13-dev-arm64-cross (13.3.0-6ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:33.3668024Z Selecting previously unselected package gcc-13-aarch64-linux-gnu.
+2026-11-25T04:04:33.3761595Z Preparing to unpack .../19-gcc-13-aarch64-linux-gnu_13.3.0-6ubuntu2~24.04.1cross1_amd64.deb ...
+2026-11-25T04:04:33.3783338Z Unpacking gcc-13-aarch64-linux-gnu (13.3.0-6ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:33.5910026Z Selecting previously unselected package gcc-aarch64-linux-gnu.
+2026-11-25T04:04:33.6012643Z Preparing to unpack .../20-gcc-aarch64-linux-gnu_4%3a13.2.0-7ubuntu1_amd64.deb ...
+2026-11-25T04:04:33.6016191Z Unpacking gcc-aarch64-linux-gnu (4:13.2.0-7ubuntu1) ...
+2026-11-25T04:04:33.6154878Z Selecting previously unselected package libgirepository-2.0-0:amd64.
+2026-11-25T04:04:33.6253083Z Preparing to unpack .../21-libgirepository-2.0-0_2.80.0-6ubuntu3.10_amd64.deb ...
+2026-11-25T04:04:33.6257571Z Unpacking libgirepository-2.0-0:amd64 (2.80.0-6ubuntu3.10) ...
+2026-11-25T04:04:33.6392011Z Selecting previously unselected package libglib2.0-dev-bin.
+2026-11-25T04:04:33.6488690Z Preparing to unpack .../22-libglib2.0-dev-bin_2.80.0-6ubuntu3.10_amd64.deb ...
+2026-11-25T04:04:33.6493381Z Unpacking libglib2.0-dev-bin (2.80.0-6ubuntu3.10) ...
+2026-11-25T04:04:33.6674768Z Selecting previously unselected package uuid-dev:amd64.
+2026-11-25T04:04:33.6765234Z Preparing to unpack .../23-uuid-dev_2.39.3-9ubuntu6.6_amd64.deb ...
+2026-11-25T04:04:33.6769943Z Unpacking uuid-dev:amd64 (2.39.3-9ubuntu6.6) ...
+2026-11-25T04:04:33.7231795Z Selecting previously unselected package libblkid-dev:amd64.
+2026-11-25T04:04:33.7322597Z Preparing to unpack .../24-libblkid-dev_2.39.3-9ubuntu6.6_amd64.deb ...
+2026-11-25T04:04:33.7326574Z Unpacking libblkid-dev:amd64 (2.39.3-9ubuntu6.6) ...
+2026-11-25T04:04:33.7478828Z Selecting previously unselected package libsepol-dev:amd64.
+2026-11-25T04:04:33.7568152Z Preparing to unpack .../25-libsepol-dev_3.5-2build1_amd64.deb ...
+2026-11-25T04:04:33.7571454Z Unpacking libsepol-dev:amd64 (3.5-2build1) ...
+2026-11-25T04:04:33.7767584Z Selecting previously unselected package libselinux1-dev:amd64.
+2026-11-25T04:04:33.7857279Z Preparing to unpack .../26-libselinux1-dev_3.5-2ubuntu2.1_amd64.deb ...
+2026-11-25T04:04:33.7860903Z Unpacking libselinux1-dev:amd64 (3.5-2ubuntu2.1) ...
+2026-11-25T04:04:33.8074239Z Selecting previously unselected package libmount-dev:amd64.
+2026-11-25T04:04:33.8162921Z Preparing to unpack .../27-libmount-dev_2.39.3-9ubuntu6.6_amd64.deb ...
+2026-11-25T04:04:33.8167226Z Unpacking libmount-dev:amd64 (2.39.3-9ubuntu6.6) ...
+2026-11-25T04:04:33.8287911Z Selecting previously unselected package libglib2.0-dev:amd64.
+2026-11-25T04:04:33.8375969Z Preparing to unpack .../28-libglib2.0-dev_2.80.0-6ubuntu3.10_amd64.deb ...
+2026-11-25T04:04:33.8379104Z Unpacking libglib2.0-dev:amd64 (2.80.0-6ubuntu3.10) ...
+2026-11-25T04:04:33.8983059Z Selecting previously unselected package libpixman-1-dev:amd64.
+2026-11-25T04:04:33.9075097Z Preparing to unpack .../29-libpixman-1-dev_0.42.2-1build1_amd64.deb ...
+2026-11-25T04:04:33.9079446Z Unpacking libpixman-1-dev:amd64 (0.42.2-1build1) ...
+2026-11-25T04:04:33.9235093Z Selecting previously unselected package ninja-build.
+2026-11-25T04:04:33.9325810Z Preparing to unpack .../30-ninja-build_1.11.1-2_amd64.deb ...
+2026-11-25T04:04:33.9330334Z Unpacking ninja-build (1.11.1-2) ...
+2026-11-25T04:04:33.9883351Z Selecting previously unselected package meson.
+2026-11-25T04:04:33.9976100Z Preparing to unpack .../31-meson_1.3.2-1ubuntu1_all.deb ...
+2026-11-25T04:04:33.9979467Z Unpacking meson (1.3.2-1ubuntu1) ...
+2026-11-25T04:04:34.0296635Z Selecting previously unselected package python3-distlib.
+2026-11-25T04:04:34.0389399Z Preparing to unpack .../32-python3-distlib_0.3.8-1_all.deb ...
+2026-11-25T04:04:34.0392631Z Unpacking python3-distlib (0.3.8-1) ...
+2026-11-25T04:04:34.0563333Z Selecting previously unselected package libfdt1:amd64.
+2026-11-25T04:04:34.0655116Z Preparing to unpack .../33-libfdt1_1.7.0-2build1_amd64.deb ...
+2026-11-25T04:04:34.0659841Z Unpacking libfdt1:amd64 (1.7.0-2build1) ...
+2026-11-25T04:04:34.0782847Z Selecting previously unselected package libfdt-dev:amd64.
+2026-11-25T04:04:34.0874332Z Preparing to unpack .../34-libfdt-dev_1.7.0-2build1_amd64.deb ...
+2026-11-25T04:04:34.0878639Z Unpacking libfdt-dev:amd64 (1.7.0-2build1) ...
+2026-11-25T04:04:34.1126827Z Setting up libglib2.0-dev-bin (2.80.0-6ubuntu3.10) ...
+2026-11-25T04:04:34.2563023Z Setting up libpixman-1-dev:amd64 (0.42.2-1build1) ...
+2026-11-25T04:04:34.2574578Z Setting up libgirepository-2.0-0:amd64 (2.80.0-6ubuntu3.10) ...
+2026-11-25T04:04:34.2585623Z Setting up binutils-aarch64-linux-gnu (2.42-4ubuntu2.10) ...
+2026-11-25T04:04:34.2595964Z Setting up gcc-14-cross-base (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.2606058Z Setting up python3-distlib (0.3.8-1) ...
+2026-11-25T04:04:34.3740767Z Setting up libfdt1:amd64 (1.7.0-2build1) ...
+2026-11-25T04:04:34.3752009Z Setting up ninja-build (1.11.1-2) ...
+2026-11-25T04:04:34.3762115Z Setting up libfdt-dev:amd64 (1.7.0-2build1) ...
+2026-11-25T04:04:34.3773228Z Setting up uuid-dev:amd64 (2.39.3-9ubuntu6.6) ...
+2026-11-25T04:04:34.3783882Z Setting up gcc-13-cross-base (13.3.0-6ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.3795771Z Setting up libc6-arm64-cross (2.39-0ubuntu8cross1) ...
+2026-11-25T04:04:34.3805149Z Setting up libitm1-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.3815910Z Setting up libsepol-dev:amd64 (3.5-2build1) ...
+2026-11-25T04:04:34.3825076Z Setting up build-essential (12.10ubuntu1) ...
+2026-11-25T04:04:34.3835737Z Setting up gcc-13-aarch64-linux-gnu-base:amd64 (13.3.0-6ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.3846362Z Setting up libgcc-s1-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.3857404Z Setting up libatomic1-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.3867313Z Setting up liblsan0-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.3877088Z Setting up libblkid-dev:amd64 (2.39.3-9ubuntu6.6) ...
+2026-11-25T04:04:34.3887810Z Setting up libgomp1-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.3898985Z Setting up cpp-13-aarch64-linux-gnu (13.3.0-6ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.3908961Z Setting up libselinux1-dev:amd64 (3.5-2ubuntu2.1) ...
+2026-11-25T04:04:34.3920376Z Setting up meson (1.3.2-1ubuntu1) ...
+2026-11-25T04:04:34.9049503Z Setting up libhwasan0-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.9060253Z Setting up libstdc++6-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.9070113Z Setting up cpp-aarch64-linux-gnu (4:13.2.0-7ubuntu1) ...
+2026-11-25T04:04:34.9081310Z Setting up libasan8-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.9091067Z Setting up libtsan2-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.9101620Z Setting up libmount-dev:amd64 (2.39.3-9ubuntu6.6) ...
+2026-11-25T04:04:34.9110928Z Setting up libubsan1-arm64-cross (14.2.0-4ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.9121032Z Setting up libglib2.0-dev:amd64 (2.80.0-6ubuntu3.10) ...
+2026-11-25T04:04:34.9135142Z Setting up libgcc-13-dev-arm64-cross (13.3.0-6ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.9145288Z Setting up gcc-13-aarch64-linux-gnu (13.3.0-6ubuntu2~24.04.1cross1) ...
+2026-11-25T04:04:34.9156996Z Setting up gcc-aarch64-linux-gnu (4:13.2.0-7ubuntu1) ...
+2026-11-25T04:04:34.9171916Z Processing triggers for man-db (2.12.0-4build2) ...
+2026-11-25T04:04:34.9195208Z Not building database; man-db/auto-update is not 'true'.
+2026-11-25T04:04:34.9204824Z Processing triggers for libglib2.0-0t64:amd64 (2.80.0-6ubuntu3.10) ...
+2026-11-25T04:04:34.9290166Z Processing triggers for libc-bin (2.39-0ubuntu8.12) ...
+2026-11-25T04:04:42.8823336Z 
+2026-11-25T04:04:42.8824354Z Running kernel seems to be up-to-date.
+2026-11-25T04:04:42.8824690Z 
+2026-11-25T04:04:42.8824916Z No services need to be restarted.
+2026-11-25T04:04:42.8825381Z 
+2026-11-25T04:04:42.8825508Z No containers need to be restarted.
+2026-11-25T04:04:42.8825739Z 
+2026-11-25T04:04:42.8825852Z No user sessions are running outdated binaries.
+2026-11-25T04:04:42.8826048Z 
+2026-11-25T04:04:42.8826256Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-11-25T04:04:43.7157899Z ##[group]Run set -euo pipefail
+2026-11-25T04:04:43.7158261Z [36;1mset -euo pipefail[0m
+2026-11-25T04:04:43.7158504Z [36;1mrepo="$PWD"[0m
+2026-11-25T04:04:43.7158735Z [36;1mmkdir -p "$RUNNER_TEMP/a77-build"[0m
+2026-11-25T04:04:43.7159024Z [36;1mcd "$RUNNER_TEMP/a77-build"[0m
+2026-11-25T04:04:43.7159317Z [36;1m"$repo/configure" --target-list=aarch64-softmmu \[0m
+2026-11-25T04:04:43.7159740Z [36;1m  --with-devices-aarch64=a77-test --without-default-devices \[0m
+2026-11-25T04:04:43.7160157Z [36;1m  --without-default-features --enable-system --enable-tcg --enable-fdt \[0m
+2026-11-25T04:04:43.7160548Z [36;1m  --disable-docs --disable-tools --disable-guest-agent \[0m
+2026-11-25T04:04:43.7160922Z [36;1m  2>&1 | tee "$RUNNER_TEMP/a77-results/configure.log"[0m
+2026-11-25T04:04:43.7161343Z [36;1mninja -j2 qemu-system-aarch64 tests/qtest/qos-test \[0m
+2026-11-25T04:04:43.7161691Z [36;1m  2>&1 | tee "$RUNNER_TEMP/a77-results/build.log"[0m
+2026-11-25T04:04:43.7188894Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-25T04:04:43.7189274Z ##[endgroup]
+2026-11-25T04:04:45.4138729Z python determined to be '/usr/bin/python3'
+2026-11-25T04:04:45.4145163Z python version: Python 3.12.3
+2026-11-25T04:04:45.9474012Z mkvenv: Creating non-isolated virtual environment at 'pyvenv'
+2026-11-25T04:04:46.2180204Z mkvenv: checking for meson>=1.5.0
+2026-11-25T04:04:46.2196753Z mkvenv: checking for pycotap>=1.1.0
+2026-11-25T04:04:49.5148934Z mkvenv: installing meson==1.11.1, pycotap==1.3.1
+2026-11-25T04:04:49.5149520Z mkvenv: checking for qemu.qmp>=0.0.5
+2026-11-25T04:04:49.5154071Z mkvenv: checking for setuptools>=44.1.1
+2026-11-25T04:04:49.5166176Z mkvenv: checking for wheel>=0.34.2
+2026-11-25T04:04:49.5171074Z mkvenv: checking for pip>=20.3.4
+2026-11-25T04:04:49.5193900Z mkvenv: installing qemu.qmp==0.0.6
+2026-11-25T04:04:50.7240257Z mkvenv: installing /home/runner/work/qemu-tb371fc/qemu-tb371fc/python
+2026-11-25T04:04:55.9366087Z The Meson build system
+2026-11-25T04:04:55.9366562Z Version: 1.11.1
+2026-11-25T04:04:55.9366941Z Source dir: /home/runner/work/qemu-tb371fc/qemu-tb371fc
+2026-11-25T04:04:55.9367620Z Build dir: /home/runner/work/_temp/a77-build
+2026-11-25T04:04:55.9368111Z Build type: native build
+2026-11-25T04:04:55.9368494Z Project name: qemu
+2026-11-25T04:04:55.9368815Z Project version: 11.1.3
+2026-11-25T04:04:55.9369690Z C compiler for the host machine: cc -m64 (gcc 13.3.0 "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0")
+2026-11-25T04:04:55.9370350Z C linker for the host machine: cc -m64 ld.bfd 2.42
+2026-11-25T04:04:55.9370769Z Host machine cpu family: x86_64
+2026-11-25T04:04:55.9371119Z Host machine cpu: x86_64
+2026-11-25T04:04:55.9372026Z Program scripts/symlink-install-tree.py found: YES (/home/runner/work/_temp/a77-build/pyvenv/bin/python3 /home/runner/work/qemu-tb371fc/qemu-tb371fc/scripts/symlink-install-tree.py)
+2026-11-25T04:04:55.9373138Z Program sh found: YES (/usr/bin/sh)
+2026-11-25T04:04:55.9373707Z Program python3 found: YES (/home/runner/work/_temp/a77-build/pyvenv/bin/python3)
+2026-11-25T04:04:55.9374301Z Compiler for language rust skipped: feature rust disabled
+2026-11-25T04:04:55.9374708Z Program iasl found: NO
+2026-11-25T04:04:55.9375076Z Program bzip2 found: YES (/usr/bin/bzip2)
+2026-11-25T04:04:55.9375443Z Checking for size of "void *" : 8 
+2026-11-25T04:04:55.9375938Z Compiler for C supports arguments -fno-link-libatomic: NO 
+2026-11-25T04:04:55.9376475Z Compiler for C supports link arguments -Wl,-z,relro: YES 
+2026-11-25T04:04:55.9376971Z Compiler for C supports link arguments -Wl,-z,now: YES 
+2026-11-25T04:04:55.9377493Z Checking if "-fzero-call-used-regs=used-gpr" compiles: YES 
+2026-11-25T04:04:55.9377990Z Compiler for C supports arguments -mcx16: YES 
+2026-11-25T04:04:55.9378439Z Compiler for C supports arguments -msse2: YES 
+2026-11-25T04:04:55.9378952Z Compiler for C supports arguments -D_GNU_SOURCE: YES 
+2026-11-25T04:04:55.9379465Z Compiler for C supports arguments -D_FILE_OFFSET_BITS=64: YES 
+2026-11-25T04:04:55.9380250Z Compiler for C supports arguments -D_LARGEFILE_SOURCE: YES 
+2026-11-25T04:04:55.9380787Z Compiler for C supports arguments -fno-strict-aliasing: YES 
+2026-11-25T04:04:55.9381303Z Compiler for C supports arguments -fno-common: YES 
+2026-11-25T04:04:55.9381746Z Compiler for C supports arguments -fwrapv: YES 
+2026-11-25T04:04:55.9382231Z Compiler for C supports arguments -ftrivial-auto-var-init=zero: YES 
+2026-11-25T04:04:55.9383028Z Compiler for C supports arguments -fzero-init-padding-bits=all: NO 
+2026-11-25T04:04:55.9383611Z Compiler for C supports arguments -fzero-call-used-regs=used-gpr: YES 
+2026-11-25T04:04:55.9384202Z Compiler for C supports arguments -Wempty-body: YES 
+2026-11-25T04:04:55.9384848Z Compiler for C supports arguments -Wendif-labels: YES 
+2026-11-25T04:04:55.9385495Z Compiler for C supports arguments -Wexpansion-to-defined: YES 
+2026-11-25T04:04:55.9386040Z Compiler for C supports arguments -Wformat-overflow=2: YES 
+2026-11-25T04:04:55.9386548Z Compiler for C supports arguments -Wformat-security: YES 
+2026-11-25T04:04:55.9387040Z Compiler for C supports arguments -Wformat-y2k: YES 
+2026-11-25T04:04:55.9387558Z Compiler for C supports arguments -Wignored-qualifiers: YES 
+2026-11-25T04:04:55.9387910Z Compiler for C supports arguments -Wimplicit-fallthrough=2: YES 
+2026-11-25T04:04:55.9388268Z Compiler for C supports arguments -Winit-self: YES 
+2026-11-25T04:04:55.9388637Z Compiler for C supports arguments -Wmissing-format-attribute: YES 
+2026-11-25T04:04:55.9389118Z Compiler for C supports arguments -Wmissing-prototypes: YES 
+2026-11-25T04:04:55.9389475Z Compiler for C supports arguments -Wnested-externs: YES 
+2026-11-25T04:04:55.9389815Z Compiler for C supports arguments -Wold-style-declaration: YES 
+2026-11-25T04:04:55.9390178Z Compiler for C supports arguments -Wold-style-definition: YES 
+2026-11-25T04:04:55.9390553Z Compiler for C supports arguments -Wredundant-decls: YES 
+2026-11-25T04:04:55.9390924Z Compiler for C supports arguments -Wshadow=local: YES 
+2026-11-25T04:04:55.9391258Z Compiler for C supports arguments -Wstrict-prototypes: YES 
+2026-11-25T04:04:55.9391579Z Compiler for C supports arguments -Wtype-limits: YES 
+2026-11-25T04:04:55.9391898Z Compiler for C supports arguments -Wundef: YES 
+2026-11-25T04:04:55.9392186Z Compiler for C supports arguments -Wvla: YES 
+2026-11-25T04:04:55.9392850Z Compiler for C supports arguments -Wwrite-strings: YES 
+2026-11-25T04:04:55.9393321Z Compiler for C supports arguments -Wno-gnu-variable-sized-type-not-at-end: NO 
+2026-11-25T04:04:55.9393743Z Compiler for C supports arguments -Wno-initializer-overrides: NO 
+2026-11-25T04:04:55.9394102Z Compiler for C supports arguments -Wno-missing-include-dirs: YES 
+2026-11-25T04:04:55.9394454Z Compiler for C supports arguments -Wno-psabi: YES 
+2026-11-25T04:04:55.9394760Z Compiler for C supports arguments -Wno-shift-negative-value: YES 
+2026-11-25T04:04:55.9395127Z Compiler for C supports arguments -Wno-string-plus-int: NO 
+2026-11-25T04:04:55.9395489Z Compiler for C supports arguments -Wno-tautological-type-limit-compare: NO 
+2026-11-25T04:04:55.9395876Z Compiler for C supports arguments -Wno-typedef-redefinition: NO 
+2026-11-25T04:04:55.9396211Z Program cgcc skipped: feature sparse disabled
+2026-11-25T04:04:55.9396476Z Library m found: YES
+2026-11-25T04:04:55.9396718Z Run-time dependency threads found: YES
+2026-11-25T04:04:55.9396957Z Library util found: YES
+2026-11-25T04:04:55.9397196Z Found pkg-config: YES (/usr/bin/pkg-config) 1.8.1
+2026-11-25T04:04:55.9397502Z Run-time dependency glib-2.0 found: YES 2.80.0
+2026-11-25T04:04:55.9397820Z Dependency gio-2.0 for host machine skipped: feature gio disabled
+2026-11-25T04:04:55.9398416Z Program scripts/xml-preprocess.py found: YES (/home/runner/work/_temp/a77-build/pyvenv/bin/python3 /home/runner/work/qemu-tb371fc/qemu-tb371fc/scripts/xml-preprocess.py)
+2026-11-25T04:04:55.9399004Z Dependency pixman-1 for host machine skipped: feature pixman disabled
+2026-11-25T04:04:55.9399339Z Run-time dependency zlib found: YES 1.3
+2026-11-25T04:04:55.9399782Z Library aio skipped: feature linux_aio disabled
+2026-11-25T04:04:55.9400118Z Dependency liburing for host machine skipped: feature linux_io_uring disabled
+2026-11-25T04:04:55.9400503Z Dependency libnfs for host machine skipped: feature libnfs disabled
+2026-11-25T04:04:55.9400963Z Dependency appleframeworks(modules: Cocoa, CoreVideo, QuartzCore) for host machine skipped: feature cocoa disabled
+2026-11-25T04:04:55.9401463Z Dependency appleframeworks(modules: vmnet) for host machine skipped: feature vmnet disabled
+2026-11-25T04:04:55.9401924Z Dependency libseccomp for host machine skipped: feature seccomp disabled
+2026-11-25T04:04:55.9402262Z Library cap-ng skipped: feature cap_ng disabled
+2026-11-25T04:04:55.9402910Z Dependency xkbcommon for host machine skipped: feature xkbcommon disabled
+2026-11-25T04:04:55.9403353Z Dependency slirp for host machine skipped: feature slirp disabled
+2026-11-25T04:04:55.9403676Z Library vdeplug skipped: feature vde disabled
+2026-11-25T04:04:55.9404007Z Dependency libpulse for host machine skipped: feature pa disabled
+2026-11-25T04:04:55.9404355Z Dependency alsa for host machine skipped: feature alsa disabled
+2026-11-25T04:04:55.9404691Z Dependency jack for host machine skipped: feature jack disabled
+2026-11-25T04:04:55.9405150Z Dependency libpipewire-0.3 for host machine skipped: feature pipewire disabled
+2026-11-25T04:04:55.9405589Z Dependency sndio for host machine skipped: feature sndio disabled
+2026-11-25T04:04:55.9406017Z Dependency spice-protocol for host machine skipped: feature spice_protocol disabled
+2026-11-25T04:04:55.9406371Z Checking for function "shm_open" : YES 
+2026-11-25T04:04:55.9406683Z Dependency libiscsi for host machine skipped: feature libiscsi disabled
+2026-11-25T04:04:55.9407054Z Dependency libzstd for host machine skipped: feature zstd disabled
+2026-11-25T04:04:55.9407428Z Dependency qpl for host machine skipped: feature qpl disabled
+2026-11-25T04:04:55.9407782Z Dependency libwd for host machine skipped: feature uadk disabled
+2026-11-25T04:04:55.9408172Z Dependency libwd_comp for host machine skipped: feature uadk disabled
+2026-11-25T04:04:55.9408546Z Dependency qatzip for host machine skipped: feature qatzip disabled
+2026-11-25T04:04:55.9408934Z Dependency virglrenderer for host machine skipped: feature virglrenderer disabled
+2026-11-25T04:04:55.9409364Z Dependency rutabaga_gfx_ffi for host machine skipped: feature rutabaga_gfx disabled
+2026-11-25T04:04:55.9409769Z Dependency blkio for host machine skipped: feature blkio disabled
+2026-11-25T04:04:55.9410114Z Dependency libcurl for host machine skipped: feature curl disabled
+2026-11-25T04:04:55.9410487Z Dependency libudev for host machine skipped: feature libudev disabled
+2026-11-25T04:04:55.9410837Z Dependency igvm for host machine skipped: feature igvm disabled
+2026-11-25T04:04:55.9411164Z Library brlapi skipped: feature brlapi disabled
+2026-11-25T04:04:55.9411478Z Dependency sdl2 for host machine skipped: feature sdl disabled
+2026-11-25T04:04:55.9411773Z Library rados skipped: feature rbd disabled
+2026-11-25T04:04:55.9412022Z Library rbd skipped: feature rbd disabled
+2026-11-25T04:04:55.9412339Z Dependency libssh for host machine skipped: feature libssh disabled
+2026-11-25T04:04:55.9412825Z Library bz2 skipped: feature bzip2 disabled
+2026-11-25T04:04:55.9413095Z Library lzfse skipped: feature lzfse disabled
+2026-11-25T04:04:55.9413376Z Has header "dsound.h" : NO 
+2026-11-25T04:04:55.9413712Z Dependency appleframeworks(modules: CoreAudio) for host machine skipped: feature coreaudio disabled
+2026-11-25T04:04:55.9414154Z Dependency epoxy for host machine skipped: feature opengl disabled
+2026-11-25T04:04:55.9414497Z Has header "epoxy/egl.h" with dependency epoxy: NO 
+2026-11-25T04:04:55.9414817Z Dependency libcbor for host machine skipped: feature libcbor disabled
+2026-11-25T04:04:55.9415184Z Dependency libgcrypt for host machine skipped: feature gcrypt disabled
+2026-11-25T04:04:55.9415545Z Dependency nettle for host machine skipped: feature nettle disabled
+2026-11-25T04:04:55.9415906Z Dependency capstone for host machine skipped: feature capstone disabled
+2026-11-25T04:04:55.9416319Z Run-time dependency gmp found: YES 6.3.0
+2026-11-25T04:04:55.9416603Z Run-time dependency x11 found: NO  (tried pkg-config)
+2026-11-25T04:04:55.9416918Z Library pam skipped: feature auth_pam disabled
+2026-11-25T04:04:55.9417194Z Library snappy skipped: feature snappy disabled
+2026-11-25T04:04:55.9417487Z Library lzo2 skipped: feature lzo disabled
+2026-11-25T04:04:55.9417737Z Library numa skipped: feature numa disabled
+2026-11-25T04:04:55.9417968Z Library fdt found: YES
+2026-11-25T04:04:55.9418211Z Library rdmacm skipped: feature rdma disabled
+2026-11-25T04:04:55.9418474Z Library ibverbs skipped: feature rdma disabled
+2026-11-25T04:04:55.9418844Z Dependency libcacard for host machine skipped: feature smartcard disabled
+2026-11-25T04:04:55.9419247Z Dependency u2f-emu for host machine skipped: feature u2f disabled
+2026-11-25T04:04:55.9419600Z Dependency canokey-qemu for host machine skipped: feature canokey disabled
+2026-11-25T04:04:55.9420035Z Dependency libusbredirparser-0.5 for host machine skipped: feature usb_redir disabled
+2026-11-25T04:04:55.9420435Z Dependency libusb-1.0 for host machine skipped: feature libusb disabled
+2026-11-25T04:04:55.9420816Z Dependency libpmem for host machine skipped: feature libpmem disabled
+2026-11-25T04:04:55.9421185Z Dependency libdaxctl for host machine skipped: feature libdaxctl disabled
+2026-11-25T04:04:55.9421575Z Dependency libkeyutils for host machine skipped: feature libkeyutils disabled
+2026-11-25T04:04:55.9422304Z Checking for function "gettid" : YES 
+2026-11-25T04:04:55.9422762Z Dependency libselinux for host machine skipped: feature selinux disabled
+2026-11-25T04:04:55.9423144Z Dependency fuse3 for host machine skipped: feature fuse disabled
+2026-11-25T04:04:55.9423488Z Dependency libbpf for host machine skipped: feature bpf disabled
+2026-11-25T04:04:55.9423830Z Dependency libdw for host machine skipped: feature libdw disabled
+2026-11-25T04:04:58.7832170Z Initialized empty Git repository in /home/runner/work/qemu-tb371fc/qemu-tb371fc/subprojects/keycodemapdb/.git/
+2026-11-25T04:04:59.3248123Z From https://gitlab.com/qemu-project/keycodemapdb
+2026-11-25T04:04:59.3248573Z  * branch            f5772a62ec52591ff6870b7e8ef32482371f22c6 -> FETCH_HEAD
+2026-11-25T04:04:59.3314909Z HEAD is now at f5772a6 Add Qemu qcode support for F13 to F24
+2026-11-25T04:04:59.7430582Z Initialized empty Git repository in /home/runner/work/qemu-tb371fc/qemu-tb371fc/subprojects/berkeley-softfloat-3/.git/
+2026-11-25T04:05:00.2443789Z From https://gitlab.com/qemu-project/berkeley-softfloat-3
+2026-11-25T04:05:00.2444300Z  * branch            b64af41c3276f97f0e181920400ee056b9c88037 -> FETCH_HEAD
+2026-11-25T04:05:00.2572248Z HEAD is now at b64af41 Fix typo in function 'softfloat_propagateNaNF128M' for RISC-V.
+2026-11-25T04:05:00.2773493Z Initialized empty Git repository in /home/runner/work/qemu-tb371fc/qemu-tb371fc/subprojects/berkeley-testfloat-3/.git/
+2026-11-25T04:05:00.8010881Z From https://gitlab.com/qemu-project/berkeley-testfloat-3
+2026-11-25T04:05:00.8011371Z  * branch            e7af9751d9f9fd3b47911f51a5cfd08af256a9ab -> FETCH_HEAD
+2026-11-25T04:05:00.8100509Z HEAD is now at e7af975 Fix -Wreturn-type errors in fNNRandom
+2026-11-25T04:05:01.1320390Z Header "linux/fs.h" has symbol "FIFREEZE" : YES 
+2026-11-25T04:05:01.1320947Z Header "linux/fs.h" has symbol "FITRIM" : YES 
+2026-11-25T04:05:01.1321428Z Has header "linux/magic.h" : YES 
+2026-11-25T04:05:01.1321876Z Has header "linux/btrfs.h" : YES 
+2026-11-25T04:05:01.1322274Z Has header "libdrm/drm.h" : NO 
+2026-11-25T04:05:01.1322954Z Has header "linux/openat2.h" : YES 
+2026-11-25T04:05:01.1323333Z Has header "pty.h" : YES 
+2026-11-25T04:05:01.1323680Z Has header "sys/disk.h" : NO 
+2026-11-25T04:05:01.1324079Z Has header "sys/ioccom.h" : NO 
+2026-11-25T04:05:01.1324452Z Has header "sys/kcov.h" : NO 
+2026-11-25T04:05:01.1324875Z Checking for function "close_range" : NO 
+2026-11-25T04:05:01.1325352Z Checking for function "accept4" : YES 
+2026-11-25T04:05:01.1325761Z Checking for function "clock_adjtime" : YES 
+2026-11-25T04:05:01.1326366Z Checking for function "dup3" : YES 
+2026-11-25T04:05:01.1326794Z Checking for function "fallocate" : YES 
+2026-11-25T04:05:01.1327278Z Checking for function "posix_fallocate" : YES 
+2026-11-25T04:05:01.1327732Z Checking for function "sched_getcpu" : NO 
+2026-11-25T04:05:01.1328143Z Checking for function "posix_memalign" : YES 
+2026-11-25T04:05:01.1328605Z Checking for function "_aligned_malloc" : NO 
+2026-11-25T04:05:01.1329037Z Checking for function "valloc" : YES 
+2026-11-25T04:05:01.1329431Z Checking for function "memalign" : YES 
+2026-11-25T04:05:01.1329838Z Checking for function "ppoll" : YES 
+2026-11-25T04:05:01.1330214Z Checking for function "preadv" : YES 
+2026-11-25T04:05:01.1330644Z Checking for function "pthread_fchdir_np" : NO 
+2026-11-25T04:05:01.1331216Z Checking for function "sendfile" : YES 
+2026-11-25T04:05:01.1331603Z Checking for function "setns" : YES 
+2026-11-25T04:05:01.1331993Z Checking for function "unshare" : YES 
+2026-11-25T04:05:01.1332370Z Checking for function "syncfs" : YES 
+2026-11-25T04:05:01.1332975Z Checking for function "sync_file_range" : YES 
+2026-11-25T04:05:01.1333403Z Checking for function "timerfd_create" : YES 
+2026-11-25T04:05:01.1333792Z Checking for function "getloadavg" : YES 
+2026-11-25T04:05:01.1334201Z Checking for function "htonll" : NO 
+2026-11-25T04:05:01.1334622Z Checking for function "copy_file_range" : YES 
+2026-11-25T04:05:01.1335093Z Checking for function "getifaddrs" : YES 
+2026-11-25T04:05:01.1335562Z Checking for function "openpty" with dependency -lutil: YES 
+2026-11-25T04:05:01.1336014Z Checking for function "strchrnul" : YES 
+2026-11-25T04:05:01.1336416Z Checking for function "system" : YES 
+2026-11-25T04:05:01.1336836Z Header "sys/inotify.h" has symbol "inotify_init1" : YES 
+2026-11-25T04:05:01.1337291Z Checking for function "inotify_init1" : YES 
+2026-11-25T04:05:01.1337769Z Header "linux/blkzoned.h" has symbol "BLKOPENZONE" : YES 
+2026-11-25T04:05:01.1338276Z Header "linux/falloc.h" has symbol "FALLOC_FL_PUNCH_HOLE" : YES 
+2026-11-25T04:05:01.1338848Z Header "linux/falloc.h" has symbol "FALLOC_FL_KEEP_SIZE" : YES 
+2026-11-25T04:05:01.1339362Z Header "linux/falloc.h" has symbol "FALLOC_FL_ZERO_RANGE" : YES 
+2026-11-25T04:05:01.1339840Z Has header "linux/fiemap.h" : YES 
+2026-11-25T04:05:01.1340255Z Header "linux/fs.h" has symbol "FS_IOC_FIEMAP" : YES 
+2026-11-25T04:05:01.1340683Z Header "sched.h" has symbol "getcpu" : YES 
+2026-11-25T04:05:01.1341087Z Checking for function "getrandom" : YES 
+2026-11-25T04:05:01.1341506Z Header "sys/random.h" has symbol "GRND_NONBLOCK" : YES 
+2026-11-25T04:05:01.1341970Z Header "sys/prctl.h" has symbol "PR_SET_TIMERSLACK" : YES 
+2026-11-25T04:05:01.1342664Z Header "linux/rtnetlink.h" has symbol "IFLA_PROTO_DOWN" : YES 
+2026-11-25T04:05:01.1343198Z Header "sys/sysmacros.h" has symbol "makedev" : YES 
+2026-11-25T04:05:01.1343660Z Header "getopt.h" has symbol "optreset" : NO 
+2026-11-25T04:05:01.1344095Z Header "netinet/in.h" has symbol "IPPROTO_MPTCP" : YES 
+2026-11-25T04:05:01.1344586Z Header "netinet/tcp.h" has symbol "TCP_KEEPCNT" : YES 
+2026-11-25T04:05:01.1345106Z Header "netinet/tcp.h" has symbol "TCP_KEEPIDLE" : YES 
+2026-11-25T04:05:01.1345575Z Header "netinet/tcp.h" has symbol "TCP_KEEPINTVL" : YES 
+2026-11-25T04:05:01.1346090Z Checking whether type "struct sigevent" has member "sigev_notify_thread_id" : NO 
+2026-11-25T04:05:01.1346712Z Checking whether type "struct stat" has member "st_atim" : YES 
+2026-11-25T04:05:01.1347355Z Checking whether type "struct blk_zone" has member "capacity" : YES 
+2026-11-25T04:05:01.1347849Z Checking for type "struct iovec" : YES 
+2026-11-25T04:05:01.1348228Z Checking for type "struct utmpx" : YES 
+2026-11-25T04:05:01.1348636Z Header "asm/hwprobe.h" has symbol "RISCV_HWPROBE_EXT_ZBA" : NO 
+2026-11-25T04:05:01.1349072Z Header "linux/vm_sockets.h" has symbol "AF_VSOCK" : YES 
+2026-11-25T04:05:01.1349908Z Program scripts/minikconf.py found: YES (/home/runner/work/_temp/a77-build/pyvenv/bin/python3 /home/runner/work/qemu-tb371fc/qemu-tb371fc/scripts/minikconf.py)
+2026-11-25T04:05:01.1350861Z Configuring aarch64-softmmu-config-target.h using configuration
+2026-11-25T04:05:01.1351392Z Configuring aarch64-softmmu-config-devices.mak with command
+2026-11-25T04:05:01.1352024Z Reading depfile: /home/runner/work/_temp/a77-build/meson-private/aarch64-softmmu-config-devices.mak.d
+2026-11-25T04:05:01.1352886Z Configuring aarch64-softmmu-config-devices.h using configuration
+2026-11-25T04:05:01.1353618Z Program scripts/make-config-poison.sh found: YES (/home/runner/work/qemu-tb371fc/qemu-tb371fc/scripts/make-config-poison.sh)
+2026-11-25T04:05:01.1354338Z Configuring config-host.h using configuration
+2026-11-25T04:05:01.1354720Z Configuring run using configuration
+2026-11-25T04:05:01.1355230Z Program scripts/hxtool found: YES (/home/runner/work/qemu-tb371fc/qemu-tb371fc/scripts/hxtool)
+2026-11-25T04:05:01.1356398Z Program scripts/shaderinclude.py found: YES (/home/runner/work/_temp/a77-build/pyvenv/bin/python3 /home/runner/work/qemu-tb371fc/qemu-tb371fc/scripts/shaderinclude.py)
+2026-11-25T04:05:01.1357564Z Program scripts/qapi-gen.py found: YES (/home/runner/work/_temp/a77-build/pyvenv/bin/python3 /home/runner/work/qemu-tb371fc/qemu-tb371fc/scripts/qapi-gen.py)
+2026-11-25T04:05:01.1358548Z Program scripts/qemu-version.sh found: YES (/home/runner/work/qemu-tb371fc/qemu-tb371fc/scripts/qemu-version.sh)
+2026-11-25T04:05:01.1359025Z 
+2026-11-25T04:05:01.1359159Z Executing subproject keycodemapdb 
+2026-11-25T04:05:01.1359388Z 
+2026-11-25T04:05:01.1359510Z keycodemapdb| Project name: keycodemapdb
+2026-11-25T04:05:01.1359934Z keycodemapdb| Project version: undefined
+2026-11-25T04:05:01.1360625Z keycodemapdb| Program tools/keymap-gen found: YES (/home/runner/work/qemu-tb371fc/qemu-tb371fc/subprojects/keycodemapdb/tools/keymap-gen)
+2026-11-25T04:05:01.1361360Z keycodemapdb| Build targets in project: 446
+2026-11-25T04:05:01.1361734Z keycodemapdb| Subproject keycodemapdb finished.
+2026-11-25T04:05:01.1361954Z 
+2026-11-25T04:05:01.1362633Z Program scripts/decodetree.py found: YES (/home/runner/work/_temp/a77-build/pyvenv/bin/python3 /home/runner/work/qemu-tb371fc/qemu-tb371fc/scripts/decodetree.py)
+2026-11-25T04:05:01.1363843Z Program ../scripts/feature_to_c.py found: YES (/home/runner/work/_temp/a77-build/pyvenv/bin/python3 /home/runner/work/qemu-tb371fc/qemu-tb371fc/gdbstub/../scripts/feature_to_c.py)
+2026-11-25T04:05:01.1365183Z Program ../scripts/modules/module_block.py found: YES (/home/runner/work/_temp/a77-build/pyvenv/bin/python3 /home/runner/work/qemu-tb371fc/qemu-tb371fc/block/../scripts/modules/module_block.py)
+2026-11-25T04:05:01.1366653Z Program ../scripts/block-coroutine-wrapper.py found: YES (/home/runner/work/_temp/a77-build/pyvenv/bin/python3 /home/runner/work/qemu-tb371fc/qemu-tb371fc/block/../scripts/block-coroutine-wrapper.py)
+2026-11-25T04:05:01.1367998Z Program scripts/modinfo-collect.py found: YES (/home/runner/work/_temp/a77-build/pyvenv/bin/python3 /home/runner/work/qemu-tb371fc/qemu-tb371fc/scripts/modinfo-collect.py)
+2026-11-25T04:05:01.1369175Z Program scripts/modinfo-generate.py found: YES (/home/runner/work/_temp/a77-build/pyvenv/bin/python3 /home/runner/work/qemu-tb371fc/qemu-tb371fc/scripts/modinfo-generate.py)
+2026-11-25T04:05:01.1370299Z Program scripts/rust/rust_root_crate.sh found: YES (/home/runner/work/qemu-tb371fc/qemu-tb371fc/scripts/rust/rust_root_crate.sh)
+2026-11-25T04:05:01.1370978Z Configuring 50-edk2-i386-secure.json using configuration
+2026-11-25T04:05:01.1371496Z Configuring 50-edk2-x86_64-secure.json using configuration
+2026-11-25T04:05:01.1371947Z Configuring 60-edk2-aarch64.json using configuration
+2026-11-25T04:05:01.1372356Z Configuring 60-edk2-arm.json using configuration
+2026-11-25T04:05:01.1373097Z Configuring 60-edk2-i386.json using configuration
+2026-11-25T04:05:01.1373482Z Configuring 60-edk2-x86_64.json using configuration
+2026-11-25T04:05:01.1373909Z Configuring 60-edk2-loongarch64.json using configuration
+2026-11-25T04:05:01.1374328Z Configuring 60-edk2-riscv64.json using configuration
+2026-11-25T04:05:01.1374708Z Program dtc found: NO
+2026-11-25T04:05:01.1375194Z Program qemu-keymap found: NO
+2026-11-25T04:05:01.1375687Z Program /home/runner/work/_temp/a77-build/pyvenv/bin/sphinx-build skipped: feature docs disabled
+2026-11-25T04:05:01.1376529Z Program /home/runner/work/qemu-tb371fc/qemu-tb371fc/scripts/decodetree.py found: YES (/home/runner/work/_temp/a77-build/pyvenv/bin/python3 /home/runner/work/qemu-tb371fc/qemu-tb371fc/scripts/decodetree.py)
+2026-11-25T04:05:01.1377031Z 
+2026-11-25T04:05:01.1377158Z Executing subproject berkeley-softfloat-3 
+2026-11-25T04:05:01.1377335Z 
+2026-11-25T04:05:01.1377469Z berkeley-softfloat-3| Project name: berkeley-softfloat-3
+2026-11-25T04:05:01.1377814Z berkeley-softfloat-3| Project version: undefined
+2026-11-25T04:05:01.1378247Z berkeley-softfloat-3| C compiler for the host machine: cc -m64 (gcc 13.3.0 "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0")
+2026-11-25T04:05:01.1379832Z berkeley-softfloat-3| C linker for the host machine: cc -m64 ld.bfd 2.42
+2026-11-25T04:05:01.1380344Z berkeley-softfloat-3| Configuring platform.h using configuration
+2026-11-25T04:05:01.1380798Z berkeley-softfloat-3| Build targets in project: 546
+2026-11-25T04:05:01.1381250Z berkeley-softfloat-3| Subproject berkeley-softfloat-3 finished.
+2026-11-25T04:05:01.1381549Z 
+2026-11-25T04:05:01.1381554Z 
+2026-11-25T04:05:01.1381687Z Executing subproject berkeley-testfloat-3 
+2026-11-25T04:05:01.1381918Z 
+2026-11-25T04:05:01.1382075Z berkeley-testfloat-3| Project name: berkeley-testfloat-3
+2026-11-25T04:05:01.1382724Z berkeley-testfloat-3| Project version: undefined
+2026-11-25T04:05:01.1383471Z berkeley-testfloat-3| C compiler for the host machine: cc -m64 (gcc 13.3.0 "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0")
+2026-11-25T04:05:01.1384203Z berkeley-testfloat-3| C linker for the host machine: cc -m64 ld.bfd 2.42
+2026-11-25T04:05:01.1384837Z berkeley-testfloat-3| Configuring platform.h using configuration
+2026-11-25T04:05:01.1385446Z berkeley-testfloat-3| Compiler for C supports arguments -Wno-ignored-pragmas: NO
+2026-11-25T04:05:01.1385976Z berkeley-testfloat-3| Build targets in project: 548
+2026-11-25T04:05:01.1386451Z berkeley-testfloat-3| Subproject berkeley-testfloat-3 finished.
+2026-11-25T04:05:01.1386722Z 
+2026-11-25T04:05:01.1386852Z Program diff found: YES (/usr/bin/diff)
+2026-11-25T04:05:01.1387206Z Program dbus-daemon found: YES (/usr/bin/dbus-daemon)
+2026-11-25T04:05:01.1387696Z Run-time dependency sysprof-capture-4 found: NO  (tried pkg-config)
+2026-11-25T04:05:01.1388134Z Run-time dependency glib-2.0 found: YES 2.80.0
+2026-11-25T04:05:01.1388740Z Program initrd-stress.sh found: YES (/home/runner/work/qemu-tb371fc/qemu-tb371fc/tests/migration-stress/initrd-stress.sh)
+2026-11-25T04:05:01.1389366Z Build targets in project: 710
+2026-11-25T04:05:01.1389561Z 
+2026-11-25T04:05:01.1389645Z qemu 11.1.3
+2026-11-25T04:05:01.1389788Z 
+2026-11-25T04:05:01.1389876Z   Build environment
+2026-11-25T04:05:01.1390206Z     Build directory                 : /home/runner/work/_temp/a77-build
+2026-11-25T04:05:01.1390699Z     Source path                     : /home/runner/work/qemu-tb371fc/qemu-tb371fc
+2026-11-25T04:05:01.1391144Z     Download dependencies           : YES
+2026-11-25T04:05:01.1391366Z 
+2026-11-25T04:05:01.1391454Z   Directories
+2026-11-25T04:05:01.1391895Z     Install prefix                  : /usr/local
+2026-11-25T04:05:01.1392252Z     BIOS directory                  : share/qemu
+2026-11-25T04:05:01.1392876Z     firmware path                   : share/qemu-firmware
+2026-11-25T04:05:01.1393750Z     binary directory                : /usr/local/bin
+2026-11-25T04:05:01.1394198Z     library directory               : /usr/local/lib/x86_64-linux-gnu
+2026-11-25T04:05:01.1394674Z     module directory                : lib/x86_64-linux-gnu/qemu
+2026-11-25T04:05:01.1395154Z     libexec directory               : /usr/local/libexec
+2026-11-25T04:05:01.1395593Z     include directory               : /usr/local/include
+2026-11-25T04:05:01.1396025Z     config directory                : /usr/local/etc
+2026-11-25T04:05:01.1396421Z     local state directory           : /var/local
+2026-11-25T04:05:01.1396917Z     Manual directory                : /usr/local/share/man
+2026-11-25T04:05:01.1397245Z     Doc directory                   : /usr/local/share/doc
+2026-11-25T04:05:01.1397434Z 
+2026-11-25T04:05:01.1397511Z   Host binaries
+2026-11-25T04:05:01.1397846Z     python                          : /home/runner/work/_temp/a77-build/pyvenv/bin/python3 (version: 3.12)
+2026-11-25T04:05:01.1398197Z     sphinx-build                    : NO
+2026-11-25T04:05:01.1398439Z     gdb                             : 
+2026-11-25T04:05:01.1398701Z     iasl                            : NO
+2026-11-25T04:05:01.1398933Z     genisoimage                     : 
+2026-11-25T04:05:01.1399086Z 
+2026-11-25T04:05:01.1399157Z   Configurable features
+2026-11-25T04:05:01.1399399Z     Documentation                   : NO
+2026-11-25T04:05:01.1399700Z     system-mode emulation           : YES
+2026-11-25T04:05:01.1399992Z     user-mode emulation             : NO
+2026-11-25T04:05:01.1400230Z     block layer                     : YES
+2026-11-25T04:05:01.1400453Z     Install blobs                   : YES
+2026-11-25T04:05:01.1400705Z     module support                  : NO
+2026-11-25T04:05:01.1400939Z     fuzzing support                 : NO
+2026-11-25T04:05:01.1401193Z     Audio drivers                   : 
+2026-11-25T04:05:01.1401430Z     Trace backends                  : log
+2026-11-25T04:05:01.1401671Z     QOM debugging                   : YES
+2026-11-25T04:05:01.1401922Z     Relocatable install             : YES
+2026-11-25T04:05:01.1402202Z     vhost-kernel support            : NO
+2026-11-25T04:05:01.1402678Z     vhost-net support               : NO
+2026-11-25T04:05:01.1403004Z     vhost-user support              : NO
+2026-11-25T04:05:01.1403333Z     vhost-user-crypto support       : NO
+2026-11-25T04:05:01.1403606Z     vhost-user-blk server support   : NO
+2026-11-25T04:05:01.1403857Z     vhost-vdpa support              : NO
+2026-11-25T04:05:01.1404111Z     build guest agent               : NO
+2026-11-25T04:05:01.1404287Z 
+2026-11-25T04:05:01.1404367Z   Compilation
+2026-11-25T04:05:01.1404581Z     host CPU                        : x86_64
+2026-11-25T04:05:01.1404875Z     host endianness                 : little
+2026-11-25T04:05:01.1405279Z     C compiler                      : cc -m64
+2026-11-25T04:05:01.1405560Z     Host C compiler                 : cc -m64
+2026-11-25T04:05:01.1405864Z     C++ compiler                    : NO
+2026-11-25T04:05:01.1406110Z     Objective-C compiler            : NO
+2026-11-25T04:05:01.1406355Z     Rust support                    : NO
+2026-11-25T04:05:01.1406653Z     CFLAGS                          : -g -O2
+2026-11-25T04:05:01.1407349Z     QEMU_CFLAGS                     : -mcx16 -msse2 -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -fno-strict-aliasing -fno-common -fwrapv -ftrivial-auto-var-init=zero -fzero-init-padding-bits=all -fzero-call-used-regs=used-gpr
+2026-11-25T04:05:01.1408147Z     QEMU_LDFLAGS                    : -Wl,-z,relro -Wl,-z,now
+2026-11-25T04:05:01.1408440Z     link-time optimization (LTO)    : NO
+2026-11-25T04:05:01.1408688Z     PIE                             : YES
+2026-11-25T04:05:01.1408958Z     static build                    : NO
+2026-11-25T04:05:01.1409208Z     malloc trim support             : NO
+2026-11-25T04:05:01.1409463Z     membarrier                      : NO
+2026-11-25T04:05:01.1409701Z     debug graph lock                : NO
+2026-11-25T04:05:01.1409932Z     debug stack usage               : NO
+2026-11-25T04:05:01.1410197Z     mutex debugging                 : NO
+2026-11-25T04:05:01.1410487Z     memory allocator                : system
+2026-11-25T04:05:01.1410753Z     avx2 optimization               : YES
+2026-11-25T04:05:01.1411004Z     avx512bw optimization           : YES
+2026-11-25T04:05:01.1411240Z     gcov                            : NO
+2026-11-25T04:05:01.1411524Z     thread sanitizer                : NO
+2026-11-25T04:05:01.1411762Z     CFI support                     : NO
+2026-11-25T04:05:01.1412001Z     strip binaries                  : NO
+2026-11-25T04:05:01.1412337Z     sparse                          : NO
+2026-11-25T04:05:01.1412786Z     mingw32 support                 : NO
+2026-11-25T04:05:01.1412956Z 
+2026-11-25T04:05:01.1413092Z   Cross compilers
+2026-11-25T04:05:01.1413337Z     aarch64                         : aarch64-linux-gnu-gcc
+2026-11-25T04:05:01.1413507Z 
+2026-11-25T04:05:01.1413621Z   Targets and accelerators
+2026-11-25T04:05:01.1413861Z     KVM support                     : NO
+2026-11-25T04:05:01.1414105Z     Nitro support                   : NO
+2026-11-25T04:05:01.1414375Z     HVF support                     : NO
+2026-11-25T04:05:01.1414619Z     WHPX support                    : NO
+2026-11-25T04:05:01.1414848Z     NVMM support                    : NO
+2026-11-25T04:05:01.1415133Z     MSHV support                    : NO
+2026-11-25T04:05:01.1415431Z     Xen support                     : NO
+2026-11-25T04:05:01.1415699Z     Xen emulation                   : NO
+2026-11-25T04:05:01.1415936Z     TCG support                     : YES
+2026-11-25T04:05:01.1416195Z     TCG backend                     : native (x86_64)
+2026-11-25T04:05:01.1416477Z     TCG plugins                     : NO
+2026-11-25T04:05:01.1416719Z     TCG debug enabled               : NO
+2026-11-25T04:05:01.1416999Z     target list                     : aarch64-softmmu
+2026-11-25T04:05:01.1417277Z     default devices                 : NO
+2026-11-25T04:05:01.1417538Z     out of process emulation        : NO
+2026-11-25T04:05:01.1417804Z     vfio-user server                : NO
+2026-11-25T04:05:01.1417940Z 
+2026-11-25T04:05:01.1418045Z   Block layer support
+2026-11-25T04:05:01.1418301Z     coroutine backend               : ucontext
+2026-11-25T04:05:01.1418630Z     coroutine pool                  : YES
+2026-11-25T04:05:01.1418886Z     Block whitelist (rw)            : 
+2026-11-25T04:05:01.1419149Z     Block whitelist (ro)            : 
+2026-11-25T04:05:01.1419433Z     Use block whitelist in tools    : NO
+2026-11-25T04:05:01.1419681Z     VirtFS (9P) support             : NO
+2026-11-25T04:05:01.1419962Z     replication support             : NO
+2026-11-25T04:05:01.1420195Z     bochs support                   : NO
+2026-11-25T04:05:01.1420446Z     cloop support                   : NO
+2026-11-25T04:05:01.1420690Z     dmg support                     : NO
+2026-11-25T04:05:01.1420937Z     qcow v1 support                 : NO
+2026-11-25T04:05:01.1421204Z     vdi support                     : NO
+2026-11-25T04:05:01.1421450Z     vhdx support                    : NO
+2026-11-25T04:05:01.1421696Z     vmdk support                    : NO
+2026-11-25T04:05:01.1421947Z     vpc support                     : NO
+2026-11-25T04:05:01.1422226Z     vvfat support                   : NO
+2026-11-25T04:05:01.1422660Z     qed support                     : NO
+2026-11-25T04:05:01.1422924Z     parallels support               : NO
+2026-11-25T04:05:01.1423175Z     FUSE exports                    : NO
+2026-11-25T04:05:01.1423502Z     VDUSE block exports             : NO
+2026-11-25T04:05:01.1423680Z 
+2026-11-25T04:05:01.1423760Z   Crypto
+2026-11-25T04:05:01.1423978Z     TLS priority                    : NORMAL
+2026-11-25T04:05:01.1424226Z     GNUTLS support                  : NO
+2026-11-25T04:05:01.1424455Z     libgcrypt                       : NO
+2026-11-25T04:05:01.1424758Z     nettle                          : NO
+2026-11-25T04:05:01.1425020Z     SM4 ALG support                 : NO
+2026-11-25T04:05:01.1425344Z     SM3 ALG support                 : NO
+2026-11-25T04:05:01.1425659Z     AF_ALG support                  : NO
+2026-11-25T04:05:01.1425976Z     rng-none                        : NO
+2026-11-25T04:05:01.1426515Z     Linux keyring                   : NO
+2026-11-25T04:05:01.1426867Z     Linux keyutils                  : NO
+2026-11-25T04:05:01.1427067Z 
+2026-11-25T04:05:01.1427192Z   User interface
+2026-11-25T04:05:01.1427526Z     D-Bus display                   : NO
+2026-11-25T04:05:01.1427880Z     SDL support                     : NO
+2026-11-25T04:05:01.1428267Z     SDL image support               : NO
+2026-11-25T04:05:01.1428742Z     GTK support                     : NO
+2026-11-25T04:05:01.1429090Z     pixman                          : NO
+2026-11-25T04:05:01.1429444Z     VTE support                     : NO
+2026-11-25T04:05:01.1429803Z     PNG support                     : NO
+2026-11-25T04:05:01.1430201Z     VNC support                     : NO
+2026-11-25T04:05:01.1430556Z     VNC D-Bus server (qemu-vnc)     : NO
+2026-11-25T04:05:01.1430882Z     spice protocol support          : NO
+2026-11-25T04:05:01.1431309Z     curses support                  : NO
+2026-11-25T04:05:01.1431678Z     brlapi support                  : NO
+2026-11-25T04:05:01.1431871Z 
+2026-11-25T04:05:01.1432070Z   Graphics backends
+2026-11-25T04:05:01.1432387Z     VirGL support                   : NO
+2026-11-25T04:05:01.1433102Z     Rutabaga support                : NO
+2026-11-25T04:05:01.1433382Z 
+2026-11-25T04:05:01.1433495Z   Audio backends
+2026-11-25T04:05:01.1433799Z     OSS support                     : NO
+2026-11-25T04:05:01.1434466Z     sndio support                   : NO
+2026-11-25T04:05:01.1434828Z     ALSA support                    : NO
+2026-11-25T04:05:01.1435201Z     PulseAudio support              : NO
+2026-11-25T04:05:01.1435583Z     PipeWire support                : NO
+2026-11-25T04:05:01.1435936Z     JACK support                    : NO
+2026-11-25T04:05:01.1436165Z 
+2026-11-25T04:05:01.1436312Z   Network backends
+2026-11-25T04:05:01.1436617Z     AF_XDP support                  : NO
+2026-11-25T04:05:01.1436956Z     passt support                   : NO
+2026-11-25T04:05:01.1437307Z     slirp support                   : NO
+2026-11-25T04:05:01.1437654Z     vde support                     : NO
+2026-11-25T04:05:01.1438063Z     netmap support                  : NO
+2026-11-25T04:05:01.1438433Z     l2tpv3 support                  : NO
+2026-11-25T04:05:01.1438651Z 
+2026-11-25T04:05:01.1438792Z   Dependencies
+2026-11-25T04:05:01.1439106Z     libtasn1                        : NO
+2026-11-25T04:05:01.1439494Z     PAM                             : NO
+2026-11-25T04:05:01.1439862Z     iconv support                   : NO
+2026-11-25T04:05:01.1440250Z     blkio support                   : NO
+2026-11-25T04:05:01.1440600Z     curl support                    : NO
+2026-11-25T04:05:01.1440958Z     Multipath support               : NO
+2026-11-25T04:05:01.1441368Z     Linux AIO support               : NO
+2026-11-25T04:05:01.1441742Z     Linux io_uring support          : NO
+2026-11-25T04:05:01.1442136Z     ATTR/XATTR support              : NO
+2026-11-25T04:05:01.1442685Z     RDMA support                    : NO
+2026-11-25T04:05:01.1443068Z     fdt support                     : YES
+2026-11-25T04:05:01.1443448Z     libcap-ng support               : NO
+2026-11-25T04:05:01.1443831Z     bpf support                     : NO
+2026-11-25T04:05:01.1444209Z     rbd support                     : NO
+2026-11-25T04:05:01.1444572Z     smartcard support               : NO
+2026-11-25T04:05:01.1445044Z     U2F support                     : NO
+2026-11-25T04:05:01.1445443Z     libusb                          : NO
+2026-11-25T04:05:01.1445827Z     usb net redir                   : NO
+2026-11-25T04:05:01.1446222Z     OpenGL support (epoxy)          : NO
+2026-11-25T04:05:01.1446589Z     GBM                             : NO
+2026-11-25T04:05:01.1447023Z     libiscsi support                : NO
+2026-11-25T04:05:01.1447415Z     libnfs support                  : NO
+2026-11-25T04:05:01.1447801Z     seccomp support                 : NO
+2026-11-25T04:05:01.1448180Z     hv-balloon support              : NO
+2026-11-25T04:05:01.1448572Z     TPM support                     : NO
+2026-11-25T04:05:01.1448909Z     IGVM support                    : NO
+2026-11-25T04:05:01.1449289Z     libssh support                  : NO
+2026-11-25T04:05:01.1450277Z     lzo support                     : NO
+2026-11-25T04:05:01.1450635Z     snappy support                  : NO
+2026-11-25T04:05:01.1450998Z     bzip2 support                   : NO
+2026-11-25T04:05:01.1451341Z     lzfse support                   : NO
+2026-11-25T04:05:01.1451865Z     zstd support                    : NO
+2026-11-25T04:05:01.1452235Z     Query Processing Library support: NO
+2026-11-25T04:05:01.1452814Z     UADK Library support            : NO
+2026-11-25T04:05:01.1453189Z     qatzip support                  : NO
+2026-11-25T04:05:01.1453549Z     NUMA host support               : NO
+2026-11-25T04:05:01.1453937Z     capstone                        : NO
+2026-11-25T04:05:01.1454293Z     libpmem support                 : NO
+2026-11-25T04:05:01.1454637Z     libdaxctl support               : NO
+2026-11-25T04:05:01.1455022Z     libcbor support                 : NO
+2026-11-25T04:05:01.1455379Z     libudev                         : NO
+2026-11-25T04:05:01.1455763Z     FUSE lseek                      : NO
+2026-11-25T04:05:01.1456136Z     selinux                         : NO
+2026-11-25T04:05:01.1456596Z     libdw                           : NO
+2026-11-25T04:05:01.1456978Z     valgrind                        : NO
+2026-11-25T04:05:01.1457186Z 
+2026-11-25T04:05:01.1457333Z   Subprojects
+2026-11-25T04:05:02.8110388Z     berkeley-softfloat-3            : YES
+2026-11-25T04:05:02.8111037Z     berkeley-testfloat-3            : YES
+2026-11-25T04:05:02.8111747Z     keycodemapdb                    : YES
+2026-11-25T04:05:02.8112135Z 
+2026-11-25T04:05:02.8112328Z   User defined options
+2026-11-25T04:05:02.8113002Z     Native files                    : config-meson.cross
+2026-11-25T04:05:02.8113652Z     auto_features                   : disabled
+2026-11-25T04:05:02.8114191Z     default_devices                 : false
+2026-11-25T04:05:02.8114762Z     docs                            : disabled
+2026-11-25T04:05:02.8115306Z     fdt                             : enabled
+2026-11-25T04:05:02.8115856Z     guest_agent                     : disabled
+2026-11-25T04:05:02.8116471Z     tools                           : disabled
+2026-11-25T04:05:02.8116844Z 
+2026-11-25T04:05:02.8117057Z Found ninja-1.13.2 at /usr/local/bin/ninja
+2026-11-25T04:05:02.8118348Z Running postconf script '/home/runner/work/_temp/a77-build/pyvenv/bin/python3 /home/runner/work/qemu-tb371fc/qemu-tb371fc/scripts/symlink-install-tree.py'
+2026-11-25T04:05:03.2502380Z [1/1535] Generating config-poison.h with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:03.2910902Z [2/1535] Generating qemu-version.h with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:03.4073161Z [3/1535] Generating qemu-options.def with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:03.4489604Z [4/1535] Generating qemu-img-cmds.h with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:03.5060286Z [5/1535] Generating hmp-commands.h with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:03.5535959Z [6/1535] Generating hmp-commands-info.h with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:03.5804389Z [7/1535] Generating trace/trace-root.h with a custom command
+2026-11-25T04:05:03.6032567Z [8/1535] Generating trace/trace-root.c with a custom command
+2026-11-25T04:05:03.6250300Z [9/1535] Generating trace/trace-crypto.h with a custom command
+2026-11-25T04:05:03.6466988Z [10/1535] Generating trace/trace-crypto.c with a custom command
+2026-11-25T04:05:03.6689283Z [11/1535] Generating trace/trace-qapi.h with a custom command
+2026-11-25T04:05:03.6906118Z [12/1535] Generating trace/trace-qapi.c with a custom command
+2026-11-25T04:05:03.7119333Z [13/1535] Generating trace/trace-qom.h with a custom command
+2026-11-25T04:05:03.7330958Z [14/1535] Generating trace/trace-qom.c with a custom command
+2026-11-25T04:05:03.7553237Z [15/1535] Generating trace/trace-monitor.h with a custom command
+2026-11-25T04:05:03.7764844Z [16/1535] Generating trace/trace-monitor.c with a custom command
+2026-11-25T04:05:03.8012186Z [17/1535] Generating trace/trace-util.h with a custom command
+2026-11-25T04:05:03.8243113Z [18/1535] Generating trace/trace-util.c with a custom command
+2026-11-25T04:05:03.8468542Z [19/1535] Generating trace/trace-gdbstub.h with a custom command
+2026-11-25T04:05:03.8687994Z [20/1535] Generating trace/trace-gdbstub.c with a custom command
+2026-11-25T04:05:03.8767919Z [21/1535] Generating qapi/shared QAPI source files with a custom command
+2026-11-25T04:05:03.9326718Z [22/1535] Generating trace/trace-tools_qemu_vnc.h with a custom command
+2026-11-25T04:05:03.9548398Z [23/1535] Generating trace/trace-authz.h with a custom command
+2026-11-25T04:05:03.9552373Z [24/1535] Generating trace/trace-tools_qemu_vnc.c with a custom command
+2026-11-25T04:05:03.9771894Z [25/1535] Generating trace/trace-authz.c with a custom command
+2026-11-25T04:05:03.9843705Z [26/1535] Generating trace/trace-block.h with a custom command
+2026-11-25T04:05:04.0033428Z [27/1535] Generating trace/trace-block.c with a custom command
+2026-11-25T04:05:04.0069746Z [28/1535] Generating trace/trace-chardev.h with a custom command
+2026-11-25T04:05:04.0256576Z [29/1535] Generating trace/trace-chardev.c with a custom command
+2026-11-25T04:05:04.0314254Z [30/1535] Generating trace/trace-io.h with a custom command
+2026-11-25T04:05:04.0487914Z [31/1535] Generating trace/trace-io.c with a custom command
+2026-11-25T04:05:04.0573469Z [32/1535] Generating trace/trace-nbd.h with a custom command
+2026-11-25T04:05:04.0725665Z [33/1535] Generating trace/trace-nbd.c with a custom command
+2026-11-25T04:05:04.0777557Z [34/1535] Generating trace/trace-scsi.h with a custom command
+2026-11-25T04:05:04.0936917Z [35/1535] Generating trace/trace-scsi.c with a custom command
+2026-11-25T04:05:04.0989588Z [36/1535] Generating trace/trace-accel_hvf.h with a custom command
+2026-11-25T04:05:04.1148084Z [37/1535] Generating trace/trace-accel_hvf.c with a custom command
+2026-11-25T04:05:04.1219961Z [38/1535] Generating trace/trace-accel_kvm.h with a custom command
+2026-11-25T04:05:04.1370409Z [39/1535] Generating trace/trace-accel_kvm.c with a custom command
+2026-11-25T04:05:04.1442834Z [40/1535] Generating trace/trace-accel_mshv.h with a custom command
+2026-11-25T04:05:04.1585260Z [41/1535] Generating trace/trace-accel_mshv.c with a custom command
+2026-11-25T04:05:04.1652199Z [42/1535] Generating trace/trace-accel_nitro.h with a custom command
+2026-11-25T04:05:04.1794466Z [43/1535] Generating trace/trace-accel_nitro.c with a custom command
+2026-11-25T04:05:04.1889282Z [44/1535] Generating trace/trace-audio.h with a custom command
+2026-11-25T04:05:04.2019515Z [45/1535] Generating trace/trace-audio.c with a custom command
+2026-11-25T04:05:04.2114232Z [46/1535] Generating trace/trace-backends.h with a custom command
+2026-11-25T04:05:04.2238701Z [47/1535] Generating trace/trace-backends.c with a custom command
+2026-11-25T04:05:04.2351576Z [48/1535] Generating trace/trace-backends_tpm.h with a custom command
+2026-11-25T04:05:04.2457714Z [49/1535] Generating trace/trace-backends_tpm.c with a custom command
+2026-11-25T04:05:04.2566618Z [50/1535] Generating trace/trace-ebpf.h with a custom command
+2026-11-25T04:05:04.2668307Z [51/1535] Generating trace/trace-ebpf.c with a custom command
+2026-11-25T04:05:04.2803624Z [52/1535] Generating trace/trace-hw_9pfs.h with a custom command
+2026-11-25T04:05:04.2892641Z [53/1535] Generating trace/trace-hw_9pfs.c with a custom command
+2026-11-25T04:05:04.3051810Z [54/1535] Generating trace/trace-hw_acpi.h with a custom command
+2026-11-25T04:05:04.3122166Z [55/1535] Generating trace/trace-hw_acpi.c with a custom command
+2026-11-25T04:05:04.3263470Z [56/1535] Generating trace/trace-hw_adc.h with a custom command
+2026-11-25T04:05:04.3331455Z [57/1535] Generating trace/trace-hw_adc.c with a custom command
+2026-11-25T04:05:04.3473780Z [58/1535] Generating trace/trace-hw_alpha.h with a custom command
+2026-11-25T04:05:04.3539030Z [59/1535] Generating trace/trace-hw_alpha.c with a custom command
+2026-11-25T04:05:04.3723460Z [60/1535] Generating trace/trace-hw_arm.h with a custom command
+2026-11-25T04:05:04.3770815Z [61/1535] Generating trace/trace-hw_arm.c with a custom command
+2026-11-25T04:05:04.3958344Z [62/1535] Generating trace/trace-hw_audio.h with a custom command
+2026-11-25T04:05:04.3994844Z [63/1535] Generating trace/trace-hw_audio.c with a custom command
+2026-11-25T04:05:04.4220556Z [64/1535] Generating trace/trace-hw_block.h with a custom command
+2026-11-25T04:05:04.4235208Z [65/1535] Generating trace/trace-hw_block.c with a custom command
+2026-11-25T04:05:04.4473793Z [66/1535] Generating trace/trace-hw_char.c with a custom command
+2026-11-25T04:05:04.4487176Z [67/1535] Generating trace/trace-hw_char.h with a custom command
+2026-11-25T04:05:04.4751146Z [68/1535] Generating trace/trace-hw_display.c with a custom command
+2026-11-25T04:05:04.4778037Z [69/1535] Generating trace/trace-hw_display.h with a custom command
+2026-11-25T04:05:04.4979573Z [70/1535] Generating trace/trace-hw_dma.h with a custom command
+2026-11-25T04:05:04.5000803Z [71/1535] Generating trace/trace-hw_dma.c with a custom command
+2026-11-25T04:05:04.5200359Z [72/1535] Generating trace/trace-hw_fsi.h with a custom command
+2026-11-25T04:05:04.5224928Z [73/1535] Generating trace/trace-hw_fsi.c with a custom command
+2026-11-25T04:05:04.5419439Z [74/1535] Generating trace/trace-hw_hexagon.h with a custom command
+2026-11-25T04:05:04.5435803Z [75/1535] Generating trace/trace-hw_hexagon.c with a custom command
+2026-11-25T04:05:04.5653847Z [76/1535] Generating trace/trace-hw_hyperv.h with a custom command
+2026-11-25T04:05:04.5659935Z [77/1535] Generating trace/trace-hw_hyperv.c with a custom command
+2026-11-25T04:05:04.5885394Z [78/1535] Generating trace/trace-hw_i2c.h with a custom command
+2026-11-25T04:05:04.5891128Z [79/1535] Generating trace/trace-hw_i2c.c with a custom command
+2026-11-25T04:05:04.6113469Z [80/1535] Generating trace/trace-hw_i3c.c with a custom command
+2026-11-25T04:05:04.6120244Z [81/1535] Generating trace/trace-hw_i3c.h with a custom command
+2026-11-25T04:05:04.6367021Z [82/1535] Generating trace/trace-hw_i386.c with a custom command
+2026-11-25T04:05:04.6385241Z [83/1535] Generating trace/trace-hw_i386.h with a custom command
+2026-11-25T04:05:04.6576882Z [84/1535] Generating trace/trace-hw_i386_xen.h with a custom command
+2026-11-25T04:05:04.6600440Z [85/1535] Generating trace/trace-hw_i386_xen.c with a custom command
+2026-11-25T04:05:04.6800658Z [86/1535] Generating trace/trace-hw_i386_kvm.h with a custom command
+2026-11-25T04:05:04.6820011Z [87/1535] Generating trace/trace-hw_i386_kvm.c with a custom command
+2026-11-25T04:05:04.7055716Z [88/1535] Generating trace/trace-hw_ide.c with a custom command
+2026-11-25T04:05:04.7061997Z [89/1535] Generating trace/trace-hw_ide.h with a custom command
+2026-11-25T04:05:04.7285334Z [90/1535] Generating trace/trace-hw_input.h with a custom command
+2026-11-25T04:05:04.7288714Z [91/1535] Generating trace/trace-hw_input.c with a custom command
+2026-11-25T04:05:04.7577434Z [92/1535] Generating trace/trace-hw_intc.c with a custom command
+2026-11-25T04:05:04.7644100Z [93/1535] Generating trace/trace-hw_intc.h with a custom command
+2026-11-25T04:05:04.7797929Z [94/1535] Generating trace/trace-hw_isa.h with a custom command
+2026-11-25T04:05:04.7863567Z [95/1535] Generating trace/trace-hw_isa.c with a custom command
+2026-11-25T04:05:04.8013749Z [96/1535] Generating trace/trace-hw_mem.h with a custom command
+2026-11-25T04:05:04.8074482Z [97/1535] Generating trace/trace-hw_mem.c with a custom command
+2026-11-25T04:05:04.8226026Z [98/1535] Generating trace/trace-hw_mips.h with a custom command
+2026-11-25T04:05:04.8286000Z [99/1535] Generating trace/trace-hw_mips.c with a custom command
+2026-11-25T04:05:04.8577588Z [100/1535] Generating trace/trace-hw_misc.c with a custom command
+2026-11-25T04:05:04.8591436Z [101/1535] Generating trace/trace-hw_misc.h with a custom command
+2026-11-25T04:05:04.8802981Z [102/1535] Generating trace/trace-hw_misc_macio.h with a custom command
+2026-11-25T04:05:04.8817817Z [103/1535] Generating trace/trace-hw_misc_macio.c with a custom command
+2026-11-25T04:05:04.9148032Z [104/1535] Generating trace/trace-hw_net.c with a custom command
+2026-11-25T04:05:04.9229200Z [105/1535] Generating trace/trace-hw_net.h with a custom command
+2026-11-25T04:05:04.9376247Z [106/1535] Generating trace/trace-hw_net_can.h with a custom command
+2026-11-25T04:05:04.9447736Z [107/1535] Generating trace/trace-hw_net_can.c with a custom command
+2026-11-25T04:05:04.9589046Z [108/1535] Generating trace/trace-hw_nitro.h with a custom command
+2026-11-25T04:05:04.9656455Z [109/1535] Generating trace/trace-hw_nitro.c with a custom command
+2026-11-25T04:05:04.9805389Z [110/1535] Generating trace/trace-hw_nubus.h with a custom command
+2026-11-25T04:05:04.9865164Z [111/1535] Generating trace/trace-hw_nubus.c with a custom command
+2026-11-25T04:05:05.0133404Z [112/1535] Generating trace/trace-hw_nvme.h with a custom command
+2026-11-25T04:05:05.0138231Z [113/1535] Generating trace/trace-hw_nvme.c with a custom command
+2026-11-25T04:05:05.0348845Z [114/1535] Generating trace/trace-hw_nvram.c with a custom command
+2026-11-25T04:05:05.0354673Z [115/1535] Generating trace/trace-hw_nvram.h with a custom command
+2026-11-25T04:05:05.0570537Z [116/1535] Generating trace/trace-hw_pci.h with a custom command
+2026-11-25T04:05:05.0575775Z [117/1535] Generating trace/trace-hw_pci.c with a custom command
+2026-11-25T04:05:05.0801109Z [118/1535] Generating trace/trace-hw_pci_host.c with a custom command
+2026-11-25T04:05:05.0811467Z [119/1535] Generating trace/trace-hw_pci_host.h with a custom command
+2026-11-25T04:05:05.1060094Z [120/1535] Generating trace/trace-hw_ppc.c with a custom command
+2026-11-25T04:05:05.1077113Z [121/1535] Generating trace/trace-hw_ppc.h with a custom command
+2026-11-25T04:05:05.1280140Z [122/1535] Generating trace/trace-hw_rtc.h with a custom command
+2026-11-25T04:05:05.1296727Z [123/1535] Generating trace/trace-hw_rtc.c with a custom command
+2026-11-25T04:05:05.1503627Z [124/1535] Generating trace/trace-hw_riscv.h with a custom command
+2026-11-25T04:05:05.1512330Z [125/1535] Generating trace/trace-hw_riscv.c with a custom command
+2026-11-25T04:05:05.1729156Z [126/1535] Generating trace/trace-hw_s390x.h with a custom command
+2026-11-25T04:05:05.1733868Z [127/1535] Generating trace/trace-hw_s390x.c with a custom command
+2026-11-25T04:05:05.2040445Z [128/1535] Generating trace/trace-hw_scsi.c with a custom command
+2026-11-25T04:05:05.2119276Z [129/1535] Generating trace/trace-hw_scsi.h with a custom command
+2026-11-25T04:05:05.2279980Z [130/1535] Generating trace/trace-hw_sd.h with a custom command
+2026-11-25T04:05:05.2349252Z [131/1535] Generating trace/trace-hw_sd.c with a custom command
+2026-11-25T04:05:05.2490103Z [132/1535] Generating trace/trace-hw_sensor.h with a custom command
+2026-11-25T04:05:05.2559343Z [133/1535] Generating trace/trace-hw_sensor.c with a custom command
+2026-11-25T04:05:05.2700081Z [134/1535] Generating trace/trace-hw_sh4.h with a custom command
+2026-11-25T04:05:05.2769012Z [135/1535] Generating trace/trace-hw_sh4.c with a custom command
+2026-11-25T04:05:05.2915741Z [136/1535] Generating trace/trace-hw_sparc.h with a custom command
+2026-11-25T04:05:05.2981740Z [137/1535] Generating trace/trace-hw_sparc.c with a custom command
+2026-11-25T04:05:05.3133948Z [138/1535] Generating trace/trace-hw_sparc64.h with a custom command
+2026-11-25T04:05:05.3196377Z [139/1535] Generating trace/trace-hw_sparc64.c with a custom command
+2026-11-25T04:05:05.3368214Z [140/1535] Generating trace/trace-hw_ssi.h with a custom command
+2026-11-25T04:05:05.3419564Z [141/1535] Generating trace/trace-hw_ssi.c with a custom command
+2026-11-25T04:05:05.3625765Z [142/1535] Generating trace/trace-hw_timer.h with a custom command
+2026-11-25T04:05:05.3653627Z [143/1535] Generating trace/trace-hw_timer.c with a custom command
+2026-11-25T04:05:05.3851644Z [144/1535] Generating trace/trace-hw_tpm.h with a custom command
+2026-11-25T04:05:05.3871305Z [145/1535] Generating trace/trace-hw_tpm.c with a custom command
+2026-11-25T04:05:05.4066313Z [146/1535] Generating trace/trace-hw_uefi.h with a custom command
+2026-11-25T04:05:05.4083376Z [147/1535] Generating trace/trace-hw_uefi.c with a custom command
+2026-11-25T04:05:05.4303788Z [148/1535] Generating trace/trace-hw_ufs.h with a custom command
+2026-11-25T04:05:05.4309934Z [149/1535] Generating trace/trace-hw_ufs.c with a custom command
+2026-11-25T04:05:05.4614476Z [150/1535] Generating trace/trace-hw_usb.c with a custom command
+2026-11-25T04:05:05.4684429Z [151/1535] Generating trace/trace-hw_usb.h with a custom command
+2026-11-25T04:05:05.4913771Z [152/1535] Generating trace/trace-hw_vfio.h with a custom command
+2026-11-25T04:05:05.4947170Z [153/1535] Generating trace/trace-hw_vfio.c with a custom command
+2026-11-25T04:05:05.5136725Z [154/1535] Generating trace/trace-hw_vfio_user.h with a custom command
+2026-11-25T04:05:05.5160278Z [155/1535] Generating trace/trace-hw_vfio_user.c with a custom command
+2026-11-25T04:05:05.5409155Z [156/1535] Generating trace/trace-hw_virtio.c with a custom command
+2026-11-25T04:05:05.5425882Z [157/1535] Generating trace/trace-hw_virtio.h with a custom command
+2026-11-25T04:05:05.5626966Z [158/1535] Generating trace/trace-hw_vmapple.h with a custom command
+2026-11-25T04:05:05.5651731Z [159/1535] Generating trace/trace-hw_vmapple.c with a custom command
+2026-11-25T04:05:05.5855958Z [160/1535] Generating trace/trace-hw_watchdog.h with a custom command
+2026-11-25T04:05:05.5880037Z [161/1535] Generating trace/trace-hw_watchdog.c with a custom command
+2026-11-25T04:05:05.6104270Z [162/1535] Generating trace/trace-hw_xen.h with a custom command
+2026-11-25T04:05:05.6112864Z [163/1535] Generating trace/trace-hw_xen.c with a custom command
+2026-11-25T04:05:05.6329753Z [164/1535] Generating trace/trace-hw_gpio.c with a custom command
+2026-11-25T04:05:05.6336062Z [165/1535] Generating trace/trace-hw_gpio.h with a custom command
+2026-11-25T04:05:05.6649345Z [166/1535] Generating trace/trace-migration.c with a custom command
+2026-11-25T04:05:05.6707952Z [167/1535] Generating trace/trace-migration.h with a custom command
+2026-11-25T04:05:05.6873232Z [168/1535] Generating trace/trace-net.h with a custom command
+2026-11-25T04:05:05.6925213Z [169/1535] Generating trace/trace-net.c with a custom command
+2026-11-25T04:05:05.7093103Z [170/1535] Generating trace/trace-replay.h with a custom command
+2026-11-25T04:05:05.7147393Z [171/1535] Generating trace/trace-replay.c with a custom command
+2026-11-25T04:05:05.7331423Z [172/1535] Generating trace/trace-system.h with a custom command
+2026-11-25T04:05:05.7369890Z [173/1535] Generating trace/trace-system.c with a custom command
+2026-11-25T04:05:05.7636189Z [174/1535] Generating trace/trace-ui.h with a custom command
+2026-11-25T04:05:05.7642028Z [175/1535] Generating trace/trace-ui.c with a custom command
+2026-11-25T04:05:05.7855588Z [176/1535] Generating trace/trace-hw_remote.c with a custom command
+2026-11-25T04:05:05.7864637Z [177/1535] Generating trace/trace-hw_remote.h with a custom command
+2026-11-25T04:05:05.8075412Z [178/1535] Generating trace/trace-accel_tcg.h with a custom command
+2026-11-25T04:05:05.8088528Z [179/1535] Generating trace/trace-accel_tcg.c with a custom command
+2026-11-25T04:05:05.8307948Z [180/1535] Generating trace/trace-hw_core.c with a custom command
+2026-11-25T04:05:05.8308865Z [181/1535] Generating trace/trace-hw_core.h with a custom command
+2026-11-25T04:05:05.8531865Z [182/1535] Generating trace/trace-target_arm.h with a custom command
+2026-11-25T04:05:05.8539206Z [183/1535] Generating trace/trace-target_arm.c with a custom command
+2026-11-25T04:05:05.8753257Z [184/1535] Generating trace/trace-target_arm_hvf.c with a custom command
+2026-11-25T04:05:05.8759116Z [185/1535] Generating trace/trace-target_arm_hvf.h with a custom command
+2026-11-25T04:05:05.8966025Z [186/1535] Generating trace/trace-target_arm_tcg.h with a custom command
+2026-11-25T04:05:05.8977063Z [187/1535] Generating trace/trace-target_arm_tcg.c with a custom command
+2026-11-25T04:05:05.9181479Z [188/1535] Generating trace/trace-target_hppa.h with a custom command
+2026-11-25T04:05:05.9198954Z [189/1535] Generating trace/trace-target_hppa.c with a custom command
+2026-11-25T04:05:05.9407825Z [190/1535] Generating trace/trace-target_i386.h with a custom command
+2026-11-25T04:05:05.9416383Z [191/1535] Generating trace/trace-target_i386.c with a custom command
+2026-11-25T04:05:05.9629002Z [192/1535] Generating trace/trace-target_i386_kvm.h with a custom command
+2026-11-25T04:05:05.9634489Z [193/1535] Generating trace/trace-target_i386_kvm.c with a custom command
+2026-11-25T04:05:05.9841646Z [194/1535] Generating trace/trace-target_i386_whpx.c with a custom command
+2026-11-25T04:05:05.9842278Z [195/1535] Generating trace/trace-target_i386_whpx.h with a custom command
+2026-11-25T04:05:06.0060139Z [196/1535] Generating trace/trace-target_loongarch.h with a custom command
+2026-11-25T04:05:06.0067100Z [197/1535] Generating trace/trace-target_loongarch.c with a custom command
+2026-11-25T04:05:06.0273182Z [198/1535] Generating trace/trace-target_mips_tcg.h with a custom command
+2026-11-25T04:05:06.0282793Z [199/1535] Generating trace/trace-target_mips_tcg.c with a custom command
+2026-11-25T04:05:06.0503946Z [200/1535] Generating trace/trace-target_ppc.c with a custom command
+2026-11-25T04:05:06.0505446Z [201/1535] Generating trace/trace-target_ppc.h with a custom command
+2026-11-25T04:05:06.0724224Z [202/1535] Generating trace/trace-target_riscv.c with a custom command
+2026-11-25T04:05:06.0729097Z [203/1535] Generating trace/trace-target_riscv.h with a custom command
+2026-11-25T04:05:06.0937312Z [204/1535] Generating trace/trace-target_s390x.h with a custom command
+2026-11-25T04:05:06.0944882Z [205/1535] Generating trace/trace-target_s390x.c with a custom command
+2026-11-25T04:05:06.1154888Z [206/1535] Generating trace/trace-target_s390x_kvm.h with a custom command
+2026-11-25T04:05:06.1160996Z [207/1535] Generating trace/trace-target_s390x_kvm.c with a custom command
+2026-11-25T04:05:06.1378603Z [208/1535] Generating trace/trace-target_sparc.c with a custom command
+2026-11-25T04:05:06.1383894Z [209/1535] Generating trace/trace-target_sparc.h with a custom command
+2026-11-25T04:05:06.1597553Z [210/1535] Generating trace/trace-qapi_commands_authz_trace_events.h with a custom command
+2026-11-25T04:05:06.1604011Z [211/1535] Generating trace/trace-qapi_commands_authz_trace_events.c with a custom command
+2026-11-25T04:05:06.1821003Z [212/1535] Generating trace/trace-qapi_commands_block_trace_events.c with a custom command
+2026-11-25T04:05:06.1825309Z [213/1535] Generating trace/trace-qapi_commands_block_trace_events.h with a custom command
+2026-11-25T04:05:06.2069120Z [214/1535] Generating trace/trace-qapi_commands_block_core_trace_events.c with a custom command
+2026-11-25T04:05:06.2075321Z [215/1535] Generating trace/trace-qapi_commands_block_core_trace_events.h with a custom command
+2026-11-25T04:05:06.2292396Z [216/1535] Generating trace/trace-qapi_commands_block_export_trace_events.h with a custom command
+2026-11-25T04:05:06.2299340Z [217/1535] Generating trace/trace-qapi_commands_block_export_trace_events.c with a custom command
+2026-11-25T04:05:06.2516135Z [218/1535] Generating trace/trace-qapi_commands_char_trace_events.c with a custom command
+2026-11-25T04:05:06.2521866Z [219/1535] Generating trace/trace-qapi_commands_char_trace_events.h with a custom command
+2026-11-25T04:05:06.2724862Z [220/1535] Generating trace/trace-qapi_commands_common_trace_events.h with a custom command
+2026-11-25T04:05:06.2736494Z [221/1535] Generating trace/trace-qapi_commands_common_trace_events.c with a custom command
+2026-11-25T04:05:06.2940100Z [222/1535] Generating trace/trace-qapi_commands_compat_trace_events.h with a custom command
+2026-11-25T04:05:06.2947037Z [223/1535] Generating trace/trace-qapi_commands_compat_trace_events.c with a custom command
+2026-11-25T04:05:06.3159476Z [224/1535] Generating trace/trace-qapi_commands_control_trace_events.h with a custom command
+2026-11-25T04:05:06.3166832Z [225/1535] Generating trace/trace-qapi_commands_control_trace_events.c with a custom command
+2026-11-25T04:05:06.3373572Z [226/1535] Generating trace/trace-qapi_commands_crypto_trace_events.h with a custom command
+2026-11-25T04:05:06.3379755Z [227/1535] Generating trace/trace-qapi_commands_crypto_trace_events.c with a custom command
+2026-11-25T04:05:06.3596723Z [228/1535] Generating trace/trace-qapi_commands_cxl_trace_events.c with a custom command
+2026-11-25T04:05:06.3597712Z [229/1535] Generating trace/trace-qapi_commands_cxl_trace_events.h with a custom command
+2026-11-25T04:05:06.3809696Z [230/1535] Generating trace/trace-qapi_commands_dump_trace_events.h with a custom command
+2026-11-25T04:05:06.3817631Z [231/1535] Generating trace/trace-qapi_commands_dump_trace_events.c with a custom command
+2026-11-25T04:05:06.4025669Z [232/1535] Generating trace/trace-qapi_commands_ebpf_trace_events.c with a custom command
+2026-11-25T04:05:06.4027616Z [233/1535] Generating trace/trace-qapi_commands_ebpf_trace_events.h with a custom command
+2026-11-25T04:05:06.4234582Z [234/1535] Generating trace/trace-qapi_commands_error_trace_events.h with a custom command
+2026-11-25T04:05:06.4241837Z [235/1535] Generating trace/trace-qapi_commands_error_trace_events.c with a custom command
+2026-11-25T04:05:06.4450525Z [236/1535] Generating trace/trace-qapi_commands_introspect_trace_events.h with a custom command
+2026-11-25T04:05:06.4457411Z [237/1535] Generating trace/trace-qapi_commands_introspect_trace_events.c with a custom command
+2026-11-25T04:05:06.4675370Z [238/1535] Generating trace/trace-qapi_commands_job_trace_events.h with a custom command
+2026-11-25T04:05:06.4682146Z [239/1535] Generating trace/trace-qapi_commands_job_trace_events.c with a custom command
+2026-11-25T04:05:06.4888257Z [240/1535] Generating trace/trace-qapi_commands_machine_common_trace_events.h with a custom command
+2026-11-25T04:05:06.4895617Z [241/1535] Generating trace/trace-qapi_commands_machine_common_trace_events.c with a custom command
+2026-11-25T04:05:06.5125531Z [242/1535] Generating trace/trace-qapi_commands_machine_trace_events.c with a custom command
+2026-11-25T04:05:06.5135382Z [243/1535] Generating trace/trace-qapi_commands_machine_trace_events.h with a custom command
+2026-11-25T04:05:06.5341123Z [244/1535] Generating trace/trace-qapi_commands_machine_s390x_trace_events.h with a custom command
+2026-11-25T04:05:06.5351374Z [245/1535] Generating trace/trace-qapi_commands_machine_s390x_trace_events.c with a custom command
+2026-11-25T04:05:06.5577016Z [246/1535] Generating trace/trace-qapi_commands_migration_trace_events.c with a custom command
+2026-11-25T04:05:06.5593448Z [247/1535] Generating trace/trace-qapi_commands_migration_trace_events.h with a custom command
+2026-11-25T04:05:06.5807308Z [248/1535] Generating trace/trace-qapi_commands_misc_trace_events.h with a custom command
+2026-11-25T04:05:06.5815020Z [249/1535] Generating trace/trace-qapi_commands_misc_trace_events.c with a custom command
+2026-11-25T04:05:06.6024573Z [250/1535] Generating trace/trace-qapi_commands_net_trace_events.h with a custom command
+2026-11-25T04:05:06.6030674Z [251/1535] Generating trace/trace-qapi_commands_net_trace_events.c with a custom command
+2026-11-25T04:05:06.6237990Z [252/1535] Generating trace/trace-qapi_commands_pragma_trace_events.c with a custom command
+2026-11-25T04:05:06.6241926Z [253/1535] Generating trace/trace-qapi_commands_pragma_trace_events.h with a custom command
+2026-11-25T04:05:06.6457766Z [254/1535] Generating trace/trace-qapi_commands_qom_trace_events.h with a custom command
+2026-11-25T04:05:06.6464043Z [255/1535] Generating trace/trace-qapi_commands_qom_trace_events.c with a custom command
+2026-11-25T04:05:06.6673504Z [256/1535] Generating trace/trace-qapi_commands_replay_trace_events.c with a custom command
+2026-11-25T04:05:06.6676420Z [257/1535] Generating trace/trace-qapi_commands_replay_trace_events.h with a custom command
+2026-11-25T04:05:06.6886582Z [258/1535] Generating trace/trace-qapi_commands_run_state_trace_events.h with a custom command
+2026-11-25T04:05:06.6892752Z [259/1535] Generating trace/trace-qapi_commands_run_state_trace_events.c with a custom command
+2026-11-25T04:05:06.7095794Z [260/1535] Generating trace/trace-qapi_commands_sockets_trace_events.h with a custom command
+2026-11-25T04:05:06.7101815Z [261/1535] Generating trace/trace-qapi_commands_sockets_trace_events.c with a custom command
+2026-11-25T04:05:06.7309936Z [262/1535] Generating trace/trace-qapi_commands_stats_trace_events.h with a custom command
+2026-11-25T04:05:06.7315398Z [263/1535] Generating trace/trace-qapi_commands_stats_trace_events.c with a custom command
+2026-11-25T04:05:06.7523512Z [264/1535] Generating trace/trace-qapi_commands_trace_trace_events.c with a custom command
+2026-11-25T04:05:06.7524426Z [265/1535] Generating trace/trace-qapi_commands_trace_trace_events.h with a custom command
+2026-11-25T04:05:06.7735008Z [266/1535] Generating trace/trace-qapi_commands_transaction_trace_events.h with a custom command
+2026-11-25T04:05:06.7740586Z [267/1535] Generating trace/trace-qapi_commands_transaction_trace_events.c with a custom command
+2026-11-25T04:05:06.7947515Z [268/1535] Generating trace/trace-qapi_commands_vfio_trace_events.h with a custom command
+2026-11-25T04:05:06.7954036Z [269/1535] Generating trace/trace-qapi_commands_vfio_trace_events.c with a custom command
+2026-11-25T04:05:06.8165485Z [270/1535] Generating trace/trace-qapi_commands_virtio_trace_events.c with a custom command
+2026-11-25T04:05:06.8167086Z [271/1535] Generating trace/trace-qapi_commands_virtio_trace_events.h with a custom command
+2026-11-25T04:05:06.8378478Z [272/1535] Generating trace/trace-qapi_commands_yank_trace_events.h with a custom command
+2026-11-25T04:05:06.8384308Z [273/1535] Generating trace/trace-qapi_commands_yank_trace_events.c with a custom command
+2026-11-25T04:05:06.8594493Z [274/1535] Generating trace/trace-qapi_commands_accelerator_trace_events.c with a custom command
+2026-11-25T04:05:06.8599705Z [275/1535] Generating trace/trace-qapi_commands_accelerator_trace_events.h with a custom command
+2026-11-25T04:05:06.8803707Z [276/1535] Generating trace/trace-qapi_commands_acpi_trace_events.h with a custom command
+2026-11-25T04:05:06.8812259Z [277/1535] Generating trace/trace-qapi_commands_acpi_trace_events.c with a custom command
+2026-11-25T04:05:06.9017714Z [278/1535] Generating trace/trace-qapi_commands_acpi_hest_trace_events.h with a custom command
+2026-11-25T04:05:06.9024994Z [279/1535] Generating trace/trace-qapi_commands_acpi_hest_trace_events.c with a custom command
+2026-11-25T04:05:06.9231396Z [280/1535] Generating trace/trace-qapi_commands_audio_trace_events.h with a custom command
+2026-11-25T04:05:06.9237073Z [281/1535] Generating trace/trace-qapi_commands_audio_trace_events.c with a custom command
+2026-11-25T04:05:06.9445133Z [282/1535] Generating trace/trace-qapi_commands_cryptodev_trace_events.h with a custom command
+2026-11-25T04:05:06.9450409Z [283/1535] Generating trace/trace-qapi_commands_cryptodev_trace_events.c with a custom command
+2026-11-25T04:05:06.9660461Z [284/1535] Generating trace/trace-qapi_commands_qdev_trace_events.h with a custom command
+2026-11-25T04:05:06.9667396Z [285/1535] Generating trace/trace-qapi_commands_qdev_trace_events.c with a custom command
+2026-11-25T04:05:06.9875128Z [286/1535] Generating trace/trace-qapi_commands_pci_trace_events.h with a custom command
+2026-11-25T04:05:06.9881056Z [287/1535] Generating trace/trace-qapi_commands_pci_trace_events.c with a custom command
+2026-11-25T04:05:07.0093234Z [288/1535] Generating trace/trace-qapi_commands_rocker_trace_events.c with a custom command
+2026-11-25T04:05:07.0096543Z [289/1535] Generating trace/trace-qapi_commands_rocker_trace_events.h with a custom command
+2026-11-25T04:05:07.0303418Z [290/1535] Generating trace/trace-qapi_commands_misc_arm_trace_events.h with a custom command
+2026-11-25T04:05:07.0309479Z [291/1535] Generating trace/trace-qapi_commands_misc_arm_trace_events.c with a custom command
+2026-11-25T04:05:07.0525236Z [292/1535] Generating trace/trace-qapi_commands_misc_i386_trace_events.h with a custom command
+2026-11-25T04:05:07.0530996Z [293/1535] Generating trace/trace-qapi_commands_misc_i386_trace_events.c with a custom command
+2026-11-25T04:05:07.0743309Z [294/1535] Generating trace/trace-qapi_commands_tpm_trace_events.h with a custom command
+2026-11-25T04:05:07.0749605Z [295/1535] Generating trace/trace-qapi_commands_tpm_trace_events.c with a custom command
+2026-11-25T04:05:07.0954159Z [296/1535] Generating trace/trace-qapi_commands_uefi_trace_events.h with a custom command
+2026-11-25T04:05:07.0960673Z [297/1535] Generating trace/trace-qapi_commands_uefi_trace_events.c with a custom command
+2026-11-25T04:05:07.1183075Z [298/1535] Generating trace/trace-qapi_commands_ui_trace_events.c with a custom command
+2026-11-25T04:05:07.1184382Z [299/1535] Generating trace/trace-qapi_commands_ui_trace_events.h with a custom command
+2026-11-25T04:05:07.1900913Z [300/1535] Generating ui/input-keymap-linux-to-qcode.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.2188019Z [301/1535] Generating ui/input-keymap-atset1-to-linux.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.2615682Z [302/1535] Generating ui/input-keymap-linux-to-atset1.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.2899898Z [303/1535] Generating ui/input-keymap-linux-to-atset2.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.3331447Z [304/1535] Generating ui/input-keymap-linux-to-atset3.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.3613065Z [305/1535] Generating ui/input-keymap-qcode-to-linux.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.4054648Z [306/1535] Generating ui/input-keymap-linux-to-qnum.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.4323900Z [307/1535] Generating ui/input-keymap-linux-to-sun.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.4774416Z [308/1535] Generating ui/input-keymap-qnum-to-linux.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.5033394Z [309/1535] Generating ui/input-keymap-usb-to-linux.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.5485875Z [310/1535] Generating ui/input-keymap-win32-to-linux.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.6123304Z [311/1535] Generating ui/input-keymap-x11-to-linux.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.6208506Z [312/1535] Generating ui/input-keymap-xorgkbd-to-linux.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.6838165Z [313/1535] Generating ui/input-keymap-xorgxquartz-to-linux.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.6929825Z [314/1535] Generating ui/input-keymap-xorgxwin-to-linux.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.7450038Z [315/1535] Generating ui/shader/texture-blit-frag.h with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.7588153Z [316/1535] Generating ui/input-keymap-osx-to-linux.c.inc with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.7999684Z [317/1535] Generating ui/shader/texture-blit-vert.h with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.8115958Z [318/1535] Generating ui/shader/texture-blit-flip-vert.h with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.8631001Z [319/1535] Generating gdbstub/gdbstub-xml.c with a custom command (wrapped by meson to capture output)
+2026-11-25T04:05:07.9797992Z [320/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-types.c.o
+2026-11-25T04:05:08.0769684Z [321/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-introspect.c.o
+2026-11-25T04:05:08.0968998Z [322/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-visit.c.o
+2026-11-25T04:05:08.1956869Z [323/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-commands.c.o
+2026-11-25T04:05:08.2695138Z [324/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-init-commands.c.o
+2026-11-25T04:05:08.3151156Z [325/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-events.c.o
+2026-11-25T04:05:08.3216265Z [326/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-emit-events.c.o
+2026-11-25T04:05:08.3955761Z [327/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-builtin-types.c.o
+2026-11-25T04:05:08.4479430Z [328/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-builtin-visit.c.o
+2026-11-25T04:05:08.4625584Z [329/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-types-authz.c.o
+2026-11-25T04:05:08.5171883Z [330/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-events-authz.c.o
+2026-11-25T04:05:08.5525321Z [331/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-visit-authz.c.o
+2026-11-25T04:05:08.5738446Z [332/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-commands-authz.c.o
+2026-11-25T04:05:08.6321409Z [333/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-types-block.c.o
+2026-11-25T04:05:08.6982892Z [334/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-visit-block.c.o
+2026-11-25T04:05:08.7272268Z [335/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-events-block.c.o
+2026-11-25T04:05:08.8645800Z [336/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-commands-block.c.o
+2026-11-25T04:05:09.0196835Z [337/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-types-block-core.c.o
+2026-11-25T04:05:09.1735335Z [338/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-events-block-core.c.o
+2026-11-25T04:05:09.6519395Z [339/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-commands-block-core.c.o
+2026-11-25T04:05:09.7466410Z [340/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-types-block-export.c.o
+2026-11-25T04:05:09.9290078Z [341/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-visit-block-export.c.o
+2026-11-25T04:05:10.0159453Z [342/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-events-block-export.c.o
+2026-11-25T04:05:10.1615500Z [343/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-commands-block-export.c.o
+2026-11-25T04:05:10.2625880Z [344/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-types-char.c.o
+2026-11-25T04:05:10.4310335Z [345/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-visit-block-core.c.o
+2026-11-25T04:05:10.5009864Z [346/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-events-char.c.o
+2026-11-25T04:05:10.5342598Z [347/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-visit-char.c.o
+2026-11-25T04:05:10.5941255Z [348/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-types-common.c.o
+2026-11-25T04:05:10.6465703Z [349/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-commands-char.c.o
+2026-11-25T04:05:10.6800112Z [350/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-visit-common.c.o
+2026-11-25T04:05:10.6999315Z [351/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-events-common.c.o
+2026-11-25T04:05:10.7331349Z [352/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-commands-common.c.o
+2026-11-25T04:05:10.7549196Z [353/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-types-compat.c.o
+2026-11-25T04:05:10.8020501Z [354/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-visit-compat.c.o
+2026-11-25T04:05:10.8077207Z [355/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-events-compat.c.o
+2026-11-25T04:05:10.8566705Z [356/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-commands-compat.c.o
+2026-11-25T04:05:10.8726958Z [357/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-types-control.c.o
+2026-11-25T04:05:10.9257604Z [358/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-events-control.c.o
+2026-11-25T04:05:10.9568579Z [359/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-visit-control.c.o
+2026-11-25T04:05:11.0209732Z [360/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-commands-control.c.o
+2026-11-25T04:05:11.0429555Z [361/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-types-crypto.c.o
+2026-11-25T04:05:11.0969400Z [362/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-events-crypto.c.o
+2026-11-25T04:05:11.1506656Z [363/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-commands-crypto.c.o
+2026-11-25T04:05:11.2165850Z [364/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-types-cxl.c.o
+2026-11-25T04:05:11.2680068Z [365/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-visit-crypto.c.o
+2026-11-25T04:05:11.3213784Z [366/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-events-cxl.c.o
+2026-11-25T04:05:11.3716501Z [367/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-visit-cxl.c.o
+2026-11-25T04:05:11.4327719Z [368/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-types-dump.c.o
+2026-11-25T04:05:11.4626046Z [369/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-commands-cxl.c.o
+2026-11-25T04:05:11.5201046Z [370/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-visit-dump.c.o
+2026-11-25T04:05:11.5281606Z [371/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-events-dump.c.o
+2026-11-25T04:05:11.5779810Z [372/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-types-ebpf.c.o
+2026-11-25T04:05:11.6110692Z [373/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-commands-dump.c.o
+2026-11-25T04:05:11.6278854Z [374/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-visit-ebpf.c.o
+2026-11-25T04:05:11.6642023Z [375/1535] Compiling C object libqemuutil.a.p/meson-generated_.._qapi_qapi-events-ebpf.c.

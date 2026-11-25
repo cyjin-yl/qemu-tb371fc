@@ -1,0 +1,920 @@
+}
+2026-11-25T04:27:28.2443882Z         },
+2026-11-25T04:27:28.2443938Z         {
+2026-11-25T04:27:28.2444163Z           "direction": "send",
+2026-11-25T04:27:28.2444236Z           "command": "query-status",
+2026-11-25T04:27:28.2444312Z           "arguments": null
+2026-11-25T04:27:28.2444371Z         },
+2026-11-25T04:27:28.2444427Z         {
+2026-11-25T04:27:28.2444504Z           "direction": "receive",
+2026-11-25T04:27:28.2444566Z           "message": {
+2026-11-25T04:27:28.2444637Z             "return": {
+2026-11-25T04:27:28.2444705Z               "status": "paused",
+2026-11-25T04:27:28.2444777Z               "running": false
+2026-11-25T04:27:28.2444836Z             },
+2026-11-25T04:27:28.2444959Z             "id": 9
+2026-11-25T04:27:28.2445023Z           }
+2026-11-25T04:27:28.2445083Z         },
+2026-11-25T04:27:28.2445145Z         {
+2026-11-25T04:27:28.2445211Z           "direction": "send",
+2026-11-25T04:27:28.2445390Z           "command": "query-status",
+2026-11-25T04:27:28.2445455Z           "arguments": null
+2026-11-25T04:27:28.2445520Z         },
+2026-11-25T04:27:28.2445578Z         {
+2026-11-25T04:27:28.2445658Z           "direction": "receive",
+2026-11-25T04:27:28.2445728Z           "message": {
+2026-11-25T04:27:28.2445793Z             "return": {
+2026-11-25T04:27:28.2445866Z               "status": "paused",
+2026-11-25T04:27:28.2445932Z               "running": false
+2026-11-25T04:27:28.2445999Z             },
+2026-11-25T04:27:28.2446059Z             "id": 10
+2026-11-25T04:27:28.2446123Z           }
+2026-11-25T04:27:28.2446181Z         },
+2026-11-25T04:27:28.2446247Z         {
+2026-11-25T04:27:28.2446318Z           "direction": "send",
+2026-11-25T04:27:28.2446388Z           "command": "qom-get",
+2026-11-25T04:27:28.2446461Z           "arguments": {
+2026-11-25T04:27:28.2446534Z             "path": "/machine/ufs",
+2026-11-25T04:27:28.2446615Z             "property": "link-state"
+2026-11-25T04:27:28.2446671Z           }
+2026-11-25T04:27:28.2446740Z         },
+2026-11-25T04:27:28.2446798Z         {
+2026-11-25T04:27:28.2446870Z           "direction": "receive",
+2026-11-25T04:27:28.2446949Z           "message": {
+2026-11-25T04:27:28.2447017Z             "return": "hibern8",
+2026-11-25T04:27:28.2447084Z             "id": 11
+2026-11-25T04:27:28.2447140Z           }
+2026-11-25T04:27:28.2447204Z         },
+2026-11-25T04:27:28.2447260Z         {
+2026-11-25T04:27:28.2447332Z           "direction": "send",
+2026-11-25T04:27:28.2447424Z           "command": "human-monitor-command",
+2026-11-25T04:27:28.2447497Z           "arguments": {
+2026-11-25T04:27:28.2447582Z             "command-line": "info qtree"
+2026-11-25T04:27:28.2447640Z           }
+2026-11-25T04:27:28.2447702Z         },
+2026-11-25T04:27:28.2447757Z         {
+2026-11-25T04:27:28.2447831Z           "direction": "receive",
+2026-11-25T04:27:28.2447892Z           "message": {
+2026-11-25T04:27:28.2582279Z             "return": "bus: main-system-bus\r\n  type System\r\n  dev: qcom-geni-uart, id \"\"\r\n    gpio-in \"reset\" 1\r\n    gpio-out \"sysbus-irq\" 1\r\n    clock-in \"s-ahb\" freq_hz=100 MHz\r\n    clock-in \"m-ahb\" freq_hz=100 MHz\r\n    clock-in \"se-clk\" freq_hz=7.37 MHz\r\n    chardev = \"serial0\"\r\n    mmio 0000000000a90000/0000000000004000\r\n  dev: qcom-sm8250-ufs, id \"ufs0\"\r\n    gpio-in \"device-reset\" 1\r\n    gpio-in \"power\" 1\r\n    gpio-in \"reset\" 1\r\n    gpio-out \"sysbus-irq\" 1\r\n    clock-in \"rx1-sync-clk\" freq_hz=0 Hz\r\n    clock-out \"rx-lane1\" freq_hz=0 Hz\r\n    clock-in \"rx0-sync-clk\" freq_hz=0 Hz\r\n    clock-out \"rx-lane0\" freq_hz=0 Hz\r\n    clock-in \"tx-sync-clk\" freq_hz=0 Hz\r\n    clock-out \"tx-lane0\" freq_hz=0 Hz\r\n    clock-in \"qref-clk\" freq_hz=0 Hz\r\n    clock-in \"aggre-clk\" freq_hz=0 Hz\r\n    clock-in \"phy-aux-clk\" freq_hz=0 Hz\r\n    clock-in \"ref-clk\" freq_hz=19.2 MHz\r\n    clock-in \"unipro-clk\" freq_hz=0 Hz\r\n    clock-in \"iface-clk\" freq_hz=0 Hz\r\n    clock-in \"core-clk\" freq_hz=0 Hz\r\n    auto-hibern8 = true\r\n    serial = \"QEMU-TB371FC-TEST\"\r\n    nutrs = 32 (0x20)\r\n    nutmrs = 8 (0x8)\r\n    wb-max-size = 1024 (0x400)\r\n    wb-min-size = 256 (0x100)\r\n    hw-version = 1073741824 (0x40000000)\r\n    hci-version = 768 (0x300)\r\n    reference-symbol-hz = 150000000 (0x8f0d180)\r\n    dma-memory = \"/machine/apps-smmu/smmuv2-sid-00e0[0]\"\r\n    mmio 0000000001d84000/0000000000003000\r\n    mmio 0000000001d87000/0000000000001000\r\n    bus: ufs0\r\n      type ufs-bus\r\n      dev: ufs-lu, id \"\"\r\n        drive = \"\"\r\n        lun = 0 (0x0)\r\n        bus: scsi.0\r\n          type SCSI\r\n          dev: scsi-hd, id \"\"\r\n            drive = \"d0\"\r\n            backend_defaults = \"auto\"\r\n            logical_block_size = 4096 (4 KiB)\r\n            physical_block_size = 4096 (4 KiB)\r\n            min_io_size = 0 (0 B)\r\n            opt_io_size = 0 (0 B)\r\n            discard_granularity = 4096 (4 KiB)\r\n            write-cache = \"auto\"\r\n            share-rw = false\r\n            account-invalid = \"auto\"\r\n            account-failed = \"auto\"\r\n            stats-intervals = <null>\r\n            rerror = \"auto\"\r\n            werror = \"auto\"\r\n            ver = \"2.5+\"\r\n            serial = \"\"\r\n            vendor = \"QEMU\"\r\n            product = \"QEMU HARDDISK\"\r\n            device_id = \"\"\r\n            migrate-emulated-scsi-request = true\r\n            removable = false\r\n            dpofua = true\r\n            wwn = 0 (0x0)\r\n            port_wwn = 0 (0x0)\r\n            port_index = 0 (0x0)\r\n            max_unmap_size = 1073741824 (0x40000000)\r\n            max_io_size = 2147483647 (0x7fffffff)\r\n            rotation_rate = 0 (0x0)\r\n            scsi_version = 5 (0x5)\r\n            quirk_mode_page_vendor_specific_apple = false\r\n            quirk_mode_page_set_block_size = false\r\n            cyls = 130 (0x82)\r\n            heads = 16 (0x10)\r\n            secs = 63 (0x3f)\r\n            lcyls = 0 (0x0)\r\n            lheads = 0 (0x0)\r\n            lsecs = 0 (0x0)\r\n            channel = 0 (0x0)\r\n            scsi-id = 0 (0x0)\r\n            lun = 0 (0x0)\r\n  dev: qcom-sm8250-llcc, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000009200000/00000000001d0000\r\n    mmio 0000000009600000/0000000000050000\r\n  dev: qcom-sm8250-dispcc, id \"\"\r\n    gpio-out \"reset\" 2\r\n    gpio-in \"remote-vote\" 2\r\n    clock-out \"disp_cc_xo_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_sleep_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_sleep_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_pll1\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_pll0\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_vsync_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_vsync_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_rscc_vsync_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_rscc_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_rot_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_rot_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_pclk1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_pclk1_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_pclk0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_pclk0_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_non_gdsc_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_mdp_lut_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_mdp_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_mdp_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_esc1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_esc1_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_esc0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_esc0_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_edp_pixel_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_edp_pixel_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_edp_link_intf_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_edp_link_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_edp_link_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_edp_link_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_edp_gtc_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_edp_gtc_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_edp_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_edp_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_pixel_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_pixel_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_pixel2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_pixel2_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_pixel1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_pixel1_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_link_intf_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_link_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_link_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_link_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_link1_intf_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_link1_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_link1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_link1_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_aux1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_dp_aux1_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_byte1_intf_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_byte1_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_byte1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_byte1_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_byte0_intf_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_byte0_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_byte0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_byte0_clk\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_ahb_clk_src\" freq_hz=0 Hz\r\n    clock-out \"disp_cc_mdss_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"disp_cc_xo_clk_parent\" freq_hz=0 Hz\r\n    clock-in \"edp_phy_pll_vco_div_clk\" freq_hz=0 Hz\r\n    clock-in \"edp_phy_pll_link_clk\" freq_hz=0 Hz\r\n    clock-in \"dsi1_phy_pll_out_dsiclk\" freq_hz=0 Hz\r\n    clock-in \"dsi0_phy_pll_out_dsiclk\" freq_hz=0 Hz\r\n    clock-in \"dsi1_phy_pll_out_byteclk\" freq_hz=0 Hz\r\n    clock-in \"dsi0_phy_pll_out_byteclk\" freq_hz=0 Hz\r\n    clock-in \"dptx2_phy_pll_vco_div_clk\" freq_hz=0 Hz\r\n    clock-in \"dptx2_phy_pll_link_clk\" freq_hz=0 Hz\r\n    clock-in \"dptx1_phy_pll_vco_div_clk\" freq_hz=0 Hz\r\n    clock-in \"dptx1_phy_pll_link_clk\" freq_hz=0 Hz\r\n    clock-in \"dp_vco_divided_clk_src_mux\" freq_hz=0 Hz\r\n    clock-in \"dp_link_clk_divsel_ten\" freq_hz=0 Hz\r\n    clock-in \"disp_cc_pll1_out_even\" freq_hz=0 Hz\r\n    clock-in \"chip_sleep_clk\" freq_hz=0 Hz\r\n    clock-in \"core_bi_pll_test_se\" freq_hz=0 Hz\r\n    clock-in \"bi_tcxo\" freq_hz=19.2 MHz\r\n    enabled-reference = false\r\n    mmio 000000000af00000/0000000000020000\r\n  dev: qcom-sm8250-dp-pll, id \"\"\r\n    gpio-in \"power-on\" 1\r\n    gpio-in \"power-known\" 1\r\n    clock-out \"dp_vco_divided_clk_src_mux\" freq_hz=0 Hz\r\n    clock-out \"dp_vco_divsel_six_clk_src\" freq_hz=0 Hz\r\n    clock-out \"dp_vco_divsel_four_clk_src\" freq_hz=0 Hz\r\n    clock-out \"dp_vco_divsel_two_clk_src\" freq_hz=0 Hz\r\n    clock-out \"dp_link_clk_divsel_ten\" freq_hz=0 Hz\r\n    clock-out \"dp_vco_clk\" freq_hz=0 Hz\r\n    clock-in \"ref_clk_src\" freq_hz=19.2 MHz\r\n    enabled-reference = false\r\n    mdss-provider = \"/machine/mdss-gdsc\"\r\n    mmio 00000000088ea000/0000000000000200\r\n    mmio 00000000088eaa00/0000000000000200\r\n    mmio 00000000088ea200/0000000000000200\r\n    mmio 00000000088ea600/0000000000000200\r\n  dev: qcom-sm8250-dsi-pll, id \"\"\r\n    gpio-in \"power-on\" 1\r\n    gpio-in \"power-known\" 1\r\n    clock-out \"dsi1pll_shadow_cphy_pclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_shadow_cphy_pclk_src_mux\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_shadow_post_vco_div3_5\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_cphy_shadow_byteclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_cphy_pclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_cphy_pclk_src_mux\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_post_vco_div3_5\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_cphy_byteclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_shadow_pclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_shadow_pclk_src_mux\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_shadow_post_vco_div\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_shadow_post_bit_div\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_shadow_byteclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_shadow_bitclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_shadow_pll_out_div\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_shadow_vco_clk\" freq_hz=0 Hz\r\n    clock-out \"dsi1_phy_pll_out_dsiclk\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_pclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_pclk_src_mux\" freq_hz=0 Hz\r\n    clock-out \"dsi1_phy_pll_out_byteclk\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_post_vco_div\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_post_bit_div\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_byteclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_bitclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_pll_out_div\" freq_hz=0 Hz\r\n    clock-out \"dsi1pll_vco_clk\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_shadow_cphy_pclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_shadow_cphy_pclk_src_mux\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_shadow_post_vco_div3_5\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_shadow_cphy_byteclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_cphy_pclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_cphy_pclk_src_mux\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_post_vco_div3_5\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_cphy_byteclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_shadow_pclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_shadow_pclk_src_mux\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_shadow_post_vco_div\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_shadow_post_bit_div\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_shadow_byteclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_shadow_bitclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_shadow_pll_out_div\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_shadow_vco_clk\" freq_hz=0 Hz\r\n    clock-out \"dsi0_phy_pll_out_dsiclk\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_pclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_pclk_src_mux\" freq_hz=0 Hz\r\n    clock-out \"dsi0_phy_pll_out_byteclk\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_post_vco_div\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_post_bit_div\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_byteclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_bitclk_src\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_pll_out_div\" freq_hz=0 Hz\r\n    clock-out \"dsi0pll_vco_clk\" freq_hz=0 Hz\r\n    clock-in \"bi_tcxo\" freq_hz=19.2 MHz\r\n    enabled-reference = false\r\n    mmio 000000000ae94400/0000000000000800\r\n    mmio 000000000ae96400/0000000000000800\r\n  dev: qcom-video-gdsc, id \"\"\r\n    gpio-out \"state-known\" 4\r\n    gpio-out \"power\" 4\r\n    gpio-in \"hw-request\" 4\r\n    gpio-in \"hw-request-known\" 4\r\n    gpio-in \"parent-on\" 1\r\n    gpio-in \"parent-known\" 1\r\n    enabled-reference = false\r\n    mmio 000000000abf0bf8/0000000000000004\r\n    mmio 000000000abf0c98/0000000000000004\r\n    mmio 000000000abf0d18/0000000000000004\r\n    mmio 000000000abf0d98/0000000000000004\r\n  dev: qcom-mdss-gdsc, id \"\"\r\n    gpio-out \"state-known\" 1\r\n    gpio-out \"power\" 1\r\n    gpio-in \"hw-request\" 1\r\n    gpio-in \"hw-request-known\" 1\r\n    gpio-in \"parent-on\" 1\r\n    gpio-in \"parent-known\" 1\r\n    enabled-reference = false\r\n    mmio 000000000af03000/0000000000000004\r\n  dev: qcom-camera-gdsc, id \"\"\r\n    gpio-out \"state-known\" 6\r\n    gpio-out \"power\" 6\r\n    gpio-in \"hw-request\" 6\r\n    gpio-in \"hw-request-known\" 6\r\n    gpio-in \"parent-on\" 1\r\n    gpio-in \"parent-known\" 1\r\n    enabled-reference = false\r\n    mmio 000000000ad07004/0000000000000004\r\n    mmio 000000000ad08004/0000000000000004\r\n    mmio 000000000ad09004/0000000000000004\r\n    mmio 000000000ad0a004/0000000000000004\r\n    mmio 000000000ad0b004/0000000000000004\r\n    mmio 000000000ad0c144/0000000000000004\r\n  dev: qcom-gdsc, id \"\"\r\n    gpio-out \"reset-asserted\" 1\r\n    gpio-out \"clamp-io\" 1\r\n    gpio-out \"state-known\" 1\r\n    gpio-out \"power-on\" 1\r\n    gpio-in \"parent-on\" 1\r\n    gpio-in \"parent-known\" 1\r\n    gpio-in \"external-vote\" 1\r\n    gpio-in \"hw-enable\" 1\r\n    enabled-reference = false\r\n    reference-on = false\r\n    mmio 0000000003d9100c/0000000000000004\r\n    mmio ffffffffffffffff/0000000000000004\r\n    mmio 0000000003d91508/0000000000000004\r\n    mmio 0000000003d91008/0000000000000004\r\n  dev: qcom-gpu-cx-gdsc, id \"\"\r\n    gpio-out \"power-on\" 1\r\n    gpio-out \"state-known\" 1\r\n    gpio-in \"external-vote\" 1\r\n    gpio-in \"external-known\" 1\r\n    gpio-in \"parent-on\" 1\r\n    gpio-in \"parent-known\" 1\r\n    boot-collapsed-reference = false\r\n    transition-ns = 1000 (0x3e8)\r\n    mmio 0000000003d9106c/0000000000000004\r\n    mmio 0000000003d91540/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000001633008/0000000000000004\r\n    mmio 0000000001633018/0000000000000004\r\n    mmio 0000000001633040/0000000000000004\r\n    mmio 0000000001633048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000001632008/0000000000000004\r\n    mmio 0000000001632018/0000000000000004\r\n    mmio 0000000001632040/0000000000000004\r\n    mmio 0000000001632048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000001751008/0000000000000004\r\n    mmio 0000000001751018/0000000000000004\r\n    mmio 0000000001751040/0000000000000004\r\n    mmio 0000000001751048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000001750808/0000000000000004\r\n    mmio 0000000001750818/0000000000000004\r\n    mmio 0000000001750840/0000000000000004\r\n    mmio 0000000001750848/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000001750008/0000000000000004\r\n    mmio 0000000001750018/0000000000000004\r\n    mmio 0000000001750040/0000000000000004\r\n    mmio 0000000001750048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 000000000174f008/0000000000000004\r\n    mmio 000000000174f018/0000000000000004\r\n    mmio 000000000174f040/0000000000000004\r\n    mmio 000000000174f048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 000000000174e008/0000000000000004\r\n    mmio 000000000174e018/0000000000000004\r\n    mmio 000000000174e040/0000000000000004\r\n    mmio 000000000174e048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 000000000174d008/0000000000000004\r\n    mmio 000000000174d018/0000000000000004\r\n    mmio 000000000174d040/0000000000000004\r\n    mmio 000000000174d048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 000000000174c808/0000000000000004\r\n    mmio 000000000174c818/0000000000000004\r\n    mmio 000000000174c840/0000000000000004\r\n    mmio 000000000174c848/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 000000000174c008/0000000000000004\r\n    mmio 000000000174c018/0000000000000004\r\n    mmio 000000000174c040/0000000000000004\r\n    mmio 000000000174c048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 000000000174b008/0000000000000004\r\n    mmio 000000000174b018/0000000000000004\r\n    mmio 000000000174b040/0000000000000004\r\n    mmio 000000000174b048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 000000000174a808/0000000000000004\r\n    mmio 000000000174a818/0000000000000004\r\n    mmio 000000000174a840/0000000000000004\r\n    mmio 000000000174a848/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 000000000174a008/0000000000000004\r\n    mmio 000000000174a018/0000000000000004\r\n    mmio 000000000174a040/0000000000000004\r\n    mmio 000000000174a048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 00000000091a4008/0000000000000004\r\n    mmio 00000000091a4018/0000000000000004\r\n    mmio 00000000091a4040/0000000000000004\r\n    mmio 00000000091a4048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 00000000091a3008/0000000000000004\r\n    mmio 00000000091a3018/0000000000000004\r\n    mmio 00000000091a3040/0000000000000004\r\n    mmio 00000000091a3048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 00000000091a2008/0000000000000004\r\n    mmio 00000000091a2018/0000000000000004\r\n    mmio 00000000091a2040/0000000000000004\r\n    mmio 00000000091a2048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 00000000091a1008/0000000000000004\r\n    mmio 00000000091a1018/0000000000000004\r\n    mmio 00000000091a1040/0000000000000004\r\n    mmio 00000000091a1048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 00000000091a0008/0000000000000004\r\n    mmio 00000000091a0018/0000000000000004\r\n    mmio 00000000091a0040/0000000000000004\r\n    mmio 00000000091a0048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000009164008/0000000000000004\r\n    mmio 0000000009164018/0000000000000004\r\n    mmio 0000000009164040/0000000000000004\r\n    mmio 0000000009164048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000009163008/0000000000000004\r\n    mmio 0000000009163018/0000000000000004\r\n    mmio 0000000009163040/0000000000000004\r\n    mmio 0000000009163048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000009162008/0000000000000004\r\n    mmio 0000000009162018/0000000000000004\r\n    mmio 0000000009162040/0000000000000004\r\n    mmio 0000000009162048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000009161008/0000000000000004\r\n    mmio 0000000009161018/0000000000000004\r\n    mmio 0000000009161040/0000000000000004\r\n    mmio 0000000009161048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000009124008/0000000000000004\r\n    mmio 0000000009124018/0000000000000004\r\n    mmio 0000000009124040/0000000000000004\r\n    mmio 0000000009124048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000009123008/0000000000000004\r\n    mmio 0000000009123018/0000000000000004\r\n    mmio 0000000009123040/0000000000000004\r\n    mmio 0000000009123048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000009122008/0000000000000004\r\n    mmio 0000000009122018/0000000000000004\r\n    mmio 0000000009122040/0000000000000004\r\n    mmio 0000000009122048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000009121008/0000000000000004\r\n    mmio 0000000009121018/0000000000000004\r\n    mmio 0000000009121040/0000000000000004\r\n    mmio 0000000009121048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000001736808/0000000000000004\r\n    mmio 0000000001736818/0000000000000004\r\n    mmio 0000000001736840/0000000000000004\r\n    mmio 0000000001736848/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000001736008/0000000000000004\r\n    mmio 0000000001736018/0000000000000004\r\n    mmio 0000000001736040/0000000000000004\r\n    mmio 0000000001736048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 000000000170f008/0000000000000004\r\n    mmio 000000000170f018/0000000000000004\r\n    mmio 000000000170f040/0000000000000004\r\n    mmio 000000000170f048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 000000000170e008/0000000000000004\r\n    mmio 000000000170e018/0000000000000004\r\n    mmio 000000000170e040/0000000000000004\r\n    mmio 000000000170e048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 000000000170c008/0000000000000004\r\n    mmio 000000000170c018/0000000000000004\r\n    mmio 000000000170c040/0000000000000004\r\n    mmio 000000000170c048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 000000000170b008/0000000000000004\r\n    mmio 000000000170b018/0000000000000004\r\n    mmio 000000000170b040/0000000000000004\r\n    mmio 000000000170b048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 000000000170a008/0000000000000004\r\n    mmio 000000000170a018/0000000000000004\r\n    mmio 000000000170a040/0000000000000004\r\n    mmio 000000000170a048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000001707008/0000000000000004\r\n    mmio 0000000001707018/0000000000000004\r\n    mmio 0000000001707040/0000000000000004\r\n    mmio 0000000001707048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000001706008/0000000000000004\r\n    mmio 0000000001706018/0000000000000004\r\n    mmio 0000000001706040/0000000000000004\r\n    mmio 0000000001706048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000001705008/0000000000000004\r\n    mmio 0000000001705018/0000000000000004\r\n    mmio 0000000001705040/0000000000000004\r\n    mmio 0000000001705048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000001704008/0000000000000004\r\n    mmio 0000000001704018/0000000000000004\r\n    mmio 0000000001704040/0000000000000004\r\n    mmio 0000000001704048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000001703008/0000000000000004\r\n    mmio 0000000001703018/0000000000000004\r\n    mmio 0000000001703040/0000000000000004\r\n    mmio 0000000001703048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 00000000016ea008/0000000000000004\r\n    mmio 00000000016ea018/0000000000000004\r\n    mmio 00000000016ea040/0000000000000004\r\n    mmio 00000000016ea048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 00000000016e9008/0000000000000004\r\n    mmio 00000000016e9018/0000000000000004\r\n    mmio 00000000016e9040/0000000000000004\r\n    mmio 00000000016e9048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 00000000016e8008/0000000000000004\r\n    mmio 00000000016e8018/0000000000000004\r\n    mmio 00000000016e8040/0000000000000004\r\n    mmio 00000000016e8048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 00000000016e7008/0000000000000004\r\n    mmio 00000000016e7018/0000000000000004\r\n    mmio 00000000016e7040/0000000000000004\r\n    mmio 00000000016e7048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 00000000016e6008/0000000000000004\r\n    mmio 00000000016e6018/0000000000000004\r\n    mmio 00000000016e6040/0000000000000004\r\n    mmio 00000000016e6048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 00000000016e5008/0000000000000004\r\n    mmio 00000000016e5018/0000000000000004\r\n    mmio 00000000016e5040/0000000000000004\r\n    mmio 00000000016e5048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 00000000016e4008/0000000000000004\r\n    mmio 00000000016e4018/0000000000000004\r\n    mmio 00000000016e4040/0000000000000004\r\n    mmio 00000000016e4048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 00000000016e3008/0000000000000004\r\n    mmio 00000000016e3018/0000000000000004\r\n    mmio 00000000016e3040/0000000000000004\r\n    mmio 00000000016e3048/0000000000000004\r\n  dev: qcom-noc-qos, id \"\"\r\n    enabled-reference = false\r\n    mmio 00000000016e2008/0000000000000004\r\n    mmio 00000000016e2018/0000000000000004\r\n    mmio 00000000016e2040/0000000000000004\r\n    mmio 00000000016e2048/0000000000000004\r\n  dev: qcom-npu-gdsc, id \"\"\r\n    gpio-out \"state-known\" 1\r\n    gpio-out \"power\" 1\r\n    gpio-in \"hw-request\" 1\r\n    gpio-in \"hw-request-known\" 1\r\n    gpio-in \"parent-on\" 1\r\n    gpio-in \"parent-known\" 1\r\n    enabled-reference = false\r\n    mmio 0000000009981004/0000000000000004\r\n  dev: qcom-sm8250-videocc, id \"\"\r\n    gpio-out \"reset\" 7\r\n    gpio-in \"remote-vote\" 4\r\n    clock-out \"video_pll1\" freq_hz=0 Hz\r\n    clock-out \"video_pll0\" freq_hz=0 Hz\r\n    clock-out \"video_cc_xo_clk_src\" freq_hz=0 Hz\r\n    clock-out \"video_cc_xo_clk\" freq_hz=0 Hz\r\n    clock-out \"video_cc_sleep_clk_src\" freq_hz=0 Hz\r\n    clock-out \"video_cc_sleep_clk\" freq_hz=0 Hz\r\n    clock-out \"video_cc_mvs1c_div2_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"video_cc_mvs1c_clk\" freq_hz=0 Hz\r\n    clock-out \"video_cc_mvs1_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"video_cc_mvs1_div2_clk\" freq_hz=0 Hz\r\n    clock-out \"video_cc_mvs1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"video_cc_mvs1_clk\" freq_hz=0 Hz\r\n    clock-out \"video_cc_mvs0c_div2_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"video_cc_mvs0c_clk\" freq_hz=0 Hz\r\n    clock-out \"video_cc_mvs0_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"video_cc_mvs0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"video_cc_mvs0_clk\" freq_hz=0 Hz\r\n    clock-out \"video_cc_ahb_clk_src\" freq_hz=0 Hz\r\n    clock-out \"video_cc_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"chip_sleep_clk\" freq_hz=0 Hz\r\n    clock-in \"core_bi_pll_test_se\" freq_hz=0 Hz\r\n    clock-in \"bi_tcxo_ao\" freq_hz=19.2 MHz\r\n    clock-in \"bi_tcxo\" freq_hz=19.2 MHz\r\n    enabled-reference = false\r\n    mmio 000000000abf0000/0000000000010000\r\n  dev: qcom-sm8250-camcc, id \"\"\r\n    gpio-out \"reset\" 6\r\n    clock-out \"cam_cc_xo_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_slow_ahb_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_sleep_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_sleep_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_sbi_ife_1_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_sbi_ife_0_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_sbi_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_sbi_csid_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_sbi_csid_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_sbi_cphy_rx_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_sbi_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_sbi_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_sbi_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_pll4_out_even\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_pll4\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_pll3_out_even\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_pll3\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_pll2_out_main\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_pll2\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_pll1_out_even\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_pll1\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_pll0_out_odd\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_pll0_out_even\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_pll0\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_mclk6_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_mclk6_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_mclk5_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_mclk5_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_mclk4_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_mclk4_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_mclk3_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_mclk3_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_mclk2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_mclk2_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_mclk1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_mclk1_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_mclk0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_mclk0_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_jpeg_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_jpeg_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ipe_0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ipe_0_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ipe_0_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ipe_0_areg_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ipe_0_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_lite_csid_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_lite_csid_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_lite_cphy_rx_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_lite_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_lite_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_lite_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_lite_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_1_dsp_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_1_csid_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_1_csid_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_1_cphy_rx_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_1_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_1_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_1_areg_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_1_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_0_dsp_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_0_csid_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_0_csid_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_0_cphy_rx_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_0_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_0_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_0_areg_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_ife_0_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_icp_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_icp_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_icp_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_gdsc_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_fd_core_uar_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_fd_core_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_fd_core_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_fast_ahb_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csiphy5_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csiphy4_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csiphy3_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csiphy2_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csiphy1_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csiphy0_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csi5phytimer_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csi5phytimer_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csi4phytimer_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csi4phytimer_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csi3phytimer_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csi3phytimer_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csi2phytimer_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csi2phytimer_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csi1phytimer_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csi1phytimer_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csi0phytimer_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_csi0phytimer_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_cphy_rx_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_cpas_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_core_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_cci_1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_cci_1_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_cci_0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_cci_0_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_camnoc_dcd_xo_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_camnoc_axi_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_camnoc_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_bps_clk_src\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_bps_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_bps_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_bps_areg_clk\" freq_hz=0 Hz\r\n    clock-out \"cam_cc_bps_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"cam_cc_pll2_out_aux2\" freq_hz=0 Hz\r\n    clock-in \"chip_sleep_clk\" freq_hz=0 Hz\r\n    clock-in \"core_bi_pll_test_se\" freq_hz=0 Hz\r\n    clock-in \"bi_tcxo_ao\" freq_hz=19.2 MHz\r\n    clock-in \"bi_tcxo\" freq_hz=19.2 MHz\r\n    enabled-reference = false\r\n    mmio 000000000ad00000/0000000000010000\r\n  dev: qcom-sm8250-npucc, id \"\"\r\n    gpio-out \"reset\" 7\r\n    gpio-in \"remote-vote\" 33\r\n    clock-out \"npu_cc_xo_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_s2p_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_rsc_xo_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_noc_dma_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_noc_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_noc_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_llm_xo_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_llm_temp_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_llm_curr_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_llm_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_isense_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_dsp_bwmon_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_dsp_bwmon_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_dsp_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_dsp_ahbs_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_dsp_ahbm_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_dpm_xo_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_dpm_temp_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_dpm_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_dl_llm_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_dl_dpm_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_core_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_cal_hm1_perf_cnt_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_cal_hm1_dpm_ip_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_cal_hm1_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_cal_hm1_cdc_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_cal_hm0_perf_cnt_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_cal_hm0_dpm_ip_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_cal_hm0_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_cal_hm0_cdc_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_bwmon_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_bto_core_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_atb_clk\" freq_hz=0 Hz\r\n    clock-out \"npu_dsp_core_clk_src\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_xo_clk_src\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_cal_hm1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_cal_hm0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_lmh_clk_src\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_core_clk_src\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_crc_div\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_pll1_out_even\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_pll0_out_even\" freq_hz=0 Hz\r\n    clock-out \"npu_q6ss_pll\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_pll1\" freq_hz=0 Hz\r\n    clock-out \"npu_cc_pll0\" freq_hz=0 Hz\r\n    clock-in \"npu_cc_noc_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_noc_dma_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_noc_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"npu_s2p_clk\" freq_hz=0 Hz\r\n    clock-in \"npu_llm_curr_clk\" freq_hz=0 Hz\r\n    clock-in \"npu_llm_temp_clk\" freq_hz=0 Hz\r\n    clock-in \"qdss_qmp_clk\" freq_hz=0 Hz\r\n    clock-in \"core_bi_pll_test_se\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_gpll0_div_clk_src\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_gpll0_clk_src\" freq_hz=0 Hz\r\n    clock-in \"bi_tcxo_ao\" freq_hz=19.2 MHz\r\n    clock-in \"bi_tcxo\" freq_hz=19.2 MHz\r\n    enabled-reference = false\r\n    mmio 0000000009980000/0000000000000044\r\n    mmio 0000000009980400/0000000000000044\r\n    mmio 0000000009981000/0000000000000004\r\n    mmio 0000000009981010/0000000000000008\r\n    mmio 0000000009981030/0000000000000004\r\n    mmio 0000000009981060/0000000000000008\r\n    mmio 0000000009981074/000000000000000c\r\n    mmio 0000000009981090/0000000000000024\r\n    mmio 00000000099810b8/0000000000000004\r\n    mmio 00000000099810c0/0000000000000024\r\n    mmio 00000000099810f0/0000000000000004\r\n    mmio 0000000009981100/0000000000000008\r\n    mmio 0000000009981110/0000000000000004\r\n    mmio 0000000009981130/0000000000000004\r\n    mmio 0000000009981140/0000000000000008\r\n    mmio 0000000009981150/0000000000000004\r\n    mmio 00000000099811a0/0000000000000008\r\n    mmio 00000000099811b0/0000000000000008\r\n    mmio 0000000009981200/0000000000000004\r\n    mmio 0000000009981210/0000000000000010\r\n    mmio 0000000009981224/0000000000000004\r\n    mmio 0000000009981234/0000000000000008\r\n    mmio 0000000009981400/0000000000000008\r\n    mmio 0000000009981410/0000000000000004\r\n    mmio 0000000009800028/0000000000000008\r\n    mmio 0000000009810000/0000000000000044\r\n  dev: qcom-sm8250-gpucc, id \"\"\r\n    gpio-out \"reset\" 5\r\n    gpio-in \"remote-vote\" 15\r\n    clock-out \"gpu_cc_hlos1_vote_gpu_smmu_clk\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_sleep_clk\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_gx_vsense_clk\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_gx_qdss_tsctr_clk\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_gx_gmu_clk\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_cxo_clk\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_cxo_aon_clk\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_cx_snoc_dvm_clk\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_cx_qdss_tsctr_clk\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_cx_qdss_trig_clk\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_cx_qdss_at_clk\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_cx_gmu_clk\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_cx_apb_clk\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_crc_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_gmu_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gpu_cc_pll1\" freq_hz=0 Hz\r\n    clock-in \"gpu_cc_hlos1_vote_gpu_smmu_clk_parent\" freq_hz=0 Hz\r\n    clock-in \"gpu_cc_sleep_clk_parent\" freq_hz=0 Hz\r\n    clock-in \"gpu_cc_gx_vsense_clk_parent\" freq_hz=0 Hz\r\n    clock-in \"gpu_cc_cxo_clk_parent\" freq_hz=0 Hz\r\n    clock-in \"gpu_cc_cxo_aon_clk_parent\" freq_hz=0 Hz\r\n    clock-in \"gpu_cc_cx_snoc_dvm_clk_parent\" freq_hz=0 Hz\r\n    clock-in \"gpu_cc_cx_apb_clk_parent\" freq_hz=0 Hz\r\n    clock-in \"gpu_cc_crc_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-in \"gpu_cc_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-in \"qdss_qmp_clk\" freq_hz=0 Hz\r\n    clock-in \"core_bi_pll_test_se\" freq_hz=0 Hz\r\n    clock-in \"gcc_gpu_gpll0_div_clk_src\" freq_hz=0 Hz\r\n    clock-in \"gcc_gpu_gpll0_clk_src\" freq_hz=0 Hz\r\n    clock-in \"gpu_cc_pll0\" freq_hz=0 Hz\r\n    clock-in \"xo\" freq_hz=19.2 MHz\r\n    enabled-reference = false\r\n    mmio 0000000003d90100/0000000000000044\r\n    mmio 0000000003d91000/0000000000000008\r\n    mmio 0000000003d91058/0000000000000014\r\n    mmio 0000000003d91078/000000000000002c\r\n    mmio 0000000003d9111c/000000000000000c\r\n    mmio 0000000003d91160/0000000000000004\r\n    mmio 0000000003d95000/0000000000000004\r\n  dev: qcom-noc-sbm, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000001506080/0000000000000004\r\n    mmio 0000000001506088/0000000000000004\r\n    mmio 0000000001506100/0000000000000004\r\n  dev: qcom-devfreq-fw, id \"\"\r\n    enabled-reference = false\r\n    reference-boot-perf-index = 0 (0x0)\r\n    mmio 0000000018590000/0000000000000004\r\n    mmio 0000000018590100/00000000000000a0\r\n    mmio 0000000018590320/0000000000000004\r\n  dev: qcom-cpufreq-hw-epss, id \"\"\r\n    gpio-out \"sysbus-irq\" 1\r\n    clock-out \"cpu-frequency\" freq_hz=0 Hz\r\n    clock-in \"alternate\" freq_hz=600 MHz\r\n    clock-in \"xo\" freq_hz=19.2 MHz\r\n    enabled-reference = false\r\n    domain-id = 2 (0x2)\r\n    reference-boot-perf-index = 0 (0x0)\r\n    mmio 0000000018593000/0000000000001000\r\n  dev: qcom-cpufreq-hw-epss, id \"\"\r\n    gpio-out \"sysbus-irq\" 1\r\n    clock-out \"cpu-frequency\" freq_hz=0 Hz\r\n    clock-in \"alternate\" freq_hz=600 MHz\r\n    clock-in \"xo\" freq_hz=19.2 MHz\r\n    enabled-reference = false\r\n    domain-id = 1 (0x1)\r\n    reference-boot-perf-index = 0 (0x0)\r\n    mmio 0000000018592000/0000000000001000\r\n  dev: qcom-cpufreq-hw-epss, id \"\"\r\n    gpio-out \"sysbus-irq\" 1\r\n    clock-out \"cpu-frequency\" freq_hz=0 Hz\r\n    clock-in \"alternate\" freq_hz=600 MHz\r\n    clock-in \"xo\" freq_hz=19.2 MHz\r\n    enabled-reference = false\r\n    domain-id = 0 (0x0)\r\n    reference-boot-perf-index = 0 (0x0)\r\n    mmio 0000000018591000/0000000000001000\r\n  dev: qcom-sm8250-gcc, id \"\"\r\n    gpio-in \"hw-request\" 200\r\n    gpio-in \"remote-vote\" 200\r\n    gpio-out \"power\" 11\r\n    gpio-out \"reset\" 45\r\n    clock-in \"gcc_video_xo_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_video_xo_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_video_axi1_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_video_axi1_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_video_axi0_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_video_axi0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_video_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_video_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_phy_pipe_clk_src\" freq_hz=0 Hz\r\n    clock-in \"gcc_usb3_sec_phy_pipe_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_phy_pipe_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_phy_com_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_phy_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_phy_aux_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_usb3_sec_clkref_en_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_sec_clkref_en\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_prim_phy_pipe_clk_src\" freq_hz=0 Hz\r\n    clock-in \"gcc_usb3_prim_phy_pipe_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_prim_phy_pipe_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_prim_phy_com_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_prim_phy_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb3_prim_phy_aux_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_usb30_sec_sleep_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_sleep_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_mock_utmi_postdiv_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_mock_utmi_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_mock_utmi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_master_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_sec_master_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_usb30_prim_sleep_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_sleep_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_mock_utmi_postdiv_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_mock_utmi_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_mock_utmi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_master_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_usb30_prim_master_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_unipro_core_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_unipro_core_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_phy_tx_symbol_0_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_tx_symbol_0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_phy_rx_symbol_1_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_rx_symbol_1_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_phy_rx_symbol_0_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_rx_symbol_0_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_phy_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_phy_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_ice_core_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_ice_core_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_axi_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_phy_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_phy_ahb_clk_parent\" freq_hz=100 MHz\r\n    clock-out \"gcc_ufs_phy_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_unipro_core_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_unipro_core_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_card_tx_symbol_0_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_tx_symbol_0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_card_rx_symbol_1_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_rx_symbol_1_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_card_rx_symbol_0_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_rx_symbol_0_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_phy_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_phy_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_ice_core_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_ice_core_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_axi_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_card_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ufs_card_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ufs_1x_clkref_en_parent\" freq_hz=19.2 MHz\r\n    clock-out \"gcc_ufs_1x_clkref_en\" freq_hz=0 Hz\r\n    clock-out \"gcc_tsif_ref_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_tsif_ref_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_tsif_inactivity_timers_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_tsif_inactivity_timers_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_tsif_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_tsif_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_sys_noc_cpuss_ahb_clk\" freq_hz=19.2 MHz\r\n    clock-out \"gcc_sdcc4_apps_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_sdcc4_apps_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_sdcc4_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_sdcc4_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_sdcc2_apps_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_sdcc2_apps_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_sdcc2_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_sdcc2_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap_2_s_ahb_clk_parent\" freq_hz=100 MHz\r\n    clock-out \"gcc_qupv3_wrap_2_s_ahb_clk\" freq_hz=100 MHz\r\n    clock-in \"gcc_qupv3_wrap_2_m_ahb_clk_parent\" freq_hz=100 MHz\r\n    clock-out \"gcc_qupv3_wrap_2_m_ahb_clk\" freq_hz=100 MHz\r\n    clock-in \"gcc_qupv3_wrap_1_s_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap_1_s_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap_1_m_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap_1_m_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap_0_s_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap_0_s_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap_0_m_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap_0_m_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s5_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s5_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s4_clk_src\" freq_hz=7.37 MHz\r\n    clock-out \"gcc_qupv3_wrap2_s4_clk\" freq_hz=7.37 MHz\r\n    clock-out \"gcc_qupv3_wrap2_s3_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s3_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s2_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s1_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_s0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap2_core_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_core_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap2_core_2x_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap2_core_2x_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s5_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s5_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s4_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s4_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s3_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s3_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s2_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s1_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_s0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap1_core_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_core_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap1_core_2x_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap1_core_2x_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s7_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s7_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s6_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s6_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s5_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s5_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s4_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s4_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s3_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s3_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s2_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s1_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s0_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_s0_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap0_core_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_core_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qupv3_wrap0_core_2x_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qupv3_wrap0_core_2x_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qmip_video_vcodec_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qmip_video_vcodec_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qmip_video_cvp_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qmip_video_cvp_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qmip_disp_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qmip_disp_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qmip_camera_rt_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qmip_camera_rt_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_qmip_camera_nrt_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_qmip_camera_nrt_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_prng_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_prng_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pdm_xo4_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pdm_xo4_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pdm_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pdm_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pdm2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_pdm2_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_wigig_clkref_en_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_wigig_clkref_en\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_wifi_clkref_en_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_wifi_clkref_en\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_phy_refgen_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_phy_aux_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_mdm_clkref_en_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_mdm_clkref_en\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_2_slv_q2a_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_slv_q2a_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_2_slv_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_slv_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_2_pipe_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_pipe_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_2_mstr_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_mstr_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_2_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_2_aux_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_1_slv_q2a_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_slv_q2a_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_1_slv_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_slv_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_1_pipe_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_pipe_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_1_mstr_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_mstr_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_1_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_1_aux_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_0_slv_q2a_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_slv_q2a_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_0_slv_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_slv_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_0_pipe_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_pipe_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_0_mstr_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_mstr_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_pcie_0_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_aux_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie_0_aux_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie2_phy_refgen_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie1_phy_refgen_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_pcie0_phy_refgen_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_gpll0_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_gpll0_clk_src\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_dma_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_dma_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_bwmon_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_bwmon_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_bwmon_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_bwmon_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_npu_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_npu_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_gpu_snoc_dvm_gfx_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_snoc_dvm_gfx_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_gpu_memnoc_gfx_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_memnoc_gfx_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_gpu_iref_en_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_iref_en\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_gpll0_div_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_gpll0_clk_src\" freq_hz=0 Hz\r\n    clock-in \"gcc_gpu_cfg_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_gpu_cfg_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp3_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp3_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp2_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp2_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp1_clk_src\" freq_hz=0 Hz\r\n    clock-out \"gcc_gp1_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_disp_xo_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_disp_xo_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_disp_sf_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_disp_sf_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_disp_hf_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_disp_hf_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_disp_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_disp_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ddrss_pcie_sf_tbu_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ddrss_pcie_sf_tbu_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_ddrss_gpu_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_ddrss_gpu_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_cpuss_rbcpr_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_cpuss_rbcpr_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_cpuss_dvm_bus_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_cpuss_dvm_bus_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_cpuss_ahb_postdiv_clk_src\" freq_hz=19.2 MHz\r\n    clock-out \"gcc_cpuss_ahb_clk_src\" freq_hz=19.2 MHz\r\n    clock-out \"gcc_cpuss_ahb_clk\" freq_hz=19.2 MHz\r\n    clock-out \"gcc_cfg_noc_usb3_sec_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_cfg_noc_usb3_prim_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_camera_xo_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_camera_xo_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_camera_sf_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_camera_sf_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_camera_hf_axi_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_camera_hf_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_camera_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_camera_ahb_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_boot_rom_ahb_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_boot_rom_ahb_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_aggre_usb3_sec_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_aggre_usb3_prim_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_aggre_ufs_phy_axi_clk\" freq_hz=0 Hz\r\n    clock-out \"gcc_aggre_ufs_card_axi_clk\" freq_hz=0 Hz\r\n    clock-in \"gcc_aggre_noc_pcie_tbu_clk_parent\" freq_hz=0 Hz\r\n    clock-out \"gcc_aggre_noc_pcie_tbu_clk\" freq_hz=0 Hz\r\n    clock-out \"gpll9\" freq_hz=0 Hz\r\n    clock-out \"gpll4\" freq_hz=0 Hz\r\n    clock-out \"gpll0_out_even\" freq_hz=300 MHz\r\n    clock-out \"gpll0\" freq_hz=600 MHz\r\n    clock-in \"core_bi_pll_test_se\" freq_hz=0 Hz\r\n    clock-in \"audio\" freq_hz=0 Hz\r\n    clock-in \"sleep\" freq_hz=32 KHz\r\n    clock-in \"xo\" freq_hz=19.2 MHz\r\n    boot-configured = true\r\n    mmio 0000000000100000/00000000001f0000\r\n  dev: qcom-sm8250-tbu-debug, id \"\"\r\n    smmu = \"/machine/apps-smmu\"\r\n    reference-profile = 0 (0x0)\r\n    reference-version = 33554432 (0x2000000)\r\n    operation-latency-ns = 1000 (0x3e8)\r\n    mmio ffffffffffffffff/0000000000000020\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio ffffffffffffffff/0000000000000008\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio ffffffffffffffff/0000000000000008\r\n  dev: qcom-smmuv500, id \"\"\r\n    enabled-reference = false\r\n    reference-hw-version = 0 (0x0)\r\n    smmu = \"/machine/apps-smmu\"\r\n    mmio 0000000015182000/0000000000028000\r\n  dev: arm-smmuv2, id \"\"\r\n    gpio-out \"sysbus-irq\" 10\r\n    mmio-size = 65536 (0x10000)\r\n    num-context-banks = 8 (0x8)\r\n    num-smrs = 128 (0x80)\r\n    aarch64-granules = 1 (0x1)\r\n    memory = \"/machine/unattached/system[0]\"\r\n    mmio 0000000003da0000/0000000000010000\r\n  dev: arm-smmuv2, id \"\"\r\n    gpio-out \"sysbus-irq\" 98\r\n    mmio-size = 1048576 (0x100000)\r\n    num-context-banks = 96 (0x60)\r\n    num-smrs = 128 (0x80)\r\n    aarch64-granules = 1 (0x1)\r\n    memory = \"/machine/unattached/system[0]\"\r\n    mmio 0000000015000000/0000000000100000\r\n  dev: qcom-tb371fc-tlmm, id \"\"\r\n    gpio-out \"ufs-reset\" 1\r\n    gpio-out \"gpio-oe\" 180\r\n    gpio-out \"gpio-out\" 180\r\n    gpio-in \"gpio-in\" 180\r\n    gpio-out \"sysbus-irq\" 1\r\n    boot-ufs-reset-high = true\r\n    mmio 000000000f000000/0000000001000000\r\n  dev: qcom-refgen, id \"\"\r\n    gpio-out \"state-known\" 1\r\n    gpio-out \"software-enable\" 1\r\n    boot-disabled-reference = false\r\n    mmio 00000000088e7080/0000000000000004\r\n  dev: qcom-aop-msgram, id \"\"\r\n    mmio 000000000c300000/0000000000001000\r\n  dev: qcom-smem-handoff, id \"\"\r\n    ram = \"/objects/tb371fc.ram/tb371fc.ram[0]\"\r\n    reference-empty = false\r\n  dev: qcom-tcsr-mutex, id \"\"\r\n    boot-unlocked-reference = false\r\n    mmio 0000000001f40000/0000000000020000\r\n  dev: qcom-sm8250-ddr-stats-offset, id \"\"\r\n    enabled-reference = false\r\n    mmio 000000000c3f001c/0000000000000004\r\n  dev: qcom-sm8250-rpm-stats-offset, id \"\"\r\n    enabled-reference = false\r\n    mmio 000000000c3f0004/0000000000000004\r\n  dev: qcom-sm8250-spss-irq-mask, id \"\"\r\n    enabled-reference = false\r\n    mmio 0000000001881028/0000000000000004\r\n  dev: qcom-qsee-irq, id \"\"\r\n    gpio-in \"notify\" 8\r\n    gpio-out \"sysbus-irq\" 2\r\n    mmio 0000000001886000/0000000000000020\r\n    mmio 0000000001888000/0000000000000020\r\n  dev: qcom-ipcc, id \"\"\r\n    gpio-out \"sysbus-irq\" 1\r\n    local-client-id = 8 (0x8)\r\n    mmio 0000000000408000/0000000000001000\r\n  dev: qcom-dcc-v2, id \"\"\r\n    memory = \"/machine/unattached/system[0]\"\r\n    capture-delay-ns = 1000 (0x3e8)\r\n    mmio 0000000001023000/0000000000001000\r\n    mmio 000000000103a000/0000000000006000\r\n  dev: qcom-pshold, id \"\"\r\n    gpio-out \"ps-hold\" 1\r\n    mmio 000000000c264000/0000000000000004\r\n  dev: qcom-kpss-watchdog, id \"\"\r\n    gpio-out \"wakeup\" 1\r\n    gpio-out \"sysbus-irq\" 2\r\n    frequency = 32765 (0x7ffd)\r\n    mmio 0000000017c10000/0000000000001000\r\n  dev: qcom-tsens24xx, id \"\"\r\n    gpio-out \"sysbus-irq\" 2\r\n    enabled-reference = false\r\n    controller-id = 1 (0x1)\r\n    reference-boot-enable-mask = 0 (0x0)\r\n    reference-temperature-millicelsius = -2147483648 (0xffffffff80000000)\r\n    mmio 000000000c223004/0000000000000004\r\n    mmio 000000000c265000/00000000000001ff\r\n  dev: qcom-tsens24xx, id \"\"\r\n    gpio-out \"sysbus-irq\" 2\r\n    enabled-reference = false\r\n    controller-id = 0 (0x0)\r\n    reference-boot-enable-mask = 0 (0x0)\r\n    reference-temperature-millicelsius = -2147483648 (0xffffffff80000000)\r\n    mmio 000000000c222004/0000000000000004\r\n    mmio 000000000c263000/00000000000001ff\r\n  dev: qcom-mpm2-sleep-counter, id \"\"\r\n    clock-frequency = 32768 (0x8000)\r\n    mmio 000000000c221000/0000000000000004\r\n  dev: arm-arch-timer-mmio, id \"\"\r\n    gpio-out \"sysbus-irq\" 14\r\n    num-frames = 7 (0x7)\r\n    frequency = 19200000 (0x124f800)\r\n    exact-frequency = true\r\n    virtual-frame-mask = 1 (0x1)\r\n    el0-frame-mask = 1 (0x1)\r\n    reset-ns-access = 1 (0x1)\r\n    mmio 0000000017c20000/0000000000001000\r\n    mmio 0000000017c21000/0000000000001000\r\n    mmio 0000000017c22000/0000000000001000\r\n    mmio 0000000017c23000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio 0000000017c25000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio 0000000017c27000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio 0000000017c29000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio 0000000017c2b000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n    mmio 0000000017c2d000/0000000000001000\r\n    mmio ffffffffffffffff/0000000000001000\r\n  dev: qcom-pdc, id \"\"\r\n    gpio-out \"sysbus-irq\" 138\r\n    gpio-in \"irq-in\" 138\r\n    num-pins = 138 (0x8a)\r\n    reference-version = 0 (0x0)\r\n    mmio 000000000b220000/0000000000030000\r\n    mmio 0000000017c000f0/0000000000000060\r\n  dev: arm-gicv3, id \"\"\r\n    gpio-out \"sysbus-irq\" 48\r\n    gpio-in \"\" 1216\r\n    num-cpu = 8 (0x8)\r\n    num-irq = 992 (0x3e0)\r\n    revision = 3 (0x3)\r\n    has-lpi = false\r\n    has-nmi = false\r\n    has-security-extensions = false\r\n    maintenance-interrupt-id = 0 (0x0)\r\n    force-8-bit-prio = false\r\n    redist-region-count = 8 (0x8)\r\n    sysmem = \"\"\r\n    first-cpu-index = 0 (0x0)\r\n    mmio 0000000017a00000/0000000000010000\r\n    mmio 0000000017a60000/0000000000100000\r\n",
+2026-11-25T04:27:28.2584259Z             "id": 12
+2026-11-25T04:27:28.2584331Z           }
+2026-11-25T04:27:28.2584398Z         },
+2026-11-25T04:27:28.2584455Z         {
+2026-11-25T04:27:28.2584533Z           "direction": "send",
+2026-11-25T04:27:28.2584606Z           "command": "migrate",
+2026-11-25T04:27:28.2584681Z           "arguments": {
+2026-11-25T04:27:28.2584923Z             "uri": "file:/home/runner/work/_temp/tb371fc-results/linux-ufs-pm-migration/checkpoint.migration"
+2026-11-25T04:27:28.2584994Z           }
+2026-11-25T04:27:28.2585057Z         },
+2026-11-25T04:27:28.2585116Z         {
+2026-11-25T04:27:28.2585193Z           "direction": "receive",
+2026-11-25T04:27:28.2585256Z           "message": {
+2026-11-25T04:27:28.2585331Z             "return": {},
+2026-11-25T04:27:28.2585392Z             "id": 13
+2026-11-25T04:27:28.2585455Z           }
+2026-11-25T04:27:28.2585511Z         },
+2026-11-25T04:27:28.2585575Z         {
+2026-11-25T04:27:28.2585648Z           "direction": "send",
+2026-11-25T04:27:28.2585726Z           "command": "query-migrate",
+2026-11-25T04:27:28.2585798Z           "arguments": null
+2026-11-25T04:27:28.2585858Z         },
+2026-11-25T04:27:28.2585919Z         {
+2026-11-25T04:27:28.2585989Z           "direction": "receive",
+2026-11-25T04:27:28.2586133Z           "message": {
+2026-11-25T04:27:28.2586198Z             "return": {
+2026-11-25T04:27:28.2586272Z               "status": "setup"
+2026-11-25T04:27:28.2586337Z             },
+2026-11-25T04:27:28.2586396Z             "id": 14
+2026-11-25T04:27:28.2586459Z           }
+2026-11-25T04:27:28.2586516Z         },
+2026-11-25T04:27:28.2586579Z         {
+2026-11-25T04:27:28.2586645Z           "direction": "send",
+2026-11-25T04:27:28.2586727Z           "command": "query-migrate",
+2026-11-25T04:27:28.2586791Z           "arguments": null
+2026-11-25T04:27:28.2586858Z         },
+2026-11-25T04:27:28.2586924Z         {
+2026-11-25T04:27:28.2586990Z           "direction": "receive",
+2026-11-25T04:27:28.2587057Z           "message": {
+2026-11-25T04:27:28.2587117Z             "return": {
+2026-11-25T04:27:28.2587205Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2587356Z               "remaining": 8589967360,
+2026-11-25T04:27:28.2587429Z               "status": "active",
+2026-11-25T04:27:28.2587501Z               "setup-time": 2,
+2026-11-25T04:27:28.2587574Z               "total-time": 53,
+2026-11-25T04:27:28.2587638Z               "ram": {
+2026-11-25T04:27:28.2587705Z                 "total": 8589967360,
+2026-11-25T04:27:28.2587792Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2587863Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2587941Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2588013Z                 "pages-per-second": 0,
+2026-11-25T04:27:28.2588097Z                 "downtime-bytes": 13490174,
+2026-11-25T04:27:28.2588166Z                 "page-size": 4096,
+2026-11-25T04:27:28.2588245Z                 "remaining": 7918485504,
+2026-11-25T04:27:28.2588320Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2588387Z                 "mbps": 0,
+2026-11-25T04:27:28.2588462Z                 "transferred": 13490372,
+2026-11-25T04:27:28.2588556Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2588631Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2588702Z                 "duplicate": 161002,
+2026-11-25T04:27:28.2588780Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2588856Z                 "normal-bytes": 12017664,
+2026-11-25T04:27:28.2588920Z                 "normal": 2934
+2026-11-25T04:27:28.2588985Z               }
+2026-11-25T04:27:28.2589043Z             },
+2026-11-25T04:27:28.2589108Z             "id": 15
+2026-11-25T04:27:28.2589165Z           }
+2026-11-25T04:27:28.2589230Z         },
+2026-11-25T04:27:28.2589285Z         {
+2026-11-25T04:27:28.2589359Z           "direction": "send",
+2026-11-25T04:27:28.2589438Z           "command": "query-migrate",
+2026-11-25T04:27:28.2589503Z           "arguments": null
+2026-11-25T04:27:28.2589565Z         },
+2026-11-25T04:27:28.2589620Z         {
+2026-11-25T04:27:28.2589695Z           "direction": "receive",
+2026-11-25T04:27:28.2589762Z           "message": {
+2026-11-25T04:27:28.2589832Z             "return": {
+2026-11-25T04:27:28.2589906Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2589981Z               "remaining": 7918485504,
+2026-11-25T04:27:28.2590051Z               "status": "active",
+2026-11-25T04:27:28.2590115Z               "setup-time": 2,
+2026-11-25T04:27:28.2590280Z               "total-time": 103,
+2026-11-25T04:27:28.2590339Z               "ram": {
+2026-11-25T04:27:28.2590412Z                 "total": 8589967360,
+2026-11-25T04:27:28.2590486Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2590562Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2590638Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2590720Z                 "pages-per-second": 1639360,
+2026-11-25T04:27:28.2590799Z                 "downtime-bytes": 13822517,
+2026-11-25T04:27:28.2590867Z                 "page-size": 4096,
+2026-11-25T04:27:28.2590943Z                 "remaining": 7832453120,
+2026-11-25T04:27:28.2591015Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2591086Z                 "mbps": 1079.22976,
+2026-11-25T04:27:28.2591264Z                 "transferred": 13797838,
+2026-11-25T04:27:28.2591360Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2591434Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2591499Z                 "duplicate": 181969,
+2026-11-25T04:27:28.2591575Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2591646Z                 "normal-bytes": 12161024,
+2026-11-25T04:27:28.2591716Z                 "normal": 2969
+2026-11-25T04:27:28.2591775Z               }
+2026-11-25T04:27:28.2591840Z             },
+2026-11-25T04:27:28.2591898Z             "id": 16
+2026-11-25T04:27:28.2591965Z           }
+2026-11-25T04:27:28.2592030Z         },
+2026-11-25T04:27:28.2592088Z         {
+2026-11-25T04:27:28.2592178Z           "direction": "send",
+2026-11-25T04:27:28.2592254Z           "command": "query-migrate",
+2026-11-25T04:27:28.2592422Z           "arguments": null
+2026-11-25T04:27:28.2592479Z         },
+2026-11-25T04:27:28.2592543Z         {
+2026-11-25T04:27:28.2592614Z           "direction": "receive",
+2026-11-25T04:27:28.2592689Z           "message": {
+2026-11-25T04:27:28.2592760Z             "return": {
+2026-11-25T04:27:28.2592839Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2592921Z               "remaining": 6576828416,
+2026-11-25T04:27:28.2592989Z               "status": "active",
+2026-11-25T04:27:28.2593063Z               "setup-time": 2,
+2026-11-25T04:27:28.2593133Z               "total-time": 154,
+2026-11-25T04:27:28.2593201Z               "ram": {
+2026-11-25T04:27:28.2593273Z                 "total": 8589967360,
+2026-11-25T04:27:28.2593349Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2593427Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2593497Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2593588Z                 "pages-per-second": 1639360,
+2026-11-25T04:27:28.2593672Z                 "downtime-bytes": 16757605,
+2026-11-25T04:27:28.2593752Z                 "page-size": 4096,
+2026-11-25T04:27:28.2593824Z                 "remaining": 6496661504,
+2026-11-25T04:27:28.2593905Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2593979Z                 "mbps": 1079.22976,
+2026-11-25T04:27:28.2594052Z                 "transferred": 16745532,
+2026-11-25T04:27:28.2594148Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2594216Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2594292Z                 "duplicate": 508088,
+2026-11-25T04:27:28.2594364Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2594443Z                 "normal-bytes": 12161024,
+2026-11-25T04:27:28.2594514Z                 "normal": 2969
+2026-11-25T04:27:28.2594576Z               }
+2026-11-25T04:27:28.2594640Z             },
+2026-11-25T04:27:28.2594702Z             "id": 17
+2026-11-25T04:27:28.2594769Z           }
+2026-11-25T04:27:28.2594828Z         },
+2026-11-25T04:27:28.2594898Z         {
+2026-11-25T04:27:28.2594963Z           "direction": "send",
+2026-11-25T04:27:28.2595043Z           "command": "query-migrate",
+2026-11-25T04:27:28.2595116Z           "arguments": null
+2026-11-25T04:27:28.2595175Z         },
+2026-11-25T04:27:28.2595239Z         {
+2026-11-25T04:27:28.2595305Z           "direction": "receive",
+2026-11-25T04:27:28.2595376Z           "message": {
+2026-11-25T04:27:28.2595439Z             "return": {
+2026-11-25T04:27:28.2595521Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2595589Z               "remaining": 5238054912,
+2026-11-25T04:27:28.2595663Z               "status": "active",
+2026-11-25T04:27:28.2595738Z               "setup-time": 2,
+2026-11-25T04:27:28.2595806Z               "total-time": 204,
+2026-11-25T04:27:28.2595872Z               "ram": {
+2026-11-25T04:27:28.2595937Z                 "total": 8589967360,
+2026-11-25T04:27:28.2596015Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2596086Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2596165Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2596242Z                 "pages-per-second": 6415705,
+2026-11-25T04:27:28.2596402Z                 "downtime-bytes": 19676754,
+2026-11-25T04:27:28.2596479Z                 "page-size": 4096,
+2026-11-25T04:27:28.2596546Z                 "remaining": 5168136192,
+2026-11-25T04:27:28.2596625Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2596695Z                 "mbps": 473.1748235294118,
+2026-11-25T04:27:28.2596775Z                 "transferred": 19654423,
+2026-11-25T04:27:28.2596860Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2596936Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2597008Z                 "duplicate": 832439,
+2026-11-25T04:27:28.2597079Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2597156Z                 "normal-bytes": 12161024,
+2026-11-25T04:27:28.2597223Z                 "normal": 2969
+2026-11-25T04:27:28.2597290Z               }
+2026-11-25T04:27:28.2597452Z             },
+2026-11-25T04:27:28.2597522Z             "id": 18
+2026-11-25T04:27:28.2597578Z           }
+2026-11-25T04:27:28.2597643Z         },
+2026-11-25T04:27:28.2597706Z         {
+2026-11-25T04:27:28.2597772Z           "direction": "send",
+2026-11-25T04:27:28.2597853Z           "command": "query-migrate",
+2026-11-25T04:27:28.2597919Z           "arguments": null
+2026-11-25T04:27:28.2597984Z         },
+2026-11-25T04:27:28.2598043Z         {
+2026-11-25T04:27:28.2598118Z           "direction": "receive",
+2026-11-25T04:27:28.2598181Z           "message": {
+2026-11-25T04:27:28.2598252Z             "return": {
+2026-11-25T04:27:28.2598336Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2598404Z               "remaining": 3892465664,
+2026-11-25T04:27:28.2598477Z               "status": "active",
+2026-11-25T04:27:28.2598542Z               "setup-time": 2,
+2026-11-25T04:27:28.2598619Z               "total-time": 255,
+2026-11-25T04:27:28.2598682Z               "ram": {
+2026-11-25T04:27:28.2598760Z                 "total": 8589967360,
+2026-11-25T04:27:28.2598841Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2598916Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2598992Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2599070Z                 "pages-per-second": 6415705,
+2026-11-25T04:27:28.2599149Z                 "downtime-bytes": 22612112,
+2026-11-25T04:27:28.2599219Z                 "page-size": 4096,
+2026-11-25T04:27:28.2599295Z                 "remaining": 3832217600,
+2026-11-25T04:27:28.2599366Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2599440Z                 "mbps": 473.1748235294118,
+2026-11-25T04:27:28.2599517Z                 "transferred": 22611058,
+2026-11-25T04:27:28.2599602Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2599676Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2599748Z                 "duplicate": 1158588,
+2026-11-25T04:27:28.2599827Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2599900Z                 "normal-bytes": 12161024,
+2026-11-25T04:27:28.2599974Z                 "normal": 2969
+2026-11-25T04:27:28.2600041Z               }
+2026-11-25T04:27:28.2600101Z             },
+2026-11-25T04:27:28.2600168Z             "id": 19
+2026-11-25T04:27:28.2600310Z           }
+2026-11-25T04:27:28.2600377Z         },
+2026-11-25T04:27:28.2600435Z         {
+2026-11-25T04:27:28.2600508Z           "direction": "send",
+2026-11-25T04:27:28.2600580Z           "command": "query-migrate",
+2026-11-25T04:27:28.2600653Z           "arguments": null
+2026-11-25T04:27:28.2600716Z         },
+2026-11-25T04:27:28.2600774Z         {
+2026-11-25T04:27:28.2600848Z           "direction": "receive",
+2026-11-25T04:27:28.2600910Z           "message": {
+2026-11-25T04:27:28.2600978Z             "return": {
+2026-11-25T04:27:28.2601049Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2601126Z               "remaining": 2541109248,
+2026-11-25T04:27:28.2601190Z               "status": "active",
+2026-11-25T04:27:28.2601296Z               "setup-time": 2,
+2026-11-25T04:27:28.2601372Z               "total-time": 306,
+2026-11-25T04:27:28.2601430Z               "ram": {
+2026-11-25T04:27:28.2601617Z                 "total": 8589967360,
+2026-11-25T04:27:28.2601691Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2601770Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2601837Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2601919Z                 "pages-per-second": 6455235,
+2026-11-25T04:27:28.2601990Z                 "downtime-bytes": 25554517,
+2026-11-25T04:27:28.2602068Z                 "page-size": 4096,
+2026-11-25T04:27:28.2602144Z                 "remaining": 2493095936,
+2026-11-25T04:27:28.2602211Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2602284Z                 "mbps": 464.77976470588237,
+2026-11-25T04:27:28.2602352Z                 "transferred": 25547597,
+2026-11-25T04:27:28.2602444Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2602606Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2602684Z                 "duplicate": 1485521,
+2026-11-25T04:27:28.2602763Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2602840Z                 "normal-bytes": 12161024,
+2026-11-25T04:27:28.2602913Z                 "normal": 2969
+2026-11-25T04:27:28.2602971Z               }
+2026-11-25T04:27:28.2603037Z             },
+2026-11-25T04:27:28.2603097Z             "id": 20
+2026-11-25T04:27:28.2603165Z           }
+2026-11-25T04:27:28.2603222Z         },
+2026-11-25T04:27:28.2603285Z         {
+2026-11-25T04:27:28.2603356Z           "direction": "send",
+2026-11-25T04:27:28.2603426Z           "command": "query-migrate",
+2026-11-25T04:27:28.2603500Z           "arguments": null
+2026-11-25T04:27:28.2603556Z         },
+2026-11-25T04:27:28.2603623Z         {
+2026-11-25T04:27:28.2603690Z           "direction": "receive",
+2026-11-25T04:27:28.2603760Z           "message": {
+2026-11-25T04:27:28.2603823Z             "return": {
+2026-11-25T04:27:28.2603906Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2603978Z               "remaining": 1197092864,
+2026-11-25T04:27:28.2604043Z               "status": "active",
+2026-11-25T04:27:28.2604121Z               "setup-time": 2,
+2026-11-25T04:27:28.2604188Z               "total-time": 356,
+2026-11-25T04:27:28.2604254Z               "ram": {
+2026-11-25T04:27:28.2604319Z                 "total": 8589967360,
+2026-11-25T04:27:28.2604402Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2604479Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2604548Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2604628Z                 "pages-per-second": 6455235,
+2026-11-25T04:27:28.2604699Z                 "downtime-bytes": 28485312,
+2026-11-25T04:27:28.2604771Z                 "page-size": 4096,
+2026-11-25T04:27:28.2604838Z                 "remaining": 1159266304,
+2026-11-25T04:27:28.2604915Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2604981Z                 "mbps": 464.77976470588237,
+2026-11-25T04:27:28.2605060Z                 "transferred": 28468008,
+2026-11-25T04:27:28.2605148Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2605219Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2605296Z                 "duplicate": 1811164,
+2026-11-25T04:27:28.2605366Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2605443Z                 "normal-bytes": 12161024,
+2026-11-25T04:27:28.2605507Z                 "normal": 2969
+2026-11-25T04:27:28.2605574Z               }
+2026-11-25T04:27:28.2605638Z             },
+2026-11-25T04:27:28.2605697Z             "id": 21
+2026-11-25T04:27:28.2605760Z           }
+2026-11-25T04:27:28.2605819Z         },
+2026-11-25T04:27:28.2605882Z         {
+2026-11-25T04:27:28.2605946Z           "direction": "send",
+2026-11-25T04:27:28.2606024Z           "command": "query-migrate",
+2026-11-25T04:27:28.2606088Z           "arguments": null
+2026-11-25T04:27:28.2606152Z         },
+2026-11-25T04:27:28.2606218Z         {
+2026-11-25T04:27:28.2606289Z           "direction": "receive",
+2026-11-25T04:27:28.2606355Z           "message": {
+2026-11-25T04:27:28.2606416Z             "return": {
+2026-11-25T04:27:28.2606574Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2606643Z               "remaining": 151506944,
+2026-11-25T04:27:28.2606715Z               "status": "active",
+2026-11-25T04:27:28.2606782Z               "setup-time": 2,
+2026-11-25T04:27:28.2606856Z               "total-time": 407,
+2026-11-25T04:27:28.2606922Z               "ram": {
+2026-11-25T04:27:28.2606985Z                 "total": 8589967360,
+2026-11-25T04:27:28.2607061Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2607130Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2607202Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2607276Z                 "pages-per-second": 5833990,
+2026-11-25T04:27:28.2607353Z                 "downtime-bytes": 49313713,
+2026-11-25T04:27:28.2607419Z                 "page-size": 4096,
+2026-11-25T04:27:28.2607562Z                 "remaining": 141152256,
+2026-11-25T04:27:28.2607638Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2607705Z                 "mbps": 1079.50896,
+2026-11-25T04:27:28.2607786Z                 "transferred": 49186749,
+2026-11-25T04:27:28.2607871Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2607945Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2608010Z                 "duplicate": 2055189,
+2026-11-25T04:27:28.2608089Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2608165Z                 "normal-bytes": 30756864,
+2026-11-25T04:27:28.2608230Z                 "normal": 7509
+2026-11-25T04:27:28.2608297Z               }
+2026-11-25T04:27:28.2608355Z             },
+2026-11-25T04:27:28.2608420Z             "id": 22
+2026-11-25T04:27:28.2608477Z           }
+2026-11-25T04:27:28.2608541Z         },
+2026-11-25T04:27:28.2608596Z         {
+2026-11-25T04:27:28.2608668Z           "direction": "send",
+2026-11-25T04:27:28.2608749Z           "command": "query-migrate",
+2026-11-25T04:27:28.2608815Z           "arguments": null
+2026-11-25T04:27:28.2608878Z         },
+2026-11-25T04:27:28.2608935Z         {
+2026-11-25T04:27:28.2609013Z           "direction": "receive",
+2026-11-25T04:27:28.2609073Z           "message": {
+2026-11-25T04:27:28.2609142Z             "return": {
+2026-11-25T04:27:28.2609212Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2609287Z               "remaining": 151506944,
+2026-11-25T04:27:28.2609356Z               "status": "active",
+2026-11-25T04:27:28.2609420Z               "setup-time": 2,
+2026-11-25T04:27:28.2609494Z               "total-time": 458,
+2026-11-25T04:27:28.2609551Z               "ram": {
+2026-11-25T04:27:28.2609621Z                 "total": 8589967360,
+2026-11-25T04:27:28.2609693Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2609769Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2609841Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2609914Z                 "pages-per-second": 5833990,
+2026-11-25T04:27:28.2609992Z                 "downtime-bytes": 52469689,
+2026-11-25T04:27:28.2610056Z                 "page-size": 4096,
+2026-11-25T04:27:28.2610132Z                 "remaining": 138006528,
+2026-11-25T04:27:28.2610285Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2610356Z                 "mbps": 1079.50896,
+2026-11-25T04:27:28.2610423Z                 "transferred": 52469957,
+2026-11-25T04:27:28.2610515Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2610588Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2610654Z                 "duplicate": 2055189,
+2026-11-25T04:27:28.2610728Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2610796Z                 "normal-bytes": 33906688,
+2026-11-25T04:27:28.2610868Z                 "normal": 8278
+2026-11-25T04:27:28.2610927Z               }
+2026-11-25T04:27:28.2610991Z             },
+2026-11-25T04:27:28.2611057Z             "id": 23
+2026-11-25T04:27:28.2611115Z           }
+2026-11-25T04:27:28.2611186Z         },
+2026-11-25T04:27:28.2611244Z         {
+2026-11-25T04:27:28.2611314Z           "direction": "send",
+2026-11-25T04:27:28.2611487Z           "command": "query-migrate",
+2026-11-25T04:27:28.2611609Z           "arguments": null
+2026-11-25T04:27:28.2611666Z         },
+2026-11-25T04:27:28.2611732Z         {
+2026-11-25T04:27:28.2611800Z           "direction": "receive",
+2026-11-25T04:27:28.2611872Z           "message": {
+2026-11-25T04:27:28.2611939Z             "return": {
+2026-11-25T04:27:28.2612012Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2612087Z               "remaining": 138006528,
+2026-11-25T04:27:28.2612151Z               "status": "active",
+2026-11-25T04:27:28.2612224Z               "setup-time": 2,
+2026-11-25T04:27:28.2612290Z               "total-time": 508,
+2026-11-25T04:27:28.2612356Z               "ram": {
+2026-11-25T04:27:28.2612426Z                 "total": 8589967360,
+2026-11-25T04:27:28.2612498Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2612669Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2612735Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2612826Z                 "pages-per-second": 32960,
+2026-11-25T04:27:28.2612899Z                 "downtime-bytes": 64810425,
+2026-11-25T04:27:28.2612972Z                 "page-size": 4096,
+2026-11-25T04:27:28.2613041Z                 "remaining": 125685760,
+2026-11-25T04:27:28.2613116Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2613190Z                 "mbps": 1082.1441599999998,
+2026-11-25T04:27:28.2613259Z                 "transferred": 64683471,
+2026-11-25T04:27:28.2613350Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2613418Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2613492Z                 "duplicate": 2055189,
+2026-11-25T04:27:28.2613561Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2613638Z                 "normal-bytes": 46223360,
+2026-11-25T04:27:28.2613711Z                 "normal": 11285
+2026-11-25T04:27:28.2613775Z               }
+2026-11-25T04:27:28.2613843Z             },
+2026-11-25T04:27:28.2613902Z             "id": 24
+2026-11-25T04:27:28.2613963Z           }
+2026-11-25T04:27:28.2614024Z         },
+2026-11-25T04:27:28.2614092Z         {
+2026-11-25T04:27:28.2614160Z           "direction": "send",
+2026-11-25T04:27:28.2614243Z           "command": "query-migrate",
+2026-11-25T04:27:28.2614316Z           "arguments": null
+2026-11-25T04:27:28.2614373Z         },
+2026-11-25T04:27:28.2614437Z         {
+2026-11-25T04:27:28.2614506Z           "direction": "receive",
+2026-11-25T04:27:28.2614574Z           "message": {
+2026-11-25T04:27:28.2614639Z             "return": {
+2026-11-25T04:27:28.2614720Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2614790Z               "remaining": 138006528,
+2026-11-25T04:27:28.2614866Z               "status": "active",
+2026-11-25T04:27:28.2614939Z               "setup-time": 2,
+2026-11-25T04:27:28.2615007Z               "total-time": 559,
+2026-11-25T04:27:28.2615077Z               "ram": {
+2026-11-25T04:27:28.2615145Z                 "total": 8589967360,
+2026-11-25T04:27:28.2615226Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2615305Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2615384Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2615467Z                 "pages-per-second": 32960,
+2026-11-25T04:27:28.2615545Z                 "downtime-bytes": 65996481,
+2026-11-25T04:27:28.2615625Z                 "page-size": 4096,
+2026-11-25T04:27:28.2615694Z                 "remaining": 124506112,
+2026-11-25T04:27:28.2615768Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2615837Z                 "mbps": 1082.1441599999998,
+2026-11-25T04:27:28.2615919Z                 "transferred": 65996759,
+2026-11-25T04:27:28.2616005Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2616078Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2616154Z                 "duplicate": 2055189,
+2026-11-25T04:27:28.2616229Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2616310Z                 "normal-bytes": 47407104,
+2026-11-25T04:27:28.2616377Z                 "normal": 11574
+2026-11-25T04:27:28.2616526Z               }
+2026-11-25T04:27:28.2616585Z             },
+2026-11-25T04:27:28.2616654Z             "id": 25
+2026-11-25T04:27:28.2616711Z           }
+2026-11-25T04:27:28.2616777Z         },
+2026-11-25T04:27:28.2616841Z         {
+2026-11-25T04:27:28.2616908Z           "direction": "send",
+2026-11-25T04:27:28.2616986Z           "command": "query-migrate",
+2026-11-25T04:27:28.2617054Z           "arguments": null
+2026-11-25T04:27:28.2617119Z         },
+2026-11-25T04:27:28.2617178Z         {
+2026-11-25T04:27:28.2617253Z           "direction": "receive",
+2026-11-25T04:27:28.2617314Z           "message": {
+2026-11-25T04:27:28.2617385Z             "return": {
+2026-11-25T04:27:28.2617468Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2617535Z               "remaining": 124506112,
+2026-11-25T04:27:28.2617678Z               "status": "active",
+2026-11-25T04:27:28.2617745Z               "setup-time": 2,
+2026-11-25T04:27:28.2617820Z               "total-time": 610,
+2026-11-25T04:27:28.2617883Z               "ram": {
+2026-11-25T04:27:28.2617963Z                 "total": 8589967360,
+2026-11-25T04:27:28.2618041Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2618110Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2618186Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2618260Z                 "pages-per-second": 32960,
+2026-11-25T04:27:28.2618337Z                 "downtime-bytes": 79523273,
+2026-11-25T04:27:28.2618404Z                 "page-size": 4096,
+2026-11-25T04:27:28.2618480Z                 "remaining": 111005696,
+2026-11-25T04:27:28.2618549Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2618622Z                 "mbps": 1082.1441599999998,
+2026-11-25T04:27:28.2618701Z                 "transferred": 79523561,
+2026-11-25T04:27:28.2618787Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2618865Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2618933Z                 "duplicate": 2055189,
+2026-11-25T04:27:28.2619016Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2619086Z                 "normal-bytes": 60907520,
+2026-11-25T04:27:28.2619158Z                 "normal": 14870
+2026-11-25T04:27:28.2619224Z               }
+2026-11-25T04:27:28.2619281Z             },
+2026-11-25T04:27:28.2619345Z             "id": 26
+2026-11-25T04:27:28.2619403Z           }
+2026-11-25T04:27:28.2619466Z         },
+2026-11-25T04:27:28.2619524Z         {
+2026-11-25T04:27:28.2619597Z           "direction": "send",
+2026-11-25T04:27:28.2619668Z           "command": "query-migrate",
+2026-11-25T04:27:28.2619740Z           "arguments": null
+2026-11-25T04:27:28.2619804Z         },
+2026-11-25T04:27:28.2619860Z         {
+2026-11-25T04:27:28.2619948Z           "direction": "receive",
+2026-11-25T04:27:28.2620011Z           "message": {
+2026-11-25T04:27:28.2620083Z             "return": {
+2026-11-25T04:27:28.2620154Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2620314Z               "remaining": 124506112,
+2026-11-25T04:27:28.2620384Z               "status": "active",
+2026-11-25T04:27:28.2620457Z               "setup-time": 2,
+2026-11-25T04:27:28.2620530Z               "total-time": 660,
+2026-11-25T04:27:28.2620588Z               "ram": {
+2026-11-25T04:27:28.2620660Z                 "total": 8589967360,
+2026-11-25T04:27:28.2620732Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2620807Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2620872Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2620954Z                 "pages-per-second": 32960,
+2026-11-25T04:27:28.2621031Z                 "downtime-bytes": 79523273,
+2026-11-25T04:27:28.2621099Z                 "page-size": 4096,
+2026-11-25T04:27:28.2621173Z                 "remaining": 111005696,
+2026-11-25T04:27:28.2621241Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2621318Z                 "mbps": 1082.1441599999998,
+2026-11-25T04:27:28.2621388Z                 "transferred": 79523561,
+2026-11-25T04:27:28.2621632Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2621738Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2621881Z                 "duplicate": 2055189,
+2026-11-25T04:27:28.2622189Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2622317Z                 "normal-bytes": 60907520,
+2026-11-25T04:27:28.2622468Z                 "normal": 14870
+2026-11-25T04:27:28.2622565Z               }
+2026-11-25T04:27:28.2622700Z             },
+2026-11-25T04:27:28.2622780Z             "id": 27
+2026-11-25T04:27:28.2622996Z           }
+2026-11-25T04:27:28.2623092Z         },
+2026-11-25T04:27:28.2623230Z         {
+2026-11-25T04:27:28.2623382Z           "direction": "send",
+2026-11-25T04:27:28.2623475Z           "command": "query-migrate",
+2026-11-25T04:27:28.2623717Z           "arguments": null
+2026-11-25T04:27:28.2623910Z         },
+2026-11-25T04:27:28.2624048Z         {
+2026-11-25T04:27:28.2624162Z           "direction": "receive",
+2026-11-25T04:27:28.2624288Z           "message": {
+2026-11-25T04:27:28.2624506Z             "return": {
+2026-11-25T04:27:28.2624621Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2624769Z               "remaining": 111005696,
+2026-11-25T04:27:28.2624875Z               "status": "active",
+2026-11-25T04:27:28.2625034Z               "setup-time": 2,
+2026-11-25T04:27:28.2625194Z               "total-time": 711,
+2026-11-25T04:27:28.2625354Z               "ram": {
+2026-11-25T04:27:28.2625460Z                 "total": 8589967360,
+2026-11-25T04:27:28.2625616Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2625750Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2625907Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2626079Z                 "pages-per-second": 32960,
+2026-11-25T04:27:28.2626189Z                 "downtime-bytes": 93050065,
+2026-11-25T04:27:28.2626375Z                 "page-size": 4096,
+2026-11-25T04:27:28.2626483Z                 "remaining": 97505280,
+2026-11-25T04:27:28.2626661Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2626829Z                 "mbps": 1082.1441599999998,
+2026-11-25T04:27:28.2626939Z                 "transferred": 93050363,
+2026-11-25T04:27:28.2627108Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2627216Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2627433Z                 "duplicate": 2055189,
+2026-11-25T04:27:28.2627560Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2627713Z                 "normal-bytes": 74407936,
+2026-11-25T04:27:28.2627885Z                 "normal": 18166
+2026-11-25T04:27:28.2627984Z               }
+2026-11-25T04:27:28.2628149Z             },
+2026-11-25T04:27:28.2628265Z             "id": 28
+2026-11-25T04:27:28.2628403Z           }
+2026-11-25T04:27:28.2628499Z         },
+2026-11-25T04:27:28.2628636Z         {
+2026-11-25T04:27:28.2628815Z           "direction": "send",
+2026-11-25T04:27:28.2628948Z           "command": "query-migrate",
+2026-11-25T04:27:28.2629096Z           "arguments": null
+2026-11-25T04:27:28.2629221Z         },
+2026-11-25T04:27:28.2629362Z         {
+2026-11-25T04:27:28.2629450Z           "direction": "receive",
+2026-11-25T04:27:28.2629653Z           "message": {
+2026-11-25T04:27:28.2629755Z             "return": {
+2026-11-25T04:27:28.2629909Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2630057Z               "remaining": 111005696,
+2026-11-25T04:27:28.2630142Z               "status": "active",
+2026-11-25T04:27:28.2630572Z               "setup-time": 2,
+2026-11-25T04:27:28.2630696Z               "total-time": 761,
+2026-11-25T04:27:28.2630868Z               "ram": {
+2026-11-25T04:27:28.2630972Z                 "total": 8589967360,
+2026-11-25T04:27:28.2631112Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2631339Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2631448Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2631614Z                 "pages-per-second": 32960,
+2026-11-25T04:27:28.2631726Z                 "downtime-bytes": 93050065,
+2026-11-25T04:27:28.2631971Z                 "page-size": 4096,
+2026-11-25T04:27:28.2632122Z                 "remaining": 97505280,
+2026-11-25T04:27:28.2632320Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2632468Z                 "mbps": 1082.1441599999998,
+2026-11-25T04:27:28.2632578Z                 "transferred": 93050363,
+2026-11-25T04:27:28.2632728Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2632915Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2633083Z                 "duplicate": 2055189,
+2026-11-25T04:27:28.2633194Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2633345Z                 "normal-bytes": 74407936,
+2026-11-25T04:27:28.2633475Z                 "normal": 18166
+2026-11-25T04:27:28.2633623Z               }
+2026-11-25T04:27:28.2633807Z             },
+2026-11-25T04:27:28.2634001Z             "id": 29
+2026-11-25T04:27:28.2634139Z           }
+2026-11-25T04:27:28.2634237Z         },
+2026-11-25T04:27:28.2634405Z         {
+2026-11-25T04:27:28.2634533Z           "direction": "send",
+2026-11-25T04:27:28.2634689Z           "command": "query-migrate",
+2026-11-25T04:27:28.2634839Z           "arguments": null
+2026-11-25T04:27:28.2634937Z         },
+2026-11-25T04:27:28.2635107Z         {
+2026-11-25T04:27:28.2635261Z           "direction": "receive",
+2026-11-25T04:27:28.2635404Z           "message": {
+2026-11-25T04:27:28.2635505Z             "return": {
+2026-11-25T04:27:28.2635664Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2635905Z               "remaining": 97505280,
+2026-11-25T04:27:28.2636027Z               "status": "active",
+2026-11-25T04:27:28.2636177Z               "setup-time": 2,
+2026-11-25T04:27:28.2636284Z               "total-time": 812,
+2026-11-25T04:27:28.2636426Z               "ram": {
+2026-11-25T04:27:28.2636510Z                 "total": 8589967360,
+2026-11-25T04:27:28.2636761Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2636917Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2637035Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2637196Z                 "pages-per-second": 32960,
+2026-11-25T04:27:28.2637294Z                 "downtime-bytes": 106576857,
+2026-11-25T04:27:28.2637519Z                 "page-size": 4096,
+2026-11-25T04:27:28.2637633Z                 "remaining": 84004864,
+2026-11-25T04:27:28.2637788Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2637895Z                 "mbps": 1082.1441599999998,
+2026-11-25T04:27:28.2638032Z                 "transferred": 106577165,
+2026-11-25T04:27:28.2638294Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2638408Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2638560Z                 "duplicate": 2055189,
+2026-11-25T04:27:28.2638672Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2638807Z                 "normal-bytes": 87908352,
+2026-11-25T04:27:28.2639021Z                 "normal": 21462
+2026-11-25T04:27:28.2639120Z               }
+2026-11-25T04:27:28.2639258Z             },
+2026-11-25T04:27:28.2639362Z             "id": 30
+2026-11-25T04:27:28.2639510Z           }
+2026-11-25T04:27:28.2639654Z         },
+2026-11-25T04:27:28.2639809Z         {
+2026-11-25T04:27:28.2639917Z           "direction": "send",
+2026-11-25T04:27:28.2640072Z           "command": "query-migrate",
+2026-11-25T04:27:28.2640343Z           "arguments": null
+2026-11-25T04:27:28.2640523Z         },
+2026-11-25T04:27:28.2640674Z         {
+2026-11-25T04:27:28.2640785Z           "direction": "receive",
+2026-11-25T04:27:28.2640927Z           "message": {
+2026-11-25T04:27:28.2641059Z             "return": {
+2026-11-25T04:27:28.2641267Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2641388Z               "remaining": 97505280,
+2026-11-25T04:27:28.2641533Z               "status": "active",
+2026-11-25T04:27:28.2641678Z               "setup-time": 2,
+2026-11-25T04:27:28.2641790Z               "total-time": 863,
+2026-11-25T04:27:28.2641955Z               "ram": {
+2026-11-25T04:27:28.2642075Z                 "total": 8589967360,
+2026-11-25T04:27:28.2642342Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2642452Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2642633Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2642818Z                 "pages-per-second": 32960,
+2026-11-25T04:27:28.2642949Z                 "downtime-bytes": 106576857,
+2026-11-25T04:27:28.2643098Z                 "page-size": 4096,
+2026-11-25T04:27:28.2643207Z                 "remaining": 84004864,
+2026-11-25T04:27:28.2643359Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2643444Z                 "mbps": 1082.1441599999998,
+2026-11-25T04:27:28.2643658Z                 "transferred": 106577165,
+2026-11-25T04:27:28.2643823Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2643959Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2644200Z                 "duplicate": 2055189,
+2026-11-25T04:27:28.2644292Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2644508Z                 "normal-bytes": 87908352,
+2026-11-25T04:27:28.2644619Z                 "normal": 21462
+2026-11-25T04:27:28.2644758Z               }
+2026-11-25T04:27:28.2644900Z             },
+2026-11-25T04:27:28.2644980Z             "id": 31
+2026-11-25T04:27:28.2645180Z           }
+2026-11-25T04:27:28.2645278Z         },
+2026-11-25T04:27:28.2645443Z         {
+2026-11-25T04:27:28.2645550Z           "direction": "send",
+2026-11-25T04:27:28.2645686Z           "command": "query-migrate",
+2026-11-25T04:27:28.2645895Z           "arguments": null
+2026-11-25T04:27:28.2645990Z         },
+2026-11-25T04:27:28.2646128Z         {
+2026-11-25T04:27:28.2646236Z           "direction": "receive",
+2026-11-25T04:27:28.2646359Z           "message": {
+2026-11-25T04:27:28.2646545Z             "return": {
+2026-11-25T04:27:28.2646743Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2646856Z               "remaining": 84004864,
+2026-11-25T04:27:28.2647004Z               "status": "active",
+2026-11-25T04:27:28.2647131Z               "setup-time": 2,
+2026-11-25T04:27:28.2647286Z               "total-time": 913,
+2026-11-25T04:27:28.2647441Z               "ram": {
+2026-11-25T04:27:28.2647544Z                 "total": 8589967360,
+2026-11-25T04:27:28.2647697Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2647806Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2647984Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2648185Z                 "pages-per-second": 32633,
+2026-11-25T04:27:28.2648298Z                 "downtime-bytes": 120103649,
+2026-11-25T04:27:28.2648448Z                 "page-size": 4096,
+2026-11-25T04:27:28.2648555Z                 "remaining": 70504448,
+2026-11-25T04:27:28.2648734Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2648855Z                 "mbps": 1071.4298613861386,
+2026-11-25T04:27:28.2649006Z                 "transferred": 120103967,
+2026-11-25T04:27:28.2649178Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2649286Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2649469Z                 "duplicate": 2055189,
+2026-11-25T04:27:28.2649621Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2649772Z                 "normal-bytes": 101408768,
+2026-11-25T04:27:28.2649875Z                 "normal": 24758
+2026-11-25T04:27:28.2650014Z               }
+2026-11-25T04:27:28.2650179Z             },
+2026-11-25T04:27:28.2650398Z             "id": 32
+2026-11-25T04:27:28.2650535Z           }
+2026-11-25T04:27:28.2650629Z         },
+2026-11-25T04:27:28.2650766Z         {
+2026-11-25T04:27:28.2650855Z           "direction": "send",
+2026-11-25T04:27:28.2651140Z           "command": "query-migrate",
+2026-11-25T04:27:28.2651249Z           "arguments": null
+2026-11-25T04:27:28.2651388Z         },
+2026-11-25T04:27:28.2651523Z         {
+2026-11-25T04:27:28.2651611Z           "direction": "receive",
+2026-11-25T04:27:28.2651820Z           "message": {
+2026-11-25T04:27:28.2651921Z             "return": {
+2026-11-25T04:27:28.2652079Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2652292Z               "remaining": 84004864,
+2026-11-25T04:27:28.2652419Z               "status": "active",
+2026-11-25T04:27:28.2652652Z               "setup-time": 2,
+2026-11-25T04:27:28.2652761Z               "total-time": 964,
+2026-11-25T04:27:28.2652902Z               "ram": {
+2026-11-25T04:27:28.2653005Z                 "total": 8589967360,
+2026-11-25T04:27:28.2653138Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2653292Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2653458Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2653572Z                 "pages-per-second": 32633,
+2026-11-25T04:27:28.2653727Z                 "downtime-bytes": 120103649,
+2026-11-25T04:27:28.2653884Z                 "page-size": 4096,
+2026-11-25T04:27:28.2654037Z                 "remaining": 70504448,
+2026-11-25T04:27:28.2654289Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2654396Z                 "mbps": 1071.4298613861386,
+2026-11-25T04:27:28.2654553Z                 "transferred": 120103967,
+2026-11-25T04:27:28.2654674Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2654850Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2655017Z                 "duplicate": 2055189,
+2026-11-25T04:27:28.2655127Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2655307Z                 "normal-bytes": 101408768,
+2026-11-25T04:27:28.2655409Z                 "normal": 24758
+2026-11-25T04:27:28.2655577Z               }
+2026-11-25T04:27:28.2655691Z             },
+2026-11-25T04:27:28.2655832Z             "id": 33
+2026-11-25T04:27:28.2655971Z           }
+2026-11-25T04:27:28.2656067Z         },
+2026-11-25T04:27:28.2656259Z         {
+2026-11-25T04:27:28.2656383Z           "direction": "send",
+2026-11-25T04:27:28.2656536Z           "command": "query-migrate",
+2026-11-25T04:27:28.2656647Z           "arguments": null
+2026-11-25T04:27:28.2656813Z         },
+2026-11-25T04:27:28.2656978Z         {
+2026-11-25T04:27:28.2657102Z           "direction": "receive",
+2026-11-25T04:27:28.2657249Z           "message": {
+2026-11-25T04:27:28.2657350Z             "return": {
+2026-11-25T04:27:28.2657503Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2657589Z               "remaining": 70504448,
+2026-11-25T04:27:28.2657801Z               "status": "active",
+2026-11-25T04:27:28.2657907Z               "setup-time": 2,
+2026-11-25T04:27:28.2658082Z               "total-time": 1015,
+2026-11-25T04:27:28.2658219Z               "ram": {
+2026-11-25T04:27:28.2658301Z                 "total": 8589967360,
+2026-11-25T04:27:28.2658516Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2658634Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2658784Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2658898Z                 "pages-per-second": 32960,
+2026-11-25T04:27:28.2659041Z                 "downtime-bytes": 133630441,
+2026-11-25T04:27:28.2659257Z                 "page-size": 4096,
+2026-11-25T04:27:28.2659365Z                 "remaining": 57004032,
+2026-11-25T04:27:28.2659548Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2659654Z                 "mbps": 1082.1441599999998,
+2026-11-25T04:27:28.2659765Z                 "transferred": 133630769,
+2026-11-25T04:27:28.2665517Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2665604Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2665685Z                 "duplicate": 2055189,
+2026-11-25T04:27:28.2665766Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2665840Z                 "normal-bytes": 114909184,
+2026-11-25T04:27:28.2665912Z                 "normal": 28054
+2026-11-25T04:27:28.2665971Z               }
+2026-11-25T04:27:28.2666032Z             },
+2026-11-25T04:27:28.2666093Z             "id": 34
+2026-11-25T04:27:28.2666158Z           }
+2026-11-25T04:27:28.2666214Z         },
+2026-11-25T04:27:28.2666286Z         {
+2026-11-25T04:27:28.2666360Z           "direction": "send",
+2026-11-25T04:27:28.2666434Z           "command": "query-migrate",
+2026-11-25T04:27:28.2666649Z           "arguments": null
+2026-11-25T04:27:28.2666707Z         },
+2026-11-25T04:27:28.2666768Z         {
+2026-11-25T04:27:28.2666839Z           "direction": "receive",
+2026-11-25T04:27:28.2666905Z           "message": {
+2026-11-25T04:27:28.2666969Z             "return": {
+2026-11-25T04:27:28.2667050Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2667121Z               "remaining": 70504448,
+2026-11-25T04:27:28.2667185Z               "status": "active",
+2026-11-25T04:27:28.2667252Z               "setup-time": 2,
+2026-11-25T04:27:28.2667315Z               "total-time": 1065,
+2026-11-25T04:27:28.2667375Z               "ram": {
+2026-11-25T04:27:28.2667437Z                 "total": 8589967360,
+2026-11-25T04:27:28.2667515Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2667589Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2667795Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2667877Z                 "pages-per-second": 32960,
+2026-11-25T04:27:28.2667958Z                 "downtime-bytes": 133630441,
+2026-11-25T04:27:28.2668031Z                 "page-size": 4096,
+2026-11-25T04:27:28.2668096Z                 "remaining": 57004032,
+2026-11-25T04:27:28.2668168Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2668238Z                 "mbps": 1082.1441599999998,
+2026-11-25T04:27:28.2668312Z                 "transferred": 133630769,
+2026-11-25T04:27:28.2668404Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2668473Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2668547Z                 "duplicate": 2055189,
+2026-11-25T04:27:28.2668617Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2668690Z                 "normal-bytes": 114909184,
+2026-11-25T04:27:28.2668752Z                 "normal": 28054
+2026-11-25T04:27:28.2668813Z               }
+2026-11-25T04:27:28.2668878Z             },
+2026-11-25T04:27:28.2668936Z             "id": 35
+2026-11-25T04:27:28.2668995Z           }
+2026-11-25T04:27:28.2669051Z         },
+2026-11-25T04:27:28.2669114Z         {
+2026-11-25T04:27:28.2669179Z           "direction": "send",
+2026-11-25T04:27:28.2669255Z           "command": "query-migrate",
+2026-11-25T04:27:28.2669319Z           "arguments": null
+2026-11-25T04:27:28.2669380Z         },
+2026-11-25T04:27:28.2669439Z         {
+2026-11-25T04:27:28.2669506Z           "direction": "receive",
+2026-11-25T04:27:28.2669570Z           "message": {
+2026-11-25T04:27:28.2669632Z             "return": {
+2026-11-25T04:27:28.2669709Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2669774Z               "remaining": 57004032,
+2026-11-25T04:27:28.2669844Z               "status": "active",
+2026-11-25T04:27:28.2669909Z               "setup-time": 2,
+2026-11-25T04:27:28.2669979Z               "total-time": 1116,
+2026-11-25T04:27:28.2670040Z               "ram": {
+2026-11-25T04:27:28.2670106Z                 "total": 8589967360,
+2026-11-25T04:27:28.2670182Z                 "postcopy-requests": 0,
+2026-11-25T04:27:28.2670500Z                 "dirty-sync-count": 1,
+2026-11-25T04:27:28.2670607Z                 "multifd-bytes": 0,
+2026-11-25T04:27:28.2670680Z                 "pages-per-second": 32960,
+2026-11-25T04:27:28.2670756Z                 "downtime-bytes": 147157233,
+2026-11-25T04:27:28.2670826Z                 "page-size": 4096,
+2026-11-25T04:27:28.2670892Z                 "remaining": 43503616,
+2026-11-25T04:27:28.2670964Z                 "postcopy-bytes": 0,
+2026-11-25T04:27:28.2671029Z                 "mbps": 1082.1441599999998,
+2026-11-25T04:27:28.2671102Z                 "transferred": 147157571,
+2026-11-25T04:27:28.2671188Z                 "dirty-sync-missed-zero-copy": 0,
+2026-11-25T04:27:28.2671260Z                 "precopy-bytes": 0,
+2026-11-25T04:27:28.2671326Z                 "duplicate": 2055189,
+2026-11-25T04:27:28.2671398Z                 "dirty-pages-rate": 0,
+2026-11-25T04:27:28.2671474Z                 "normal-bytes": 128409600,
+2026-11-25T04:27:28.2671537Z                 "normal": 31350
+2026-11-25T04:27:28.2671596Z               }
+2026-11-25T04:27:28.2671760Z             },
+2026-11-25T04:27:28.2671823Z             "id": 36
+2026-11-25T04:27:28.2671881Z           }
+2026-11-25T04:27:28.2671939Z         },
+2026-11-25T04:27:28.2671993Z         {
+2026-11-25T04:27:28.2672063Z           "direction": "send",
+2026-11-25T04:27:28.2672136Z           "command": "query-migrate",
+2026-11-25T04:27:28.2672203Z           "arguments": null
+2026-11-25T04:27:28.2672264Z         },
+2026-11-25T04:27:28.2672320Z         {
+2026-11-25T04:27:28.2672392Z           "direction": "receive",
+2026-11-25T04:27:28.2672453Z           "message": {
+2026-11-25T04:27:28.2672518Z             "return": {
+2026-11-25T04:27:28.2672596Z               "expected-downtime": 300,
+2026-11-25T04:27:28.2672664Z               "remaining": 57004032,
+2026-11-25T04:27:28.2672735Z               "status": "active",
+2026-11-25T04:27:28.2672894Z               "setup-time": 2,
+2026-11-25T04:27:28.2672963Z               "total-time": 1167,
+2026-11-25T04:27:28.2673019Z               "ram": {
+2026-11-25T04:27:28.2673093Z                 "total": 8589967360,
+2026-11-25T04:27:28.2673165Z               
