@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0-or-later
-"""Reproduce both GCC data files from four pinned public source inputs."""
+"""Reproduce both GCC data files from five pinned public source inputs."""
 import argparse
 import hashlib
 import json
@@ -32,6 +32,7 @@ def run(args):
         linux = inputs / "linux-6.12.114"
         vendor = inputs / "gcc-kona.c"
         branch = inputs / "clk-branch.c"
+        gdsc = inputs / "gdsc-regulator.c"
         public = [
             ("https://raw.githubusercontent.com/gregkh/linux/v6.12.114/" + path,
              linux / path, expected)
@@ -45,6 +46,10 @@ def run(args):
             "https://raw.githubusercontent.com/OnePlusOSS/"
             "android_kernel_oneplus_sm8250/" + generator.VENDOR_REVISION +
             "/" + generator.VENDOR_BRANCH_PATH, branch, generator.VENDOR_BRANCH_SHA256))
+        public.append((
+            "https://raw.githubusercontent.com/OnePlusOSS/"
+            "android_kernel_oneplus_sm8250/" + generator.VENDOR_REVISION +
+            "/" + generator.VENDOR_GDSC_PATH, gdsc, generator.VENDOR_GDSC_SHA256))
         for url, path, expected in public:
             content = read_source(url, max_bytes=512 * 1024)
             if len(content) > 512 * 1024:
@@ -65,6 +70,7 @@ def run(args):
             sys.executable, str(Path(generator.__file__).resolve()),
             str(linux), "--vendor-gcc", str(vendor),
             "--vendor-branch", str(branch),
+            "--vendor-gdsc", str(gdsc),
             "--output-root", str(generated)]
         process = subprocess.run(command, capture_output=True, text=True,
                                  timeout=60)
