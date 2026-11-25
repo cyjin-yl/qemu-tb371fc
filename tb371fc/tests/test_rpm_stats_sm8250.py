@@ -245,7 +245,7 @@ def enabled_identity_and_geometry(rig):
     properties = {item["name"]: item["type"] for item in rig.monitor("qom-list", {"path": DEVICE})}
     assert all(properties[name] == "uint64" for name in UINT_FIELDS)
     assert all(properties[name] == "bool" for name in BOOL_FIELDS)
-    assert properties["contract-sha256"] == "str"
+    assert properties["contract-sha256"] == "string"
     assert not any(name.startswith("qtest-") for name in properties)
     assert (rig.device_mmio_operations, rig.last_clock) == before
     return {"pure_qom_getters": len(QOM_FIELDS), "contract_sha256": CONTRACT_SHA}
