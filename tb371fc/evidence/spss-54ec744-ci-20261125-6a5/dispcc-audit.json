@@ -1,0 +1,425 @@
+{
+  "schema": "tb371fc-dispcc-wide-independent-zip-audit-v1",
+  "passed": true,
+  "expected_head": "54ec7443bc75460baa35a0c0b0502ae6cb4d8fa7",
+  "auditor_sha256": "62837675b808db7ed5671e9cff7653f7b76d4c295d668919ffff10a4134fc4c8",
+  "reviewed_source_sha256": {
+    "hw/misc/qcom-sm8250-dispcc.c": "cf10f13e3cf47b750896704c045bc3ed17cd0887ee2ddf708f9e4f3ae7e70c79",
+    "tb371fc/tests/test_dispcc_sm8250.py": "c626ec6135958a43b81bca435bf8ddb1532dc4323f07dee1c9afb6e682d9217e",
+    "hw/misc/qcom-sm8250-dispcc-data.inc": "a910182ea5c2957e918b02764f910ca61ac58aa8c24b3b259606192e9bac8732"
+  },
+  "read_only_zip": true,
+  "extracted_members": 0,
+  "qemu_executed": false,
+  "guest_executed": false,
+  "native_android_boot_claimed": false,
+  "zip": {
+    "path": "/dev/shm/tb371fc-spss-54ec744-14982026237.zip",
+    "bytes": 55527863,
+    "sha256": "9fdd4ad25d9b9f272456144de43f124381e03571c7d0d91d022d151ea82d687e",
+    "members": 4960
+  },
+  "qemu": {
+    "member": "qemu-build/qemu-system-aarch64",
+    "bytes": 63675200,
+    "sha256": "b50345fe7dba411426779f27963ecb1b08d1ae6fa4d83e50e7cea4351cbf7d25"
+  },
+  "dispcc": {
+    "checks": 42,
+    "completed_migrations": 3,
+    "profile_rejections": 2,
+    "single_bit_rejections": 3,
+    "original_streams": 4,
+    "total_streams": 7,
+    "source_receipts": [
+      {
+        "file": "dispcc-v1-steady.migration",
+        "sha256": "12f02a48be021bdcdd4a731eb049a3e82c8d1c493541915c17956efdd61c38f4",
+        "wire_bytes_decoded": 1676,
+        "mdss_bytes_decoded": 64,
+        "output_clocks_recomputed": 61,
+        "source_trace": {
+          "actual_stopped_qom_getters": 556,
+          "actual_source_completed": true
+        },
+        "target_trace": {
+          "actual_first_qom_getters": 556,
+          "prewarm_device_mmio_recounted": 200,
+          "mmio_between_epoch_and_witness_drain": 0,
+          "cont_before_full_first_observation": 0,
+          "persisted_counter_pair_verified": true,
+          "raw_ram_witness_verified": true,
+          "shared_cross_channel_timestamp_available": false,
+          "cross_channel_association": "reviewed test hash, persisted equal counters, exact QMP ordering and QTest epoch/witness sequence"
+        }
+      },
+      {
+        "file": "dispcc-v1-two-locks-22-rcgs.migration",
+        "sha256": "5f504de17cb4e9c46f1b50347daf5233e7058a377be3b8858b356e582491698b",
+        "wire_bytes_decoded": 1676,
+        "mdss_bytes_decoded": 64,
+        "output_clocks_recomputed": 61,
+        "source_trace": {
+          "actual_stopped_qom_getters": 556,
+          "actual_source_completed": true
+        },
+        "target_trace": {
+          "actual_first_qom_getters": 556,
+          "prewarm_device_mmio_recounted": 200,
+          "mmio_between_epoch_and_witness_drain": 0,
+          "cont_before_full_first_observation": 0,
+          "persisted_counter_pair_verified": true,
+          "raw_ram_witness_verified": true,
+          "shared_cross_channel_timestamp_available": false,
+          "cross_channel_association": "reviewed test hash, persisted equal counters, exact QMP ordering and QTest epoch/witness sequence"
+        }
+      },
+      {
+        "file": "dispcc-v1-two-latches-six-mnd.migration",
+        "sha256": "2e1e69fd72b0915c2be91144a678974475616211b483cb684ae6bb802df0e68e",
+        "wire_bytes_decoded": 1676,
+        "mdss_bytes_decoded": 64,
+        "output_clocks_recomputed": 61,
+        "source_trace": {
+          "actual_stopped_qom_getters": 556,
+          "actual_source_completed": true
+        },
+        "target_trace": {
+          "actual_first_qom_getters": 556,
+          "prewarm_device_mmio_recounted": 200,
+          "mmio_between_epoch_and_witness_drain": 0,
+          "cont_before_full_first_observation": 0,
+          "persisted_counter_pair_verified": true,
+          "raw_ram_witness_verified": true,
+          "shared_cross_channel_timestamp_available": false,
+          "cross_channel_association": "reviewed test hash, persisted equal counters, exact QMP ordering and QTest epoch/witness sequence"
+        }
+      },
+      {
+        "file": "dispcc-v1-default.migration",
+        "sha256": "832dcd2a38a6c902faa99b7c232bd2e5b458e6b49504fb24140fff8ba53ffbfd",
+        "wire_bytes_decoded": 1676,
+        "mdss_bytes_decoded": 64,
+        "output_clocks_recomputed": 61,
+        "source_trace": {
+          "actual_stopped_qom_getters": 556,
+          "actual_source_completed": true
+        }
+      }
+    ],
+    "wide_pixel_evidence": [
+      {
+        "input": "dsi0_phy_pll_out_dsiclk",
+        "input_period": 954437176,
+        "clock": "disp_cc_mdss_pclk0_clk_src",
+        "clock_hz": 4500000004,
+        "clock_period": 954437176
+      },
+      {
+        "input": "dsi1_phy_pll_out_dsiclk",
+        "input_period": 858993459,
+        "clock": "disp_cc_mdss_pclk1_clk_src",
+        "clock_hz": 5000000001,
+        "clock_period": 858993459
+      }
+    ],
+    "rejections": [
+      {
+        "name": "enabled_to_disabled",
+        "actual_specific_load_error": true,
+        "recorded_receiver_exit": 1
+      },
+      {
+        "name": "disabled_to_enabled",
+        "actual_specific_load_error": true,
+        "recorded_receiver_exit": 1
+      },
+      {
+        "name": "physical_base",
+        "actual_specific_load_error": true,
+        "recorded_receiver_exit": 1,
+        "field_offset": 52,
+        "changed_bits": 1,
+        "original_value": 183500800,
+        "changed_value": 183500804,
+        "actual_byte_offset": 2132533
+      },
+      {
+        "name": "misc_reserved_control",
+        "actual_specific_load_error": true,
+        "recorded_receiver_exit": 1,
+        "field_offset": 576,
+        "changed_bits": 1,
+        "original_value": 16,
+        "changed_value": 17,
+        "actual_byte_offset": 2133053
+      },
+      {
+        "name": "dsi1_pixel_period_below_5ghz_boundary",
+        "actual_specific_load_error": true,
+        "recorded_receiver_exit": 1,
+        "field_offset": 1644,
+        "changed_bits": 1,
+        "original_value": 858993459,
+        "changed_value": 858993458,
+        "actual_byte_offset": 2134125
+      }
+    ],
+    "all_1676_dispcc_and_64_mdss_bytes_independently_decoded": true,
+    "all_61_source_and_first_target_clocks_recomputed": true
+  },
+  "verified_members": {
+    "tb371fc-results/source-commit.txt": {
+      "bytes": 41,
+      "sha256": "f5eb3965f9c669e1df3612071d9e742bb8efbd56e10f127d4201c9872dc96954"
+    },
+    "qemu-build/qemu-system-aarch64": {
+      "bytes": 63675200,
+      "sha256": "b50345fe7dba411426779f27963ecb1b08d1ae6fa4d83e50e7cea4351cbf7d25"
+    },
+    "tb371fc-results/components/sha256.json": {
+      "bytes": 745379,
+      "sha256": "d8c78523e3238ef476214427ae2d33894662a3e8b829648de786c17a36f6892c"
+    },
+    "tb371fc-results/components/result.json": {
+      "bytes": 111642,
+      "sha256": "4c3f6796eb7be5b36d4db2d4aeece84c04b88e7c2a7db0b591289481e16be269"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/case.json": {
+      "bytes": 1193,
+      "sha256": "1466e6b693e03149d0304696f99cfa8dcbfc05b5ac89410e6261ea21eec7319c"
+    },
+    "tb371fc-results/components/plan.json": {
+      "bytes": 78540,
+      "sha256": "e7769211c0b1f74edefdac54233ccf297a3fe32afb15f38ac62e06968c0b1735"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/stdout.log": {
+      "bytes": 164193,
+      "sha256": "ee65572f0fa654b4f88fadeac9a4dc96adb6b2440332743f21db99bea6a23e03"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/result.json": {
+      "bytes": 164193,
+      "sha256": "ee65572f0fa654b4f88fadeac9a4dc96adb6b2440332743f21db99bea6a23e03"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-corrupt-dsi1_pixel_period_below_5ghz_boundary.migration": {
+      "bytes": 2286313,
+      "sha256": "a89c1621a7bf5baa8c837d9766a6804c1cc14b799a44d1e6a267b98af978fda1"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-corrupt-misc_reserved_control.migration": {
+      "bytes": 2286313,
+      "sha256": "2e38d7f82c7c4c497132ef82196ce6ecf76d5dcb80431b13ee55b871c81aec46"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-corrupt-physical_base.migration": {
+      "bytes": 2286313,
+      "sha256": "ed0b2ad1c67b13878a648f51856e64bc7a380e1dd17cfd739a0354338a949925"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-default.migration": {
+      "bytes": 2286313,
+      "sha256": "832dcd2a38a6c902faa99b7c232bd2e5b458e6b49504fb24140fff8ba53ffbfd"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-steady.migration": {
+      "bytes": 2286313,
+      "sha256": "12f02a48be021bdcdd4a731eb049a3e82c8d1c493541915c17956efdd61c38f4"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-two-latches-six-mnd.migration": {
+      "bytes": 2286313,
+      "sha256": "2e1e69fd72b0915c2be91144a678974475616211b483cb684ae6bb802df0e68e"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-two-locks-22-rcgs.migration": {
+      "bytes": 2286313,
+      "sha256": "5f504de17cb4e9c46f1b50347daf5233e7058a377be3b8858b356e582491698b"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-steady.migration.sections.json": {
+      "bytes": 943,
+      "sha256": "afa2a5d5e3af2f8d89e55d94f0b72a2bc36cdf0e6676a690ff028556bdd172ae"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-steady.migration.dispcc-v1.payload.bin": {
+      "bytes": 1676,
+      "sha256": "90ce77ec8878e93c9e1c1fa084aac5f535d639a62bb38a0309087a21a6883c88"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-steady.migration.mdss-v1.payload.bin": {
+      "bytes": 64,
+      "sha256": "2f83c65980b58eb27ad87717e204c206c8104cb14cef988b65f26d71d93acc05"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-steady-source/source-before-save.json": {
+      "bytes": 16636,
+      "sha256": "8a404dff5c6ade6bede71d52434d6a629e0d518cf30e96f89c399caa5da936d7"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-steady-source/qmp.jsonl": {
+      "bytes": 188172,
+      "sha256": "8fcfca8d5bc64a7d1d453a869c6999e8c3704c51cbf40730d974e9ed90e2f5dc"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-steady-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "6fb2fa9d7d02defd691a1d1b139de4376869afce1f3c174588a2ec46396747c0"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-steady-source/qtest.jsonl": {
+      "bytes": 23595,
+      "sha256": "205cde853fffff455e74be7890b9e70ea77fdd166c883bcb35ddf66a62f6cc62"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-steady-target/destination-before-first-device-mmio.json": {
+      "bytes": 17007,
+      "sha256": "8814e03e865065e48a178456eb606518a58acd72afa35905c5c112301563b08f"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-steady-target/qmp.jsonl": {
+      "bytes": 281627,
+      "sha256": "7e4a29367d0d5f7a0dac4158af6f2b6e75ef3edea1ac8899bb2bc900f4dcc6e5"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-steady-target/qtest.jsonl": {
+      "bytes": 19349,
+      "sha256": "91e9351cae6fbc95c53feeb428537ba07f856d6ea3477970f81fce6bb88b5b1b"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-two-locks-22-rcgs.migration.sections.json": {
+      "bytes": 965,
+      "sha256": "f29d05557d33acd1662b516eaa8ca644fceefbd395ddbc49fe0156b5fb823a35"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-two-locks-22-rcgs.migration.dispcc-v1.payload.bin": {
+      "bytes": 1676,
+      "sha256": "acd7e0eb74bd8cf1f884891466e886e5cf72a903be0a2ad63e3601403d94b376"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-two-locks-22-rcgs.migration.mdss-v1.payload.bin": {
+      "bytes": 64,
+      "sha256": "1b440ef0fba9f19b743290da940074106556e288153f81e006ee1ca48866ad86"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-two-locks-22-rcgs-source/source-before-save.json": {
+      "bytes": 16119,
+      "sha256": "905341c57d9f4cd3b7e000e81f3595b943293fe914c350ab366fb30987edce42"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-two-locks-22-rcgs-source/qmp.jsonl": {
+      "bytes": 185420,
+      "sha256": "e7d53d373c4d368cab18af0182d4c5486c149c2f86bdc4dd23e7a46640fab649"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-two-locks-22-rcgs-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "6fb2fa9d7d02defd691a1d1b139de4376869afce1f3c174588a2ec46396747c0"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-two-locks-22-rcgs-source/qtest.jsonl": {
+      "bytes": 9423,
+      "sha256": "9d2a67fc4d3ad289d3111e2c21dfa5686a955a4b095025da9d337e699c3a2743"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-two-locks-22-rcgs-target/destination-before-first-device-mmio.json": {
+      "bytes": 16490,
+      "sha256": "1ecdf7ffa6291247436e3b4b0f7f882b4942aafff7c06bbf55926773b95adb92"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-two-locks-22-rcgs-target/qmp.jsonl": {
+      "bytes": 201759,
+      "sha256": "c8c392740d1883e2efe45c4ffc094dad7b312efd4c470fc50515eca3345e9eba"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-two-locks-22-rcgs-target/qtest.jsonl": {
+      "bytes": 19585,
+      "sha256": "a6dc4bb375eb52fa8c477821633f89d6695cb949b7e4bff7da697577eaf97682"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-two-latches-six-mnd.migration.sections.json": {
+      "bytes": 969,
+      "sha256": "c3b2598fdbacbbe8e2a42e2223bd39f5cda33851dbe029d327241105e2f50bf8"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-two-latches-six-mnd.migration.dispcc-v1.payload.bin": {
+      "bytes": 1676,
+      "sha256": "f4fab6c191cd500714152b885ee7a0653393805409cb9be4aa1ecc329bca604a"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-two-latches-six-mnd.migration.mdss-v1.payload.bin": {
+      "bytes": 64,
+      "sha256": "a6ab861b384b7d6dd962509ab79e5d245fc139bf91954d376d5791a171b10197"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-two-latches-six-mnd-source/source-before-save.json": {
+      "bytes": 16005,
+      "sha256": "67857823099e26b3525de797899f7e5d178642f209d5210f5f864db4f828f524"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-two-latches-six-mnd-source/qmp.jsonl": {
+      "bytes": 182348,
+      "sha256": "a271e5c13430415b0173cf9e2034aef991fb788fbc59ca76ca57a77d38871ff3"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-two-latches-six-mnd-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "88e67be67e1557b345418e855abcabe6456aee84627b76e4d1a8dc843742d1d8"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-two-latches-six-mnd-source/qtest.jsonl": {
+      "bytes": 17957,
+      "sha256": "540a99ed1686f122e2aa08f71e52066df50fe781016b9326d4da6b133ca63ce8"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-two-latches-six-mnd-target/destination-before-first-device-mmio.json": {
+      "bytes": 16376,
+      "sha256": "ae2bc9bf9c8d01007c829c1eb3d3140b3ddf87c0c7f188065d47e10173597262"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-two-latches-six-mnd-target/qmp.jsonl": {
+      "bytes": 198418,
+      "sha256": "767b35382f7f7541e4eda78809b6fcc30d3bf6acbce82c5ba5bb626f5f4fa8e8"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-two-latches-six-mnd-target/qtest.jsonl": {
+      "bytes": 19385,
+      "sha256": "35802f9d4c9ca28865976cd34b9d8efb31c0f8712490e7e7c1d017ec2cdd660e"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-default.migration.sections.json": {
+      "bytes": 945,
+      "sha256": "960ecc8dd42822e38d7ad5a3baec3849caa68dbc4ddd8421300bc3041b220538"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-default.migration.dispcc-v1.payload.bin": {
+      "bytes": 1676,
+      "sha256": "18eeff120414f1f4decb3f40cf63317517c9a66c6aa058019fdc91b4d2b80111"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/dispcc-v1-default.migration.mdss-v1.payload.bin": {
+      "bytes": 64,
+      "sha256": "1b440ef0fba9f19b743290da940074106556e288153f81e006ee1ca48866ad86"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-default-source/source-before-save.json": {
+      "bytes": 15242,
+      "sha256": "5421db2d08108e54395f72376b7ce3cf8cbe9ea9035860537ad492ea3ff0a43b"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-default-source/qmp.jsonl": {
+      "bytes": 179786,
+      "sha256": "92b3656e53e70f713b45cc62060d9127a3dbef4612212c7bbcef28bb9abf9603"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-default-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "88e67be67e1557b345418e855abcabe6456aee84627b76e4d1a8dc843742d1d8"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/migration-default-source/qtest.jsonl": {
+      "bytes": 274,
+      "sha256": "ecc87f8e3f69461ca9d98514931f1e681381bcbf5c54f4eb35133311de13871a"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/reject-enabled_to_disabled/qemu.stderr": {
+      "bytes": 147,
+      "sha256": "2e05cd460da54d1c1d66277a3c8bee0ec8394e5d5b8ac069a5d8cb851df56ee2"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/reject-enabled_to_disabled/qmp.jsonl": {
+      "bytes": 467,
+      "sha256": "85b499939b0a47411edce3d773a90bb4a2923f415d54be586f2e9130866cbb5e"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/reject-disabled_to_enabled/qemu.stderr": {
+      "bytes": 147,
+      "sha256": "a96eee2f96c8ad93af5f3a29df8eb9137118fd0bbd7fb14dbbc9b32e8f6d833a"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/reject-disabled_to_enabled/qmp.jsonl": {
+      "bytes": 468,
+      "sha256": "4c843a41e2ac92f78d4423502e2e60bd159c919cd4cfb5d922ffc9501e05a01d"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/reject-corrupt-physical_base/qemu.stderr": {
+      "bytes": 159,
+      "sha256": "3d3ee145105a64dc1c9e7c91595b3c362763004cd1741c3dd87c37ad94f9f577"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/reject-corrupt-physical_base/qmp.jsonl": {
+      "bytes": 479,
+      "sha256": "cd7ea287cd31b6c917a2bfdc7e374b879033d47390cc00b5fb6fc3cbd7cd1e09"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/reject-corrupt-misc_reserved_control/qemu.stderr": {
+      "bytes": 302,
+      "sha256": "c178f1863dbe3bc88aa469391530172026003e59f0a5f1b4f29b07aa4203f483"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/reject-corrupt-misc_reserved_control/qmp.jsonl": {
+      "bytes": 487,
+      "sha256": "83367e0c8f5bc499e648de1b0155b04ea69ed621f6744d6979c31aa2ed3d51ac"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/reject-corrupt-dsi1_pixel_period_below_5ghz_boundary/qemu.stderr": {
+      "bytes": 304,
+      "sha256": "eb9fc85d9b94d3f1ab4ce9d8f1a4d6d7abe88e9516f39b6932a6781368da4d23"
+    },
+    "tb371fc-results/components/58-dispcc-sm8250-reference/fixtures/data/reject-corrupt-dsi1_pixel_period_below_5ghz_boundary/qmp.jsonl": {
+      "bytes": 503,
+      "sha256": "6bdbee048b5c40e82ef66f936468331b60ef858729179a8136912c0c3d8b476d"
+    }
+  }
+}

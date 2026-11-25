@@ -1,0 +1,1115 @@
+{
+  "schema": "tb371fc-spss-irq-mask-independent-artifact-audit-v1",
+  "passed": true,
+  "observed_utc": "2026-11-25T01:17:08.546534+00:00",
+  "auditor_sha256": "a8274e31f901a6e5a30b1b3680f805f7e11e7a9f9188d363de12ef54ef0a1356",
+  "expected_head": "54ec7443bc75460baa35a0c0b0502ae6cb4d8fa7",
+  "expected_zip_sha256": "9fdd4ad25d9b9f272456144de43f124381e03571c7d0d91d022d151ea82d687e",
+  "read_only_archive": true,
+  "qemu_executed": false,
+  "guest_executed": false,
+  "extracted_members": [],
+  "producer_serializer_imported": false,
+  "model_imported": false,
+  "whole_workflow_verdict_claimed": false,
+  "native_android_passed": false,
+  "shared_log_timestamp_claimed": false,
+  "scope": "Actual compiled SPSS component, 21 groups, four original and six complete one-bit streams, full 25-byte wire and raw QMP/QTest protocol. Aggregate workflow and source-generation audits are separate.",
+  "protocol_limit": "Separate QMP/QTest JSONL files have no shared timestamp. This audit combines exact per-file order, actual counter receipts, restored RAM witness and pinned producer order; it does not invent a cross-file total order.",
+  "mmio_limit": "Only delivered scalar callbacks are rejected atomically. A raw five-byte write commits its legal four-byte prefix before the final byte reaches the unmapped hole.",
+  "reviewed_source_pins": {
+    "test": {
+      "path": "/dev/shm/pil-tz-candidate-6a5/tb371fc/tests/test_spss_irq_mask_sm8250.py",
+      "bytes": 33981,
+      "sha256": "c0a74b8ad19b621ebb748bcb388e5f02248c212912c1f19d9de0cbb8d546e180"
+    },
+    "model": {
+      "path": "/dev/shm/pil-tz-candidate-6a5/hw/misc/qcom-sm8250-spss-irq-mask.c",
+      "bytes": 9658,
+      "sha256": "9b8e0b32fa58b703726932f587db175e9ca511edacb46c7b3e86b667e83edc0f"
+    },
+    "vendor_reference_commit": "98719830b0de5584f5588bbe9f4c8304d97a64c6"
+  },
+  "archive": {
+    "path": "/dev/shm/tb371fc-spss-54ec744-14982026237.zip",
+    "bytes": 55527863,
+    "sha256": "9fdd4ad25d9b9f272456144de43f124381e03571c7d0d91d022d151ea82d687e"
+  },
+  "qemu": {
+    "member": "qemu-build/qemu-system-aarch64",
+    "bytes": 63675200,
+    "sha256": "b50345fe7dba411426779f27963ecb1b08d1ae6fa4d83e50e7cea4351cbf7d25",
+    "executed": false,
+    "host_elf_machine": 62,
+    "externally_pinned": true
+  },
+  "component": {
+    "case": "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/case.json",
+    "report": "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/result.json",
+    "source_commit_file": "tb371fc-results/source-commit.txt",
+    "head": "54ec7443bc75460baa35a0c0b0502ae6cb4d8fa7",
+    "producer_test_sha256": "c0a74b8ad19b621ebb748bcb388e5f02248c212912c1f19d9de0cbb8d546e180",
+    "exit_code": 0,
+    "checks": 21
+  },
+  "ordinary_and_special": [
+    {
+      "name": "cold_identity_unknown_and_pure_getters",
+      "actual_qom_snapshots": 2,
+      "actual_pure_getters": 36,
+      "actual_qtest_commands": 0,
+      "actual_device_rejections": 0,
+      "actual_hole_rejections": 0,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "literal_original_probe_mask",
+      "actual_qom_snapshots": 1,
+      "actual_pure_getters": 18,
+      "actual_qtest_commands": 1,
+      "actual_device_rejections": 0,
+      "actual_hole_rejections": 0,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "full_u32_writes_replace_entire_mask",
+      "actual_qom_snapshots": 10,
+      "actual_pure_getters": 180,
+      "actual_qtest_commands": 10,
+      "actual_device_rejections": 0,
+      "actual_hole_rejections": 0,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "zero_programming_provenance_and_reset",
+      "actual_qom_snapshots": 8,
+      "actual_pure_getters": 144,
+      "actual_qtest_commands": 5,
+      "actual_device_rejections": 0,
+      "actual_hole_rejections": 0,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "every_guest_read_is_rejected",
+      "actual_qom_snapshots": 17,
+      "actual_pure_getters": 306,
+      "actual_qtest_commands": 9,
+      "actual_device_rejections": 8,
+      "actual_hole_rejections": 0,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "invalid_width_and_alignment_never_program",
+      "actual_qom_snapshots": 19,
+      "actual_pure_getters": 342,
+      "actual_qtest_commands": 10,
+      "actual_device_rejections": 8,
+      "actual_hole_rejections": 1,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "exact_single_leaf_and_surrounding_holes",
+      "actual_qom_snapshots": 8,
+      "actual_pure_getters": 144,
+      "actual_qtest_commands": 15,
+      "actual_device_rejections": 0,
+      "actual_hole_rejections": 14,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "runtime_observers_are_readonly_and_time_has_no_effect",
+      "actual_qom_snapshots": 3,
+      "actual_pure_getters": 54,
+      "actual_qtest_commands": 2,
+      "actual_device_rejections": 0,
+      "actual_hole_rejections": 0,
+      "complete_command_response_sequences_checked": true
+    },
+    {
+      "name": "default_off_rejects_control_without_programming",
+      "actual_pure_getters": 180,
+      "actual_rejections": 4,
+      "no_global_profile_override": true
+    },
+    {
+      "name": "paused_tcg_exposes_no_mutating_fixture_or_guest_execution",
+      "actual_pure_getters": 36,
+      "actual_status_running": [
+        false,
+        false
+      ],
+      "qtest_commands": 0,
+      "cont_commands": 0
+    }
+  ],
+  "original_streams": [
+    {
+      "name": "spss-mask-unknown.migration",
+      "bytes": 2286313,
+      "sha256": "f1f98c1f93c49e9faa818098d15dec3d20234f8274904c0e0c8e6e19a25e3820",
+      "section": {
+        "name": "qcom-sm8250-spss-irq-mask",
+        "instance_id": 0,
+        "version": 1,
+        "header_offset": 406574,
+        "section_id": 30,
+        "payload_offset": 406613,
+        "payload_bytes": 25,
+        "footer_offset": 406638,
+        "footer_hex": "7e0000001e"
+      },
+      "payload_hex": "0000000153504d310000000001881028000000040000000000",
+      "source_qom": {
+        "enabled-profile": 1,
+        "reference-identity": 1397771569,
+        "physical-base": 25694248,
+        "window-bytes": 4,
+        "mask-value": 0,
+        "vmstate-bytes": 25,
+        "register-count": 1,
+        "irq-output-count": 0,
+        "clock-input-count": 0,
+        "clock-output-count": 0,
+        "timer-count": 0,
+        "programmed": false,
+        "mask-known": false,
+        "readback-supported": false,
+        "ready-modeled": false,
+        "firmware-modeled": false,
+        "pas-modeled": false,
+        "enabled-reference": true
+      },
+      "trace": {
+        "qmp_requests": 62,
+        "qtest_commands": 2,
+        "actual_pure_getters": 54,
+        "source_stop_and_postmigrate_verified": true,
+        "virtual_epoch": 100000,
+        "ram_witness": 1397771520,
+        "full_source_snapshot_and_after_save_equal": true
+      }
+    },
+    {
+      "name": "spss-mask-driver.migration",
+      "bytes": 2286313,
+      "sha256": "6e76b0c95164903303a0040c4378de6fe1a2d81fbf6e8f3b7a62a8b606db1779",
+      "section": {
+        "name": "qcom-sm8250-spss-irq-mask",
+        "instance_id": 0,
+        "version": 1,
+        "header_offset": 406574,
+        "section_id": 30,
+        "payload_offset": 406613,
+        "payload_bytes": 25,
+        "footer_offset": 406638,
+        "footer_hex": "7e0000001e"
+      },
+      "payload_hex": "0000000153504d31000000000188102800000004fcffffff01",
+      "source_qom": {
+        "enabled-profile": 1,
+        "reference-identity": 1397771569,
+        "physical-base": 25694248,
+        "window-bytes": 4,
+        "mask-value": 4244635647,
+        "vmstate-bytes": 25,
+        "register-count": 1,
+        "irq-output-count": 0,
+        "clock-input-count": 0,
+        "clock-output-count": 0,
+        "timer-count": 0,
+        "programmed": true,
+        "mask-known": true,
+        "readback-supported": false,
+        "ready-modeled": false,
+        "firmware-modeled": false,
+        "pas-modeled": false,
+        "enabled-reference": true
+      },
+      "trace": {
+        "qmp_requests": 62,
+        "qtest_commands": 3,
+        "actual_pure_getters": 54,
+        "source_stop_and_postmigrate_verified": true,
+        "virtual_epoch": 200000,
+        "ram_witness": 1397771521,
+        "full_source_snapshot_and_after_save_equal": true
+      }
+    },
+    {
+      "name": "spss-mask-known-zero.migration",
+      "bytes": 2286313,
+      "sha256": "c70394aa60223da1ee11c179d4d7df49633899425aec44ea5f6d44b8e4eebb96",
+      "section": {
+        "name": "qcom-sm8250-spss-irq-mask",
+        "instance_id": 0,
+        "version": 1,
+        "header_offset": 406574,
+        "section_id": 30,
+        "payload_offset": 406613,
+        "payload_bytes": 25,
+        "footer_offset": 406638,
+        "footer_hex": "7e0000001e"
+      },
+      "payload_hex": "0000000153504d310000000001881028000000040000000001",
+      "source_qom": {
+        "enabled-profile": 1,
+        "reference-identity": 1397771569,
+        "physical-base": 25694248,
+        "window-bytes": 4,
+        "mask-value": 0,
+        "vmstate-bytes": 25,
+        "register-count": 1,
+        "irq-output-count": 0,
+        "clock-input-count": 0,
+        "clock-output-count": 0,
+        "timer-count": 0,
+        "programmed": true,
+        "mask-known": true,
+        "readback-supported": false,
+        "ready-modeled": false,
+        "firmware-modeled": false,
+        "pas-modeled": false,
+        "enabled-reference": true
+      },
+      "trace": {
+        "qmp_requests": 62,
+        "qtest_commands": 3,
+        "actual_pure_getters": 54,
+        "source_stop_and_postmigrate_verified": true,
+        "virtual_epoch": 300000,
+        "ram_witness": 1397771522,
+        "full_source_snapshot_and_after_save_equal": true
+      }
+    },
+    {
+      "name": "spss-mask-disabled.migration",
+      "bytes": 2286313,
+      "sha256": "d6172cf8bb1875a8c50512e423b6c159d1ef49c580e41c6a551ff046c13eaed9",
+      "section": {
+        "name": "qcom-sm8250-spss-irq-mask",
+        "instance_id": 0,
+        "version": 1,
+        "header_offset": 406574,
+        "section_id": 30,
+        "payload_offset": 406613,
+        "payload_bytes": 25,
+        "footer_offset": 406638,
+        "footer_hex": "7e0000001e"
+      },
+      "payload_hex": "0000000053504d310000000001881028000000040000000000",
+      "source_qom": {
+        "enabled-profile": 0,
+        "reference-identity": 1397771569,
+        "physical-base": 25694248,
+        "window-bytes": 4,
+        "mask-value": 0,
+        "vmstate-bytes": 25,
+        "register-count": 1,
+        "irq-output-count": 0,
+        "clock-input-count": 0,
+        "clock-output-count": 0,
+        "timer-count": 0,
+        "programmed": false,
+        "mask-known": false,
+        "readback-supported": false,
+        "ready-modeled": false,
+        "firmware-modeled": false,
+        "pas-modeled": false,
+        "enabled-reference": false
+      },
+      "trace": {
+        "qmp_requests": 62,
+        "qtest_commands": 2,
+        "actual_pure_getters": 54,
+        "source_stop_and_postmigrate_verified": true,
+        "virtual_epoch": 400000,
+        "ram_witness": 1397771523,
+        "full_source_snapshot_and_after_save_equal": true
+      }
+    }
+  ],
+  "completed_migrations": [
+    {
+      "name": "migration_unknown",
+      "first_getter_request_id": 24,
+      "last_first_getter_request_id": 41,
+      "first_pure_getters": 18,
+      "actual_qom_getters_total": 144,
+      "prewarm_actual_device_mmio": 1,
+      "first_device_mmio_delta": 0,
+      "first_cont_delta": 0,
+      "actual_ram_witness": 1397771520,
+      "qmp_requests": 151,
+      "qtest_commands": 9,
+      "source_snapshot_restored_before_cont": true,
+      "post_restore_read_rejected_reset_unknown_and_written_zero_verified": true,
+      "shared_timestamp_used": false,
+      "cross_file_order_basis": "Pinned producer sequence plus actual before/after counters and independent per-file command/response order; no synthetic global timestamp."
+    },
+    {
+      "name": "migration_driver",
+      "first_getter_request_id": 24,
+      "last_first_getter_request_id": 41,
+      "first_pure_getters": 18,
+      "actual_qom_getters_total": 144,
+      "prewarm_actual_device_mmio": 1,
+      "first_device_mmio_delta": 0,
+      "first_cont_delta": 0,
+      "actual_ram_witness": 1397771521,
+      "qmp_requests": 151,
+      "qtest_commands": 9,
+      "source_snapshot_restored_before_cont": true,
+      "post_restore_read_rejected_reset_unknown_and_written_zero_verified": true,
+      "shared_timestamp_used": false,
+      "cross_file_order_basis": "Pinned producer sequence plus actual before/after counters and independent per-file command/response order; no synthetic global timestamp."
+    },
+    {
+      "name": "migration_known_zero",
+      "first_getter_request_id": 24,
+      "last_first_getter_request_id": 41,
+      "first_pure_getters": 18,
+      "actual_qom_getters_total": 144,
+      "prewarm_actual_device_mmio": 1,
+      "first_device_mmio_delta": 0,
+      "first_cont_delta": 0,
+      "actual_ram_witness": 1397771522,
+      "qmp_requests": 151,
+      "qtest_commands": 9,
+      "source_snapshot_restored_before_cont": true,
+      "post_restore_read_rejected_reset_unknown_and_written_zero_verified": true,
+      "shared_timestamp_used": false,
+      "cross_file_order_basis": "Pinned producer sequence plus actual before/after counters and independent per-file command/response order; no synthetic global timestamp."
+    }
+  ],
+  "profile_rejections": [
+    {
+      "name": "on_to_off",
+      "actual_stderr_diagnostic": "qcom-sm8250-spss-irq-mask: migrated profile mismatch",
+      "destination_exit": 1,
+      "process_exit_evidence": "Reviewed producer process.wait receipt, backed by actual fatal load stderr; process was not re-executed by auditor.",
+      "incoming_file": "spss-mask-driver.migration",
+      "device_mmio_commands": 0,
+      "cont_commands": 0,
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "off_to_on",
+      "actual_stderr_diagnostic": "qcom-sm8250-spss-irq-mask: migrated profile mismatch",
+      "destination_exit": 1,
+      "process_exit_evidence": "Reviewed producer process.wait receipt, backed by actual fatal load stderr; process was not re-executed by auditor.",
+      "incoming_file": "spss-mask-disabled.migration",
+      "device_mmio_commands": 0,
+      "cont_commands": 0,
+      "query_migrate_failed_response_required": false
+    }
+  ],
+  "one_bit_rejections": [
+    {
+      "name": "identity",
+      "bytes": 2286313,
+      "sha256": "ecfe7c4e395578dd49cd67c4248ec68aa2e2fb9f612b673bb2d766b29b4dec64",
+      "original": "spss-mask-driver.migration",
+      "payload_hex": "0000000153504d30000000000188102800000004fcffffff01",
+      "whole_stream_comparison": {
+        "byte_offset": 406620,
+        "before": 49,
+        "after": 48,
+        "changed_bits": 1,
+        "all_other_stream_bytes_equal": true,
+        "original_stream_sha256_unchanged": true
+      },
+      "actual_stderr_diagnostic": "qcom-sm8250-spss-irq-mask: migrated identity mismatch",
+      "destination_exit": 1,
+      "process_exit_evidence": "Reviewed producer process.wait receipt, backed by actual fatal load stderr; process was not re-executed by auditor.",
+      "incoming_file": "spss-mask-corrupt-identity.migration",
+      "device_mmio_commands": 0,
+      "cont_commands": 0,
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "physical_base",
+      "bytes": 2286313,
+      "sha256": "dd631ed9c788fcda536f6f9641e25d6801c3b68a676f6c6e178773e623b75dec",
+      "original": "spss-mask-driver.migration",
+      "payload_hex": "0000000153504d31000000000188102c00000004fcffffff01",
+      "whole_stream_comparison": {
+        "byte_offset": 406628,
+        "before": 40,
+        "after": 44,
+        "changed_bits": 1,
+        "all_other_stream_bytes_equal": true,
+        "original_stream_sha256_unchanged": true
+      },
+      "actual_stderr_diagnostic": "qcom-sm8250-spss-irq-mask: migrated geometry mismatch",
+      "destination_exit": 1,
+      "process_exit_evidence": "Reviewed producer process.wait receipt, backed by actual fatal load stderr; process was not re-executed by auditor.",
+      "incoming_file": "spss-mask-corrupt-physical_base.migration",
+      "device_mmio_commands": 0,
+      "cont_commands": 0,
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "window_bytes",
+      "bytes": 2286313,
+      "sha256": "cdbff7d06003f39c352cd27c6aff74d836bfd9e83c9ae4065d467b5d8197d01c",
+      "original": "spss-mask-driver.migration",
+      "payload_hex": "0000000153504d31000000000188102800000005fcffffff01",
+      "whole_stream_comparison": {
+        "byte_offset": 406632,
+        "before": 4,
+        "after": 5,
+        "changed_bits": 1,
+        "all_other_stream_bytes_equal": true,
+        "original_stream_sha256_unchanged": true
+      },
+      "actual_stderr_diagnostic": "qcom-sm8250-spss-irq-mask: migrated geometry mismatch",
+      "destination_exit": 1,
+      "process_exit_evidence": "Reviewed producer process.wait receipt, backed by actual fatal load stderr; process was not re-executed by auditor.",
+      "incoming_file": "spss-mask-corrupt-window_bytes.migration",
+      "device_mmio_commands": 0,
+      "cont_commands": 0,
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "programmed_flag",
+      "bytes": 2286313,
+      "sha256": "79eaabbb435b35cc8f631b68c2b13f04860a2d60e3b7ef8b735f8c93a67667cb",
+      "original": "spss-mask-unknown.migration",
+      "payload_hex": "0000000153504d310000000001881028000000040000000002",
+      "whole_stream_comparison": {
+        "byte_offset": 406637,
+        "before": 0,
+        "after": 2,
+        "changed_bits": 1,
+        "all_other_stream_bytes_equal": true,
+        "original_stream_sha256_unchanged": true
+      },
+      "actual_stderr_diagnostic": "qcom-sm8250-spss-irq-mask: invalid migrated programmed flag",
+      "destination_exit": 1,
+      "process_exit_evidence": "Reviewed producer process.wait receipt, backed by actual fatal load stderr; process was not re-executed by auditor.",
+      "incoming_file": "spss-mask-corrupt-programmed_flag.migration",
+      "device_mmio_commands": 0,
+      "cont_commands": 0,
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "unknown_mask",
+      "bytes": 2286313,
+      "sha256": "b4281dc922eb64c6740e24bd3df3c9a7bd959e68ce601ee033cfc5a52f8eea3d",
+      "original": "spss-mask-unknown.migration",
+      "payload_hex": "0000000153504d310000000001881028000000040000000100",
+      "whole_stream_comparison": {
+        "byte_offset": 406636,
+        "before": 0,
+        "after": 1,
+        "changed_bits": 1,
+        "all_other_stream_bytes_equal": true,
+        "original_stream_sha256_unchanged": true
+      },
+      "actual_stderr_diagnostic": "qcom-sm8250-spss-irq-mask: invalid migrated unknown mask",
+      "destination_exit": 1,
+      "process_exit_evidence": "Reviewed producer process.wait receipt, backed by actual fatal load stderr; process was not re-executed by auditor.",
+      "incoming_file": "spss-mask-corrupt-unknown_mask.migration",
+      "device_mmio_commands": 0,
+      "cont_commands": 0,
+      "query_migrate_failed_response_required": false
+    },
+    {
+      "name": "disabled_programmed",
+      "bytes": 2286313,
+      "sha256": "ebe32ed222dac4c87725b8b68d0f6cb49ba3c9fc916391884a42fe27078adbc7",
+      "original": "spss-mask-disabled.migration",
+      "payload_hex": "0000000053504d310000000001881028000000040000000001",
+      "whole_stream_comparison": {
+        "byte_offset": 406637,
+        "before": 0,
+        "after": 1,
+        "changed_bits": 1,
+        "all_other_stream_bytes_equal": true,
+        "original_stream_sha256_unchanged": true
+      },
+      "actual_stderr_diagnostic": "qcom-sm8250-spss-irq-mask: invalid migrated disabled state",
+      "destination_exit": 1,
+      "process_exit_evidence": "Reviewed producer process.wait receipt, backed by actual fatal load stderr; process was not re-executed by auditor.",
+      "incoming_file": "spss-mask-corrupt-disabled_programmed.migration",
+      "device_mmio_commands": 0,
+      "cont_commands": 0,
+      "query_migrate_failed_response_required": false
+    }
+  ],
+  "verified_members": {
+    "qemu-build/qemu-system-aarch64": {
+      "bytes": 63675200,
+      "sha256": "b50345fe7dba411426779f27963ecb1b08d1ae6fa4d83e50e7cea4351cbf7d25"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/case.json": {
+      "bytes": 1228,
+      "sha256": "f22d91dd02e5a00019ec501a4f0ccc69ef82b265c479aa2900abababf4f6dcf1"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/default-off/command.json": {
+      "bytes": 552,
+      "sha256": "8b993934adfc02000892f315c2f32a160237cd3ed7d186b702cace7680ba68b7"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/default-off/qemu.stderr": {
+      "bytes": 351,
+      "sha256": "615854ed02639a398de6418c34b6a0fabd488e727a4db226dd6adabda31e9a1b"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/default-off/qmp.jsonl": {
+      "bytes": 29847,
+      "sha256": "73b72d406f59171897a8e5cfd22500217a762d0b46b856bb0728960b22ddeef7"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/default-off/qtest.jsonl": {
+      "bytes": 405,
+      "sha256": "ab86157b818854d44df4d33181f1e0ac180b50fab913f682527c30dd9989b6e0"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-disabled-source/command.json": {
+      "bytes": 618,
+      "sha256": "43d77b1c900eec29be380a9cbf0a2e41bc2cac6728d7cd9c403455b4a6b8b9be"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-disabled-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-disabled-source/qmp.jsonl": {
+      "bytes": 10864,
+      "sha256": "c63069f6c6cf99637ff79184c2ed73a8bc82caff843932e594c74191d35e63c8"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-disabled-source/qtest.jsonl": {
+      "bytes": 166,
+      "sha256": "045d9e4239d9e36c1d0e362300a228ba738a82c5894f1f784fdf9555a31e88b0"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-disabled-source/source-after-save.json": {
+      "bytes": 462,
+      "sha256": "acc33c7c986df01d42d8fddb3833baa3b18b9ac8b6c8f542d5fd206b2b6e1e1f"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-disabled-source/source-before-save.json": {
+      "bytes": 462,
+      "sha256": "acc33c7c986df01d42d8fddb3833baa3b18b9ac8b6c8f542d5fd206b2b6e1e1f"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-disabled-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "6fb2fa9d7d02defd691a1d1b139de4376869afce1f3c174588a2ec46396747c0"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-driver-source/command.json": {
+      "bytes": 617,
+      "sha256": "8337b2f5ff0a74d0470d365db488f9c3d9907a77d1daafb9d07b31b3e784e046"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-driver-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-driver-source/qmp.jsonl": {
+      "bytes": 10880,
+      "sha256": "8b415517c17c7918fc1784c601df3174f5202448a9f1d1fc18d770e14f4dcb10"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-driver-source/qtest.jsonl": {
+      "bytes": 248,
+      "sha256": "5ff8494b8d4db9cb835b44a8fe51fc11bc2063fc2bbeccadf99988b8bd1ba15a"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-driver-source/source-after-save.json": {
+      "bytes": 468,
+      "sha256": "3fd361913abba8164b43b872a5603b1c6f1da2b3707e4a91c67b6575be43663d"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-driver-source/source-before-save.json": {
+      "bytes": 468,
+      "sha256": "3fd361913abba8164b43b872a5603b1c6f1da2b3707e4a91c67b6575be43663d"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-driver-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "88e67be67e1557b345418e855abcabe6456aee84627b76e4d1a8dc843742d1d8"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-driver-target/command.json": {
+      "bytes": 643,
+      "sha256": "e82b8d2e4327d5326e4f04d0349d86b109a8026c1c8e9d0701d2fc3bca2b6fce"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-driver-target/destination-before-first-device-mmio.json": {
+      "bytes": 1066,
+      "sha256": "cd92a265204bf6846c6f1a99bd5ea4cf32c722cb1dd2a56a126ae5794aa8a6d9"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-driver-target/destination-before-incoming.json": {
+      "bytes": 656,
+      "sha256": "b7e1a6854d7dbe4b14093d597c10732166160a2760197cb4bbfe22d44b85ca33"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-driver-target/qemu.stderr": {
+      "bytes": 84,
+      "sha256": "ecfed349a115579ce56931a55b2050706422b656cecc83f2d4bb80844fc0738d"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-driver-target/qmp.jsonl": {
+      "bytes": 24590,
+      "sha256": "047e522e9d674c770db2f75829c1de6c96de71d0c6b2e5d8611d898c42c1d51f"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-driver-target/qtest.jsonl": {
+      "bytes": 773,
+      "sha256": "256f538c1ac4407bf030483ffc54c3fd7710feb16cc3c1570a62c9725f026656"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-known-zero-source/command.json": {
+      "bytes": 617,
+      "sha256": "be2c32d2987175011b6b9628144cda212a610cfb9b474a68e6ddd708a685e0ae"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-known-zero-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-known-zero-source/qmp.jsonl": {
+      "bytes": 10856,
+      "sha256": "614f8f3f2b1fab02c6e976802de10040c2a84c4bb8223d609f490099c1a92815"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-known-zero-source/qtest.jsonl": {
+      "bytes": 241,
+      "sha256": "fcd64f3c6526a7fd11b755bb70dfb1d37adb92886f4aee82ac362c7625650309"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-known-zero-source/source-after-save.json": {
+      "bytes": 459,
+      "sha256": "4a0b4c39ad5906cce4b1f25ab0dbd57fa1193952e8966762709a6e9e2c3684ad"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-known-zero-source/source-before-save.json": {
+      "bytes": 459,
+      "sha256": "4a0b4c39ad5906cce4b1f25ab0dbd57fa1193952e8966762709a6e9e2c3684ad"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-known-zero-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "53385dd4a158314bd3cb6d90758017d5cdc3a82eacf932300461df2841d508ca"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-known-zero-target/command.json": {
+      "bytes": 643,
+      "sha256": "d855fd68e2440fd55013949729f934f19532e498de8514151d2f39d1076263ca"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-known-zero-target/destination-before-first-device-mmio.json": {
+      "bytes": 1057,
+      "sha256": "0930d4066329b24be13dd5626ea132e31fb5de157f1ef3a24cfbd599161660fc"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-known-zero-target/destination-before-incoming.json": {
+      "bytes": 660,
+      "sha256": "e1bcad08ddfa8cf69ce2fe53410b8c8da46d32c69a08bdc739eca9b280569b44"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-known-zero-target/qemu.stderr": {
+      "bytes": 84,
+      "sha256": "ecfed349a115579ce56931a55b2050706422b656cecc83f2d4bb80844fc0738d"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-known-zero-target/qmp.jsonl": {
+      "bytes": 24562,
+      "sha256": "1d34426edfebfbdcb44a0cb88099c73821fab3484fb7ddead547d2364cbba34d"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-known-zero-target/qtest.jsonl": {
+      "bytes": 775,
+      "sha256": "2a060fbc9594a7eb08b7a68828b92f2c7271f1f7a7b96bf58f9beefaef9201d3"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-unknown-source/command.json": {
+      "bytes": 617,
+      "sha256": "300967a49131707ffb4d6fa9a7226ee963d1101885aed77a8fe2ad1b525fe678"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-unknown-source/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-unknown-source/qmp.jsonl": {
+      "bytes": 10860,
+      "sha256": "1fe03e698a1fe256341f0e282bc6a8a30a86ce42d1c7111bd2a2a110fcc6bba9"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-unknown-source/qtest.jsonl": {
+      "bytes": 166,
+      "sha256": "d8d3d99f6c74210756e8538f560c76f6fbd9b3b814d0276aef1eeb840ede348b"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-unknown-source/source-after-save.json": {
+      "bytes": 461,
+      "sha256": "e1c8f3c32078b3dd8fe8c42421736b7fd237f6e5fd4c1d8bf7e12f5d9711df05"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-unknown-source/source-before-save.json": {
+      "bytes": 461,
+      "sha256": "e1c8f3c32078b3dd8fe8c42421736b7fd237f6e5fd4c1d8bf7e12f5d9711df05"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-unknown-source/source-query-migrate.json": {
+      "bytes": 544,
+      "sha256": "88e67be67e1557b345418e855abcabe6456aee84627b76e4d1a8dc843742d1d8"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-unknown-target/command.json": {
+      "bytes": 643,
+      "sha256": "2a9eaaa99f6a79bfab53b303d5c704d6b13270a88f94a3c126a249acc9691e9d"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-unknown-target/destination-before-first-device-mmio.json": {
+      "bytes": 1059,
+      "sha256": "576fbd13303c70e2765e4d86d5a28e1a9cca5eac5f62f46d95a0d31b58aa13f9"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-unknown-target/destination-before-incoming.json": {
+      "bytes": 660,
+      "sha256": "e4c4160216f6de287c9fe24abe5846387ea3818f65c2b3c23f6337583a117ac3"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-unknown-target/qemu.stderr": {
+      "bytes": 84,
+      "sha256": "ecfed349a115579ce56931a55b2050706422b656cecc83f2d4bb80844fc0738d"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-unknown-target/qmp.jsonl": {
+      "bytes": 24567,
+      "sha256": "a00ad7b3b7194b6ec9e95b6962792b0395311d1d08bb4ef71f0266015decc471"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/migration-unknown-target/qtest.jsonl": {
+      "bytes": 775,
+      "sha256": "e935e39e9287b597eb2f9e37fac46730ef6ad571113a3982fcbfe1e269ebdf49"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-00-cold_identity_unknown_and_pure_getters/command.json": {
+      "bytes": 617,
+      "sha256": "d36cac1c05fa0fcbc438eb7e9580399126b897f5ee2a1d2ec49eff0a35644eb9"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-00-cold_identity_unknown_and_pure_getters/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-00-cold_identity_unknown_and_pure_getters/qmp.jsonl": {
+      "bytes": 7403,
+      "sha256": "adc469d5dcb0fc87a4221c77ab4e1dceb4e144f6e75ce4ee4a5054125f2ac341"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-00-cold_identity_unknown_and_pure_getters/qtest.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-01-literal_original_probe_mask/command.json": {
+      "bytes": 617,
+      "sha256": "6996916e074133f884a830de8de0ca6250a376f42668cef0a38b93b8f2569e6b"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-01-literal_original_probe_mask/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-01-literal_original_probe_mask/qmp.jsonl": {
+      "bytes": 3281,
+      "sha256": "3dd499ed4e1bde72f963360cc548458e12acf1720e589e05a7b3d69949498ec3"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-01-literal_original_probe_mask/qtest.jsonl": {
+      "bytes": 82,
+      "sha256": "9ea4f79f47d5551f663aad514438f0314c3fbc05e0ee5899009489f2b739cc9c"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-02-full_u32_writes_replace_entire_mask/command.json": {
+      "bytes": 617,
+      "sha256": "2d45cf9b737efa9081172f922fb8cafac99127605df0e0e710f35f13bbaeaf2f"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-02-full_u32_writes_replace_entire_mask/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-02-full_u32_writes_replace_entire_mask/qmp.jsonl": {
+      "bytes": 29640,
+      "sha256": "2173c0557f42df6805130a3cb81e65d7a75a74a60ece9684944541c3b271b72c"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-02-full_u32_writes_replace_entire_mask/qtest.jsonl": {
+      "bytes": 803,
+      "sha256": "23892dce8380b527b18cae96dfe8f2f5ac00cdf398e4ac349ab79bd3bacd1618"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-03-zero_programming_provenance_and_reset/command.json": {
+      "bytes": 617,
+      "sha256": "8c4ae1caa6d03fd96dcf50204cb8ca55d96308ebec5737c5146a001b52a62f6d"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-03-zero_programming_provenance_and_reset/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-03-zero_programming_provenance_and_reset/qmp.jsonl": {
+      "bytes": 24197,
+      "sha256": "c30e51f253039f654f60ab301e0ccd57fd2221af99273e6c444ff5d888f99dab"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-03-zero_programming_provenance_and_reset/qtest.jsonl": {
+      "bytes": 388,
+      "sha256": "eb41bcdff4b6a032059e10331639fa3a2408ac7408978eb4a5d25ddd7aad8f42"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-04-every_guest_read_is_rejected/command.json": {
+      "bytes": 617,
+      "sha256": "6c5b1e8081f7e695507f98265b6bf26c14a003d65acd98c7cde9a8f35ccb0541"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-04-every_guest_read_is_rejected/qemu.stderr": {
+      "bytes": 672,
+      "sha256": "77632fa44061ec391b8b46684b1d0170b5e55318989dc00612eb93927f454c2b"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-04-every_guest_read_is_rejected/qmp.jsonl": {
+      "bytes": 50307,
+      "sha256": "9346a724313e6949939cd78cca2975e0cd79f271277fb1b37dd912087eab090d"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-04-every_guest_read_is_rejected/qtest.jsonl": {
+      "bytes": 794,
+      "sha256": "8e24f6db739ff9f8ff42c458fafe5082b4de4ef4eaecadc82336a6390e76db7c"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-05-invalid_width_and_alignment_never_program/command.json": {
+      "bytes": 617,
+      "sha256": "359499fa74ebe3dcc80583501c6fb0f57595d5afb1edb8edbe007864d1a449b5"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-05-invalid_width_and_alignment_never_program/qemu.stderr": {
+      "bytes": 782,
+      "sha256": "73e396e301efa237770a8f02ee86fd883635ffeeeaf325319846bc3867e00a30"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-05-invalid_width_and_alignment_never_program/qmp.jsonl": {
+      "bytes": 56203,
+      "sha256": "df7a9b8bb6c07079ade0d08753d30e1d534e469d20228fa96c8c853afc852b73"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-05-invalid_width_and_alignment_never_program/qtest.jsonl": {
+      "bytes": 814,
+      "sha256": "73f72d244b272ec972c559b335614f187c6e78d380d57b5a6ce77b5f144063d3"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-06-exact_single_leaf_and_surrounding_holes/command.json": {
+      "bytes": 617,
+      "sha256": "eb26b38436c75112bb0e322a0ea9754c3e2e4195f7f3012b85ac32a0a1badfe8"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-06-exact_single_leaf_and_surrounding_holes/mtree.txt": {
+      "bytes": 55205,
+      "sha256": "e8bb14b3c6fc977535cc14bf4490303cc2d582d96f5415585b1a3fb56c26ac34"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-06-exact_single_leaf_and_surrounding_holes/qemu.stderr": {
+      "bytes": 1043,
+      "sha256": "7b2753c5aee786768e8ad69f16045a1b770a0b52cbcbfcbd83abc4366149dd56"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-06-exact_single_leaf_and_surrounding_holes/qmp.jsonl": {
+      "bytes": 80620,
+      "sha256": "522ac09739fb7e4d9828eb2273dc18fd64994f31ca75f6c964a4fc4f356c0205"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-06-exact_single_leaf_and_surrounding_holes/qtest.jsonl": {
+      "bytes": 1279,
+      "sha256": "0956e339fa495f030b1897ae06def9f0122bc599de7bb0c6720f1b2737fd6602"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-07-runtime_observers_are_readonly_and_time_has_no_effect/command.json": {
+      "bytes": 617,
+      "sha256": "345e3145f440e34ddf7451abd512f234e180353b220536bb2edfd3b80f547125"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-07-runtime_observers_are_readonly_and_time_has_no_effect/qemu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-07-runtime_observers_are_readonly_and_time_has_no_effect/qmp.jsonl": {
+      "bytes": 14120,
+      "sha256": "0dc852b10d373b3e7e6c397255f656041fabb195af14a0add5a100338c767693"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/ordinary-07-runtime_observers_are_readonly_and_time_has_no_effect/qtest.jsonl": {
+      "bytes": 163,
+      "sha256": "b1cbeda3bc8ecfc6ae21db0fbb0d5ae046477362dad0e72b3fa1c3c3d78b3575"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/paused-tcg/command.json": {
+      "bytes": 499,
+      "sha256": "9e61cb48919e1cb0e9e47f9428421af9f8f03b2b5d9537657c9aafb792cbc4b2"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/paused-tcg/qemu.stderr": {
+      "bytes": 80,
+      "sha256": "7284085dd753f0c5d5ee4749e5640d9a1546a7fb25baf0b6e4f9064158c5a073"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/paused-tcg/qmp.jsonl": {
+      "bytes": 8284,
+      "sha256": "5e0bf28000d8989fccb38a1c4d9d989dcba1763f908481b821d02fb12d13687e"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/paused-tcg/qtest.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-disabled_programmed/command.json": {
+      "bytes": 644,
+      "sha256": "0c82aa3de16df728d0e60d40ff158e95b1c9ffb766fdc6e97503f03246958610"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-disabled_programmed/qemu.stderr": {
+      "bytes": 325,
+      "sha256": "91aee18090d5eba7c3a76e4edbb865ae5c3b4c695e9f74be005ff5b3ffd03472"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-disabled_programmed/qmp.jsonl": {
+      "bytes": 488,
+      "sha256": "3cb44a407d0c174694e2d20b3de9bb93847cbfa4587b2bc722652012ce36b3d2"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-disabled_programmed/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "d74971d9d4966e71076b44b2b6eb1899ccccd690f3a118d173e011a4a532e88b"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-identity/command.json": {
+      "bytes": 643,
+      "sha256": "68f694f6ab661c32d8eb9b63587b004961e1ea37f53179924c16805f8030a5db"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-identity/qemu.stderr": {
+      "bytes": 320,
+      "sha256": "1fcee54076473a13716d06aa67ba30f6d324400c25560da59d16b924165caf9c"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-identity/qmp.jsonl": {
+      "bytes": 477,
+      "sha256": "8a2fc92d25ad985144d6eccd39b65c7b08bb35c44b5e30a83dcd9cdb5a0638f8"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-identity/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "946afcbcdce9ce1557690e71a44852e9b2a42b4651041533c3d060283a2f27d1"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-physical_base/command.json": {
+      "bytes": 643,
+      "sha256": "edf4ae4d9e0fe26e2e8e72507493091988f36e038ebf71f1befba08ea7295171"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-physical_base/qemu.stderr": {
+      "bytes": 320,
+      "sha256": "9e5a197bd554bdba97fb7a3d2c0be2e03a19cef8c9e00e218f6d203a745edb1a"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-physical_base/qmp.jsonl": {
+      "bytes": 482,
+      "sha256": "0f78b5f8b359b9e775f9cbc7c3b7b140496ef5f755602c1a9b7b34f0290e2cd7"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-physical_base/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "946afcbcdce9ce1557690e71a44852e9b2a42b4651041533c3d060283a2f27d1"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-programmed_flag/command.json": {
+      "bytes": 643,
+      "sha256": "465c74d90e2893d0d95a712e12282c5c05f8cadbdf768a88eb26723e8b279584"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-programmed_flag/qemu.stderr": {
+      "bytes": 326,
+      "sha256": "14ae7688bf55bb72d00fe81f9a8d9f977c14041586c558944764549e970b0a88"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-programmed_flag/qmp.jsonl": {
+      "bytes": 484,
+      "sha256": "a1d12875660895b33c3ba90f7a41f093bb48dc62b504c14d5f844baa4a24f656"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-programmed_flag/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "c65d88940c3f66de8ad6d3b9f15bf8f537550d206971760125bf52d3df1bcad3"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-unknown_mask/command.json": {
+      "bytes": 643,
+      "sha256": "2f74e239be20a610e99609bee353ada8cde4e5fc46100e41126f09bef3ab4381"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-unknown_mask/qemu.stderr": {
+      "bytes": 323,
+      "sha256": "aeb87a2cee6411b732588430669b84548ab067fc9750ace833eb1ebd3aec9139"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-unknown_mask/qmp.jsonl": {
+      "bytes": 481,
+      "sha256": "9f61e748843cd94a79733227750ec7e4db50351885753ef5ef9ea377896d3462"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-unknown_mask/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "c65d88940c3f66de8ad6d3b9f15bf8f537550d206971760125bf52d3df1bcad3"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-window_bytes/command.json": {
+      "bytes": 643,
+      "sha256": "5b1fa165bf9b444faf7bc4a2259d1c44eb4c18c838787068abb537f288ce5427"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-window_bytes/qemu.stderr": {
+      "bytes": 320,
+      "sha256": "9e5a197bd554bdba97fb7a3d2c0be2e03a19cef8c9e00e218f6d203a745edb1a"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-window_bytes/qmp.jsonl": {
+      "bytes": 481,
+      "sha256": "52639d7149051fd9962bacdb62ba0460f3602a094df3824ac6b766170d5c16d0"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-corrupt-window_bytes/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "946afcbcdce9ce1557690e71a44852e9b2a42b4651041533c3d060283a2f27d1"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-profile-off_to_on/command.json": {
+      "bytes": 643,
+      "sha256": "8380d93a0e97fcc45343a04eeb85aeb6e219ce644088009f7a3d9f43ad505891"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-profile-off_to_on/qemu.stderr": {
+      "bytes": 319,
+      "sha256": "dedcb9272e76b2cc97c4db878d12ec5c2b7503a594dc96ad1a0ea25334a09197"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-profile-off_to_on/qmp.jsonl": {
+      "bytes": 469,
+      "sha256": "4e72713816e90739cafe0170a476e0648b66dccbcf57d99bbf6f12209fa28590"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-profile-off_to_on/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "d74971d9d4966e71076b44b2b6eb1899ccccd690f3a118d173e011a4a532e88b"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-profile-on_to_off/command.json": {
+      "bytes": 644,
+      "sha256": "87fa36317175310eb3a840cfe450c09d8a180ccddb5259bbc596b07a42e1caa6"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-profile-on_to_off/qemu.stderr": {
+      "bytes": 319,
+      "sha256": "dedcb9272e76b2cc97c4db878d12ec5c2b7503a594dc96ad1a0ea25334a09197"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-profile-on_to_off/qmp.jsonl": {
+      "bytes": 467,
+      "sha256": "c49eee225f945758bb8c23702f8cc9c42bc7eef548474e8968ad3aef2e170b70"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/reject-profile-on_to_off/qtest.jsonl": {
+      "bytes": 78,
+      "sha256": "946afcbcdce9ce1557690e71a44852e9b2a42b4651041533c3d060283a2f27d1"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/result.json": {
+      "bytes": 38240,
+      "sha256": "6ba962acf9bacd5c870c9c7ca50625316f169459c432ad04b61cc2063dfb0cbf"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-corrupt-disabled_programmed.migration": {
+      "bytes": 2286313,
+      "sha256": "ebe32ed222dac4c87725b8b68d0f6cb49ba3c9fc916391884a42fe27078adbc7"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-corrupt-identity.migration": {
+      "bytes": 2286313,
+      "sha256": "ecfe7c4e395578dd49cd67c4248ec68aa2e2fb9f612b673bb2d766b29b4dec64"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-corrupt-physical_base.migration": {
+      "bytes": 2286313,
+      "sha256": "dd631ed9c788fcda536f6f9641e25d6801c3b68a676f6c6e178773e623b75dec"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-corrupt-programmed_flag.migration": {
+      "bytes": 2286313,
+      "sha256": "79eaabbb435b35cc8f631b68c2b13f04860a2d60e3b7ef8b735f8c93a67667cb"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-corrupt-unknown_mask.migration": {
+      "bytes": 2286313,
+      "sha256": "b4281dc922eb64c6740e24bd3df3c9a7bd959e68ce601ee033cfc5a52f8eea3d"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-corrupt-window_bytes.migration": {
+      "bytes": 2286313,
+      "sha256": "cdbff7d06003f39c352cd27c6aff74d836bfd9e83c9ae4065d467b5d8197d01c"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-disabled.migration": {
+      "bytes": 2286313,
+      "sha256": "d6172cf8bb1875a8c50512e423b6c159d1ef49c580e41c6a551ff046c13eaed9"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-disabled.migration.sections.json": {
+      "bytes": 491,
+      "sha256": "c6fbe9829c94aa66b3985a2ed3c94b52bac2716b7b72e36db02eb5bad98837cb"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-disabled.migration.spss-mask-v1.payload.bin": {
+      "bytes": 25,
+      "sha256": "9908b8a9fb8c4c94d880066324d2e2ae33dbc3e9fc6417fd6779acda57255430"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-driver.migration": {
+      "bytes": 2286313,
+      "sha256": "6e76b0c95164903303a0040c4378de6fe1a2d81fbf6e8f3b7a62a8b606db1779"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-driver.migration.sections.json": {
+      "bytes": 489,
+      "sha256": "149166f88eeaf7542cdf2061160960a8cd553c7d35247b9325cec49562099723"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-driver.migration.spss-mask-v1.payload.bin": {
+      "bytes": 25,
+      "sha256": "0947007bf43ba34ae40ce371d306fd5e9971217fbe94200f725fdcf749dce9cf"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-known-zero.migration": {
+      "bytes": 2286313,
+      "sha256": "c70394aa60223da1ee11c179d4d7df49633899425aec44ea5f6d44b8e4eebb96"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-known-zero.migration.sections.json": {
+      "bytes": 493,
+      "sha256": "4871a4ff89a12fe72b7bf8696ca6ffd9cdc5de8afd91612dc6a9ec634bb6aaee"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-known-zero.migration.spss-mask-v1.payload.bin": {
+      "bytes": 25,
+      "sha256": "653c49895880ebc30b7487de2b6e1c98ffe2702f9e7bbd06f8489f5cabd71f4c"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-unknown.migration": {
+      "bytes": 2286313,
+      "sha256": "f1f98c1f93c49e9faa818098d15dec3d20234f8274904c0e0c8e6e19a25e3820"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-unknown.migration.sections.json": {
+      "bytes": 490,
+      "sha256": "34766917dab9cde816ae2c8a87229bdf3c871b1db69fb8d0a737890a329928ce"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/fixtures/data/spss-mask-unknown.migration.spss-mask-v1.payload.bin": {
+      "bytes": 25,
+      "sha256": "5175a611ca690a472d8f936d82801af5b54a746c9bf993e8af8b44d3069ef91f"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tb371fc-results/components/63-spss-irq-mask-sm8250-reference/stdout.log": {
+      "bytes": 38240,
+      "sha256": "6ba962acf9bacd5c870c9c7ca50625316f169459c432ad04b61cc2063dfb0cbf"
+    },
+    "tb371fc-results/source-commit.txt": {
+      "bytes": 41,
+      "sha256": "f5eb3965f9c669e1df3612071d9e742bb8efbd56e10f127d4201c9872dc96954"
+    }
+  },
+  "verified_member_count": 143
+}

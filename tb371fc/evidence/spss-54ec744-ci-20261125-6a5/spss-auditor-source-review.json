@@ -1,0 +1,110 @@
+{
+  "schema": "tb371fc-spss-wire-auditor-independent-source-review-v1",
+  "reviewed_head": "3bd583f2079634d01c12160ab3e3f0c5a3e47e86",
+  "reviewed_auditor": {
+    "path": "/dev/shm/spss-independent-audit/audit_spss_irq_mask_artifact.py",
+    "bytes": 63293,
+    "sha256": "91989fb1e06687ac3d36790c509900dd26e829b26ada5680f388fa2aa474eb39"
+  },
+  "producer_sha256": "c0a74b8ad19b621ebb748bcb388e5f02248c212912c1f19d9de0cbb8d546e180",
+  "model_sha256": "9b8e0b32fa58b703726932f587db175e9ca511edacb46c7b3e86b667e83edc0f",
+  "blocking_findings": [],
+  "bounded_source_review_passed": true,
+  "artifact_qualified": false,
+  "actual_zip_audit_executed": false,
+  "qemu_or_guest_executed": false,
+  "producer_serializer_imported": false,
+  "auditor_pure_literal_self_check_executed": true,
+  "vmstate_declaration_layout": [
+    {
+      "offset": 0,
+      "bytes": 4,
+      "field": "reference_profile"
+    },
+    {
+      "offset": 4,
+      "bytes": 4,
+      "field": "reference_identity"
+    },
+    {
+      "offset": 8,
+      "bytes": 8,
+      "field": "physical_base"
+    },
+    {
+      "offset": 16,
+      "bytes": 4,
+      "field": "window_bytes"
+    },
+    {
+      "offset": 20,
+      "bytes": 4,
+      "field": "mask_value"
+    },
+    {
+      "offset": 24,
+      "bytes": 1,
+      "field": "written"
+    }
+  ],
+  "qom_trace_counts_derived_from_pinned_producer": {
+    "source": {
+      "initial": 18,
+      "stopped_before_export": 18,
+      "after_postmigrate": 18,
+      "total": 54
+    },
+    "target": {
+      "dirty_prewarm": 18,
+      "first_after_incoming": 18,
+      "after_cont_clock_step": 18,
+      "before_rejected_read": 18,
+      "after_rejected_read": 18,
+      "replacement": 18,
+      "after_reset": 18,
+      "known_zero": 18,
+      "total": 144
+    }
+  },
+  "reviewed_checks": {
+    "wire": {
+      "exact_offsets_match_C_declaration": true,
+      "all_25_bytes_covered_once": true,
+      "uint8_programmed_not_boolean_normalization": true,
+      "four_literal_vectors_passed": true,
+      "unknown_zero_distinct_in_byte24": true
+    },
+    "streams": {
+      "exact_four_original_six_mutant_inventory": true,
+      "all_ten_actual_streams_full_sha256_and_size": true,
+      "unique_section_and_full_footer": true,
+      "all_mutant_bytes_equal_original_except_expected_single_bit": true,
+      "all_six_mutation_offsets_and_error_categories_match": true,
+      "sidecar_and_payload_bin_compared_to_actual_stream": true
+    },
+    "protocol": {
+      "source54_getters_stop_completed_postmigrate": true,
+      "target144_getters_with_first18_before_cont": true,
+      "dirty_target_real_one_MMIO_and_RAM_witness": true,
+      "first_counters_1_to_1_MMIO_0_to_0_cont_18_to_36_QOM": true,
+      "exact_QTest_clock_epoch_and_witness_commands": true,
+      "both_profile_and_six_corruption_full_incoming_logs": true,
+      "failed_process_status_based_on_pinned_producer_wait_and_stderr_explicit": true,
+      "no_fabricated_shared_timestamp": true
+    },
+    "ordinary": {
+      "exact21_names_and_all_detail_fields": true,
+      "typed8_and_unaligned_scalar_rejection": true,
+      "buffered5_valid_prefix_and_1byte_hole": true,
+      "unknown_vs_programmed_zero_and_reset": true,
+      "defaultoff_and_paused_TCG": true,
+      "one4byte_leaf_and_seven_true_holes": true
+    }
+  },
+  "scope_limits": [
+    "This is a source/AST/literal-byte review; no published CI result or real ZIP was used.",
+    "The evidence for no MMIO before first QOM combines fixed producer order, explicit before/after counters and per-file actual protocol; the logs do not provide a shared cross-file timestamp.",
+    "The raw five-byte QTest buffer is allowed to commit its legal four-byte prefix; only scalar callbacks rejected by the device preserve the prior value.",
+    "No IRQ, readiness, PAS service, firmware, physical reset value or Android completion is claimed."
+  ]
+}

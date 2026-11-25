@@ -1,0 +1,103 @@
+{
+  "schema": "tb371fc-pr29-bounded-readonly-source-review-v1",
+  "reviewed_utc": "2026-11-25T00:26:58.732458+00:00",
+  "repository": "cyjin-yl/qemu-tb371fc",
+  "base": "7372681f546a7ac1b816377480601ddd8e7c16f5",
+  "pr29_merge": "d40638391637e918f3382092d64fba0a7a17cade",
+  "combined_head": "a3a6183d4e9842b2e61d3d1c9cd7b69b44165187",
+  "blocking_findings": [],
+  "tests_executed": false,
+  "network_transport_tests_executed": false,
+  "qemu_executed": false,
+  "device_rpc_used": false,
+  "github_mutations": false,
+  "combined_artifact_qualified": false,
+  "actual_source_pins": {
+    "helper": {
+      "path": "tb371fc/scripts/source_download.py",
+      "git_blob": "1dad3f8f54658defe3e705fe9245ec0aa02c19bd",
+      "bytes": 4642,
+      "sha256": "4fde0300dc4c8777531402dc700fbed6364f16b0550fc852c3031fe641fe7dd7"
+    },
+    "test": {
+      "path": "tb371fc/scripts/test_source_download.py",
+      "git_blob": "f9f4edc3fc9de97101560a521216b0050b0a6c3f",
+      "bytes": 13953,
+      "sha256": "b61b03821aeef22bd2bd0bb724c7a4bc7974dee426b495647cede3bed63fe6fd"
+    },
+    "all_16_fetched_git_blobs_recomputed": true
+  },
+  "transport_review": {
+    "max_attempts": 3,
+    "retry_http_statuses": [
+      408,
+      429,
+      500,
+      502,
+      503,
+      504
+    ],
+    "retry_backoff_seconds": [
+      1,
+      2
+    ],
+    "aggregate_retry_wait_budget_seconds": 30,
+    "retry_after_minimum_respected": true,
+    "excessive_retry_after_fails_without_early_retry": true,
+    "ssl_errors_nonretryable": true,
+    "transient_dns_eai_again_only": true,
+    "partial_content_length_body_discarded_and_fresh_get_required": true,
+    "response_limit_bytes": 524289,
+    "caller_size_bound_bytes": 524288,
+    "identity_checks_outside_retry": true,
+    "no_cache_or_alternate_url_fallback": true,
+    "socket_timeout_is_not_whole_response_deadline": true,
+    "existing_generator_timeout_seconds": 60,
+    "existing_gate_process_timeout_not_changed_by_patch": true,
+    "source_lines": {
+      "transient_classifier": "tb371fc/scripts/source_download.py:29-41",
+      "retry_after": "tb371fc/scripts/source_download.py:44-60",
+      "bounded_read_and_retry": "tb371fc/scripts/source_download.py:63-108"
+    }
+  },
+  "identity_contract_precision": {
+    "llcc": "Explicit whole-file SHA256, Git blob and exact byte size all remain in verifier lines 47-48, outside retry; all three failures are final.",
+    "other_six": "Their previous whole-file SHA256 and 512KiB size-bound checks remain unchanged. They did not all previously have explicit expected-size/blob checks at this verifier layer; this review does not invent new checks. Existing generator validation is unchanged.",
+    "all_seven": "Full AST equality after only the exact import and one urlopen/read replacement proves generation invocation, output byte comparisons, counts, source URLs, schema and verdict expressions unchanged."
+  },
+  "scope_change_inventory": {
+    "changed_files": 15,
+    "seven_verifiers": 7,
+    "new_transport_helper": 1,
+    "new_transport_unit_script": 1,
+    "workflow_added_commands": [
+      "python3 tb371fc/scripts/test_source_download.py",
+      "python3 tb371fc/scripts/test_ci_device_tests.py"
+    ],
+    "generation_tables_changed": false,
+    "model_or_producer_or_ci_plan_changed": false,
+    "shared_spSS_verifier_changed": false
+  },
+  "document_finding": {
+    "original_issue": "PR29 generic retry paragraph would describe SPSS incorrectly after combination; SPSS retains its separate 429/all5xx/timeout +1/2s policy.",
+    "resolved_in_combined_ci_md": true,
+    "combined_ci_blob": "1b1f185456822956be8dedca2baa2c997b685fe1",
+    "combined_ci_sha256": "193b8a85483802eeed3686d05a9204aaaa1c05beb506c76c989b900bf8c29598",
+    "resolution": "Combined text explicitly names only GCC/CAMCC/DISPCC/VIDEOCC/DSI/DP/LLCC as shared-helper users and keeps the SPSS-specific paragraph."
+  },
+  "auditor_adaptation": {
+    "aggregate": "Copy frozen f0013bb3 and change REVIEWED_HEAD only; RUNNER_SHA256 22d04821 and 95+5 PLAN remain fixed.",
+    "llcc": "Copy frozen a4a077fc and change HEAD only; source8/output2 and model/test/783B/313 remain fixed.",
+    "dp": "Copy frozen 434eaf76 and change HEAD only; source17/output2 and model/test/791B remain fixed.",
+    "dsi": "Frozen 0e0b7e6e already takes expected-head as CLI; no code change needed.",
+    "dispcc": "Frozen 62837675 already takes expected-head as CLI; no code change needed.",
+    "spss": "Copy frozen 91989fb1 and change HEAD only; model/test/25B/18 remain fixed.",
+    "all": "Use the actual new combined-head ZIP/source-commit and actual ELF SHA; preserve old receipts and do not reuse 3bd qualification for a3a."
+  },
+  "additional_ci_evidence": "New download helper tests are in the workflow host step, not 95+5 component plan. Retain actual new-step logs for 15 download cases and the current 33 acceptance-harness cases; old PR29 evidence of 31 harness cases describes its older base only.",
+  "files": {
+    "fetched_inputs_sha256": "eb5249da0e4fa53a1ff8be09899aa96b2dd5056ef16892ee69de0b4390cc546f",
+    "verifier_ast_comparison_sha256": "d992c35ee4dae8e7c089fbcd0c498b60b3d2668fdcd9ce0aeb366f6b84d913f6",
+    "combined_head_compare_sha256": "f76d9c9b2b3632977532f6bf17cf4908daf26c27ae8509a21e77d56193cd3651"
+  }
+}
