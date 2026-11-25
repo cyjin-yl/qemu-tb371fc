@@ -1,0 +1,333 @@
+{
+  "actual_append_bytes_and_sha256_equal_original_bootargs": true,
+  "all20_local_files_equal_collected_payload": true,
+  "android_outcome": {
+    "OEM_PBL_XBL_ABL_executed": false,
+    "boot_completed_observed": false,
+    "interactive_display_verified": false,
+    "stock_android_boot_passed": false,
+    "userspace_observed": false
+  },
+  "aop_unchanged": true,
+  "artifact": {
+    "archive_bytes": 55527863,
+    "archive_sha256": "9fdd4ad25d9b9f272456144de43f124381e03571c7d0d91d022d151ea82d687e",
+    "audit_receipt_sha256": "0a52a79598ff4f57e1697b7e8327d5229b3b2491e8947f7142c1e2bbc97d5206",
+    "id": 14982026237,
+    "qemu_sha256": "b50345fe7dba411426779f27963ecb1b08d1ae6fa4d83e50e7cea4351cbf7d25"
+  },
+  "binding_sha256": "efdcb0f739c52904a1a6204b57dfe6f6d297b1a84c7c20214467330958d16a47",
+  "blocking_review_findings": [],
+  "bootargs_modified": false,
+  "bounded_claim": "This single pinned native execution preserves original direct-kernel inputs and advances beyond the prior SPSS invalid-write frontier to an unmapped RPM statistics read. It does not establish SPSS firmware/PAS behavior, Android userspace/UI/boot completion, or complete storage backups.",
+  "bounded_frontier": {
+    "SPSS_consumer_link_line_observed": true,
+    "access": "read",
+    "explicit_SPSS_probe_success_not_established": true,
+    "faulting_opcode": "b9400017",
+    "first_kernel_failure_guest_seconds": 3.064255,
+    "instruction": "LDR W23, [X0]",
+    "invalid_mmio_count": 1,
+    "lr": "msm_rpmstats_probe+0x80/0x1c8",
+    "panic_guest_seconds": 3.067152,
+    "pc": "msm_rpmstats_probe+0x84/0x1c8",
+    "physical_address": "0x0c3f0004",
+    "prior_spss_0x01881028_invalid_access_absent": true,
+    "size_bytes": 4
+  },
+  "ci_run": 45521455233,
+  "collection_payload_sha256": "65c68f76cd622c1f0d03e3e87be2811640bcb17c75ddb0803808b72a952c01d1",
+  "compressed_collection_sha256": "3a737bcb2839bc513609f5a20bdab75baf77d2b8f49df4b7ac0ea7ff6e52b550",
+  "core_inputs": {
+    "bootargs": {
+      "bytes": 1392,
+      "post_run_unchanged_in_runner_and_coordinator": true,
+      "pre_verified_in_runner_plan": true,
+      "sha256": "63c5738bb0c67419dd7efa0c585156499d163479d01b421203c0b51756fc6732"
+    },
+    "dtb": {
+      "bytes": 973052,
+      "post_run_unchanged_in_runner_and_coordinator": true,
+      "pre_verified_in_runner_plan": true,
+      "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207"
+    },
+    "initrd": {
+      "bytes": 1298323,
+      "post_run_unchanged_in_runner_and_coordinator": true,
+      "pre_verified_in_runner_plan": true,
+      "sha256": "563f4b334f8470155c6a451395342f7044b70e79b480a886c7641960f534f596"
+    },
+    "kernel": {
+      "bytes": 37445648,
+      "post_run_unchanged_in_runner_and_coordinator": true,
+      "pre_verified_in_runner_plan": true,
+      "sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f"
+    }
+  },
+  "evidence": [
+    {
+      "bytes": 893,
+      "namespace": "container",
+      "path": "spss-run-receipt.json",
+      "sha256": "021ab662f48aa8d4373d050c030c20b7a15fd17266195a02afdb481a39cbb1dd"
+    },
+    {
+      "bytes": 819,
+      "namespace": "container",
+      "path": "input-selection.json",
+      "sha256": "9216930d6319c0bb39c5a9b3e732c95d7100b015a827429aec2393b991275ec7"
+    },
+    {
+      "bytes": 317,
+      "namespace": "container",
+      "path": "deployment-receipt.json",
+      "sha256": "3b992ff2bad541e0b0ee41c3b7d5c3cf6f448f72bd74b2d60dc4e1fed7b12370"
+    },
+    {
+      "bytes": 4927,
+      "namespace": "container",
+      "path": "actual-invocation-spss.json",
+      "sha256": "0f5c2813131e8e548d689a7c24cb033681df4798a5f42c9120394e16c038eb93"
+    },
+    {
+      "bytes": 10928,
+      "namespace": "container",
+      "path": "native-command-plan.json",
+      "sha256": "d2aa8a1dd37b84ef098d82c7f3bf4eeafd56ca502ab6eea40d9ed3e7481b480e"
+    },
+    {
+      "bytes": 7148,
+      "namespace": "container",
+      "path": "original-android-spss/result.json",
+      "sha256": "38ff96e4c8c41f265c265f647781a532baf9187718ae3e7f52309fb278f56aa2"
+    },
+    {
+      "bytes": 1985,
+      "namespace": "container",
+      "path": "original-android-spss/qmp-messages.json",
+      "sha256": "040b67cff3675666c6272358ac20e88c408a4a2e844576746b44933f4fc48ddd"
+    },
+    {
+      "bytes": 13806,
+      "namespace": "container",
+      "path": "original-android-spss/plan.json",
+      "sha256": "e2254b43e8ddac42da7c17645340f3ea4caa9a9db0021f009dd99c877e694f24"
+    },
+    {
+      "bytes": 660352,
+      "namespace": "container",
+      "path": "original-android-spss/qemu.log",
+      "sha256": "268e396411075135f486c9879d883b0576a9afa5ec5dc252dc70e0d0f2721cee"
+    },
+    {
+      "bytes": 73417,
+      "namespace": "container",
+      "path": "original-android-spss/printk-0000/kernel-printk.log",
+      "sha256": "6136c6ab36b688002cd8e0ddeabc2e90dd45e1eb4a3507e1382a311b4261b2f0"
+    },
+    {
+      "bytes": 689,
+      "namespace": "container",
+      "path": "original-android-spss/printk-0000/kernel-printk-metadata.json",
+      "sha256": "b0f41dcb2fc541dabb904178d5ad6499e922428adc017bddf4c704a5f207da05"
+    },
+    {
+      "bytes": 256,
+      "namespace": "container",
+      "path": "original-android-spss/printk-0000/kernel-banner.bin",
+      "sha256": "f510bd2f9622842dbdb1d552dec1b1f83a4c8c8dafabe4b72f3c4810052687d9"
+    },
+    {
+      "bytes": 0,
+      "namespace": "container",
+      "path": "original-android-spss/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "namespace": "container",
+      "path": "original-android-spss/serial.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3895,
+      "namespace": "host",
+      "path": "job-result.json",
+      "sha256": "c7e58f0e5b0cf9f95e5d6d5e4d9b8209473f8176b828958ca4e5f221d21d59be"
+    },
+    {
+      "bytes": 17117,
+      "namespace": "host",
+      "path": "artifact-receipt.json",
+      "sha256": "6013c86de8a3d4b654ad0e07450fcb4d2e5e1c326c0a745882ca4ddf217a5fff"
+    },
+    {
+      "bytes": 12601,
+      "namespace": "host",
+      "path": "config.json",
+      "sha256": "9c6afd2e8fd98ee2f5df5d77ac1f02d5c665b934fb85591ca58f32294cc8033a"
+    },
+    {
+      "bytes": 440,
+      "namespace": "host",
+      "path": "container-preflight.json",
+      "sha256": "2ade3a9d9e524118f85cac1e59818358d3d2381b38d926dc87b1beb24fd929b6"
+    },
+    {
+      "bytes": 604,
+      "namespace": "host",
+      "path": "native-attempt.json",
+      "sha256": "58d67332b566937b48a1f6bf57a25980137fb96867194225d28ddb00350e380c"
+    },
+    {
+      "bytes": 4730,
+      "namespace": "host",
+      "path": "terminal.log",
+      "sha256": "042f062aa926ed3b30ac149756284356e3d012eff7ba1415ac3370d3d419543d"
+    }
+  ],
+  "execution": {
+    "host_exit_code": 2,
+    "host_finished_utc": "2026-11-25T01:45:18.244970+00:00",
+    "host_started_utc": "2026-11-25T01:44:34.061143+00:00",
+    "native_invoked": true,
+    "outcome": "kernel-failure",
+    "qemu_exit_code": 0,
+    "runner_elapsed_seconds": 6.086,
+    "runner_exit_code": 2,
+    "runner_finished_utc": "2026-11-25T01:45:17.318711+00:00",
+    "runner_started_utc": "2026-11-25T01:45:10.333865+00:00"
+  },
+  "full_dtb_retained": true,
+  "global_properties": {
+    "count": 29,
+    "exact_match_across_native_plan_invocation_and_QEMU_command": true,
+    "machine_equal_to_prior_LLCC_run": true,
+    "prior28_retained_in_order": true,
+    "sole_added_global": "qcom-sm8250-spss-irq-mask.enabled-reference=on",
+    "unique_property_keys": 29
+  },
+  "input_preservation_scope": "Checks exact planned input identities, emitted QEMU arguments and independent runner/coordinator post-run digest records. Original input byte files were not copied to this reviewer.",
+  "input_selection": {
+    "classification": "no-lun-diagnostic",
+    "original_luns_attached": 0,
+    "prepared_manifest_sha256": "1a4e7fbdb34062ee815a445a065d6b7b3edffb1ea7a9e9ae38d5b9737fa2680f",
+    "ready_present_at_selection": false,
+    "snapshot_consistent": false,
+    "storage_complete": false
+  },
+  "printk": {
+    "before_and_after_shutdown_stopped": true,
+    "capture_failed": false,
+    "guest_memory_written": false,
+    "logs_analysis_truncated": false,
+    "records": 1090,
+    "snapshots": 1
+  },
+  "prior_reviewer_attempt": {
+    "exit_code": 1,
+    "native_or_evidence_reexecuted_or_modified": false,
+    "reason": "Reviewer expected -machine but the actual preserved QEMU command uses -M; only that option-name assertion was corrected.",
+    "retained_source_sha256": "1ef543c16addc0d0d133f18eb0c8aba2340c12b9bbc73bbd1e9e8e2bfd87b089"
+  },
+  "qmp_cleanup": {
+    "WATCHDOG_precedes_qualifying_guest_SHUTDOWN": true,
+    "drain_errno": 104,
+    "drain_residual_bytes": 0,
+    "drain_terminal": "reset",
+    "event_order": [
+      {
+        "data": {},
+        "event": "RESUME"
+      },
+      {
+        "data": {
+          "action": "reset"
+        },
+        "event": "WATCHDOG"
+      },
+      {
+        "data": {
+          "guest": true,
+          "reason": "guest-reset"
+        },
+        "event": "SHUTDOWN"
+      },
+      {
+        "data": {},
+        "event": "STOP"
+      },
+      {
+        "data": {
+          "guest": false,
+          "reason": "host-qmp-quit"
+        },
+        "event": "SHUTDOWN"
+      }
+    ],
+    "final_status": {
+      "running": false,
+      "status": "shutdown"
+    },
+    "forced_host_termination": false,
+    "last_relevant_pre_quit_event_is_guest_reset_SHUTDOWN": true,
+    "messages_count": 22,
+    "new_shutdown_state_provenance_path_exercised": true,
+    "normal": true,
+    "qemu_exit_code": 0,
+    "quit_request_id": 16,
+    "quit_tail_equals_saved_messages": true,
+    "quit_tail_start": 20,
+    "unique_empty_object_ack": true
+  },
+  "review_passed": true,
+  "reviewed_utc": "2026-11-25T01:51:56.301338+00:00",
+  "reviewer_did_not": [
+    "invoke device RPC or SSH",
+    "run QEMU or another native attempt",
+    "rerun CI artifact auditors",
+    "modify source or original inputs",
+    "publish private raw logs or full bootargs"
+  ],
+  "reviewer_source_sha256": "cc54c19997b710c6726c97821902962fa34fbace0ee0d46b00bbe1bf90f185fa",
+  "runtime_pins_after_recorded_and_cross_checked": [
+    {
+      "bytes": 40941,
+      "path": "runner/boot_android.py",
+      "sha256": "61093aab7176842ef14f592e90456c0c0b91206d594447474d0a02cbf3fb10d1"
+    },
+    {
+      "bytes": 31692,
+      "path": "runner/boot_android_from_ready.py",
+      "sha256": "b2ef676a99c7064b9d31035d1b3e1e471d613500cba6373a0992b4c4f4e4154d"
+    },
+    {
+      "bytes": 36402,
+      "path": "runner/android_boot_inputs.py",
+      "sha256": "08affe8ef5c40c7350be9e4c0f0482c4c5e594a3dcff7e3a88cf7887ea1eb5d8"
+    },
+    {
+      "bytes": 2822,
+      "path": "runner/boot_qmp.py",
+      "sha256": "b0d95776470110fd682371d393ffda4e2996fb295b1d3c81b41c46980be7a54c"
+    },
+    {
+      "bytes": 4275,
+      "path": "runner/legacy_printk.py",
+      "sha256": "6b7d18188ef8987c32135fef179f271dcf7284766a233626d09269696cada27d"
+    },
+    {
+      "bytes": 63675200,
+      "path": "qemu-build/qemu-system-aarch64",
+      "sha256": "b50345fe7dba411426779f27963ecb1b08d1ae6fa4d83e50e7cea4351cbf7d25"
+    }
+  ],
+  "runtime_pins_scope": "Pins are the root collector runtime observations; this reviewer independently verifies collected payload and all local file bytes, without querying the device again.",
+  "schema": "tb371fc-spss-54ec744-independent-native-review-v1",
+  "scope": "Offline verification of retained bytes and cross-record consistency for one original-input native diagnostic; review pass is not an Android boot pass.",
+  "source_commit": "54ec7443bc75460baa35a0c0b0502ae6cb4d8fa7",
+  "symbols_unchanged": true,
+  "tag": "spss-54ec744-diagnostic-f093",
+  "test_init_injected": false,
+  "total_retained_file_bytes": 814924
+}
