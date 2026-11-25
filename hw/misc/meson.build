@@ -209,3 +209,4 @@ system_ss.add(when: 'CONFIG_QCOM_CPUFREQ_HW', if_true: files('qcom-cpufreq-hw.c'
 system_ss.add(when: 'CONFIG_QCOM_DEVFREQ_FW', if_true: files('qcom-devfreq-fw.c'))
 
 system_ss.add(when: 'CONFIG_QCOM_NOC_SBM', if_true: files('qcom-noc-sbm.c'))
+system_ss.add(when: 'CONFIG_QCOM_SM8250_GENI_I2C', if_true: files('qcom-sm8250-geni-i2c.c'))

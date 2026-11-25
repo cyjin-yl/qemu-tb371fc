@@ -175,7 +175,7 @@ class PlanTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         plan = ci.plan(args, Path("/test/runtime"))
         cases = {case.name: case for case in plan}
-        self.assertEqual(len(plan), 106)
+        self.assertEqual(len(plan), 107)
         self.assertEqual(len(cases), len(plan))
         self.assertEqual(cases["tbu-reference-ecats"].expected_count, 17)
         self.assertEqual(cases["smmuv500-reference"].expected_count, 36)
@@ -350,7 +350,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 111)
+        self.assertEqual(len(cases), 112)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]
@@ -626,7 +626,7 @@ class PlanTests(unittest.TestCase):
                              "ddr-stats-offset-source-generation", "ddr-stats-offset-sm8250-reference",
                                    "geni-hs-source-generation-unit", "geni-hs-source-generation",
                                    "geni-hs-sm8250-reference", "qce-bam-source-generation",
-                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference"}:
+                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -747,7 +747,7 @@ class PlanTests(unittest.TestCase):
                              "ddr-stats-offset-source-generation", "ddr-stats-offset-sm8250-reference",
                                    "geni-hs-source-generation-unit", "geni-hs-source-generation",
                                    "geni-hs-sm8250-reference", "qce-bam-source-generation",
-                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference"}:
+                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -878,7 +878,7 @@ class PlanTests(unittest.TestCase):
                                    "ddr-stats-offset-sm8250-reference",
                                    "geni-hs-source-generation-unit", "geni-hs-source-generation",
                                    "geni-hs-sm8250-reference", "qce-bam-source-generation",
-                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference"}:
+                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -1058,8 +1058,8 @@ class GeniContractTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
         additions = {"geni-hs-source-generation-unit", "geni-hs-source-generation", "geni-hs-sm8250-reference",
-                     "qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference"}
-        self.assertEqual(len(cases), 111)
+                     "qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference"}
+        self.assertEqual(len(cases), 112)
         def normalize(value):
             if isinstance(value, Path):
                 value = str(value)
@@ -1098,9 +1098,9 @@ class QceContractTests(unittest.TestCase):
         self.plan = ci.plan(self.args, Path("/test/runtime"))
 
     def test_qce_additions_preserve_all_107_prior_contracts_in_order(self):
-        additions = {"qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference"}
-        self.assertEqual(len(self.plan), 111)
-        self.assertEqual({c.name for c in self.plan[-4:-1]}, additions - {"spmi-debug-fuse-reference"})
+        additions = {"qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference"}
+        self.assertEqual(len(self.plan), 112)
+        self.assertEqual({c.name for c in self.plan[-5:-2]}, additions - {"spmi-debug-fuse-reference", "geni-i2c-reference"})
         def normalize(value):
             if isinstance(value, Path):
                 value = str(value)
@@ -1207,10 +1207,10 @@ class SpmiDebugFuseContractTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         self.plan = ci.plan(args, Path("/test/runtime"))
-        self.case = self.plan[-1]
+        self.case = self.plan[-2]
 
     def test_all_110_prior_contracts_remain_the_exact_ordered_prefix(self):
-        self.assertEqual(len(self.plan), 111)
+        self.assertEqual(len(self.plan), 112)
         self.assertEqual(self.case.name, 'spmi-debug-fuse-reference')
         def normalize(value):
             if isinstance(value, Path):value = str(value)
@@ -1225,7 +1225,7 @@ class SpmiDebugFuseContractTests(unittest.TestCase):
         normalized = [normalize(vars(case)) for case in self.plan]
         fingerprint = lambda rows: hashlib.sha256(json.dumps(rows, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
         self.assertEqual(fingerprint(normalized[:110]), '28eac5e25ea2c4720b47628c30d8b3b08407c96f476f75dc60f175912326b5a6')
-        self.assertEqual(fingerprint(normalized), '3bb17209275609d01562d59528c01b1000b011e84a7377f5114d408b5e22ddee')
+        self.assertEqual(fingerprint(normalized[:111]), '3bb17209275609d01562d59528c01b1000b011e84a7377f5114d408b5e22ddee')
         self.assertEqual(self.case.expected_count, 22)
         self.assertEqual(self.case.expected_lengths, {'admission_rejections':8, 'access_rejections':21,
                          'migrations':3, 'rejected_migrations':4, 'corrupted_stream_rejections':2,
@@ -1330,6 +1330,186 @@ class SpmiDebugFuseContractTests(unittest.TestCase):
                 target[keys[-1]]=value;path.write_text(json.dumps(changed))
                 with self.subTest(path=keys),self.assertRaises((ValueError,KeyError)):
                     ci.judge(case,path)
+
+
+
+class GeniI2cContractTests(unittest.TestCase):
+    """Bounded synthetic reader fixtures; no QEMU or aggregate success fixture."""
+    def setUp(self):
+        args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        self.plan = ci.plan(args, Path("/test/runtime"))
+        self.case = self.plan[-1]
+
+    def test_all_111_prior_contracts_remain_the_exact_ordered_prefix(self):
+        self.assertEqual(len(self.plan), 112)
+        self.assertEqual(self.case.name, "geni-i2c-reference")
+        self.assertEqual(sum(c.name == self.case.name for c in self.plan), 1)
+        def normalize(value):
+            if isinstance(value, Path):
+                value = str(value)
+            if isinstance(value, str):
+                for other in self.plan:
+                    physical, token = str(other.fixture), "@FIXTURE:" + other.name + "@"
+                    value = token if value == physical else value.replace(physical + "/", token + "/")
+                return value.replace(str(ci.ROOT), "@ROOT@").replace(sys.executable, "@PYTHON@")
+            if isinstance(value, list):
+                return [normalize(x) for x in value]
+            if isinstance(value, dict):
+                return {k: normalize(v) for k, v in value.items()}
+            return value
+        prefix = [normalize(vars(case)) for case in self.plan[:111]]
+        fingerprint = hashlib.sha256(json.dumps(prefix, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        self.assertEqual(fingerprint, "3bb17209275609d01562d59528c01b1000b011e84a7377f5114d408b5e22ddee")
+        for suite, count in (("components", 107), ("linux", 5)):
+            args = SimpleNamespace(suite=suite, qemu=Path("/test/qemu"),
+                                   build_dir=Path("/test/build"), kernel=None)
+            cases = ci.plan(args, Path("/test/runtime"))
+            self.assertEqual(len(cases), count)
+            self.assertEqual(any(c.name == "geni-i2c-reference" for c in cases), suite == "components")
+
+    def test_i2c_gate_and_bounded_reader_evidence_are_strict(self):
+        import struct
+        import geni_i2c_ci_contract as f
+        self.assertEqual(self.case.name, f.NAME)
+        self.assertEqual(self.case.expected_count, 76)
+        self.assertEqual(self.case.timeout, 600)
+        self.assertEqual(self.case.expected_values, f.EXPECTED_VALUES)
+        self.assertEqual(self.case.expected_lengths, {
+            "processes": 76, "roundtrips": 2, "migrations": 4,
+            "rejected_migrations": 57, "actual_stream_files": 60})
+        self.assertEqual(self.case.expected_lengths, f.EXPECTED_LENGTHS)
+        self.assertEqual(self.case.command, [
+            sys.executable, str(ci.ROOT / "tb371fc/tests/test_geni_i2c_sm8250.py"),
+            "--qemu", "/test/qemu", "--out", str(self.case.fixture / "data")])
+        self.assertEqual(self.case.result, str(self.case.fixture / "data/result.json"))
+        self.assertEqual((len(f.NORMAL), len(f.MIGRATION), len(f.NEGATIVE), len(f.CHECKS)),
+                         (12, 7, 57, 76))
+        self.assertEqual((len(f.access_cases()), len(f.masked_write_cases())), (69, 17))
+
+        # Independently written literal profile and dynamic state; not read from C.
+        state = {
+            "reference-identity": 0x47493231, "instance-id-readonly": 1,
+            "instance-id": 1, "physical-base": 0x984000, "window-bytes": 0x4000,
+            "interrupt-spi": 602, "wrapper-index": 0,
+            "main-fw-revision": 0x300, "secondary-fw-revision": 0x300,
+            "main-config-revision": 0, "secondary-config-revision": 0,
+            "fifo-words": 16, "fifo-word-bits": 32, "ios-idle": 3,
+            "tx-count": 0, "se-clock-period": 0, "m-ahb-clock-period": 0,
+            "s-ahb-clock-period": 0, "vmstate-bytes": 305, "profile-wire-bytes": 64,
+            "attached-slaves": 0, "tx-payload-bytes": 0, "rx-payload-bytes": 0,
+            "dma-read-bytes": 0, "dma-write-bytes": 0,
+            "enabled-reference": True, "irq-level": False, "reset-held": False,
+            "bus-available": False, "engine-available": False, "command-active": False,
+            "firmware-executed": False, "physical-state-captured": False,
+            "dma-data-modeled": False, "address-phase-modeled": True,
+            "profile": "empty-bus-v1", "registers-hex": "00" * 148,
+            "tx-fifo-hex": "00" * 64,
+        }
+        self.assertEqual(len(state), 38)
+        self.assertEqual(set(state), set(f.GETTERS))
+        cold = f.state(state, 1, True)
+        self.assertEqual(len(cold), 37)
+        self.assertFalse(any(cold.values()))
+        values = [0] * 37
+        values[16], values[17], values[35] = 0x408, 8, 4
+        state.update({"registers-hex": struct.pack(">37I", *values).hex(),
+                      "tx-fifo-hex": "44332211" + "00" * 60, "tx-count": 1,
+                      "se-clock-period": 11, "m-ahb-clock-period": 22,
+                      "s-ahb-clock-period": 33, "bus-available": True,
+                      "engine-available": True, "irq-level": True})
+        actual_registers = f.state(state, 1, True)
+        self.assertEqual((actual_registers[0x610], actual_registers[0x614],
+                          actual_registers[0xe1c]), (0x408, 8, 4))
+        profile = bytes.fromhex(
+            "00000001 47493231 00000001 0000000000984000 00004000 "
+            "0000025a 00000000 00000300 00000300 00000000 00000000 "
+            "00000010 00000020 00000003 00000000")
+        expected_wire = (profile + bytes.fromhex(state["registers-hex"])
+                         + bytes.fromhex(state["tx-fifo-hex"])
+                         + bytes.fromhex("00000001 00 000000000000000b "
+                                         "0000000000000016 0000000000000021"))
+        self.assertEqual(len(profile), 64)
+        self.assertEqual(len(expected_wire), 305)
+        self.assertEqual(f.wire(1, True, state), expected_wire)
+        for field, bad in (("tx-count", True), ("irq-level", False),
+                           ("dma-read-bytes", 1), ("registers-hex", "00" * 147),
+                           ("tx-fifo-hex", "44332211" + "00" * 56 + "00000001")):
+            changed = copy.deepcopy(state)
+            changed[field] = bad
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                f.state(changed, 1, True)
+        changed = copy.deepcopy(state)
+        del changed["profile-wire-bytes"]
+        with self.assertRaises(ValueError):
+            f.state(changed, 1, True)
+        for index, bad in ((0, 2), (8, 1)):
+            changed = copy.deepcopy(state)
+            registers = values.copy()
+            registers[index] = bad
+            changed["registers-hex"] = struct.pack(">37I", *registers).hex()
+            with self.subTest(register_index=index), self.assertRaises(ValueError):
+                f.state(changed, 1, True)
+
+        # These are toy cleanup records, not artifact receipts or process evidence.
+        empty_sha = hashlib.sha256(b"").hexdigest()
+        rows = []
+        raised = {"fifo-address-nack", "dma-address-nack", "unsupported-commands",
+                  "irq-mask-se-clock", "ahb-clock-gates", "shared-wrapper-reset",
+                  "migration-target-on", "migration-return-on"}
+        for index, name in enumerate(f.CHECKS):
+            code = int(name in f.NEGATIVE)
+            counts = {key: 0 for key in f.COUNTERS}
+            counts.update(qom_get=684, cont=int(name in f.RUNNING))
+            if name in ("default-off", "explicit-off"):
+                counts.update(memory=18, device_mmio=18)
+            events = ([{"action": "raise", "number": 0},
+                       {"action": "lower", "number": 0}] if name in raised else [])
+            row = {"fixture": name, "expected_exit_code": code, "exit_code": code,
+                   "pid": 1000 + index, "actually_waited_and_reaped": True,
+                   "wait_calls": [{"called": "Popen.wait", "returned_exit_code": code}
+                                  for _ in range(2 if code else 1)],
+                   "forced_terminate": False, "forced_kill": False,
+                   "signals_to_preexisting_processes": False, "quit_sent": code == 0,
+                   "quit_acknowledged": code == 0, "quit_error": None,
+                   "quit_not_applicable": "already-exited" if code else None,
+                   "counters": counts, "unexpected_qtest_drain_lines": [],
+                   "irq_events": events,
+                   "drains": {key: {"terminal": "eof", "error": None,
+                                    "drain_hex": "", "drain_bytes": 0}
+                              for key in ("qmp", "qtest")},
+                   "stdio": {key: {"complete_after_actual_wait": True,
+                                   "bytes": 0, "sha256": empty_sha}
+                             for key in ("qemu.stdout", "qemu.stderr")}}
+            if name == "paused-tcg-observer":
+                row["drains"]["qtest"] = {"not_opened": True}
+            rows.append(row)
+        f.cleanup(rows)
+        for field, bad in (("actually_waited_and_reaped", False), ("wait_calls", []),
+                           ("quit_acknowledged", False)):
+            changed = copy.deepcopy(rows)
+            changed[0][field] = bad
+            with self.subTest(cleanup=field), self.assertRaises(ValueError):
+                f.cleanup(changed)
+        changed = copy.deepcopy(rows)
+        changed[0]["drains"]["qmp"]["terminal"] = "reset"
+        with self.assertRaises(ValueError):
+            f.cleanup(changed)
+
+        # All top-level count and summary gates pass, but missing per-case evidence
+        # must still fail through the newly connected independent judge.
+        summary = {**copy.deepcopy(self.case.expected_values), "passed": True,
+                   "synthetic_contract_fixture": True,
+                   "checks": [{"name": name, "passed": True} for name in f.CHECKS]}
+        for key, count in self.case.expected_lengths.items():
+            summary[key] = [{} for _ in range(count)]
+        with tempfile.TemporaryDirectory(prefix="tbci-i2c-unit-", dir="/tmp") as directory:
+            path = Path(directory) / "summary-only.json"
+            path.write_text(json.dumps(summary))
+            case = copy.deepcopy(self.case)
+            case.result = str(path)
+            with self.assertRaises((KeyError, ValueError)):
+                ci.judge(case, path)
 
 
 if __name__ == "__main__":

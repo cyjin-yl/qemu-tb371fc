@@ -24,6 +24,10 @@ import traceback
 
 from qce_bam_ci_contract import judge_qce_details
 from spmi_debug_fuse_ci_contract import judge_spmi_debug_fuse_details
+from geni_i2c_ci_contract import (
+    NAME as GENI_I2C_NAME, EXPECTED_VALUES as GENI_I2C_EXPECTED_VALUES,
+    EXPECTED_LENGTHS as GENI_I2C_EXPECTED_LENGTHS, judge_geni_i2c_details,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -1349,6 +1353,11 @@ def plan(args, runtime):
                                  "migrations": 3, "rejected_migrations": 4,
                                  "corrupted_stream_rejections": 2,
                                  "actual_stream_files": 5, "process_cleanup": 22})
+    if args.suite in ("all", "components"):
+        device(GENI_I2C_NAME, "test_geni_i2c_sm8250.py",
+               output="--out", result="file", count=76, timeout=600,
+               expected=GENI_I2C_EXPECTED_VALUES,
+               expected_lengths=GENI_I2C_EXPECTED_LENGTHS)
     return cases
 
 
@@ -1551,6 +1560,7 @@ def judge(case, stdout):
     judge_geni_hs_details(case, data)
     judge_qce_details(case, data)
     judge_spmi_debug_fuse_details(case, data)
+    judge_geni_i2c_details(case, data)
     return details
 
 

@@ -46,6 +46,7 @@
 #include "hw/intc/arm_gicv3_common.h"
 #include "hw/intc/qcom-pdc.h"
 #include "hw/misc/qcom-sm8250-gcc.h"
+#include "hw/misc/qcom-sm8250-geni-i2c.h"
 #include "hw/misc/qcom-sm8250-gpucc.h"
 #include "hw/misc/qcom-sm8250-npucc.h"
 #include "hw/misc/qcom-sm8250-camcc.h"
@@ -179,6 +180,8 @@ struct TB371FCMachineState {
     DeviceState *gic;
     QcomGeniUartState uart;
     QcomGeniUartState uart_hs;
+    DeviceState *geni_i2c[QCOM_GENI_I2C_INSTANCE_COUNT];
+    bool geni_i2c_enabled;
     QcomSm8250GccState gcc;
     DeviceState *ufs;
     DeviceState *dsi_pll;
@@ -1460,6 +1463,86 @@ static void tb371fc_create_noc_qos(TB371FCMachineState *s)
      */
 }
 
+
+static void tb371fc_prepare_geni_i2c(TB371FCMachineState *s)
+{
+    for (unsigned i = 0; i < qcom_geni_i2c_instance_count(); i++) {
+        const QcomGeniI2CInstance *inst = qcom_geni_i2c_instance_at(i);
+        DeviceState *dev = qdev_new(TYPE_QCOM_SM8250_GENI_I2C);
+        g_autofree char *name = g_strdup_printf("geni-i2c-se%u", inst->id);
+
+        s->geni_i2c[i] = dev;
+        object_property_add_child(OBJECT(s), name, OBJECT(dev));
+        dev->id = g_strdup(name);
+        qdev_prop_set_uint32(dev, "instance-id", inst->id);
+        qdev_prop_set_bit(dev, "enabled-reference", s->geni_i2c_enabled);
+    }
+}
+
+/*
+ * Each shared wrapper reset has one output owner. When the I2C profile is
+ * off, keep the original legacy destination and create no new fanout.
+ * The stateless splitters are the same core device already used above.
+ */
+static qemu_irq tb371fc_geni_reset_sink(TB371FCMachineState *s,
+                                       unsigned wrapper,
+                                       DeviceState *legacy)
+{
+    DeviceState *splitter;
+    g_autofree char *name = NULL;
+    unsigned count = legacy ? 1 : 0;
+    unsigned output = 0;
+
+    if (!s->geni_i2c_enabled) {
+        return legacy ? qdev_get_gpio_in_named(legacy, "reset", 0) : NULL;
+    }
+    for (unsigned i = 0; i < qcom_geni_i2c_instance_count(); i++) {
+        count += qcom_geni_i2c_instance_at(i)->wrapper == wrapper;
+    }
+    assert(count > 0);
+    splitter = qdev_new(TYPE_SPLIT_IRQ);
+    name = g_strdup_printf("geni-i2c-wrap%u-reset-fanout", wrapper);
+    object_property_add_child(OBJECT(s), name, OBJECT(splitter));
+    qdev_prop_set_uint16(splitter, "num-lines", count);
+    qdev_realize_and_unref(splitter, NULL, &error_fatal);
+    if (legacy) {
+        qdev_connect_gpio_out(splitter, output++,
+                              qdev_get_gpio_in_named(legacy, "reset", 0));
+    }
+    for (unsigned i = 0; i < qcom_geni_i2c_instance_count(); i++) {
+        if (qcom_geni_i2c_instance_at(i)->wrapper == wrapper) {
+            qdev_connect_gpio_out(splitter, output++,
+                qdev_get_gpio_in_named(s->geni_i2c[i], "reset", 0));
+        }
+    }
+    assert(output == count);
+    return qdev_get_gpio_in(splitter, 0);
+}
+
+static void tb371fc_realize_geni_i2c(TB371FCMachineState *s)
+{
+    for (unsigned i = 0; i < qcom_geni_i2c_instance_count(); i++) {
+        const QcomGeniI2CInstance *inst = qcom_geni_i2c_instance_at(i);
+        DeviceState *dev = s->geni_i2c[i];
+
+        qdev_connect_clock_in(dev, "se-clk",
+            qdev_get_clock_out(DEVICE(&s->gcc), inst->se_clock));
+        qdev_connect_clock_in(dev, "m-ahb",
+            qdev_get_clock_out(DEVICE(&s->gcc), inst->m_ahb_clock));
+        qdev_connect_clock_in(dev, "s-ahb",
+            qdev_get_clock_out(DEVICE(&s->gcc), inst->s_ahb_clock));
+        sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, inst->base);
+        sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0,
+                            qdev_get_gpio_in(s->gic, inst->spi));
+    }
+    if (s->geni_i2c_enabled) {
+        /* Wrapper 0 and 2 also retain HS and console UART, respectively. */
+        qdev_connect_gpio_out_named(DEVICE(&s->gcc), "reset", 25,
+                                    tb371fc_geni_reset_sink(s, 1, NULL));
+    }
+}
+
 static void tb371fc_create_gcc(TB371FCMachineState *s)
 {
     DeviceState *gcc;
@@ -1483,10 +1566,16 @@ static void tb371fc_create_gcc(TB371FCMachineState *s)
                           s->fabric);
     qdev_connect_clock_in(gcc, "gcc_qupv3_wrap_2_s_ahb_clk_parent",
                           s->fabric);
-    if (s->uart_hs.hs_enabled) {
+    if (s->uart_hs.hs_enabled || s->geni_i2c_enabled) {
         qdev_connect_clock_in(gcc, "gcc_qupv3_wrap_0_m_ahb_clk_parent",
                               s->fabric);
         qdev_connect_clock_in(gcc, "gcc_qupv3_wrap_0_s_ahb_clk_parent",
+                              s->fabric);
+    }
+    if (s->geni_i2c_enabled) {
+        qdev_connect_clock_in(gcc, "gcc_qupv3_wrap_1_m_ahb_clk_parent",
+                              s->fabric);
+        qdev_connect_clock_in(gcc, "gcc_qupv3_wrap_1_s_ahb_clk_parent",
                               s->fabric);
     }
     if (s->ufs) {
@@ -1514,6 +1603,19 @@ static void tb371fc_create_gcc(TB371FCMachineState *s)
         qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request", 99), 1);
         qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request", 131), 1);
         qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request", 132), 1);
+    }
+    if (s->geni_i2c_enabled) {
+        for (unsigned i = 0; i < qcom_geni_i2c_instance_count(); i++) {
+            const QcomGeniI2CInstance *inst = qcom_geni_i2c_instance_at(i);
+
+            /* Current provider indices, not the vendor DT clock IDs. */
+            qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request",
+                                                inst->se_clock_index), 1);
+            qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request",
+                                                inst->m_ahb_clock_index), 1);
+            qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request",
+                                                inst->s_ahb_clock_index), 1);
+        }
     }
 }
 
@@ -2009,6 +2111,7 @@ static void tb371fc_init(MachineState *ms)
     /* Apply the HS qdev global before conditional GCC parents are connected. */
     object_initialize_child(OBJECT(s), "uart-hs", &s->uart_hs,
                             TYPE_QCOM_SM8250_GENI_HS);
+    tb371fc_prepare_geni_i2c(s);
     tb371fc_create_gcc(s);
     tb371fc_create_cpufreq(s);
     tb371fc_create_devfreq(s);
@@ -2053,8 +2156,8 @@ static void tb371fc_init(MachineState *ms)
                                               "gcc_qupv3_wrap_2_s_ahb_clk"));
     qdev_connect_gpio_out_named(DEVICE(&s->gcc), "reset",
                                 TB371FC_GCC_QUP_RESET,
-                                qdev_get_gpio_in_named(DEVICE(&s->uart),
-                                                       "reset", 0));
+                                tb371fc_geni_reset_sink(s, 2,
+                                                       DEVICE(&s->uart)));
     uart = SYS_BUS_DEVICE(&s->uart);
     sysbus_realize(uart, &error_fatal);
     sysbus_mmio_map(uart, 0, TB371FC_UART_BASE);
@@ -2075,13 +2178,14 @@ static void tb371fc_init(MachineState *ms)
                           qdev_get_clock_out(DEVICE(&s->gcc),
                                               "gcc_qupv3_wrap_0_s_ahb_clk"));
     qdev_connect_gpio_out_named(DEVICE(&s->gcc), "reset", 24,
-                                qdev_get_gpio_in_named(DEVICE(&s->uart_hs),
-                                                       "reset", 0));
+                                tb371fc_geni_reset_sink(s, 0,
+                                                       DEVICE(&s->uart_hs)));
     uart = SYS_BUS_DEVICE(&s->uart_hs);
     sysbus_realize(uart, &error_fatal);
     sysbus_mmio_map(uart, 0, qcom_geni_hs_se_base());
     sysbus_mmio_map(uart, 1, qcom_geni_hs_wrapper_version_address());
     sysbus_connect_irq(uart, 0, qdev_get_gpio_in(s->gic, 607));
+    tb371fc_realize_geni_i2c(s);
 
     s->bootinfo.ram_size = ms->ram_size;
     s->bootinfo.board_id = -1;
@@ -2268,6 +2372,23 @@ static void tb371fc_set_smem_profile(Object *obj, const char *value, Error **err
     s->smem_profile = g_strdup(value);
 }
 
+
+static bool tb371fc_get_geni_i2c_enabled(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->geni_i2c_enabled;
+}
+
+static void tb371fc_set_geni_i2c_enabled(Object *obj, bool value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "geni-i2c-enabled is fixed after machine creation");
+        return;
+    }
+    s->geni_i2c_enabled = value;
+}
+
 static bool tb371fc_get_spmi_debug_fuse_enabled(Object *obj, Error **errp)
 {
     return TB371FC_MACHINE(obj)->spmi_debug_fuse_enabled;
@@ -2389,6 +2510,7 @@ static void tb371fc_instance_init(Object *obj)
     s->rpmh_profile = g_strdup("off");
     s->spmi_profile = g_strdup("off");
     s->spmi_debug_fuse_enabled = false;
+    s->geni_i2c_enabled = false;
     s->spmi_debug_fuse_word = NULL;
     s->smem_profile = g_strdup("off");
     s->aop_profile = g_strdup("none");
@@ -2450,6 +2572,12 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
         tb371fc_get_spmi_profile, tb371fc_set_spmi_profile);
     object_class_property_set_description(oc, "spmi-profile",
         "off (default) or explicit reference APID/ownership/PMIC subset");
+    object_class_property_add_bool(oc, "geni-i2c-enabled",
+        tb371fc_get_geni_i2c_enabled, tb371fc_set_geni_i2c_enabled);
+    object_class_property_set_description(oc, "geni-i2c-enabled",
+        "Enable the nine original-DT I2C controller instances with the "
+        "virtual empty-bus policy (default off); address NACK, no slaves "
+        "or successful payload/DMA traffic");
     object_class_property_add_bool(oc, "spmi-debug-fuse-enabled",
         tb371fc_get_spmi_debug_fuse_enabled, tb371fc_set_spmi_debug_fuse_enabled);
     object_class_property_set_description(oc, "spmi-debug-fuse-enabled",
