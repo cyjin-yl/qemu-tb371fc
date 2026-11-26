@@ -102,6 +102,13 @@ struct arm_boot_info {
      * to EL3) then PSCI will not be enabled.
      */
     int psci_conduit;
+    /*
+     * Preserve a supplied /psci node's board metadata, phandle and children
+     * while replacing the PSCI ABI properties with QEMU's implementation.
+     * Boards with PSCI power-domain references must opt in explicitly.
+     * The default retains the historical whole-node replacement behavior.
+     */
+    bool preserve_psci_node;
     /* Used internally by arm_boot.c */
     int is_linux;
     hwaddr initrd_start;
