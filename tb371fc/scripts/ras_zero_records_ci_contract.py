@@ -84,7 +84,7 @@ def elf_probe(raw):
     for i in range(phnum):
         kind,flags,off,va,pa,filesz,memsz,alignment=struct.unpack_from('<IIQQQQQQ',raw,phoff+56*i)
         if kind != 1: continue
-        need(va==pa and 0x80010000<=pa<pa+memsz<=CONTROL and filesz<=memsz and off+filesz<=len(raw),'ELF payload containment')
+        need(va==pa and 0x80100000<=pa<pa+memsz<=CONTROL and filesz<=memsz and off+filesz<=len(raw),'ELF payload containment')
         segments.append({'address':pa,'offset':off,'file_bytes':filesz,'memory_bytes':memsz,'flags':flags})
     symbols={}
     for i in range(shnum):
@@ -100,7 +100,7 @@ def elf_probe(raw):
             key=strings[name:strings.find(b'\0',name)].decode('ascii')
             if key in ('_start','secondary_entry','enter_el1','enter_el0','el1_return_hvc','el0_return_svc','el2_return','el1_return') or key.startswith(('read_','write_')):
                 need(key not in symbols and index!=0,'ELF unique defined symbol');symbols[key]=address
-    need(entry==symbols.get('_start')==0x80010000,'ELF entry')
+    need(entry==symbols.get('_start')==0x80100000,'ELF entry')
     instructions={}
     for reg,encoding in enumerate(ENCODINGS):
         for wr in (0,1):

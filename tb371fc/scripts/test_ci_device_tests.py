@@ -1700,21 +1700,21 @@ class RasZeroRecordsContractTests(unittest.TestCase):
                     (0xd5000000 if write else 0xd5200000) | encoding << 5, 0xd65f03c0)
         symbols = bytearray(24)
         for i, name in enumerate(names):
-            address = 0x80010000 if i < 8 else 0x80010000 + (i - 8) * 8
+            address = 0x80100000 if i < 8 else 0x80100000 + (i - 8) * 8
             symbols += struct.pack("<IBBHQQ", offsets[name], 0x12, 0, 1, address, 8)
         code_at, sym_at = 0x100, 0x200
         strings_at = sym_at + len(symbols); shoff = (strings_at + len(strings) + 7) & ~7
         raw = bytearray(shoff + 4 * 64)
         ident = b"\x7fELF\x02\x01\x01" + bytes(9)
         struct.pack_into("<16sHHIQQQIHHHHHH", raw, 0, ident, 2, 183, 1,
-                         0x80010000, 64, shoff, 0, 64, 56, 1, 64, 4, 0)
-        struct.pack_into("<IIQQQQQQ", raw, 64, 1, 5, code_at, 0x80010000,
-                         0x80010000, len(code), len(code), 4)
+                         0x80100000, 64, shoff, 0, 64, 56, 1, 64, 4, 0)
+        struct.pack_into("<IIQQQQQQ", raw, 64, 1, 5, code_at, 0x80100000,
+                         0x80100000, len(code), len(code), 4)
         raw[code_at:code_at + len(code)] = code
         raw[sym_at:sym_at + len(symbols)] = symbols
         raw[strings_at:strings_at + len(strings)] = strings
         for index, kind, flags, address, offset, size, link, align, entry in (
-                (1, 1, 6, 0x80010000, code_at, len(code), 0, 4, 0),
+                (1, 1, 6, 0x80100000, code_at, len(code), 0, 4, 0),
                 (2, 2, 0, 0, sym_at, len(symbols), 3, 8, 24),
                 (3, 3, 0, 0, strings_at, len(strings), 0, 1, 0)):
             struct.pack_into("<IIQQQQIIQQ", raw, shoff + index * 64,

@@ -2,7 +2,7 @@
 ENTRY(_start)
 PHDRS { image PT_LOAD FLAGS(5); }
 SECTIONS {
-  . = 0x80010000;
+  . = 0x80100000;
   .text : { *(.text.boot) *(.text*) } :image
   .rodata : { *(.rodata*) } :image
   .data : { *(.data*) } :image

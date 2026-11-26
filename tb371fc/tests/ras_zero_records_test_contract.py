@@ -109,7 +109,7 @@ def parse_probe_elf(raw):
     for i in range(phnum):
         t, fl, off, va, pa, size, mem, align = struct.unpack_from('<IIQQQQQQ', raw, phoff + i * phsize)
         if t != 1: continue
-        require(va == pa and 0x80010000 <= pa < pa + mem <= CONTROL and size <= mem,
+        require(va == pa and 0x80100000 <= pa < pa + mem <= CONTROL and size <= mem,
                 'probe load segment outside test RAM')
         require(off + size <= len(raw), 'ELF segment truncation')
         segments.append(dict(address=pa, offset=off, file_bytes=size, memory_bytes=mem, flags=fl))
@@ -133,7 +133,7 @@ def parse_probe_elf(raw):
                        'el0_return_svc', 'el2_return', 'el1_return') or key.startswith(('read_', 'write_')):
                 require(key not in symbols and index != 0, 'duplicate/undefined probe symbol')
                 symbols[key] = value
-    require(symbols.get('_start') == entry == 0x80010000, 'probe entry')
+    require(symbols.get('_start') == entry == 0x80100000, 'probe entry')
     instructions = {}
     for reg, row in enumerate(REGISTERS):
         for wr in (0, 1):
