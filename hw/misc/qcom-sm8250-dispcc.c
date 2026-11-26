@@ -54,6 +54,12 @@ static uint64_t dispcc_clock_hz(const Clock *clock)
     return CLOCK_PERIOD_TO_HZ(clock_get(clock));
 }
 
+static bool dispcc_dsi_input(unsigned index)
+{
+    /* Exact four source-declared DSI PHY parents, not DP or opaque inputs. */
+    return index >= 10 && index <= 13;
+}
+
 static uint64_t dispcc_input_max_hz(unsigned index)
 {
     /* R11 v4_1 DPHY permits OUTDIV /1, bit /1, pixel mux bitclk, pixel /1. */
@@ -662,6 +668,11 @@ static int dispcc_post_load(void *opaque, int version_id)
         if (s->input[i]->multiplier != 1 || s->input[i]->divider != 1 ||
             !dispcc_input_period_valid(i, clock_get(s->input[i]))) {
             return dispcc_bad_state("input clock", i);
+        }
+        /* DSI is restored before DISP. Do not repair an inconsistent stream. */
+        if (dispcc_dsi_input(i) && clock_has_source(s->input[i]) &&
+            clock_get(s->input[i]) != clock_get(s->input[i]->source)) {
+            return dispcc_bad_state("DSI provider period", i);
         }
     }
     if (s->last_xo_hz != dispcc_clock_hz(s->input[I_XO])) {
