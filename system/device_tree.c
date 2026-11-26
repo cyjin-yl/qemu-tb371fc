@@ -363,22 +363,34 @@ int qemu_fdt_setprop(void *fdt, const char *node_path,
         exit(1);
     }
 
+    /*
+     * Older libfdt versions leave stale bytes in the 4-byte alignment tail
+     * after resizing a property. The FDT format requires those bytes to be
+     * zero. Reacquire the value after fdt_setprop() may have moved it, and
+     * clear only this property's allocated tail, never unrelated input data.
+     * Aligned and zero-length properties need no pointer or memset call.
+     */
+    if (size & 3) {
+        int actual_size;
+        char *value = fdt_getprop_w(fdt, findnode_nofail(fdt, node_path),
+                                   property, &actual_size);
+
+        if (!value || actual_size != size) {
+            error_report("%s: Couldn't read back %s/%s after update",
+                         __func__, node_path, property);
+            exit(1);
+        }
+        memset(value + size, 0, 4 - (size & 3));
+    }
+
     return r;
 }
 
 int qemu_fdt_setprop_cell(void *fdt, const char *node_path,
                           const char *property, uint32_t val)
 {
-    int r;
-
-    r = fdt_setprop_cell(fdt, findnode_nofail(fdt, node_path), property, val);
-    if (r < 0) {
-        error_report("%s: Couldn't set %s/%s = %#08x: %s", __func__,
-                     node_path, property, val, fdt_strerror(r));
-        exit(1);
-    }
-
-    return r;
+    val = cpu_to_be32(val);
+    return qemu_fdt_setprop(fdt, node_path, property, &val, sizeof(val));
 }
 
 int qemu_fdt_setprop_u64(void *fdt, const char *node_path,
@@ -391,16 +403,7 @@ int qemu_fdt_setprop_u64(void *fdt, const char *node_path,
 int qemu_fdt_setprop_string(void *fdt, const char *node_path,
                             const char *property, const char *string)
 {
-    int r;
-
-    r = fdt_setprop_string(fdt, findnode_nofail(fdt, node_path), property, string);
-    if (r < 0) {
-        error_report("%s: Couldn't set %s/%s = %s: %s", __func__,
-                     node_path, property, string, fdt_strerror(r));
-        exit(1);
-    }
-
-    return r;
+    return qemu_fdt_setprop(fdt, node_path, property, string, strlen(string) + 1);
 }
 
 /*
