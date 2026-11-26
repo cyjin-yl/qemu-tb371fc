@@ -363,7 +363,8 @@ out:
     return ret;
 }
 
-static void fdt_add_psci_node(void *fdt, ARMCPU *armcpu)
+static void fdt_add_psci_node(void *fdt, ARMCPU *armcpu,
+                             bool preserve_existing)
 {
     uint32_t cpu_suspend_fn;
     uint32_t cpu_off_fn;
@@ -391,15 +392,19 @@ static void fdt_add_psci_node(void *fdt, ARMCPU *armcpu)
 
     /*
      * A pre-existing /psci node might specify function ID values
-     * that don't match QEMU's PSCI implementation. Delete the whole
-     * node and put our own in instead.
+     * that don't match QEMU's PSCI implementation. Normally replace it.
+     * A board may retain its phandle, metadata and child power domains:
+     * in that case rewrite the known ABI properties in place below.
      */
     rc = fdt_path_offset(fdt, "/psci");
-    if (rc >= 0) {
+    if (rc >= 0 && !preserve_existing) {
         qemu_fdt_nop_node(fdt, "/psci");
+        rc = -FDT_ERR_NOTFOUND;
     }
 
-    qemu_fdt_add_subnode(fdt, "/psci");
+    if (rc < 0) {
+        qemu_fdt_add_subnode(fdt, "/psci");
+    }
     if (armcpu->psci_version >= QEMU_PSCI_VERSION_0_2) {
         if (armcpu->psci_version < QEMU_PSCI_VERSION_1_0) {
             const char comp[] = "arm,psci-0.2\0arm,psci";
@@ -627,7 +632,7 @@ int arm_load_dtb(hwaddr addr, const struct arm_boot_info *binfo,
         }
     }
 
-    fdt_add_psci_node(fdt, cpu);
+    fdt_add_psci_node(fdt, cpu, binfo->preserve_psci_node);
 
     if (binfo->modify_dtb) {
         binfo->modify_dtb(binfo, fdt);
