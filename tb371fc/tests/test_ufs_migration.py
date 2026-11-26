@@ -25,6 +25,7 @@ APPS, CB, TABLE = 0x15000000, 0x15080000, 0x82000000
 PTE_RW = 0x443
 PATTERN_A = bytes((i * 37 + 11) & 255 for i in range(4096))
 PATTERN_B = bytes((i * 19 + 83) & 255 for i in range(4096))
+RX_INTERFACE_VALUES = {0x734: 0x95, 0xb34: 0x4b}
 
 
 class UFSRig(Rig):
@@ -246,6 +247,8 @@ def main():
     def checkpoint(name, r):
         path = args.out / (name + ".migration")
         assert not r.monitor("query-status")["running"]
+        phy_before = {hex(off): r.r(PHY + off) for off in RX_INTERFACE_VALUES}
+        assert phy_before == {hex(off): value for off, value in RX_INTERFACE_VALUES.items()}
         clock_ns = r.clock_ns
         r.monitor("migrate", {"uri": "file:" + str(path)})
         outgoing = wait_migration(r)
@@ -260,8 +263,11 @@ def main():
         target.monitor("stop")
         assert restored_ns == clock_ns
         target.clock_ns = restored_ns
+        phy_after = {hex(off): target.r(PHY + off) for off in RX_INTERFACE_VALUES}
+        assert phy_after == phy_before, (name, phy_before, phy_after)
         migrations.append({"name": name, "source": outgoing, "target": incoming,
                            "external_qtest_clock_ns": clock_ns,
+                           "rx_interface_before": phy_before, "rx_interface_after": phy_after,
                            "stream_sha256": sha(path), "stream_bytes": path.stat().st_size})
         passed(name + "-qmp-completed-and-receiver-paused")
         return target, path
@@ -324,6 +330,9 @@ def main():
     try:
         r = start("source")
         setup(r)
+        for off, value in RX_INTERFACE_VALUES.items():
+            r.w(PHY + off, value)
+            assert r.r(PHY + off) == value
         assert r.query(6, 0x0e) == (0, 0, 1)
         assert r.query(6, 0x10) == (0, 0, 1)
         # PSA_DATA_SIZE is readable/writable; SECONDS_PASSED is write-only.

@@ -45,7 +45,20 @@ def generate(source, output, receipt):
                 if int(value, 0) not in e["documented_driver_values"]:
                     e["documented_driver_values"].append(int(value, 0))
                 e["tables"].append(name)
-    for suffix in ("PHY_START", "POWER_DOWN_CONTROL", "SW_RESET", "READY_STATUS"):
+    # Vendor v4 power and calibration sequences also use these documented
+    # leaves, which are absent from the selected upstream initialization tables.
+    # They are optional: the existing required calibration set is unchanged.
+    for name in ("QSERDES_V4_RX_RX_INTERFACE_MODE", "QSERDES_V4_RX_DCC_CTRL1",
+                 "QSERDES_V4_RX_GM_CAL"):
+        for base in (0x600, 0xa00):
+            address = base + definitions[name]
+            entries.setdefault(address, {"offset":address, "name":name,
+                "required":False, "documented_driver_values":[], "tables":[]})
+    for suffix in ("PHY_START", "POWER_DOWN_CONTROL", "SW_RESET", "READY_STATUS",
+                   "PLL_CNTL", "TIMER_20US_CORECLK_STEPS_MSB",
+                   "TIMER_20US_CORECLK_STEPS_LSB", "TX_PWM_GEAR_BAND",
+                   "TX_HS_GEAR_BAND", "TX_HSGEAR_CAPABILITY",
+                   "RX_HSGEAR_CAPABILITY"):
         name = "QPHY_V4_PCS_UFS_" + suffix
         address = 0xc00 + definitions[name]
         entries.setdefault(address, {"offset":address, "name":name,

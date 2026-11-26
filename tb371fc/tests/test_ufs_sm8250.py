@@ -8,6 +8,8 @@ from pathlib import Path
 HCI, PHY, GCC = 0x1d84000, 0x1d87000, 0x100000
 UTRL, CMD, DATA = 0x80010000, 0x80012000, 0x80020000
 ROOT = Path(__file__).resolve().parents[2]
+RX_INTERFACE = (0x734, 0xb34)
+RX_INTERFACE_BIT5 = 1 << 5
 
 def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -154,6 +156,94 @@ class Rig:
         for c in self.connections:c.close()
         self.log.close()
 
+def phy_preclock_controls(r, rows):
+    """Check observable state, not MemTxResult (which QTest discards)."""
+    by_offset = {entry["offset"]: entry for entry in rows}
+    assert sum(entry["required"] for entry in rows) == 111
+    assert all(not by_offset[off]["required"] for off in RX_INTERFACE)
+    controls = (*RX_INTERFACE, 0xc04)
+    def values(offsets):
+        return {hex(off): r.r(PHY + off) for off in offsets}
+    def period(name):
+        return r.monitor("qom-get", {"path": "/machine/ufs/" + name,
+                                    "property": "qtest-clock-period"})
+
+    # Seed every other writable leaf while AUX is on. Except for SW_RESET,
+    # the retained values are nonzero, so a dummy zero read cannot pass.
+    assert period("phy-aux-clk") > 0
+    before = {}
+    for off in by_offset:
+        if off in controls or off == 0xd80:
+            continue
+        value = 0 if off == 0xc08 else 1 if off == 0xc00 else 0x80 | ((off // 4) & 0x7f)
+        r.w(PHY + off, value)
+        assert r.r(PHY + off) == value, (hex(off), value)
+        before[hex(off)] = value
+    assert r.r(PHY + 0xc04) == 0
+    r.w(GCC + 0x7709c, 0)
+    r.step()
+    assert period("phy-aux-clk") == 0
+
+    expected = {"0x734": 0x95, "0xb34": 0x4b}
+    for off in RX_INTERFACE:
+        r.w(PHY + off, expected[hex(off)])
+    assert values(RX_INTERFACE) == expected
+    rmw = []
+    # The vendor path clears bit 5 for power-on and sets it for power-off.
+    # Each operation must preserve the other bits and the other lane's value.
+    for off in RX_INTERFACE:
+        for set_bit in (True, False):
+            old = values(RX_INTERFACE)
+            assert old == expected
+            value = (old[hex(off)] | RX_INTERFACE_BIT5 if set_bit else
+                     old[hex(off)] & ~RX_INTERFACE_BIT5)
+            r.w(PHY + off, value)
+            expected[hex(off)] = value
+            actual = values(RX_INTERFACE)
+            assert actual == expected, (hex(off), set_bit, old, actual)
+            rmw.append({"offset": hex(off), "set_bit": set_bit,
+                        "before": old, "after": actual})
+    r.w(PHY + 0xc04, 1)
+    expected["0xc04"] = 1
+    assert values(controls) == expected
+    for off in controls:
+        r.w(PHY + off, (expected[hex(off)] ^ 0xff) | 0x100)
+    assert values(controls) == expected  # The byte-wide write limit still applies.
+
+    attempted = {key: value ^ 0xff for key, value in before.items()}
+    for key, value in attempted.items():
+        r.w(PHY + int(key, 16), value)
+    r.step(50000)
+    symbols = {name: period(name) for name in ("tx-lane0", "rx-lane0", "rx-lane1")}
+    hcs = r.r(HCI + 0x30)
+    assert all(value == 0 for value in symbols.values()) and hcs & 7 == 0
+    # All required leaves, START and SW_RESET were already programmed. POWER=1
+    # must still leave the PHY stopped while AUX is off. Do not use a gated
+    # READY read of zero as evidence: QTest does not expose its bus status.
+    r.w(GCC + 0x7709c, 1)
+    r.step(50000)
+    assert period("phy-aux-clk") > 0
+    after = values(int(key, 16) for key in before)
+    assert after == before, (before, after)
+    assert values(controls) == expected
+    assert r.r(PHY + 0xd80) == 1 and period("tx-lane0") > 0
+
+    # Reset must clear the nonzero control state and reject writes held in reset.
+    r.w(GCC + 0x77000, 1)
+    for off in controls:
+        r.w(PHY + off, 0x5b)
+    r.w(GCC + 0x77000, 0)
+    r.step()
+    reset_values = values(controls)
+    assert reset_values == {hex(off): 0 for off in controls}
+    assert r.r(PHY + 0xc08) == 1 and r.r(PHY + 0xd80) == 0
+    return {"aux_off_control_rmw": rmw, "aux_off_controls": expected,
+            "noncontrol_before": before, "noncontrol_attempted": attempted,
+            "noncontrol_after_aux_restored": after,
+            "aux_off_symbol_clock_periods": symbols, "aux_off_hcs": hcs,
+            "reset_control_values": reset_values,
+            "memtx_status_observed": False}
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--qemu",type=Path,required=True)
@@ -181,16 +271,22 @@ def main():
         r.step()
         check("hci_reference_version",r.r(HCI+8)==0x300)
         check("phy_starts_reset",r.r(PHY+0xc08)==1 and r.r(PHY+0xd80)==0)
+        rows=json.loads((ROOT/"tb371fc/docs/ufs-qmp-registers.json").read_text())["registers"]
+        preclock=phy_preclock_controls(r,rows)
         r.w(HCI+0x34,1);r.w(HCI+0x24,0x71fff)
         check("link_startup_without_phy_fails",r.uic(0x16)[0]!=0)
         r.w(PHY+0xc04,1);r.w(PHY+0xc08,0);r.w(PHY+0xc00,1);r.step(50000)
-        check("unprogrammed_phy_not_ready",r.r(PHY+0xd80)==0)
-        rows=json.loads((ROOT/"tb371fc/docs/ufs-qmp-registers.json").read_text())["registers"]
+        check("unprogrammed_phy_not_ready",r.r(PHY+0xd80)==0,preclock)
         for entry in rows:
-            if entry["documented_driver_values"]:
+            if entry["documented_driver_values"] and entry["offset"] not in RX_INTERFACE:
                 r.w(PHY+entry["offset"],entry["documented_driver_values"][0])
         r.step(50000)
-        check("programmed_phy_ready",r.r(PHY+0xd80)==1)
+        optional={hex(off):r.r(PHY+off) for off in RX_INTERFACE}
+        check("programmed_phy_ready",r.r(PHY+0xd80)==1 and all(value==0 for value in optional.values()),
+              {"unwritten_rx_interface_controls":optional})
+        for off,value in zip(RX_INTERFACE,(0x95,0x6b)):
+            r.w(PHY+off,value)
+            assert r.r(PHY+off)==value
         check("phy_symbols_propagate",r.monitor("qom-get",{
             "path":"/machine/ufs/tx-lane0","property":"qtest-clock-period"})>0)
         check("tx_fsm_hibern8",r.uic(1,0x41)==(0,1))
@@ -319,7 +415,9 @@ def main():
         r.w(GCC+0x8c000,1);r.step(50000)
         check("restored_qref_restarts_phy",r.r(PHY+0xd80)==1 and r.uic(0x16)[0]==0)
         r.w(GCC+0x77000,1);r.w(GCC+0x77000,0);r.step()
-        check("gcc_bcr_resets_hci_and_phy",r.r(HCI+0x34)==0 and r.r(PHY+0xd80)==0 and r.r(PHY+0xc08)==1)
+        reset_controls={hex(off):r.r(PHY+off) for off in (*RX_INTERFACE,0xc04)}
+        check("gcc_bcr_resets_hci_and_phy",r.r(HCI+0x34)==0 and r.r(PHY+0xd80)==0 and r.r(PHY+0xc08)==1
+              and all(value==0 for value in reset_controls.values()),reset_controls)
         result["passed"]=True
     except Exception as e:
         result["error"]=f"{type(e).__name__}: {e}"
