@@ -175,7 +175,7 @@ class PlanTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         plan = ci.plan(args, Path("/test/runtime"))
         cases = {case.name: case for case in plan}
-        self.assertEqual(len(plan), 110)
+        self.assertEqual(len(plan), 111)
         self.assertEqual(len(cases), len(plan))
         self.assertEqual(cases["tbu-reference-ecats"].expected_count, 17)
         self.assertEqual(cases["smmuv500-reference"].expected_count, 36)
@@ -350,7 +350,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 115)
+        self.assertEqual(len(cases), 116)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]
@@ -626,7 +626,7 @@ class PlanTests(unittest.TestCase):
                              "ddr-stats-offset-source-generation", "ddr-stats-offset-sm8250-reference",
                                    "geni-hs-source-generation-unit", "geni-hs-source-generation",
                                    "geni-hs-sm8250-reference", "qce-bam-source-generation",
-                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat", "dsu-pmu-cycle-only"}:
+                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat", "dsu-pmu-cycle-only", "prng-virtual"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -747,7 +747,7 @@ class PlanTests(unittest.TestCase):
                              "ddr-stats-offset-source-generation", "ddr-stats-offset-sm8250-reference",
                                    "geni-hs-source-generation-unit", "geni-hs-source-generation",
                                    "geni-hs-sm8250-reference", "qce-bam-source-generation",
-                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat", "dsu-pmu-cycle-only"}:
+                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat", "dsu-pmu-cycle-only", "prng-virtual"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -878,7 +878,7 @@ class PlanTests(unittest.TestCase):
                                    "ddr-stats-offset-sm8250-reference",
                                    "geni-hs-source-generation-unit", "geni-hs-source-generation",
                                    "geni-hs-sm8250-reference", "qce-bam-source-generation",
-                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat", "dsu-pmu-cycle-only"}:
+                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat", "dsu-pmu-cycle-only", "prng-virtual"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -1058,8 +1058,8 @@ class GeniContractTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
         additions = {"geni-hs-source-generation-unit", "geni-hs-source-generation", "geni-hs-sm8250-reference",
-                     "qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat", "dsu-pmu-cycle-only"}
-        self.assertEqual(len(cases), 115)
+                     "qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat", "dsu-pmu-cycle-only", "prng-virtual"}
+        self.assertEqual(len(cases), 116)
         def normalize(value):
             if isinstance(value, Path):
                 value = str(value)
@@ -1098,9 +1098,9 @@ class QceContractTests(unittest.TestCase):
         self.plan = ci.plan(self.args, Path("/test/runtime"))
 
     def test_qce_additions_preserve_all_107_prior_contracts_in_order(self):
-        additions = {"qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat", "dsu-pmu-cycle-only"}
-        self.assertEqual(len(self.plan), 115)
-        self.assertEqual({c.name for c in self.plan[107:110]}, additions - {"spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat", "dsu-pmu-cycle-only"})
+        additions = {"qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat", "dsu-pmu-cycle-only", "prng-virtual"}
+        self.assertEqual(len(self.plan), 116)
+        self.assertEqual({c.name for c in self.plan[107:110]}, additions - {"spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat", "dsu-pmu-cycle-only", "prng-virtual"})
         def normalize(value):
             if isinstance(value, Path):
                 value = str(value)
@@ -1210,7 +1210,7 @@ class SpmiDebugFuseContractTests(unittest.TestCase):
         self.case = next(case for case in self.plan if case.name == 'spmi-debug-fuse-reference')
 
     def test_all_110_prior_contracts_remain_the_exact_ordered_prefix(self):
-        self.assertEqual(len(self.plan), 115)
+        self.assertEqual(len(self.plan), 116)
         self.assertEqual(self.case.name, 'spmi-debug-fuse-reference')
         def normalize(value):
             if isinstance(value, Path):value = str(value)
@@ -1342,7 +1342,7 @@ class GeniI2cContractTests(unittest.TestCase):
         self.case = next(case for case in self.plan if case.name == 'geni-i2c-reference')
 
     def test_all_111_prior_contracts_remain_the_exact_ordered_prefix(self):
-        self.assertEqual(len(self.plan), 115)
+        self.assertEqual(len(self.plan), 116)
         self.assertEqual(self.case.name, "geni-i2c-reference")
         self.assertEqual(sum(c.name == self.case.name for c in self.plan), 1)
         def normalize(value):
@@ -1361,7 +1361,7 @@ class GeniI2cContractTests(unittest.TestCase):
         prefix = [normalize(vars(case)) for case in self.plan[:111]]
         fingerprint = hashlib.sha256(json.dumps(prefix, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
         self.assertEqual(fingerprint, "3bb17209275609d01562d59528c01b1000b011e84a7377f5114d408b5e22ddee")
-        for suite, count in (("components", 110), ("linux", 5)):
+        for suite, count in (("components", 111), ("linux", 5)):
             args = SimpleNamespace(suite=suite, qemu=Path("/test/qemu"),
                                    build_dir=Path("/test/build"), kernel=None)
             cases = ci.plan(args, Path("/test/runtime"))
@@ -1522,7 +1522,7 @@ class NpuGdscPendingContractTests(unittest.TestCase):
         self.case = next(case for case in self.plan if case.name == 'npu-gdsc-pending-reference')
 
     def test_all_112_prior_contracts_remain_the_exact_ordered_prefix(self):
-        self.assertEqual(len(self.plan), 115)
+        self.assertEqual(len(self.plan), 116)
         self.assertEqual(self.case.name, "npu-gdsc-pending-reference")
         self.assertEqual(sum(c.name == self.case.name for c in self.plan), 1)
         def normalize(value):
@@ -1541,7 +1541,7 @@ class NpuGdscPendingContractTests(unittest.TestCase):
         prefix = [normalize(vars(case)) for case in self.plan[:112]]
         fingerprint = hashlib.sha256(json.dumps(prefix, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
         self.assertEqual(fingerprint, "23920b243e9ca1830658dd5800125136795cd7e0aa3b598f1046895d81c3dfd5")
-        for suite, count in (("components", 110), ("linux", 5)):
+        for suite, count in (("components", 111), ("linux", 5)):
             args = SimpleNamespace(suite=suite, qemu=Path("/test/qemu"),
                                    build_dir=Path("/test/build"), kernel=None)
             cases = ci.plan(args, Path("/test/runtime"))
@@ -1651,7 +1651,7 @@ class RasZeroRecordsContractTests(unittest.TestCase):
 
     def test_all_113_prior_gate_contracts_remain_the_ordered_prefix(self):
         import ras_zero_records_ci_contract as f
-        self.assertEqual(len(self.plan), 115)
+        self.assertEqual(len(self.plan), 116)
         self.assertEqual(self.case.name, "ras-zero-records-compat")
         self.assertEqual(sum(c.name == self.case.name for c in self.plan), 1)
         fields = ("name", "verdict", "expected_count", "count_field", "expected_values",
@@ -1663,7 +1663,7 @@ class RasZeroRecordsContractTests(unittest.TestCase):
             prefix.append(row)
         actual = hashlib.sha256(json.dumps(prefix, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
         self.assertEqual(actual, "019195770f0c505817a1b4c8d09aab81ec3b44956c772ea57a1cdfbd80eb383b")
-        for suite, count in (("components", 110), ("linux", 5)):
+        for suite, count in (("components", 111), ("linux", 5)):
             args = SimpleNamespace(suite=suite, qemu=Path("/test/qemu"),
                                    build_dir=Path("/test/build"), kernel=None)
             cases = ci.plan(args, Path("/test/runtime"))
@@ -1743,7 +1743,7 @@ class RasZeroRecordsContractTests(unittest.TestCase):
 
 class DsuPlanTests(unittest.TestCase):
     def test_cycle_only_gate_appends_to_existing_prefix(self):
-        for suite, count in (("all", 115), ("components", 110), ("linux", 5)):
+        for suite, count in (("all", 116), ("components", 111), ("linux", 5)):
             args = SimpleNamespace(suite=suite, qemu=Path("/test/qemu"),
                                    build_dir=Path("/test/build"), kernel=None)
             cases = ci.plan(args, Path("/test/runtime"))
@@ -1753,7 +1753,7 @@ class DsuPlanTests(unittest.TestCase):
             if not matches:
                 continue
             case = matches[0]
-            self.assertIs(case, cases[-1])
+            self.assertIs(case, cases[-2])
             self.assertEqual((case.expected_count, case.timeout), (7, 240))
             self.assertEqual(case.expected_lengths,
                              {"processes": 6, "migrations": 2, "rejected_migrations": 2})
@@ -1761,7 +1761,32 @@ class DsuPlanTests(unittest.TestCase):
             self.assertEqual(case.expected_values["cpu_count"], 8)
             self.assertFalse(case.expected_values["output_interception_installed"])
             self.assertFalse(case.expected_values["original_android_executed"])
-            self.assertEqual(cases[-2].name, "ras-zero-records-compat")
+            self.assertEqual(cases[-3].name, "ras-zero-records-compat")
+
+
+class PrngPlanTests(unittest.TestCase):
+    def test_virtual_prng_appends_and_retains_scope_boundaries(self):
+        for suite, count in (("all", 116), ("components", 111), ("linux", 5)):
+            args = SimpleNamespace(suite=suite, qemu=Path("/test/qemu"),
+                                   build_dir=Path("/test/build"), kernel=None)
+            cases = ci.plan(args, Path("/test/runtime"))
+            self.assertEqual(len(cases), count)
+            matches = [case for case in cases if case.name == "prng-virtual"]
+            self.assertEqual(len(matches), int(suite != "linux"))
+            if not matches:
+                continue
+            case = matches[0]
+            self.assertIs(case, cases[-1])
+            self.assertEqual(cases[-2].name, "dsu-pmu-cycle-only")
+            self.assertEqual((case.expected_count, case.timeout), (11, 240))
+            self.assertEqual(case.expected_lengths,
+                             {"processes": 9, "migrations": 3, "rejected_migrations": 2,
+                              "access_rejections": 24})
+            self.assertTrue(case.expected_values["real_host_backend_observed"])
+            for field in ("guest_cpu_executed", "original_android_executed",
+                          "physical_rng_verified", "entropy_quality_verified",
+                          "migration_payloads_modified"):
+                self.assertFalse(case.expected_values[field])
 
 
 if __name__ == "__main__":

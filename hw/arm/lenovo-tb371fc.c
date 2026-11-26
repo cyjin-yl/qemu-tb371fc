@@ -95,6 +95,7 @@
 #include "target/arm/cpu.h"
 #include "target/arm/gtimer.h"
 #include "tb371fc-dsu-pmu.h"
+#include "hw/misc/qcom-sm8250-prng.h"
 
 #define TYPE_TB371FC_MACHINE MACHINE_TYPE_NAME("tb371fc")
 OBJECT_DECLARE_SIMPLE_TYPE(TB371FCMachineState, TB371FC_MACHINE)
@@ -115,6 +116,7 @@ OBJECT_DECLARE_SIMPLE_TYPE(TB371FCMachineState, TB371FC_MACHINE)
 #define TB371FC_QUP_SIZE         UINT64_C(0x6000)
 #define TB371FC_TIMER_HZ         19200000
 #define TB371FC_GCC_BASE         UINT64_C(0x00100000)
+#define TB371FC_PRNG_BASE        UINT64_C(0x00793000)
 #define TB371FC_GCC_XO_HZ        19200000
 #define TB371FC_SLEEP_HZ         32000
 #define TB371FC_UFS_BASE         UINT64_C(0x01d84000)
@@ -180,6 +182,7 @@ struct TB371FCMachineState {
     ARMCPU *cpu[TB371FC_CPUS];
     DeviceState *gic;
     DeviceState *dsu_pmu;
+    DeviceState *prng;
     QcomGeniUartState uart;
     QcomGeniUartState uart_hs;
     DeviceState *geni_i2c[QCOM_GENI_I2C_INSTANCE_COUNT];
@@ -208,6 +211,7 @@ struct TB371FCMachineState {
     bool counter_exact;
     bool ras_zero_records_compat;
     bool dsu_pmu_cycle_only;
+    bool prng_virtual;
     uint64_t kernel_load_base;
     Clock *xo, *sleep, *fabric;
     bool gcc_boot_configured;
@@ -1559,6 +1563,20 @@ static void tb371fc_realize_geni_i2c(TB371FCMachineState *s)
     }
 }
 
+static void tb371fc_create_prng(TB371FCMachineState *s)
+{
+    s->prng = qdev_new(TYPE_QCOM_SM8250_PRNG);
+    object_property_add_child(OBJECT(s), "prng", OBJECT(s->prng));
+    qdev_prop_set_bit(s->prng, "enabled", s->prng_virtual);
+    qdev_connect_clock_in(s->prng, "iface",
+        qdev_get_clock_out(DEVICE(&s->gcc), "gcc_prng_ahb_clk"));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(s->prng), &error_fatal);
+    if (s->prng_virtual) {
+        /* Original /soc/qrng@793000: only DATA/STATUS, no-qrng-config. */
+        sysbus_mmio_map(SYS_BUS_DEVICE(s->prng), 0, TB371FC_PRNG_BASE);
+    }
+}
+
 static void tb371fc_create_gcc(TB371FCMachineState *s)
 {
     DeviceState *gcc;
@@ -1603,6 +1621,10 @@ static void tb371fc_create_gcc(TB371FCMachineState *s)
                               qdev_get_clock_out(s->ufs, "rx-lane0"));
         qdev_connect_clock_in(gcc, "gcc_ufs_phy_rx_symbol_1_clk_parent",
                               qdev_get_clock_out(s->ufs, "rx-lane1"));
+    }
+    if (s->prng_virtual) {
+        /* Explicit virtual carrier; the silicon parent/rate is not known. */
+        qdev_connect_clock_in(gcc, "gcc_prng_ahb_clk_parent", s->fabric);
     }
     sysbus_realize(SYS_BUS_DEVICE(gcc), &error_fatal);
     sysbus_mmio_map(SYS_BUS_DEVICE(gcc), 0, TB371FC_GCC_BASE);
@@ -2133,6 +2155,7 @@ static void tb371fc_init(MachineState *ms)
                             TYPE_QCOM_SM8250_GENI_HS);
     tb371fc_prepare_geni_i2c(s);
     tb371fc_create_gcc(s);
+    tb371fc_create_prng(s);
     tb371fc_create_cpufreq(s);
     tb371fc_create_devfreq(s);
     tb371fc_create_sbm(s);
@@ -2410,6 +2433,22 @@ static void tb371fc_set_ras_zero_records_compat(Object *obj, bool value,
     s->ras_zero_records_compat = value;
 }
 
+static bool tb371fc_get_prng_virtual(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->prng_virtual;
+}
+
+static void tb371fc_set_prng_virtual(Object *obj, bool value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->cpu[0]) {
+        error_setg(errp, "prng-virtual is fixed after machine creation");
+        return;
+    }
+    s->prng_virtual = value;
+}
+
 static bool tb371fc_get_dsu_pmu_cycle_only(Object *obj, Error **errp)
 {
     return TB371FC_MACHINE(obj)->dsu_pmu_cycle_only;
@@ -2572,6 +2611,7 @@ static void tb371fc_instance_init(Object *obj)
     s->counter_exact = true;
     s->ras_zero_records_compat = false;
     s->dsu_pmu_cycle_only = false;
+    s->prng_virtual = false;
     s->gcc_boot_configured = true;
     s->enable_ufs = true;
     s->bootstrap_fabric_hz = 100000000;
@@ -2633,6 +2673,10 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
     object_class_property_set_description(oc, "ras-zero-records-compat",
         "Opt in to AArch64 zero-record RAS RES0/RAZ/WI compatibility on "
         "all eight CPUs (default off); no physical error records or IRQs");
+    object_class_property_add_bool(oc, "prng-virtual",
+        tb371fc_get_prng_virtual, tb371fc_set_prng_virtual);
+    object_class_property_set_description(oc, "prng-virtual",
+        "Explicit host-entropy PRNG with a synthetic AHB carrier (default off)");
     object_class_property_add_bool(oc, "dsu-pmu-cycle-only",
         tb371fc_get_dsu_pmu_cycle_only, tb371fc_set_dsu_pmu_cycle_only);
     object_class_property_set_description(oc, "dsu-pmu-cycle-only",

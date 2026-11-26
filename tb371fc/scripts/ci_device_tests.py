@@ -1388,6 +1388,19 @@ def plan(args, runtime):
                          "original_android_executed": False},
                expected_lengths={"processes": 6, "migrations": 2,
                                  "rejected_migrations": 2})
+    if args.suite in ("all", "components"):
+        device("prng-virtual", "test_prng_virtual.py",
+               output="--out", result="file", count=11, timeout=240,
+               expected={"schema": "tb371fc-prng-virtual-test-v1",
+                         "real_host_backend_observed": True,
+                         "guest_cpu_executed": False,
+                         "original_android_executed": False,
+                         "physical_rng_verified": False,
+                         "entropy_quality_verified": False,
+                         "migration_payloads_modified": False},
+               expected_lengths={"processes": 9, "migrations": 3,
+                                 "rejected_migrations": 2,
+                                 "access_rejections": 24})
     return cases
 
 
