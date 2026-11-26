@@ -219,11 +219,14 @@ static const ARMCPRegInfo dsu_regs[] = {
     /*
      * Upstream ACTLR_EL2/HACTLR is RAZ/WI on this board. Override only the
      * DSU gate, leaving every other bit RAZ/WI. EL3 is absent on TB371FC.
+     * CPU realization already added the old constant ACTLR migration slots.
+     * Keep those slots canonically zero; the device owns the live access gates.
      */
     { .name = "ACTLR_EL2", .state = ARM_CP_STATE_BOTH,
       .opc0 = 3, .opc1 = 4, .crn = 1, .crm = 0, .opc2 = 1,
-      .access = PL2_RW, .type = ARM_CP_IO | ARM_CP_NO_RAW | ARM_CP_OVERRIDE,
+      .access = PL2_RW, .type = ARM_CP_IO | ARM_CP_OVERRIDE,
       .readfn = dsu_actlr_read, .writefn = dsu_actlr_write,
+      .raw_readfn = arm_cp_read_zero, .raw_writefn = arm_cp_write_ignore,
       .resetfn = dsu_actlr_reset },
 };
 

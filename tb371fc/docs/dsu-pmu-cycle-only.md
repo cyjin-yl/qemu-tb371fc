@@ -70,7 +70,9 @@ horizon. In particular a zero counter is not mistaken for a zero-delay wrap.
 Sysreg callbacks use ARM_CP_IO so QEMU serializes their side effects with
 the BQL. The cluster state belongs to one SysBusDevice, not to whichever
 CPU happened to access it. The device's own VMState owns that state; the
-CPU sysreg definitions use ARM_CP_NO_RAW to avoid duplicate migration.
+new cluster sysreg definitions use ARM_CP_NO_RAW to avoid duplicate migration.
+The pre-existing CPU ACTLR migration slots retain canonical zero raw values;
+its architectural access gate is migrated solely in the DSU device state.
 
 ## Privilege and direct-kernel handoff
 
