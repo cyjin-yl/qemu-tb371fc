@@ -175,7 +175,7 @@ class PlanTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         plan = ci.plan(args, Path("/test/runtime"))
         cases = {case.name: case for case in plan}
-        self.assertEqual(len(plan), 108)
+        self.assertEqual(len(plan), 109)
         self.assertEqual(len(cases), len(plan))
         self.assertEqual(cases["tbu-reference-ecats"].expected_count, 17)
         self.assertEqual(cases["smmuv500-reference"].expected_count, 36)
@@ -350,7 +350,7 @@ class PlanTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
-        self.assertEqual(len(cases), 113)
+        self.assertEqual(len(cases), 114)
         matches = [case for case in cases if case.name == "spmi-pdc-gic-route"]
         self.assertEqual(len(matches), 1)
         case = matches[0]
@@ -626,7 +626,7 @@ class PlanTests(unittest.TestCase):
                              "ddr-stats-offset-source-generation", "ddr-stats-offset-sm8250-reference",
                                    "geni-hs-source-generation-unit", "geni-hs-source-generation",
                                    "geni-hs-sm8250-reference", "qce-bam-source-generation",
-                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference"}:
+                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -747,7 +747,7 @@ class PlanTests(unittest.TestCase):
                              "ddr-stats-offset-source-generation", "ddr-stats-offset-sm8250-reference",
                                    "geni-hs-source-generation-unit", "geni-hs-source-generation",
                                    "geni-hs-sm8250-reference", "qce-bam-source-generation",
-                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference"}:
+                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -878,7 +878,7 @@ class PlanTests(unittest.TestCase):
                                    "ddr-stats-offset-sm8250-reference",
                                    "geni-hs-source-generation-unit", "geni-hs-source-generation",
                                    "geni-hs-sm8250-reference", "qce-bam-source-generation",
-                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference"}:
+                                   "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat"}:
                 continue
             def normalize(value):
                 if isinstance(value, Path):
@@ -1058,8 +1058,8 @@ class GeniContractTests(unittest.TestCase):
                                build_dir=Path("/test/build"), kernel=None)
         cases = ci.plan(args, Path("/test/runtime"))
         additions = {"geni-hs-source-generation-unit", "geni-hs-source-generation", "geni-hs-sm8250-reference",
-                     "qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference"}
-        self.assertEqual(len(cases), 113)
+                     "qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat"}
+        self.assertEqual(len(cases), 114)
         def normalize(value):
             if isinstance(value, Path):
                 value = str(value)
@@ -1098,9 +1098,9 @@ class QceContractTests(unittest.TestCase):
         self.plan = ci.plan(self.args, Path("/test/runtime"))
 
     def test_qce_additions_preserve_all_107_prior_contracts_in_order(self):
-        additions = {"qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference"}
-        self.assertEqual(len(self.plan), 113)
-        self.assertEqual({c.name for c in self.plan[-6:-3]}, additions - {"spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference"})
+        additions = {"qce-bam-source-generation", "qce-bam-safety", "qce-bam-reference", "spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat"}
+        self.assertEqual(len(self.plan), 114)
+        self.assertEqual({c.name for c in self.plan[-7:-4]}, additions - {"spmi-debug-fuse-reference", "geni-i2c-reference", "npu-gdsc-pending-reference", "ras-zero-records-compat"})
         def normalize(value):
             if isinstance(value, Path):
                 value = str(value)
@@ -1207,10 +1207,10 @@ class SpmiDebugFuseContractTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         self.plan = ci.plan(args, Path("/test/runtime"))
-        self.case = self.plan[-3]
+        self.case = self.plan[-4]
 
     def test_all_110_prior_contracts_remain_the_exact_ordered_prefix(self):
-        self.assertEqual(len(self.plan), 113)
+        self.assertEqual(len(self.plan), 114)
         self.assertEqual(self.case.name, 'spmi-debug-fuse-reference')
         def normalize(value):
             if isinstance(value, Path):value = str(value)
@@ -1339,10 +1339,10 @@ class GeniI2cContractTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         self.plan = ci.plan(args, Path("/test/runtime"))
-        self.case = self.plan[-2]
+        self.case = self.plan[-3]
 
     def test_all_111_prior_contracts_remain_the_exact_ordered_prefix(self):
-        self.assertEqual(len(self.plan), 113)
+        self.assertEqual(len(self.plan), 114)
         self.assertEqual(self.case.name, "geni-i2c-reference")
         self.assertEqual(sum(c.name == self.case.name for c in self.plan), 1)
         def normalize(value):
@@ -1361,7 +1361,7 @@ class GeniI2cContractTests(unittest.TestCase):
         prefix = [normalize(vars(case)) for case in self.plan[:111]]
         fingerprint = hashlib.sha256(json.dumps(prefix, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
         self.assertEqual(fingerprint, "3bb17209275609d01562d59528c01b1000b011e84a7377f5114d408b5e22ddee")
-        for suite, count in (("components", 108), ("linux", 5)):
+        for suite, count in (("components", 109), ("linux", 5)):
             args = SimpleNamespace(suite=suite, qemu=Path("/test/qemu"),
                                    build_dir=Path("/test/build"), kernel=None)
             cases = ci.plan(args, Path("/test/runtime"))
@@ -1519,10 +1519,10 @@ class NpuGdscPendingContractTests(unittest.TestCase):
         args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
                                build_dir=Path("/test/build"), kernel=None)
         self.plan = ci.plan(args, Path("/test/runtime"))
-        self.case = self.plan[-1]
+        self.case = self.plan[-2]
 
     def test_all_112_prior_contracts_remain_the_exact_ordered_prefix(self):
-        self.assertEqual(len(self.plan), 113)
+        self.assertEqual(len(self.plan), 114)
         self.assertEqual(self.case.name, "npu-gdsc-pending-reference")
         self.assertEqual(sum(c.name == self.case.name for c in self.plan), 1)
         def normalize(value):
@@ -1541,7 +1541,7 @@ class NpuGdscPendingContractTests(unittest.TestCase):
         prefix = [normalize(vars(case)) for case in self.plan[:112]]
         fingerprint = hashlib.sha256(json.dumps(prefix, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
         self.assertEqual(fingerprint, "23920b243e9ca1830658dd5800125136795cd7e0aa3b598f1046895d81c3dfd5")
-        for suite, count in (("components", 108), ("linux", 5)):
+        for suite, count in (("components", 109), ("linux", 5)):
             args = SimpleNamespace(suite=suite, qemu=Path("/test/qemu"),
                                    build_dir=Path("/test/build"), kernel=None)
             cases = ci.plan(args, Path("/test/runtime"))
@@ -1635,6 +1635,108 @@ class NpuGdscPendingContractTests(unittest.TestCase):
             path = Path(directory) / "summary-only.json"
             path.write_text(json.dumps(summary))
             case = copy.deepcopy(self.case);case.result = str(path)
+            with self.assertRaises((KeyError, ValueError)):
+                ci.judge(case, path)
+
+
+
+
+class RasZeroRecordsContractTests(unittest.TestCase):
+    """Pure acceptance-boundary checks; generated guest execution is a CI gate."""
+    def setUp(self):
+        args = SimpleNamespace(suite="all", qemu=Path("/test/qemu"),
+                               build_dir=Path("/test/build"), kernel=None)
+        self.plan = ci.plan(args, Path("/test/runtime"))
+        self.case = self.plan[-1]
+
+    def test_all_113_prior_gate_contracts_remain_the_ordered_prefix(self):
+        import ras_zero_records_ci_contract as f
+        self.assertEqual(len(self.plan), 114)
+        self.assertEqual(self.case.name, "ras-zero-records-compat")
+        self.assertEqual(sum(c.name == self.case.name for c in self.plan), 1)
+        fields = ("name", "verdict", "expected_count", "count_field", "expected_values",
+                  "expected_lengths", "tap_count", "guest_errno")
+        prefix = []
+        for case in self.plan[:113]:
+            row = {key: getattr(case, key) for key in fields}
+            row["kind"] = case.result if case.result in ("exit", "stdout", "tap") else "file"
+            prefix.append(row)
+        actual = hashlib.sha256(json.dumps(prefix, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        self.assertEqual(actual, "019195770f0c505817a1b4c8d09aab81ec3b44956c772ea57a1cdfbd80eb383b")
+        for suite, count in (("components", 109), ("linux", 5)):
+            args = SimpleNamespace(suite=suite, qemu=Path("/test/qemu"),
+                                   build_dir=Path("/test/build"), kernel=None)
+            cases = ci.plan(args, Path("/test/runtime"))
+            self.assertEqual(len(cases), count)
+            self.assertEqual(any(c.name == f.NAME for c in cases), suite == "components")
+        self.assertEqual((self.case.expected_count, self.case.timeout), (35, 600))
+        self.assertEqual(self.case.expected_values, f.EXPECTED_VALUES)
+        self.assertEqual(self.case.expected_lengths, f.EXPECTED_LENGTHS)
+        self.assertEqual(self.case.command, [sys.executable,
+            str(ci.ROOT / "tb371fc/tests/test_ras_zero_records.py"),
+            "--qemu", "/test/qemu", "--out", str(self.case.fixture / "data")])
+        self.assertEqual((len(f.ORDER), len(f.NORMAL), len(f.INVALID), len(f.MUTANTS)), (35, 11, 2, 20))
+        self.assertEqual(f.SUMMARY["actual_Popen_wait_calls"], 59)
+        self.assertEqual(f.SUMMARY["guest_instruction_operations"], 8960)
+        self.assertEqual(f.SUMMARY["actual_stream_files"], 24)
+
+    def test_exact_guest_instruction_witness_and_missing_raw_rejection(self):
+        import struct
+        import ras_zero_records_ci_contract as f
+        # One small synthetic ELF, not a QEMU result or compiled guest claim.
+        names = ["_start", "secondary_entry", "enter_el1", "enter_el0", "el1_return_hvc",
+                 "el0_return_svc", "el2_return", "el1_return"]
+        registers = ("erridr", "errselr", "erxfr", "erxctlr", "erxstatus", "erxaddr",
+                     "erxmisc0", "erxmisc1", "unknown0", "unknown1")
+        encodings = (0xc298, 0xc299, 0xc2a0, 0xc2a1, 0xc2a2, 0xc2a3, 0xc2a8, 0xc2a9, 0xc2a4, 0xc2af)
+        names += [prefix + name for name in registers for prefix in ("read_", "write_")]
+        strings = bytearray(b"\0"); offsets = {}
+        for name in names:
+            offsets[name] = len(strings); strings += name.encode() + b"\0"
+        code = bytearray(160)
+        for reg, encoding in enumerate(encodings):
+            for write in (0, 1):
+                struct.pack_into("<II", code, (reg * 2 + write) * 8,
+                    (0xd5000000 if write else 0xd5200000) | encoding << 5, 0xd65f03c0)
+        symbols = bytearray(24)
+        for i, name in enumerate(names):
+            address = 0x80010000 if i < 8 else 0x80010000 + (i - 8) * 8
+            symbols += struct.pack("<IBBHQQ", offsets[name], 0x12, 0, 1, address, 8)
+        code_at, sym_at = 0x100, 0x200
+        strings_at = sym_at + len(symbols); shoff = (strings_at + len(strings) + 7) & ~7
+        raw = bytearray(shoff + 4 * 64)
+        ident = b"\x7fELF\x02\x01\x01" + bytes(9)
+        struct.pack_into("<16sHHIQQQIHHHHHH", raw, 0, ident, 2, 183, 1,
+                         0x80010000, 64, shoff, 0, 64, 56, 1, 64, 4, 0)
+        struct.pack_into("<IIQQQQQQ", raw, 64, 1, 5, code_at, 0x80010000,
+                         0x80010000, len(code), len(code), 4)
+        raw[code_at:code_at + len(code)] = code
+        raw[sym_at:sym_at + len(symbols)] = symbols
+        raw[strings_at:strings_at + len(strings)] = strings
+        for index, kind, flags, address, offset, size, link, align, entry in (
+                (1, 1, 6, 0x80010000, code_at, len(code), 0, 4, 0),
+                (2, 2, 0, 0, sym_at, len(symbols), 3, 8, 24),
+                (3, 3, 0, 0, strings_at, len(strings), 0, 1, 0)):
+            struct.pack_into("<IIQQQQIIQQ", raw, shoff + index * 64,
+                             0, kind, flags, address, offset, size, link, 0, align, entry)
+        witness = f.elf_probe(bytes(raw))
+        self.assertEqual(len(witness["instructions"]), 20)
+        self.assertEqual(witness["instructions"]["write_errselr"]["instruction_u32"], 0xd5185320)
+        damaged = bytearray(raw); damaged[code_at] ^= 1
+        for invalid in (bytes(damaged), bytes(raw[:-1])):
+            with self.subTest(damage=len(invalid)), self.assertRaises(ValueError):
+                f.elf_probe(invalid)
+        with self.assertRaises(ValueError):
+            f.equal(True, 1, "typed profile")
+        # Even all expected aggregate values cannot substitute for missing raw
+        # protocol, full guest bytes, actual waits and migration streams.
+        summary = {**copy.deepcopy(f.EXPECTED_VALUES), "passed": True,
+                   "checks": [{"name": name, "fixture": name, "passed": True} for name in f.ORDER]}
+        for key, count in f.EXPECTED_LENGTHS.items():
+            if key != "checks": summary[key] = [{} for _ in range(count)]
+        with tempfile.TemporaryDirectory(prefix="tbci-ras-unit-", dir="/tmp") as directory:
+            path = Path(directory) / "summary-only.json"; path.write_text(json.dumps(summary))
+            case = copy.deepcopy(self.case); case.result = str(path)
             with self.assertRaises((KeyError, ValueError)):
                 ci.judge(case, path)
 

@@ -266,3 +266,40 @@ complete 64-byte restore, and both profile 1/2 mismatch directions. Separate act
 PCI UFS regressions remain required. Source validation and test registration
 are not a compiled pass. A matching compiled receipt and a new unchanged-input
 native run are needed before claiming that the observed NPU abort is past.
+
+## Actual pending-profile native result (2026-11-26)
+
+The later [complete safe native review](../evidence/npu-pending-native-20261126-5297812/independent-public-native-review.json)
+and [exact frontier supplement](../evidence/npu-pending-native-20261126-5297812/actual-frontier.json)
+record one original-input attempt using source
+`5297812e6af5f5a6d88372debb12c5841142757c`, artifact `15078443518`, and the
+explicit pending option. The unchanged earlier 33 globals were retained and
+`qcom-npu-gdsc.unknown-feedback-pending=on` was appended as the 34th.
+
+This run supplies positive evidence for the software failure path. At guest
+5.334112 s, the original driver reported `npu_core_gdsc enable timed out: 0x0`.
+It then reported final status zero, failed to enable NPU power, dropped its
+regulator links, and returned NPU probe error `-110` at 5.335631 s. Execution
+continued after that failed probe. The earlier strict-profile external abort
+at the GDSCR read was not observed in this attempt; that absence is supported
+here by the explicit timeout/error-return sequence, not treated alone as proof
+of progress. NPU power-on, a known physical parent supply, successful probe
+and NPU execution remain unproved. The printed follow-up interval of 100 us
+is an observation from the driver log, not an independent latency measurement.
+
+The later fatal sequence is separate: QEMU rejected a write to
+`S3_0_C5_C3_1` (`ERRSELR_EL1`), then raised Undefined Instruction on CPU 4 at
+ELR `0xffffff8008c32268`. The complete original symbol metadata maps that
+address uniquely to `kryo_cpu_erp_probe+0x30` in a 904-byte function. Printk
+reported undefined instruction at 5.470610 s; a secondary handler Data Abort
+and the subsequent panic followed. The safe frontier supplement distinguishes
+this initiating fault from the frozen review's later panic-pattern match.
+No new RAS behavior or corrective source is qualified by this evidence.
+
+The independent record review passed 2,249 checks, while the native runner
+and host returned 2 with outcome `kernel-failure`; QEMU returned 0 after normal
+QMP shutdown. This was a 0-LUN diagnostic with storage incomplete at selection.
+Android userspace, completed boot and interactive UI were not observed. The
+same artifact's once marker is consumed, and it must not be rerun. The public
+records preserve complete file hashes and source-defined input/cleanup limits;
+no raw private log, original input content or instruction bytes are published.

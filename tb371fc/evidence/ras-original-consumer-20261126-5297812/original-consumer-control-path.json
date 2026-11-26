@@ -1,0 +1,429 @@
+{
+  "boundaries": {
+    "binary_payloads_or_private_logs_included": false,
+    "compiled_model_validation_claimed": false,
+    "dump_err_reg_body_collected_or_reviewed": false,
+    "generic_QEMU_architecture_bug_claimed": false,
+    "host_paths_included": false,
+    "later_native_success_claimed": false,
+    "new_remote_or_guest_execution_in_this_packaging": false,
+    "nonzero_MISC_jump_table_bytes_collected": false,
+    "original_callbacks_executed_by_this_analysis": false,
+    "physical_RAS_values_read": false,
+    "physical_zero_records_claimed": false,
+    "spinlock_printk_panic_bodies_reviewed": false
+  },
+  "callback_static_paths": [
+    {
+      "function": "initialize_registers",
+      "operations": [
+        "ERXCTLR_EL1 <- 0x10f at +0x8",
+        "ERXMISC0_EL1 <- 0x7f7f00000000 at +0xc"
+      ],
+      "selector_scope": "uses whatever selector is current on that CPU; no selection value inferred",
+      "selector_write_present": false
+    },
+    {
+      "condition": "numeric action argument equals 2; enum meaning not inferred",
+      "function": "kryo_pmu_cpu_pm_notify",
+      "later_calls": [
+        "kryo_check_l3_scu_error at +0x48",
+        "kryo_check_l1_l2_ecc at +0x54"
+      ],
+      "operations": [
+        "selector0 at +0x28",
+        "ERXCTLR 0x10f at +0x2c",
+        "ERXMISC0 0x7f7f00000000 at +0x30",
+        "selector1 at +0x34",
+        "ERXCTLR 0x10f at +0x38",
+        "ERXMISC0 0x7f7f00000000 at +0x3c"
+      ],
+      "returns": 1
+    },
+    {
+      "calls": [
+        "kryo_check_l3_scu_error at +0x20",
+        "kryo_check_l1_l2_ecc at +0x28"
+      ],
+      "function": "kryo_cpu_panic_notify",
+      "returns": 1
+    },
+    {
+      "calls": [
+        "kryo_check_l1_l2_ecc at +0x14"
+      ],
+      "function": "kryo_l1_l2_handler",
+      "returns": 1
+    },
+    {
+      "calls": [
+        "kryo_check_l3_scu_error at +0xc"
+      ],
+      "function": "kryo_l3_scu_handler",
+      "returns": 1
+    },
+    {
+      "calls": [
+        "enable_percpu_irq at +0x10"
+      ],
+      "direct_RAS_access": false,
+      "function": "l1_l2_irq_enable",
+      "second_argument": 4
+    }
+  ],
+  "conditional_STATUS_writeback": [
+    {
+      "function": "kryo_check_l3_scu_error",
+      "instruction": "MSR ERXSTATUS_EL1, x21",
+      "next": "unlock branch +0x48",
+      "offset": "0xd4",
+      "value": "original captured STATUS on handled nonzero error path"
+    },
+    {
+      "function": "kryo_check_l1_l2_ecc",
+      "instruction": "MSR ERXSTATUS_EL1, x20",
+      "next": "unlock branch +0x3c",
+      "offset": "0x160",
+      "value": "original captured STATUS on nonzero valid-status path"
+    }
+  ],
+  "coverage": {
+    "complete_bytes": 1784,
+    "complete_functions": 9,
+    "decoded_instruction_slots": 446,
+    "direct_BL_in_complete_slices": 45,
+    "global_same_name_text_candidates_each_one": true
+  },
+  "functions": [
+    {
+      "collection_group": "probe",
+      "complete_bytes": 904,
+      "decoded_instruction_slots": 226,
+      "direct_BL_in_complete_slice": 26,
+      "exact_start_aliases": [
+        "kryo_cpu_erp_probe"
+      ],
+      "global_same_name_text_candidate_count": 1,
+      "name": "kryo_cpu_erp_probe",
+      "next_distinct_text_symbol_address": "0xffffff8008c325c0",
+      "next_distinct_text_symbol_names": [
+        "kryo_cpu_erp_remove"
+      ],
+      "sha256": "277bc4a99be8c9ae5d1005368e70e734eac2fbbff8783c19314ffb9a88450f8e",
+      "symbol_kind": "t",
+      "virtual_address": "0xffffff8008c32238"
+    },
+    {
+      "collection_group": "callbacks",
+      "complete_bytes": 104,
+      "decoded_instruction_slots": 26,
+      "direct_BL_in_complete_slice": 2,
+      "exact_start_aliases": [
+        "kryo_pmu_cpu_pm_notify"
+      ],
+      "global_same_name_text_candidate_count": 1,
+      "name": "kryo_pmu_cpu_pm_notify",
+      "next_distinct_text_symbol_address": "0xffffff8008c32670",
+      "next_distinct_text_symbol_names": [
+        "kryo_cpu_panic_notify"
+      ],
+      "sha256": "ef33296716af9b677bf9013de7f8cd1665b7a2883d3fca7810467178af45e596",
+      "symbol_kind": "t",
+      "virtual_address": "0xffffff8008c32608"
+    },
+    {
+      "collection_group": "callbacks",
+      "complete_bytes": 64,
+      "decoded_instruction_slots": 16,
+      "direct_BL_in_complete_slice": 2,
+      "exact_start_aliases": [
+        "kryo_cpu_panic_notify"
+      ],
+      "global_same_name_text_candidate_count": 1,
+      "name": "kryo_cpu_panic_notify",
+      "next_distinct_text_symbol_address": "0xffffff8008c326b0",
+      "next_distinct_text_symbol_names": [
+        "kryo_l1_l2_handler"
+      ],
+      "sha256": "94a99c54f5832b405798c9fc3666f345331a875aa99648d052ea312b78d821e3",
+      "symbol_kind": "t",
+      "virtual_address": "0xffffff8008c32670"
+    },
+    {
+      "collection_group": "callbacks",
+      "complete_bytes": 40,
+      "decoded_instruction_slots": 10,
+      "direct_BL_in_complete_slice": 1,
+      "exact_start_aliases": [
+        "kryo_l1_l2_handler"
+      ],
+      "global_same_name_text_candidate_count": 1,
+      "name": "kryo_l1_l2_handler",
+      "next_distinct_text_symbol_address": "0xffffff8008c326d8",
+      "next_distinct_text_symbol_names": [
+        "kryo_l3_scu_handler"
+      ],
+      "sha256": "7e971ae3c275bbc7d76033b26f5fa8b0fb261852e442d88d9cf48c5001d9d9c8",
+      "symbol_kind": "t",
+      "virtual_address": "0xffffff8008c326b0"
+    },
+    {
+      "collection_group": "callbacks",
+      "complete_bytes": 32,
+      "decoded_instruction_slots": 8,
+      "direct_BL_in_complete_slice": 1,
+      "exact_start_aliases": [
+        "kryo_l3_scu_handler"
+      ],
+      "global_same_name_text_candidate_count": 1,
+      "name": "kryo_l3_scu_handler",
+      "next_distinct_text_symbol_address": "0xffffff8008c326f8",
+      "next_distinct_text_symbol_names": [
+        "initialize_registers"
+      ],
+      "sha256": "5d342f21e103347a66c1d19097f11527438489a05994ac9dfed824eb23d65a12",
+      "symbol_kind": "t",
+      "virtual_address": "0xffffff8008c326d8"
+    },
+    {
+      "collection_group": "callbacks",
+      "complete_bytes": 24,
+      "decoded_instruction_slots": 6,
+      "direct_BL_in_complete_slice": 0,
+      "exact_start_aliases": [
+        "initialize_registers"
+      ],
+      "global_same_name_text_candidate_count": 1,
+      "name": "initialize_registers",
+      "next_distinct_text_symbol_address": "0xffffff8008c32710",
+      "next_distinct_text_symbol_names": [
+        "l1_l2_irq_enable"
+      ],
+      "sha256": "902b3ca350ed8becd3156f2a40b213c452f10e901b47aaf20189ff84522c5008",
+      "symbol_kind": "t",
+      "virtual_address": "0xffffff8008c326f8"
+    },
+    {
+      "collection_group": "callbacks",
+      "complete_bytes": 32,
+      "decoded_instruction_slots": 8,
+      "direct_BL_in_complete_slice": 1,
+      "exact_start_aliases": [
+        "l1_l2_irq_enable"
+      ],
+      "global_same_name_text_candidate_count": 1,
+      "name": "l1_l2_irq_enable",
+      "next_distinct_text_symbol_address": "0xffffff8008c32730",
+      "next_distinct_text_symbol_names": [
+        "_find_opp_table"
+      ],
+      "sha256": "b985ca065d13a9ae77e1dc0e8728ac9118ef4d5f37b60ab392398fc8d65190bd",
+      "symbol_kind": "t",
+      "virtual_address": "0xffffff8008c32710"
+    },
+    {
+      "collection_group": "error_checks",
+      "complete_bytes": 224,
+      "decoded_instruction_slots": 56,
+      "direct_BL_in_complete_slice": 6,
+      "exact_start_aliases": [
+        "kryo_check_l3_scu_error"
+      ],
+      "global_same_name_text_candidate_count": 1,
+      "name": "kryo_check_l3_scu_error",
+      "next_distinct_text_symbol_address": "0xffffff8008c31f58",
+      "next_distinct_text_symbol_names": [
+        "kryo_check_l1_l2_ecc"
+      ],
+      "sha256": "2e70bf39004e683c2dc5a5e8757bdf418071f617266174cbf169253950d1c242",
+      "symbol_kind": "t",
+      "virtual_address": "0xffffff8008c31e78"
+    },
+    {
+      "collection_group": "error_checks",
+      "complete_bytes": 360,
+      "decoded_instruction_slots": 90,
+      "direct_BL_in_complete_slice": 6,
+      "exact_start_aliases": [
+        "kryo_check_l1_l2_ecc"
+      ],
+      "global_same_name_text_candidate_count": 1,
+      "name": "kryo_check_l1_l2_ecc",
+      "next_distinct_text_symbol_address": "0xffffff8008c320c0",
+      "next_distinct_text_symbol_names": [
+        "dump_err_reg"
+      ],
+      "sha256": "5eb04fef335bc6e72442fbe41c9692927450309bae2550760097655daeb7ae87",
+      "symbol_kind": "t",
+      "virtual_address": "0xffffff8008c31f58"
+    }
+  ],
+  "method": {
+    "complete_kernel_and_symbols_read_twice": true,
+    "direct_BL_targets": "all direct BL immediate targets independently checked against exact original symbol metadata",
+    "disassembly": "Capstone 5.0.6, all fixed-width instruction slots consumed without skipped data; decoded bytes matched complete slice",
+    "meaning_of_instruction_count": "decoded 4-byte instruction slots including padding; not executed instruction count",
+    "observation_receipts": [
+      {
+        "complete_observation": {
+          "bytes": 13016,
+          "sha256": "fb64bb9083763ba6fffa5197c6fdbeb90b99879e16abeaad6cba39886a297440"
+        },
+        "group": "probe",
+        "two_complete_asset_reads_and_path_identity_stable": true
+      },
+      {
+        "complete_observation": {
+          "bytes": 11723,
+          "sha256": "54ce44c54c7d59af0ea20dcfb64cef3833e30bce8b52b53dcf436804b6f2101d"
+        },
+        "group": "callbacks",
+        "two_complete_asset_reads_and_path_identity_stable": true
+      },
+      {
+        "complete_observation": {
+          "bytes": 9187,
+          "sha256": "03e01ad6dc9249e4586e3e63c23f7df2fbbc975dbc0685e4a86e3a1a0f1b54ce"
+        },
+        "group": "error_checks",
+        "two_complete_asset_reads_and_path_identity_stable": true
+      }
+    ],
+    "static_analysis_receipts": [
+      {
+        "complete_static_analysis_receipt": {
+          "bytes": 10317,
+          "sha256": "b305565aa5d397e4593eb74bcedaa4b3f64d3a2a8313158b9646804b0fd20520"
+        },
+        "group": "probe"
+      },
+      {
+        "complete_static_analysis_receipt": {
+          "bytes": 9806,
+          "sha256": "b15329836be2572e34b550efb1c0477f1a5c96c60bd3693f5d689cfc95de39c0"
+        },
+        "group": "callbacks"
+      },
+      {
+        "complete_static_analysis_receipt": {
+          "bytes": 13445,
+          "sha256": "4aebe26e157bf0f46bd4e95f8b46a48b2af1ad01ee4d15017d7f25eb5c2c5096"
+        },
+        "group": "error_checks"
+      }
+    ],
+    "symbol_selection": "exact observed start, full same-name text candidate set, aliases and next distinct text symbol boundary",
+    "whole_asset_identity_and_file_stability_verified": true
+  },
+  "model_implication": "A virtual STATUS value of zero supplies the clean error-checker branch. This evidence does not justify inventing valid-error state, captured addresses, enable state, interrupt sources or successful physical error handling.",
+  "observed_initial_failure": {
+    "PC": "0xffffff8008c32268",
+    "function": "kryo_cpu_erp_probe",
+    "function_offset": "0x30",
+    "input_value_from_preceding_instruction": 0,
+    "native_public_evidence_manifest": {
+      "bytes": 1283,
+      "relative_path": "tb371fc/evidence/npu-pending-native-20261126-5297812/manifest.json",
+      "sha256": "65850462510e82f6afecf332919e421b93237e6e8181cd0b0dfbb26043268cdd"
+    },
+    "operation": "MSR ERRSELR_EL1, x8",
+    "subsequent_control_flow_is_static_not_observed_guest_execution": true
+  },
+  "probe_static_path": {
+    "ERRIDR_or_MIDR_CPU_type_gate_before_first_fault": false,
+    "IRQ_setup_callback": {
+      "call": "on_each_cpu",
+      "call_offset": "0x248",
+      "callback": "l1_l2_irq_enable",
+      "condition": "only along successful prior setup branches",
+      "wait_argument": 1
+    },
+    "first_selector_write": {
+      "offset": "0x30",
+      "register": "ERRSELR_EL1",
+      "value": 0
+    },
+    "later_local_writes": [
+      {
+        "offset": "0xa8",
+        "register": "ERRSELR_EL1",
+        "value": 1
+      },
+      {
+        "offset": "0xac",
+        "register": "ERXCTLR_EL1",
+        "value": "0x10f"
+      },
+      {
+        "offset": "0xb0",
+        "register": "ERXMISC0_EL1",
+        "value": "0x7f7f00000000"
+      }
+    ],
+    "possible_CPU_iteration": {
+      "bound_symbol": "nr_cpu_ids",
+      "bound_value_observed": false,
+      "call": "smp_call_function_single",
+      "call_offset": "0x6c",
+      "callback": "initialize_registers",
+      "mask_symbol": "__cpu_possible_mask",
+      "mask_values_observed": false,
+      "online_mask_or_actual_CPU_execution_inferred": false,
+      "return_value_checked_by_probe": false,
+      "wait_argument": 1
+    }
+  },
+  "schema": "tb371fc-original-ras-consumer-static-evidence-v1",
+  "source_context": {
+    "consumed_native_artifact_id": 15078443518,
+    "new_model_commit_or_artifact_bound": false,
+    "original_assets": {
+      "kernel": {
+        "bytes": 37445648,
+        "sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f"
+      },
+      "symbols": {
+        "bytes": 5226424,
+        "sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0"
+      }
+    },
+    "qemu_head_at_observed_frontier": "5297812e6af5f5a6d88372debb12c5841142757c",
+    "qemu_tree_at_observed_frontier": "81995ad7ea3904a57396f0b334a7eccd7744c8b8",
+    "symbol_lines": 121415
+  },
+  "writeback_semantics_boundary": "These local instruction paths preserve the captured STATUS in callee-saved x21/x20. Called functions are assumed to honor the calling convention. The instruction evidence alone does not prove physical clear semantics.",
+  "zero_MISC0_is_not_equivalent_to_zero_STATUS": {
+    "L1_L2": "With STATUS bit30 set, MISC0 zero does not give a clean early return. MIDR part 0x803/0x805 reaches common dump/write; 0x804/0xd0d reaches diagnostic then dump/write; other parts reach diagnostic then status write. The zero-STATUS policy avoids all of these branches.",
+    "L3": "With STATUS bit30 set but MISC0 zero, (MISC0 & 0xe) != 4, so unlock and return without status write.",
+    "nonzero_MISC_jump_table_needed_for_zero_paths": false
+  },
+  "zero_STATUS_paths": {
+    "kryo_check_l1_l2_ecc": {
+      "MISC0_MIDR_printk_dump_STATUS_write_reached": false,
+      "order": [
+        "ERRSELR_EL1 <- 0 at +0x2c",
+        "ERXSTATUS_EL1 read into x20 at +0x30",
+        "TPIDR_EL1 read at +0x34",
+        "test STATUS bit30 at +0x38",
+        "zero bit does not branch",
+        "unlock at +0x48",
+        "return at +0x5c"
+      ]
+    },
+    "kryo_check_l3_scu_error": {
+      "MISC0_is_read_before_STATUS_test": true,
+      "order": [
+        "ERRSELR_EL1 <- 1 at +0x2c",
+        "ERXSTATUS_EL1 read into x21 at +0x30",
+        "ERXMISC0_EL1 read into x22 at +0x34",
+        "test STATUS bit30 at +0x38",
+        "zero bit branches to +0x48",
+        "unlock at +0x54",
+        "return at +0x68"
+      ],
+      "printk_panic_dump_STATUS_write_reached": false
+    },
+    "selectors_restored_by_checkers": false,
+    "zero_STATUS_sufficient_for_both_paths": true
+  }
+}

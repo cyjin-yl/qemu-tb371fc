@@ -34,6 +34,11 @@ from npu_gdsc_pending_ci_contract import (
     EXPECTED_LENGTHS as NPU_PENDING_EXPECTED_LENGTHS, judge_npu_gdsc_pending_details,
 )
 
+from ras_zero_records_ci_contract import (
+    NAME as RAS_ZERO_NAME, EXPECTED_VALUES as RAS_ZERO_EXPECTED_VALUES,
+    EXPECTED_LENGTHS as RAS_ZERO_EXPECTED_LENGTHS, judge_ras_zero_records_details,
+)
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -1368,6 +1373,11 @@ def plan(args, runtime):
                output="--out", result="file", count=26, timeout=360,
                expected=NPU_PENDING_EXPECTED_VALUES,
                expected_lengths=NPU_PENDING_EXPECTED_LENGTHS)
+    if args.suite in ("all", "components"):
+        device(RAS_ZERO_NAME, "test_ras_zero_records.py",
+               output="--out", result="file", count=35, timeout=600,
+               expected=RAS_ZERO_EXPECTED_VALUES,
+               expected_lengths=RAS_ZERO_EXPECTED_LENGTHS)
     return cases
 
 
@@ -1572,6 +1582,7 @@ def judge(case, stdout):
     judge_spmi_debug_fuse_details(case, data)
     judge_geni_i2c_details(case, data)
     judge_npu_gdsc_pending_details(case, data)
+    judge_ras_zero_records_details(case, data)
     return details
 
 

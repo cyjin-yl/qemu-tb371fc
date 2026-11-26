@@ -204,6 +204,7 @@ struct TB371FCMachineState {
     MemoryRegion qtest_tbu_dma_alias[QCOM_SM8250_TBU_COUNT];
     bool enable_ufs;
     bool counter_exact;
+    bool ras_zero_records_compat;
     uint64_t kernel_load_base;
     Clock *xo, *sleep, *fabric;
     bool gcc_boot_configured;
@@ -902,6 +903,8 @@ static void tb371fc_create_cpus(TB371FCMachineState *s, MemoryRegion *sysmem)
         object_property_set_int(obj, "cntfrq", TB371FC_TIMER_HZ, &error_abort);
         object_property_set_bool(obj, "cntfrq-exact", s->counter_exact,
                                  &error_abort);
+        object_property_set_bool(obj, "tb371fc-ras-zero-records-compat",
+                                 s->ras_zero_records_compat, &error_abort);
         if (i >= 4) {
             object_property_set_int(obj, "revidr", 3, &error_abort);
         }
@@ -2373,6 +2376,23 @@ static void tb371fc_set_smem_profile(Object *obj, const char *value, Error **err
 }
 
 
+static bool tb371fc_get_ras_zero_records_compat(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->ras_zero_records_compat;
+}
+
+static void tb371fc_set_ras_zero_records_compat(Object *obj, bool value,
+                                               Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->cpu[0]) {
+        error_setg(errp, "ras-zero-records-compat is fixed after CPU creation");
+        return;
+    }
+    s->ras_zero_records_compat = value;
+}
+
 static bool tb371fc_get_geni_i2c_enabled(Object *obj, Error **errp)
 {
     return TB371FC_MACHINE(obj)->geni_i2c_enabled;
@@ -2517,6 +2537,7 @@ static void tb371fc_instance_init(Object *obj)
     s->tbu_profile = g_strdup("off");
     s->rpmh_boot_configured = true;
     s->counter_exact = true;
+    s->ras_zero_records_compat = false;
     s->gcc_boot_configured = true;
     s->enable_ufs = true;
     s->bootstrap_fabric_hz = 100000000;
@@ -2572,6 +2593,12 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
         tb371fc_get_spmi_profile, tb371fc_set_spmi_profile);
     object_class_property_set_description(oc, "spmi-profile",
         "off (default) or explicit reference APID/ownership/PMIC subset");
+    object_class_property_add_bool(oc, "ras-zero-records-compat",
+        tb371fc_get_ras_zero_records_compat,
+        tb371fc_set_ras_zero_records_compat);
+    object_class_property_set_description(oc, "ras-zero-records-compat",
+        "Opt in to AArch64 zero-record RAS RES0/RAZ/WI compatibility on "
+        "all eight CPUs (default off); no physical error records or IRQs");
     object_class_property_add_bool(oc, "geni-i2c-enabled",
         tb371fc_get_geni_i2c_enabled, tb371fc_set_geni_i2c_enabled);
     object_class_property_set_description(oc, "geni-i2c-enabled",
