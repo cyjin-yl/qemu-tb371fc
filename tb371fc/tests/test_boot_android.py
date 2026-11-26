@@ -257,6 +257,49 @@ class AndroidRunnerTests(unittest.TestCase):
         self.assertEqual(len(report["kernel_failures"]), 2)
         self.assertEqual(len(report["hardware_diagnostics"]), 2)
 
+    def test_undefined_instruction_uses_first_fault_and_deduplicates_snapshots(self):
+        # Keep the original DSU exception spelling, without private boot data.
+        fault = ("[    5.406881] Internal error: undefined instruction: 0 "
+                 "[#1] PREEMPT SMP\n")
+        panic = "[ 9.2] Kernel panic - not syncing: Attempted to kill init!\n"
+        report = boot.analyze_logs([
+            ("serial.log", panic),
+            ("printk-1.log", fault + "[ 5.407000] pc : dsu_pmu_cpu_online+0x6c/0x130\n"),
+            ("printk-2.log", fault + panic),
+        ])
+        self.assertEqual(report["first_kernel_failure"]["guest_time_seconds"], 5.406881)
+        self.assertEqual(report["first_kernel_failure"]["source"], "printk-1.log")
+        self.assertEqual(report["first_kernel_failure"]["line"], 1)
+        self.assertEqual(len(report["kernel_failures"]), 2)
+        self.assertFalse(report["android_userspace_observed"])
+        self.assertFalse(report["android_boot_completed_observed"])
+
+    def test_undefined_instruction_description_is_not_a_kernel_exception(self):
+        report = boot.analyze_logs([("printk.log",
+            "[ 1.0] CPU: undefined instruction diagnostic support initialized\n"
+            "[ 1.1] WARNING: undefined instruction diagnostic helper is optional\n"
+            "[ 1.2] Kernel command line: diagnostic='Internal error: undefined instruction'\n")])
+        self.assertIsNone(report["first_kernel_failure"])
+        self.assertEqual(report["kernel_failures"], [])
+        self.assertFalse(report["android_userspace_observed"])
+        self.assertFalse(report["android_boot_completed_observed"])
+
+    def test_undefined_instruction_vetoes_completion_and_finalizes_early_stop(self):
+        report, monitor, captures = self.run_main_with_printk(
+            "[    5.406881] Internal error: undefined instruction: 0 [#1] PREEMPT SMP\n"
+            "[ 6.0] init: init second stage started!\n"
+            "[ 7.0] init: processing action (sys.boot_completed=1) from (fixture:1)\n",
+            early_stop=True, expected_status=2)
+        self.assertEqual(report["outcome"], "kernel-failure")
+        self.assertEqual(report["stop_reason"], "kernel-failure")
+        self.assertEqual(report["early_kernel_failure"]["guest_time_seconds"], 5.406881)
+        self.assertTrue(report["observation"]["android_userspace_observed"])
+        self.assertTrue(report["observation"]["android_boot_completed_observed"])
+        self.assertFalse(report["stock_android_boot_passed"])
+        self.assertLess(report["elapsed_seconds"], 120)
+        self.assertEqual(len(captures), 2)
+        self.assertEqual(monitor.commands.count("cont"), 1)
+
     def test_first_failure_uses_guest_time_and_deduplicates_ring_snapshots(self):
         early = "[ 4.1] Internal error: synchronous external abort: 96000210 [#1]\n"
         late = "[ 9.2] Kernel panic - not syncing: Attempted to kill init!\n"

@@ -1378,6 +1378,16 @@ def plan(args, runtime):
                output="--out", result="file", count=35, timeout=600,
                expected=RAS_ZERO_EXPECTED_VALUES,
                expected_lengths=RAS_ZERO_EXPECTED_LENGTHS)
+    if args.suite in ("all", "components"):
+        device("dsu-pmu-cycle-only", "test_dsu_pmu.py",
+               output="--out", result="file", count=7, timeout=240,
+               expected={"schema": "tb371fc-dsu-pmu-cycle-only-test-v1",
+                         "cpu_count": 8, "profile_id": 0x44535501,
+                         "programmable_counters": 0, "irq_intid": 82,
+                         "output_interception_installed": False,
+                         "original_android_executed": False},
+               expected_lengths={"processes": 6, "migrations": 2,
+                                 "rejected_migrations": 2})
     return cases
 
 

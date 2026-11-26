@@ -94,6 +94,7 @@
 #include "system/tcg.h"
 #include "target/arm/cpu.h"
 #include "target/arm/gtimer.h"
+#include "tb371fc-dsu-pmu.h"
 
 #define TYPE_TB371FC_MACHINE MACHINE_TYPE_NAME("tb371fc")
 OBJECT_DECLARE_SIMPLE_TYPE(TB371FCMachineState, TB371FC_MACHINE)
@@ -178,6 +179,7 @@ struct TB371FCMachineState {
     MachineState parent_obj;
     ARMCPU *cpu[TB371FC_CPUS];
     DeviceState *gic;
+    DeviceState *dsu_pmu;
     QcomGeniUartState uart;
     QcomGeniUartState uart_hs;
     DeviceState *geni_i2c[QCOM_GENI_I2C_INSTANCE_COUNT];
@@ -205,6 +207,7 @@ struct TB371FCMachineState {
     bool enable_ufs;
     bool counter_exact;
     bool ras_zero_records_compat;
+    bool dsu_pmu_cycle_only;
     uint64_t kernel_load_base;
     Clock *xo, *sleep, *fabric;
     bool gcc_boot_configured;
@@ -887,6 +890,15 @@ static CpuInstanceProperties tb371fc_cpu_index_to_props(MachineState *ms,
     return cpus->cpus[index].props;
 }
 
+static void tb371fc_create_dsu_pmu(TB371FCMachineState *s)
+{
+    /* Always present so migration can reject enabled/disabled mismatches. */
+    s->dsu_pmu = qdev_new(TYPE_TB371FC_DSU_PMU);
+    object_property_add_child(OBJECT(s), "dsu-pmu", OBJECT(s->dsu_pmu));
+    qdev_prop_set_bit(s->dsu_pmu, "enabled", s->dsu_pmu_cycle_only);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(s->dsu_pmu), &error_fatal);
+}
+
 static void tb371fc_create_cpus(TB371FCMachineState *s, MemoryRegion *sysmem)
 {
     const CPUArchIdList *cpus = tb371fc_possible_cpu_arch_ids(MACHINE(s));
@@ -916,6 +928,7 @@ static void tb371fc_create_cpus(TB371FCMachineState *s, MemoryRegion *sysmem)
                                 &error_abort);
         object_property_set_link(obj, "memory", OBJECT(sysmem), &error_abort);
         qdev_realize(DEVICE(obj), NULL, &error_fatal);
+        tb371fc_dsu_pmu_attach_cpu(s->dsu_pmu, s->cpu[i]);
         object_unref(obj);
     }
 }
@@ -2094,8 +2107,12 @@ static void tb371fc_init(MachineState *ms)
     }
 
     memory_region_add_subregion(sysmem, TB371FC_RAM_BASE, ms->ram);
+    tb371fc_create_dsu_pmu(s);
     tb371fc_create_cpus(s, sysmem);
     tb371fc_create_gic(s);
+    /* Original DT /soc/dsu_pmu@0: all eight CPUs, level-high SPI 50. */
+    sysbus_connect_irq(SYS_BUS_DEVICE(s->dsu_pmu), 0,
+                       qdev_get_gpio_in(s->gic, 50));
     tb371fc_create_pdc(s);
     tb371fc_create_spmi(s);
     tb371fc_create_spmi_debug_fuse(s);
@@ -2393,6 +2410,22 @@ static void tb371fc_set_ras_zero_records_compat(Object *obj, bool value,
     s->ras_zero_records_compat = value;
 }
 
+static bool tb371fc_get_dsu_pmu_cycle_only(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->dsu_pmu_cycle_only;
+}
+
+static void tb371fc_set_dsu_pmu_cycle_only(Object *obj, bool value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->cpu[0]) {
+        error_setg(errp, "dsu-pmu-cycle-only is fixed after CPU creation");
+        return;
+    }
+    s->dsu_pmu_cycle_only = value;
+}
+
 static bool tb371fc_get_geni_i2c_enabled(Object *obj, Error **errp)
 {
     return TB371FC_MACHINE(obj)->geni_i2c_enabled;
@@ -2538,6 +2571,7 @@ static void tb371fc_instance_init(Object *obj)
     s->rpmh_boot_configured = true;
     s->counter_exact = true;
     s->ras_zero_records_compat = false;
+    s->dsu_pmu_cycle_only = false;
     s->gcc_boot_configured = true;
     s->enable_ufs = true;
     s->bootstrap_fabric_hz = 100000000;
@@ -2599,6 +2633,11 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
     object_class_property_set_description(oc, "ras-zero-records-compat",
         "Opt in to AArch64 zero-record RAS RES0/RAZ/WI compatibility on "
         "all eight CPUs (default off); no physical error records or IRQs");
+    object_class_property_add_bool(oc, "dsu-pmu-cycle-only",
+        tb371fc_get_dsu_pmu_cycle_only, tb371fc_set_dsu_pmu_cycle_only);
+    object_class_property_set_description(oc, "dsu-pmu-cycle-only",
+        "Opt in to a shared virtual 1 GHz DSU cycle counter with no "
+        "programmable events (default off); not a physical DSU PMU");
     object_class_property_add_bool(oc, "geni-i2c-enabled",
         tb371fc_get_geni_i2c_enabled, tb371fc_set_geni_i2c_enabled);
     object_class_property_set_description(oc, "geni-i2c-enabled",
