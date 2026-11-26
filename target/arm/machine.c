@@ -420,6 +420,91 @@ static const VMStateDescription vmstate_tb371fc_ras_zero_records = {
     }
 };
 
+/* The shared bank has one mandatory owner inside CPU0's new subsection. */
+static const VMStateDescription vmstate_tb371fc_dsu_bank = {
+    .name = "cpu/tb371fc-dsu-pmu/shared-bank",
+    .version_id = 1,
+    .minimum_version_id = 1,
+    .fields = (const VMStateField[]) {
+        VMSTATE_UINT32(magic, TB371FCDSUPMUWire),
+        VMSTATE_UINT32(cpu_mask, TB371FCDSUPMUWire),
+        VMSTATE_UINT32(irq_intid, TB371FCDSUPMUWire),
+        VMSTATE_UINT32(event_counters, TB371FCDSUPMUWire),
+        VMSTATE_UINT64(frequency_hz, TB371FCDSUPMUWire),
+        VMSTATE_UINT32(pmcr, TB371FCDSUPMUWire),
+        VMSTATE_UINT32(count_enable, TB371FCDSUPMUWire),
+        VMSTATE_UINT32(overflow, TB371FCDSUPMUWire),
+        VMSTATE_UINT32(interrupt_enable, TB371FCDSUPMUWire),
+        VMSTATE_UINT32(selector, TB371FCDSUPMUWire),
+        VMSTATE_UINT32_ARRAY(event_count, TB371FCDSUPMUWire,
+                             TB371FC_DSU_EVENT_COUNTERS),
+        VMSTATE_UINT32_ARRAY(event_type, TB371FCDSUPMUWire,
+                             TB371FC_DSU_EVENT_COUNTERS),
+        VMSTATE_UINT64(cycle_count, TB371FCDSUPMUWire),
+        VMSTATE_UINT64(fraction, TB371FCDSUPMUWire),
+        VMSTATE_END_OF_LIST()
+    }
+};
+
+static bool tb371fc_dsu_needed(void *opaque)
+{
+    return ARM_CPU(opaque)->tb371fc_dsu_pmu;
+}
+
+static bool tb371fc_dsu_owner(void *opaque, int version_id)
+{
+    return ARM_CPU(opaque)->tb371fc_dsu_cpu_index == 0;
+}
+
+static int tb371fc_dsu_pre_save(void *opaque)
+{
+    ARMCPU *cpu = opaque;
+    TB371FCDSUPMULink *link = cpu->tb371fc_dsu_link;
+
+    if (cpu->tb371fc_dsu_actlr_el2 & ~TB371FC_DSU_ACTLR_WRITE_ENABLE) {
+        error_report("Invalid TB371FC DSU ACTLR permission state");
+        return -EINVAL;
+    }
+    return cpu->tb371fc_dsu_cpu_index == 0 ?
+        link->snapshot(link->opaque, &cpu->tb371fc_dsu_wire) : 0;
+}
+
+static int tb371fc_dsu_loaded(void *opaque, int version_id)
+{
+    ARMCPU *cpu = opaque;
+    TB371FCDSUPMULink *link = cpu->tb371fc_dsu_link;
+
+    if (!cpu->tb371fc_dsu_pmu || !link || cpu->tb371fc_dsu_received ||
+        (cpu->tb371fc_dsu_actlr_el2 & ~TB371FC_DSU_ACTLR_WRITE_ENABLE)) {
+        error_report("Invalid incoming TB371FC DSU CPU permission profile");
+        return -EINVAL;
+    }
+    if (cpu->tb371fc_dsu_cpu_index == 0 &&
+        link->stage_load(link->opaque, &cpu->tb371fc_dsu_wire) < 0) {
+        return -EINVAL;
+    }
+    cpu->tb371fc_dsu_received = true;
+    return 0;
+}
+
+static const VMStateDescription vmstate_tb371fc_dsu = {
+    .name = "cpu/tb371fc-dsu-pmu",
+    .version_id = 1,
+    .minimum_version_id = 1,
+    .needed = tb371fc_dsu_needed,
+    .pre_save = tb371fc_dsu_pre_save,
+    .post_load = tb371fc_dsu_loaded,
+    .fields = (const VMStateField[]) {
+        VMSTATE_UINT32_EQUAL(tb371fc_dsu_profile, ARMCPU),
+        VMSTATE_UINT32_EQUAL(tb371fc_dsu_cpu_index, ARMCPU),
+        VMSTATE_UINT64_EQUAL(tb371fc_dsu_frequency_hz, ARMCPU),
+        VMSTATE_UINT64(tb371fc_dsu_actlr_el2, ARMCPU),
+        VMSTATE_STRUCT_TEST(tb371fc_dsu_wire, ARMCPU, tb371fc_dsu_owner, 1,
+                            vmstate_tb371fc_dsu_bank, TB371FCDSUPMUWire),
+        VMSTATE_END_OF_LIST()
+    }
+};
+
 static bool hyp_timer_needed(void *opaque)
 {
     ARMCPU *cpu = opaque;
@@ -1122,6 +1207,12 @@ static int cpu_pre_load(void *opaque)
 
     cpu->gt_cntfrq_exact_received = false;
     cpu->tb371fc_ras_zero_records_received = false;
+    cpu->tb371fc_dsu_received = false;
+    if (cpu->tb371fc_dsu_pmu &&
+        cpu->tb371fc_dsu_link->begin_load(cpu->tb371fc_dsu_link->opaque,
+                                         cpu->tb371fc_dsu_cpu_index) < 0) {
+        return -EINVAL;
+    }
 
     /*
      * In an inbound migration where on the source FPSCR/FPSR/FPCR are 0,
@@ -1222,6 +1313,11 @@ static int cpu_post_load(void *opaque, int version_id)
         cpu->tb371fc_ras_zero_records_received) {
         error_report("Incoming CPU RAS zero-records mode differs from "
                      "destination");
+        return -EINVAL;
+    }
+
+    if (cpu->tb371fc_dsu_pmu != cpu->tb371fc_dsu_received) {
+        error_report("Incoming CPU DSU PMU mode differs from destination");
         return -EINVAL;
     }
 
@@ -1342,6 +1438,11 @@ static int cpu_post_load(void *opaque, int version_id)
         arm_rebuild_hflags(env);
     }
 
+    if (cpu->tb371fc_dsu_pmu &&
+        cpu->tb371fc_dsu_link->complete_load(cpu->tb371fc_dsu_link->opaque,
+                                            cpu->tb371fc_dsu_cpu_index) < 0) {
+        return -EINVAL;
+    }
     return 0;
 }
 
@@ -1441,6 +1542,7 @@ const VMStateDescription vmstate_arm_cpu = {
         &vmstate_wfxt_timer,
         &vmstate_gt_exact_frequency,
         &vmstate_tb371fc_ras_zero_records,
+        &vmstate_tb371fc_dsu,
         &vmstate_hyp_timer,
         &vmstate_syndrome64,
         &vmstate_pstate64,

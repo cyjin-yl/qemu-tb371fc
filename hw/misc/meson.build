@@ -210,3 +210,5 @@ system_ss.add(when: 'CONFIG_QCOM_DEVFREQ_FW', if_true: files('qcom-devfreq-fw.c'
 
 system_ss.add(when: 'CONFIG_QCOM_NOC_SBM', if_true: files('qcom-noc-sbm.c'))
 system_ss.add(when: 'CONFIG_QCOM_SM8250_GENI_I2C', if_true: files('qcom-sm8250-geni-i2c.c'))
+
+system_ss.add(when: 'CONFIG_TB371FC_DSU_PMU', if_true: files('tb371fc-dsu-pmu.c'))

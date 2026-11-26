@@ -47,6 +47,7 @@
 #include "hw/intc/qcom-pdc.h"
 #include "hw/misc/qcom-sm8250-gcc.h"
 #include "hw/misc/qcom-sm8250-geni-i2c.h"
+#include "hw/misc/tb371fc-dsu-pmu.h"
 #include "hw/misc/qcom-sm8250-gpucc.h"
 #include "hw/misc/qcom-sm8250-npucc.h"
 #include "hw/misc/qcom-sm8250-camcc.h"
@@ -205,6 +206,9 @@ struct TB371FCMachineState {
     bool enable_ufs;
     bool counter_exact;
     bool ras_zero_records_compat;
+    bool dsu_pmu_enabled;
+    uint64_t dsu_pmu_frequency_hz;
+    DeviceState *dsu_pmu;
     uint64_t kernel_load_base;
     Clock *xo, *sleep, *fabric;
     bool gcc_boot_configured;
@@ -887,6 +891,18 @@ static CpuInstanceProperties tb371fc_cpu_index_to_props(MachineState *ms,
     return cpus->cpus[index].props;
 }
 
+static void tb371fc_create_dsu_pmu(TB371FCMachineState *s)
+{
+    if (!s->dsu_pmu_enabled) {
+        return;
+    }
+    s->dsu_pmu = qdev_new(TYPE_TB371FC_DSU_PMU);
+    object_property_add_child(OBJECT(s), "dsu-pmu-device", OBJECT(s->dsu_pmu));
+    qdev_prop_set_uint64(s->dsu_pmu, "reference-frequency-hz",
+                         s->dsu_pmu_frequency_hz);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(s->dsu_pmu), &error_fatal);
+}
+
 static void tb371fc_create_cpus(TB371FCMachineState *s, MemoryRegion *sysmem)
 {
     const CPUArchIdList *cpus = tb371fc_possible_cpu_arch_ids(MACHINE(s));
@@ -905,6 +921,11 @@ static void tb371fc_create_cpus(TB371FCMachineState *s, MemoryRegion *sysmem)
                                  &error_abort);
         object_property_set_bool(obj, "tb371fc-ras-zero-records-compat",
                                  s->ras_zero_records_compat, &error_abort);
+        if (s->dsu_pmu) {
+            s->cpu[i]->tb371fc_dsu_link = tb371fc_dsu_pmu_get_link(s->dsu_pmu);
+        }
+        object_property_set_bool(obj, "tb371fc-dsu-pmu", s->dsu_pmu_enabled,
+                                 &error_abort);
         if (i >= 4) {
             object_property_set_int(obj, "revidr", 3, &error_abort);
         }
@@ -2094,8 +2115,14 @@ static void tb371fc_init(MachineState *ms)
     }
 
     memory_region_add_subregion(sysmem, TB371FC_RAM_BASE, ms->ram);
+    tb371fc_create_dsu_pmu(s);
     tb371fc_create_cpus(s, sysmem);
     tb371fc_create_gic(s);
+    if (s->dsu_pmu) {
+        /* Original DT: GIC SPI 50, level-high, architectural INTID 82. */
+        sysbus_connect_irq(SYS_BUS_DEVICE(s->dsu_pmu), 0,
+                           qdev_get_gpio_in(s->gic, 50));
+    }
     tb371fc_create_pdc(s);
     tb371fc_create_spmi(s);
     tb371fc_create_spmi_debug_fuse(s);
@@ -2393,6 +2420,47 @@ static void tb371fc_set_ras_zero_records_compat(Object *obj, bool value,
     s->ras_zero_records_compat = value;
 }
 
+static bool tb371fc_get_dsu_pmu(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->dsu_pmu_enabled;
+}
+
+static void tb371fc_set_dsu_pmu(Object *obj, bool value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->cpu[0] || s->dsu_pmu) {
+        error_setg(errp, "dsu-pmu is fixed after machine creation");
+        return;
+    }
+    s->dsu_pmu_enabled = value;
+}
+
+static void tb371fc_get_dsu_pmu_hz(Object *obj, Visitor *v, const char *name,
+                                  void *opaque, Error **errp)
+{
+    uint64_t hz = TB371FC_MACHINE(obj)->dsu_pmu_frequency_hz;
+
+    visit_type_uint64(v, name, &hz, errp);
+}
+
+static void tb371fc_set_dsu_pmu_hz(Object *obj, Visitor *v, const char *name,
+                                  void *opaque, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+    uint64_t hz;
+
+    if (!visit_type_uint64(v, name, &hz, errp)) {
+        return;
+    }
+    if (s->cpu[0] || s->dsu_pmu || !hz || hz > TB371FC_DSU_MAX_HZ) {
+        error_setg(errp, "dsu-pmu-frequency-hz requires 1..1000000000 "
+                   "before machine creation");
+        return;
+    }
+    s->dsu_pmu_frequency_hz = hz;
+}
+
 static bool tb371fc_get_geni_i2c_enabled(Object *obj, Error **errp)
 {
     return TB371FC_MACHINE(obj)->geni_i2c_enabled;
@@ -2538,6 +2606,8 @@ static void tb371fc_instance_init(Object *obj)
     s->rpmh_boot_configured = true;
     s->counter_exact = true;
     s->ras_zero_records_compat = false;
+    s->dsu_pmu_enabled = false;
+    s->dsu_pmu_frequency_hz = TB371FC_DSU_DEFAULT_HZ;
     s->gcc_boot_configured = true;
     s->enable_ufs = true;
     s->bootstrap_fabric_hz = 100000000;
@@ -2599,6 +2669,16 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
     object_class_property_set_description(oc, "ras-zero-records-compat",
         "Opt in to AArch64 zero-record RAS RES0/RAZ/WI compatibility on "
         "all eight CPUs (default off); no physical error records or IRQs");
+    object_class_property_add_bool(oc, "dsu-pmu",
+        tb371fc_get_dsu_pmu, tb371fc_set_dsu_pmu);
+    object_class_property_set_description(oc, "dsu-pmu",
+        "Opt in to a shared DSU PMU virtual CPU_CYCLES reference model "
+        "on all eight CPUs (default off); no physical cache/bus events");
+    object_class_property_add(oc, "dsu-pmu-frequency-hz", "uint64",
+        tb371fc_get_dsu_pmu_hz, tb371fc_set_dsu_pmu_hz, NULL, NULL);
+    object_class_property_set_description(oc, "dsu-pmu-frequency-hz",
+        "Virtual DSU reference frequency, 1..1000000000 Hz, default "
+        "100000000 Hz; not a measured physical clock");
     object_class_property_add_bool(oc, "geni-i2c-enabled",
         tb371fc_get_geni_i2c_enabled, tb371fc_set_geni_i2c_enabled);
     object_class_property_set_description(oc, "geni-i2c-enabled",

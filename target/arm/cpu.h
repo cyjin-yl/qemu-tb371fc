@@ -36,6 +36,7 @@
 #include "target/arm/mmuidx.h"
 #include "hw/intc/arm_gicv5_types.h"
 #include "target/arm/vector-type.h"
+#include "hw/misc/tb371fc-dsu-pmu.h"
 
 #define EXCP_UDEF            1   /* undefined instruction */
 #define EXCP_SWI             2   /* software interrupt */
@@ -1178,6 +1179,16 @@ struct ArchCPU {
     bool tb371fc_ras_zero_records_compat;
     uint32_t tb371fc_ras_zero_records_profile; /* Immutable after realize. */
     bool tb371fc_ras_zero_records_received; /* Incoming subsection seen. */
+
+    /* Board-only shared DSU bank. CPU-local reset must not reset the bank. */
+    bool tb371fc_dsu_pmu;
+    uint32_t tb371fc_dsu_profile;
+    uint32_t tb371fc_dsu_cpu_index;
+    uint64_t tb371fc_dsu_frequency_hz;
+    uint64_t tb371fc_dsu_actlr_el2;
+    bool tb371fc_dsu_received;
+    TB371FCDSUPMULink *tb371fc_dsu_link;
+    TB371FCDSUPMUWire tb371fc_dsu_wire; /* Serialized only for CPU0. */
 };
 
 typedef struct ARMCPUInfo {

@@ -39,6 +39,11 @@ from ras_zero_records_ci_contract import (
     EXPECTED_LENGTHS as RAS_ZERO_EXPECTED_LENGTHS, judge_ras_zero_records_details,
 )
 
+from dsu_pmu_ci_contract import (
+    NAME as DSU_PMU_NAME, EXPECTED_VALUES as DSU_PMU_EXPECTED_VALUES,
+    EXPECTED_LENGTHS as DSU_PMU_EXPECTED_LENGTHS, judge_dsu_pmu_details,
+)
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -1378,6 +1383,11 @@ def plan(args, runtime):
                output="--out", result="file", count=35, timeout=600,
                expected=RAS_ZERO_EXPECTED_VALUES,
                expected_lengths=RAS_ZERO_EXPECTED_LENGTHS)
+    if args.suite in ("all", "components"):
+        device(DSU_PMU_NAME, "test_dsu_pmu.py",
+               output="--out", result="file", count=54, timeout=900,
+               expected=DSU_PMU_EXPECTED_VALUES,
+               expected_lengths=DSU_PMU_EXPECTED_LENGTHS)
     return cases
 
 
@@ -1583,6 +1593,7 @@ def judge(case, stdout):
     judge_geni_i2c_details(case, data)
     judge_npu_gdsc_pending_details(case, data)
     judge_ras_zero_records_details(case, data)
+    judge_dsu_pmu_details(case, data)
     return details
 
 
