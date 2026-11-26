@@ -2246,6 +2246,7 @@ static void tb371fc_init(MachineState *ms)
     s->bootinfo.loader_start = load_base;
     s->bootinfo.ram_size = ms->ram_size - (load_base - TB371FC_RAM_BASE);
     s->bootinfo.psci_conduit = QEMU_PSCI_CONDUIT_SMC;
+    s->bootinfo.preserve_psci_node = true;
     s->bootinfo.get_dtb = tb371fc_get_dtb;
     s->bootinfo.modify_dtb = tb371fc_fixup_memory;
     tb371fc_create_fdt(s);
