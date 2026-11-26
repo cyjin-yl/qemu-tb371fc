@@ -390,6 +390,36 @@ static const VMStateDescription vmstate_gt_exact_frequency = {
     }
 };
 
+static bool tb371fc_ras_zero_records_needed(void *opaque)
+{
+    return ARM_CPU(opaque)->tb371fc_ras_zero_records_compat;
+}
+
+static int tb371fc_ras_zero_records_loaded(void *opaque, int version_id)
+{
+    ARMCPU *cpu = ARM_CPU(opaque);
+
+    if (!cpu->tb371fc_ras_zero_records_compat) {
+        error_report("Incoming CPU uses TB371FC RAS zero-records compatibility "
+                     "but destination does not");
+        return -EINVAL;
+    }
+    cpu->tb371fc_ras_zero_records_received = true;
+    return 0;
+}
+
+static const VMStateDescription vmstate_tb371fc_ras_zero_records = {
+    .name = "cpu/tb371fc-ras-zero-records-compat",
+    .version_id = 1,
+    .minimum_version_id = 1,
+    .needed = tb371fc_ras_zero_records_needed,
+    .post_load = tb371fc_ras_zero_records_loaded,
+    .fields = (const VMStateField[]) {
+        VMSTATE_UINT32_EQUAL(tb371fc_ras_zero_records_profile, ARMCPU),
+        VMSTATE_END_OF_LIST()
+    }
+};
+
 static bool hyp_timer_needed(void *opaque)
 {
     ARMCPU *cpu = opaque;
@@ -1091,6 +1121,7 @@ static int cpu_pre_load(void *opaque)
     CPUARMState *env = &cpu->env;
 
     cpu->gt_cntfrq_exact_received = false;
+    cpu->tb371fc_ras_zero_records_received = false;
 
     /*
      * In an inbound migration where on the source FPSCR/FPSR/FPCR are 0,
@@ -1185,6 +1216,12 @@ static int cpu_post_load(void *opaque, int version_id)
 
     if (cpu->gt_cntfrq_exact != cpu->gt_cntfrq_exact_received) {
         error_report("Incoming CPU counter mode differs from cntfrq-exact");
+        return -EINVAL;
+    }
+    if (cpu->tb371fc_ras_zero_records_compat !=
+        cpu->tb371fc_ras_zero_records_received) {
+        error_report("Incoming CPU RAS zero-records mode differs from "
+                     "destination");
         return -EINVAL;
     }
 
@@ -1403,6 +1440,7 @@ const VMStateDescription vmstate_arm_cpu = {
         &vmstate_irq_line_state,
         &vmstate_wfxt_timer,
         &vmstate_gt_exact_frequency,
+        &vmstate_tb371fc_ras_zero_records,
         &vmstate_hyp_timer,
         &vmstate_syndrome64,
         &vmstate_pstate64,

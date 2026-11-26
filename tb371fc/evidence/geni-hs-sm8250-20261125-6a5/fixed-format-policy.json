@@ -1,0 +1,607 @@
+{
+  "schema": "tb371fc-geni-hs-fixed-packing-correction-v1",
+  "source_only": true,
+  "reason": "Freeze001 accepted arbitrary stored packing although the engine implements fixed little-endian byte packing. Reject unsupported layouts before mutation, and use the same validator during load.",
+  "prior_freeze": {
+    "bytes": 48575,
+    "sha256": "c4815d3940fa1f28331e9d216f02a0e528a773e3e342e7976bbb9c75b81244e5"
+  },
+  "corrected_source": {
+    "bytes": 49436,
+    "sha256": "58dbcdf008aedd9978445ba385343afb57e6a2367ce65498bfd36f67f1d3499d"
+  },
+  "primary_source": {
+    "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+    "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+    "path": "drivers/platform/msm/qcom-geni-se.c",
+    "bytes": 55444,
+    "sha256": "02c0accf53cb09f7f92261abb6532b8610539554f96bd3b81d753f4e4ae5c3bf",
+    "function": "se_get_packing_config"
+  },
+  "derivation": {
+    "bpw": 8,
+    "pack_words": 4,
+    "msb_to_lsb": false,
+    "vectors": [
+      14,
+      270,
+      526,
+      783
+    ],
+    "cfg0": 276494,
+    "cfg1": 802318,
+    "byte_granularity": 0
+  },
+  "zero_semantics": "Reset0 in each packing slot is an explicit alias for the fixed byte layout in this reference model; it is not a captured hardware reset or a general unconfigured packing engine. Zero or the canonical word can be written independently with identical byte behavior.",
+  "write_error_priority": [
+    "bus-unavailable",
+    "read-only/unsupported-register",
+    "unsupported-dma for nonzero DMA_MODE",
+    "reserved-bits",
+    "unsupported-format"
+  ],
+  "register_policy": [
+    {
+      "offset": "0x000",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0x004",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0x020",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x00000001"
+    },
+    {
+      "offset": "0x024",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x0000007f"
+    },
+    {
+      "offset": "0x028",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x0000007f"
+    },
+    {
+      "offset": "0x040",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0x048",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x0000fff1"
+    },
+    {
+      "offset": "0x04c",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x0000fff1"
+    },
+    {
+      "offset": "0x060",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0x064",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0x068",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0x06c",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0x07c",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x00000007"
+    },
+    {
+      "offset": "0x22c",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x00000000",
+      "accepted_values": [
+        0
+      ]
+    },
+    {
+      "offset": "0x240",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x00000000",
+      "accepted_values": [
+        0
+      ]
+    },
+    {
+      "offset": "0x254",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x00000003",
+      "accepted_values": [
+        0
+      ]
+    },
+    {
+      "offset": "0x258",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x00000000",
+      "accepted_values": [
+        0
+      ]
+    },
+    {
+      "offset": "0x25c",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x00000000",
+      "accepted_values": [
+        0
+      ]
+    },
+    {
+      "offset": "0x260",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x000fffff",
+      "accepted_values": [
+        0,
+        276494
+      ]
+    },
+    {
+      "offset": "0x264",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x000fffff",
+      "accepted_values": [
+        0,
+        802318
+      ]
+    },
+    {
+      "offset": "0x268",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 8,
+      "write_mask": "0x000003ff",
+      "accepted_values": [
+        8
+      ]
+    },
+    {
+      "offset": "0x26c",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x00000000",
+      "accepted_values": [
+        0
+      ]
+    },
+    {
+      "offset": "0x270",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x00ffffff"
+    },
+    {
+      "offset": "0x280",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x00000000",
+      "accepted_values": [
+        0
+      ]
+    },
+    {
+      "offset": "0x284",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x000fffff",
+      "accepted_values": [
+        0,
+        276494
+      ]
+    },
+    {
+      "offset": "0x288",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x000fffff",
+      "accepted_values": [
+        0,
+        802318
+      ]
+    },
+    {
+      "offset": "0x28c",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 8,
+      "write_mask": "0x000003ff",
+      "accepted_values": [
+        8
+      ]
+    },
+    {
+      "offset": "0x294",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x00ffffff"
+    },
+    {
+      "offset": "0x2a4",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x00000000",
+      "accepted_values": [
+        0
+      ]
+    },
+    {
+      "offset": "0x2a8",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x00000000",
+      "accepted_values": [
+        0
+      ]
+    },
+    {
+      "offset": "0x2ac",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x00000000",
+      "accepted_values": [
+        0
+      ]
+    },
+    {
+      "offset": "0x600",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0xf8000000"
+    },
+    {
+      "offset": "0x604",
+      "readable": true,
+      "writable": true,
+      "stored": false,
+      "reset_stored_value": 0,
+      "write_mask": "0x00000007"
+    },
+    {
+      "offset": "0x610",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0x614",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0xffffffff"
+    },
+    {
+      "offset": "0x618",
+      "readable": true,
+      "writable": true,
+      "stored": false,
+      "reset_stored_value": 0,
+      "write_mask": "0xffffffff"
+    },
+    {
+      "offset": "0x61c",
+      "readable": true,
+      "writable": true,
+      "stored": false,
+      "reset_stored_value": 0,
+      "write_mask": "0xffffffff"
+    },
+    {
+      "offset": "0x620",
+      "readable": true,
+      "writable": true,
+      "stored": false,
+      "reset_stored_value": 0,
+      "write_mask": "0xffffffff"
+    },
+    {
+      "offset": "0x630",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0xf8000000"
+    },
+    {
+      "offset": "0x634",
+      "readable": true,
+      "writable": true,
+      "stored": false,
+      "reset_stored_value": 0,
+      "write_mask": "0x00000007"
+    },
+    {
+      "offset": "0x640",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0x644",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0xffffffff"
+    },
+    {
+      "offset": "0x648",
+      "readable": true,
+      "writable": true,
+      "stored": false,
+      "reset_stored_value": 0,
+      "write_mask": "0xffffffff"
+    },
+    {
+      "offset": "0x64c",
+      "readable": true,
+      "writable": true,
+      "stored": false,
+      "reset_stored_value": 0,
+      "write_mask": "0xffffffff"
+    },
+    {
+      "offset": "0x650",
+      "readable": true,
+      "writable": true,
+      "stored": false,
+      "reset_stored_value": 0,
+      "write_mask": "0xffffffff"
+    },
+    {
+      "offset": "0x700",
+      "readable": false,
+      "writable": true,
+      "stored": false,
+      "reset_stored_value": 0,
+      "write_mask": "0xffffffff"
+    },
+    {
+      "offset": "0x780",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0x800",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0x804",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0x80c",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x0000003f"
+    },
+    {
+      "offset": "0x810",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x0000003f"
+    },
+    {
+      "offset": "0x814",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x0000003f"
+    },
+    {
+      "offset": "0x908",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0x910",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0x914",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0xc48",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x0000400f"
+    },
+    {
+      "offset": "0xc4c",
+      "readable": true,
+      "writable": true,
+      "stored": false,
+      "reset_stored_value": 0,
+      "write_mask": "0x0000400f"
+    },
+    {
+      "offset": "0xc50",
+      "readable": true,
+      "writable": true,
+      "stored": false,
+      "reset_stored_value": 0,
+      "write_mask": "0x0000400f"
+    },
+    {
+      "offset": "0xd48",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x000077ff"
+    },
+    {
+      "offset": "0xd4c",
+      "readable": true,
+      "writable": true,
+      "stored": false,
+      "reset_stored_value": 0,
+      "write_mask": "0x000077ff"
+    },
+    {
+      "offset": "0xd50",
+      "readable": true,
+      "writable": true,
+      "stored": false,
+      "reset_stored_value": 0,
+      "write_mask": "0x000077ff"
+    },
+    {
+      "offset": "0xe18",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x00000000",
+      "accepted_values": [
+        0
+      ]
+    },
+    {
+      "offset": "0xe1c",
+      "readable": true,
+      "writable": true,
+      "stored": true,
+      "reset_stored_value": 0,
+      "write_mask": "0x0000000f"
+    },
+    {
+      "offset": "0xe24",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    },
+    {
+      "offset": "0xe28",
+      "readable": true,
+      "writable": false,
+      "stored": false,
+      "reset_stored_value": 0
+    }
+  ],
+  "register_policy_rows": 65,
+  "header_and_board_unchanged": true,
+  "wire_or_getter_contract_changed": false,
+  "compiled_or_runtime_pass_claimed": false
+}

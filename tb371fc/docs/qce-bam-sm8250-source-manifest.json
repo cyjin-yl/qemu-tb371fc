@@ -1,0 +1,915 @@
+{
+  "all_source_identities_verified_before_source_parse": true,
+  "derived": {
+    "config": {
+      "derived_value": 134213636,
+      "removed_command_mask": 134217728,
+      "source_default": 268431364,
+      "terms": [
+        {
+          "bit": 2,
+          "name": "BAM_PIPE_CNFG",
+          "retained": true,
+          "value": 4
+        },
+        {
+          "bit": 12,
+          "name": "BAM_NO_EXT_P_RST",
+          "retained": true,
+          "value": 4096
+        },
+        {
+          "bit": 13,
+          "name": "BAM_IBC_DISABLE",
+          "retained": true,
+          "value": 8192
+        },
+        {
+          "bit": 14,
+          "name": "BAM_SB_CLK_REQ",
+          "retained": true,
+          "value": 16384
+        },
+        {
+          "bit": 15,
+          "name": "BAM_PSM_CSW_REQ",
+          "retained": true,
+          "value": 32768
+        },
+        {
+          "bit": 16,
+          "name": "BAM_PSM_P_RES",
+          "retained": true,
+          "value": 65536
+        },
+        {
+          "bit": 17,
+          "name": "BAM_AU_P_RES",
+          "retained": true,
+          "value": 131072
+        },
+        {
+          "bit": 18,
+          "name": "BAM_SI_P_RES",
+          "retained": true,
+          "value": 262144
+        },
+        {
+          "bit": 19,
+          "name": "BAM_WB_P_RES",
+          "retained": true,
+          "value": 524288
+        },
+        {
+          "bit": 20,
+          "name": "BAM_WB_BLK_CSW",
+          "retained": true,
+          "value": 1048576
+        },
+        {
+          "bit": 21,
+          "name": "BAM_WB_CSW_ACK_IDL",
+          "retained": true,
+          "value": 2097152
+        },
+        {
+          "bit": 22,
+          "name": "BAM_WB_RETR_SVPNT",
+          "retained": true,
+          "value": 4194304
+        },
+        {
+          "bit": 23,
+          "name": "BAM_WB_DSC_AVL_P_RST",
+          "retained": true,
+          "value": 8388608
+        },
+        {
+          "bit": 24,
+          "name": "BAM_REG_P_EN",
+          "retained": true,
+          "value": 16777216
+        },
+        {
+          "bit": 25,
+          "name": "BAM_PSM_P_HD_DATA",
+          "retained": true,
+          "value": 33554432
+        },
+        {
+          "bit": 26,
+          "name": "BAM_AU_ACCUMED",
+          "retained": true,
+          "value": 67108864
+        },
+        {
+          "bit": 27,
+          "name": "BAM_CMD_ENABLE",
+          "retained": false,
+          "value": 134217728
+        }
+      ]
+    },
+    "consumer": {
+      "cache_hit_clears_no_get_around": false,
+      "cache_hit_reads_config": false,
+      "cd0_omits_command_list_setup": true,
+      "first_cd0_clears_no_get_around": true,
+      "first_registration_reads_config": true,
+      "setup_data_and_dummy_have_no_direct_mmio_or_submit": true,
+      "software_flags_are_not_emulated_crypto_capabilities": true,
+      "software_support_flags_independent_of_engines": [
+        "sha_hmac",
+        "cmac",
+        "aes_xts",
+        "bam",
+        "aes_ccm"
+      ]
+    },
+    "fields": {
+      "bam_num_pipes": {
+        "BAM_DATA_ADDR_BUS_WIDTH": 49152,
+        "BAM_NON_PIPE_GRP": 4278190080,
+        "BAM_NUM_PIPES": 255,
+        "BAM_PERIPH_NON_PIPE_GRP": 16711680
+      },
+      "bam_revision": {
+        "BAM_AXI_ACTIVE": 16384,
+        "BAM_CE_BUFFER_SIZE": 12288,
+        "BAM_CMD_DESC_EN": 8388608,
+        "BAM_DESC_CACHE_DEPTH": 6291456,
+        "BAM_HAS_NO_BYPASS": 131072,
+        "BAM_HIGH_FREQUENCY_BAM": 262144,
+        "BAM_INACTIV_TMRS_EXST": 524288,
+        "BAM_INACTIV_TMR_BASE": 4278190080,
+        "BAM_NUM_EES": 3840,
+        "BAM_NUM_INACTIV_TMRS": 1048576,
+        "BAM_REVISION": 255,
+        "BAM_SECURED": 65536,
+        "BAM_USE_VMIDMT": 32768
+      },
+      "descriptor_address_bits": 36,
+      "descriptor_fifo_size_mask": 65535,
+      "descriptor_upper_mask": 15,
+      "pipe_control_cold_mask": 2031674,
+      "pipe_irq_masks": {
+        "CLR": 255,
+        "EN": 255,
+        "STTS": 255
+      },
+      "qce_engines": [
+        {
+          "mask": 1,
+          "name": "ENCR_AES_SEL",
+          "shift": 0,
+          "virtual_value": 0
+        },
+        {
+          "mask": 2,
+          "name": "DES_SEL",
+          "shift": 1,
+          "virtual_value": 0
+        },
+        {
+          "mask": 4,
+          "name": "ENCR_SNOW3G_SEL",
+          "shift": 2,
+          "virtual_value": 0
+        },
+        {
+          "mask": 8,
+          "name": "ENCR_KASUMI_SEL",
+          "shift": 3,
+          "virtual_value": 0
+        },
+        {
+          "mask": 16,
+          "name": "SHA_SEL",
+          "shift": 4,
+          "virtual_value": 0
+        },
+        {
+          "mask": 32,
+          "name": "SHA512_SEL",
+          "shift": 5,
+          "virtual_value": 0
+        },
+        {
+          "mask": 64,
+          "name": "AUTH_AES_SEL",
+          "shift": 6,
+          "virtual_value": 0
+        },
+        {
+          "mask": 128,
+          "name": "AUTH_SNOW3G_SEL",
+          "shift": 7,
+          "virtual_value": 0
+        },
+        {
+          "mask": 256,
+          "name": "AUTH_KASUMI_SEL",
+          "shift": 8,
+          "virtual_value": 0
+        },
+        {
+          "mask": 67108864,
+          "name": "ENCR_ZUC_SEL",
+          "shift": 26,
+          "virtual_value": 0
+        },
+        {
+          "mask": 134217728,
+          "name": "AUTH_ZUC_SEL",
+          "shift": 27,
+          "virtual_value": 0
+        },
+        {
+          "mask": 268435456,
+          "name": "ZUC_ENABLE",
+          "shift": 28,
+          "virtual_value": 0
+        },
+        {
+          "mask": 7680,
+          "name": "BAM_PIPE_SETS",
+          "shift": 9,
+          "virtual_value": 0
+        },
+        {
+          "mask": 516096,
+          "name": "AXI_WR_BEATS",
+          "shift": 13,
+          "virtual_value": 0
+        },
+        {
+          "mask": 33030144,
+          "name": "AXI_RD_BEATS",
+          "shift": 19,
+          "virtual_value": 0
+        }
+      ],
+      "qce_engines_defined_mask": 503316479,
+      "qce_version": [
+        {
+          "field": "major",
+          "mask": 4278190080,
+          "shift": 24,
+          "source_abi_value": 5
+        },
+        {
+          "field": "minor",
+          "mask": 16711680,
+          "shift": 16,
+          "source_abi_value": 3
+        },
+        {
+          "field": "step",
+          "mask": 65535,
+          "shift": 0,
+          "source_abi_value": 1
+        }
+      ]
+    },
+    "geometry": {
+      "bam_base": 31211520,
+      "bam_bytes": 147456,
+      "channels": 8,
+      "clients": [
+        {
+          "consumer": 6,
+          "ee": 0,
+          "name": "qcedev",
+          "pair": 3,
+          "producer": 7
+        },
+        {
+          "consumer": 4,
+          "ee": 0,
+          "name": "qcrypto",
+          "pair": 2,
+          "producer": 5
+        }
+      ],
+      "execution_environments": 2,
+      "guest_ee": 0,
+      "overlap_bytes": 32768,
+      "owned_pipe_mask": 240,
+      "owned_pipes": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "qce_base": 31326208,
+      "qce_bytes": 131072,
+      "qce_engines_address": 31432968,
+      "qce_version_address": 31432704,
+      "spi": 272,
+      "union_base": 31211520,
+      "union_bytes": 245760
+    },
+    "identity": {
+      "bam-config": 134213636,
+      "bam-ee-attr": 2147483888,
+      "bam-ee-initial-irq-mask": 0,
+      "bam-num-pipes": 16392,
+      "bam-revision": 515,
+      "qce-engines": 0,
+      "qce-version": 84082689
+    },
+    "layout": {
+      "bam_register_offsets": {
+        "CNFG_BITS": 124,
+        "IRQ_SRCS_EE": 12288,
+        "IRQ_SRCS_MSK_EE": 12292,
+        "IRQ_SRCS_UNMASKED_EE": 12296,
+        "NUM_PIPES": 4104,
+        "PIPE_ATTR_EE": 12300,
+        "P_CTRL": 77824,
+        "P_DESC_FIFO_ADDR": 79900,
+        "P_DESC_FIFO_ADDR_MSB": 80148,
+        "P_EVNT_GEN_TRSHLD": 79912,
+        "P_EVNT_REG": 79896,
+        "P_FIFO_SIZES": 79904,
+        "P_IRQ_CLR": 77844,
+        "P_IRQ_EN": 77848,
+        "P_IRQ_STTS": 77840,
+        "P_RST": 77828,
+        "P_SW_OFSTS": 79872,
+        "REVISION": 4096
+      },
+      "ee_stride": 4096,
+      "pipe_stride": 4096,
+      "positional_index": 2,
+      "qce_vendor_offsets": {
+        "CRYPTO_BAM_CNFG_BITS_REG": 124,
+        "CRYPTO_ENGINES_AVAIL": 106760,
+        "CRYPTO_VERSION_REG": 106496
+      },
+      "selector": "SPS_BAM_NDP_4K",
+      "vendor_upstream_offsets_compared": [
+        "REVISION",
+        "NUM_PIPES",
+        "CNFG_BITS",
+        "IRQ_SRCS_EE",
+        "IRQ_SRCS_MSK_EE",
+        "P_CTRL",
+        "P_RST",
+        "P_IRQ_STTS",
+        "P_IRQ_CLR",
+        "P_IRQ_EN",
+        "P_EVNT_REG",
+        "P_SW_OFSTS",
+        "P_DESC_FIFO_ADDR",
+        "P_EVNT_GEN_TRSHLD",
+        "P_FIFO_SIZES"
+      ]
+    },
+    "revision": {
+      "ce_buffer_size_upstream_mask": 8192,
+      "ce_buffer_size_vendor_mask": 12288,
+      "compatible_to_silicon_revision_mapping_claimed": false,
+      "disagreeing_buffer_field_value_is_zero": true,
+      "mti_upper_bound": 2,
+      "vendor_maximum": 47,
+      "vendor_minimum": 2,
+      "virtual_marker": 3
+    },
+    "virtual_policy": {
+      "abi_name": "virtual-qce-bam-cold-control-v1",
+      "bam_revision_marker_rule": "source MTI upper bound + 1; new virtual marker, not silicon encoding",
+      "command_descriptors_accepted": false,
+      "controller_admitted_when_enabled": true,
+      "crypto_datapath_accepted": false,
+      "default_enabled": false,
+      "descriptor_width_code": 1,
+      "ee_initial_irq_mask": 0,
+      "physical_register_values_claimed": false,
+      "select_named_vendor_qce_abi": true
+    }
+  },
+  "input_bytes": 770745,
+  "input_count": 12,
+  "inputs": [
+    {
+      "bytes": 188196,
+      "git_blob": "1d9486ac0bd8c81b416a115eda5cd8e26164e0ec",
+      "key": "vendor_qce",
+      "path": "primary-vendor/drivers/crypto/msm/qce50.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "sha256": "a987df8a5ae02ffa34910cc96eb540a98111e76d6980fefbcd92277ae424c094",
+      "source_path": "drivers/crypto/msm/qce50.c"
+    },
+    {
+      "bytes": 18355,
+      "git_blob": "ae72416e95e6502b63a4bf5533d71e1305e2237a",
+      "key": "vendor_regs",
+      "path": "primary-vendor/drivers/crypto/msm/qcryptohw_50.h",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "sha256": "300ba56b9c3c2c4f3adde3ef7b2bf8b2ec03e49eb41c9834a75bc882b6cf3732",
+      "source_path": "drivers/crypto/msm/qcryptohw_50.h"
+    },
+    {
+      "bytes": 69776,
+      "git_blob": "f8f67ba4b789f0d1c204ea0f58c45b6a608df2bf",
+      "key": "vendor_bam",
+      "path": "primary-vendor/drivers/platform/msm/sps/bam.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "sha256": "369b5b93a2d9d7c9244dc3f03d64db1d78450b977311e1eac619716b464ae859",
+      "source_path": "drivers/platform/msm/sps/bam.c"
+    },
+    {
+      "bytes": 13415,
+      "git_blob": "45ad64bd75553ee783e2902107585ce2902cefbf",
+      "key": "vendor_spsi",
+      "path": "primary-vendor/drivers/platform/msm/sps/spsi.h",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "sha256": "2517406309039ec1012774046810ca8a3fe493482ae798be48290c2678cce51d",
+      "source_path": "drivers/platform/msm/sps/spsi.h"
+    },
+    {
+      "bytes": 65781,
+      "git_blob": "c0c9ae60eea2df6714888d69b70cb26daa7532ff",
+      "key": "vendor_sps_bam",
+      "path": "primary-vendor/drivers/platform/msm/sps/sps_bam.c",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "sha256": "ea8099573db0bdbf48dfc9d3c31f70045a978343e8bc9da72f3fcd7f625a0ac6",
+      "source_path": "drivers/platform/msm/sps/sps_bam.c"
+    },
+    {
+      "bytes": 46545,
+      "git_blob": "98ed0e54535b9e18c3be68ef039ba9a64ebcf831",
+      "key": "vendor_sps_api",
+      "path": "primary-vendor/include/linux/msm-sps.h",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "sha256": "1b2300dca5426113b53446d5d581f20d83ac7fc1fe24957f4e335af91aea17f8",
+      "source_path": "include/linux/msm-sps.h"
+    },
+    {
+      "bytes": 132499,
+      "git_blob": "e9651f09bd579616787894dc8514429063623b2d",
+      "key": "vendor_dt",
+      "path": "primary-vendor/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+      "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+      "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+      "source_path": "arch/arm64/boot/dts/vendor/qcom/kona.dtsi"
+    },
+    {
+      "bytes": 40461,
+      "git_blob": "d43a881e43b904a8e98faf582221dd05cede98e6",
+      "key": "linux_bam",
+      "path": "primary-upstream/drivers/dma/qcom/bam_dma.c",
+      "repository": "torvalds/linux",
+      "revision": "adc218676eef25575469234709c2d87185ca223a",
+      "sha256": "f58acbed38d782228fb9888a539f07caf849e6f3d60e06fb0621b940408064cd",
+      "source_path": "drivers/dma/qcom/bam_dma.c"
+    },
+    {
+      "bytes": 2550,
+      "git_blob": "3ad0d9b1fbc5e4f83dd316d1ad79773c288748ba",
+      "key": "linux_binding",
+      "path": "primary-upstream/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml",
+      "repository": "torvalds/linux",
+      "revision": "adc218676eef25575469234709c2d87185ca223a",
+      "sha256": "4a9b5810fdb7cb3ed2dbe3c19d7d9a47f047005185ac742ae7abfe9b18573d60",
+      "source_path": "Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml"
+    },
+    {
+      "bytes": 6952,
+      "git_blob": "28b5fd82382775dd5cfffbda301058cfbd538ddd",
+      "key": "linux_qce",
+      "path": "primary-upstream/drivers/crypto/qce/core.c",
+      "repository": "torvalds/linux",
+      "revision": "adc218676eef25575469234709c2d87185ca223a",
+      "sha256": "26781cdcae9c3d99b291428309455bb759ca8cb9de6ef3bedc29133a4d068001",
+      "source_path": "drivers/crypto/qce/core.c"
+    },
+    {
+      "bytes": 9332,
+      "git_blob": "d59ed279890621a8e2e6f4cdb20692dbf39f1461",
+      "key": "linux_regs",
+      "path": "primary-upstream/drivers/crypto/qce/regs-v5.h",
+      "repository": "torvalds/linux",
+      "revision": "adc218676eef25575469234709c2d87185ca223a",
+      "sha256": "79da04964ec251aff3874ac32bd8427cd40cb708e399c7c64381d52dc9e14676",
+      "source_path": "drivers/crypto/qce/regs-v5.h"
+    },
+    {
+      "bytes": 176883,
+      "git_blob": "630f4eff20bf810e347685066dce74ab92a23b56",
+      "key": "linux_dt",
+      "path": "primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+      "repository": "torvalds/linux",
+      "revision": "adc218676eef25575469234709c2d87185ca223a",
+      "sha256": "8735b5d8bb61d6a3a579e5b088ff2a719132266cef57c91c319ec19e12770499",
+      "source_path": "arch/arm64/boot/dts/qcom/sm8250.dtsi"
+    }
+  ],
+  "limitations": [
+    "This policy permits testing of the virtual control ABI; it does not certify original physical state or full native cold-probe success.",
+    "The actual original crypto-manager binary was not compared; pinned public notest behavior is a separate source argument.",
+    "Original Android boot and userspace/UI remain incomplete."
+  ],
+  "output_bytes": 1115,
+  "output_path": "hw/misc/qcom-sm8250-qce-bam-profile.inc",
+  "output_sha256": "263aea301635e787eb3aa5c353f025756fd9227ba68523e969eae297bf774430",
+  "physical_identity_measured": false,
+  "profile": {
+    "bound": true,
+    "digest": "f9809a8de0e6b91c57e7baf3d675dfd16c4ce1bc6e2797a0d866ec42bebf1c3b",
+    "document": {
+      "bound": true,
+      "identity": {
+        "bam-config": 134213636,
+        "bam-ee-attr": 2147483888,
+        "bam-ee-initial-irq-mask": 0,
+        "bam-num-pipes": 16392,
+        "bam-revision": 515,
+        "qce-engines": 0,
+        "qce-version": 84082689
+      },
+      "name": "virtual-qce-bam-cold-control-v1",
+      "policy": {
+        "accepted_review_candidate": {
+          "bytes": 16474,
+          "revision": 2,
+          "sha256": "0a9b1ec2022657a22f5f6f971a45ffd4a2889553926f99f4d2e6dc993aba3249"
+        },
+        "basis": "Virtual cold-control ABI: documented QCE5.3.1 register encoding; newly defined non-MTI BAM marker3; primary SM8250 eight-channel/two-EE topology; no crypto/command-descriptor execution; full candidate002 rationale retained.",
+        "cnfg_derivation": {
+          "candidate_hex": "0x07fff004",
+          "candidate_value": 134213636,
+          "macro": "BAM_CNFG_BITS_DEFAULT",
+          "meaning": "Keep the complete source-defined workaround/configuration word except its command-descriptor enable. The change is an explicit virtual unsupported-feature policy. No source or firmware is claimed to have written this final word on the physical tablet.",
+          "policy_removed_macro": "BAM_CMD_ENABLE",
+          "removed_mask": 134217728,
+          "repository": "torvalds/linux",
+          "revision": "adc218676eef25575469234709c2d87185ca223a",
+          "scope_of_retained_flags": "These flags define a frozen control configuration only. No descriptor engine executes their transfer-time behavior in this candidate.",
+          "source_default": 268431364,
+          "source_default_hex": "0x0ffff004",
+          "source_path": "drivers/dma/qcom/bam_dma.c",
+          "terms": [
+            {
+              "bit": 2,
+              "hex": "0x00000004",
+              "name": "BAM_PIPE_CNFG",
+              "retained_in_candidate": true,
+              "value": 4
+            },
+            {
+              "bit": 12,
+              "hex": "0x00001000",
+              "name": "BAM_NO_EXT_P_RST",
+              "retained_in_candidate": true,
+              "value": 4096
+            },
+            {
+              "bit": 13,
+              "hex": "0x00002000",
+              "name": "BAM_IBC_DISABLE",
+              "retained_in_candidate": true,
+              "value": 8192
+            },
+            {
+              "bit": 14,
+              "hex": "0x00004000",
+              "name": "BAM_SB_CLK_REQ",
+              "retained_in_candidate": true,
+              "value": 16384
+            },
+            {
+              "bit": 15,
+              "hex": "0x00008000",
+              "name": "BAM_PSM_CSW_REQ",
+              "retained_in_candidate": true,
+              "value": 32768
+            },
+            {
+              "bit": 16,
+              "hex": "0x00010000",
+              "name": "BAM_PSM_P_RES",
+              "retained_in_candidate": true,
+              "value": 65536
+            },
+            {
+              "bit": 17,
+              "hex": "0x00020000",
+              "name": "BAM_AU_P_RES",
+              "retained_in_candidate": true,
+              "value": 131072
+            },
+            {
+              "bit": 18,
+              "hex": "0x00040000",
+              "name": "BAM_SI_P_RES",
+              "retained_in_candidate": true,
+              "value": 262144
+            },
+            {
+              "bit": 19,
+              "hex": "0x00080000",
+              "name": "BAM_WB_P_RES",
+              "retained_in_candidate": true,
+              "value": 524288
+            },
+            {
+              "bit": 20,
+              "hex": "0x00100000",
+              "name": "BAM_WB_BLK_CSW",
+              "retained_in_candidate": true,
+              "value": 1048576
+            },
+            {
+              "bit": 21,
+              "hex": "0x00200000",
+              "name": "BAM_WB_CSW_ACK_IDL",
+              "retained_in_candidate": true,
+              "value": 2097152
+            },
+            {
+              "bit": 22,
+              "hex": "0x00400000",
+              "name": "BAM_WB_RETR_SVPNT",
+              "retained_in_candidate": true,
+              "value": 4194304
+            },
+            {
+              "bit": 23,
+              "hex": "0x00800000",
+              "name": "BAM_WB_DSC_AVL_P_RST",
+              "retained_in_candidate": true,
+              "value": 8388608
+            },
+            {
+              "bit": 24,
+              "hex": "0x01000000",
+              "name": "BAM_REG_P_EN",
+              "retained_in_candidate": true,
+              "value": 16777216
+            },
+            {
+              "bit": 25,
+              "hex": "0x02000000",
+              "name": "BAM_PSM_P_HD_DATA",
+              "retained_in_candidate": true,
+              "value": 33554432
+            },
+            {
+              "bit": 26,
+              "hex": "0x04000000",
+              "name": "BAM_AU_ACCUMED",
+              "retained_in_candidate": true,
+              "value": 67108864
+            },
+            {
+              "bit": 27,
+              "hex": "0x08000000",
+              "name": "BAM_CMD_ENABLE",
+              "retained_in_candidate": false,
+              "value": 134217728
+            }
+          ]
+        },
+        "cold_consumer_consequences": [
+          "The vendor major5 check succeeds for the declared5.3.1 source ABI. The version-only probe initially sets no_get_around=true, but no algorithm capability bit is set.",
+          "First shared-BAM registration reads CNFG once. With CMD_ENABLE0 it records support_cmd_dscr=false and explicitly clears this first client no_get_around=false. Remote management is independently required by the actual shared DT property.",
+          "A second qce_open reads QCE version/engines again. qce_sps_get_bam finds the existing physical-BAM registration, copies support_cmd_dscr=false and returns before reading CNFG or clearing no_get_around. Thus this second client may retain its version-derived no_get_around=true.",
+          "Both clients omit qce_setup_cmdlistptrs because support_cmd_dscr=false; IOVEC/result-buffer preparation and setup_dummy_req remain RAM-only. There is no CD0-specific direct QCE register write or submit in the public cold qce_open path.",
+          "Both clients still configure their producer and consumer BAM pipes using the same shared4K EE0 sequence. The complete cold-control configuration remains required.",
+          "qce_hw_support hardcodes sha_hmac,cmac,aes_xts,bam,aes_ccm=true and does not derive them from ENGINES. ENGINES0 disables the OTA bit test but cannot suppress these software declarations. no_get_around selects max_request (first client1, cached client may use MAX_QCE_BAM_REQ). These are driver software assumptions, not implemented model capabilities.",
+          "The pinned manager source has no test-table match for the actual prefixed algorithm/driver names. That source registration path performs no crypto test. It is neither a successful cryptographic self-test nor a proof of original-kernel manager bytes.",
+          "Later explicit requests remain unsupported. With command descriptors disabled they may attempt direct QCE configuration before a BAM doorbell; the first omitted register or submission rejects atomically. No success/completion is fabricated."
+        ],
+        "cold_reset_is_reference_policy": true,
+        "crypto_execution_modeled": false,
+        "default_enabled": false,
+        "dma_execution_modeled": false,
+        "guest_interrupt_handling_verified": false,
+        "identity_choices": [
+          {
+            "classification": "named-source-ABI policy",
+            "hex": "0x05030001",
+            "macro": "QCB_PROFILE_QCE_VERSION",
+            "rationale": "Encode the explicit vendor5.3.1 software ABI using independently matching version bitfields. No physical revision or working CCM claim.",
+            "value": 84082689
+          },
+          {
+            "classification": "virtual capability policy",
+            "hex": "0x00000000",
+            "macro": "QCB_PROFILE_QCE_ENGINES",
+            "rationale": "All algorithm/engine-selection, CE pipe-set and AXI beat fields arezero because no crypto datapath accepts work. BAM control topology is separate. No guest algorithm support is promised.",
+            "value": 0
+          },
+          {
+            "classification": "virtual supported-subset policy derived from source initializer",
+            "hex": "0x07fff004",
+            "macro": "QCB_PROFILE_BAM_CONFIG",
+            "rationale": "Use upstream explicit default0x0ffff004, clearing only CMD_ENABLE because command descriptors are unsupported. This is a new virtual configuration, not an observed secure initializer result.",
+            "value": 134213636
+          },
+          {
+            "classification": "new virtual ABI marker plus primary topology",
+            "hex": "0x00000203",
+            "macro": "QCB_PROFILE_BAM_REVISION",
+            "rationale": "Low83 is defined as this non-MTI virtual control ABI marker (source MTI cutoff2+1); it is not BAM-v1.7.4 silicon encoding. EE count2 comes from SM8250 DTS; every other feature field iszero/unimplemented.",
+            "value": 515
+          },
+          {
+            "classification": "primary topology plus virtual width policy",
+            "hex": "0x00004008",
+            "macro": "QCB_PROFILE_BAM_NUM_PIPES",
+            "rationale": "Eight channels from SM8250 DTS; width code1 is the chosen nonzero36-bit encoding supported by the vendor decoder and descriptor high mask. Both non-pipe-group fields arezero, with no BAM-to-BAM/peer datapath.",
+            "value": 16392
+          },
+          {
+            "classification": "virtual admission and ownership policy",
+            "hex": "0x800000f0",
+            "macro": "QCB_PROFILE_BAM_EE_ATTR",
+            "rationale": "An enabled reference instance has its modeled cold controller admitted and owns EE0 pipes4-7 from actual/public client pairs. Other pipes/EEs are outside this interface. Attribute bit31 describes this configured control state, not physical secure firmware or DMA readiness.",
+            "value": 2147483888
+          },
+          {
+            "classification": "virtual idle initialization policy",
+            "hex": "0x00000000",
+            "macro": "QCB_PROFILE_BAM_EE_MASK",
+            "rationale": "All IRQ masks startclear; every pipe startsidle with pending0. No global error/transfer producer exists. Cold client RMW endsata0; reset returnszero. No physical reset value claim.",
+            "value": 0
+          }
+        ],
+        "identity_selection_reviewed": true,
+        "initial_remote_state_reviewed": true,
+        "initial_remote_state_scope": "Explicit virtual cold controller admission, EE0 ownership, and idle interrupt mask. No physical firmware result or measured reset state is claimed.",
+        "limitations": [
+          "This policy permits testing of the virtual control ABI; it does not certify original physical state or full native cold-probe success.",
+          "The actual original crypto-manager binary was not compared; pinned public notest behavior is a separate source argument.",
+          "Original Android boot and userspace/UI remain incomplete."
+        ],
+        "physical_identity_measured": false,
+        "required_model_boundaries": [
+          "No descriptor fetch or guest-memory write",
+          "No crypto calculation, key acceptance, DMA transfer or successful completion",
+          "Every P_EVNT_REG write includingzero returnsMEMTX_ERROR",
+          "QCE GO/key/IV/payload/algorithm registers remainunsupported",
+          "No asynchronous completion IRQ, error latch fabrication or caller patch",
+          "No DT/status/name rewrite to suppress a driver",
+          "Whole immutable profile and dynamic state validated before any post-load output"
+        ],
+        "reviewed_source_facts": {
+          "bytes": 12415,
+          "sha256": "40d2b2c87a6fc91519d2592da6a74b4ce429aa5b9b73442aa0cccd9ff1b391f4"
+        },
+        "secure_firmware_executed": false,
+        "silicon_version_emulation_claimed": false
+      },
+      "schema": "tb371fc-qce-bam-reference-profile-v1",
+      "source_inputs": [
+        {
+          "bytes": 188196,
+          "git_blob": "1d9486ac0bd8c81b416a115eda5cd8e26164e0ec",
+          "key": "vendor_qce",
+          "path": "primary-vendor/drivers/crypto/msm/qce50.c",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "sha256": "a987df8a5ae02ffa34910cc96eb540a98111e76d6980fefbcd92277ae424c094",
+          "source_path": "drivers/crypto/msm/qce50.c"
+        },
+        {
+          "bytes": 18355,
+          "git_blob": "ae72416e95e6502b63a4bf5533d71e1305e2237a",
+          "key": "vendor_regs",
+          "path": "primary-vendor/drivers/crypto/msm/qcryptohw_50.h",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "sha256": "300ba56b9c3c2c4f3adde3ef7b2bf8b2ec03e49eb41c9834a75bc882b6cf3732",
+          "source_path": "drivers/crypto/msm/qcryptohw_50.h"
+        },
+        {
+          "bytes": 69776,
+          "git_blob": "f8f67ba4b789f0d1c204ea0f58c45b6a608df2bf",
+          "key": "vendor_bam",
+          "path": "primary-vendor/drivers/platform/msm/sps/bam.c",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "sha256": "369b5b93a2d9d7c9244dc3f03d64db1d78450b977311e1eac619716b464ae859",
+          "source_path": "drivers/platform/msm/sps/bam.c"
+        },
+        {
+          "bytes": 13415,
+          "git_blob": "45ad64bd75553ee783e2902107585ce2902cefbf",
+          "key": "vendor_spsi",
+          "path": "primary-vendor/drivers/platform/msm/sps/spsi.h",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "sha256": "2517406309039ec1012774046810ca8a3fe493482ae798be48290c2678cce51d",
+          "source_path": "drivers/platform/msm/sps/spsi.h"
+        },
+        {
+          "bytes": 65781,
+          "git_blob": "c0c9ae60eea2df6714888d69b70cb26daa7532ff",
+          "key": "vendor_sps_bam",
+          "path": "primary-vendor/drivers/platform/msm/sps/sps_bam.c",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "sha256": "ea8099573db0bdbf48dfc9d3c31f70045a978343e8bc9da72f3fcd7f625a0ac6",
+          "source_path": "drivers/platform/msm/sps/sps_bam.c"
+        },
+        {
+          "bytes": 46545,
+          "git_blob": "98ed0e54535b9e18c3be68ef039ba9a64ebcf831",
+          "key": "vendor_sps_api",
+          "path": "primary-vendor/include/linux/msm-sps.h",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "sha256": "1b2300dca5426113b53446d5d581f20d83ac7fc1fe24957f4e335af91aea17f8",
+          "source_path": "include/linux/msm-sps.h"
+        },
+        {
+          "bytes": 132499,
+          "git_blob": "e9651f09bd579616787894dc8514429063623b2d",
+          "key": "vendor_dt",
+          "path": "primary-vendor/arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+          "source_path": "arch/arm64/boot/dts/vendor/qcom/kona.dtsi"
+        },
+        {
+          "bytes": 40461,
+          "git_blob": "d43a881e43b904a8e98faf582221dd05cede98e6",
+          "key": "linux_bam",
+          "path": "primary-upstream/drivers/dma/qcom/bam_dma.c",
+          "repository": "torvalds/linux",
+          "revision": "adc218676eef25575469234709c2d87185ca223a",
+          "sha256": "f58acbed38d782228fb9888a539f07caf849e6f3d60e06fb0621b940408064cd",
+          "source_path": "drivers/dma/qcom/bam_dma.c"
+        },
+        {
+          "bytes": 2550,
+          "git_blob": "3ad0d9b1fbc5e4f83dd316d1ad79773c288748ba",
+          "key": "linux_binding",
+          "path": "primary-upstream/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml",
+          "repository": "torvalds/linux",
+          "revision": "adc218676eef25575469234709c2d87185ca223a",
+          "sha256": "4a9b5810fdb7cb3ed2dbe3c19d7d9a47f047005185ac742ae7abfe9b18573d60",
+          "source_path": "Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml"
+        },
+        {
+          "bytes": 6952,
+          "git_blob": "28b5fd82382775dd5cfffbda301058cfbd538ddd",
+          "key": "linux_qce",
+          "path": "primary-upstream/drivers/crypto/qce/core.c",
+          "repository": "torvalds/linux",
+          "revision": "adc218676eef25575469234709c2d87185ca223a",
+          "sha256": "26781cdcae9c3d99b291428309455bb759ca8cb9de6ef3bedc29133a4d068001",
+          "source_path": "drivers/crypto/qce/core.c"
+        },
+        {
+          "bytes": 9332,
+          "git_blob": "d59ed279890621a8e2e6f4cdb20692dbf39f1461",
+          "key": "linux_regs",
+          "path": "primary-upstream/drivers/crypto/qce/regs-v5.h",
+          "repository": "torvalds/linux",
+          "revision": "adc218676eef25575469234709c2d87185ca223a",
+          "sha256": "79da04964ec251aff3874ac32bd8427cd40cb708e399c7c64381d52dc9e14676",
+          "source_path": "drivers/crypto/qce/regs-v5.h"
+        },
+        {
+          "bytes": 176883,
+          "git_blob": "630f4eff20bf810e347685066dce74ab92a23b56",
+          "key": "linux_dt",
+          "path": "primary-upstream/arch/arm64/boot/dts/qcom/sm8250.dtsi",
+          "repository": "torvalds/linux",
+          "revision": "adc218676eef25575469234709c2d87185ca223a",
+          "sha256": "8735b5d8bb61d6a3a579e5b088ff2a719132266cef57c91c319ec19e12770499",
+          "source_path": "arch/arm64/boot/dts/qcom/sm8250.dtsi"
+        }
+      ]
+    },
+    "file_bytes": 16599,
+    "file_sha256": "6bb5bff5a445a73fab54261376ef73a820c6b2ac050048e5fca45715755f76be",
+    "identity": {
+      "bam-config": 134213636,
+      "bam-ee-attr": 2147483888,
+      "bam-ee-initial-irq-mask": 0,
+      "bam-num-pipes": 16392,
+      "bam-revision": 515,
+      "qce-engines": 0,
+      "qce-version": 84082689
+    },
+    "name": "virtual-qce-bam-cold-control-v1"
+  },
+  "profile_bound": true,
+  "public_source_pins_verified": true,
+  "qemu_device_network_used": false,
+  "reference_scope": "cold-control-only",
+  "schema": "tb371fc-qce-bam-generation-v1"
+}

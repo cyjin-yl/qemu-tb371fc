@@ -1,0 +1,247 @@
+{
+  "actual_failure_observations": {
+    "backend_events_only": "two socket peers connected",
+    "backend_output_bytes": 0,
+    "case_elapsed_seconds": 1.168,
+    "cleanup": {
+      "exit_code": 0,
+      "forced_kill": false,
+      "forced_terminate": false,
+      "quit_acknowledged": true
+    },
+    "compiled_suite_passed": false,
+    "complete_worlds": 2,
+    "cont_between_snapshots": 0,
+    "evidence_pins": {
+      "backend": {
+        "bytes": 82,
+        "sha256": "1252b1e8357d41e3d4212e1db24686abe75d78a302ee260044a34d1f30cca84e"
+      },
+      "case": {
+        "bytes": 1243,
+        "sha256": "3db31ba55f9b5fd7dc06154bee186a3f4b5e24cfa12f6031d1dda58e71073190"
+      },
+      "cleanup": {
+        "bytes": 103,
+        "sha256": "d8b0814ac292145bc25f13773911ebb28b00bdf580d5d2c68545f5acc78c1da4"
+      },
+      "command": {
+        "bytes": 847,
+        "sha256": "67780775a2db6a05679f41d05df572c887ce9d2525711a64f3af9d1d14168e26"
+      },
+      "qemu_stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "qmp": {
+        "bytes": 149947,
+        "sha256": "fad253bf52ee1502fbbf13ebe1f2dc5d077cf2f25f05587b926e0a11ff4b9334"
+      },
+      "qtest": {
+        "bytes": 100,
+        "sha256": "27f468d238af827ccbdf05abdedb2bae6b4bf479d25c7b4071e7c5e6d9cc19fb"
+      },
+      "report": {
+        "bytes": 3797,
+        "sha256": "94d4f647ec82f343ae0035fa970888b2821fc6dc7d5641293acb1e25cb5b2489"
+      }
+    },
+    "getters": 98,
+    "getters_per_world": 49,
+    "initial_cont_before_getters": 1,
+    "memory_operations": 0,
+    "metadata_own_properties": 32,
+    "metadata_type_counts": {
+      "bool": 10,
+      "string": 3,
+      "uint64": 19
+    },
+    "qmp_requests": {
+      "cont": 1,
+      "qmp_capabilities": 1,
+      "qom-get": 98,
+      "qom-list": 1,
+      "quit": 1
+    },
+    "qtest_commands": [
+      "irq_intercept_out /machine/uart-hs sysbus-irq"
+    ],
+    "worlds_equal": true
+  },
+  "bounded_validation": {
+    "actual_recorded_response_replay": true,
+    "corrected_all_32_metadata_assertions_pass": true,
+    "execution": {
+      "bytes": 663,
+      "file": "qom-type-source-check-execution-001.json",
+      "sha256": "529d5c28658714f7371b453452778aebd030b1eddbb09cfd1046da75f4cba099"
+    },
+    "exit_code": 0,
+    "full_98_getter_order_values_and_types_checked": true,
+    "old_metadata_assertion_fails": true,
+    "result": {
+      "bytes": 4648,
+      "file": "qom-type-source-check-result-001.json",
+      "sha256": "489b1420dc6faf9deab62b2011f86c18083e3d4683793a0cd9baa86cd4cf2ba9"
+    },
+    "source_only_not_compiled_runtime_rerun": true,
+    "syntax_compilation_passed": true,
+    "validator": {
+      "bytes": 11454,
+      "file": "validate-qom-type-correction-001.py",
+      "sha256": "759ed58f745bc7ba317be459a500df7bbb21f0762df33ab4545cbec522b95c7d"
+    }
+  },
+  "ci_rerun_by_this_review": false,
+  "corrected_compiled_suite_pass_claimed": false,
+  "correction": {
+    "all_other_ast_unchanged": true,
+    "before": {
+      "bytes": 68816,
+      "file": "tb371fc/tests/test_geni_hs_sm8250.py",
+      "sha256": "e2935bb0a09cd8f3957f878ec4b4698f1eb391b3e2aa4031b0879a6147273055"
+    },
+    "changed_lines": 1,
+    "diff": {
+      "bytes": 683,
+      "file": "qom-type-correction-001.diff",
+      "sha256": "0bfd94f4bb9b37a3dccabc6c79955cf7619a7578be80848c679dd981e3b30b59"
+    },
+    "file": {
+      "bytes": 68819,
+      "file": "tb371fc/tests/test_geni_hs_sm8250.py",
+      "git_blob_sha1": "94ebca9c45633c52da63cb793492143852abea66",
+      "sha256": "c4dc696c14c8a4581ceb574be500457c43273ee99dc7e3740a18661fffa4093c"
+    },
+    "only_change": "The QOM metadata assertion changes 'str' to 'string'.",
+    "python_return_value_string_check_preserved": true,
+    "reverse_substitution_reproduces_complete_b5_file": true,
+    "transport": {
+      "bytes": 20048,
+      "file": "tb371fc/tests/geni_hs_test_transport.py",
+      "sha256": "32dae63e1604366615f43c6e8982a21050c5cb4aaf70ac8e54527822f9a332e9"
+    },
+    "transport_unchanged": true
+  },
+  "created_utc": "2026-11-25T08:13:33.436828+00:00",
+  "diagnosis": {
+    "actual_and_api_defined_qom_type": "string",
+    "affected_properties": [
+      "registers-hex",
+      "tx-fifo-hex",
+      "rx-fifo-hex"
+    ],
+    "category": "test_metadata_label_error",
+    "failed_function": "identity_and_pure_observation",
+    "failed_line_in_b5": 215,
+    "incorrect_expected_qom_type": "str",
+    "model_change_required_for_this_failure": false,
+    "scope": "The recorded first GENI failure is the metadata assertion. Later ordinary and migration cases were not reached and remain unverified.",
+    "unrelated_chardev_type": "str"
+  },
+  "exact_qom_api_source": {
+    "bytes": 82356,
+    "commit": "b5bf00086640cbee8ef0c13375ba281cd73b8369",
+    "full_file_git_blob_recomputed": true,
+    "function": "object_property_add_str",
+    "git_blob_sha1": "f79b2cf3618369a87d25685b1bd834f8b2218936",
+    "path": "qom/object.c",
+    "registered_property_type": "string",
+    "sha256": "65b3958347a9ff405f17ed008d571a1f41b8533c8ec1871b22795566a9ffa9ee",
+    "url": "https://github.com/cyjin-yl/qemu-tb371fc/blob/b5bf00086640cbee8ef0c13375ba281cd73b8369/qom/object.c"
+  },
+  "failed_b5_artifact_qualified": false,
+  "failed_ci_identity": {
+    "archive": {
+      "bytes": 50936393,
+      "sha256": "63df14f571c2a05b12ff3dea0c5fa83c648e30967aff7ec76e42e381442d83b4"
+    },
+    "artifact_id": 15003310246,
+    "board_job_id": 139050558756,
+    "geni_case_exit_code": 1,
+    "geni_case_passed": false,
+    "geni_completed_checks": 0,
+    "push_run_id": 45568949371,
+    "source_commit": "b5bf00086640cbee8ef0c13375ba281cd73b8369",
+    "source_commit_member": {
+      "bytes": 41,
+      "file": "source-commit.txt",
+      "sha256": "b79452b444443fadf52790e8330a390666a09651c31a1b08a5e20782f121f740"
+    },
+    "source_tree": "e4045ad189531c6f74250fd07f8c3e508be9508c"
+  },
+  "native_executed": false,
+  "next_gate": "Publish the bounded corrected source and run real compiled CI under the root coordinator; no subsequent-case success is inferred from this replay.",
+  "qemu_executed_by_this_review": false,
+  "retained_b5_auditor_sources": [
+    {
+      "bytes": 118092,
+      "file": "audit_geni_hs_artifact_unbound_001.py",
+      "sha256": "425c384e184ca1af429a294ac5c92a4ceb5f0ea8b548a3c0914013e57b433539"
+    },
+    {
+      "bytes": 118257,
+      "file": "audit_geni_hs_artifact_b5bf0008_002.py",
+      "sha256": "07196291f3695c48f27c7c34182546053ea73d38e3ee1163d9a7a12959551c6f"
+    }
+  ],
+  "retained_b5_static_receipts": [
+    {
+      "bytes": 17635,
+      "file": "test-design-001.json",
+      "sha256": "ad576fc69d0d0ebbca250700ee1250a9a160f29af67a8f3c8bcd31c7db0f0b94"
+    },
+    {
+      "bytes": 3992,
+      "file": "test-source-validation-001.json",
+      "sha256": "8daea0253bc92855675f645063e97274c055cd45308a2696e2cab2bfd17c2b5a"
+    },
+    {
+      "bytes": 1604,
+      "file": "test-source-freeze-001.json",
+      "sha256": "2caca77cb951bdc480c978a63b4cb7a3fd017f3f5b442818bf48e8f86420c8f1"
+    },
+    {
+      "bytes": 4975,
+      "file": "test-protocol-static-review-001.json",
+      "sha256": "3963a123737bfdac2b917b7594af5001a784858323bf0b15237e41cd64713a80"
+    }
+  ],
+  "review_limitation_acknowledged": "The earlier source-only test and peer reviews did not catch the exact QOM metadata label. Those original receipts and the actual B5 failure are preserved without rewriting their historical outcome.",
+  "reviewer": "independent_native_result_review",
+  "schema": "tb371fc-geni-hs-b5-qom-metadata-failure-correction-v1",
+  "unchanged_core_files": [
+    {
+      "bytes": 50414,
+      "file": "hw/char/qcom-geni-uart.c",
+      "sha256": "c1fe1af46ec3383f9a080d1ba10f60073dfd59696fccfa363a9567551ebb3e10"
+    },
+    {
+      "bytes": 2135,
+      "file": "include/hw/char/qcom-geni-uart.h",
+      "sha256": "f2efb7233b29ae2ece90de924b7d64e1f33a9f1fd04ed3da37298e0f6efd83bf"
+    },
+    {
+      "bytes": 105293,
+      "file": "hw/arm/lenovo-tb371fc.c",
+      "sha256": "9119e88b7fcb6cdd103f4fad8ef11a4cc9ba7f8314e989a12747e7dd05017bda"
+    }
+  ],
+  "unchanged_legacy_tests": [
+    {
+      "bytes": 15851,
+      "file": "test_geni_uart.py",
+      "sha256": "4ab5857e40f3d320656677812abb86d2683c310764d35baa7a32b4aa53572fbd"
+    },
+    {
+      "bytes": 6760,
+      "file": "test_geni_migration.py",
+      "sha256": "31ce2edf92785ef948eb5e297fa7274aa577265594b4327b181ff10a29a5c9a8"
+    },
+    {
+      "bytes": 11078,
+      "file": "test_geni_clock_reset.py",
+      "sha256": "57dc711516a29a965f22e3f27ff0c1d4a900e97b20689e9037d58ad535b7e0df"
+    }
+  ]
+}

@@ -1,0 +1,1622 @@
+#!/usr/bin/env python3
+"""Assemble exact70b source-only CI qualification preparation from ten complete independent audits.
+
+This preparatory source is UNBOUND and refuses before any evidence read. The source
+commit has exactly two ordered parents; its document-only merge is checked separately
+from the four historical single-parent publications. The strict PR/source tree
+equality gate is preserved. A later
+reviewed successor may bind the actual new archive and receipts. No executable
+artifact, producer, generator, native runner or device is launched here.
+"""
+from pathlib import Path, PurePosixPath
+import argparse
+import ast
+import datetime
+import hashlib
+import json
+import re
+import types
+import zipfile
+
+if not __debug__:
+    raise SystemExit('Qualification refuses optimized Python; retained validators require assertions')
+
+BINDING_SHA256 = 'a649d255ccd78da4dd6a645e078d2a51f79ea80cb448a0db5c19cf1a007c53ae'
+
+HEAD = '70b387fb064cdf2099e85dd89213a5ea7e2c398f'
+
+TREE = '37bf696bc687422eac2bd967abda7d80af8e02b9'
+
+SOURCE_PARENTS = ['9e5dddcd0e0ba228821e733a7cf853bbd57dfd7b', 'a49ea65e503e08ec3230eb694c4baa9d3c7a27cb']
+
+SOURCE_PARENT_TREE = 'af84a55f62ee750cec17f5c5bfe3ca7c524108ab'
+
+CI_BASE = 'a49ea65e503e08ec3230eb694c4baa9d3c7a27cb'
+
+MERGE = '252366376d64454bc1abccf874e2e459847c3406'
+
+PUSH_RUN = 45599002342
+
+PR_RUN = 45599016290
+
+JOBS = {'pr': {'a77_job_id': 139152837634, 'board_job_id': 139152837234, 'run_id': 45599016290},
+ 'push': {'a77_job_id': 139152769048, 'board_job_id': 139152769553, 'run_id': 45599002342}}
+
+QEMU_MEMBER = 'qemu-build/qemu-system-aarch64'
+
+AUDIT_NAMES = ['integration',
+ 'ddr_stats_offset',
+ 'rpm_stats_offset',
+ 'spss',
+ 'llcc',
+ 'dp',
+ 'dsi',
+ 'dispcc',
+ 'geni_hs',
+ 'geni_source']
+
+FIXED_AUDITORS = {'ddr_stats_offset': {'bytes': 95891,
+                      'path': 'evidence://reviewed-source/auditors/ddr_stats_offset.py.txt',
+                      'sha256': 'ed0d08fe2d170079ded6721da586cf2357b9adacec5aaa675829dc08b397b79a'},
+ 'dispcc': {'bytes': 52957,
+            'path': 'evidence://reviewed-source/auditors/dispcc.py.txt',
+            'sha256': '62837675b808db7ed5671e9cff7653f7b76d4c295d668919ffff10a4134fc4c8'},
+ 'dp': {'bytes': 87087,
+        'path': 'evidence://reviewed-source/auditors/dp.py.txt',
+        'sha256': '769344055cf453b45916bf189bb330201f4bc0611b6256b7fb1efac99d03ee4a'},
+ 'dsi': {'bytes': 91462,
+         'path': 'evidence://reviewed-source/auditors/dsi.py.txt',
+         'sha256': '0e0b7e6ebe3a9486383c2946669629a97d4d037414be9d6e5ea28970462954fe'},
+ 'geni_hs': {'bytes': 120822,
+             'path': 'evidence://reviewed-source/auditors/geni_hs.py.txt',
+             'sha256': '6c9c6c817294992591cc3dfe9f561db8ae988e88c444d48012fd3375385201d7'},
+ 'geni_source': {'bytes': 45486,
+                 'path': 'evidence://reviewed-source/auditors/geni_source.py.txt',
+                 'sha256': 'e5a3fbae9b657480401eadf72d87e3fbe68afefe3e89868639632286ab38e1b0'},
+ 'integration': {'bytes': 160620,
+                 'path': 'evidence://reviewed-source/auditors/integration.py.txt',
+                 'sha256': 'f33641691a5650acc2aa7fe9da1e5a73f2c7e3440d38df43b7e797f141b98c8e'},
+ 'llcc': {'bytes': 77024,
+          'path': 'evidence://reviewed-source/auditors/llcc.py.txt',
+          'sha256': '4553f5303a5ce879122b152b2d6a6ef4dcb951c9d0ff91fdf8bdc7f4ce3bd5db'},
+ 'rpm_stats_offset': {'bytes': 88492,
+                      'path': 'evidence://reviewed-source/auditors/rpm_stats_offset.py.txt',
+                      'sha256': 'b64bf8e01b220d0f56912d87f3c2d7ca9c47ae40862049daa9c49a2ff1e7ba8c'},
+ 'spss': {'bytes': 63293,
+          'path': 'evidence://reviewed-source/auditors/spss.py.txt',
+          'sha256': 'bd6fa589cbcf6e6b4769de847574a2be737cbcce75617a6a3e98ad767b55ca13'}}
+
+FIXED_ASSETS = {'a77_observer': {'bytes': 11041,
+                  'path': 'evidence://reviewed-source/observers/a77.py.txt',
+                  'sha256': '39709d4d93c02fbe6fd62b8d1000cf27393fc1ca124d2a4a6afa9352113af896'},
+ 'board_observer': {'bytes': 18564,
+                    'path': 'evidence://reviewed-source/observers/board.py.txt',
+                    'sha256': '645de0a98f1c980bd51414b96dfdd2383ff470921277734af5fec09e73079dba'},
+ 'corrected_head_source_adaptation': {'bytes': 14349,
+                                      'path': 'retained-proof://b0bfb864952328888df2ee10244e794837eeee38432368833443afa3e0c24819',
+                                      'sha256': '1378d197ad74dc967e173c6b81ddb379244e72dc0c50f0ab49c9ed3e965be14e'},
+ 'correction_base_trees': {'bytes': 122792,
+                           'path': 'retained-proof://d5c85cc2836e8ba068e7a5cccc0d270ddd4b4f8a05b355755062afbc6df65ada',
+                           'sha256': 'b413f7f61cd92407d671e6e63f8bd7beb3c983f00c38db4b161b3d5961306f02'},
+ 'correction_packet': {'bytes': 208042,
+                       'path': 'retained-proof://d30512c9f28826e9a230f283666f3f5367f05f01e2c23ae557831ac526926678',
+                       'sha256': '3a6399cf556c7be4b31535f5d232426168307c92ea6789c5e16fe73e79e1b1fa'},
+ 'correction_readback': {'bytes': 7133,
+                         'path': 'retained-proof://22034b0eb0f7f2c556d31c2bacee932cb914eec8033dd5e1abf73dc9c32c9d7f',
+                         'sha256': '4fb48e5ea40c47f07102585315a6714ee7a34e4a84f044bd78eeff5f46cd75dd'},
+ 'current_extra_tree_provenance': {'bytes': 3392,
+                                   'path': 'retained-proof://05b8e1d25d9233b150fc6447c1b0f6a18f0df3411f47db880683832b8d9a42b6',
+                                   'sha256': '26125d6622dd6b07a94484a39e32ec0b739051fdb4aa18dd742b3cd9fe2b9c72'},
+ 'current_extra_trees': {'bytes': 143534,
+                         'path': 'retained-proof://535e394e6fc9764720219bffdfc190ddf99d2e47ce1913ff7ae9a7c3f649ad52',
+                         'sha256': 'c5a74a491a6d4f21def0b375e05fda19c4fed651c8597781509130152a1a5800'},
+ 'current_inventory_binding': {'bytes': 6182,
+                               'path': 'retained-proof://2d2bbf3b10410b3ed7cb2eeec41d6cbd7602fede1694e39ff7d437f84b794130',
+                               'sha256': '39afdaf86ab3271ffcc549d0a008e3462a54a35291b6c6faaf5b853b34826814'},
+ 'current_observer_source_adaptation': {'bytes': 4223,
+                                        'path': 'retained-proof://3f58e5e6acc5417aa0641b955af3a8933f7df60627a18ebbdc89374bd4bac8f0',
+                                        'sha256': 'f1fad0858dbbbc9d0741d363c2f3d40bd748e5d80a8b6f96be85873089960f31'},
+ 'failed_qualification_execution': {'bytes': 1103,
+                                    'path': 'retained-proof://db3857b8b46164946227d869674fd8e4118c757ce2b579c9124feb0e7ba8e0f5',
+                                    'sha256': 'a83e04ba10ab5f32eb709fc57930103eda636313d588026cf0a72a4658106d47'},
+ 'failed_qualification_independent_observation': {'bytes': 2839,
+                                                  'path': 'retained-proof://2d666aaf839076d71d7b4a8646c2e67a0b28358906f65ac63bd42964166a329a',
+                                                  'sha256': '103730ee9e9deb644823b502f1601e301c3721d7ed7e7b9f3409bd703cc1a449'},
+ 'failed_qualification_stderr': {'bytes': 351,
+                                 'path': 'retained-proof://d8e75ed4346c1dcda268fd4b22fe48e5a52d007e600e6171451a3f300e43b817',
+                                 'sha256': '916e692c50a3dfdf9242da1581209349dd7864e09f4eb24931c03f2eda9b86f0'},
+ 'failed_qualification_stdout': {'bytes': 0,
+                                 'path': 'retained-proof://3d89b204808cc13a625d715413c57264db630d3d8c33e58104110afe6c8b9b32',
+                                 'sha256': 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'},
+ 'fourth_blob_reply_00': {'bytes': 6318,
+                          'path': 'retained-proof://fbd051ad7de750741d90e6da8809b51745c1daa56cde6f569a07bdc922783afc',
+                          'sha256': '9fde2ce408def84047e7c3c03d582dfe3f01c7ba94c25a86ca4a293c2b250586'},
+ 'fourth_blob_reply_01': {'bytes': 210229,
+                          'path': 'retained-proof://d54c7cd760490fee83268bfa46f9b6aae35bf231101b2a9650b01c62fc9958ee',
+                          'sha256': '512ce85c3788e90ebf0ff8d5dfd46664bbafb1e442d3bb0401bc99c8e2018d1c'},
+ 'fourth_blob_reply_02': {'bytes': 2186,
+                          'path': 'retained-proof://b539ea972ae4672343c2dec52c79777e9f152d0c54a06e2940c4e22257262406',
+                          'sha256': 'f2ceaca20b1a7571d4d06b9a836e0b33fa084cae5982b06f716203548d1ad00d'},
+ 'fourth_blob_reply_03': {'bytes': 2282,
+                          'path': 'retained-proof://0da697743044836a27f1315bbcb470c2a71c796051e22259ad1147b2a0e39df7',
+                          'sha256': 'd02aeebba761b8a7a99f19f1f731d9b13baa860fad9acb6afe042fc19c6b1cdd'},
+ 'fourth_blob_reply_04': {'bytes': 9380,
+                          'path': 'retained-proof://58fc259892cf6b14dfd6b720564a4b5b055151ba677f937a22a450e399bb2530',
+                          'sha256': 'a697fe56b760eb263afff583f3b16a12de9ef885104dd87b214176e4acc872e1'},
+ 'fourth_blob_reply_05': {'bytes': 1847,
+                          'path': 'retained-proof://6da0a34e39ca47a595684de68be05536f142e179c6cd61404c9854c43c2b7e73',
+                          'sha256': '75ac9aa6868652ea33b12a5f153d38e5b4c0854e24621d56c83df4d84fc77054'},
+ 'fourth_blob_reply_06': {'bytes': 5950,
+                          'path': 'retained-proof://d06045a8e0a23c3a8068b0557d9632780457b94fb198abe0412425e717f1438c',
+                          'sha256': '43b729ea51ae56c253f40789ed275f3507c4c0f899852e6e5e4a21a82bbba773'},
+ 'fourth_blob_reply_07': {'bytes': 744,
+                          'path': 'retained-proof://62fff70c295991bd47afa9b3500ebe6b08b79d65e2083fe731b03bb7ce3229fb',
+                          'sha256': '81964f73bbd15e908bfcac7463c4f1856d17b54c02aed000193479926e47a3dd'},
+ 'fourth_blob_reply_08': {'bytes': 1178,
+                          'path': 'retained-proof://1fdbca525f3b17ef3f30165753b6ce5059f67e8713f0fad4636e6d54db25f1a7',
+                          'sha256': '2e38064d591543cc09ebce8ea6d63f0fe75bd7c9fe392cf2af8b1636127934b3'},
+ 'fourth_blob_reply_09': {'bytes': 2195,
+                          'path': 'retained-proof://ed9f5df08e586e60ffaee5ad7a50b0625949e14f2f82661ab375a1c3036cb4b0',
+                          'sha256': '06bf475443c156860802372b103319fa33e3687ba26cd7fad845c6f0942771da'},
+ 'fourth_blob_reply_10': {'bytes': 4038,
+                          'path': 'retained-proof://acc435fb213d29e71c80ab5b57a684ca1639a74a1de5072ab17665942cae7d6b',
+                          'sha256': 'a441b511d356c0f27d4fcd6dcd6d6557970fa64b10ad5fd209336ec4d688d641'},
+ 'fourth_commit_reply': {'bytes': 1793,
+                         'path': 'retained-proof://28481e435577c8f3de62a61d24461c643c9b41d830e20dc93093fd3b3da00359',
+                         'sha256': 'd5fa487a8c389be87b46ecb07db5da8a9163535258e978a669248620322e739d'},
+ 'fourth_normalized_readback': {'bytes': 5175,
+                                'path': 'retained-proof://1e3242aa0b84868205e541bf2ca5c686c74ce10c62f6f070b29c4c66eb63e1a5',
+                                'sha256': '1a47651fdd6a57c3028179f5463f5fe239f44fb7f26c72e3941e34858603aac8'},
+ 'fourth_packet': {'bytes': 244633,
+                   'path': 'retained-proof://391142427252b2e871811af0cbf09ee3ba32ac85641d36d42cb8957f930f5e82',
+                   'sha256': '0197c141f69e52b76310e07b4c3a8ae1c6bf926bc1b57e3762a1d27ada3b696d'},
+ 'fourth_root_readback': {'bytes': 4481,
+                          'path': 'retained-proof://69b92ed05a16fa2513f23badef21b2910ade3eec1016c5d6311ef3eaaf498a1b',
+                          'sha256': '3f6184470cc61825b46c984df77c3c8f1d397aa8a65ccfd9e0076f7c348477e6'},
+ 'fourth_tree_reply_00': {'bytes': 37240,
+                          'path': 'retained-proof://19c28e4a80179a634f57397946ce5e8de0b170fd2725e9498990fa86ea93decd',
+                          'sha256': '7982bbc65912fa8d13706e8c2c203c66862873caade1c91ddf3b77b6cc2ad418'},
+ 'fourth_tree_reply_01': {'bytes': 3713,
+                          'path': 'retained-proof://ea3cd87c95bd2723d19af51063b67819ee62dc6e244b16d63f0cf34534be2791',
+                          'sha256': '5ee0c4f91267732def08ab0626d6c1ecdcf7c2ea6135bb5c5ec3a8ce6db45679'},
+ 'fourth_tree_reply_02': {'bytes': 30702,
+                          'path': 'retained-proof://97a2c25ece5ed2451d207a3f3832a9d496c66ee8384db6792dffee7c18d0f7c8',
+                          'sha256': '3d48a1529c7e94789d797755da39776009dab78a3396a3998666f73104c740fc'},
+ 'fourth_tree_reply_03': {'bytes': 2561,
+                          'path': 'retained-proof://03094bc08d83e8a6ee66d3c7a2a4cf76931082ac078e89cdb082a7681cb668ca',
+                          'sha256': '43a226cff3b6dbe5830eb36008288d27a8dc68bb2504548dd0d7d681b8568e09'},
+ 'fourth_tree_reply_04': {'bytes': 25808,
+                          'path': 'retained-proof://b675a7f8e9b5a0d410763f69a4d2390eb4c79b689100fa46a6754af52fb0eae5',
+                          'sha256': 'f432fa4dd5d5bccff650e7bbd3f6823b33876fc963dd28b6a966c058c8ba5c6c'},
+ 'fourth_tree_reply_05': {'bytes': 634,
+                          'path': 'retained-proof://ef4ec6d4ac8ab162a0f89d949c472ba370bb6993cebaea27187ae1818605c197',
+                          'sha256': '3df92a6006954779b235f0a72776b9f366a9a1aa7ab42e94db8e2a8413028aa9'},
+ 'fourth_tree_reply_06': {'bytes': 1276,
+                          'path': 'retained-proof://7509ca290eaf25159e4b5f8aca8e688947434b4456317f09a654075ede0a086b',
+                          'sha256': '2d01609f7c5914a132c98842b4c2fc7bd808ed5f9557d563119e17b832866494'},
+ 'fourth_tree_reply_07': {'bytes': 717,
+                          'path': 'retained-proof://7d7ee15ffab4ba041faea2aea668da546b897d11ed58fdb98250dcac1ca5e21f',
+                          'sha256': 'a11f971ebcefcfca4a81c197db14e205254c47d9f87e2432f3c912db230ba1ef'},
+ 'full_107': {'bytes': 96580,
+              'path': 'evidence://source/full-107-contracts.public.json',
+              'sha256': '04e116c16b3b57c07f7959958b01f2e7c8b6e4176cc6dc9a96e02b710e7f040b'},
+ 'geni_source_contract': {'bytes': 47709,
+                          'path': 'evidence://source/geni-source-audit-contract.public.json',
+                          'sha256': '1c9f71d5a9e96b81ad12affd89e34609f6a3d0b840afad13c6a2710beab6a9ed'},
+ 'geni_source_peer_review': {'bytes': 7901,
+                             'path': 'retained-proof://87e72e3b305b5930776738273a2e525e125c2108660e68c95e11ab6b076a94ca',
+                             'sha256': '875786b2375b88f2dcb3c04bef70e2fccd8133b7ecfdd1d18bfa82ee3f72b25b'},
+ 'geni_source_pure_review': {'bytes': 32685,
+                             'path': 'retained-proof://9d4fd42372c45d55afd26966c05e16d162fe9516399ee8f03720592be7b48ac4',
+                             'sha256': 'd621042dff996b734a8c7e1ab984b20425bab0f961b46e4a4860e7c2590f30c7'},
+ 'geni_source_reader_interface': {'bytes': 3276,
+                                  'path': 'retained-proof://b645ec053bdb5a1a1e76a75ba817d9fee36a3092d770f24a73fbb37c5a384d4a',
+                                  'sha256': '6db9e43a40c42820352de96c05c573e546b93460e2d0b499d9e904a21b55e33d'},
+ 'historical_4710_compiled_failure': {'bytes': 8147,
+                                      'path': 'retained-proof://8d97e4b4cc4e822f57c717d45290bbebf04563bc7df11f20176d17fd0666ef0b',
+                                      'sha256': 'f74873147a4955a133a88ddacc25b01e3eb5d6abdc602c3ac63e18924cd499f6'},
+ 'historical_4710_root_observation': {'bytes': 4953,
+                                      'path': 'retained-proof://9475deee44dcd74ae208e8a176d5aa94828669e73dcecea13185e91c073c4551',
+                                      'sha256': '4402fe00adea366903100de8d2eb462fa5e533395752a5dbb90c91c3af181287'},
+ 'historical_4710_source_failure': {'bytes': 7589,
+                                    'path': 'retained-proof://7e9b8e0f3378c051f63597b81caff526116985f0c6045332ffe8519a2449b17f',
+                                    'sha256': '0dcfd12f341c8e0201492085da710c161b5173e6192107288a58b832b6b46d32'},
+ 'historical_a91_failure': {'bytes': 2036,
+                            'path': 'retained-proof://e8d8b147bb5a1b99b93cc8f97cffe240e7c88be469d48802794f14909a55ee1b',
+                            'sha256': '6fe341733f194cf9fd90468f9613bbc638a6d148194e5eaf36503c7c4575949d'},
+ 'historical_b5_extraction': {'bytes': 3957,
+                              'path': 'retained-proof://a5789e1e25336aac85fb65a4efb5c13d39aca1747e45de0deca3912e3ea1ed2c',
+                              'sha256': 'c0c02ff41cf4bbfccec8b1c0edcafd9ec7cd833fbddc29035e82d9f87b5f2e4a'},
+ 'historical_ddr_local_failure': {'bytes': 1191,
+                                  'path': 'retained-proof://b2fa90b5846af1d02797c6d1add704f57c16c9035672a134ff5e89de1fd2fdde',
+                                  'sha256': '9e1c7f2e4604a106bc3da29c59e98cf3e83222cde2430076f866c9b97317ccc8'},
+ 'historical_ddr_local_stderr': {'bytes': 5480,
+                                 'path': 'retained-proof://c4a3694563850bad25552f4569b5ba93733259342240b7d2b22917ec38dfd4d4',
+                                 'sha256': '76db9d6e51e5bc747ecf8142f800c7073c897aad0065083efc40d9c6e995e3c7'},
+ 'historical_ddr_local_stdout': {'bytes': 0,
+                                 'path': 'retained-proof://6437e0946119218833809f4f7560048fc89d1fc0311004eb34cd9cca54b2b0b9',
+                                 'sha256': 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'},
+ 'historical_ddr_native_public': {'bytes': 17201,
+                                  'path': 'retained-proof://6dfad9f9e27c9833aea34700213544a5feb702ea81f6efbcb13b5d6497eaa730',
+                                  'sha256': '419fe8aec5f66a0167acea497b3511c30eb111da3f81df2cd9c5f68708189307'},
+ 'historical_ddr_qualification': {'bytes': 41198,
+                                  'path': 'retained-proof://f95cad3f9776663e3655b5e79a00b37db5eac64d596410b50804835327d570af',
+                                  'sha256': 'aacc8a4c439244e51e8b32a0cf8f4698c7cedbeab6aaafe02a6c9b91eaef9c28'},
+ 'historical_e42_PR_merge': {'bytes': 2637,
+                             'path': 'retained-proof://9a85ac16ee61ffce8334068f071a7ff401f0a952a4fb626f360729f0d0ed3cd3',
+                             'sha256': '7cb5bebaa59e35e28fafbde3d454f7bdaf559355333d705038bc109cb82333f7'},
+ 'historical_e42_root_observation': {'bytes': 8384,
+                                     'path': 'retained-proof://257efd182634a57960bd8e454bb6479654865328fead4427435c9f151d2a3f04',
+                                     'sha256': '98ca0d6d58db3bba03ede0817266f8c70e84f3f4f752a6079cdcd80ab4bd8e6c'},
+ 'historical_e42_source_only_preparation': {'bytes': 8580,
+                                            'path': 'retained-proof://ece5f170f4da8023664537ca9c13dc62d55652f6f5d7aff9e997275e3c3caf22',
+                                            'sha256': '177b07f69ca660d0ac7ea11250250e3bcc2180c60177ace6e78113450cd80962'},
+ 'historical_e42_workflow_failure_metadata': {'bytes': 27095,
+                                              'path': 'retained-proof://c65bf8535f7d0aa7f9cce0dee7baa0e5dd1e74d2d715f6d4986e302fd871a4dd',
+                                              'sha256': 'e03da6827509ac52f95fa4f1e00b7b4ce4ebb7787f79c8d1e593dd462623fa8c'},
+ 'historical_earlier_spss_qualification': {'bytes': 3020,
+                                           'path': 'retained-proof://7e2e3a877f43655e7a34c4e269d6b3530a73818f1c89de24f96dea26e72ed386',
+                                           'sha256': '41dd65062d5be0e68c8f7d0ad2cdb404fc6419a2920e5ed7f1f61a755b5922f9'},
+ 'historical_failed_ci': {'bytes': 1957,
+                          'path': 'retained-proof://ff41ebabadbc2c0bb6cac3e31fbd03c0aab543aab00c8bf6025de3de3618fbce',
+                          'sha256': '0ef5b40ffe9fb06aba132c310bc8dabf94aabcb708a9f3388c8f7b0484878a6a'},
+ 'historical_include_correction': {'bytes': 1696,
+                                   'path': 'retained-proof://dd6b41a9bc3d5fc1da32b2f4753b871e1d18071593099dc88d8685f5c94d9fe4',
+                                   'sha256': 'c83c59a3d4076007c26a02b39e21707bbe42fe9a994fe8e327541cc4a9fd4468'},
+ 'historical_include_review': {'bytes': 3570,
+                               'path': 'retained-proof://0874a162dd4c1ee5117dab6cde31369efb40bd66a5842efc6478a5e11609f171',
+                               'sha256': '2ded18bc3ddb68f4960c707fbbd0b345af3887ff3f81173f5d32606f2c22a44c'},
+ 'historical_prior_spss_qualification': {'bytes': 22044,
+                                         'path': 'retained-proof://5af9327fe149f00dbb2054407795bfcfb1b417ea7215a81ee877929aa64206a7',
+                                         'sha256': '0a52a79598ff4f57e1697b7e8327d5229b3b2491e8947f7142c1e2bbc97d5206'},
+ 'historical_rpm_local_actual': {'bytes': 766,
+                                 'path': 'retained-proof://8a7423fa1a21654a5b3a0af514f020b808187bc4c6cc9d3f0d521ccd76480034',
+                                 'sha256': '8fd999774fba3548d99a2a58326ce4f697f21e61ed0b8ebf8f142444e9a38273'},
+ 'historical_rpm_local_actual_stderr': {'bytes': 5342,
+                                        'path': 'retained-proof://071e52a1370183cef629274bfa51e463e895c33b3abc5b965f451897db012daf',
+                                        'sha256': 'e266c0df006bda9b3035bd24b2b9216d258589e2e3efa85b5dcaa6f12db5de64'},
+ 'historical_rpm_local_initial': {'bytes': 576,
+                                  'path': 'retained-proof://1de7f969d340cd79f9f0c64a186aa0d90377872e0bc3fc08a2fad9c6640c41d6',
+                                  'sha256': '865984016a4bf612a93203e0728d9ec1a619a88e478b61a32ef68146c7176739'},
+ 'historical_rpm_local_initial_stderr': {'bytes': 226,
+                                         'path': 'retained-proof://4b86b04f8582aec7c8684650554a98a521ede852287159c7610bf7e94f93a9b4',
+                                         'sha256': '614fb81526194c64cd5944903501ef47b541523f31a36c0ad3f5c6b8c202a1b6'},
+ 'historical_rpm_native': {'bytes': 20263,
+                           'path': 'retained-proof://e554831319a1f96e1bafa030da54c15a2583ceddb8a1e1b910b7f84a45b412d0',
+                           'sha256': '18c4cfb5554c3286531f6aa3a5694e92ff36896471fac63e7002c02b3de0a366'},
+ 'historical_rpm_qualification': {'bytes': 31589,
+                                  'path': 'retained-proof://7091d356604715f4f98de40bf2a5fcf2f0506080348e51fea0fc2efb82a942cb',
+                                  'sha256': '4272efca70e43f31de1ed0ef9db20e3478d8157b64fbb44f84fa853dabf576d6'},
+ 'historical_runner_source_review': {'bytes': 5578,
+                                     'path': 'retained-proof://7afe46a46ce164bd77d163ccf603803fbe4f7f77d62c41df4c3e2633b7ca12ff',
+                                     'sha256': 'a3583e1cce51b346ec8c952f8d3bc95613dd1f2d004da6b9bbb7854b6faf4d73'},
+ 'historical_runner_template_review': {'bytes': 5366,
+                                       'path': 'retained-proof://ec9ded121c6bc67212ded8945ad9f6c8f75879612f68f017bda642488a3dcaf9',
+                                       'sha256': '65079790c5026729b3010c862ef98c883ca3221876e5688df63605efe85ad2db'},
+ 'independent_source_chain': {'bytes': 1860672,
+                              'path': 'evidence://source/independent-source-chain.public.json',
+                              'sha256': '30edd7488965669937ddef78f0ef05c52e9e477d24c416a5e57bc9ffed6d1602'},
+ 'initial_base_trees': {'bytes': 255117,
+                        'path': 'retained-proof://f039b7f673cd6642c361fa43e804e1e427fc11b7c6c4fcdcb26725a1279e9726',
+                        'sha256': '185a97aa1ab774831e2cc2ed0ebc45a49bd5915334d9fde7870487822979a375'},
+ 'initial_packet': {'bytes': 799473,
+                    'path': 'retained-proof://1136ad52f8957fa3313bf7f86b5fdfa4eb79f8d1fa70cc981703422c36b0bc41',
+                    'sha256': 'b7e04af1d9fa4656f180177ed9c39751ead09c6ad0a9f1ce9732e6ec0a97bff4'},
+ 'initial_readback': {'bytes': 14925,
+                      'path': 'retained-proof://04ec2f04ef0e1e7b20c6d0962f12f4c0951e27f8a237a607dde33705f048431f',
+                      'sha256': '9b85515adf49833d7325b5685dd18235f19d3ad56bfc7ede6da2a4d9406eea6e'},
+ 'integration_contracts': {'bytes': 70464,
+                           'path': 'retained-proof://0502a6fdfe532574d28ddcde305068449cecf5f0a3e4d6ef396d0fadea98e716',
+                           'sha256': 'e03c0417de2c67839e4d2416f55c73ed948a2a3526a2aaee00ea9c94b3690925'},
+ 'observed_current_PR_merge': {'bytes': 2637,
+                               'path': 'retained-proof://28a768920a0156851115078053dd8fe2dd17175b49d404b136d5c75b7d038696',
+                               'sha256': '51dc0f9989cea2f4aaaf9d4566b99d4d69453c1ef2a9fba61d05394f68907289'},
+ 'preparation_9e5_qualifier_body': {'bytes': 45015,
+                                    'path': 'retained-proof://238aebe10de51ae6e12cdf40083a010725846d0e478dae85dc0c270108fe128c',
+                                    'sha256': '7c2515759b60bea1274865b433060cf3c27c4d7acf106ea08a8e485c06748c44'},
+ 'preparation_9e5_qualifier_preparer': {'bytes': 17339,
+                                        'path': 'retained-proof://a12b33dc4b107da70f40c0d413f973a1d0b18d30b7a6925328975515e447ed88',
+                                        'sha256': 'e6e568040ece67d6d2fbda36063fa23a48abe104f7647d7143b858af0429c037'},
+ 'preparation_inventory_exclusive_failure': {'bytes': 571,
+                                             'path': 'retained-proof://deef3adb989a54f26d32b1c4b467b6cde2c68c9b3e89d7e42fd1a925fa55f538',
+                                             'sha256': 'f662ed17f8c2a90aff3da71440812343dddd51364d63b2f115cf7e3d37d7c448'},
+ 'preparation_inventory_missing_parent_failure': {'bytes': 653,
+                                                  'path': 'retained-proof://6cb9fa38ab2a28b1da695a9a6ec029f7f6904913195cc0fd06f5d3be9199811f',
+                                                  'sha256': 'a3f3d42f01548cf5433bd1e949d7af26d76bd1b0d9f8a6dc37446475e72c4305'},
+ 'preparation_legacy_normalization_failure': {'bytes': 294,
+                                              'path': 'retained-proof://0bfcb964f14ad20bbd8d3378a0f1b881320ebf09aa0776b74bb8f6cbeb8df2f5',
+                                              'sha256': '4a30a1bbe767f3da35ab10c4a14ebfcab0e1c1822742110c90f7a2ee988776fd'},
+ 'preparation_legacy_pin_resolution_failure': {'bytes': 1883,
+                                               'path': 'retained-proof://2f25f3999eed433883575aadaa336d7cf6948ade96afeb285fec5260ce3d6bec',
+                                               'sha256': '89ef2ba9d1882615f8e3794045d1d5ce8d44c5c33ba7d9931cecf8540a547491'},
+ 'preparation_source_document_merge_failed_helper': {'bytes': 14576,
+                                                     'path': 'retained-proof://e84e4cacb0c7d87cbcb5bd7f88006e7d2c9a4346a4a226bc248f8e27d21e2720',
+                                                     'sha256': 'a6f67e8e041866ae6c79c74e91ceb804f879e8e748d4e0974cb09ccad6f68764'},
+ 'preparation_source_document_merge_failure': {'bytes': 1485,
+                                               'path': 'retained-proof://aca2ad461f278963b4bc70b0466be60de65d5de3bcec31aa59d894cc5356b40c',
+                                               'sha256': '4f4bdf318ea21b665dd290dc4c205e105c3085a65321205f5f947632e90dd0ec'},
+ 'preparation_source_reader_parser_001': {'bytes': 1968,
+                                          'path': 'retained-proof://72a17d59a72a0b2b58c217850be0f7f753fe9c0bb4128dfa115c1f56feebd9d2',
+                                          'sha256': '75330b78beeda3a171cc7e1628245edade3474c2d909339a4543a1a7989e5392'},
+ 'preparation_source_reader_parser_002': {'bytes': 1937,
+                                          'path': 'retained-proof://11f4a478de5d7095e6510e4d351f1c53a89299c0399b7de3f6fba67d54399759',
+                                          'sha256': 'd792fcd5f391b1648741549fbce4ef3ffb1647478c6740c196ca1e9df9e01206'},
+ 'preparation_source_reader_verbose_assumption_failure': {'bytes': 1018,
+                                                          'path': 'retained-proof://ecca6d663ccd3513895435a6c71454ed2bd0a3b7e24de984f9ff8d2784870592',
+                                                          'sha256': '1fe30185476219544d52195478651a97dfe87deaeb53395d9faeaaf15a001eb4'},
+ 'preparation_tree_mode_failure': {'bytes': 744,
+                                   'path': 'retained-proof://4f0d7240a609ce1baef5f013fec11f9ef802a174527ce51e3db8ba8b3283b264',
+                                   'sha256': '45e5830b0b44e4f586683e6e50512bf8910767e028c178438efa9bb901b963c1'},
+ 'retained_104': {'bytes': 69524,
+                  'path': 'evidence://source/retained-104-contracts.public.json',
+                  'sha256': '2420779f94ded1adff2751ae2424764557a421b25f10784db9c69df4a4e5286a'},
+ 'source_document_merge_expectation': {'bytes': 1213,
+                                       'path': 'retained-proof://d8f34ac40f87e7c4b23cf323e70ec6f639cbd65fc8a12c05bd65dc183b3b9518',
+                                       'sha256': '596181639e662915226edb1139c785c5d18d9b4a6c69989892cfa2fb7940e748'},
+ 'source_document_merge_original_objects': {'bytes': 80025,
+                                            'path': 'retained-proof://d599535f1ea81ee4053e93aff994580112b97e7336b4653f98e62d19e062737b',
+                                            'sha256': 'c6e5f206114130e0c355459e9de1f66ee4e8105200f224b0bd0dfddb91e0472e'},
+ 'source_document_merge_readback': {'bytes': 57418,
+                                    'path': 'retained-proof://9713111f2979852aec2d8ea986d51083918d23a86c690670e1668048ad646cbe',
+                                    'sha256': '871ab2f243843d8884b58add75aa99a69956633505dee94e7e92994fff21d48c'},
+ 'source_document_merge_tree_proof': {'bytes': 1454,
+                                      'path': 'retained-proof://4093c878b1f040fc50eaf307b4127c25c322ca5a78a997b2fb6d9b677ddf2bfd',
+                                      'sha256': 'e7be2feb357cca05776dfcd0a9e0648d019549224e4881e3859f5a12563ecb96'},
+ 'source_inventory': {'bytes': 52546,
+                      'path': 'evidence://source/current-source-inventory.public.json',
+                      'sha256': '66e1a8c38f36b0fb166b50b6b616f8c587d4acb5d5b50bcc52b8b10154fad040'},
+ 'source_reader_preparation': {'bytes': 14349,
+                               'path': 'retained-proof://b0bfb864952328888df2ee10244e794837eeee38432368833443afa3e0c24819',
+                               'sha256': '1378d197ad74dc967e173c6b81ddb379244e72dc0c50f0ab49c9ed3e965be14e'},
+ 'third_base_trees': {'bytes': 123049,
+                      'path': 'retained-proof://6f880c62c6de34c75be886683795e99e2722239688a213ffc2c2772ad8e0650c',
+                      'sha256': 'b2c0901e1f3f1cfef4fefd52eb843a2f5b3d9788153365b020ab8956692c74be'},
+ 'third_blob_reply_00': {'bytes': 72601,
+                         'path': 'retained-proof://16baecb329cdc4344e1252a84b48586860b565729dc01da6d8d7d11a5d8748ba',
+                         'sha256': '72c803f4031b4d814aed5b566b8d63476933802bb37f7d4a6e1c34bdce7e8b99'},
+ 'third_blob_reply_01': {'bytes': 20870,
+                         'path': 'retained-proof://570203e5a0b99f486cbe3236bbef2332c19a03fd91c3b39d45794d1f1fcbeb99',
+                         'sha256': '3fdfe3e8dc3afc74c490e05578a96ceeaa201e9823d5181540aa9c148ddeae8c'},
+ 'third_blob_reply_02': {'bytes': 14644,
+                         'path': 'retained-proof://dc6b75e708ae51ae52395db6ed140108e2ca0a699ffa764b86c0dae02297d437',
+                         'sha256': '679bce51d0a1e3598a143a3221f6498fc54e1e94a3b17fca8c624690fba02edc'},
+ 'third_blob_reply_03': {'bytes': 43860,
+                         'path': 'retained-proof://6556583a315069a4678e1946d520f1973927d81a0f450cb760251776d3642df4',
+                         'sha256': '701ee720affbe4ef26cb2bd9bedbb8108695dca8e0802653ca67e995b69a472d'},
+ 'third_blob_reply_04': {'bytes': 14561,
+                         'path': 'retained-proof://5409e9e688690da2035fab83d51d8080cea073bcd4bc926d9f0013cee45b5cea',
+                         'sha256': '0136ea735376f75506d103cf4866db07e19f2482a0f82804837c20da7564f193'},
+ 'third_blob_reply_05': {'bytes': 6415,
+                         'path': 'retained-proof://d693354d13c2545715c109293965150cbe81432e47540c345ea14b02cf1abb63',
+                         'sha256': '31d90fe13cafeaaa89597f8cb3af404441236c3e97bc84b0481347a8ca1c752a'},
+ 'third_blob_reply_06': {'bytes': 9162,
+                         'path': 'retained-proof://b29425d996b3210e938a840a2420450b2f49c8c61ff0ec3fd68e0c9531518187',
+                         'sha256': '72026155ab1e2bd1c045edfd945b91f4abaa7e7e311532b695acac8a0abdb812'},
+ 'third_blob_reply_07': {'bytes': 50706,
+                         'path': 'retained-proof://42d03f5547eb2650f823eb46c2f1089ea082e58e8fb25a77649c4c5306bf3a58',
+                         'sha256': 'a791579e71d377706168cd3df9c0e5bc8f98a89d67aa90584a977cc4c5f24236'},
+ 'third_blob_reply_08': {'bytes': 6606,
+                         'path': 'retained-proof://7a4216db2422d7be9cfa206dfba8c4a0f81d02aed42c7efdcfb8d59f15d09775',
+                         'sha256': 'e42b0149016e50d47e3e5c862d2dfa488a5e47f6458772b23fcf791e5b6bdaf6'},
+ 'third_blob_reply_09': {'bytes': 26028,
+                         'path': 'retained-proof://8999041d8ec78c854e4bb926dc26ef412692599265a2dec5f0f7dd11beda92dc',
+                         'sha256': '2f79ef787ed3de5472e9038c73035ebfef04191c1c042782c2611beb754da2b7'},
+ 'third_blob_reply_10': {'bytes': 4406,
+                         'path': 'retained-proof://272f1bf30747229ac71203a5a4feb81060cb4b76532db2ca9e736c8622680be2',
+                         'sha256': '027e8daa4609d30b0a9d39d4aaf7a2fbe8bb96a88a8e55c4240959c01e8d8bf3'},
+ 'third_blob_reply_11': {'bytes': 8542,
+                         'path': 'retained-proof://8f891d7706ce9bc9982bb684e2d828176e25bb9c31fef4621457e49800650cbd',
+                         'sha256': '365bd62e453a9c33aeb254799b55ba19b932ea0f795fe518134efcb80b0e050f'},
+ 'third_blob_reply_12': {'bytes': 1438,
+                         'path': 'retained-proof://5681cd3a24d1dca4d0d23bc96020a4fc24d51bf6cb8ec92b96d024b24d63d5a5',
+                         'sha256': '1f359ebf0ec948493864c041c478088c9c152805bc3db65547908c02d8b66f47'},
+ 'third_blob_reply_13': {'bytes': 2119,
+                         'path': 'retained-proof://d3b05839da5d50716096cfcd3628f962e590eea2f93105287c0bb1d4b2735fa1',
+                         'sha256': '0c68b37adefa75112cae2b4ff93dc6a25463a5f3e24fbe98db3eac329ae29e68'},
+ 'third_blob_reply_14': {'bytes': 5853,
+                         'path': 'retained-proof://7125bd0c95824af92bc04f30bd3f6ed52df44172f050d2819b6f91f4e684c311',
+                         'sha256': '5eb62b79d2ca4aa8e7863a341a245064a7acac32a1bf55a0cde463b88f38364b'},
+ 'third_blob_reply_15': {'bytes': 573,
+                         'path': 'retained-proof://11a91d81909e500480225c6eee475b29b2edb4cf59eae753842ee382a7c9562e',
+                         'sha256': 'c5972e72a364dbc10797829554786cfda3d9a8119d7db8ce6300e9e610468a44'},
+ 'third_blob_reply_16': {'bytes': 2588,
+                         'path': 'retained-proof://f8c24ad8317a4798f335884bea2b7b98bf4fb892727868b088be1d3af0324d8c',
+                         'sha256': '5250faa3a22f0f3aeb9351a8f1307f965c02dd68edb484a23ed8e2ee22d700bb'},
+ 'third_blob_reply_17': {'bytes': 4321,
+                         'path': 'retained-proof://55be513b97f6201293f32ba885ba6b485f198a50b637d0433bf606ae7bc93083',
+                         'sha256': 'c4c57c3573320474dddd2cf358a6d1c76bd43cf17007ae048d4e62be382eb82d'},
+ 'third_blob_reply_18': {'bytes': 4152,
+                         'path': 'retained-proof://6ffd679a89eda26c8a7556dd6ef4eeff8cf2300d3d1d7ebb640215180d0d2d63',
+                         'sha256': '50ac73879f9f8e42a6fcb0b0971acccd3089226f57a92c73e246a5b70c4c16d9'},
+ 'third_blob_reply_19': {'bytes': 5674,
+                         'path': 'retained-proof://d51478d118e9c4bf47eb94a31dd2ad99b61fde2d86cf76fc40506f15a7c3c20f',
+                         'sha256': 'ff5ee5779221452e789a8350145f8fb2dec2eb9b8e2b48f5ac16f0b93b39c66e'},
+ 'third_blob_reply_20': {'bytes': 1937,
+                         'path': 'retained-proof://0d8f39136f8b83cd00a578baf29246a3bb7988a61f49e2c862a3a22c5b4acdfb',
+                         'sha256': '68ea7eafcc8903267328f3bb254e252f91c5e327a56e0b013a281822d1eaeb4e'},
+ 'third_blob_reply_21': {'bytes': 8177,
+                         'path': 'retained-proof://4f62cf94b8ed938f0aa993498129e411e532a68ec136ae05640e22bc79d6d6b1',
+                         'sha256': '7cb4534544bbd4ef8a77c1bf0e6158f4ea078d4cc8dc01bc95b68e61a298ce04'},
+ 'third_commit_reply': {'bytes': 1862,
+                        'path': 'retained-proof://82027bbe50fca6c5516f324e2a2703fa162dcc59b105f4aa20dc7e51c0f583f5',
+                        'sha256': 'e42e8ffcdf4f092a7d79befc2f859eb85f4de7379de5acf8f7c458dead1c1a0a'},
+ 'third_normalized_readback': {'bytes': 9637,
+                               'path': 'retained-proof://d67d3442b321037c2aacea14dc153adab21f0e0417ffef1db141f47fa1d5f458',
+                               'sha256': 'ea10743aa310914055f0b14408ca5b3472cafa8b2c411952e14aab45a41e2582'},
+ 'third_packet': {'bytes': 311795,
+                  'path': 'retained-proof://0196c8bd380ce6826cf640fd1d5adca526f310d707c8cedb0614bdede0648379',
+                  'sha256': '3f3c87a3e05027845d734bc4230c11aee60ada5dc828f362b161af84918e0822'},
+ 'third_root_readback': {'bytes': 8288,
+                         'path': 'retained-proof://a0f389698b9365a2d713a6aa9810836cf514fee67e7a8b7dfa0c91775f64a7f1',
+                         'sha256': '90faf75488bcd9e112aff672cfca87f856b437bfd4d063b3f305e6a71a409db9'},
+ 'third_tree_reply_00': {'bytes': 28234,
+                         'path': 'retained-proof://9a9a905a259153c7cc6f02f251c9f5501b11cec36c54372865ce7bb7ef7f7d52',
+                         'sha256': 'aa3f2b8d9f56766b005d65fc620e6655ff0c93cba41f4d69d57ae2bae38e31bb'},
+ 'third_tree_reply_01': {'bytes': 2637,
+                         'path': 'retained-proof://36fdaa67a4350fc08eee2624ef6522af63ef39424b0894fd21c7186e89e3ea78',
+                         'sha256': '7abfa207b78947135a816a6996b0c1e66f02a7f674c05de0c37c67797ee287c4'},
+ 'third_tree_reply_02': {'bytes': 23541,
+                         'path': 'retained-proof://c9acdff7ded92f58915674416ba09d1d1ed55cb35446a281ab17750240b284f1',
+                         'sha256': 'fff56d47e2c59c46e73427eae75962109ac49ae1499d1be1938622d17001149e'},
+ 'third_tree_reply_03': {'bytes': 1457,
+                         'path': 'retained-proof://417ba0e7cdf107bae654ff7c05a4f943ae5607a4ed2d21609348c5e2da40496c',
+                         'sha256': '5c87943fbd030bb2438783bd230c9caf27b8f490250eacc10a96223fb7566a7b'},
+ 'third_tree_reply_04': {'bytes': 1553,
+                         'path': 'retained-proof://4a16b56a75e42507caa368f34c39481ab03ce8521dcb198239c61f31bce8fa12',
+                         'sha256': 'b6993a56931ce77fa19a9338079934950fb4c058571632c2189617b9b3668543'},
+ 'third_tree_reply_05': {'bytes': 2529,
+                         'path': 'retained-proof://04df4f7ba0e672b5f0618e4b4fa4b7f7d302476416fffcfd7f30241c072010c0',
+                         'sha256': '5546ca525a942ff116ad5c2eb552919e67a91aafe49e3de6296956cbe0d3d44d'},
+ 'third_tree_reply_06': {'bytes': 19680,
+                         'path': 'retained-proof://9a5741bf999154865918af911300f777792947155c4edf67de7674538cd0cf41',
+                         'sha256': '51f032edc7521e60d69b257b0c87f5e9b40332eb2f93915c149d8858e3c168e3'},
+ 'third_tree_reply_07': {'bytes': 20611,
+                         'path': 'retained-proof://27ce6be14e56a32e8e04e41cf9abf94a81ccd0739010e5825a0e936ad5ad261c',
+                         'sha256': '376803eda95aac2b013b56f40a96e45cfeafedc4694f4210cf3c08e486b9cc91'},
+ 'tree_math': {'bytes': 14924,
+               'path': 'evidence://reviewed-source/independent-git-source-chain.py.txt',
+               'sha256': '4cbaaa06c262adda40e83b86cd0c64f81f3fc75e98d2f31602aad10d5250f2f1'},
+ 'ufs_observer': {'bytes': 23815,
+                  'path': 'evidence://reviewed-source/observers/ufs.py.txt',
+                  'sha256': '356dcedd4ea1eae96263db67e549bd9506f8a28c8a0d9393199bafc23ce5be80'}}
+
+DYNAMIC_ASSETS = ['github_metadata',
+ 'pr_identity',
+ 'artifact_api',
+ 'artifact_download',
+ 'raw_observer_binding',
+ 'board_receipt',
+ 'a77_receipt',
+ 'ufs_receipt']
+
+PUBLICATION_EXPECTATIONS = [('initial',
+  {'added': 29,
+   'files': 36,
+   'head': 'b5bf00086640cbee8ef0c13375ba281cd73b8369',
+   'modified': 7,
+   'parent': 'a91cf67d09380c7f7fa8868f7068dba6b3956daa',
+   'parent_tree': '74ea0a472278a5909e54c846cf05d0547f950051',
+   'tree': 'e4045ad189531c6f74250fd07f8c3e508be9508c'}),
+ ('correction',
+  {'added': 16,
+   'files': 19,
+   'head': '4710b80bde965798dfe5f0c9684c5b5880b84d04',
+   'modified': 3,
+   'parent': 'b5bf00086640cbee8ef0c13375ba281cd73b8369',
+   'parent_tree': 'e4045ad189531c6f74250fd07f8c3e508be9508c',
+   'tree': 'afc2fe21894f38803e6280f49465a0daba7413c6'})]
+
+THIRD_PUBLICATION_EXPECTATION = {'added': 17,
+ 'files': 22,
+ 'head': 'e42c0a5934d36a1dc31de4ba30275672a919665a',
+ 'modified': 5,
+ 'parent': '4710b80bde965798dfe5f0c9684c5b5880b84d04',
+ 'parent_tree': 'afc2fe21894f38803e6280f49465a0daba7413c6',
+ 'tree': '291960cd4497ea54607c7b5d6187f5905172155b'}
+
+FOURTH_PUBLICATION_EXPECTATION = {'added': 10,
+ 'files': 11,
+ 'head': '9e5dddcd0e0ba228821e733a7cf853bbd57dfd7b',
+ 'modified': 1,
+ 'parent': 'e42c0a5934d36a1dc31de4ba30275672a919665a',
+ 'parent_tree': '291960cd4497ea54607c7b5d6187f5905172155b',
+ 'tree': 'af84a55f62ee750cec17f5c5bfe3ca7c524108ab'}
+
+SOURCE_DOCUMENT_MERGE_EXPECTATION = {'changed_trees': {'': '37bf696bc687422eac2bd967abda7d80af8e02b9',
+                   'tb371fc': 'e263838557f64ebe90507c6b3402ebf54f4eac70',
+                   'tb371fc/evidence': 'fb49060a56a5687833b9354806141fdf3f9fccb0',
+                   'tb371fc/evidence/capture-storage-retirement-20261125': '3fb3c08a1aacbcddc648216a47f549f3368996d5'},
+ 'files': [{'bytes': 4217,
+            'git_blob_sha1': '0429749ce605a9fe476b69ac2bb9dcc39fbb7bf5',
+            'path': 'tb371fc/evidence/capture-storage-retirement-20261125/README.md',
+            'sha256': '553a9d9834e606d7ed31e1ad40b3e8d99bf81ec6a52752c8d941bfe11ed0d8b7'},
+           {'bytes': 7201,
+            'git_blob_sha1': 'e395ff7d7b0336e0232d9f3a9d7811e3fccd9295',
+            'path': 'tb371fc/evidence/capture-storage-retirement-20261125/manifest.json',
+            'sha256': 'cab902ce5c4149f6a126aa90983c13c4cfb5ad7f3c80bffcd67f4ef13c45590e'}],
+ 'head': '70b387fb064cdf2099e85dd89213a5ea7e2c398f',
+ 'parent_tree': 'af84a55f62ee750cec17f5c5bfe3ca7c524108ab',
+ 'parents': ['9e5dddcd0e0ba228821e733a7cf853bbd57dfd7b', 'a49ea65e503e08ec3230eb694c4baa9d3c7a27cb'],
+ 'prior_pr_merge_head': 'ab65fc671bff5fa34eb1d12366e8af88f68ca92f',
+ 'tree': '37bf696bc687422eac2bd967abda7d80af8e02b9'}
+
+EXPECTED_RUNNERS = {'tb371fc/scripts/android_boot_inputs.py': {'bytes': 36402,
+                                            'git_blob_sha1': '4291d8d096f0cafddb58c201030ccf210c50250c',
+                                            'sha256': '08affe8ef5c40c7350be9e4c0f0482c4c5e594a3dcff7e3a88cf7887ea1eb5d8'},
+ 'tb371fc/scripts/boot_android.py': {'bytes': 40941,
+                                     'git_blob_sha1': '1614a9c6032457fecf370559ed66c45823f16a3f',
+                                     'sha256': '61093aab7176842ef14f592e90456c0c0b91206d594447474d0a02cbf3fb10d1'},
+ 'tb371fc/scripts/boot_android_from_ready.py': {'bytes': 31692,
+                                                'git_blob_sha1': 'e2b4d59c0460286ba1f948bfe9afca73f51f05fc',
+                                                'sha256': 'b2ef676a99c7064b9d31035d1b3e1e471d613500cba6373a0992b4c4f4e4154d'},
+ 'tb371fc/scripts/boot_qmp.py': {'bytes': 2822,
+                                 'git_blob_sha1': '54e845229266a212d0a192276e5d0228c3cf716f',
+                                 'sha256': 'b0d95776470110fd682371d393ffda4e2996fb295b1d3c81b41c46980be7a54c'},
+ 'tb371fc/scripts/legacy_printk.py': {'bytes': 4275,
+                                      'git_blob_sha1': '055df2101bd15268ab55189795fdaa1b78c473ff',
+                                      'sha256': '6b7d18188ef8987c32135fef179f271dcf7284766a233626d09269696cada27d'}}
+
+REQUIRED_CURRENT_SOURCE_PINS = {'.github/workflows/tb371fc.yml': {'bytes': 12348,
+                                   'sha256': '6f0545c1893f7b0914c4ab5b90e6f43cb90cfa8abc708a2edb12b51fae2e3be0'},
+ 'hw/arm/Kconfig': {'bytes': 15508, 'sha256': '6cbe01a64aeea18706c4d255276819a6addf66bf6d4636381b75fbf12a6984af'},
+ 'hw/arm/lenovo-tb371fc.c': {'bytes': 105293,
+                             'sha256': '9119e88b7fcb6cdd103f4fad8ef11a4cc9ba7f8314e989a12747e7dd05017bda'},
+ 'hw/char/qcom-geni-uart.c': {'bytes': 50414,
+                              'sha256': 'c1fe1af46ec3383f9a080d1ba10f60073dfd59696fccfa363a9567551ebb3e10'},
+ 'hw/char/qcom-sm8250-geni-hs-data.inc': {'bytes': 909,
+                                          'sha256': '4cc9babbdc75fd6006f39ce32a92b6161d1bcf2739de843005e02af19179b9a6'},
+ 'hw/core/clock-vmstate.c': {'bytes': 1540,
+                             'sha256': 'f6a71ff89c1073b94409a5a6102b315a2de9c04f0481595e2435d3ce08b2fe70'},
+ 'hw/core/clock.c': {'bytes': 5685, 'sha256': '3d877ef4c1824508ded8e4e5f2b0f56dd621661b5368bdfc311fa5db23dd891e'},
+ 'hw/misc/Kconfig': {'bytes': 4239, 'sha256': '451eb84dce84cb9dde20e65220a39314b5acb8e36885efd172d878549b10fa5d'},
+ 'hw/misc/meson.build': {'bytes': 10935,
+                         'sha256': 'ca26e093985792bb0ece8c598cc83a384c455b8b693e950d83678327946f121a'},
+ 'hw/misc/qcom-sm8250-ddr-stats-offset-data.inc': {'bytes': 346,
+                                                   'sha256': 'e6ec892f78dac7e3f87a06618a3cc69e9692fa819c2ea60027bdb5e526fccd4f'},
+ 'hw/misc/qcom-sm8250-ddr-stats-offset.c': {'bytes': 9691,
+                                            'sha256': '4237cdc3a63263785c14a091f4eb92d14242ba79d114820c8ac3bb443ecaaced'},
+ 'hw/misc/qcom-sm8250-dp-pll.c': {'bytes': 31439,
+                                  'sha256': '9a876a06787f1b847bf732801283a03963dd6a482fdcc5c57c0b77af8af860b2'},
+ 'hw/misc/qcom-sm8250-dsi-pll.c': {'bytes': 39558,
+                                   'sha256': '75e6b773eb965077a99ecc23d5a250aa68e82ba95006ffd9872e6b0ad6e51b8b'},
+ 'hw/misc/qcom-sm8250-gcc.c': {'bytes': 29024,
+                               'sha256': 'f9f0dc291e6a183298a0114082df1f5ea65a369dc4f1685dfc330996121da95a'},
+ 'hw/misc/qcom-sm8250-llcc.c': {'bytes': 26501,
+                                'sha256': '1312474d66959cc70188a76769765014779b999602b8885f3c9658927d563f04'},
+ 'hw/misc/qcom-sm8250-rpm-stats-offset-data.inc': {'bytes': 346,
+                                                   'sha256': 'dc38191138f43d396b94971b15b9b6617924131669b602cb1bccf185f75d22e5'},
+ 'hw/misc/qcom-sm8250-rpm-stats-offset.c': {'bytes': 9377,
+                                            'sha256': '5144319fb0856c107512edbdfe86d48adef1237846da7c312394ff8ccae5db09'},
+ 'hw/misc/qcom-sm8250-spss-irq-mask.c': {'bytes': 9658,
+                                         'sha256': '9b8e0b32fa58b703726932f587db175e9ca511edacb46c7b3e86b667e83edc0f'},
+ 'include/hw/char/qcom-geni-uart.h': {'bytes': 2135,
+                                      'sha256': 'f2efb7233b29ae2ece90de924b7d64e1f33a9f1fd04ed3da37298e0f6efd83bf'},
+ 'include/hw/core/clock.h': {'bytes': 11374,
+                             'sha256': '8e43731157aaf5f019c3c5c16cf355076b1fab10d49a47aba9217f257ff99ac4'},
+ 'include/hw/misc/qcom-sm8250-ddr-stats-offset.h': {'bytes': 364,
+                                                    'sha256': '3f37eb47beb17f2f85af9b378a2400b8dc6fe93ff69d9f8cba9104bfad1c40dc'},
+ 'include/hw/misc/qcom-sm8250-rpm-stats-offset.h': {'bytes': 364,
+                                                    'sha256': '946df3bee216839b46001d4ea3065bda6563413a0c753a7b221fffea3b77ad0b'},
+ 'tb371fc/docs/ddr-stats-offset-sm8250-registers.json': {'bytes': 5304,
+                                                         'sha256': '682074c1299455fa482b870a4b2f841ea1c1c74aee9ed6dac131cc9dcff33b7d'},
+ 'tb371fc/docs/geni-hs-sm8250-private-producer-facts.json': {'bytes': 3246,
+                                                             'sha256': '1df0eb4cfd41cf8a42918407dba8e391a985164ecc9a1e513ca6b471c0bdfc80'},
+ 'tb371fc/docs/geni-hs-sm8250-reference-policy.json': {'bytes': 1923,
+                                                       'sha256': '6d1ed6d87381f2d6e7cbc8c11804e150ad6c3be9b5e8db84654dcb9accb0d85f'},
+ 'tb371fc/docs/geni-hs-sm8250-registers.json': {'bytes': 25446,
+                                                'sha256': 'e143022b5d3a678e3e93be4911af36c8bc81c3aebd2cbc5b58437137bda0a040'},
+ 'tb371fc/docs/rpm-stats-offset-sm8250-registers.json': {'bytes': 4870,
+                                                         'sha256': 'df0c4dad7572a918f579e98174663496893039d27315db6427726de9641a6adb'},
+ 'tb371fc/evidence/ddr-stats-offset-20261125-6a5/test-ci-contract.json': {'bytes': 4628,
+                                                                          'sha256': '0f0363f4d50339667bb53d4d9b8c4e456ce337b581b7b2f719f57037fa386901'},
+ 'tb371fc/evidence/geni-hs-sm8250-20261125-6a5/test-design.json': {'bytes': 17635,
+                                                                   'sha256': 'ad576fc69d0d0ebbca250700ee1250a9a160f29af67a8f3c8bcd31c7db0f0b94'},
+ 'tb371fc/evidence/geni-hs-sm8250-20261125-6a5/test-independent-static-review.json': {'bytes': 4975,
+                                                                                      'sha256': '3963a123737bfdac2b917b7594af5001a784858323bf0b15237e41cd64713a80'},
+ 'tb371fc/evidence/rpm-stats-offset-20261125-6a5/test-ci-contract.json': {'bytes': 3391,
+                                                                          'sha256': '2d137f7cd52b52c281414fd2508a04fde7c5ae567a123f6c3a2c7a31128e032a'},
+ 'tb371fc/scripts/android_boot_inputs.py': {'bytes': 36402,
+                                            'sha256': '08affe8ef5c40c7350be9e4c0f0482c4c5e594a3dcff7e3a88cf7887ea1eb5d8'},
+ 'tb371fc/scripts/boot_android.py': {'bytes': 40941,
+                                     'sha256': '61093aab7176842ef14f592e90456c0c0b91206d594447474d0a02cbf3fb10d1'},
+ 'tb371fc/scripts/boot_android_from_ready.py': {'bytes': 31692,
+                                                'sha256': 'b2ef676a99c7064b9d31035d1b3e1e471d613500cba6373a0992b4c4f4e4154d'},
+ 'tb371fc/scripts/boot_qmp.py': {'bytes': 2822,
+                                 'sha256': 'b0d95776470110fd682371d393ffda4e2996fb295b1d3c81b41c46980be7a54c'},
+ 'tb371fc/scripts/ci_device_tests.py': {'bytes': 93011,
+                                        'sha256': 'affce15c868fbf2dd11d9f80d78736a601dfc634528f340f59b0ac6d1b9d62e9'},
+ 'tb371fc/scripts/gen_ddr_stats_offset.py': {'bytes': 21540,
+                                             'sha256': '6d2c03467242065e21cc34247a4e944928d924a5f96021aa44252b075ae3dcf2'},
+ 'tb371fc/scripts/gen_geni_hs_sm8250.py': {'bytes': 46416,
+                                           'sha256': 'df246eeb7ed45b136cd795583bc90919fdf738234efcc16f63a301161ddca41c'},
+ 'tb371fc/scripts/gen_rpm_stats_offset.py': {'bytes': 19192,
+                                             'sha256': '47f77997d2708da12235cde157b25228ef75b93bb689a92f1338769dcc99537c'},
+ 'tb371fc/scripts/legacy_printk.py': {'bytes': 4275,
+                                      'sha256': '6b7d18188ef8987c32135fef179f271dcf7284766a233626d09269696cada27d'},
+ 'tb371fc/scripts/source_download.py': {'bytes': 13848,
+                                        'sha256': '0e20fd7c67e28c6f355be520ecfc7773482abdaeb1e0bed57dce361b2b16f733'},
+ 'tb371fc/scripts/test_ci_device_tests.py': {'bytes': 63932,
+                                             'sha256': 'e1c1d5aed26224853f839922ddd791bf342eb2be0354691fdbf602a803e91b4e'},
+ 'tb371fc/scripts/test_geni_hs_sm8250_generation.py': {'bytes': 13852,
+                                                       'sha256': '89bd210ab501315a389a2d77c50569ec843a14a302a05f9f8b404fb3b822afe1'},
+ 'tb371fc/scripts/test_source_download.py': {'bytes': 41983,
+                                             'sha256': '080acdc6867e3e132bc3ec7faeb851f41189a8563821bf2c09e61c8f217e39bb'},
+ 'tb371fc/scripts/verify_ddr_stats_offset_generation.py': {'bytes': 5139,
+                                                           'sha256': '4529d753567592ce1dfb957c052f551e397069e266e2a6f11a70bc0572bb8ae6'},
+ 'tb371fc/scripts/verify_geni_hs_sm8250_generation.py': {'bytes': 14241,
+                                                         'sha256': 'e21afa9a748d11b2d68b7e201af49172dc59b0c2a76bf90d86895e7ec33e3348'},
+ 'tb371fc/scripts/verify_llcc_generation.py': {'bytes': 5649,
+                                               'sha256': '66f347d1f85d2540f592edbdc747c84d18c036889f449e44c1c2a5b714a96d7d'},
+ 'tb371fc/scripts/verify_rpm_stats_offset_generation.py': {'bytes': 4965,
+                                                           'sha256': '2673e6cc5457db0a1e281013c14d30941e7251bf7f40f2a4bf2265f40831630c'},
+ 'tb371fc/sources/llcc-sm8250/BSD-3-Clause': {'bytes': 1845,
+                                              'sha256': '7a83b1aeb460458db9a4bd521d7f237c45b1650f6e60ea5ffc71e49472454de3'},
+ 'tb371fc/sources/llcc-sm8250/README.md': {'bytes': 1953,
+                                           'sha256': '187eb070fc1f7c0f48dd46c6093acbcd41f6f7d227db05bea50ad8d51c13964a'},
+ 'tb371fc/sources/llcc-sm8250/linux-adc218676eef25575469234709c2d87185ca223a/sm8250.dtsi': {'bytes': 176883,
+                                                                                            'sha256': '8735b5d8bb61d6a3a579e5b088ff2a719132266cef57c91c319ec19e12770499'},
+ 'tb371fc/tests/geni_hs_test_transport.py': {'bytes': 20061,
+                                             'sha256': '319e8049aa82a4e2be7b956e3e7dc2de9b48477dfdd5cc5442805980cefeed11'},
+ 'tb371fc/tests/test_acquire_block_ranges.py': {'bytes': 17537,
+                                                'sha256': 'fd92eb60cda7444041f19a41065f500541d2415b46077e2e7459f1d9552a6a65'},
+ 'tb371fc/tests/test_android_boot_inputs.py': {'bytes': 29519,
+                                               'sha256': 'b839f44d72c79e28c976a22c972a21ebdbb9d7b14724839369aaa60580b356b9'},
+ 'tb371fc/tests/test_assemble_lun.py': {'bytes': 15528,
+                                        'sha256': 'eab2e35714279fcbbbaf388895b17df444899ba27fab45cd93c9c7ff83126568'},
+ 'tb371fc/tests/test_boot_android.py': {'bytes': 52167,
+                                        'sha256': 'cda111c0b37cbf2e6f9844fc3483ce0f75fda9ed78a98bcd21efeddb4fe89a75'},
+ 'tb371fc/tests/test_camera_gdsc.py': {'bytes': 74782,
+                                       'sha256': 'e187b3de97b5ae2d53376bd41d1f82099053c69bce9034af572830f8e1c1e619'},
+ 'tb371fc/tests/test_ddr_stats_offset_sm8250.py': {'bytes': 41779,
+                                                   'sha256': 'ec83a76070316b57fdf0590de152cb07dcb0b66464f1d5a30fc7a083527d0bc4'},
+ 'tb371fc/tests/test_dp_pll_7nm.py': {'bytes': 61809,
+                                      'sha256': '1a04d27e40f81360a23c53dfa075f3baf80573912ba2e68d8aef859d0e482f14'},
+ 'tb371fc/tests/test_dsi_pll_7nm.py': {'bytes': 70160,
+                                       'sha256': '73c81336b97229657a19958068490102118def404a2afa4d97743ee26ffac36e'},
+ 'tb371fc/tests/test_geni_hs_sm8250.py': {'bytes': 70882,
+                                          'sha256': '01802bf20b9e9e5a68c32aa32bdb6bde48d733694f8d9559d4dc7db161a259b5'},
+ 'tb371fc/tests/test_llcc_sm8250.py': {'bytes': 48079,
+                                       'sha256': '4472734a675049a4a0f18e4699617ceecde6b293e6b8ede7f4a0825f403d48e3'},
+ 'tb371fc/tests/test_rpm_stats_offset_sm8250.py': {'bytes': 39266,
+                                                   'sha256': '8e878e30ad978d7affb389573e4df4cc3bb3009843ac74b5d363ebd723eee39f'},
+ 'tb371fc/tests/test_spss_irq_mask_sm8250.py': {'bytes': 33981,
+                                                'sha256': 'c0a74b8ad19b621ebb748bcb388e5f02248c212912c1f19d9de0cbb8d546e180'}}
+
+GENI_SUMMARY = {'actual_archive_evidence_verified': True,
+ 'android_boot_claimed': False,
+ 'checks': 55,
+ 'completed_migrations': 2,
+ 'first_cont_delta': 0,
+ 'first_device_mmio_delta': 0,
+ 'first_getters': 49,
+ 'first_memory_command_delta': 0,
+ 'gic_or_guest_interrupt_handling_verified': False,
+ 'guard_bytes': 48,
+ 'hs_payload_bytes': 16608,
+ 'legacy_payload_bytes': 16587,
+ 'native_probe_claimed': False,
+ 'normal_process_exits': 28,
+ 'one_bit_rejections': 25,
+ 'ordinary_and_special_groups': 23,
+ 'original_streams': 2,
+ 'prewarm_device_mmio': 0,
+ 'process_cleanup_records': 58,
+ 'profile_rejections': 2,
+ 'rejected_process_exits': 30,
+ 'repeated_getters': 49,
+ 'structural_rejections': 3,
+ 'total_stream_files': 30}
+
+SOURCE_SUMMARY = {'android_boot_claimed': False,
+ 'clock_bindings': 3,
+ 'complete_input_identity_negatives': 19,
+ 'constants': 12,
+ 'generated_output_bytes': 26355,
+ 'generated_output_negatives': 2,
+ 'generated_outputs': 2,
+ 'generator_executed_by_auditor': False,
+ 'native_probe_claimed': False,
+ 'negative_mutant_bytes': 1700682,
+ 'negative_mutants': 51,
+ 'parser_contract_negatives': 19,
+ 'primary_fact_sections': 6,
+ 'private_binary_review_publicly_reproduced': False,
+ 'public_input_bytes': 810000,
+ 'public_inputs': 19,
+ 'qemu_executed': False,
+ 'reference_identity_negatives': 2,
+ 'reference_inputs': 2,
+ 'reference_originals_reconstructed_from_full_mutants': 2,
+ 'reference_scope_negatives': 9,
+ 'separate_reference_original_members': 0,
+ 'unit_tests': 49,
+ 'windows': 2}
+
+NEW_GATE_NAMES = ['geni-hs-source-generation-unit', 'geni-hs-source-generation', 'geni-hs-sm8250-reference']
+
+OLD_104_SHA = '2420779f94ded1adff2751ae2424764557a421b25f10784db9c69df4a4e5286a'
+
+RPM_GENERATED_CONTRACT = {'mapped_bytes': 4,
+ 'offset_value': 983112,
+ 'physical_base': 205455364,
+ 'register_count': 1,
+ 'source_input_count': 4,
+ 'window_count': 1}
+
+DDR_GENERATED_CONTRACT = {'mapped_bytes': 4,
+ 'offset_value': 983224,
+ 'physical_base': 205455388,
+ 'register_count': 1,
+ 'source_input_count': 4,
+ 'window_count': 1}
+
+HISTORICAL_ARCHIVE_DIGESTS = ['1e6c37d205a9e130e4f197c068c93c756488b6b579ab06eadd429190b9b0bd6f',
+ 'a4e3339f726ff2a20d24e58004ed179aaedb4c111b8f8561650d4b2d96e53ab7',
+ '63df14f571c2a05b12ff3dea0c5fa83c648e30967aff7ec76e42e381442d83b4',
+ '787fd4a236053e557499f527d330d5b733ddef976c34ebe5d5646c3531c00c74',
+ '51af9156f507570a214875865bc7133fe52b0f2e0dc030246f2e1d62933a02f8',
+ '0ad6d0919c494c7c30a5d4de91322ad2550615740fcb615e81fe6fd85ad8c358',
+ '0cb92a64eb5465332b9b1a83f3684250a1f98ed4a5eea530ef260ea69d7a0f63']
+
+def validate_retained_model_reports(reports, audit_by_name, QEMU_BYTES):
+    aggregate = reports['integration']
+    assert aggregate['schema'] == 'tb371fc-ddr-stats-offset-integration-independent-zip-audit-v1'
+    assert aggregate['components']['count'] == 102 and aggregate['linux']['count'] == 5
+    assert aggregate['ci_harness_unittests'] == 40
+    assert aggregate['qemu']['bytes'] == QEMU_BYTES and aggregate['qemu']['member'] == QEMU_MEMBER
+    source_gen = {}
+    for key, count in [('generation', 10), ('dsi_generation', 13), ('dp_generation', 17), ('llcc_generation', 8),
+                       ('spss_generation', 2), ('rpm_stats_offset_generation', 4), ('ddr_stats_offset_generation', 4)]:
+        row = aggregate[key]
+        assert row['inputs_verified_from_actual_bytes'] == count and row['outputs_verified_from_actual_bytes'] == 2
+        source_gen[key] = {k: v for k, v in row.items() if k in (
+            'inputs_verified_from_actual_bytes', 'outputs_verified_from_actual_bytes',
+            'committed_output_pins', 'source_revision', 'geometry_source_revision')}
+    for key, contract in [('rpm_stats_offset_generation', RPM_GENERATED_CONTRACT),
+                          ('ddr_stats_offset_generation', DDR_GENERATED_CONTRACT)]:
+        row = aggregate[key]
+        exact(row['generated_contract'], contract, key + '.generated_contract')
+        assert row['all_primary_git_blob_identities_verified'] is True
+        assert all(row[field] is False for field in ['statistics_payload_implemented', 'native_reset_value_known',
+                                                   'captured_runtime_word_claimed', 'aop_execution_claimed'])
+    assert aggregate['ddr_stats_offset_generation']['reference_window_mapped_only_when_enabled'] is True
+    assert type(aggregate['ddr_stats_offset_generation']['default_off_mapped_bytes']) is int
+    assert aggregate['ddr_stats_offset_generation']['default_off_mapped_bytes'] == 0
+    audit_by_name['integration']['scope'] = {'description': aggregate['scope'], 'component_gates': 102,
+        'linux_gates': 5, 'ci_harness_unittests_from_actual_push_artifact': 40,
+        'actual_archive_and_elf_bytes_hashed': True, 'source_generation': source_gen,
+        'videocc': {k: v for k, v in aggregate['videocc'].items() if not isinstance(v, list)},
+        'supplementary_wire_audits': aggregate['requires_supplementary_wire_audits']}
+
+
+    # DDR-specific checks are new; the six retained model sections below remain the
+    # public RPM predecessor's semantic validators, with a strict current RPM tree.
+    ddr = reports['ddr_stats_offset']
+    assert ddr['schema'] == 'tb371fc-ddr-stats-offset-independent-artifact-audit-v1'
+    assert ddr['expected_tree'] == TREE and ddr['component']['checks'] == 20
+    expected_ddr_summary = {
+        'checks': 20, 'ordinary_and_special_groups': 10, 'original_streams': 2,
+        'completed_migrations': 2, 'profile_rejections': 2, 'one_bit_rejections': 6,
+        'total_stream_files': 8, 'payload_bytes': 24, 'first_getters': 17, 'repeated_getters': 17,
+        'prewarm_device_mmio': 0, 'prewarm_ram_commands': 2, 'first_memory_command_delta': 0,
+        'first_device_mmio_delta': 0, 'first_cont_delta': 0, 'device_state_dirtied': False,
+        'ram_witness_dirtied': True, 'source_generation_checks': 2, 'source_generation_inputs': 4,
+        'enabled_active_mapped_bytes': 4, 'default_off_active_mapped_bytes': 0,
+        'default_off_device_callback_count': 0, 'default_off_generic_rejection_count': 12,
+        'disabled_target_device_callback_count': 0, 'disabled_target_generic_rejection_count': 3,
+        'active_mapping_queries_verified': 7, 'target_pure_getters_total_per_direction': 187,
+        'actual_archive_evidence_verified': True, 'native_probe_claimed': False, 'android_boot_claimed': False,
+    }
+    exact(ddr['summary'], expected_ddr_summary, 'DDR full independent summary')
+    assert [len(ddr[k]) for k in ['original_streams', 'completed_migrations', 'profile_rejections', 'one_bit_rejections']] == [2, 2, 2, 6]
+    assert len(ddr['ordinary_and_special']) == 10
+    assert ddr['source_recovery']['new_derivation'] is True
+    assert ddr['source_recovery']['original_source_byte_identity_claimed'] is False
+    assert ddr['source_recovery']['lost_actual_receipts_recreated'] is False
+    assert ddr['source_recovery']['original_lost_auditor_sha256'] == 'e083e95d5087a71416afecf87c921255433306bb6c7b2c0ba10ae586f528a024'
+    assert ddr['source_recovery']['predecessor_commit'] == 'd103750ca2a191559daeb9eff4341b8c80013dc6'
+    assert ddr['source_recovery']['predecessor_auditor_sha256'] == '7eb65a626ce253f3f8469948ddb0669d6bb5256f186f0ef9ffbb3c76b55b10f0'
+    assert [row['payload_hex'] for row in ddr['original_streams']] == [
+        '0000000144534f31000000000c3f001c00000004000f00b8',
+        '0000000044534f31000000000c3f001c0000000400000000']
+    assert [row['name'] for row in ddr['original_streams']] == ['ddr-stats-offset-enabled.migration', 'ddr-stats-offset-disabled.migration']
+    for index, row in enumerate(ddr['original_streams']):
+        assert row['section']['payload_bytes'] == 24 and row['section']['version'] == 1
+        assert row['trace']['actual_device_mmio_commands'] == 0 and row['trace']['actual_ram_commands'] == 2
+        assert row['trace']['ram_witness'] == 0x44534f00 + index
+        assert row['trace']['source_stop_and_postmigrate_verified'] is True
+    for index, row in enumerate(ddr['completed_migrations']):
+        enabled = index == 0
+        assert row['name'] == ['migration_enabled', 'migration_disabled'][index]
+        expected_counts = {'first_pure_getters': 17, 'repeated_pure_getters': 17,
+            'actual_qom_getters_total': 187, 'qtest_commands': 9, 'prewarm_actual_device_mmio': 0,
+            'prewarm_actual_memory_commands': 2, 'prewarm_actual_ram_commands': 2,
+            'first_device_mmio_delta': 0, 'first_memory_command_delta': 0, 'first_cont_delta': 0,
+            'repeated_device_mmio_delta': 0, 'repeated_memory_command_delta': 0, 'repeated_cont_delta': 0,
+            'payload_bytes_verified': 24, 'actual_device_rejections': 1 if enabled else 0,
+            'actual_hole_rejections': 0 if enabled else 3, 'actual_ram_witness': 0x44534f00 + index}
+        assert all(type(row[key]) is int and row[key] == value for key, value in expected_counts.items())
+        expected_flags = {'device_state_mutable': False, 'destination_device_state_dirtied': False,
+            'destination_ram_witness_dirtied': True, 'ram_witness_checked_after_both_observations': True,
+            'ram_witness_checked_before_cont': True, 'source_snapshot_restored_before_cont': True,
+            'post_restore_layout_and_read_semantics_checked': True, 'post_restore_reset_retains_profile': True,
+            'shared_timestamp_used': False, 'first_flatview_after_both_qom_snapshots_and_restored_ram_witness': True,
+            'first_flatview_before_cont': True, 'second_flatview_after_final_post_reset_device_read': True}
+        assert all(row[key] is value for key, value in expected_flags.items())
+        assert row['source_status'] == row['target_status'] == 'completed'
+        assert row['ram_witness_before'] == ((0x44534f00 + index) ^ 0xffffffff)
+        for key, filename in [('active_mapping_after_restore', 'mtree-after-restore.txt'),
+                               ('active_mapping_after_reset', 'mtree-after-reset.txt')]:
+            exact(row[key], {'active_leaf_count': int(enabled), 'active_mapped_bytes': 4 if enabled else 0,
+                             'mtree_file': filename, 'configured_profile_enabled': enabled}, 'DDR.' + key)
+    off, = [row for row in ddr['ordinary_and_special'] if row['name'] == 'default_off_keeps_unknown_offset_and_rejects_all_access']
+    assert off['actual_qom_snapshots'] == 22 and off['actual_pure_getters'] == 374
+    assert off['actual_rejections'] == 10 and off['actual_qtest_commands'] == 11
+    assert off['actual_device_rejections'] == 0 and off['actual_hole_rejections'] == 12
+    assert off['default_off_mapped_bytes'] == 0 and off['no_global_profile_override'] is True
+    assert off['unknown_zero_not_treated_as_valid_read'] is True
+    for key, filename in [('active_mapping_before_reset', 'mtree-before-reset.txt'), ('active_mapping_after_reset', 'mtree-after-reset.txt')]:
+        exact(off[key], {'active_leaf_count': 0, 'active_mapped_bytes': 0, 'mtree_file': filename,
+                         'configured_profile_enabled': False}, 'DDR.off.' + key)
+    assert [row['name'] for row in ddr['profile_rejections']] == ['on_to_off', 'off_to_on']
+    assert [row['name'] for row in ddr['one_bit_rejections']] == ['profile', 'identity', 'physical_base', 'window_bytes', 'enabled_offset', 'disabled_offset']
+    for row in ddr['profile_rejections'] + ddr['one_bit_rejections']:
+        assert row['destination_exit'] == 1
+        assert all(type(row[key]) is int and row[key] == 0 for key in ['device_mmio_commands', 'memory_commands', 'cont_commands'])
+        assert row['query_migrate_failed_response_required'] is False
+        assert row['actual_stderr_diagnostic'].startswith('qcom-sm8250-ddr-stats-offset: migrated ')
+    for index, row in enumerate(ddr['one_bit_rejections']):
+        original = ddr['original_streams'][1 if index == 5 else 0]
+        comparison = row['whole_stream_comparison']
+        expected_byte, expected_xor = [3, 7, 15, 19, 23, 23][index], [2, 1, 4, 1, 1, 1][index]
+        assert row['original'] == original['name'] and row['bytes'] == original['bytes']
+        assert comparison['changed_bits'] == 1
+        assert comparison['all_other_stream_bytes_equal'] is True and comparison['original_stream_sha256_unchanged'] is True
+        assert comparison['byte_offset'] == original['section']['payload_offset'] + expected_byte
+        source_payload = bytes.fromhex(original['payload_hex'])
+        changed_payload = bytearray(source_payload)
+        changed_payload[expected_byte] ^= expected_xor
+        assert comparison['before'] == source_payload[expected_byte] and comparison['after'] == changed_payload[expected_byte]
+        assert row['payload_hex'] == changed_payload.hex()
+    audit_by_name['ddr_stats_offset']['scope'] = {
+        'independent_summary': ddr['summary'], 'checks': 20, 'unmodified_streams': 2,
+        'stream_files': 8, 'completed_migrations': 2, 'profile_rejections': 2, 'single_bit_rejections': 6,
+        'bytes_per_original_payload': 24, 'first_target_qom_getters_each': 17,
+        'repeated_target_qom_getters_each': 17, 'target_getters_each': 187,
+        'first_target_actual_mmio_delta_each': 0, 'first_target_actual_cont_count_each': 0,
+        'physical_base': 0x0c3f001c, 'mapped_bytes_when_enabled': 4, 'default_off_mapped_bytes': 0,
+        'offset_value': 0x000f00b8, 'statistics_payload_implemented': False,
+        'native_reset_value_known': False, 'captured_runtime_word_claimed': False,
+        'aop_execution_claimed': False, 'rpm_offset_behavior_modeled': False,
+        'destination_ram_witness_dirtied': True, 'destination_device_state_dirtied': False,
+        'new_source_recovery_audit': True}
+
+
+    rpm = reports['rpm_stats_offset']
+    assert rpm['expected_tree'] == TREE
+    assert rpm['component']['checks'] == 20
+    expected_rpm_summary = {'checks': 20, 'ordinary_and_special_groups': 10, 'original_streams': 2, 'completed_migrations': 2, 'profile_rejections': 2, 'one_bit_rejections': 6, 'total_stream_files': 8, 'payload_bytes': 24, 'first_getters': 17, 'repeated_getters': 17, 'prewarm_device_mmio': 0, 'prewarm_ram_commands': 2, 'first_memory_command_delta': 0, 'first_device_mmio_delta': 0, 'first_cont_delta': 0, 'device_state_dirtied': False, 'ram_witness_dirtied': True, 'source_generation_checks': 2, 'source_generation_inputs': 4, 'actual_archive_evidence_verified': True, 'native_probe_claimed': False, 'android_boot_claimed': False}
+    assert rpm['summary'] == expected_rpm_summary
+    assert all(type(rpm['summary'][key]) is type(value) for key, value in expected_rpm_summary.items())
+    assert [len(rpm[k]) for k in ['original_streams', 'completed_migrations', 'profile_rejections', 'one_bit_rejections']] == [2, 2, 2, 6]
+    assert len(rpm['ordinary_and_special']) == 10
+    for row in rpm['completed_migrations']:
+        expected_counts = {'first_pure_getters': 17, 'repeated_pure_getters': 17,
+            'prewarm_actual_device_mmio': 0, 'prewarm_actual_memory_commands': 2,
+            'prewarm_actual_ram_commands': 2, 'first_device_mmio_delta': 0,
+            'first_memory_command_delta': 0, 'first_cont_delta': 0,
+            'repeated_device_mmio_delta': 0, 'repeated_memory_command_delta': 0,
+            'repeated_cont_delta': 0, 'payload_bytes_verified': 24}
+        assert all(type(row[key]) is int and row[key] == value for key, value in expected_counts.items())
+        expected_flags = {'device_state_mutable': False, 'destination_device_state_dirtied': False,
+            'destination_ram_witness_dirtied': True, 'ram_witness_checked_after_both_observations': True,
+            'ram_witness_checked_before_cont': True, 'source_snapshot_restored_before_cont': True,
+            'post_restore_layout_and_read_semantics_checked': True,
+            'post_restore_reset_retains_profile': True, 'shared_timestamp_used': False}
+        assert all(row[key] is value for key, value in expected_flags.items())
+        assert row['source_status'] == row['target_status'] == 'completed'
+    assert rpm['schema'] == 'tb371fc-rpm-stats-offset-independent-artifact-audit-v1'
+    audit_by_name['rpm_stats_offset']['scope'] = {
+        'independent_summary': rpm['summary'],
+        'checks': 20, 'ordinary_and_special_cases': 10, 'unmodified_streams': 2,
+        'stream_files': 8, 'completed_migrations': 2, 'profile_rejections': 2,
+        'single_bit_rejections': 6, 'bytes_per_original_payload': 24,
+        'first_target_qom_getters_each': 17, 'repeated_target_qom_getters_each': 17,
+        'first_target_actual_mmio_delta_each': 0, 'first_target_actual_cont_count_each': 0,
+        'destination_ram_witness_dirtied': True, 'destination_device_state_dirtied': False,
+        'physical_base': 0x0c3f0004, 'mapped_bytes': 4, 'offset_value': 0x000f0048,
+        'statistics_payload_implemented': False, 'native_reset_value_known': False,
+        'captured_runtime_word_claimed': False, 'aop_execution_claimed': False,
+        'ready_or_ddr_offset_modeled': False}
+
+    spss = reports['spss']
+    assert spss['component']['checks'] == 21
+    assert [len(spss[k]) for k in ['original_streams', 'completed_migrations', 'profile_rejections', 'one_bit_rejections']] == [4, 3, 2, 6]
+    assert len(spss['ordinary_and_special']) == 10
+    for row in spss['completed_migrations']:
+        assert [row[k] for k in ['first_pure_getters', 'actual_qom_getters_total', 'prewarm_actual_device_mmio', 'first_device_mmio_delta', 'first_cont_delta']] == [18, 144, 1, 0, 0]
+        assert row['source_snapshot_restored_before_cont'] is True
+    audit_by_name['spss']['scope'] = {'checks': 21, 'ordinary_and_special_cases': 10,
+        'unmodified_streams': 4, 'stream_files': 10, 'completed_migrations': 3,
+        'profile_rejections': 2, 'single_bit_rejections': 6,
+        'bytes_per_original_payload': 25, 'first_target_qom_getters_each': 18,
+        'first_target_actual_mmio_delta_each': 0, 'first_target_actual_cont_count_each': 0,
+        'target_qom_getters_total_each': 144, 'prewarm_actual_device_mmio_each': 1,
+        'programmed_zero_distinct_from_unknown': True,
+        'readback_supported': False, 'ready_firmware_pas_effects_modeled': False,
+        'buffered_five_byte_write_commits_valid_four_byte_prefix': True,
+        'buffered_write_whole_transfer_atomicity_claimed': False}
+    llcc = reports['llcc']
+    assert llcc['component']['check_count'] == 32
+    assert [len(llcc[k]) for k in ['sources', 'completed', 'profile_rejections', 'corruption_rejections']] == [5, 4, 2, 4]
+    assert llcc['source_generation']['source_table_bytes'] == 640
+    audit_by_name['llcc']['scope'] = {'checks': 32, 'unmodified_streams': 5, 'stream_files': 9,
+        'completed_migrations': 4, 'profile_rejections': 2, 'single_bit_rejections': 4,
+        'bytes_per_original_payload': 783, 'first_target_qom_getters_each': 313,
+        'first_target_actual_mmio_delta_each': 0, 'first_target_actual_cont_count_each': 0,
+        'source_generation': llcc['source_generation']}
+    audit_by_name['dp']['scope'] = reports['dp']['summary']
+    audit_by_name['dsi']['scope'] = reports['dsi']['summary']
+    audit_by_name['dispcc']['scope'] = {k: v for k, v in reports['dispcc']['dispcc'].items() if k not in ('sources', 'rejections')}
+
+def need(value, label):
+    if not value:
+        raise ValueError(label)
+
+
+def exact(value, expected, label):
+    need(type(value) is type(expected), label + ': type')
+    if isinstance(expected, dict):
+        need(set(value) == set(expected), label + ': keys')
+        for key in expected:
+            exact(value[key], expected[key], label + '.' + str(key))
+    elif isinstance(expected, list):
+        need(len(value) == len(expected), label + ': length')
+        for index, (a, b) in enumerate(zip(value, expected)):
+            exact(a, b, label + '.' + str(index))
+    else:
+        need(value == expected, label + ': value')
+
+
+def unique_pairs(pairs):
+    out = {}
+    for key, value in pairs:
+        need(key not in out, 'duplicate JSON key: ' + key)
+        out[key] = value
+    return out
+
+
+def document(raw):
+    def nonfinite(value):
+        raise ValueError('nonfinite JSON number: ' + value)
+    return json.loads(raw, object_pairs_hook=unique_pairs, parse_constant=nonfinite)
+
+
+def read(path):
+    return document(Path(path).read_bytes())
+
+
+def pin(path, digest=None):
+    path = Path(path)
+    need(path.is_absolute() and path.is_file() and not path.is_symlink(), 'regular absolute file: ' + str(path))
+    hasher = hashlib.sha256()
+    count = 0
+    with path.open('rb') as stream:
+        while True:
+            block = stream.read(1024 * 1024)
+            if not block:
+                break
+            count += len(block)
+            hasher.update(block)
+    actual = {'path': str(path), 'bytes': count, 'sha256': hasher.hexdigest()}
+    if digest is not None:
+        exact(actual['sha256'], digest, 'complete file digest: ' + str(path))
+    return actual
+
+
+def spec_shape(spec):
+    need(type(spec) is dict and set(spec) == {'path', 'bytes', 'sha256'}, 'complete file pin fields')
+    need(type(spec['path']) is str and Path(spec['path']).is_absolute(), 'absolute pin path')
+    need(type(spec['bytes']) is int and spec['bytes'] >= 0, 'pin length')
+    need(type(spec['sha256']) is str and re.fullmatch('[0-9a-f]{64}', spec['sha256']), 'full lowercase SHA256')
+
+
+def checked_spec(spec):
+    spec_shape(spec)
+    actual = pin(spec['path'], spec['sha256'])
+    exact(actual, spec, 'actual complete file pin')
+    return actual
+
+
+def safe_relative(value):
+    need(type(value) is str, 'relative path type')
+    path = PurePosixPath(value)
+    need(value and not path.is_absolute() and '..' not in path.parts and str(path) == value and '\x00' not in value,
+         'normalized bounded relative path')
+    return path
+
+
+def validate_binding_shape(binding):
+    exact(set(binding), {'schema', 'source_head', 'source_tree', 'source_parents', 'ci_base_head',
+                        'pr_merge_head', 'artifact', 'audits', 'assets'}, 'qualification binding fields')
+    for key, value in {'schema': 'tb371fc-geni-70b387fb-qualification-binding-v1', 'source_head': HEAD,
+                       'source_tree': TREE, 'source_parents': SOURCE_PARENTS, 'ci_base_head': CI_BASE,
+                       'pr_merge_head': MERGE}.items():
+        exact(binding[key], value, 'binding.' + key)
+    artifact = binding['artifact']
+    exact(set(artifact), {'id', 'run_id', 'name', 'archive', 'qemu'}, 'artifact binding fields')
+    need(type(artifact['id']) is int and artifact['id'] > 0 and artifact['id'] not in (14991304675, 14998056908, 15003310246, 15005831019, 15005675790, 15012477808, 15012428691),
+         'new artifact id, not a historical artifact')
+    exact(artifact['run_id'], PUSH_RUN, 'new artifact push run')
+    exact(artifact['name'], 'tb371fc-public-gates-' + HEAD, 'new artifact name')
+    spec_shape(artifact['archive'])
+    need(0 < artifact['archive']['bytes'] <= 1024 ** 3, 'bounded nonempty complete archive')
+    need(artifact['archive']['sha256'] not in HISTORICAL_ARCHIVE_DIGESTS, 'historical archive cannot qualify this source')
+    qemu = artifact['qemu']
+    exact(set(qemu), {'member', 'bytes', 'sha256'}, 'QEMU binding fields')
+    exact(qemu['member'], QEMU_MEMBER, 'QEMU archive member')
+    need(type(qemu['bytes']) is int and 20 <= qemu['bytes'] <= 1024 ** 3, 'bounded complete QEMU length')
+    need(type(qemu['sha256']) is str and re.fullmatch('[0-9a-f]{64}', qemu['sha256']), 'QEMU full SHA256')
+    rows = binding['audits']
+    need(type(rows) is list and len(rows) == 10, 'exactly ten current audits')
+    exact([row['name'] for row in rows], AUDIT_NAMES, 'ordered distinct audit names')
+    for row in rows:
+        exact(set(row), {'name', 'auditor', 'receipt'}, 'audit binding fields')
+        exact(row['auditor'], FIXED_AUDITORS[row['name']], 'reviewed current auditor')
+        spec_shape(row['receipt'])
+    exact(set(binding['assets']), set(FIXED_ASSETS) | set(DYNAMIC_ASSETS), 'all source/history/actual assets')
+    for name, spec in binding['assets'].items():
+        spec_shape(spec)
+        if name in FIXED_ASSETS:
+            exact(spec, FIXED_ASSETS[name], 'fixed reviewed asset ' + name)
+    return artifact
+
+
+def validate_current_sources(assets):
+    helper_path = assets['tree_math']['path']
+    module = types.ModuleType('independent_current_git_tree_math')
+    # Only this pinned, reviewed pure arithmetic helper is evaluated. No model,
+    # generator, verifier, CI harness, auditor or native runner is imported.
+    exec(compile(Path(helper_path).read_bytes(), helper_path, 'exec'), module.__dict__)
+    entries = []
+    for label, expected in PUBLICATION_EXPECTATIONS:
+        entries.append((read(assets[label + '_packet']['path']), read(assets[label + '_base_trees']['path']),
+                        read(assets[label + '_readback']['path']), expected))
+    publications, objects = module.source_chain(entries)
+    retained = read(assets['independent_source_chain']['path'])
+    exact(publications, retained['publications'][:2], 'retained first two complete publication proofs')
+    extra = read(assets['current_extra_trees']['path'])
+    provenance = read(assets['current_extra_tree_provenance']['path'])
+    need(len(extra) == len(provenance) == 8, 'eight connected complete extra directory trees')
+    for row in provenance:
+        actual = checked_spec(row['source'])
+        raw = read(actual['path'])
+        if 'result' in raw:
+            raw = document(raw['result']['structuredContent']['content'])
+        exact(raw, extra[row['tree_path']], 'complete retained/fresh API tree object')
+        exact(raw['sha'], row['git_tree_sha1'], 'extra tree identity')
+    objects = module.extend_current_objects(objects, extra, THIRD_PUBLICATION_EXPECTATION['parent_tree'])
+    # The existing format is normalized from all31 pinned full raw replies;
+    # the source preparation proof retains their byte and Git object checks.
+    third = module.publication(read(assets['third_packet']['path']), objects,
+                               read(assets['third_normalized_readback']['path']), THIRD_PUBLICATION_EXPECTATION)
+    publications.append(third)
+    objects = third['tree_objects']
+    fourth = module.publication(read(assets['fourth_packet']['path']), objects,
+                                read(assets['fourth_normalized_readback']['path']), FOURTH_PUBLICATION_EXPECTATION)
+    publications.append(fourth)
+    objects = fourth['tree_objects']
+    exact(publications, retained['publications'], 'recomputed four-hop complete publication proof')
+    source_merge = module.document_merge(objects, read(assets['source_document_merge_original_objects']['path']),
+                                         read(assets['source_document_merge_readback']['path']),
+                                         SOURCE_DOCUMENT_MERGE_EXPECTATION)
+    objects = source_merge['tree_objects']
+    exact({key: value for key, value in source_merge.items() if key != 'tree_objects'},
+          retained['document_merge'], 'recomputed exact two-document two-parent source merge')
+    exact(objects, retained['current_tree_objects'], 'recomputed full current source trees')
+    inventory = read(assets['source_inventory']['path'])
+    need(inventory['schema'] == 'tb371fc-geni-current-source-blob-inventory-v1' and inventory['passed'] is True,
+         'current source inventory verdict')
+    exact(inventory['head'], HEAD, 'source inventory head')
+    exact(inventory['tree'], TREE, 'source inventory tree')
+    exact(inventory['file_count'], 64, 'source inventory count')
+    exact(inventory['bytes'], 1664597, 'source inventory total bytes')
+    need(len(inventory['files']) == 64 and len(objects) == inventory['current_tree_objects_count'] == 30,
+         'current source file/tree cardinalities')
+    exact(inventory['five_native_runners_unchanged'], EXPECTED_RUNNERS, 'five retained runner identities')
+    sources = {}
+    runners = []
+    for row in inventory['files']:
+        relative = str(safe_relative(row['relative_path']))
+        need(relative not in sources, 'unique current source path')
+        expected_path = Path(inventory['source_root']) / relative
+        exact(row['path'], str(expected_path), 'source root containment')
+        actual = checked_spec({k: row[k] for k in ('path', 'bytes', 'sha256')})
+        raw = Path(actual['path']).read_bytes()
+        blob, mode = module.current_blob(objects, relative)
+        exact(module.git_blob(raw), blob, 'actual complete current Git blob')
+        exact(row['git_blob_sha1'], blob, 'inventory blob identity')
+        exact(row['git_mode'], mode, 'inventory Git mode')
+        need(row['complete_bytes_and_current_git_blob_verified'] is True and row['current_tree_path_proved'] is True,
+             'source path/tree proof marker')
+        sources[relative] = {**actual, 'git_blob_sha1': blob, 'git_mode': mode}
+        if relative in EXPECTED_RUNNERS:
+            exact({k: sources[relative][k] for k in ('bytes', 'sha256', 'git_blob_sha1')},
+                  EXPECTED_RUNNERS[relative], 'current runner equals retained historical bytes')
+            runners.append(sources[relative])
+    need(len(runners) == 5, 'all five native runners are currently proven')
+    for relative, expected in REQUIRED_CURRENT_SOURCE_PINS.items():
+        need(relative in sources, 'required model/generator/harness source present')
+        exact({k: sources[relative][k] for k in ('bytes', 'sha256')}, expected, 'current source full identity')
+    return {'publication_chain': [{k: v for k, v in item.items() if k not in ('tree_objects', 'files')}
+                                  for item in publications],
+            'document_only_source_merge': {key: value for key, value in source_merge.items() if key != 'tree_objects'},
+            'source_file_count': len(sources), 'source_bytes': sum(row['bytes'] for row in sources.values()),
+            'current_tree_objects_recomputed': len(objects), 'runner_files': runners,
+            'all_source_bytes_and_current_git_blobs_verified': True,
+            'all_other_tree_entries_unchanged': True}, sources
+
+
+def validate_gate_contracts(assets, auditor_path):
+    old_raw = Path(assets['retained_104']['path']).read_bytes()
+    exact(hashlib.sha256(old_raw).hexdigest(), OLD_104_SHA, 'retained complete104 contract fingerprint')
+    old = document(old_raw)
+    full = read(assets['full_107']['path'])
+    need(type(old) is list and len(old) == 104 and type(full) is list and len(full) == 107,
+         'retained104 and current107 full contracts')
+    names = [row['name'] for row in full]
+    need(len(set(names)) == 107, '107 distinct contract names')
+    projected = [row for row in full if row['name'] not in NEW_GATE_NAMES]
+    exact(projected, old, 'all original104 full contracts preserved in order')
+    need(len(full) - len(projected) == 3 and set(names) - {row['name'] for row in old} == set(NEW_GATE_NAMES),
+         'only three added GENI gate contracts')
+    expected = read(assets['integration_contracts']['path'])
+    need(len(expected['components']) == 102 and len(expected['linux']) == 5, '102 component plus5 Linux')
+    nodes = [node for node in ast.parse(Path(auditor_path).read_bytes()).body if isinstance(node, ast.Assign)
+             and isinstance(node.targets[0], ast.Name) and node.targets[0].id == 'PLAN']
+    need(len(nodes) == 1 and isinstance(nodes[0].value, ast.Call), 'one frozen integration PLAN')
+    actual = document(ast.literal_eval(nodes[0].value.args[0]))
+    exact(actual, expected, 'integration auditor retains all107 frozen receipt contracts')
+    return {'full_gate_count': 107, 'components': 102, 'linux': 5, 'retained_gate_count': 104,
+            'retained_full_contract_sha256': OLD_104_SHA, 'added_names': NEW_GATE_NAMES,
+            'all_retained_contract_fields_unchanged': True}
+
+
+def validate_audit_receipts(binding, sources):
+    artifact = binding['artifact']
+    reports, audits = {}, []
+    for row in binding['audits']:
+        name = row['name']
+        auditor = checked_spec(row['auditor'])
+        receipt = checked_spec(row['receipt'])
+        obj = read(receipt['path'])
+        need(obj['passed'] is True, 'actual independent audit failed: ' + name)
+        exact(obj['auditor_sha256'], auditor['sha256'], 'actual auditor bytes: ' + name)
+        archive = obj.get('zip', obj.get('archive', obj.get('input')))
+        exact(archive['bytes'], artifact['archive']['bytes'], 'actual audited archive length: ' + name)
+        exact(archive['sha256'], artifact['archive']['sha256'], 'actual audited archive digest: ' + name)
+        head = obj.get('expected_head', obj.get('head', obj.get('component', {}).get('head')))
+        exact(head, HEAD, 'actual audited current head: ' + name)
+        if 'expected_tree' in obj:
+            exact(obj['expected_tree'], TREE, 'actual audited tree: ' + name)
+        binary = obj.get('qemu', {}).get('sha256', obj.get('component', {}).get('qemu_sha256_from_separately_audited_binary'))
+        exact(binary, artifact['qemu']['sha256'], 'actual audited QEMU digest: ' + name)
+        if 'qemu' in obj and 'bytes' in obj['qemu']:
+            exact(obj['qemu']['bytes'], artifact['qemu']['bytes'], 'actual audited QEMU length: ' + name)
+        for field in ('qemu_executed', 'guest_executed', 'native_android_passed', 'native_android_boot_claimed'):
+            if field in obj:
+                need(obj[field] is False, 'read-only audit boundary: ' + name + '.' + field)
+        reports[name] = obj
+        audits.append({'name': name, 'auditor': auditor, 'receipt': receipt, 'passed': True})
+    by_name = {row['name']: row for row in audits}
+    validate_retained_model_reports(reports, by_name, artifact['qemu']['bytes'])
+    validate_geni_receipts(reports, by_name, sources)
+    return audits, reports
+
+
+def validate_geni_receipts(reports, audit_by_name, sources):
+    compiled = reports['geni_hs']
+    exact(compiled['schema'], 'tb371fc-geni-hs-independent-artifact-audit-v1', 'compiledGENI schema')
+    exact(compiled['summary'], GENI_SUMMARY, 'compiledGENI full independent summary')
+    exact(compiled['component']['checks'], 55, 'compiled55 checks')
+    exact(compiled['component']['exit_code'], 0, 'compiled component exit')
+    exact(compiled['component']['producer_test_sha256'], sources['tb371fc/tests/test_geni_hs_sm8250.py']['sha256'],
+          'compiled producer exact corrected source')
+    exact(compiled['component']['transport_helper_sha256'], sources['tb371fc/tests/geni_hs_test_transport.py']['sha256'],
+          'compiled transport helper current bytes')
+    for key, count in {'ordinary_and_special': 23, 'completed_migrations': 2, 'profile_rejections': 2,
+                       'one_bit_rejections': 25, 'structural_rejections': 3}.items():
+        need(type(compiled[key]) is list and len(compiled[key]) == count, 'compiledGENI exact list ' + key)
+    cleanup = compiled['process_cleanup']
+    need(type(cleanup) is dict, 'compiled process cleanup object')
+    exact({key: cleanup[key] for key in ('records', 'normal_exit0_with_quit_ack', 'expected_exit1_without_quit',
+                                       'forced_terminations', 'forced_kills')},
+          {'records': 58, 'normal_exit0_with_quit_ack': 28, 'expected_exit1_without_quit': 30,
+           'forced_terminations': 0, 'forced_kills': 0}, 'compiled full cleanup summary')
+    need(type(cleanup['actual_records']) is list and len(cleanup['actual_records']) == 58,
+         'all58 actual process cleanup records')
+    need(type(compiled['original_streams']) is dict and set(compiled['original_streams']) == {'enabled', 'disabled'},
+         'two original stream scenarios')
+    for row in compiled['original_streams'].values():
+        exact(row['hs_payload_bytes'], 16608, 'full HS wire bytes')
+        exact(row['legacy_payload_bytes'], 16587, 'full legacy wire bytes')
+        need(row['independent_source_world_verified'] is True, 'independently reconstructed source world')
+    for row in compiled['completed_migrations']:
+        need(row['source_status'] == row['target_status'] == 'completed', 'both migration status receipts')
+        raw = row['raw_observations']
+        for key, expected in {'first_getters': 49, 'repeated_getters': 49, 'prewarm_device_mmio': 0,
+                              'prewarm_memory_commands': 2}.items():
+            exact(raw[key], expected, 'compiled actual chronology count ' + key)
+        for key in ('all_first98_actual_getters_verified', 'first_post_restore_memory_is_ram_witness',
+                    'first_cont_after_observations', 'restored_sysbus_irq_captured'):
+            need(raw[key] is True, 'compiled actual chronology ' + key)
+    need(compiled['source_generation_semantics_audited_here'] is False and compiled['native_android_passed'] is False,
+         'compiled scope remains separate from source semantics and native')
+    audit_by_name['geni_hs']['scope'] = {'independent_summary': compiled['summary'],
+                                       'source_generation_semantics_audited_here': False,
+                                       'physical_SE6_selection_or_reset_state_established': False}
+    source = reports['geni_source']
+    exact(source['schema'], 'tb371fc-geni-hs-source-independent-artifact-audit-v1', 'GENI source schema')
+    exact(source['summary'], SOURCE_SUMMARY, 'GENI source full independent summary')
+    for key, count in {'inputs': 19, 'reference_inputs': 2, 'outputs': 2, 'negative_checks': 51,
+                       'source_provenance': 9, 'verified_members': 84}.items():
+        need(type(source[key]) is list and len(source[key]) == count, 'sourceGENI exact list ' + key)
+    need(type(source['constants']) is dict and len(source['constants']) == 12 and
+         type(source['primary_facts']) is dict and len(source['primary_facts']) == 6, 'source constants/facts shape')
+    exact(source['verified_member_count'], 84, 'source complete member count')
+    exact(source['component']['checks'], 2, 'two complete generated outputs')
+    exact(source['component']['exit_code'], 0, 'source component exit')
+    exact(source['unit_component']['tests'], 49, '49 exact source unit methods')
+    exact(source['unit_component']['exit_code'], 0, 'source unit exit')
+    for key in ('qemu_executed', 'generator_or_verifier_imported_or_executed', 'guest_executed'):
+        need(source[key] is False, 'independent source reader did not execute producer/QEMU')
+    exact(source['contract'], FIXED_ASSETS['geni_source_contract'], 'frozen source reader contract')
+    for row in source['source_provenance']:
+        need(row['path'] in sources, 'source generation input current-tree path')
+        exact({k: row[k] for k in ('bytes', 'sha256')}, {k: sources[row['path']][k] for k in ('bytes', 'sha256')},
+              'source generation complete current Git blob identity')
+    need(sum(row['bytes'] for row in source['inputs']) == 810000 and
+         sum(row['bytes'] for row in source['outputs']) == 26355 and
+         sum(row['bytes'] for row in source['negative_checks']) == 1700682, 'all source input/output/mutant bytes')
+    for row in source['reference_inputs']:
+        need(row['separate_original_member_claimed'] is False and row['from_complete_mutant_member'],
+             'reference original actually reconstructed from complete retained mutant')
+    categories = {}
+    for row in source['negative_checks']:
+        categories[row['category']] = categories.get(row['category'], 0) + 1
+        need(row['whole_mutant_reconstructed'] is True, 'every complete mutant independently reconstructed')
+        if row['category'] in ('parser-contract', 'reference-scope'):
+            need(row['independent_semantic_rejection'] is True, 'semantic mutant independently rejected')
+    exact(categories, {'complete-input-identity': 19, 'reference-input-identity': 2, 'parser-contract': 19,
+                       'reference-scope': 9, 'generated-output': 2}, 'five complete mutant categories')
+    audit_by_name['geni_source']['scope'] = {'independent_summary': source['summary'],
+        'physical_SE6_selection_or_reset_state_established': False,
+        'withheld_private_binary_bytes_publicly_reproduced': False}
+
+
+def validate_ci_and_observers(binding, assets, reports, gate_contracts):
+    artifact = binding['artifact']
+    gh = read(assets['github_metadata']['path'])
+    need(gh['head']['sha'] == HEAD and gh['head']['tree']['sha'] == TREE and
+         [row['sha'] for row in gh['head']['parents']] == SOURCE_PARENTS, 'actual created source commit')
+    need(gh['merge']['sha'] == MERGE and gh['merge']['tree']['sha'] == TREE and
+         [row['sha'] for row in gh['merge']['parents']] == [CI_BASE, HEAD], 'actual merge tree and CI base parents')
+    refs = read(assets['pr_identity']['path'])
+    pr = refs.get('pr', refs)
+    need(pr['number'] == 40 and pr['head']['sha'] == HEAD and pr['base']['ref'] == 'tb371fc', 'observed PR source identity')
+    # The raw checkout and Git merge parents establish the immutable CI base.
+    # Mutable default-ref/PR-base changes are recorded, never asserted equal to it.
+    workflow_runs = []
+    for role, row in JOBS.items():
+        run = gh[role]['run']
+        need(run['id'] == row['run_id'] and run['head_sha'] == HEAD and run['run_attempt'] == 1 and
+             run['event'] == ('push' if role == 'push' else 'pull_request'), 'actual workflow identity')
+        need(run['status'] == 'completed' and run['conclusion'] == 'success' and
+             run['path'] == '.github/workflows/tb371fc.yml', 'actual complete successful current workflow')
+        jobs = gh[role]['jobs']['jobs']
+        need(len(jobs) == 2 and {j['id'] for j in jobs} == {row['board_job_id'], row['a77_job_id']} and
+             {j['name'] for j in jobs} == {'board-components-and-linux', 'cortex-a77-architecture'}, 'exact two jobs')
+        for job in jobs:
+            need(job['head_sha'] == HEAD and job['status'] == 'completed' and job['conclusion'] == 'success' and
+                 job['run_attempt'] == 1 and job['run_id'] == row['run_id'], 'current job terminal success')
+            need(job['steps'] and all(step['status'] == 'completed' and step['conclusion'] == 'success'
+                                     for step in job['steps']), 'all actual job steps passed')
+        workflow_runs.append({**{k: run[k] for k in ('id', 'event', 'head_branch', 'head_sha', 'run_attempt',
+                                                    'status', 'conclusion', 'updated_at', 'html_url')},
+                              'jobs': [{k: job[k] for k in ('id', 'name', 'head_sha', 'status', 'conclusion',
+                                                           'run_attempt', 'started_at', 'completed_at')} for job in jobs]})
+    rows = [row for row in read(assets['artifact_api']['path'])['artifacts'] if row['id'] == artifact['id']]
+    need(len(rows) == 1, 'one actual current push artifact')
+    api = rows[0]
+    need(api['name'] == artifact['name'] and api['expired'] is False and
+         api['size_in_bytes'] == artifact['archive']['bytes'] and
+         api['digest'] == 'sha256:' + artifact['archive']['sha256'] and
+         api['workflow_run']['id'] == PUSH_RUN and api['workflow_run']['head_sha'] == HEAD,
+         'actual artifact API source/run/digest/length identity')
+    download = read(assets['artifact_download']['path'])
+    for key, expected in {'head': HEAD, 'run_id': PUSH_RUN, 'artifact_id': artifact['id'],
+                          'zip_bytes': artifact['archive']['bytes'], 'zip_sha256': artifact['archive']['sha256'],
+                          'qemu_bytes': artifact['qemu']['bytes'], 'qemu_sha256': artifact['qemu']['sha256'],
+                          'qemu_member': QEMU_MEMBER}.items():
+        exact(download[key], expected, 'complete new download ' + key)
+    need(download['complete_hashes_verified'] is True and download['structural_preflight_passed'] is True and
+         download['qemu_executed'] is False and download['native_executed'] is False,
+         'bounded download preflight, no executable launch')
+    observation = read(assets['raw_observer_binding']['path'])
+    exact(observation, {'schema': 'tb371fc-geni-ci-raw-observer-binding-v1', 'source_head': HEAD, 'source_tree': TREE,
+                        'pr_merge_head': MERGE, 'pr_base_head': CI_BASE,
+                        'evidence_root': observation['evidence_root'], 'jobs': JOBS}, 'raw observer binding')
+    need(type(observation['evidence_root']) is str and Path(observation['evidence_root']).is_absolute(), 'raw log root')
+    board = read(assets['board_receipt']['path'])
+    a77 = read(assets['a77_receipt']['path'])
+    ufs = read(assets['ufs_receipt']['path'])
+    for name, obj, schema in [('board', board, 'tb371fc-geni-hs-board-rawlog-observation-v1'),
+                               ('a77', a77, 'tb371fc-geni-hs-a77-rawlog-observation-v1')]:
+        need(obj['schema'] == schema and obj['passed'] is True and obj['source_head'] == HEAD and
+             obj['matching_push_pr_tree'] == TREE and len(obj['runs']) == 2, 'actual complete ' + name + ' observations')
+        exact(obj['auditor_sha256'], assets[name + '_observer']['sha256'], 'actual observer source ' + name)
+        exact(obj['observation_binding'], assets['raw_observer_binding'], 'actual observer binding ' + name)
+    exact(board['observer'], assets['board_observer'], 'board full source pin')
+    exact(board['github_metadata'], assets['github_metadata'], 'board exact complete metadata')
+    need({row['job_id'] for row in board['runs']} == {JOBS['push']['board_job_id'], JOBS['pr']['board_job_id']},
+         'both current board jobs')
+    expected_contracts = read(assets['integration_contracts']['path'])
+    for row in board['runs']:
+        identity = JOBS[row['role']]
+        need(row['run_id'] == identity['run_id'] and row['job_id'] == identity['board_job_id'] and row['run_attempt'] == 1 and
+             row['completed_success'] is True and row['actual_checkout'] == (HEAD if row['role'] == 'push' else MERGE),
+             'board actual checkout and terminal state')
+        exact([row['component_gates'], row['linux_gates'], row['distinct_PASS_gate_lines'], row['FAIL_gate_lines']],
+              [102, 5, 107, 0], 'board actual gate counts')
+        exact(row['component_gate_names'], [x['name'] for x in expected_contracts['components']], '102 actual component names/order')
+        exact(row['linux_gate_names'], [x['name'] for x in expected_contracts['linux']], '5 actual Linux names/order')
+        exact(row['extra_ufs_checks'], [39, 61], 'board extra UFS counts')
+        exact(row['host_unit_suites']['all_host_unittest_counts_in_order'], [52, 40, 28, 43, 16, 15],
+              'all six actual host suite counts/order')
+        checked_spec(row['raw_log'])
+    archived = board['push_unit']
+    need(archived['passed'] is True and archived['exit_code'] == 0 and archived['unittest_count'] == 40 and
+         archived['unittest_verdict'] == 'OK' and archived['archived_source_head'] == HEAD and
+         archived['archived_qemu_sha256'] == artifact['qemu']['sha256'] and archived['run_id'] == PUSH_RUN and
+         archived['artifact_id'] == artifact['id'], 'actual40-test push CI harness unit')
+    exact({k: archived['archive'][k] for k in ('bytes', 'sha256')},
+          {k: artifact['archive'][k] for k in ('bytes', 'sha256')}, 'push unit exact archive')
+    for key, expected in {'PR_artifact_unit_count_directly_observed': False, 'PR_host_unit_count_directly_observed': True,
+                          'qemu_executed': False, 'device_rpc': False}.items():
+        need(board['scope'][key] is expected, 'board observation scope')
+    need({row['job_id'] for row in a77['runs']} == {JOBS['push']['a77_job_id'], JOBS['pr']['a77_job_id']}, 'both A77 jobs')
+    for row in a77['runs']:
+        role = 'push' if row['job_id'] == JOBS['push']['a77_job_id'] else 'pr'
+        need(row['run_id'] == JOBS[role]['run_id'] and row['actual_checkout'] == (HEAD if role == 'push' else MERGE) and
+             row['job_completed_success'] is True and row['all_job_steps_completed_success'] is True,
+             'A77 actual checkout and complete job')
+        need(row['guest_checks'] == sum(x['guest_checks'] for x in row['variants']) == 852 and len(row['variants']) == 9 and
+             len(row['invalid_configurations']) == 2 and len(row['pci_ufs_cases']) == row['shared_pci_ufs_case_count'] == 17,
+             'A77 actual852/9/2/17 bounded evidence')
+        checked_spec({'path': row['log_path'], 'bytes': row['log_bytes'], 'sha256': row['log_sha256']})
+    for row in a77['source_files']:
+        checked_spec(row)
+    need(ufs['schema'] == 'tb371fc-extra-linux-ufs-artifact-observation-v2' and ufs['passed'] is True and
+         ufs['head'] == HEAD and ufs['run_id'] == PUSH_RUN and ufs['artifact_id'] == artifact['id'], 'UFS current actual receipt')
+    exact(ufs['auditor_sha256'], assets['ufs_observer']['sha256'], 'UFS observer exact source')
+    for key in ('bytes', 'sha256'):
+        exact(ufs['archive'][key], artifact['archive'][key], 'UFS archive ' + key)
+        exact(ufs['qemu'][key], artifact['qemu'][key], 'UFS QEMU ' + key)
+    exact([[r['check_count'], r['source_checks'], r['target_checks'], r['passed']] for r in ufs['cases']],
+          [[39, 21, 18, True], [61, 34, 27, True]], 'actual extra UFS source/target checks')
+    return {'workflow_runs': workflow_runs, 'artifact_api': api, 'ufs_boundary': ufs['boundary'],
+            'immutable_CI_base': CI_BASE, 'actual_PR_checkout': MERGE,
+            'mutable_PR_base_observed': pr['base']['sha'], 'mutable_default_ref_observed': refs.get('main_ref'),
+            'mutable_PR_mergeability_claimed': False}
+
+
+def validate_history(assets):
+    prior = read(assets['historical_ddr_qualification']['path'])
+    need(prior['passed'] is True and prior['commit'] == '7d01e5e294b788f97a8120c2d34122ddb25e6343' and
+         prior['all_eight_independent_audits_passed'] is True and prior['native_executed'] is False,
+         'historical DDR qualification remains historical')
+    native = read(assets['historical_ddr_native_public']['path'])
+    need(native['review_passed'] is True and native['qualified_source'] == prior['commit'] and
+         native['termination']['runner_exit'] == 2 and native['termination']['QEMU_exit'] == 0 and
+         native['termination']['outcome'] == 'kernel-failure' and
+         native['limitations']['Android_boot_completed'] is False and
+         native['limitations']['one_native_attempt_reclassified_as_success'] is False,
+         'prior GENI-frontier native remains failure')
+    failure = read(assets['historical_b5_extraction']['path'])
+    need(failure['artifact_id'] == 15003310246 and
+         failure['archive_sha256'] == '63df14f571c2a05b12ff3dea0c5fa83c648e30967aff7ec76e42e381442d83b4' and
+         len(failure['files']) == 18, 'retained B5 actual failure extraction identity')
+    failed_files = []
+    parent = Path(assets['historical_b5_extraction']['path']).parent
+    for row in failure['files']:
+        failed_files.append(checked_spec({'path': str(parent / safe_relative(row['path'])),
+                                         'bytes': row['bytes'], 'sha256': row['sha256']}))
+    failed = read(parent / 'tb371fc-results/components/result.json')
+    need(failed['source_commit'] == 'b5bf00086640cbee8ef0c13375ba281cd73b8369' and failed['expected_gates'] == 102 and failed['passed_gates'] == 100 and
+         failed['passed'] is False and len(failed['gates']) == 102, 'B5 actual100/102 remains failure')
+    names = [row['name'] for row in failed['gates'] if row['passed'] is False]
+    exact(names, ['gcc-source-generation', 'geni-hs-sm8250-reference'], 'two actual B5 failures retained')
+    a91 = read(assets['historical_a91_failure']['path'])
+    need(a91['source_commit'] == 'a91cf67d09380c7f7fa8868f7068dba6b3956daa' and a91['passed_gates'] == 98 and a91['total_gates'] == 99 and
+         a91['linux_gates_executed'] is False and a91['native_executed'] is False,
+         'postmerge a91 failure retained')
+    a91_files = []
+    parent = Path(assets['historical_a91_failure']['path']).parent
+    for row in a91['files']:
+        a91_files.append(checked_spec({'path': str(parent / safe_relative(row['path'])),
+                                      'bytes': row['bytes'], 'sha256': row['sha256']}))
+    need(len(a91_files) == 5, 'all retained a91 failure member bytes')
+    failed4710 = read(assets['historical_4710_root_observation']['path'])
+    need(failed4710['schema'] == 'tb371fc-geni-4710-correction-root-observation-v1' and
+         failed4710['parent'] == '4710b80bde965798dfe5f0c9684c5b5880b84d04' and
+         failed4710['normal_new_head_ci_required'] is True, 'retained4710 actual failure observation')
+    exact([(row['event'], row['run_id'], row['artifact_id'], row['components_passed'], row['components_expected'],
+            row['failed_gate_names'], row['source_commit']) for row in failed4710['historical_ci']],
+          [('push', 45575456246, 15005831019, 101, 102, ['geni-hs-sm8250-reference'],
+            '4710b80bde965798dfe5f0c9684c5b5880b84d04'),
+           ('pull_request', 45575467494, 15005675790, 100, 102,
+            ['geni-hs-source-generation', 'geni-hs-sm8250-reference'],
+            '65d4cfc6ad24ffca43cf7450a528629119729dcc')], 'both actual4710 failed CI records retained')
+    failede42 = read(assets['historical_e42_root_observation']['path'])
+    need(failede42['schema'] == 'tb371fc-llcc-bundled-geometry-root-observation-v1' and
+         failede42['parent'] == 'e42c0a5934d36a1dc31de4ba30275672a919665a' and
+         failede42['normal_successful_new_head_ci_and_artifact_qualification_required'] is True,
+         'retained e42 failure observation')
+    exact([(row['event'], row['run_id'], row['artifact_id'], row['components_passed'], row['components_expected'],
+            row['failed_gate_names'], row['artifact_source_commit']) for row in failede42['actual_failed_ci']],
+          [('push', 45592813019, 15012477808, 101, 102, ['llcc-source-generation'],
+            'e42c0a5934d36a1dc31de4ba30275672a919665a'),
+           ('pr', 45592822429, 15012428691, 101, 102, ['llcc-source-generation'],
+            '5cbcd5a0d9b0cafd98a18b7b9d7396fa88141f50')], 'both actual e42 failed CI records retained')
+    need(all(row['workflow_conclusion'] == 'failure' and row['native_executed'] is False and
+             row['new_head_qualification'] is False for row in failede42['actual_failed_ci']),
+         'e42 component reports do not qualify the failed workflows')
+    # Older RPM/DDR failures, stderr and native observations are fixed complete
+    # assets, already rehashed by the caller. They are never reclassified.
+    return {'prior_DDR_qualification': assets['historical_ddr_qualification'],
+            'prior_DDR_native_public_review': assets['historical_ddr_native_public'],
+            'prior_DDR_native_runner_exit': 2, 'prior_DDR_native_QEMU_exit': 0,
+            'prior_DDR_native_outcome': 'kernel-failure',
+            'postmerge_a91_failure': assets['historical_a91_failure'], 'a91_full_extracted_files': a91_files,
+            'B5_push_failure': assets['historical_b5_extraction'], 'B5_full_extracted_files': failed_files,
+            'B5_push_components_passed': 100, 'B5_push_components_total': 102,
+            'B5_push_failed_names': names, 'B5_PR_component_counts_inferred': False,
+            '4710_failed_CI': failed4710['historical_ci'],
+            '4710_failure_observation': assets['historical_4710_root_observation'],
+            'e42_failed_CI': failede42['actual_failed_ci'],
+            'e42_failure_observation': assets['historical_e42_root_observation'],
+            'earlier_failure_reclassified_as_pass': False, 'current_native_outcome_inferred': False,
+            'retained_older_assets': {k: v for k, v in assets.items() if k.startswith('historical_') or
+                                     k.startswith('failed_qualification_') or k.startswith('preparation_')}}
+
+
+def validate_archive_bytes(artifact, reports):
+    actual = checked_spec(artifact['archive'])
+    observed = {}
+    counts = {}
+    for label, report in reports.items():
+        rows = report.get('verified_members', report.get('verified_files'))
+        if rows is None:
+            continue
+        if isinstance(rows, dict):
+            entries = list(rows.items())
+        else:
+            need(type(rows) is list, 'known verified member collection')
+            entries = [(row['member'], row) for row in rows]
+        if 'verified_member_count' in report:
+            exact(len(entries), report['verified_member_count'], 'actual audit member count')
+        counts[label] = len(entries)
+        for name, row in entries:
+            safe_relative(name)
+            expected = {key: row[key] for key in ('bytes', 'sha256')}
+            need(type(expected['bytes']) is int and 0 <= expected['bytes'] <= 1024 ** 3 and
+                 re.fullmatch('[0-9a-f]{64}', expected['sha256']), 'bounded verified member identity')
+            if name in observed:
+                exact(observed[name], expected, 'independent audit agreement on complete member')
+            observed[name] = expected
+    need(set(counts) == {'integration', 'ddr_stats_offset', 'rpm_stats_offset', 'spss', 'llcc', 'dispcc', 'geni_hs', 'geni_source'},
+         'all eight complete member inventories retained; DP/DSI preserve separate scoped receipts')
+    exact(observed[QEMU_MEMBER], {key: artifact['qemu'][key] for key in ('bytes', 'sha256')}, 'binary member agreement')
+    with zipfile.ZipFile(actual['path']) as archive:
+        infos = archive.infolist()
+        need(len(infos) == len({info.filename for info in infos}), 'archive has no duplicate names')
+        by_name = {info.filename: info for info in infos}
+        for name, expected in sorted(observed.items()):
+            need(name in by_name and not by_name[name].is_dir() and by_name[name].file_size == expected['bytes'],
+                 'actual bounded archive member shape')
+            digest = hashlib.sha256(); count = 0; prefix = b''
+            with archive.open(name) as stream:
+                while True:
+                    raw = stream.read(1024 * 1024)
+                    if not raw:
+                        break
+                    if not prefix:
+                        prefix = raw[:20]
+                    count += len(raw)
+                    need(count <= expected['bytes'], 'uncompressed member exceeds reviewed complete length')
+                    digest.update(raw)
+            exact({'bytes': count, 'sha256': digest.hexdigest()}, expected, 'full independently reread member ' + name)
+            if name == QEMU_MEMBER:
+                need(len(prefix) == 20 and prefix[:6] == b'\x7fELF\x02\x01', 'actual complete ELF prefix; never executed')
+    exact(pin(actual['path']), actual, 'archive unchanged after complete independent member reread')
+    return {'archive': actual, 'rehashed_member_count': len(observed),
+            'rehashed_uncompressed_bytes': sum(row['bytes'] for row in observed.values()),
+            'independent_inventory_counts': counts, 'qemu_executed': False, 'extracted_members': 0}
+
+
+def assemble(binding, binding_pin):
+    artifact = validate_binding_shape(binding)
+    assets = {name: checked_spec(spec) for name, spec in binding['assets'].items()}
+    source, source_files = validate_current_sources(assets)
+    gates = validate_gate_contracts(assets, FIXED_AUDITORS['integration']['path'])
+    audits, reports = validate_audit_receipts(binding, source_files)
+    actual_ci = validate_ci_and_observers(binding, assets, reports, gates)
+    history = validate_history(assets)
+    actual_archive = validate_archive_bytes(artifact, reports)
+    return {'schema': 'tb371fc-geni-hs-70b387fb-qualification-v1', 'passed': True,
+            'qualification': 'Exact-source push and PR CI plus ten independent read-only actual-artifact audits passed',
+            'qualification_evidence_observed_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            'repository': 'cyjin-yl/qemu-tb371fc', 'commit': HEAD, 'tree': TREE,
+            'artifact': {'id': artifact['id'], 'artifact_name': artifact['name'], 'run_id': PUSH_RUN,
+                         'api_url': actual_ci['artifact_api']['url'],
+                         'archive_bytes': artifact['archive']['bytes'], 'archive_sha256': artifact['archive']['sha256'],
+                         'qemu_member': QEMU_MEMBER, 'qemu_bytes': artifact['qemu']['bytes'],
+                         'qemu_sha256': artifact['qemu']['sha256']},
+            'workflow_runs': actual_ci['workflow_runs'], 'github_evidence': assets['github_metadata'],
+            'pr_base_evidence': assets['pr_identity'], 'artifact_api_evidence': assets['artifact_api'],
+            'bounded_artifact_download_evidence': assets['artifact_download'],
+            'assembler': pin(Path(__file__).resolve()), 'qualification_binding': binding_pin,
+            'all_ten_independent_audits_passed': True, 'audits': audits, 'gate_contracts': gates,
+            'a77_actual_raw_log_audit': assets['a77_receipt'],
+            'independent_board_log_observation': assets['board_receipt'],
+            'extra_linux_ufs_observation': {'receipt': assets['ufs_receipt'], 'checks': [39, 61],
+                                            'boundary': actual_ci['ufs_boundary']},
+            'additional_host_unit_suites_each_board_job': {'source_download': 52, 'ci_device_tests': 40,
+                'android_boot_inputs': 28, 'boot_android': 43, 'acquire_block_ranges': 16, 'assemble_lun': 15,
+                'order': ['source_download', 'ci_device_tests', 'android_boot_inputs', 'boot_android',
+                          'acquire_block_ranges', 'assemble_lun'], 'included_in_component_gate_count': False},
+            'current_head_publication_review': source,
+            'current_head_runner_readback': {'source_commit': HEAD, 'source_tree': TREE,
+                'exact_file_count': 5, 'files': source['runner_files'],
+                'runner_behavior_review_is_historical_and_byte_identity_is_current': True},
+            'runner_source_sha256': EXPECTED_RUNNERS['tb371fc/scripts/boot_android.py']['sha256'],
+            'actual_complete_archive_readback': actual_archive,
+            'immutable_CI_merge': {'commit': MERGE, 'tree': TREE, 'parents': [CI_BASE, HEAD]},
+            'mutable_reference_observation': {key: actual_ci[key] for key in ('mutable_PR_base_observed',
+                'mutable_default_ref_observed', 'mutable_PR_mergeability_claimed')},
+            'retained_history': history, 'all_asset_pins': assets,
+            'ci_attempts_observed': 1, 'ci_failure_observed_for_this_head': False,
+            'native_started': False, 'native_executed': False, 'coordinator_deployed': False,
+            'host_boot_guard_bound': False, 'device_rpc_used_for_qualification': False,
+            'android_userspace_established': False, 'ui_established': False, 'android_boot_established': False,
+            'physical_SE6_firmware_selection_established': False, 'physical_wrapper_reset_value_established': False,
+            'DDR_RPM_statistics_payload_established': False, 'GIC_or_guest_interrupt_handling_established': False,
+            'read_only_qualification_assembly': True,
+            'scope': 'Compiled CI qualification for one separately authorized later original-input native attempt. '
+                     'GENI is an explicit default-off strict-FIFO reference profile; source-derived identities and '
+                     'sanitized producer facts do not establish captured physical SE6 selection, wrapper reset state, '
+                     'firmware execution, DMA transfers, original Android userspace/UI, or boot completion.'}
+
+
+def main():
+    # The frozen unbound preparatory source cannot read a binding, actual ZIP,
+    # receipts or private inputs. Root may create a reviewed versioned successor
+    # changing only this binding digest once the actual evidence is complete.
+    need(re.fullmatch('[0-9a-f]{64}', BINDING_SHA256),
+         'GENI qualification binding is UNBOUND; no evidence read and no qualification written')
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--binding', type=Path, required=True)
+    parser.add_argument('--out', type=Path, required=True)
+    args = parser.parse_args()
+    need(not args.out.exists() and args.out.is_absolute(), 'new absolute qualification output required')
+    binding_pin = pin(args.binding, BINDING_SHA256)
+    result = assemble(read(args.binding), binding_pin)
+    raw = (json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + '\n').encode()
+    with args.out.open('xb') as stream:
+        stream.write(raw)
+    print(json.dumps({'passed': True, 'qualification': pin(args.out), 'native_executed': False}))
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

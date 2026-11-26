@@ -1173,6 +1173,11 @@ struct ArchCPU {
     /* Opt-in exact counter/deadline conversion; legacy machines stay false. */
     bool gt_cntfrq_exact;
     bool gt_cntfrq_exact_received; /* Incoming migration subsection seen. */
+
+    /* TB371FC-only, opt-in AArch64 zero-record RAS compatibility policy. */
+    bool tb371fc_ras_zero_records_compat;
+    uint32_t tb371fc_ras_zero_records_profile; /* Immutable after realize. */
+    bool tb371fc_ras_zero_records_received; /* Incoming subsection seen. */
 };
 
 typedef struct ARMCPUInfo {

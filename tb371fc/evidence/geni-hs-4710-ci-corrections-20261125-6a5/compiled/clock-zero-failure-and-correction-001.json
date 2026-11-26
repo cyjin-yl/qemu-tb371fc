@@ -1,0 +1,224 @@
+{
+  "actual_failed_push": {
+    "artifact_id": 15005831019,
+    "completed_checks": [
+      "identity_and_pure_observation"
+    ],
+    "duration_seconds": 2.092692030999956,
+    "error": "('clock_step 0', 'FAIL could not advance time')",
+    "failed_check": "exact_original_cold_probe_and_dma_masks",
+    "fixtures": [
+      {
+        "accelerator": "qtest",
+        "actual_qmp_cont_observed": true,
+        "cleanup": {
+          "exit_code": 0,
+          "forced_kill": false,
+          "forced_terminate": false,
+          "quit_acknowledged": true
+        },
+        "evidence": {
+          "backend.jsonl": {
+            "bytes": 82,
+            "sha256": "1252b1e8357d41e3d4212e1db24686abe75d78a302ee260044a34d1f30cca84e"
+          },
+          "cleanup.json": {
+            "bytes": 103,
+            "sha256": "d8b0814ac292145bc25f13773911ebb28b00bdf580d5d2c68545f5acc78c1da4"
+          },
+          "command.json": {
+            "bytes": 847,
+            "sha256": "d38c45eb3fd23f0f9db2f39638e8ed92d29d117e01a88963dd33ed17dc6bcbdb"
+          },
+          "qemu.stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "qmp.jsonl": {
+            "bytes": 150452,
+            "sha256": "c5b5d46c649a9c501ed34222394f5b685734da3d8c6bf4375433b8caddeddc94"
+          },
+          "qtest.jsonl": {
+            "bytes": 1263,
+            "sha256": "744ab34af1153d9b2ad7e1482cea0a52e98fa4e33378ea210794f0132020b0b2"
+          }
+        },
+        "fixture": "ordinary-00-identity_and_pure_observation",
+        "qemu_stderr_empty": true
+      },
+      {
+        "accelerator": "qtest",
+        "actual_qmp_cont_observed": true,
+        "cleanup": {
+          "exit_code": 0,
+          "forced_kill": false,
+          "forced_terminate": false,
+          "quit_acknowledged": true
+        },
+        "evidence": {
+          "backend.jsonl": {
+            "bytes": 256,
+            "sha256": "736916b4d72b6d99bccebd585592674504f96001790ae24a87a3e8658567346e"
+          },
+          "cleanup.json": {
+            "bytes": 103,
+            "sha256": "d8b0814ac292145bc25f13773911ebb28b00bdf580d5d2c68545f5acc78c1da4"
+          },
+          "command.json": {
+            "bytes": 847,
+            "sha256": "0a32226380164eb59be5268430cfb30d55bf5d17688a2a46bfb618038a33d831"
+          },
+          "qemu.stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "qmp.jsonl": {
+            "bytes": 148485,
+            "sha256": "23d6584ec818007174425bcd66c8dee0dbddda8b40d302216d39e459aeec5707"
+          },
+          "qtest.jsonl": {
+            "bytes": 2472,
+            "sha256": "e0c5f690e3a19b2772660ace7b2fee93650e0b948930cf47ddba1d1d91cd9758"
+          }
+        },
+        "fixture": "ordinary-01-exact_original_cold_probe_and_dma_masks",
+        "qemu_stderr_empty": true
+      }
+    ],
+    "qemu": {
+      "bytes": 63783936,
+      "sha256": "404f621540f640ea8f7331d080cd826152ee76e77e27d7f1efceeb76f0862d00"
+    },
+    "qemu_binary_unchanged": true,
+    "result": {
+      "bytes": 140512,
+      "sha256": "5dbe5b0e025a01b0c2d34e08307122e49feb9a608cf1a9eb0ed4c1c937127c2e"
+    },
+    "result_passed": false,
+    "run_id": 45575456246,
+    "source_test_sha256": "c4dc696c14c8a4581ceb574be500457c43273ee99dc7e3740a18661fffa4093c",
+    "transport_sha256": "32dae63e1604366615f43c6e8982a21050c5cb4aaf70ac8e54527822f9a332e9",
+    "zip": {
+      "bytes": 50993810,
+      "sha256": "787fd4a236053e557499f527d330d5b733ddef976c34ebe5d5646c3531c00c74"
+    }
+  },
+  "bounded_validation": {
+    "clock_set_semantics_distinct_and_unchanged": true,
+    "execution": {
+      "bytes": 675,
+      "name": "irq-protocol-source-check-execution-001.json",
+      "sha256": "504656869c11cc447aa07cf0d33f37c549f021f997d922746b0833ae1fc6298c"
+    },
+    "incoming_clock_set_and_later_cases_runtime_not_yet_observed": true,
+    "paused_tcg_has_no_qtest_or_time_command": true,
+    "positive_step_arguments": [
+      1000,
+      1000,
+      10000,
+      10000
+    ],
+    "source_only_result": {
+      "bytes": 4239,
+      "sha256": "0f841a50b26d95af01c320f5abd958629b646c801511729c8be7150e8a18e2d7"
+    }
+  },
+  "correction": {
+    "after": {
+      "bytes": 68852,
+      "sha256": "4aa3886ce77b41103c22958d77c1df94a7c408ae0a4950cbbb64f867e3769f71"
+    },
+    "all_55_groups_preserved": true,
+    "before": {
+      "bytes": 68819,
+      "sha256": "c4dc696c14c8a4581ceb574be500457c43273ee99dc7e3740a18661fffa4093c"
+    },
+    "byte_exact_reverse_substitution": true,
+    "changed_function": "assert_irq",
+    "changed_functions_only": [
+      "assert_irq"
+    ],
+    "diff": {
+      "bytes": 736,
+      "sha256": "73d2138d6584a4ae173421136c071e6bf70566ce981bac65bf3e7aaad3190f16"
+    },
+    "one_protocol_transaction_preserved": true,
+    "path": "tb371fc/tests/test_geni_hs_sm8250.py",
+    "purpose": "Process queued actual IRQ notifications before the protocol reply without memory access or time advancement",
+    "qom_and_output_signal_assertions_preserved": true,
+    "qtest_error_and_eof_rejection_preserved": true,
+    "replacement": "assert r.command('endianness') == ['little']",
+    "same_helper_callers": [
+      "core_irq_mask_aliases_and_w1c",
+      "exact_original_cold_probe_and_dma_masks",
+      "rx_partial_empty_and_no_peer_invention",
+      "three_clock_gates_and_real_irq_suppression",
+      "tx_partial_word_real_bytes",
+      "unsupported_dma_transfer_has_no_effect",
+      "wrapper_reset_isolation_and_fixed_identity",
+      "zero_length_waits_for_engine_clock"
+    ],
+    "unchanged_source_files": [
+      {
+        "bytes": 105293,
+        "path": "hw/arm/lenovo-tb371fc.c",
+        "sha256": "9119e88b7fcb6cdd103f4fad8ef11a4cc9ba7f8314e989a12747e7dd05017bda"
+      },
+      {
+        "bytes": 50414,
+        "path": "hw/char/qcom-geni-uart.c",
+        "sha256": "c1fe1af46ec3383f9a080d1ba10f60073dfd59696fccfa363a9567551ebb3e10"
+      },
+      {
+        "bytes": 2135,
+        "path": "include/hw/char/qcom-geni-uart.h",
+        "sha256": "f2efb7233b29ae2ece90de924b7d64e1f33a9f1fd04ed3da37298e0f6efd83bf"
+      },
+      {
+        "bytes": 20048,
+        "path": "tb371fc/tests/geni_hs_test_transport.py",
+        "sha256": "32dae63e1604366615f43c6e8982a21050c5cb4aaf70ac8e54527822f9a332e9"
+      }
+    ]
+  },
+  "diagnosis": {
+    "actual_accelerator": "qtest",
+    "category": "test_protocol_precondition_error",
+    "device_source_change_demonstrated_necessary": false,
+    "earlier_positive_clock_step_succeeded": true,
+    "final_virtual_ns_before_failure": 1000,
+    "incorrect_prior_assumption": "clock_step 0 was used as a read-only IRQ notification fence although this QTest implementation rejects zero progress",
+    "prior_static_review_did_not_catch_this_protocol_assumption": true,
+    "qtest_source": {
+      "bytes": 30014,
+      "sha256": "b9278555cbea97cfb0e4a13cf5a65ddf1fe9d9df1e1ff939cb7424ff41adc5f6"
+    },
+    "step_success_condition": "new_ns > old_ns",
+    "tcg_not_used_in_failed_fixture": true,
+    "zero_step_cannot_meet_condition": true
+  },
+  "limits": {
+    "artifact_auditors_and_native_qualifier_not_changed": true,
+    "complete_local_component_diagnostic_pending_parent_execution": true,
+    "failed_4710_ci_not_qualified": true,
+    "no_ci_rerun_by_reviewer": true,
+    "no_device_or_ssh_operations": true,
+    "no_native_execution": true,
+    "no_qemu_execution_by_reviewer": true,
+    "source_only_checks_are_not_compiled_runtime_results": true
+  },
+  "preservation": {
+    "complete_extracted_members": 17,
+    "exact_original_source_files": 5,
+    "manifest": {
+      "bytes": 5353,
+      "sha256": "2c5696272d019454a231840265a84010559ddfdc8e94e176817c85291cbf4651"
+    },
+    "old_sources_and_actual_failure_retained": true,
+    "previous_b5_metadata_failure_not_rewritten": true
+  },
+  "reviewer": "independent_native_result_review",
+  "schema": "tb371fc-geni-hs-clock-zero-failure-and-correction-v1",
+  "source_head": "4710b80bde965798dfe5f0c9684c5b5880b84d04",
+  "source_tree": "afc2fe21894f38803e6280f49465a0daba7413c6"
+}

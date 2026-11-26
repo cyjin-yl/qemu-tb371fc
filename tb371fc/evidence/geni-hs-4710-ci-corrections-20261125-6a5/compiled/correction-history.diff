@@ -1,0 +1,114 @@
+--- 4710/tb371fc/tests/test_geni_hs_sm8250.py
++++ corrected/tb371fc/tests/test_geni_hs_sm8250.py
+@@ -201,9 +201,9 @@
+ def assert_irq(r, expected, engine='hs'):
+     assert engine=='hs' and r.irq_intercepted
+     assert r.qom('irq-level', DEVICE if engine=='hs' else LEGACY) is expected
+-    # No MMIO value stands in for the signal. A zero-time QTest command drains
+-    # actual asynchronous output transitions captured by the established hook.
+-    r.step(0)
++    # This read-only protocol query drains queued IRQ notifications without
++    # MMIO or time advancement; clock_step requires strictly positive progress.
++    assert r.command('endianness') == ['little']
+     assert r.irq[0] is expected,(expected,r.irq,r.irq_events)
+ 
+ 
+--- diagnostic001/tb371fc/tests/test_geni_hs_sm8250.py
++++ corrected/tb371fc/tests/test_geni_hs_sm8250.py
+@@ -159,7 +159,22 @@
+     added_device = device_lines(newlog)[len(device_lines(oldlog)):]
+     if shape:
+         assert not wrapper, 'Wrapper boundary shape delivery has a separate bounded check'
+-        assert added_core == [(op, offset, size, TYPE, 'rejected')], added_core
++        # QTest uses address_space_read/write, whose buffer dispatcher splits
++        # unaligned requests into aligned fragments before MemoryRegion.valid.
++        if size in (1, 2):
++            assert offset % size == 0
++            fragments = ((offset, size),)
++        else:
++            assert size == 4 and offset % 4 in (1, 2, 3)
++            widths = (2, 2) if offset % 4 == 2 else (1, 2, 1)
++            fragments = []
++            cursor = offset
++            for width_bytes in widths:
++                fragments.append((cursor, width_bytes))
++                cursor += width_bytes
++        expected_core = [(op, address, width_bytes, TYPE, 'invalid size (min:4 max:4)')
++                         for address, width_bytes in fragments]
++        assert added_core == expected_core, added_core
+         assert added_device == [], added_device
+         expected_line = None
+     else:
+@@ -508,9 +523,25 @@
+ 
+ def strict_shapes_readonly_and_unknown_registers(r):
+     observations=[]
+-    for width in ('b','w','q'):
++    for width in ('b','w'):
+         observations.append(rejected(r,FW_MAIN,width=width,shape=True))
+         observations.append(rejected(r,M_EN,write=True,width=width,value=1,shape=True))
++    # readq/writeq are eight-byte QTest buffers, not unsplit guest accesses.
++    # The dispatcher delivers two four-byte accesses to these adjacent words.
++    wide_before,wide_log=world(r),r.logs()
++    wide_value=r.read(FW_MAIN,width='q')
++    assert wide_value==FW_REVISION|(FW_REVISION<<32)
++    assert core_diagnostics(r.logs())[len(core_diagnostics(wide_log)):]==[]
++    assert device_lines(r.logs())[len(device_lines(wide_log)):]==[]
++    assert world(r)==wide_before
++    r.write(FW_MAIN,0x12345678deadbeef,width='q')
++    wide_rejections=device_lines(r.logs())[len(device_lines(wide_log)):]
++    expected_wide=[TYPE+': rejected write offset=0x68 size=4 value=0xdeadbeef reason=read-only',
++                   TYPE+': rejected write offset=0x6c size=4 value=0x12345678 reason=read-only']
++    assert wide_rejections==expected_wide,wide_rejections
++    assert core_diagnostics(r.logs())[len(core_diagnostics(wide_log)):]==[]
++    assert world(r)==wide_before
++    r.no_output();r.no_output('legacy')
+     for delta in (1,2,3):
+         observations.append(rejected(r,M_EN+delta,shape=True))
+         observations.append(rejected(r,M_EN+delta,write=True,value=1,shape=True))
+@@ -532,16 +563,20 @@
+     for off in (0x22c,0x25c,0x26c,0x280,0x2a4,0x2a8,0x2ac):
+         observations.append(rejected(r,off,write=True,value=1,reason='reserved-bits'))
+     # Buffered reads preserve an accepted prefix but do not turn the rejected
+-    # suffix into meaningful data. This is distinct from scalar readq.
++    # suffix into meaningful data. QTest scalar spellings also use buffers;
++    # this one-byte suffix is below the device's minimum access size.
+     before=world(r);old=r.logs()
+     reply=r.command(f'read {HS_BASE+FW_MAIN:#x} 5')
+     assert len(reply)==1 and reply[0].startswith('0x')
+     value=bytes.fromhex(reply[0][2:]);assert len(value)==5 and value[:4]==b'\x01\x02\x00\x00'
+     core=core_diagnostics(r.logs())[len(core_diagnostics(old)):]
+-    assert core==[('read',FW_SECONDARY,1,TYPE,'rejected')],core
++    assert core==[('read',FW_SECONDARY,1,TYPE,'invalid size (min:4 max:4)')],core
+     assert device_lines(r.logs())[len(device_lines(old)):]==[] and world(r)==before
+     return {'rejections':observations,'five_byte_read_prefix_hex':value[:4].hex(),
+-            'failed_suffix_interpreted':False,'whole_buffer_read_succeeded':False}
++            'failed_suffix_interpreted':False,'whole_buffer_read_succeeded':False,
++            'eight_byte_qtest_buffer':{'read_value':wide_value,'requested_bytes':8,
++                'actual_readonly_write_rejections':wide_rejections,
++                'full_state_unchanged':True,'unsplit_eight_byte_callback_observed':False}}
+ 
+ 
+ def unsupported_dma_transfer_has_no_effect(r):
+--- diagnostic002/geni_hs_test_transport.py
++++ corrected/geni_hs_test_transport.py
+@@ -62,7 +62,7 @@
+ 
+ def file_channels(path):
+     return {'channels': [{'channel-type': 'main', 'addr': {'transport': 'file',
+-                                                         'filename': str(Path(path).resolve())}}]}
++                                                         'filename': str(Path(path).resolve()), 'offset': 0}}]}
+ 
+ 
+ class HsRig:
+--- diagnostic003/test_geni_hs_sm8250.py
++++ corrected/test_geni_hs_sm8250.py
+@@ -1142,7 +1142,7 @@
+             at=sec['name_offset']+len(TYPE)-1;data[at]^=1
+             assert data[at]!=raw[at] and (data[at]^raw[at]).bit_count()==1
+             assert bytes(data[:at])==raw[:at] and bytes(data[at+1:])==raw[at+1:]
+-            diagnostic='Unknown savevm section or instance';core=True
++            diagnostic='Unknown section or instance';core=True
+             change={'changed_byte_offsets':[at],'changed_bits':1,
+                     'original_section_name':TYPE,'mutated_section_name':TYPE[:-1]+chr(data[at])}
+         else:

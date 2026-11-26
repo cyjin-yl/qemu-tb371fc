@@ -1,0 +1,32 @@
+--- a/tb371fc/scripts/verify_llcc_generation.py
++++ b/tb371fc/scripts/verify_llcc_generation.py
+@@ -14,6 +14,17 @@
+ 
+ ROOT = Path(__file__).resolve().parents[2]
+ MAX_INPUT_BYTES = 512 * 1024
++# Complete, unchanged public geometry source; the normal identity checks below
++# also apply to this bundled copy. A missing or corrupt copy is a gate failure.
++BUNDLED_GEOMETRY_PIN = (
++    "primary-upstream", "torvalds/linux", "adc218676eef25575469234709c2d87185ca223a",
++    "arch/arm64/boot/dts/qcom/sm8250.dtsi", 176883,
++    "630f4eff20bf810e347685066dce74ab92a23b56",
++    "8735b5d8bb61d6a3a579e5b088ff2a719132266cef57c91c319ec19e12770499",
++)
++BUNDLED_GEOMETRY_PATH = ROOT / (
++    "tb371fc/sources/llcc-sm8250/"
++    "linux-adc218676eef25575469234709c2d87185ca223a/sm8250.dtsi")
+ 
+ 
+ def digest(raw):
+@@ -33,7 +44,10 @@
+             local = prefix+"/"+relative
+             url = f"https://raw.githubusercontent.com/{repository}/{revision}/{relative}"
+             if args.source_root is None:
+-                raw = read_source(url, max_bytes=MAX_INPUT_BYTES)
++                if (prefix, repository, revision, relative, size, blob, expected) == BUNDLED_GEOMETRY_PIN:
++                    raw = BUNDLED_GEOMETRY_PATH.read_bytes()
++                else:
++                    raw = read_source(url, max_bytes=MAX_INPUT_BYTES)
+             else:
+                 raw = (args.source_root/local).read_bytes()
+             if len(raw) > MAX_INPUT_BYTES:

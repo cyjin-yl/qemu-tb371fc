@@ -1,0 +1,137 @@
+{
+  "actual_b5_failure_retained": {
+    "bytes": 2062,
+    "file": "actual-failure-review-001.json",
+    "sha256": "04658aeb5ae5b5b6d0663734589ab2a6a261fad03db58f012ae2ad4112913295"
+  },
+  "b5_failure_reclassified_as_pass": false,
+  "before_files": [
+    {
+      "bytes": 13065,
+      "file": "before-source_download.py",
+      "sha256": "007f430930aeae13e028271e95bf2b1eee2ab79ff3ec085475fc29d1f7195c95"
+    },
+    {
+      "bytes": 35146,
+      "file": "before-test_source_download.py",
+      "sha256": "c0a7ea65ef6cdce330142409c32bf2c6303b50ab9cd7a706b720f18f76260001"
+    }
+  ],
+  "change_scope": {
+    "catch_scope": "Only _cache_key(url) ValueError; no cache directory/read/integrity/publication operation is inside the fallback try.",
+    "eligible_cache_security_errors_do_not_downgrade": true,
+    "ineligible_url_bypasses_cache_filesystem": true,
+    "only_helper_function_changed": "read_source",
+    "original_network_transport_ast_identical": true,
+    "other_helper_functions_ast_identical": 10,
+    "remaining_read_source_ast_identical_after_exact_branch_and_doc_reversal": true,
+    "retry_attempts_unchanged": 3,
+    "retry_wait_budget_seconds_unchanged": 30,
+    "uncached_eligibility_branch_only": true
+  },
+  "compiled_runtime_or_native_pass_claimed": false,
+  "complete_diff": {
+    "bytes": 6636,
+    "file": "cache-compatibility-003.diff",
+    "sha256": "b3c4c823d49f5ec944b7be555a65538be13da73940330f8a53b5540b5e1ac41e"
+  },
+  "corrected_gcc_generation_real_ci_pending": true,
+  "created_utc": "2026-11-25T08:18:07.039857+00:00",
+  "final_files": [
+    {
+      "bytes": 13409,
+      "file": "tb371fc/scripts/source_download.py",
+      "sha256": "988060e6c9e604f5562e840996a778bf7049aabc8f547082566aae159f4779cf"
+    },
+    {
+      "bytes": 39099,
+      "file": "tb371fc/scripts/test_source_download.py",
+      "sha256": "5a5d5dfe85e3c8b7d097529a117e328f80016e99a5926ddd13cd715e7bd2c46d"
+    }
+  ],
+  "findings": [],
+  "gcc_bad_complete_content_test": {
+    "actual_verifier_used": true,
+    "cache_directory_not_called": true,
+    "expected_error": "Public source hash differs:",
+    "generator_not_called": true,
+    "one_request": true,
+    "passed_in_saved_49_test_run": true,
+    "retry_not_called": true,
+    "source_only_mocked_transport": true
+  },
+  "gcc_content_pins": {
+    "VENDOR_BRANCH_SHA256": "375830dc9cd0ecbc12ea018eee1d260d8ba724dc52f1ac8b3589a07bc75d08aa",
+    "VENDOR_SHA256": "ed208678508c983d0989f1f135fac898c5a9a91c14af1fa42cd7ea2f24cd14cd",
+    "drivers/clk/qcom/gcc-sm8250.c": "b3b3865de3a297f906d5562a720d8d304538cef3c8d3703dee026cfd6dba06c8",
+    "include/dt-bindings/clock/qcom,gcc-sm8250.h": "34682c01e5b21bb13db125afa3504c73606c294c23cfb3a96f6ea52cdffd2ff7"
+  },
+  "gcc_verifier_source_unchanged_from_b5": true,
+  "public_dependencies": [
+    {
+      "bytes": 27435,
+      "file": "tb371fc/scripts/generate_gcc_sm8250.py",
+      "git_blob_sha1": "7d164f19d32d6f260e651c6f81b56b0f5cb19328",
+      "sha256": "c6e97551b09b847e3a7e4fd8b0ecc50df0f67a03db174a2a37f14b93e7e32768"
+    },
+    {
+      "bytes": 151505,
+      "file": "tb371fc/docs/gcc-sm8250-registers.json",
+      "git_blob_sha1": "e5ad9aa8a352fc87a47c413a22045b404caae96b",
+      "sha256": "6961f3b2f00cc7ad1547d50cc3fa9ff98b22cca4501a59c03be5408a60333ac6"
+    },
+    {
+      "bytes": 4132,
+      "file": "tb371fc/scripts/verify_gcc_generation.py",
+      "git_blob_sha1": "f5ae4b8cb12d64fe17ee88e84623a220ec78f309",
+      "sha256": "a380251b1e429df458749c7e01a4ee5753b38c7148ff7811497e8a4924454c67"
+    }
+  ],
+  "qemu_device_ssh_ci_executed_by_reviewer": false,
+  "review_preparation_failure_retained": {
+    "bytes": 445,
+    "file": "independent-cache-review-preparation-failure-001.json",
+    "sha256": "5c626501a528a260c19571faa88d7354b771a91a80504b1eef64b8e7e3ac1c5c"
+  },
+  "reviewed_freeze": {
+    "bytes": 8659,
+    "file": "cache-source-freeze-003.json",
+    "sha256": "8848641abde78189347c3a0a70eaa596736698dd591c9394efd8701a552a9bfe"
+  },
+  "reviewer": "independent_native_result_review",
+  "schema": "tb371fc-public-source-cache-compatibility-independent-review-v1",
+  "source_review_passed": true,
+  "unit_evidence": {
+    "execution": {
+      "bytes": 681,
+      "file": "execution.json",
+      "sha256": "4bb29827de1923834a688c87b506399b3778a664099f2f48a40097efafb26128"
+    },
+    "logged_test_names_match_complete_current_class_methods": true,
+    "new_methods": [
+      "PublicSourceCacheTests.test_actual_gcc_verifier_still_rejects_wrong_tag_content_without_retry",
+      "PublicSourceCacheTests.test_gcc_tag_url_is_never_cached_and_does_not_change_pinned_entries",
+      "PublicSourceCacheTests.test_uncacheable_tag_retains_original_transient_retry_policy",
+      "PublicSourceCacheTests.test_unpinned_nonpublic_or_ambiguous_urls_use_uncached_transport"
+    ],
+    "observed_duration_seconds": 12.781,
+    "observed_exit_code": 0,
+    "observed_tests": 49,
+    "old_methods": 46,
+    "replaced_old_methods": [
+      "PublicSourceCacheTests.test_unpinned_nonpublic_or_ambiguous_urls_fail_before_network"
+    ],
+    "reviewer_reran_tests": false,
+    "stderr": {
+      "bytes": 9059,
+      "file": "stderr.log",
+      "sha256": "b7ce960cb537a1169952a8046913654381092d9388b1f417dd749af385e12b17"
+    },
+    "stdout": {
+      "bytes": 1810,
+      "file": "stdout.log",
+      "sha256": "f733a1c09b41f88dc9b21270df505efe20c4a8778dd5ad51fda6df802757552d"
+    },
+    "unchanged_old_methods": 45
+  }
+}

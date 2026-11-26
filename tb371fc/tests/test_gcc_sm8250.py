@@ -28,6 +28,7 @@ OFF, ROOT, BUSY = 1 << 31, 2, 1
 UART_CMD, UART_CBCR, VOTE = 0x1e4d0, 0x1e4cc, 0x52010
 UART_CFG = (6 << 8) | (2 << 12) | 1
 PERIOD_UNIT = 1_000_000_000 << 32
+RETAIN_FF = 1 << 11  # Pinned Kona gdsc-regulator.c GDSCR request field.
 
 
 class GccRig(Rig):
@@ -381,6 +382,37 @@ def software_power_transition(r):
     r.write(0x77004, before | 2)
     assert r.read(0x77004) == before
 
+    # Retaining a control request while collapsed does not supply power.
+    r.write(0x77004, RETAIN_FF | 1)
+    r.step(3000)
+    assert r.read(0x77004) == RETAIN_FF | 1
+    r.expect_line(4, False)
+    # The vendor cold enable writes zero, polls POWER_ON, then writes 0x800
+    # from its pre-poll local value. The polling helper has its own variable.
+    r.write(0x77004, 0)
+    r.step(2999)
+    assert r.read(0x77004) == 0
+    r.step(1)
+    assert r.read(0x77004) == OFF
+    r.expect_line(4, True)
+    r.write(0x77004, RETAIN_FF)
+    assert r.read(0x77004) == OFF | RETAIN_FF
+    r.expect_line(4, True)
+    # Driver disable carries the read-only status and retains the request.
+    r.write(0x77004, r.read(0x77004) | 1)
+    r.step(2999)
+    assert r.read(0x77004) == OFF | RETAIN_FF | 1
+    r.step(1)
+    assert r.read(0x77004) == RETAIN_FF | 1
+    r.expect_line(4, False)
+    r.write(0x77004, r.read(0x77004) & ~1)
+    r.step(3000)
+    assert r.read(0x77004) == OFF | RETAIN_FF
+    # Guest clearing of the request is visible without changing power state.
+    r.write(0x77004, r.read(0x77004) & ~RETAIN_FF)
+    assert r.read(0x77004) == OFF
+    r.expect_line(4, True)
+
 
 software_power_transition.intercept = 'power'
 
@@ -389,6 +421,8 @@ def reset_cancels_pending_transitions(r):
     pll(r, wait=False)
     uart_config(r, wait=False)
     r.write(0x77004, 0)
+    r.write(0x77004, r.read(0x77004) | RETAIN_FF)
+    assert r.read(0x77004) == RETAIN_FF
     r.write(0x77000, 1)
     r.expect_line(33, True)
     r.reset()
@@ -412,6 +446,33 @@ def unsupported_registers_are_diagnosed(r):
     assert 'unsupported write 0x00000001 at 0x1e4e4' in log, log
     assert 'unsupported write 0x00001234 at 0x18' in log, log
     assert 'unsupported read at 0xdead0' in log, log
+    # The new request is restricted to UFS PHY, not the other ten domains.
+    for offset in (0x6b004, 0x8d004, 0x6004, 0x75004, 0xf004, 0x10004,
+                   0x7d050, 0x7d058, 0x7d054, 0x7d06c):
+        before = r.read(offset)
+        log_start = r.log_path.stat().st_size
+        r.write(offset, before | RETAIN_FF)
+        assert r.read(offset) == before
+        expected = (f'qcom-sm8250-gcc: unsupported write '
+                    f'0x{before | RETAIN_FF:08x} at 0x{offset:x}\n').encode()
+        assert r.log_path.read_bytes()[log_start:] == expected
+    # A mixed valid/unknown write is rejected atomically, including retain.
+    for bad in (1 << 10, 1 << 24):
+        before = r.read(0x77004)
+        log_start = r.log_path.stat().st_size
+        value = before | RETAIN_FF | bad
+        r.write(0x77004, value)
+        assert r.read(0x77004) == before
+        expected = (f'qcom-sm8250-gcc: unsupported write '
+                    f'0x{value:08x} at 0x77004\n').encode()
+        assert r.log_path.read_bytes()[log_start:] == expected
+    # The adjacent unimplemented word is not turned into backing RAM.
+    before = r.read(0x77004)
+    log_start = r.log_path.stat().st_size
+    r.write(0x77008, RETAIN_FF)
+    assert r.read(0x77004) == before
+    assert r.log_path.read_bytes()[log_start:] == (
+        b'qcom-sm8250-gcc: unsupported write 0x00000800 at 0x77008\n')
 
 
 TESTS = [cold_defaults, invalid_pll_does_not_lock, pll_vote_lock_and_stop,
@@ -437,6 +498,8 @@ def migration(args, directory):
         source.write(0x77000, 1)
         uart_config(source, numerator=768, wait=False)
         source.write(0x77004, 0)
+        source.write(0x77004, source.read(0x77004) | RETAIN_FF)
+        assert source.read(0x77004) == RETAIN_FF
         source.expect_hz('gcc_qupv3_wrap2_s4_clk', 7_372_800)
         source.expect_line(33, True)
         regs = (0, 4, 0x40, 0x52018, UART_CMD, UART_CMD + 4,
@@ -459,6 +522,7 @@ def migration(args, directory):
         checks.append({'check': 'actual_qmp_migration_completed', 'status': 'pass'})
         after = {hex(reg): target.read(reg) for reg in regs}
         assert before == after, {'before': before, 'after': after}
+        assert after['0x77004'] == RETAIN_FF
         assert int(target.command('readl 0x80010000')[0], 0) == 0x47434331
         target.expect_hz('gcc_qupv3_wrap2_s4_clk', 7_372_800)
         target.expect_line(33, True)
@@ -473,11 +537,18 @@ def migration(args, directory):
         assert not target.read(0x77004) & OFF
         target.step(1)
         assert target.read(0x77004) & OFF
+        assert target.read(0x77004) == OFF | RETAIN_FF
         checks.append({'check': 'pending_timers_resume_at_test_controlled_deadlines', 'status': 'pass'})
         target.gpio('remote-vote', 127, False)
         target.expect_hz('gcc_qupv3_wrap2_s4_clk', 0)
         target.write(0x77000, 0)
         target.expect_line(33, False)
+        target.write(0x77004, target.read(0x77004) | 1)
+        target.step(3000)
+        assert target.read(0x77004) == RETAIN_FF | 1
+        target.write(0x77004, target.read(0x77004) & ~1)
+        target.step(3000)
+        assert target.read(0x77004) == OFF | RETAIN_FF
         checks.append({'check': 'destination_clocks_votes_and_reset_continue', 'status': 'pass'})
         return {'success': True, 'checks': checks, 'migration': state,
                 'qtest_virtual_ns_at_transfer': now}

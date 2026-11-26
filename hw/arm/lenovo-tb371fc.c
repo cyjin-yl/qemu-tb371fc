@@ -46,6 +46,7 @@
 #include "hw/intc/arm_gicv3_common.h"
 #include "hw/intc/qcom-pdc.h"
 #include "hw/misc/qcom-sm8250-gcc.h"
+#include "hw/misc/qcom-sm8250-geni-i2c.h"
 #include "hw/misc/qcom-sm8250-gpucc.h"
 #include "hw/misc/qcom-sm8250-npucc.h"
 #include "hw/misc/qcom-sm8250-camcc.h"
@@ -62,6 +63,7 @@
 #include "hw/misc/qcom-sm8250-spss-irq-mask.h"
 #include "hw/misc/qcom-sm8250-rpm-stats-offset.h"
 #include "hw/misc/qcom-sm8250-ddr-stats-offset.h"
+#include "hw/misc/qcom-sm8250-qce-bam.h"
 #include "hw/misc/qcom-tcsr-mutex.h"
 #include "hw/misc/qcom-tsens24xx.h"
 #include "hw/misc/qcom-cpufreq-hw.h"
@@ -78,6 +80,7 @@
 #include "hw/misc/qcom-npu-gdsc.h"
 #include "hw/misc/qcom-video-gdsc.h"
 #include "hw/misc/qcom-spmi-pmic-arb.h"
+#include "hw/misc/qcom-sm8250-spmi-debug-fuse.h"
 #include "hw/gpio/qcom-tb371fc-tlmm.h"
 #include "hw/misc/qcom-sm8250-rpmh.h"
 #include "hw/ufs/qcom-sm8250-ufs.h"
@@ -91,6 +94,8 @@
 #include "system/tcg.h"
 #include "target/arm/cpu.h"
 #include "target/arm/gtimer.h"
+#include "tb371fc-dsu-pmu.h"
+#include "hw/misc/qcom-sm8250-prng.h"
 
 #define TYPE_TB371FC_MACHINE MACHINE_TYPE_NAME("tb371fc")
 OBJECT_DECLARE_SIMPLE_TYPE(TB371FCMachineState, TB371FC_MACHINE)
@@ -111,6 +116,7 @@ OBJECT_DECLARE_SIMPLE_TYPE(TB371FCMachineState, TB371FC_MACHINE)
 #define TB371FC_QUP_SIZE         UINT64_C(0x6000)
 #define TB371FC_TIMER_HZ         19200000
 #define TB371FC_GCC_BASE         UINT64_C(0x00100000)
+#define TB371FC_PRNG_BASE        UINT64_C(0x00793000)
 #define TB371FC_GCC_XO_HZ        19200000
 #define TB371FC_SLEEP_HZ         32000
 #define TB371FC_UFS_BASE         UINT64_C(0x01d84000)
@@ -175,7 +181,12 @@ struct TB371FCMachineState {
     MachineState parent_obj;
     ARMCPU *cpu[TB371FC_CPUS];
     DeviceState *gic;
+    DeviceState *dsu_pmu;
+    DeviceState *prng;
     QcomGeniUartState uart;
+    QcomGeniUartState uart_hs;
+    DeviceState *geni_i2c[QCOM_GENI_I2C_INSTANCE_COUNT];
+    bool geni_i2c_enabled;
     QcomSm8250GccState gcc;
     DeviceState *ufs;
     DeviceState *dsi_pll;
@@ -188,6 +199,8 @@ struct TB371FCMachineState {
     Clock *board_xo;
     char *rpmh_profile, *rpmh_cmd_db;
     char *spmi_profile;
+    bool spmi_debug_fuse_enabled;
+    char *spmi_debug_fuse_word;
     char *smem_profile;
     char *aop_profile;
     char *tbu_profile;
@@ -196,6 +209,9 @@ struct TB371FCMachineState {
     MemoryRegion qtest_tbu_dma_alias[QCOM_SM8250_TBU_COUNT];
     bool enable_ufs;
     bool counter_exact;
+    bool ras_zero_records_compat;
+    bool dsu_pmu_cycle_only;
+    bool prng_virtual;
     uint64_t kernel_load_base;
     Clock *xo, *sleep, *fabric;
     bool gcc_boot_configured;
@@ -878,6 +894,15 @@ static CpuInstanceProperties tb371fc_cpu_index_to_props(MachineState *ms,
     return cpus->cpus[index].props;
 }
 
+static void tb371fc_create_dsu_pmu(TB371FCMachineState *s)
+{
+    /* Always present so migration can reject enabled/disabled mismatches. */
+    s->dsu_pmu = qdev_new(TYPE_TB371FC_DSU_PMU);
+    object_property_add_child(OBJECT(s), "dsu-pmu", OBJECT(s->dsu_pmu));
+    qdev_prop_set_bit(s->dsu_pmu, "enabled", s->dsu_pmu_cycle_only);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(s->dsu_pmu), &error_fatal);
+}
+
 static void tb371fc_create_cpus(TB371FCMachineState *s, MemoryRegion *sysmem)
 {
     const CPUArchIdList *cpus = tb371fc_possible_cpu_arch_ids(MACHINE(s));
@@ -894,6 +919,8 @@ static void tb371fc_create_cpus(TB371FCMachineState *s, MemoryRegion *sysmem)
         object_property_set_int(obj, "cntfrq", TB371FC_TIMER_HZ, &error_abort);
         object_property_set_bool(obj, "cntfrq-exact", s->counter_exact,
                                  &error_abort);
+        object_property_set_bool(obj, "tb371fc-ras-zero-records-compat",
+                                 s->ras_zero_records_compat, &error_abort);
         if (i >= 4) {
             object_property_set_int(obj, "revidr", 3, &error_abort);
         }
@@ -905,6 +932,7 @@ static void tb371fc_create_cpus(TB371FCMachineState *s, MemoryRegion *sysmem)
                                 &error_abort);
         object_property_set_link(obj, "memory", OBJECT(sysmem), &error_abort);
         qdev_realize(DEVICE(obj), NULL, &error_fatal);
+        tb371fc_dsu_pmu_attach_cpu(s->dsu_pmu, s->cpu[i]);
         object_unref(obj);
     }
 }
@@ -1455,6 +1483,100 @@ static void tb371fc_create_noc_qos(TB371FCMachineState *s)
      */
 }
 
+
+static void tb371fc_prepare_geni_i2c(TB371FCMachineState *s)
+{
+    for (unsigned i = 0; i < qcom_geni_i2c_instance_count(); i++) {
+        const QcomGeniI2CInstance *inst = qcom_geni_i2c_instance_at(i);
+        DeviceState *dev = qdev_new(TYPE_QCOM_SM8250_GENI_I2C);
+        g_autofree char *name = g_strdup_printf("geni-i2c-se%u", inst->id);
+
+        s->geni_i2c[i] = dev;
+        object_property_add_child(OBJECT(s), name, OBJECT(dev));
+        dev->id = g_strdup(name);
+        qdev_prop_set_uint32(dev, "instance-id", inst->id);
+        qdev_prop_set_bit(dev, "enabled-reference", s->geni_i2c_enabled);
+    }
+}
+
+/*
+ * Each shared wrapper reset has one output owner. When the I2C profile is
+ * off, keep the original legacy destination and create no new fanout.
+ * The stateless splitters are the same core device already used above.
+ */
+static qemu_irq tb371fc_geni_reset_sink(TB371FCMachineState *s,
+                                       unsigned wrapper,
+                                       DeviceState *legacy)
+{
+    DeviceState *splitter;
+    g_autofree char *name = NULL;
+    unsigned count = legacy ? 1 : 0;
+    unsigned output = 0;
+
+    if (!s->geni_i2c_enabled) {
+        return legacy ? qdev_get_gpio_in_named(legacy, "reset", 0) : NULL;
+    }
+    for (unsigned i = 0; i < qcom_geni_i2c_instance_count(); i++) {
+        count += qcom_geni_i2c_instance_at(i)->wrapper == wrapper;
+    }
+    assert(count > 0);
+    splitter = qdev_new(TYPE_SPLIT_IRQ);
+    name = g_strdup_printf("geni-i2c-wrap%u-reset-fanout", wrapper);
+    object_property_add_child(OBJECT(s), name, OBJECT(splitter));
+    qdev_prop_set_uint16(splitter, "num-lines", count);
+    qdev_realize_and_unref(splitter, NULL, &error_fatal);
+    if (legacy) {
+        qdev_connect_gpio_out(splitter, output++,
+                              qdev_get_gpio_in_named(legacy, "reset", 0));
+    }
+    for (unsigned i = 0; i < qcom_geni_i2c_instance_count(); i++) {
+        if (qcom_geni_i2c_instance_at(i)->wrapper == wrapper) {
+            qdev_connect_gpio_out(splitter, output++,
+                qdev_get_gpio_in_named(s->geni_i2c[i], "reset", 0));
+        }
+    }
+    assert(output == count);
+    return qdev_get_gpio_in(splitter, 0);
+}
+
+static void tb371fc_realize_geni_i2c(TB371FCMachineState *s)
+{
+    for (unsigned i = 0; i < qcom_geni_i2c_instance_count(); i++) {
+        const QcomGeniI2CInstance *inst = qcom_geni_i2c_instance_at(i);
+        DeviceState *dev = s->geni_i2c[i];
+
+        qdev_connect_clock_in(dev, "se-clk",
+            qdev_get_clock_out(DEVICE(&s->gcc), inst->se_clock));
+        qdev_connect_clock_in(dev, "m-ahb",
+            qdev_get_clock_out(DEVICE(&s->gcc), inst->m_ahb_clock));
+        qdev_connect_clock_in(dev, "s-ahb",
+            qdev_get_clock_out(DEVICE(&s->gcc), inst->s_ahb_clock));
+        sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, inst->base);
+        sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0,
+                            qdev_get_gpio_in(s->gic, inst->spi));
+    }
+    if (s->geni_i2c_enabled) {
+        /* Wrapper 0 and 2 also retain HS and console UART, respectively. */
+        qdev_connect_gpio_out_named(DEVICE(&s->gcc), "reset", 25,
+                                    tb371fc_geni_reset_sink(s, 1, NULL));
+    }
+}
+
+static void tb371fc_create_prng(TB371FCMachineState *s)
+{
+    s->prng = qdev_new(TYPE_QCOM_SM8250_PRNG);
+    object_property_add_child(OBJECT(s), "prng", OBJECT(s->prng));
+    qdev_prop_set_bit(s->prng, "enabled", s->prng_virtual);
+    qdev_connect_clock_in(s->prng, "iface",
+        qdev_get_clock_out(DEVICE(&s->gcc), "gcc_prng_ahb_clk"));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(s->prng), &error_fatal);
+    if (s->prng_virtual) {
+        /* Original /soc/qrng@793000: only DATA/STATUS, no-qrng-config. */
+        sysbus_mmio_map(SYS_BUS_DEVICE(s->prng), 0, TB371FC_PRNG_BASE);
+    }
+}
+
 static void tb371fc_create_gcc(TB371FCMachineState *s)
 {
     DeviceState *gcc;
@@ -1478,6 +1600,18 @@ static void tb371fc_create_gcc(TB371FCMachineState *s)
                           s->fabric);
     qdev_connect_clock_in(gcc, "gcc_qupv3_wrap_2_s_ahb_clk_parent",
                           s->fabric);
+    if (s->uart_hs.hs_enabled || s->geni_i2c_enabled) {
+        qdev_connect_clock_in(gcc, "gcc_qupv3_wrap_0_m_ahb_clk_parent",
+                              s->fabric);
+        qdev_connect_clock_in(gcc, "gcc_qupv3_wrap_0_s_ahb_clk_parent",
+                              s->fabric);
+    }
+    if (s->geni_i2c_enabled) {
+        qdev_connect_clock_in(gcc, "gcc_qupv3_wrap_1_m_ahb_clk_parent",
+                              s->fabric);
+        qdev_connect_clock_in(gcc, "gcc_qupv3_wrap_1_s_ahb_clk_parent",
+                              s->fabric);
+    }
     if (s->ufs) {
         qdev_connect_clock_in(gcc, "gcc_ufs_phy_ahb_clk_parent", s->fabric);
         qdev_connect_clock_in(gcc, "gcc_ufs_1x_clkref_en_parent", s->xo);
@@ -1487,6 +1621,10 @@ static void tb371fc_create_gcc(TB371FCMachineState *s)
                               qdev_get_clock_out(s->ufs, "rx-lane0"));
         qdev_connect_clock_in(gcc, "gcc_ufs_phy_rx_symbol_1_clk_parent",
                               qdev_get_clock_out(s->ufs, "rx-lane1"));
+    }
+    if (s->prng_virtual) {
+        /* Explicit virtual carrier; the silicon parent/rate is not known. */
+        qdev_connect_clock_in(gcc, "gcc_prng_ahb_clk_parent", s->fabric);
     }
     sysbus_realize(SYS_BUS_DEVICE(gcc), &error_fatal);
     sysbus_mmio_map(SYS_BUS_DEVICE(gcc), 0, TB371FC_GCC_BASE);
@@ -1498,6 +1636,25 @@ static void tb371fc_create_gcc(TB371FCMachineState *s)
                                        TB371FC_GCC_QUP_M_AHB), 1);
     qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request",
                                        TB371FC_GCC_QUP_S_AHB), 1);
+    if (s->uart_hs.hs_enabled) {
+        /* QEMU table indices, not the vendor DT clock IDs 100/132/133. */
+        qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request", 99), 1);
+        qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request", 131), 1);
+        qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request", 132), 1);
+    }
+    if (s->geni_i2c_enabled) {
+        for (unsigned i = 0; i < qcom_geni_i2c_instance_count(); i++) {
+            const QcomGeniI2CInstance *inst = qcom_geni_i2c_instance_at(i);
+
+            /* Current provider indices, not the vendor DT clock IDs. */
+            qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request",
+                                                inst->se_clock_index), 1);
+            qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request",
+                                                inst->m_ahb_clock_index), 1);
+            qemu_set_irq(qdev_get_gpio_in_named(gcc, "hw-request",
+                                                inst->s_ahb_clock_index), 1);
+        }
+    }
 }
 
 
@@ -1616,6 +1773,7 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
     DeviceState *spss_mask = qdev_new(TYPE_QCOM_SM8250_SPSS_IRQ_MASK);
     DeviceState *rpm_stats_offset = qdev_new(TYPE_QCOM_SM8250_RPM_STATS_OFFSET);
     DeviceState *ddr_stats_offset = qdev_new(TYPE_QCOM_SM8250_DDR_STATS_OFFSET);
+    DeviceState *qce_bam = qdev_new(TYPE_QCOM_SM8250_QCE_BAM);
     DeviceState *mutex = qdev_new(TYPE_QCOM_TCSR_MUTEX);
     DeviceState *smem = qdev_new(TYPE_QCOM_SMEM_HANDOFF);
     DeviceState *msgram = qdev_new(TYPE_QCOM_AOP_MSGRAM);
@@ -1673,6 +1831,13 @@ static void tb371fc_create_boot_resources(TB371FCMachineState *s)
                               OBJECT(ddr_stats_offset));
     sysbus_realize_and_unref(SYS_BUS_DEVICE(ddr_stats_offset), &error_fatal);
     sysbus_mmio_map(SYS_BUS_DEVICE(ddr_stats_offset), 0, 0x0c3f001c);
+
+    /* One strict shared QCE/BAM union; reference profile is default off. */
+    object_property_add_child(OBJECT(s), "qce-bam", OBJECT(qce_bam));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(qce_bam), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(qce_bam), 0, QCOM_SM8250_QCE_BAM_BASE);
+    sysbus_connect_irq(SYS_BUS_DEVICE(qce_bam), 0,
+                       qdev_get_gpio_in(s->gic, 272));
 
     /* Captured SMEM hardware-lock geometry; initial owners remain unknown. */
     object_property_add_child(OBJECT(s), "tcsr-mutex", OBJECT(mutex));
@@ -1760,6 +1925,19 @@ static void tb371fc_create_pdc(TB371FCMachineState *s)
                                qdev_get_gpio_in(s->gic, ranges[i].spi + j));
         }
     }
+}
+
+static void tb371fc_create_spmi_debug_fuse(TB371FCMachineState *s)
+{
+    DeviceState *dev = qdev_new(TYPE_QCOM_SM8250_SPMI_DEBUG_FUSE);
+
+    object_property_add_child(OBJECT(s), "spmi-debug-fuse", OBJECT(dev));
+    qdev_prop_set_bit(dev, "enabled", s->spmi_debug_fuse_enabled);
+    if (s->spmi_debug_fuse_word) {
+        qdev_prop_set_string(dev, "fuse-word", s->spmi_debug_fuse_word);
+    }
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, QCOM_SPMI_DEBUG_FUSE_GUARD_BASE);
 }
 
 static void tb371fc_create_spmi(TB371FCMachineState *s)
@@ -1951,10 +2129,15 @@ static void tb371fc_init(MachineState *ms)
     }
 
     memory_region_add_subregion(sysmem, TB371FC_RAM_BASE, ms->ram);
+    tb371fc_create_dsu_pmu(s);
     tb371fc_create_cpus(s, sysmem);
     tb371fc_create_gic(s);
+    /* Original DT /soc/dsu_pmu@0: all eight CPUs, level-high SPI 50. */
+    sysbus_connect_irq(SYS_BUS_DEVICE(s->dsu_pmu), 0,
+                       qdev_get_gpio_in(s->gic, 50));
     tb371fc_create_pdc(s);
     tb371fc_create_spmi(s);
+    tb371fc_create_spmi_debug_fuse(s);
     tb371fc_create_mmio_timer(s);
     tb371fc_create_mpm2_sleep_counter(s);
     tb371fc_create_tsens(s);
@@ -1967,7 +2150,12 @@ static void tb371fc_init(MachineState *ms)
         object_property_add_child(OBJECT(s), "ufs", OBJECT(s->ufs));
         s->ufs->id = g_strdup("ufs0");
     }
+    /* Apply the HS qdev global before conditional GCC parents are connected. */
+    object_initialize_child(OBJECT(s), "uart-hs", &s->uart_hs,
+                            TYPE_QCOM_SM8250_GENI_HS);
+    tb371fc_prepare_geni_i2c(s);
     tb371fc_create_gcc(s);
+    tb371fc_create_prng(s);
     tb371fc_create_cpufreq(s);
     tb371fc_create_devfreq(s);
     tb371fc_create_sbm(s);
@@ -2011,8 +2199,8 @@ static void tb371fc_init(MachineState *ms)
                                               "gcc_qupv3_wrap_2_s_ahb_clk"));
     qdev_connect_gpio_out_named(DEVICE(&s->gcc), "reset",
                                 TB371FC_GCC_QUP_RESET,
-                                qdev_get_gpio_in_named(DEVICE(&s->uart),
-                                                       "reset", 0));
+                                tb371fc_geni_reset_sink(s, 2,
+                                                       DEVICE(&s->uart)));
     uart = SYS_BUS_DEVICE(&s->uart);
     sysbus_realize(uart, &error_fatal);
     sysbus_mmio_map(uart, 0, TB371FC_UART_BASE);
@@ -2021,6 +2209,26 @@ static void tb371fc_init(MachineState *ms)
     memory_region_init_io(&s->qup_version, OBJECT(s), &tb371fc_qup_ops, s,
                           "tb371fc.synthetic-qup-version", TB371FC_QUP_SIZE);
     memory_region_add_subregion(sysmem, TB371FC_QUP_BASE, &s->qup_version);
+
+    qdev_prop_set_chr(DEVICE(&s->uart_hs), "chardev", serial_hd(1));
+    qdev_connect_clock_in(DEVICE(&s->uart_hs), "se-clk",
+                          qdev_get_clock_out(DEVICE(&s->gcc),
+                                              "gcc_qupv3_wrap0_s6_clk"));
+    qdev_connect_clock_in(DEVICE(&s->uart_hs), "m-ahb",
+                          qdev_get_clock_out(DEVICE(&s->gcc),
+                                              "gcc_qupv3_wrap_0_m_ahb_clk"));
+    qdev_connect_clock_in(DEVICE(&s->uart_hs), "s-ahb",
+                          qdev_get_clock_out(DEVICE(&s->gcc),
+                                              "gcc_qupv3_wrap_0_s_ahb_clk"));
+    qdev_connect_gpio_out_named(DEVICE(&s->gcc), "reset", 24,
+                                tb371fc_geni_reset_sink(s, 0,
+                                                       DEVICE(&s->uart_hs)));
+    uart = SYS_BUS_DEVICE(&s->uart_hs);
+    sysbus_realize(uart, &error_fatal);
+    sysbus_mmio_map(uart, 0, qcom_geni_hs_se_base());
+    sysbus_mmio_map(uart, 1, qcom_geni_hs_wrapper_version_address());
+    sysbus_connect_irq(uart, 0, qdev_get_gpio_in(s->gic, 607));
+    tb371fc_realize_geni_i2c(s);
 
     s->bootinfo.ram_size = ms->ram_size;
     s->bootinfo.board_id = -1;
@@ -2208,6 +2416,109 @@ static void tb371fc_set_smem_profile(Object *obj, const char *value, Error **err
     s->smem_profile = g_strdup(value);
 }
 
+
+static bool tb371fc_get_ras_zero_records_compat(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->ras_zero_records_compat;
+}
+
+static void tb371fc_set_ras_zero_records_compat(Object *obj, bool value,
+                                               Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->cpu[0]) {
+        error_setg(errp, "ras-zero-records-compat is fixed after CPU creation");
+        return;
+    }
+    s->ras_zero_records_compat = value;
+}
+
+static bool tb371fc_get_prng_virtual(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->prng_virtual;
+}
+
+static void tb371fc_set_prng_virtual(Object *obj, bool value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->cpu[0]) {
+        error_setg(errp, "prng-virtual is fixed after machine creation");
+        return;
+    }
+    s->prng_virtual = value;
+}
+
+static bool tb371fc_get_dsu_pmu_cycle_only(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->dsu_pmu_cycle_only;
+}
+
+static void tb371fc_set_dsu_pmu_cycle_only(Object *obj, bool value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->cpu[0]) {
+        error_setg(errp, "dsu-pmu-cycle-only is fixed after CPU creation");
+        return;
+    }
+    s->dsu_pmu_cycle_only = value;
+}
+
+static bool tb371fc_get_geni_i2c_enabled(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->geni_i2c_enabled;
+}
+
+static void tb371fc_set_geni_i2c_enabled(Object *obj, bool value, Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "geni-i2c-enabled is fixed after machine creation");
+        return;
+    }
+    s->geni_i2c_enabled = value;
+}
+
+static bool tb371fc_get_spmi_debug_fuse_enabled(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->spmi_debug_fuse_enabled;
+}
+
+static void tb371fc_set_spmi_debug_fuse_enabled(Object *obj, bool value,
+                                              Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "spmi-debug-fuse-enabled is fixed after machine creation");
+        return;
+    }
+    s->spmi_debug_fuse_enabled = value;
+}
+
+static char *tb371fc_get_spmi_debug_fuse_word(Object *obj, Error **errp)
+{
+    const char *word = TB371FC_MACHINE(obj)->spmi_debug_fuse_word;
+
+    return g_strdup(word ? word : "");
+}
+
+static void tb371fc_set_spmi_debug_fuse_word(Object *obj, const char *value,
+                                           Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "spmi-debug-fuse-word is fixed after machine creation");
+        return;
+    }
+    g_free(s->spmi_debug_fuse_word);
+    s->spmi_debug_fuse_word = g_strdup(value);
+}
+
 static char *tb371fc_get_spmi_profile(Object *obj, Error **errp)
 {
     return g_strdup(TB371FC_MACHINE(obj)->spmi_profile);
@@ -2291,11 +2602,17 @@ static void tb371fc_instance_init(Object *obj)
 
     s->rpmh_profile = g_strdup("off");
     s->spmi_profile = g_strdup("off");
+    s->spmi_debug_fuse_enabled = false;
+    s->geni_i2c_enabled = false;
+    s->spmi_debug_fuse_word = NULL;
     s->smem_profile = g_strdup("off");
     s->aop_profile = g_strdup("none");
     s->tbu_profile = g_strdup("off");
     s->rpmh_boot_configured = true;
     s->counter_exact = true;
+    s->ras_zero_records_compat = false;
+    s->dsu_pmu_cycle_only = false;
+    s->prng_virtual = false;
     s->gcc_boot_configured = true;
     s->enable_ufs = true;
     s->bootstrap_fabric_hz = 100000000;
@@ -2307,6 +2624,7 @@ static void tb371fc_instance_finalize(Object *obj)
     g_free(s->rpmh_profile);
     g_free(s->rpmh_cmd_db);
     g_free(s->spmi_profile);
+    g_free(s->spmi_debug_fuse_word);
     g_free(s->smem_profile);
     g_free(s->aop_profile);
     g_free(s->tbu_profile);
@@ -2350,6 +2668,37 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
         tb371fc_get_spmi_profile, tb371fc_set_spmi_profile);
     object_class_property_set_description(oc, "spmi-profile",
         "off (default) or explicit reference APID/ownership/PMIC subset");
+    object_class_property_add_bool(oc, "ras-zero-records-compat",
+        tb371fc_get_ras_zero_records_compat,
+        tb371fc_set_ras_zero_records_compat);
+    object_class_property_set_description(oc, "ras-zero-records-compat",
+        "Opt in to AArch64 zero-record RAS RES0/RAZ/WI compatibility on "
+        "all eight CPUs (default off); no physical error records or IRQs");
+    object_class_property_add_bool(oc, "prng-virtual",
+        tb371fc_get_prng_virtual, tb371fc_set_prng_virtual);
+    object_class_property_set_description(oc, "prng-virtual",
+        "Explicit host-entropy PRNG with a synthetic AHB carrier (default off)");
+    object_class_property_add_bool(oc, "dsu-pmu-cycle-only",
+        tb371fc_get_dsu_pmu_cycle_only, tb371fc_set_dsu_pmu_cycle_only);
+    object_class_property_set_description(oc, "dsu-pmu-cycle-only",
+        "Opt in to a shared virtual 1 GHz DSU cycle counter with no "
+        "programmable events (default off); not a physical DSU PMU");
+    object_class_property_add_bool(oc, "geni-i2c-enabled",
+        tb371fc_get_geni_i2c_enabled, tb371fc_set_geni_i2c_enabled);
+    object_class_property_set_description(oc, "geni-i2c-enabled",
+        "Enable the nine original-DT I2C controller instances with the "
+        "virtual empty-bus policy (default off); address NACK, no slaves "
+        "or successful payload/DMA traffic");
+    object_class_property_add_bool(oc, "spmi-debug-fuse-enabled",
+        tb371fc_get_spmi_debug_fuse_enabled, tb371fc_set_spmi_debug_fuse_enabled);
+    object_class_property_set_description(oc, "spmi-debug-fuse-enabled",
+        "Enable independent read-only debug fuse aperture (default off); "
+        "requires explicit spmi-debug-fuse-word");
+    object_class_property_add_str(oc, "spmi-debug-fuse-word",
+        tb371fc_get_spmi_debug_fuse_word, tb371fc_set_spmi_debug_fuse_word);
+    object_class_property_set_description(oc, "spmi-debug-fuse-word",
+        "Explicit immutable 32-bit word as 0xhhhhhhhh; no value is bound "
+        "by default and no physical fuse capture is implied");
     object_class_property_add_str(oc, "rpmh-profile",
         tb371fc_get_rpmh_profile, tb371fc_set_rpmh_profile);
     object_class_property_set_description(oc, "rpmh-profile",

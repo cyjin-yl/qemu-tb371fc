@@ -1,0 +1,282 @@
+{
+  "document": {
+    "actual_compiled_receipt": {
+      "bytes": 208365,
+      "path": "evidence://audits/geni_hs.public.json",
+      "sha256": "b9f4f2a08fb5d7bf1c77326247940fbb2a8b367f290447771572b60b08492d4d"
+    },
+    "actual_source_receipt": {
+      "bytes": 73139,
+      "path": "evidence://audits/geni_source.public.json",
+      "sha256": "c3ab44d2ae8ce7c63d7b99c050cdba884e7ddeaccdbf3c4b97a8bc42c5d4d1b9"
+    },
+    "all_nonfunction_AST_unchanged": true,
+    "archive_reopened_or_QEMU_native_device_SSH_network_used": false,
+    "change_scope": "Only the ordinary_and_special validation block within validate_geni_receipts; all other old source bytes recover exactly by reverse replacement.",
+    "changed_functions": [
+      "validate_geni_receipts"
+    ],
+    "diff": {
+      "bytes": 3605,
+      "path": "evidence://qualification/ordinary-schema-only.diff",
+      "sha256": "d17d3f426a07ef62ad2b88ca389c722b3600c2a99a34b97078c553b5693fdcdc"
+    },
+    "failure_class": "Consumer schema error: the frozen independent auditor emits a nine-field ordinary_and_special object; prior consumer expected list23.",
+    "first_actual_main_failure_preserved": [
+      {
+        "bytes": 1430,
+        "path": "execution-source://main-qualification-001.execution.json",
+        "sha256": "bfe2a43c7e682619144323b4393c4333d89ac60141e3fc2b825f7a57b881cbd3"
+      },
+      {
+        "bytes": 359,
+        "path": "execution-source://main-qualification-001.started.json",
+        "sha256": "57e2635300c1ca84de1727e180483ecbf1117300538ffa7ca9fdc3771cde93e0"
+      },
+      {
+        "bytes": 1341,
+        "path": "evidence://qualification/first-main-failure.stderr.txt",
+        "sha256": "0614a86d26dec8866f7e7bbf4c2cb60ad0cf8ebe263f29cd83154d4d984e6e9c"
+      },
+      {
+        "bytes": 0,
+        "path": "execution-source://main-qualification-001.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "first_failure_output_absent": true,
+    "frozen_compiled_auditor": {
+      "bytes": 120822,
+      "path": "evidence://reviewed-source/auditors/geni_hs.py.txt",
+      "sha256": "6c9c6c817294992591cc3dfe9f561db8ae988e88c444d48012fd3375385201d7"
+    },
+    "independent_peer_review_pending": true,
+    "main_or_validator_functions_imported_or_executed": false,
+    "next_root_execution_argv": [
+      "python3",
+      "-B",
+      "evidence://reviewed-source/qualification-main-002.py.txt",
+      "--binding",
+      "evidence://qualification/binding-001.public.json",
+      "--out",
+      "evidence://qualification/qualification-002.public.json"
+    ],
+    "old_bound_source": {
+      "bytes": 120009,
+      "path": "evidence://reviewed-source/qualification-main-001.py.txt",
+      "sha256": "79875d358c44ce28259ed4212ecde68b9aa754640a1f9398283e63f073c5104f"
+    },
+    "ordinary_contract": {
+      "group_count": 23,
+      "keys": [
+        "actual_irq_output_checked",
+        "actual_output_byte_streams_checked",
+        "all_actual_qtest_commands_and_rejection_diagnostics_accounted",
+        "both_engine_qom_state_checks",
+        "gic_or_guest_interrupt_handling_verified",
+        "group_count",
+        "ordinary",
+        "process_count",
+        "special_processes"
+      ],
+      "ordinary_identities": [
+        {
+          "fixture": "ordinary-00-identity_and_pure_observation",
+          "name": "identity_and_pure_observation"
+        },
+        {
+          "fixture": "ordinary-01-exact_original_cold_probe_and_dma_masks",
+          "name": "exact_original_cold_probe_and_dma_masks"
+        },
+        {
+          "fixture": "ordinary-02-exact_mapping_and_neighbor_holes",
+          "name": "exact_mapping_and_neighbor_holes"
+        },
+        {
+          "fixture": "ordinary-03-tx_partial_word_real_bytes",
+          "name": "tx_partial_word_real_bytes"
+        },
+        {
+          "fixture": "ordinary-04-core_irq_mask_aliases_and_w1c",
+          "name": "core_irq_mask_aliases_and_w1c"
+        },
+        {
+          "fixture": "ordinary-05-rx_partial_empty_and_no_peer_invention",
+          "name": "rx_partial_empty_and_no_peer_invention"
+        },
+        {
+          "fixture": "ordinary-06-rx_backpressure_preserves_all_bytes",
+          "name": "rx_backpressure_preserves_all_bytes"
+        },
+        {
+          "fixture": "ordinary-07-tx_fifo_overflow_and_clock_pause",
+          "name": "tx_fifo_overflow_and_clock_pause"
+        },
+        {
+          "fixture": "ordinary-08-commands_cancel_abort_and_overrun",
+          "name": "commands_cancel_abort_and_overrun"
+        },
+        {
+          "fixture": "ordinary-09-three_clock_gates_and_real_irq_suppression",
+          "name": "three_clock_gates_and_real_irq_suppression"
+        },
+        {
+          "fixture": "ordinary-10-hwcg_request_removal_is_real",
+          "name": "hwcg_request_removal_is_real"
+        },
+        {
+          "fixture": "ordinary-11-wrapper_reset_isolation_and_fixed_identity",
+          "name": "wrapper_reset_isolation_and_fixed_identity"
+        },
+        {
+          "fixture": "ordinary-12-two_engine_fifo_and_backend_isolation",
+          "name": "two_engine_fifo_and_backend_isolation"
+        },
+        {
+          "fixture": "ordinary-13-strict_shapes_readonly_and_unknown_registers",
+          "name": "strict_shapes_readonly_and_unknown_registers"
+        },
+        {
+          "fixture": "ordinary-14-unsupported_dma_transfer_has_no_effect",
+          "name": "unsupported_dma_transfer_has_no_effect"
+        },
+        {
+          "fixture": "ordinary-15-immutable_qom_properties",
+          "name": "immutable_qom_properties"
+        },
+        {
+          "fixture": "ordinary-16-disconnected_backend_retains_pending",
+          "name": "disconnected_backend_retains_pending"
+        },
+        {
+          "fixture": "ordinary-17-absent_backend_cannot_complete",
+          "name": "absent_backend_cannot_complete"
+        },
+        {
+          "fixture": "ordinary-18-real_socket_tx_backpressure_and_resume",
+          "name": "real_socket_tx_backpressure_and_resume"
+        },
+        {
+          "fixture": "ordinary-19-zero_length_waits_for_engine_clock",
+          "name": "zero_length_waits_for_engine_clock"
+        }
+      ],
+      "ordinary_names_equal_frozen_auditor_ORDINARY": true,
+      "process_count": 24,
+      "scope_values": {
+        "actual_irq_output_checked": true,
+        "actual_output_byte_streams_checked": true,
+        "all_actual_qtest_commands_and_rejection_diagnostics_accounted": true,
+        "both_engine_qom_state_checks": true,
+        "gic_or_guest_interrupt_handling_verified": false
+      },
+      "special_process_identities": [
+        "default-omitted",
+        "explicit-off",
+        "paused-tcg",
+        "missing-clock-parent"
+      ]
+    },
+    "qualification_result_created": false,
+    "reader_sources_modified": false,
+    "remaining_GENI_interface_static_inspection": {
+      "additional_schema_mismatch_found": false,
+      "both_full_summary_objects_equal_existing_frozen_constants": true,
+      "compiled_2_original_streams_are_enabled_disabled_dict": true,
+      "compiled_58_actual_cleanup_records_are_list": true,
+      "compiled_shapes": {
+        "completed_migrations": {
+          "count": 2,
+          "type": "list"
+        },
+        "one_bit_rejections": {
+          "count": 25,
+          "type": "list"
+        },
+        "original_streams": {
+          "count": 2,
+          "type": "dict"
+        },
+        "process_cleanup": {
+          "count": 6,
+          "type": "dict"
+        },
+        "profile_rejections": {
+          "count": 2,
+          "type": "list"
+        },
+        "structural_rejections": {
+          "count": 3,
+          "type": "list"
+        }
+      },
+      "completed_migrations_have_all_existing_chronology_fields": true,
+      "method": "Full JSON field/type/count comparison with frozen function source and frozen auditor emitters; no consumer or auditor function executed.",
+      "reference_original_and_negative_semantic_fields_present_and_match": true,
+      "source_input_output_mutant_byte_sums": [
+        810000,
+        26355,
+        1700682
+      ],
+      "source_shapes": {
+        "constants": {
+          "count": 12,
+          "type": "dict"
+        },
+        "inputs": {
+          "count": 19,
+          "type": "list"
+        },
+        "negative_checks": {
+          "count": 51,
+          "type": "list"
+        },
+        "outputs": {
+          "count": 2,
+          "type": "list"
+        },
+        "primary_facts": {
+          "count": 6,
+          "type": "dict"
+        },
+        "reference_inputs": {
+          "count": 2,
+          "type": "list"
+        },
+        "source_provenance": {
+          "count": 9,
+          "type": "list"
+        },
+        "verified_members": {
+          "count": 84,
+          "type": "list"
+        }
+      }
+    },
+    "root_review_and_actual_successor_execution_required": true,
+    "schema": "tb371fc-70b-qualification-receipt-contract-correction-v1",
+    "source_preparation_passed": true,
+    "successor_bound_source": {
+      "bytes": 122768,
+      "path": "evidence://reviewed-source/qualification-main-002.py.txt",
+      "sha256": "49dd1a49ab3f88856008724fa9f0e2ec64bfa37b17d1841600ad950ee7359766"
+    },
+    "syntax_compilation_only_passed": true,
+    "ten_auditors_or_three_observers_rerun": false,
+    "unchanged_binding": {
+      "bytes": 38653,
+      "path": "evidence://qualification/binding-001.public.json",
+      "sha256": "a649d255ccd78da4dd6a645e078d2a51f79ea80cb448a0db5c19cf1a007c53ae"
+    },
+    "unchanged_function_count": 19,
+    "whole_source_reverse_replacement_identical": true
+  },
+  "original_evidence": {
+    "alias": "evidence://qualification/ordinary-schema-correction.public.json",
+    "bytes": 9489,
+    "git_blob_sha1": "c2e3c030b6649bfc6fe3d8887e33b5405a0ad63b",
+    "sha256": "d5282a485ce04b1da3ffd168e1048ec938986214839ee5289a72e26760a5b52a"
+  },
+  "schema": "tb371fc-public-derived-evidence-document-v1",
+  "transformation": "Original JSON values retained; workstation locators replaced by aliases; canonical JSON and this wrapper added. Original hashes identify retained originals."
+}

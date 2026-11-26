@@ -1,0 +1,190 @@
+{
+  "actual_hardware_or_kernel_execution_performed": false,
+  "all_instructions_decoded": 1766,
+  "all_slice_bytes": 7064,
+  "analysis_limits": {
+    "NPU_firmware_DMA_or_inference_provided": false,
+    "configured_timeout_value_measured": false,
+    "future_native_continuation_observed": false,
+    "intermediate_regulator_enable_and__regulator_do_enable_bodies_reviewed": false,
+    "physical_parent_state_or_successful_read_value_measured": false,
+    "production_gdsc_probe_timeout_initialization_body_reviewed": false,
+    "production_poll_uses_its_configured_count": true,
+    "reference_vendor_default_timeout_us": 100
+  },
+  "checks_passed": 82,
+  "complete_functions": [
+    {
+      "bytes": 32,
+      "decoded_instructions": 8,
+      "name": "regmap_mmio_read32le",
+      "sha256": "4651fc9da36cb58f38a5a6ad2e7cd7864ced6d92f553f03613ed668fd2d453a5",
+      "virtual_address": "0xffffff800884e960"
+    },
+    {
+      "bytes": 1376,
+      "decoded_instructions": 344,
+      "name": "gdsc_enable",
+      "sha256": "1eee210856cbbd5474b0c0ac20eb945123d16e4ff19fb9345ae6307d248018b5",
+      "virtual_address": "0xffffff800865c288"
+    },
+    {
+      "bytes": 488,
+      "decoded_instructions": 122,
+      "name": "npu_enable_core_power",
+      "sha256": "7f7037050d69179780913e7acd4ef72b80c86d8de1979a6d5d0ee683a6b71463",
+      "virtual_address": "0xffffff8008b90d80"
+    },
+    {
+      "bytes": 5168,
+      "decoded_instructions": 1292,
+      "name": "npu_probe",
+      "sha256": "4035f6fd0891a515bd296bf8e27dc9de74553d836d2fb4d75d88a0675d420a1b",
+      "virtual_address": "0xffffff8008b91e50"
+    }
+  ],
+  "metadata_symbol_disambiguation": {
+    "same_name_gdsc_enable_candidates": [
+      {
+        "bytes": 1376,
+        "virtual_address": "0xffffff800865c288"
+      },
+      {
+        "bytes": 776,
+        "virtual_address": "0xffffff800865d3d0"
+      }
+    ],
+    "selected_virtual_address": "0xffffff800865c288",
+    "selection": "Exact first listed address selected because it uniquely matches the actual 0x560 call-trace extent; selection never uses ordinal position. The collector subsequently binds the complete observed candidate set and all four exact addresses."
+  },
+  "observed_failure": {
+    "CPU": 6,
+    "ELR": "0xffffff800884e968",
+    "ESR": "0x96000210",
+    "GDSC_caller": "gdsc_enable+0x278/0x560",
+    "NPU_power_caller": "npu_enable_core_power+0x104/0x1e8",
+    "PC": "regmap_mmio_read32le+0x8/0x20",
+    "PID": 1,
+    "access": "read",
+    "bytes": 4,
+    "guest_seconds": 5.52489,
+    "mapped_owner": "qcom-npu-gdsc.npu-core-control",
+    "physical_address": "0x09981004",
+    "probe_caller": "npu_probe+0x648/0x1430",
+    "reason": "power-feedback-unknown",
+    "successful_register_read_value_claimed": false
+  },
+  "observed_native_artifact_id": 15070246969,
+  "original_DT": {
+    "GDSCR_address": "0x09981004",
+    "GDSCR_bytes": 4,
+    "GDSC_clock_provider_phandle": 22,
+    "GDSC_declared_parent_supply": false,
+    "GDSC_optional_auxiliary_status_mapping": false,
+    "GDSC_vendor_clock_id": 43,
+    "complete_input_bytes": 973052,
+    "complete_input_sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207",
+    "consumer_CX_supply_is_not_a_declared_GDSC_parent": true,
+    "consumer_first_resource": "0x09900000",
+    "consumer_node": "/soc/qcom,msm_npu@9800000",
+    "consumer_regulator_names": [
+      "vdd",
+      "vdd_cx"
+    ],
+    "consumer_status": "ok",
+    "consumer_vdd_cx_phandle": 102,
+    "consumer_vdd_phandle": 477,
+    "full_property_value_hashes_verified": 83,
+    "gdsc_node": "/soc/qcom,gdsc@9981004",
+    "referenced_providers": 5,
+    "selected_nodes": 2
+  },
+  "original_asset_pins": {
+    "dtb": {
+      "bytes": 973052,
+      "sha256": "5114262a0dea5ef82b53db69b3d489ddbe57040e1a50b57365e87a28d2946207"
+    },
+    "kernel": {
+      "bytes": 37445648,
+      "sha256": "ef9e7b5cdb9ef3c66977a04d6b6e21cf83e83f2f45476390c861827d1bb1cf0f"
+    },
+    "symbols": {
+      "bytes": 5226424,
+      "sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0"
+    }
+  },
+  "production_control_flow": [
+    {
+      "fact": "The faulting operation is a 32-bit load after adding the requested register offset.",
+      "function": "regmap_mmio_read32le",
+      "offset": "0x8"
+    },
+    {
+      "fact": "Read control; clear only SW_COLLAPSE bit0; write the request; read back the same primary regmap at offset0. The observed +0x278 is the last call return point, before delay or polling.",
+      "function": "gdsc_enable",
+      "offsets": [
+        "0x24c",
+        "0x25c",
+        "0x264",
+        "0x274"
+      ]
+    },
+    {
+      "fact": "Load configured count; poll bit31; a positive bit branches to the success path, otherwise delay and decrement a finite counter.",
+      "function": "gdsc_enable",
+      "offsets": [
+        "0x288",
+        "0x29c",
+        "0x2b0",
+        "0x2c0",
+        "0x2cc",
+        "0x2d4"
+      ]
+    },
+    {
+      "fact": "The no-auxiliary timeout branch logs, waits the configured bound, reads final state, sets -110, and returns that error.",
+      "function": "gdsc_enable",
+      "offsets": [
+        "0x2ec",
+        "0x4fc",
+        "0x51c",
+        "0x52c",
+        "0x54c",
+        "0x50",
+        "0x68"
+      ]
+    },
+    {
+      "fact": "If regulator_enable returns a negative error, preserve it, unwind prior successful regulators, request zero bandwidth, release the mutex, and return the error.",
+      "function": "npu_enable_core_power",
+      "offsets": [
+        "0x100",
+        "0x104",
+        "0x108",
+        "0x1a8",
+        "0x1c4",
+        "0xc4",
+        "0xcc",
+        "0xd0",
+        "0xe4"
+      ]
+    },
+    {
+      "fact": "A nonzero core-power return goes directly to error reporting and a normal error return, skipping the NPU core-register read at +0x654.",
+      "function": "npu_probe",
+      "offsets": [
+        "0x644",
+        "0x648",
+        "0xf04",
+        "0xf20",
+        "0xf40",
+        "0xf58",
+        "0xf78"
+      ]
+    }
+  ],
+  "raw_data_exported": false,
+  "schema": "tb371fc-original-npu-control-path-static-proof-v1",
+  "scope": "Data-only analysis of four complete slices from the pinned original kernel; actual prior native failure is preserved. This is not a later native run.",
+  "source_head": "3803138af99cc2c9d227127c15f4de8a3e0d124a"
+}

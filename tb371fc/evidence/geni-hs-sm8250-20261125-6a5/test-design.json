@@ -1,0 +1,619 @@
+{
+  "check_names": [
+    "identity_and_pure_observation",
+    "exact_original_cold_probe_and_dma_masks",
+    "exact_mapping_and_neighbor_holes",
+    "tx_partial_word_real_bytes",
+    "core_irq_mask_aliases_and_w1c",
+    "rx_partial_empty_and_no_peer_invention",
+    "rx_backpressure_preserves_all_bytes",
+    "tx_fifo_overflow_and_clock_pause",
+    "commands_cancel_abort_and_overrun",
+    "three_clock_gates_and_real_irq_suppression",
+    "hwcg_request_removal_is_real",
+    "wrapper_reset_isolation_and_fixed_identity",
+    "two_engine_fifo_and_backend_isolation",
+    "strict_shapes_readonly_and_unknown_registers",
+    "unsupported_dma_transfer_has_no_effect",
+    "immutable_qom_properties",
+    "disconnected_backend_retains_pending",
+    "absent_backend_cannot_complete",
+    "real_socket_tx_backpressure_and_resume",
+    "zero_length_waits_for_engine_clock",
+    "default_off_keeps_both_windows_unmapped",
+    "paused_tcg_has_real_pure_observers",
+    "absent_clock_parent_remains_zero",
+    "migration_enabled",
+    "migration_disabled",
+    "profile_on_to_off_rejected",
+    "profile_off_to_on_rejected",
+    "single_bit_profile_rejected",
+    "single_bit_identity_rejected",
+    "single_bit_se_base_rejected",
+    "single_bit_se_window_rejected",
+    "single_bit_wrapper_address_rejected",
+    "single_bit_wrapper_window_rejected",
+    "single_bit_main_revision_rejected",
+    "single_bit_secondary_revision_rejected",
+    "single_bit_wrapper_version_rejected",
+    "single_bit_fifo_geometry_rejected",
+    "single_bit_unsupported_register_rejected",
+    "single_bit_global_irq_reserved_bit_rejected",
+    "single_bit_unsupported_dma_mode_rejected",
+    "single_bit_tx_count_out_of_range_rejected",
+    "single_bit_rx_count_out_of_range_rejected",
+    "single_bit_active_remaining_zero_rejected",
+    "single_bit_command_accounting_overflow_rejected",
+    "single_bit_inactive_pending_tx_rejected",
+    "single_bit_noncanonical_boolean_rejected",
+    "single_bit_reset_with_active_state_rejected",
+    "single_bit_zero_pending_with_active_tx_rejected",
+    "single_bit_se_period_witness_rejected",
+    "single_bit_m_ahb_period_witness_rejected",
+    "single_bit_s_ahb_period_witness_rejected",
+    "single_bit_disabled_rx_state_rejected",
+    "structural_missing_guard_rejected",
+    "structural_unknown_section_identity_rejected",
+    "structural_unsupported_section_version_rejected"
+  ],
+  "created_at": "2026-11-25T07:27:59.801876+00:00",
+  "expected_counts": {
+    "all_streams": 30,
+    "checks": 55,
+    "completed_migrations": 2,
+    "expected_failed_load_process_exits": 30,
+    "normal_process_exits": 28,
+    "processes": 58,
+    "profile_rejections": 2,
+    "single_bit_rejections": 25,
+    "structural_rejections": 3,
+    "unmodified_streams": 2
+  },
+  "flags_initialized_false_until_runtime_evidence_complete": [
+    "binary_unchanged",
+    "two_engine_backend_isolation_tested",
+    "migration_destination_ram_dirtied",
+    "full_migration_stream_hashes_verified",
+    "process_cleanup_verified",
+    "passed"
+  ],
+  "irq_scope": {
+    "actual_hs_sysbus_output_transition_capture": true,
+    "gic_or_guest_interrupt_handling_verified": false,
+    "ordinary_irq_assertions_require_qom_and_captured_signal_agreement": true,
+    "qtest_intercept_replaces_gic_connection": true,
+    "zero_time_fence_does_not_read_device_register": true
+  },
+  "limitations": [
+    "No compiled acceptance has been executed by the test author.",
+    "Pure synthetic parser checks establish source-parser behavior only.",
+    "No native kernel, Android userspace, real peripheral or physical clock/register state is claimed.",
+    "QTest intercept verifies device IRQ output, not GIC routing or guest interrupt handling.",
+    "Unsupported DMA transfer registers fail; only explicitly supported DMA IRQ masks are stored."
+  ],
+  "negative_cases": {
+    "accepted_terminal_forms": [
+      {
+        "errno": null,
+        "termination": "eof"
+      },
+      {
+        "errno": 104,
+        "termination": "reset"
+      }
+    ],
+    "dynamic_one_bit_fields": [
+      {
+        "name": "unsupported_register",
+        "profile": "enabled",
+        "relative_offset": 64,
+        "required_diagnostic": "invalid migration state",
+        "width": 4,
+        "xor": 1
+      },
+      {
+        "name": "global_irq_reserved_bit",
+        "profile": "enabled",
+        "relative_offset": 3660,
+        "required_diagnostic": "invalid migration state",
+        "width": 4,
+        "xor": 16
+      },
+      {
+        "name": "unsupported_dma_mode",
+        "profile": "enabled",
+        "relative_offset": 648,
+        "required_diagnostic": "invalid migration state",
+        "width": 4,
+        "xor": 1
+      },
+      {
+        "name": "tx_count_out_of_range",
+        "profile": "enabled",
+        "relative_offset": 16560,
+        "required_diagnostic": "invalid migration state",
+        "width": 4,
+        "xor": 64
+      },
+      {
+        "name": "rx_count_out_of_range",
+        "profile": "enabled",
+        "relative_offset": 16564,
+        "required_diagnostic": "invalid migration state",
+        "width": 4,
+        "xor": 64
+      },
+      {
+        "name": "active_remaining_zero",
+        "profile": "enabled",
+        "relative_offset": 16568,
+        "required_diagnostic": "invalid migration state",
+        "width": 4,
+        "xor": 4
+      },
+      {
+        "name": "command_accounting_overflow",
+        "profile": "enabled",
+        "relative_offset": 16572,
+        "required_diagnostic": "invalid migration state",
+        "width": 4,
+        "xor": 16777216
+      },
+      {
+        "name": "inactive_pending_tx",
+        "profile": "enabled",
+        "relative_offset": 16580,
+        "required_diagnostic": "invalid migration state",
+        "width": 1,
+        "xor": 1
+      },
+      {
+        "name": "noncanonical_boolean",
+        "profile": "enabled",
+        "relative_offset": 16580,
+        "required_diagnostic": "invalid migration state",
+        "width": 1,
+        "xor": 2
+      },
+      {
+        "name": "reset_with_active_state",
+        "profile": "enabled",
+        "relative_offset": 16606,
+        "required_diagnostic": "invalid migration state",
+        "width": 1,
+        "xor": 1
+      },
+      {
+        "name": "zero_pending_with_active_tx",
+        "profile": "enabled",
+        "relative_offset": 16607,
+        "required_diagnostic": "invalid migration state",
+        "width": 1,
+        "xor": 1
+      },
+      {
+        "name": "se_period_witness",
+        "profile": "enabled",
+        "relative_offset": 16582,
+        "required_diagnostic": "input clock witness mismatch",
+        "width": 8,
+        "xor": 1
+      },
+      {
+        "name": "m_ahb_period_witness",
+        "profile": "enabled",
+        "relative_offset": 16590,
+        "required_diagnostic": "input clock witness mismatch",
+        "width": 8,
+        "xor": 1
+      },
+      {
+        "name": "s_ahb_period_witness",
+        "profile": "enabled",
+        "relative_offset": 16598,
+        "required_diagnostic": "input clock witness mismatch",
+        "width": 8,
+        "xor": 1
+      },
+      {
+        "name": "disabled_rx_state",
+        "profile": "disabled",
+        "relative_offset": 16564,
+        "required_diagnostic": "invalid disabled migration state",
+        "width": 4,
+        "xor": 1
+      }
+    ],
+    "every_mutant_whole_file_hash_and_exact_changed_positions_retained": true,
+    "failed_process_state_readback_or_rollback_claimed": false,
+    "failure_observer_starts_before_incoming_and_runs_through_exit": true,
+    "guard_deletion_scope": "48-byte guard physically removed inside present HS section; entire missing device section is not tested",
+    "guard_one_bit_fields": [
+      {
+        "name": "profile",
+        "relative_offset": 0,
+        "width": 4,
+        "xor": 2
+      },
+      {
+        "name": "identity",
+        "relative_offset": 4,
+        "width": 4,
+        "xor": 1
+      },
+      {
+        "name": "se_base",
+        "relative_offset": 8,
+        "width": 8,
+        "xor": 4
+      },
+      {
+        "name": "se_window",
+        "relative_offset": 16,
+        "width": 4,
+        "xor": 4
+      },
+      {
+        "name": "wrapper_address",
+        "relative_offset": 20,
+        "width": 8,
+        "xor": 4
+      },
+      {
+        "name": "wrapper_window",
+        "relative_offset": 28,
+        "width": 4,
+        "xor": 1
+      },
+      {
+        "name": "main_revision",
+        "relative_offset": 32,
+        "width": 4,
+        "xor": 1
+      },
+      {
+        "name": "secondary_revision",
+        "relative_offset": 36,
+        "width": 4,
+        "xor": 1
+      },
+      {
+        "name": "wrapper_version",
+        "relative_offset": 40,
+        "width": 4,
+        "xor": 1
+      },
+      {
+        "name": "fifo_geometry",
+        "relative_offset": 44,
+        "width": 4,
+        "xor": 1
+      }
+    ],
+    "no_memory_or_cont_on_negative_targets": true,
+    "original_streams_rehashed_and_preserved": true,
+    "other_socket_errors_fail": true,
+    "required_process_exit_code": 1,
+    "requires_specific_diagnostic_and_load_failure_text": true,
+    "structural": [
+      "missing_guard",
+      "unknown_section_identity",
+      "unsupported_section_version"
+    ],
+    "zero_output_bytes_required_on_both_actual_backends": true
+  },
+  "proposed_gate_timeout_seconds": 900,
+  "qom_observation_contract": {
+    "actual_restored_irq_checked_using_first_post_snapshot_ram_read_fence": true,
+    "each_world_order": [
+      "HS dynamic fields",
+      "HS identity fields",
+      "legacy dynamic fields"
+    ],
+    "first_and_repeated_target_worlds": 2,
+    "getters_per_world": 49,
+    "hs_dynamic": {
+      "bool": [
+        "tx-active",
+        "rx-active",
+        "tx-zero-pending",
+        "reset-held",
+        "irq-level"
+      ],
+      "str": [
+        "registers-hex",
+        "tx-fifo-hex",
+        "rx-fifo-hex"
+      ],
+      "uint64": [
+        "tx-count",
+        "rx-count",
+        "tx-remaining",
+        "tx-sent",
+        "rx-received",
+        "se-clock-period",
+        "m-ahb-clock-period",
+        "s-ahb-clock-period",
+        "fifo-bytes"
+      ]
+    },
+    "hs_identity": {
+      "bool": [
+        "enabled-reference",
+        "firmware-executed",
+        "dma-modeled",
+        "physical-state-captured",
+        "dma-mask-modeled"
+      ],
+      "uint64": [
+        "reference-identity",
+        "physical-base",
+        "window-bytes",
+        "wrapper-address",
+        "wrapper-window-bytes",
+        "main-fw-revision",
+        "secondary-fw-revision",
+        "wrapper-version",
+        "vmstate-bytes",
+        "profile-wire-bytes"
+      ]
+    },
+    "legacy_dynamic_fields_identical_names_and_types": true,
+    "post_incoming_first98_getters_before_any_memory_qtest_cont_or_backend_receive": true,
+    "prewarm_only_virtual_clock_alignment_and_inverse_ram_witness": true,
+    "queued_rx_must_remain_unconsumed_until_cont": true,
+    "queued_target_hs_rx_before_incoming": "NEW"
+  },
+  "reference_oracle": {
+    "dma_irq_mask_storage_modeled": true,
+    "dma_transfer_emulated": false,
+    "firmware_executed": false,
+    "independent_of_device_implementation_source": true,
+    "main_revision": 513,
+    "packing": {
+      "bpw": 8,
+      "byte_granularity": 0,
+      "cfg0": 276494,
+      "cfg1": 802318,
+      "msb_to_lsb": false,
+      "pack_words": 4,
+      "physical_reset_value_claimed": false,
+      "primary_path": "drivers/platform/msm/qcom-geni-se.c",
+      "primary_revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+      "primary_sha256": "02c0accf53cb09f7f92261abb6532b8610539554f96bd3b81d753f4e4ae5c3bf",
+      "vectors": [
+        14,
+        270,
+        526,
+        783
+      ],
+      "zero_default_is_model_alias": true
+    },
+    "physical_live_or_reset_register_values_claimed": false,
+    "physical_se6_firmware_selection_proven": false,
+    "secondary_revision": 513,
+    "wrapper_version": 537198592,
+    "wrapper_version_is_declared_profile_compatibility": true
+  },
+  "report_constants": {
+    "android_boot_passed": false,
+    "bluetooth_peer_modeled": false,
+    "cold_primary_irq_or_mask": 213909552,
+    "cold_secondary_irq_or_mask": 201326640,
+    "default_off_mapped_bytes": 0,
+    "dma_mask_modeled": true,
+    "dma_rx_irq_valid_mask": 30719,
+    "dma_transfer_modeled": false,
+    "dma_tx_irq_valid_mask": 16399,
+    "enabled_mapped_bytes": 16388,
+    "expected_checks": 55,
+    "expected_completed_migrations": 2,
+    "expected_corrupted_stream_rejections": 25,
+    "expected_rejected_migrations": 2,
+    "expected_stream_files": 30,
+    "expected_structural_stream_rejections": 3,
+    "expected_unmodified_streams": 2,
+    "fifo_capacity_bytes": 64,
+    "fifo_depth_words": 16,
+    "fifo_width_bits": 32,
+    "firmware_executed": false,
+    "first_observation_qom_get_count": 49,
+    "full_migration_stream_hashes_verified": true,
+    "guest_cpu_executed": false,
+    "legacy_complete_payload_bytes": 16587,
+    "legacy_functional_payload_bytes": 16534,
+    "main_firmware_revision": 513,
+    "migration_destination_device_state_dirtied": false,
+    "migration_destination_ram_dirtied": true,
+    "native_kernel_probe_observed": false,
+    "physical_base": 10059776,
+    "physical_state_captured": false,
+    "profile_guard_bytes": 48,
+    "pure_dynamic_getters_per_engine": 17,
+    "pure_hs_identity_getters": 15,
+    "reference_enabled_by_default": false,
+    "reference_identity": 1195922225,
+    "repeated_observation_qom_get_count": 49,
+    "schema": "tb371fc-geni-hs-sm8250-v1",
+    "secondary_firmware_revision": 513,
+    "suite": "geni-hs-sm8250-reference",
+    "test_oracle_reads_device_implementation": false,
+    "two_engine_backend_isolation_tested": true,
+    "vmstate_minimum_version": 1,
+    "vmstate_payload_bytes": 16608,
+    "vmstate_version": 1,
+    "window_bytes": 16384,
+    "wrapper_address": 10223620,
+    "wrapper_version": 537198592,
+    "wrapper_window_bytes": 4
+  },
+  "report_fields_from_actual_execution": [
+    "qemu_sha256_before",
+    "qemu_sha256_after",
+    "test_script_sha256",
+    "transport_helper_sha256",
+    "checks",
+    "migration_sources",
+    "migrations",
+    "rejected_migrations",
+    "corrupted_stream_rejections",
+    "structural_stream_rejections",
+    "actual_stream_files",
+    "process_cleanup",
+    "process_cleanup_verified",
+    "binary_unchanged",
+    "duration_seconds",
+    "passed"
+  ],
+  "report_scope_flags_not_physical_observations": [
+    "firmware_executed",
+    "physical_state_captured",
+    "dma_transfer_modeled",
+    "bluetooth_peer_modeled",
+    "guest_cpu_executed",
+    "native_kernel_probe_observed",
+    "android_boot_passed",
+    "gic_or_guest_interrupt_handling_verified"
+  ],
+  "runtime_execution_pending": true,
+  "schema": "tb371fc-geni-hs-independent-test-design-v1",
+  "source_files": [
+    {
+      "bytes": 68816,
+      "file": "test_geni_hs_sm8250.py",
+      "sha256": "e2935bb0a09cd8f3957f878ec4b4698f1eb391b3e2aa4031b0879a6147273055"
+    },
+    {
+      "bytes": 20048,
+      "file": "geni_hs_test_transport.py",
+      "sha256": "32dae63e1604366615f43c6e8982a21050c5cb4aaf70ac8e54527822f9a332e9"
+    }
+  ],
+  "source_only": true,
+  "source_parent": "a91cf67d09380c7f7fa8868f7068dba6b3956daa",
+  "source_validation": {
+    "bytes": 3992,
+    "file": "test-source-validation-001.json",
+    "sha256": "8daea0253bc92855675f645063e97274c055cd45308a2696e2cab2bfd17c2b5a"
+  },
+  "timeout_is_measured_runtime": false,
+  "wire_contract": {
+    "all4096_raw_register_words_and_full64byte_fifo_tails_compared": true,
+    "all_counter_flags_and_clock_period_witnesses_compared": true,
+    "complete_other_device_payload_oracle_claimed": false,
+    "field_offsets_and_widths": {
+      "enabled": [
+        0,
+        4
+      ],
+      "fifo_bytes": [
+        44,
+        4
+      ],
+      "identity": [
+        4,
+        4
+      ],
+      "m_ahb_period": [
+        16590,
+        8
+      ],
+      "main_revision": [
+        32,
+        4
+      ],
+      "registers": [
+        48,
+        16384
+      ],
+      "reset_held": [
+        16606,
+        1
+      ],
+      "rx_active": [
+        16581,
+        1
+      ],
+      "rx_count": [
+        16564,
+        4
+      ],
+      "rx_fifo": [
+        16496,
+        64
+      ],
+      "rx_received": [
+        16576,
+        4
+      ],
+      "s_ahb_period": [
+        16598,
+        8
+      ],
+      "se_base": [
+        8,
+        8
+      ],
+      "se_period": [
+        16582,
+        8
+      ],
+      "se_size": [
+        16,
+        4
+      ],
+      "secondary_revision": [
+        36,
+        4
+      ],
+      "tx_active": [
+        16580,
+        1
+      ],
+      "tx_count": [
+        16560,
+        4
+      ],
+      "tx_fifo": [
+        16432,
+        64
+      ],
+      "tx_remaining": [
+        16568,
+        4
+      ],
+      "tx_sent": [
+        16572,
+        4
+      ],
+      "tx_zero_pending": [
+        16607,
+        1
+      ],
+      "wrapper_address": [
+        20,
+        8
+      ],
+      "wrapper_size": [
+        28,
+        4
+      ],
+      "wrapper_version": [
+        40,
+        4
+      ]
+    },
+    "footer_marker_and_section_id_verified": true,
+    "guard_bytes": 48,
+    "legacy_body_bytes": 16534,
+    "legacy_clock_subsection_name": "qcom-geni-uart/clocks",
+    "legacy_complete_payload_bytes": 16587,
+    "legacy_section": "qcom-geni-uart",
+    "legacy_subsection_version": 1,
+    "native_minimum_version": 1,
+    "native_payload_bytes": 16608,
+    "native_section": "qcom-sm8250-geni-hs",
+    "native_version": 1,
+    "optional_clock_muldiv_absence_observed_via_full_payload_and_footer_not_assumed": true
+  }
+}
