@@ -1309,6 +1309,13 @@ static const Property arm_cpu_gt_cntfrq_property =
 static const Property arm_cpu_gt_cntfrq_exact_property =
             DEFINE_PROP_BOOL("cntfrq-exact", ARMCPU, gt_cntfrq_exact, false);
 
+static const Property arm_cpu_tb371fc_ras_zero_records_property =
+    DEFINE_PROP_BOOL("tb371fc-ras-zero-records-compat", ARMCPU,
+                     tb371fc_ras_zero_records_compat, false);
+
+static const Property arm_cpu_tb371fc_dsu_property =
+    DEFINE_PROP_BOOL("tb371fc-dsu-pmu", ARMCPU, tb371fc_dsu_pmu, false);
+
 static const Property arm_cpu_reset_cbar_property =
             DEFINE_PROP_UINT64("reset-cbar", ARMCPU, reset_cbar, 0);
 
@@ -1576,6 +1583,18 @@ static void arm_cpu_post_init(Object *obj)
                                         "execution state ");
     }
 #ifndef CONFIG_USER_ONLY
+    if (arm_feature(&cpu->env, ARM_FEATURE_AARCH64)) {
+        qdev_property_add_static(DEVICE(obj),
+                                 &arm_cpu_tb371fc_ras_zero_records_property);
+        object_property_add_uint32_ptr(obj,
+            "tb371fc-ras-zero-records-profile",
+            &cpu->tb371fc_ras_zero_records_profile, OBJ_PROP_FLAG_READ);
+        qdev_property_add_static(DEVICE(obj), &arm_cpu_tb371fc_dsu_property);
+        object_property_add_uint32_ptr(obj, "tb371fc-dsu-pmu-profile",
+            &cpu->tb371fc_dsu_profile, OBJ_PROP_FLAG_READ);
+        object_property_add_uint64_ptr(obj, "tb371fc-dsu-pmu-frequency-hz",
+            &cpu->tb371fc_dsu_frequency_hz, OBJ_PROP_FLAG_READ);
+    }
     if (arm_feature(&cpu->env, ARM_FEATURE_CBAR) ||
         arm_feature(&cpu->env, ARM_FEATURE_CBAR_RO)) {
         qdev_property_add_static(DEVICE(obj), &arm_cpu_reset_cbar_property);
@@ -1853,6 +1872,78 @@ static void arm_cpu_realizefn(DeviceState *dev, Error **errp)
     }
 
 #ifndef CONFIG_USER_ONLY
+    if (cpu->tb371fc_ras_zero_records_compat) {
+        MachineState *ms = MACHINE(qdev_get_machine());
+        const char *cpu_type = object_get_typename(OBJECT(cpu));
+
+        if ((!tcg_enabled() && !qtest_enabled()) ||
+            strcmp(object_get_typename(OBJECT(ms)),
+                   MACHINE_TYPE_NAME("tb371fc")) ||
+            (strcmp(cpu_type, ARM_CPU_TYPE_NAME("cortex-a55")) &&
+             strcmp(cpu_type, ARM_CPU_TYPE_NAME("cortex-a77"))) ||
+            !arm_feature(env, ARM_FEATURE_AARCH64) ||
+            FIELD_EX64_IDREG(isar, ID_AA64PFR0, RAS) != 1 ||
+            !cpu->has_el2 || cpu->has_el3) {
+            error_setg(errp, "tb371fc-ras-zero-records-compat requires the "
+                       "TB371FC A55/A77 RASv1 software-emulated profile "
+                       "with EL2 enabled and EL3 disabled");
+            return;
+        }
+        if (!object_property_get_bool(OBJECT(ms), "ras-zero-records-compat",
+                                      &local_err)) {
+            if (local_err) {
+                error_propagate(errp, local_err);
+            } else {
+                error_setg(errp, "tb371fc-ras-zero-records-compat requires "
+                           "the explicit machine ras-zero-records-compat "
+                           "option");
+            }
+            return;
+        }
+    }
+    cpu->tb371fc_ras_zero_records_profile =
+        cpu->tb371fc_ras_zero_records_compat ? 1 : 0;
+
+    if (cpu->tb371fc_dsu_pmu) {
+        MachineState *ms = MACHINE(qdev_get_machine());
+        const char *cpu_type = object_get_typename(OBJECT(cpu));
+        TB371FCDSUPMULink *link = cpu->tb371fc_dsu_link;
+
+        if ((!tcg_enabled() && !qtest_enabled()) ||
+            strcmp(object_get_typename(OBJECT(ms)),
+                   MACHINE_TYPE_NAME("tb371fc")) ||
+            (strcmp(cpu_type, ARM_CPU_TYPE_NAME("cortex-a55")) &&
+             strcmp(cpu_type, ARM_CPU_TYPE_NAME("cortex-a77"))) ||
+            !arm_feature(env, ARM_FEATURE_AARCH64) ||
+            !cpu->has_el2 || cpu->has_el3 || cs->cpu_index < 0 ||
+            cs->cpu_index >= 8 || !link || !link->opaque ||
+            link->profile != TB371FC_DSU_PROFILE ||
+            link->cpu_mask != TB371FC_DSU_CPU_MASK ||
+            link->irq_intid != TB371FC_DSU_IRQ_INTID ||
+            !link->frequency_hz || link->frequency_hz > TB371FC_DSU_MAX_HZ ||
+            !link->read || !link->write || !link->snapshot ||
+            !link->begin_load || !link->stage_load || !link->complete_load) {
+            error_setg(errp, "tb371fc-dsu-pmu requires the TB371FC A55/A77 "
+                       "shared software-emulated bank, EL2 on and EL3 off");
+            return;
+        }
+        if (!object_property_get_bool(OBJECT(ms), "dsu-pmu", &local_err)) {
+            if (local_err) {
+                error_propagate(errp, local_err);
+            } else {
+                error_setg(errp, "tb371fc-dsu-pmu requires the explicit "
+                           "machine dsu-pmu option");
+            }
+            return;
+        }
+        cpu->tb371fc_dsu_profile = TB371FC_DSU_PROFILE;
+        cpu->tb371fc_dsu_cpu_index = cs->cpu_index;
+        cpu->tb371fc_dsu_frequency_hz = link->frequency_hz;
+    } else if (cpu->tb371fc_dsu_link) {
+        error_setg(errp, "A TB371FC DSU backend requires its CPU profile");
+        return;
+    }
+
     /* The NVIC and M-profile CPU are two halves of a single piece of
      * hardware; trying to use one without the other is a command line
      * error and will result in segfaults if not caught here.

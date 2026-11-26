@@ -108,6 +108,29 @@
         "line": 3987
       },
       "scope": "Digital request fields only; no retained payload or clock availability is inferred"
+    },
+    {
+      "name": "oneplus-kona-ufs-phy-retain-ff",
+      "revision": "94304e12a3509eac7b3716bf574ce0b1fcaacbae",
+      "path": "drivers/clk/qcom/gdsc-regulator.c",
+      "url": "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/blob/94304e12a3509eac7b3716bf574ce0b1fcaacbae/drivers/clk/qcom/gdsc-regulator.c",
+      "sha256": "41acd7aa326c656db5b9dbe57c5fe05f1783abf8a299aaf9f8d4c58b9ecea3d2",
+      "power_domain_ids": [
+        4
+      ],
+      "register_offset": 487428,
+      "write_mask": 2048,
+      "field_bits": {
+        "retain_ff": 11
+      },
+      "macro_line": 30,
+      "dt_property": "qcom,retain-regs",
+      "register_owner": {
+        "path": "drivers/clk/qcom/gcc-sm8250.c",
+        "sha256": "b3b3865de3a297f906d5562a720d8d304538cef3c8d3703dee026cfd6dba06c8",
+        "line": 3256
+      },
+      "scope": "UFS PHY digital retain request only; no retained payload or new power state. Existing XO and virtual transition conditions still apply."
     }
   ],
   "clocks": [
@@ -7752,7 +7775,7 @@
     },
     {
       "offset": 487428,
-      "write_mask": 16773127,
+      "write_mask": 16775175,
       "status_mask": 2147483648
     },
     {

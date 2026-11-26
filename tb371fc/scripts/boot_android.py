@@ -32,7 +32,7 @@ MAX_QMP_BUFFER = 1024 * 1024
 MAX_STAGE_RECORDS = 64
 KERNEL_FAILURE = re.compile(
     r"(?:Kernel panic - not syncing|Unable to handle kernel |"
-    r"Internal error:.*(?:Oops|BUG|synchronous external abort)|"
+    r"Internal error:.*(?:Oops|BUG|synchronous external abort|undefined instruction)|"
     r"\bOops:|\bBUG: (?:unable to handle|scheduling while atomic|soft lockup)|"
     r"Attempted to kill init!)", re.I)
 HARDWARE_ERROR = re.compile(

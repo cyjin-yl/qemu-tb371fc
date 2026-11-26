@@ -1,0 +1,274 @@
+{
+  "NPU_failure_path_observed": {
+    "NPU_execution_established": false,
+    "NPU_probe_succeeded": false,
+    "enable_timeout_and_probe_error_return_observed": true,
+    "evidence": [
+      {
+        "guest_seconds": 5.334112,
+        "line": 1564,
+        "source": "native_printk",
+        "text": "[    5.334112] regulator regulator.35: npu_core_gdsc enable timed out: 0x0"
+      },
+      {
+        "guest_seconds": 5.334289,
+        "line": 1565,
+        "source": "native_printk",
+        "text": "[    5.334289] regulator regulator.35: npu_core_gdsc final state: 0x0 (100 us after timeout)"
+      },
+      {
+        "guest_seconds": 5.334435,
+        "line": 1566,
+        "source": "native_printk",
+        "text": "[    5.334435] NPU_ERR: npu_enable_regulators: 1070 vdd enable failed"
+      },
+      {
+        "guest_seconds": 5.335136,
+        "line": 1567,
+        "source": "native_printk",
+        "text": "[    5.335136] NPU_ERR: npu_hw_info_init: 2372 Failed to enable power"
+      },
+      {
+        "guest_seconds": 5.335403,
+        "line": 1568,
+        "source": "native_printk",
+        "text": "[    5.335403] msm_npu 9900000.qcom,msm_npu: Dropping the link to regulator.4"
+      },
+      {
+        "guest_seconds": 5.335514,
+        "line": 1569,
+        "source": "native_printk",
+        "text": "[    5.335514] msm_npu 9900000.qcom,msm_npu: Dropping the link to regulator.35"
+      },
+      {
+        "guest_seconds": 5.335631,
+        "line": 1570,
+        "source": "native_printk",
+        "text": "[    5.335631] msm_npu: probe of 9900000.qcom,msm_npu failed with error -110"
+      }
+    ],
+    "explicit_pending_profile": 2,
+    "kernel_execution_continued_after_failed_NPU_probe": true,
+    "logged_followup_interval_us": 100,
+    "parent_supply_state_measured": false,
+    "physical_power_transition_observed": false,
+    "previous_strict_unknown_feedback_abort_observed_in_this_run": false,
+    "probe_error": -110,
+    "source_property": "qcom-npu-gdsc.unknown-feedback-pending=on",
+    "timeout_elapsed_duration_independently_measured": false,
+    "unknown_feedback_pending": true
+  },
+  "actual_native_result": {
+    "Android_boot_completed_observed": false,
+    "Android_userspace_observed": false,
+    "QEMU_exit_code": 0,
+    "host_exit_code": 2,
+    "interactive_display_verified": false,
+    "native_invocations_for_artifact": 1,
+    "native_invoked": true,
+    "native_runner_exit_code": 2,
+    "observer_exit_code": 0,
+    "once_claim_consumed": true,
+    "original_luns_attached": 0,
+    "outcome": "kernel-failure",
+    "ready_present_at_input_selection": false,
+    "same_artifact_rerun_permitted": false,
+    "stock_android_boot_passed": false,
+    "storage_classification": "no-lun-diagnostic",
+    "storage_complete": false
+  },
+  "complete_log_evidence": [
+    {
+      "bytes": 1155682,
+      "role": "native_qemu_log",
+      "sha256": "fdd7a7bf13c64321a4c10f3db33894aa94024dcfb0378a7b17501dd8d47d6a1e"
+    },
+    {
+      "bytes": 112175,
+      "role": "native_printk",
+      "sha256": "5be5a9f55ff690fac1f93c3c6c13dd6776f0c9a60ba077a5183d644a8031dd6b"
+    }
+  ],
+  "evidence_preservation": {
+    "artifact_once_consumed": true,
+    "complete_native_bytes": 2677674,
+    "complete_native_files": 49,
+    "explicit_missing_optional_six_LUN_files": 2,
+    "inventory_only_files": 2,
+    "native_invocations_for_artifact": 1,
+    "original_inputs_reported_rehashed_unchanged": true,
+    "raw_native_logs_or_private_payloads_published": false,
+    "reviewer_independently_reread_remote_original_inputs": false,
+    "safe_excerpts_whole_sensitive_lines_filtered": true
+  },
+  "frozen_review_summary_scope": {
+    "earlier_undefined_instruction_identified_in_this_supplement": true,
+    "explanation": "The frozen review first-fatal matcher selected the later panic. The full logs also contain the earlier undefined-instruction fault documented above; the original PASS receipt is preserved and does not replace this explicit ordering.",
+    "original_first_fatal_pattern_match": {
+      "guest_seconds": 5.473609,
+      "line": 1713,
+      "source": "printk_0000_kernel_printk_log",
+      "text": "[    5.473609] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b"
+    },
+    "original_review_preserved_verbatim": true
+  },
+  "identity": {
+    "archive_bytes": 84332241,
+    "archive_sha256": "adb99529bd4637d04d89d183a0a992f00f68ca598e2d60f00cb5e27a76089c46",
+    "artifact_id": 15078443518,
+    "binding_sha256": "b1d08d5b7578e0f5a94e5f775a2c07eb87fad19ab6315edee1f378313eecf716",
+    "configuration_sha256": "d9b0de6c6804bfd584bdb4b75390c455293c4dee20749d893948392f3a738374",
+    "coordinator_sha256": "5dba67a650893fef1c7a734959bbe5f9aceca4074349154c545a76ea2f5204bc",
+    "push_run": 45733250705,
+    "qemu_bytes": 63929840,
+    "qemu_sha256": "0574f6c0f361c8768e3caabb47cd2824cd54c6f976567d36bd00f4b6fd7997df",
+    "qualification_sha256": "f38ff7e8230400e764f0f60a0fc30f854f87639b8f81b2b45c62ca936905c6d0",
+    "reference_profile_sha256": "f9809a8de0e6b91c57e7baf3d675dfd16c4ce1bc6e2797a0d866ec42bebf1c3b",
+    "source_commit": "5297812e6af5f5a6d88372debb12c5841142757c",
+    "source_tree": "81995ad7ea3904a57396f0b334a7eccd7744c8b8"
+  },
+  "independent_review": {
+    "actual_review_execution": {
+      "bytes": 778,
+      "role": "actual_local_review_execution",
+      "sha256": "bacb33abe4b8cf322858ff48da3d72c23e7fefd12fdfc8dfa3ee71fb67b36158"
+    },
+    "checks": 2249,
+    "native_passed": false,
+    "private_receipt": {
+      "bytes": 285950,
+      "role": "independent_private_review",
+      "sha256": "c3d93244e3ff2cb53c65ec0f0b522ba0186b577ca0443ae7a9caba43b587f6f2"
+    },
+    "public_receipt": {
+      "bytes": 36634,
+      "role": "independent_public_review",
+      "sha256": "f4aa02e4a1b6f0631831964657033285d23e7e1961a560b237815c648a0dcd2c"
+    },
+    "review_passed": true
+  },
+  "next_observed_fault_sequence": {
+    "ELR": "0xffffff8008c32268",
+    "ESR": "0x02000000",
+    "MMIO_fault_address_inferred_for_system_register_write": false,
+    "cpu": 4,
+    "exception_class": "Undefined Instruction",
+    "instruction_bytes_published": false,
+    "qemu_evidence": [
+      {
+        "line": 31729,
+        "source": "native_qemu_log",
+        "text": "write access to unsupported AArch64 system register op0:3 op1:0 crn:5 crm:3 op2:1"
+      },
+      {
+        "line": 31730,
+        "source": "native_qemu_log",
+        "text": "Taking exception 1 [Undefined Instruction] on CPU 4"
+      },
+      {
+        "line": 31732,
+        "source": "native_qemu_log",
+        "text": "...with ESR 0x0/0x2000000"
+      },
+      {
+        "line": 31734,
+        "source": "native_qemu_log",
+        "text": "...with ELR 0xffffff8008c32268"
+      }
+    ],
+    "same_original_symbol_mapping": {
+      "extent_bytes": 904,
+      "function_address": "0xffffff8008c32238",
+      "metadata_capture": {
+        "bytes": 1808,
+        "role": "actual_PC_symbol_metadata",
+        "sha256": "f5d2c39325f1a7a03d7641035e937469529a58fca9291d7fa9b5ea5564239aee"
+      },
+      "offset": 48,
+      "offset_hex": "0x30",
+      "same_name_candidates": 1,
+      "symbol": "kryo_cpu_erp_probe",
+      "symbols_bytes": 5226424,
+      "symbols_sha256": "e32ef8e07019bd35105f7e2ddd6b7f47b9c23d828575afa6858b0ade37c49ab0"
+    },
+    "secondary_fault_in_exception_handler": {
+      "ELR": "0xffffff8008093d00",
+      "FAR": "0xfffffffffffffff0",
+      "evidence": [
+        {
+          "line": 31736,
+          "source": "native_qemu_log",
+          "text": "Taking exception 4 [Data Abort] on CPU 4"
+        },
+        {
+          "line": 31738,
+          "source": "native_qemu_log",
+          "text": "...with ESR 0x25/0x96000005"
+        },
+        {
+          "line": 31739,
+          "source": "native_qemu_log",
+          "text": "...with FAR 0xfffffffffffffff0"
+        },
+        {
+          "line": 31741,
+          "source": "native_qemu_log",
+          "text": "...with ELR 0xffffff8008093d00"
+        }
+      ],
+      "extent_bytes": 896,
+      "offset_hex": "0x268",
+      "symbol": "die"
+    },
+    "subsequent_panic": {
+      "guest_seconds": 5.473609,
+      "line": 1713,
+      "source": "native_printk",
+      "text": "[    5.473609] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b"
+    },
+    "undefined_instruction_printk": {
+      "guest_seconds": 5.47061,
+      "line": 1685,
+      "source": "native_printk",
+      "text": "[    5.470610] Internal error: undefined instruction: 0 [#1] PREEMPT SMP"
+    },
+    "unsupported_system_register_write": {
+      "CRm": 3,
+      "CRn": 5,
+      "architectural_name": "ERRSELR_EL1",
+      "encoding": "S3_0_C5_C3_1",
+      "op0": 3,
+      "op1": 0,
+      "op2": 1
+    }
+  },
+  "other_observed_limits": {
+    "Android_boot_completed_observed": false,
+    "Android_userspace_observed": false,
+    "UI_verified": false,
+    "all_warnings_fixed": false,
+    "complete_log_Data_Aborts": [
+      {
+        "ELR": "0xffffff800818e10c",
+        "ESR": "0x96000005",
+        "FAR": "0x0",
+        "cpu": 6,
+        "line": 3588
+      },
+      {
+        "ELR": "0xffffff8008093d00",
+        "ESR": "0x96000005",
+        "FAR": "0xfffffffffffffff0",
+        "cpu": 4,
+        "line": 31736
+      }
+    ],
+    "earlier_recoverable_abort_and_secondary_handler_abort_not_reclassified_as_absent": true,
+    "new_RAS_model_or_source_fix_qualified": false,
+    "same_artifact_rerun_permitted": false,
+    "six_LUN_success_established": false,
+    "warning_count": 13
+  },
+  "publication_performed": false,
+  "schema": "tb371fc-npu-pending-native-frontier-facts-v1"
+}

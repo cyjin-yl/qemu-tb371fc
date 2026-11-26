@@ -266,6 +266,16 @@ class AndroidRunnerTests(unittest.TestCase):
         self.assertEqual(report["first_kernel_failure"]["source"], "printk-1.log")
         self.assertEqual(len(report["kernel_failures"]), 2)
 
+    def test_undefined_instruction_is_a_kernel_failure_not_a_generic_warning(self):
+        fault = "[ 5.406881] Internal error: undefined instruction: 00000000 [#1] PREEMPT SMP\n"
+        diagnostic = "[ 1.0] undefined instruction handler installed\n"
+        report = boot.analyze_logs([("printk-1.log", diagnostic + fault),
+                                    ("printk-2.log", fault)])
+        self.assertEqual(len(report["kernel_failures"]), 1)
+        self.assertEqual(report["first_kernel_failure"]["guest_time_seconds"], 5.406881)
+        self.assertEqual(report["first_kernel_failure"]["source"], "printk-1.log")
+        self.assertEqual(boot.analyze_logs([("printk.log", diagnostic)])["kernel_failures"], [])
+
     def test_boot_completion_is_rejected_after_guest_panic_or_shutdown(self):
         self.add_lun(0)
         plan = self.plan()
@@ -489,6 +499,18 @@ class AndroidRunnerTests(unittest.TestCase):
         self.assertEqual(report["early_kernel_failure"]["guest_time_seconds"], 3.5)
         self.assertTrue(report["observation"]["android_boot_completed_observed"])
         self.assertEqual(len(captures), 2)  # Scheduled capture, then normal final capture.
+        self.assertEqual(monitor.commands.count("cont"), 1)
+
+    def test_opt_in_undefined_instruction_stops_and_completes_finalization(self):
+        report, monitor, captures = self.run_main_with_printk(
+            "[ 5.406881] Internal error: undefined instruction: 00000000 [#1] PREEMPT SMP\n",
+            early_stop=True)
+        self.assertLess(report["elapsed_seconds"], 120)
+        self.assertEqual(report["stop_reason"], "kernel-failure")
+        self.assertEqual(report["outcome"], "kernel-failure")
+        self.assertEqual(report["early_kernel_failure"]["guest_time_seconds"], 5.406881)
+        self.assertFalse(report["stock_android_boot_passed"])
+        self.assertEqual(len(captures), 2)
         self.assertEqual(monitor.commands.count("cont"), 1)
 
     def test_pid1_panic_shutdown_cleans_up_but_remains_kernel_failure(self):

@@ -1,0 +1,737 @@
+{
+  "claims": {
+    "native_execution": false,
+    "new_natural_ci_pass": false,
+    "pure_checks_alone_establish_compiled_component_pass": false,
+    "unsplit_eight_byte_device_callback_observed": false
+  },
+  "device_c_unchanged_across_all_corrections": {
+    "bytes": 50414,
+    "sha256": "c1fe1af46ec3383f9a080d1ba10f60073dfd59696fccfa363a9567551ebb3e10"
+  },
+  "exact_diff_sequence": [
+    {
+      "byte_offset_in_combined_diff": 0,
+      "bytes": 736,
+      "sha256": "73d2138d6584a4ae173421136c071e6bf70566ce981bac65bf3e7aaad3190f16",
+      "stage": 1
+    },
+    {
+      "byte_offset_in_combined_diff": 736,
+      "bytes": 4344,
+      "sha256": "ee510fd01e296f8db8d2810b89213befdcd4d7be920faae312aefd8d9ad1473f",
+      "stage": 2
+    },
+    {
+      "byte_offset_in_combined_diff": 5080,
+      "bytes": 442,
+      "sha256": "3574fd6a6a27ee8c6ddb62eae9973b5d262f3a434b67dd7bc90b8bfb1fc70be6",
+      "stage": 3
+    },
+    {
+      "byte_offset_in_combined_diff": 5522,
+      "bytes": 632,
+      "sha256": "bc9f87d81f48af23a862d403a1d9a532f15d50800489012e867b2890668fd08e",
+      "stage": 4
+    }
+  ],
+  "latest_source_identities": {
+    "test": {
+      "bytes": 70882,
+      "sha256": "01802bf20b9e9e5a68c32aa32bdb6bde48d733694f8d9559d4dc7db161a259b5"
+    },
+    "transport": {
+      "bytes": 20061,
+      "sha256": "319e8049aa82a4e2be7b956e3e7dc2de9b48477dfdd5cc5442805980cefeed11"
+    }
+  },
+  "schema": "tb371fc-geni-hs-bounded-source-correction-history-v1",
+  "source_head_of_ci_elf": "4710b80bde965798dfe5f0c9684c5b5880b84d04",
+  "source_only_case_counts": {
+    "file_address_constructions": 3,
+    "file_address_static_callsites": 3,
+    "irq_synthetic_protocol": 9,
+    "shape_actual_first_failure_replay": 1,
+    "shape_synthetic_diagnostics": 14
+  },
+  "stages": [
+    {
+      "all_55_check_names_unchanged": true,
+      "changed_functions": [
+        "assert_irq"
+      ],
+      "existing_execution": {
+        "command_alias": "python3 -B validate-irq-protocol-correction-001.py",
+        "compiled_runtime_pass_claimed": false,
+        "emulator_executed": false,
+        "execution_kind": "Python source, AST and in-memory protocol replay; no process or socket fixture",
+        "exit_code": 0,
+        "native_executed": false,
+        "result": {
+          "bytes": 4239,
+          "sha256": "0f841a50b26d95af01c320f5abd958629b646c801511729c8be7150e8a18e2d7"
+        },
+        "schema": "tb371fc-geni-hs-pure-source-check-execution-v1",
+        "script": {
+          "bytes": 8600,
+          "sha256": "4a3d8f2b7bee375b74a3d7918fb408c8db188dfeed847b67fea6865f6680fa53"
+        },
+        "synthetic_protocol_checks": 9,
+        "wall_time_seconds_observed": 0.156387959
+      },
+      "kind": "IRQ protocol fence",
+      "ordinal": 1,
+      "primary_source_pins": [
+        {
+          "bytes": 30014,
+          "complete_fetch": true,
+          "git_blob_sha": "cf301239177416bf0e4b9856dfaafda05f701f06",
+          "path": "system/qtest.c",
+          "sha256": "b9278555cbea97cfb0e4a13cf5a65ddf1fe9d9df1e1ff939cb7424ff41adc5f6"
+        },
+        {
+          "bytes": 20974,
+          "complete_fetch": true,
+          "git_blob_sha": "97e5a5edee23b70d8bd170c2b984568f4e804672",
+          "path": "system/cpus.c",
+          "sha256": "d3ead98db2a9354e49217d631f316e95487f7ab156ab4be9adad32dd5fae4acc"
+        },
+        {
+          "bytes": 20456,
+          "complete_fetch": true,
+          "git_blob_sha": "d93a020064fe2a82602c5739f4cb39a930d64a0e",
+          "path": "util/qemu-timer.c",
+          "sha256": "2b8436271d4638cf97927981c1ab26934488c3c819e44d6aa5b870fa0621317c"
+        },
+        {
+          "bytes": 2147,
+          "complete_fetch": true,
+          "git_blob_sha": "bb1491d93b4814588f34800ef0da42b77d6c8acd",
+          "path": "accel/qtest/qtest.c",
+          "sha256": "9166ffb57ab61b6ccdf9766f5952c072be67f08825a0e9cdf9ebc5d5994257f0"
+        }
+      ],
+      "provenance": [
+        {
+          "bytes": 8147,
+          "name": "clock-zero-failure-and-correction-001.json",
+          "sha256": "f74873147a4955a133a88ddacc25b01e3eb5d6abdc602c3ac63e18924cd499f6"
+        },
+        {
+          "bytes": 4239,
+          "name": "irq-protocol-source-check-result-001.json",
+          "sha256": "0f841a50b26d95af01c320f5abd958629b646c801511729c8be7150e8a18e2d7"
+        },
+        {
+          "bytes": 675,
+          "name": "irq-protocol-source-check-execution-001.json",
+          "sha256": "504656869c11cc447aa07cf0d33f37c549f021f997d922746b0833ae1fc6298c"
+        },
+        {
+          "bytes": 8600,
+          "name": "validate-irq-protocol-correction-001.py",
+          "sha256": "4a3d8f2b7bee375b74a3d7918fb408c8db188dfeed847b67fea6865f6680fa53"
+        },
+        {
+          "bytes": 3019,
+          "name": "clock-protocol-followup-source-review-001.json",
+          "sha256": "9aaed844b403226a16d89eedf208d1da56d247c1da1ab5b2a61f3dd97988e765"
+        },
+        {
+          "bytes": 79248,
+          "name": "clock-source-responses-001.json",
+          "sha256": "8e84e6c1a12faed992428ec181d8a4113f4eb9d60edd5a772c92b87b0e881f11"
+        }
+      ],
+      "reverse_substitution_byte_exact": true,
+      "semantics": {
+        "clock_set_unchanged": true,
+        "clock_step_success_condition": "new_ns > old_ns",
+        "paused_tcg_has_no_qtest_or_time_command": true,
+        "positive_step_arguments_unchanged": [
+          1000,
+          1000,
+          10000,
+          10000
+        ],
+        "replacement": "endianness query consumes preceding IRQ notifications with no memory or time advancement"
+      },
+      "synthetic_check_count": 9,
+      "synthetic_checks": [
+        {
+          "expected_rejection": null,
+          "memory_commands": 0,
+          "name": "queued_raise_observed",
+          "passed": true,
+          "qom_getters": 1,
+          "qtest_commands": 1,
+          "time_changed": false
+        },
+        {
+          "expected_rejection": null,
+          "memory_commands": 0,
+          "name": "queued_lower_observed",
+          "passed": true,
+          "qom_getters": 1,
+          "qtest_commands": 1,
+          "time_changed": false
+        },
+        {
+          "expected_rejection": null,
+          "memory_commands": 0,
+          "name": "ordered_events_drained",
+          "passed": true,
+          "qom_getters": 1,
+          "qtest_commands": 1,
+          "time_changed": false
+        },
+        {
+          "expected_rejection": null,
+          "memory_commands": 0,
+          "name": "unchanged_low_observed",
+          "passed": true,
+          "qom_getters": 1,
+          "qtest_commands": 1,
+          "time_changed": false
+        },
+        {
+          "expected_rejection": "AssertionError",
+          "memory_commands": 0,
+          "name": "wrong_output_signal_rejected",
+          "passed": true,
+          "qom_getters": 1,
+          "qtest_commands": 1,
+          "time_changed": false
+        },
+        {
+          "expected_rejection": "AssertionError",
+          "memory_commands": 0,
+          "name": "qom_mismatch_rejected",
+          "passed": true,
+          "qom_getters": 1,
+          "qtest_commands": 0,
+          "time_changed": false
+        },
+        {
+          "expected_rejection": "AssertionError",
+          "memory_commands": 0,
+          "name": "wrong_protocol_reply_rejected",
+          "passed": true,
+          "qom_getters": 1,
+          "qtest_commands": 1,
+          "time_changed": false
+        },
+        {
+          "expected_rejection": "AssertionError",
+          "memory_commands": 0,
+          "name": "qtest_failure_still_rejected",
+          "passed": true,
+          "qom_getters": 1,
+          "qtest_commands": 1,
+          "time_changed": false
+        },
+        {
+          "expected_rejection": "RuntimeError",
+          "memory_commands": 0,
+          "name": "unexpected_eof_still_rejected",
+          "passed": true,
+          "qom_getters": 1,
+          "qtest_commands": 1,
+          "time_changed": false
+        }
+      ],
+      "test_after": {
+        "bytes": 68852,
+        "sha256": "4aa3886ce77b41103c22958d77c1df94a7c408ae0a4950cbbb64f867e3769f71"
+      },
+      "test_before": {
+        "bytes": 68819,
+        "sha256": "c4dc696c14c8a4581ceb574be500457c43273ee99dc7e3740a18661fffa4093c"
+      },
+      "transport_unchanged": {
+        "bytes": 20048,
+        "sha256": "32dae63e1604366615f43c6e8982a21050c5cb4aaf70ac8e54527822f9a332e9"
+      },
+      "unchanged_functions_or_classes": 57
+    },
+    {
+      "actual_first_failure_line_replayed": true,
+      "all_55_group_names_retained": true,
+      "changed_functions": [
+        "rejected",
+        "strict_shapes_readonly_and_unknown_registers"
+      ],
+      "existing_execution": {
+        "actual_failure_line_replayed": true,
+        "command_alias": "python3 -B validate-shape-protocol-correction-001.py",
+        "exit_code": 0,
+        "new_runtime_pass_claimed": false,
+        "qemu_or_socket_execution": false,
+        "result": {
+          "bytes": 3380,
+          "sha256": "2a7c443d68672df409898159a25476ffcf9f05406cb18c59f65d628d8cbfcae2"
+        },
+        "schema": "tb371fc-geni-hs-pure-source-check-execution-v1",
+        "script": {
+          "bytes": 5942,
+          "sha256": "edd400b155dc77de33e427b358845fb51736f0e4d1d8c265b27167e7bb05b5e9"
+        },
+        "synthetic_checks": 14,
+        "wall_time_seconds_observed": 0.203930883
+      },
+      "kind": "Exact diagnostic fragments for QTest buffer accesses",
+      "ordinal": 2,
+      "primary_source_scope": {
+        "buffer_dispatch_caps_each_fragment_at_valid_max_access_size": 4,
+        "buffer_dispatch_respects_alignment_before_validity_check": true,
+        "exact_head_complete_sources": [
+          {
+            "bytes": 118660,
+            "git_blob_sha": "5fc36708ec349d94605f0503c647d7f9d1475a2d",
+            "path": "system/memory.c",
+            "sha256": "09a3c9c186629f082f63b50b3ee7c54366c37a62584f6d9f897980cd276aca13"
+          },
+          {
+            "bytes": 140872,
+            "git_blob_sha": "c21ea929153e5b67efa47432b1db0993e2690f9c",
+            "path": "system/physmem.c",
+            "sha256": "3210a543353b435a146f7ae4a33608ea849aad038cd9e889ddb3a30c104c063f"
+          },
+          {
+            "bytes": 30014,
+            "path": "system/qtest.c",
+            "sha256": "b9278555cbea97cfb0e4a13cf5a65ddf1fe9d9df1e1ff939cb7424ff41adc5f6"
+          }
+        ],
+        "scalar_qtest_spellings_use_buffer_api": true,
+        "unassigned_accepts_rejection_remains_distinct": true,
+        "validity_checks_log_exact_size_reason_for_delivered_narrow_fragments": true
+      },
+      "provenance": [
+        {
+          "bytes": 12608,
+          "name": "shape-diagnostic-failure-and-correction-001.json",
+          "sha256": "a76417cd79f9e1689c6e6f9fa4c43cd4042211bd98e7f55c6c6c491083d3793b"
+        },
+        {
+          "bytes": 3380,
+          "name": "shape-protocol-source-check-result-001.json",
+          "sha256": "2a7c443d68672df409898159a25476ffcf9f05406cb18c59f65d628d8cbfcae2"
+        },
+        {
+          "bytes": 581,
+          "name": "shape-protocol-source-check-execution-001.json",
+          "sha256": "cbe50f16501773304760a4bc94163c2450535f48f50b6ecb183232fc82a0d2cc"
+        },
+        {
+          "bytes": 5942,
+          "name": "validate-shape-protocol-correction-001.py",
+          "sha256": "edd400b155dc77de33e427b358845fb51736f0e4d1d8c265b27167e7bb05b5e9"
+        }
+      ],
+      "strict_width_expectations": {
+        "aligned_byte_and_word": "exact invalid-size reason, operation, relative address and fragment size",
+        "eight_byte_qtest_buffer": "exact combined two-word revision read and exact two four-byte read-only write diagnostics, with complete state unchanged",
+        "five_byte_buffer": "exact accepted four-byte revision prefix plus one invalid-size suffix; suffix uninterpreted",
+        "misaligned_four_byte": "exact ordered 1/2-byte fragment list, all invalid-size"
+      },
+      "synthetic_check_count": 14,
+      "synthetic_checks": [
+        {
+          "fragments": [
+            [
+              104,
+              1
+            ]
+          ],
+          "name": "byte_read",
+          "passed": true
+        },
+        {
+          "fragments": [
+            [
+              1556,
+              1
+            ]
+          ],
+          "name": "byte_write",
+          "passed": true
+        },
+        {
+          "fragments": [
+            [
+              104,
+              2
+            ]
+          ],
+          "name": "word_read",
+          "passed": true
+        },
+        {
+          "fragments": [
+            [
+              1556,
+              2
+            ]
+          ],
+          "name": "word_write",
+          "passed": true
+        },
+        {
+          "fragments": [
+            [
+              1557,
+              1
+            ],
+            [
+              1558,
+              2
+            ],
+            [
+              1560,
+              1
+            ]
+          ],
+          "name": "unaligned_1_False",
+          "passed": true
+        },
+        {
+          "fragments": [
+            [
+              1557,
+              1
+            ],
+            [
+              1558,
+              2
+            ],
+            [
+              1560,
+              1
+            ]
+          ],
+          "name": "unaligned_1_True",
+          "passed": true
+        },
+        {
+          "fragments": [
+            [
+              1558,
+              2
+            ],
+            [
+              1560,
+              2
+            ]
+          ],
+          "name": "unaligned_2_False",
+          "passed": true
+        },
+        {
+          "fragments": [
+            [
+              1558,
+              2
+            ],
+            [
+              1560,
+              2
+            ]
+          ],
+          "name": "unaligned_2_True",
+          "passed": true
+        },
+        {
+          "fragments": [
+            [
+              1559,
+              1
+            ],
+            [
+              1560,
+              2
+            ],
+            [
+              1562,
+              1
+            ]
+          ],
+          "name": "unaligned_3_False",
+          "passed": true
+        },
+        {
+          "fragments": [
+            [
+              1559,
+              1
+            ],
+            [
+              1560,
+              2
+            ],
+            [
+              1562,
+              1
+            ]
+          ],
+          "name": "unaligned_3_True",
+          "passed": true
+        },
+        {
+          "expected_rejection": true,
+          "name": "old_generic_reason_rejected",
+          "passed": true
+        },
+        {
+          "expected_rejection": true,
+          "name": "missing_fragment_rejected",
+          "passed": true
+        },
+        {
+          "expected_rejection": true,
+          "name": "extra_fragment_rejected",
+          "passed": true
+        },
+        {
+          "expected_rejection": true,
+          "name": "wrong_chunk_width_rejected",
+          "passed": true
+        }
+      ],
+      "test_after": {
+        "bytes": 70889,
+        "sha256": "c845e6e1a9255db4ed62a86fb47ba5a655a4476e12e081ba6fe848c6cb16b547"
+      },
+      "test_before": {
+        "bytes": 68852,
+        "sha256": "4aa3886ce77b41103c22958d77c1df94a7c408ae0a4950cbbb64f867e3769f71"
+      },
+      "transport_unchanged": {
+        "bytes": 20048,
+        "sha256": "32dae63e1604366615f43c6e8982a21050c5cb4aaf70ac8e54527822f9a332e9"
+      },
+      "unsplit_eight_byte_callback_observed": false
+    },
+    {
+      "all_call_sites": [
+        {
+          "calls": 1,
+          "function": "save_source"
+        },
+        {
+          "calls": 1,
+          "function": "receive_source"
+        },
+        {
+          "calls": 1,
+          "function": "expect_load_failure"
+        }
+      ],
+      "changed_functions": [
+        "file_channels"
+      ],
+      "exact_head_qapi": {
+        "bytes": 72944,
+        "git_blob_sha": "b1eaf7b0545ba9e5e8876104178a4c4a5f3c99e1",
+        "path": "qapi/migration.json",
+        "sha256": "39327c1bd7e16899e300da2cca4065cf1444cef80ce6d1fb584be57208a16205",
+        "source_head": "4710b80bde965798dfe5f0c9684c5b5880b84d04"
+      },
+      "existing_execution": {
+        "callsites_statically_verified": 3,
+        "exit_code": 0,
+        "kind": "inline Python source/schema/address-construction checks",
+        "new_runtime_pass_claimed": false,
+        "pure_address_cases": 3,
+        "qemu_or_socket_or_device_execution": false,
+        "result": {
+          "bytes": 2162,
+          "sha256": "ea392621294c567d2b1bf5af4ca9f5e9beef8656e7507494e72f63be85b6285e"
+        },
+        "schema": "tb371fc-geni-hs-pure-source-check-execution-v1",
+        "wall_time_seconds_observed": 0.136589081
+      },
+      "full_byte_single_substitution": true,
+      "helper_after": {
+        "bytes": 20061,
+        "sha256": "319e8049aa82a4e2be7b956e3e7dc2de9b48477dfdd5cc5442805980cefeed11"
+      },
+      "helper_before": {
+        "bytes": 20048,
+        "sha256": "32dae63e1604366615f43c6e8982a21050c5cb4aaf70ac8e54527822f9a332e9"
+      },
+      "kind": "Required file-migration address offset",
+      "only_semantic_change": "required file migration offset explicitly set to integer zero",
+      "ordinal": 3,
+      "provenance": [
+        {
+          "bytes": 11179,
+          "name": "migration-address-failure-and-correction-001.json",
+          "sha256": "4c117e034e362e8f3cda014c31f0bfe797e8075abaafcb9240d28cb7319319f1"
+        },
+        {
+          "bytes": 2162,
+          "name": "file-channel-source-check-result-001.json",
+          "sha256": "ea392621294c567d2b1bf5af4ca9f5e9beef8656e7507494e72f63be85b6285e"
+        },
+        {
+          "bytes": 465,
+          "name": "file-channel-source-check-execution-001.json",
+          "sha256": "adbe3d71e022e8418fcd20239d301487d95626796f444b330972a1c92207ac93"
+        },
+        {
+          "bytes": 72944,
+          "name": "qapi-migration-4710.json",
+          "sha256": "39327c1bd7e16899e300da2cca4065cf1444cef80ce6d1fb584be57208a16205"
+        },
+        {
+          "bytes": 76832,
+          "name": "qapi-migration-response-001.json",
+          "sha256": "7c53e39d16f0c40be7bb2773fc187318e4ed5b32bc9f0d1bbe9bef177acbe258"
+        }
+      ],
+      "pure_address_case_count": 3,
+      "pure_checks": [
+        {
+          "channel": "main",
+          "name": "source.migration",
+          "offset": 0,
+          "offset_python_type": "int",
+          "passed": true,
+          "transport": "file"
+        },
+        {
+          "channel": "main",
+          "name": "incoming stream.migration",
+          "offset": 0,
+          "offset_python_type": "int",
+          "passed": true,
+          "transport": "file"
+        },
+        {
+          "channel": "main",
+          "name": "negative-profile.migration",
+          "offset": 0,
+          "offset_python_type": "int",
+          "passed": true,
+          "transport": "file"
+        }
+      ],
+      "qapi_file_fields": {
+        "filename": "str",
+        "offset": "uint64"
+      },
+      "test_unchanged": {
+        "bytes": 70889,
+        "sha256": "c845e6e1a9255db4ed62a86fb47ba5a655a4476e12e081ba6fe848c6cb16b547"
+      }
+    },
+    {
+      "correction": {
+        "after": {
+          "bytes": 70882,
+          "sha256": "01802bf20b9e9e5a68c32aa32bdb6bde48d733694f8d9559d4dc7db161a259b5"
+        },
+        "before": {
+          "bytes": 70889,
+          "sha256": "c845e6e1a9255db4ed62a86fb47ba5a655a4476e12e081ba6fe848c6cb16b547"
+        },
+        "device_c_changed": false,
+        "diff": {
+          "bytes": 632,
+          "sha256": "bc9f87d81f48af23a862d403a1d9a532f15d50800489012e867b2890668fd08e"
+        },
+        "exactly_one_string_literal_ast_change": true,
+        "exit_code_specific_failure_backend_observer_and_cleanup_checks_preserved": true,
+        "last_unsupported_version_needle_unchanged_and_matches_source": true,
+        "path": "tb371fc/tests/test_geni_hs_sm8250.py",
+        "single_change": "remove obsolete word savevm from the unknown-section diagnostic needle",
+        "unchanged_helper": {
+          "bytes": 20061,
+          "sha256": "319e8049aa82a4e2be7b956e3e7dc2de9b48477dfdd5cc5442805980cefeed11"
+        }
+      },
+      "existing_execution": {
+        "emulator_or_socket_execution": false,
+        "exit_code": 0,
+        "kind": "inline Python syntax, exact one-literal substitution, source/actual-stderr comparisons",
+        "result": {
+          "bytes": 1325,
+          "sha256": "aa7281e134d21774f993a42fdb61f911d70bd96ec7a08aac1dfb0853966ce374"
+        },
+        "schema": "tb371fc-geni-hs-pure-source-check-execution-v1",
+        "unknown_case_runtime_pass_claimed": false,
+        "wall_time_seconds_observed": 0.920075329
+      },
+      "existing_source_validation": {
+        "actual_mutated_section_name": "qcom-sm8250-geni-hr",
+        "actual_previous_passed_checks": 53,
+        "actual_reported_completed_migrations": 2,
+        "actual_unknown_target_exit_code": 1,
+        "full_byte_single_substitution": true,
+        "guard_exit_backend_observation_and_cleanup_assertions_unchanged": true,
+        "last_version_case_needle_matches_exact_vmstate_source": true,
+        "new_55_check_or_ci_pass_claimed": false,
+        "new_needle_present_exactly_once": true,
+        "old_needle_absent_from_actual_stderr": true,
+        "other_failure_types_not_accepted": true,
+        "passed": true,
+        "qemu_or_device_or_socket_execution": false,
+        "runtime_unknown_case_not_yet_passed": true,
+        "schema": "tb371fc-geni-hs-unknown-section-needle-source-check-v1",
+        "scope": "source syntax, exact-byte/AST substitution and actual stderr match only",
+        "sole_ast_change": "one string literal in migration_checks",
+        "test_after": {
+          "bytes": 70882,
+          "sha256": "01802bf20b9e9e5a68c32aa32bdb6bde48d733694f8d9559d4dc7db161a259b5"
+        },
+        "test_before": {
+          "bytes": 70889,
+          "sha256": "c845e6e1a9255db4ed62a86fb47ba5a655a4476e12e081ba6fe848c6cb16b547"
+        },
+        "unchanged_helper": {
+          "bytes": 20061,
+          "sha256": "319e8049aa82a4e2be7b956e3e7dc2de9b48477dfdd5cc5442805980cefeed11"
+        },
+        "unknown_fixture_finish_observer_not_reached_in_diagnostic003": true
+      },
+      "kind": "Exact unknown-section diagnostic needle",
+      "ordinal": 4,
+      "primary_source_pins": [
+        {
+          "bytes": 111458,
+          "path": "migration/savevm.c",
+          "sha256": "98a9287762f05cdfd84f74377f85bf12da5086765cf26f9e054fa713e71a40a6"
+        },
+        {
+          "bytes": 29944,
+          "path": "migration/vmstate.c",
+          "sha256": "dc5aca380cef7f94867f700c87c9b46ddd25ef9fbed19bd6a1ae79279a1cd4a4"
+        }
+      ],
+      "provenance": [
+        {
+          "bytes": 18477,
+          "name": "unknown-section-failure-and-correction-001.json",
+          "sha256": "784f41d055253d1a703f649d9b447a1a66760aa4b94c6edd72beecda9793b197"
+        },
+        {
+          "bytes": 1325,
+          "name": "unknown-section-source-check-result-001.json",
+          "sha256": "aa7281e134d21774f993a42fdb61f911d70bd96ec7a08aac1dfb0853966ce374"
+        },
+        {
+          "bytes": 434,
+          "name": "unknown-section-source-check-execution-001.json",
+          "sha256": "d81be8d0164b1abc0f15f1b8d5891c6c3a80a037e28b3af12215c182b37e7815"
+        },
+        {
+          "bytes": 148091,
+          "name": "migration-source-responses-001.json",
+          "sha256": "c4075d8e2a9d548c6c211c3bc59e80f73bd723f560dd92695d9c16c727f30470"
+        }
+      ]
+    }
+  ],
+  "status": "four corrections frozen after actual diagnostic004 passed"
+}

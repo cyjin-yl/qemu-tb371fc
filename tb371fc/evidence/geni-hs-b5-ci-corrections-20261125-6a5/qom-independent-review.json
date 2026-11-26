@@ -1,0 +1,110 @@
+{
+  "actual_failure_evidence": [
+    {
+      "bytes": 149947,
+      "git_blob_sha1": "35226c3f8b4d4af1fa09e8a03215565c62064df7",
+      "path": "artifact/tb371fc-results/components/25-geni-hs-sm8250-reference/fixtures/data/ordinary-00-identity_and_pure_observation/qmp.jsonl",
+      "sha256": "fad253bf52ee1502fbbf13ebe1f2dc5d077cf2f25f05587b926e0a11ff4b9334"
+    },
+    {
+      "bytes": 1243,
+      "git_blob_sha1": "fac95eabad200ff3d155a10c9dec9a5ca05d417a",
+      "path": "artifact/tb371fc-results/components/25-geni-hs-sm8250-reference/case.json",
+      "sha256": "3db31ba55f9b5fd7dc06154bee186a3f4b5e24cfa12f6031d1dda58e71073190"
+    },
+    {
+      "bytes": 3797,
+      "git_blob_sha1": "a3ac9169ea88e025d71579f492cb3858d30a01f5",
+      "path": "artifact/tb371fc-results/components/25-geni-hs-sm8250-reference/fixtures/data/result.json",
+      "sha256": "94d4f647ec82f343ae0035fa970888b2821fc6dc7d5641293acb1e25cb5b2489"
+    }
+  ],
+  "after": {
+    "bytes": 68819,
+    "git_blob_sha1": "94ebca9c45633c52da63cb793492143852abea66",
+    "path": "tb371fc/tests/test_geni_hs_sm8250.py",
+    "sha256": "c4dc696c14c8a4581ceb574be500457c43273ee99dc7e3740a18661fffa4093c"
+  },
+  "before": {
+    "bytes": 68816,
+    "git_blob_sha1": "c4cfd68eb84a4b5eec94da1ad33e9d1a7eac2b9b",
+    "path": "qom-review/b5-test_geni_hs_sm8250.py",
+    "sha256": "e2935bb0a09cd8f3957f878ec4b4698f1eb391b3e2aa4031b0879a6147273055"
+  },
+  "checks": {
+    "actual_b5_response_matches_string": true,
+    "all_other_ast_unchanged": true,
+    "core_and_transport_unchanged": true,
+    "exact_b5_qom_source_registers_string": true,
+    "one_loop_covers_exact_three_properties": true,
+    "only_one_source_line_changed": true,
+    "original_failure_retained": true,
+    "reverse_substitution_recovers_full_original": true
+  },
+  "created_utc": "2026-11-25T08:17:48.765319+00:00",
+  "exact_qom_api_source": {
+    "bytes": 82356,
+    "git_blob_sha1": "f79b2cf3618369a87d25685b1bd834f8b2218936",
+    "path": "qom-review/qom-object-b5.c",
+    "sha256": "65b3958347a9ff405f17ed008d571a1f41b8533c8ec1871b22795566a9ffa9ee"
+  },
+  "material_findings": [],
+  "next_gate": "Corrected real compiled CI remains required; no result for later ordinary or migration groups is inferred.",
+  "observed_qom_types": {
+    "registers-hex": "string",
+    "rx-fifo-hex": "string",
+    "tx-fifo-hex": "string"
+  },
+  "peer_correction_receipt": {
+    "bytes": 8622,
+    "git_blob_sha1": "6d0c7fa962ba32321b630691d29303a3f2a06c78",
+    "path": "qom-review/b5-qom-metadata-failure-and-correction-001.json",
+    "sha256": "82b53396323f0cfb4f6b1cd7c92da34fec22971d50499e01a5db2328504e9218"
+  },
+  "prior_review_limitation": "The earlier source-only protocol review missed the QOM metadata label. This new bounded review corrects that conclusion using the actual failed B5 response and exact B5 API source; the prior receipt is unchanged.",
+  "prior_static_review_retained": {
+    "bytes": 4975,
+    "git_blob_sha1": "d8ec44133be3a1f313ad339c4389aefab5250cde",
+    "path": "peer-review/test-protocol-static-review-001.json",
+    "sha256": "3963a123737bfdac2b917b7594af5001a784858323bf0b15237e41cd64713a80"
+  },
+  "reviewer": "rpmstats_frontier",
+  "schema": "tb371fc-geni-hs-qom-metadata-correction-independent-review-v1",
+  "scope": {
+    "ci_rerun": false,
+    "compiled_suite_pass_claimed": false,
+    "model_change_required_for_this_failure": false,
+    "native_executed": false,
+    "qemu_executed": false,
+    "subsequent_cases_verified": false
+  },
+  "source_commit": "b5bf00086640cbee8ef0c13375ba281cd73b8369",
+  "static_review_passed": true,
+  "unchanged_files": [
+    {
+      "bytes": 20048,
+      "git_blob_sha1": "711fdca5b89f9dace4d76d62984cf99bebd65276",
+      "path": "tb371fc/tests/geni_hs_test_transport.py",
+      "sha256": "32dae63e1604366615f43c6e8982a21050c5cb4aaf70ac8e54527822f9a332e9"
+    },
+    {
+      "bytes": 50414,
+      "git_blob_sha1": "2a8132b46f5e55fe62f51bea8788d862be5c382a",
+      "path": "hw/char/qcom-geni-uart.c",
+      "sha256": "c1fe1af46ec3383f9a080d1ba10f60073dfd59696fccfa363a9567551ebb3e10"
+    },
+    {
+      "bytes": 2135,
+      "git_blob_sha1": "590531bb1e07ddd178e7bf5653ee7b811c99742b",
+      "path": "include/hw/char/qcom-geni-uart.h",
+      "sha256": "f2efb7233b29ae2ece90de924b7d64e1f33a9f1fd04ed3da37298e0f6efd83bf"
+    },
+    {
+      "bytes": 105293,
+      "git_blob_sha1": "8f6b6b2b694fb5456e0a63c4c64f79b93d646daa",
+      "path": "hw/arm/lenovo-tb371fc.c",
+      "sha256": "9119e88b7fcb6cdd103f4fad8ef11a4cc9ba7f8314e989a12747e7dd05017bda"
+    }
+  ],
+  "unrelated_chardev_type": "str"
+}

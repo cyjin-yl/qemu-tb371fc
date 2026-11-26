@@ -1,0 +1,121 @@
+{
+  "schema": "tb371fc-public-source-cache-source-freeze-v1",
+  "source_parent": "a91cf67d09380c7f7fa8868f7068dba6b3956daa",
+  "source_files": [
+    {
+      "path": "tb371fc/scripts/source_download.py",
+      "bytes": 13065,
+      "sha256": "007f430930aeae13e028271e95bf2b1eee2ab79ff3ec085475fc29d1f7195c95",
+      "git_blob_sha1": "1fdfc962617f621a509f26e5cd789c138565512d",
+      "baseline": {
+        "bytes": 4642,
+        "sha256": "4fde0300dc4c8777531402dc700fbed6364f16b0550fc852c3031fe641fe7dd7",
+        "git_blob_sha1": "1dad3f8f54658defe3e705fe9245ec0aa02c19bd"
+      },
+      "prior_freeze": {
+        "bytes": 12147,
+        "sha256": "32be30c81420797de232fe8810ff16ae430dba0205ea677f290697106fcb66d1",
+        "git_blob_sha1": "6309dbc6a1039570080b8b6b4f8a9f404a081841"
+      }
+    },
+    {
+      "path": "tb371fc/scripts/test_source_download.py",
+      "bytes": 35146,
+      "sha256": "c0a7ea65ef6cdce330142409c32bf2c6303b50ab9cd7a706b720f18f76260001",
+      "git_blob_sha1": "6939be87947455fb7f76668529c9dfbc13fd2258",
+      "baseline": {
+        "bytes": 13953,
+        "sha256": "b61b03821aeef22bd2bd0bb724c7a4bc7974dee426b495647cede3bed63fe6fd",
+        "git_blob_sha1": "f9f4edc3fc9de97101560a521216b0050b0a6c3f"
+      },
+      "prior_freeze": {
+        "bytes": 32744,
+        "sha256": "a22913156ea3eda987dc8e4d9b18a5f7e9d36980212812d13930c1e90cfc1045",
+        "git_blob_sha1": "f1a84c732b8211861bbaea6e015d606c9603e9d0"
+      }
+    }
+  ],
+  "source_checks_passed": true,
+  "old_retry_helpers_ast_unchanged": [
+    "_transient",
+    "_retry_after"
+  ],
+  "uncached_transport_ast_unchanged_after_removing_cache_only_branches": true,
+  "argument_validation_ast_unchanged": true,
+  "attempts": 3,
+  "aggregate_retry_wait_seconds": 30,
+  "retained_original_test_methods": 15,
+  "retained_original_test_methods_ast_unchanged": true,
+  "new_test_methods": 31,
+  "actual_test_methods_executed": 46,
+  "actual_tests_passed": 46,
+  "actual_unit_receipt": {
+    "path": "unit-002.json",
+    "bytes": 1038,
+    "sha256": "a594e515bc9cb64678ab4a27ba679c77f0dd705f8e9f732c405b2af272d777b1",
+    "git_blob_sha1": "39bbbe79659783d912411ff24cc2cac9f21227b4"
+  },
+  "cache_contract": {
+    "environment_variable": "TB371FC_PUBLIC_SOURCE_CACHE",
+    "default": "disabled",
+    "root": "absolute path; existing parent; leaf owner and mode0700",
+    "entry": "SHA256(full URL) directory mode0700; source file mode0600, current uid, single link",
+    "path_walk": "directory FDs with O_NOFOLLOW for every component; file O_NOFOLLOW/O_NONBLOCK then fstat regular-file validation",
+    "allowed_urls": "https://raw.githubusercontent.com/owner/repository/<40 hex revision>/path; no query, fragment, port, userinfo, dot/empty components, percent escapes or controls",
+    "response_admission": "HTTP200, same final URL, no Content-Range, valid declared length when present, completed bounded read",
+    "header": "magic +URL SHA256 +u64 body length +body SHA256",
+    "read_bound": "caller max_bytes plus fixed header plus one byte; oversize existing entries fail before read",
+    "publish": "Linux lazy ctypes renameat2(RENAME_NOREPLACE), with source/destination directory FDs; complete private staging fsynced first; no existing target can be replaced.",
+    "bad_entries": "fail closed without network fallback or deletion",
+    "incomplete_or_oversize_responses": "not published",
+    "caller_integrity": "Full caller length/SHA256/Git-blob admission remains mandatory on every hit; framing is not authentication",
+    "concurrent_staging": "Retained; all existing targets are preserved and reread strictly, including empty/malformed entries; identical complete responses accepted, differing or incomplete responses rejected.",
+    "platform": "Linux only; absent no-replace publication capability fails with no fallback."
+  },
+  "original_ci_failure_retained": {
+    "observation": {
+      "bytes": 2036,
+      "sha256": "6fe341733f194cf9fd90468f9613bbc638a6d148194e5eaf36503c7c4575949d",
+      "git_blob_sha1": "6468482783dd7f94dfc16bc0d0ed4529046a60b1"
+    },
+    "run_id": 45558827077,
+    "job_id": 139017312344,
+    "artifact_id": 14998056908,
+    "artifact": {
+      "bytes": 50359699,
+      "sha256": "a4e3339f726ff2a20d24e58004ed179aaedb4c111b8f8561650d4b2d96e53ab7",
+      "git_blob_sha1": "eaa9872935a9c4dbc6d856b3d77d764aaa1ac9ac"
+    },
+    "passed_components": 98,
+    "total_components": 99,
+    "failed_case": "llcc-source-generation",
+    "http_status": 429,
+    "generation_checks_completed": 0,
+    "linux_executed": false,
+    "native_executed": false,
+    "full_original_evidence_files_rehashed": 5
+  },
+  "qemu_executed": false,
+  "devices_or_ssh_accessed": false,
+  "a91_ci_rerun": false,
+  "ci_environment_wiring_by_root": true,
+  "next_validation": "Independent review, then the normal new-head CI publication; no old failure is converted into a pass.",
+  "revision": 2,
+  "prior_freeze_receipt": {
+    "bytes": 4246,
+    "sha256": "c3ab1caa4a0018a581063f78754431a87f62be8bba12e36f6352828c936ce6f9",
+    "git_blob_sha1": "be0c128fc3e70852aca07c1ed79572bcb98d5d8c"
+  },
+  "prior_43_test_pass_retained": {
+    "bytes": 1038,
+    "sha256": "635b26da4dfc6d0863356c327a9a52fc31cc2001fd57aca994f92d04bd035683",
+    "git_blob_sha1": "60c1ad66ffc7bdcf59ca1d166b0c940a41530ef1"
+  },
+  "correction": "Root review identified that ordinary rename can replace a concurrently appearing empty directory. Replace publication with Linux renameat2(RENAME_NOREPLACE); preserve and strictly validate every existing target, including empty/incomplete directories.",
+  "correction_tests": [
+    "existing empty target appears at atomic publication: original inode and empty directory retained; pending complete source retained; operation fails",
+    "non-Linux opt-in fails before network or cache creation",
+    "missing renameat2 raises ENOSYS without replacement fallback; completed staging retained"
+  ],
+  "no_unrelated_core_change": true
+}

@@ -186,12 +186,14 @@ system_ss.add(when: 'CONFIG_QCOM_QSEE_IRQ', if_true: files('qcom-qsee-irq.c'))
 system_ss.add(when: 'CONFIG_QCOM_SM8250_SPSS_IRQ_MASK', if_true: files('qcom-sm8250-spss-irq-mask.c'))
 system_ss.add(when: 'CONFIG_QCOM_SM8250_RPM_STATS_OFFSET', if_true: files('qcom-sm8250-rpm-stats-offset.c'))
 system_ss.add(when: 'CONFIG_QCOM_SM8250_DDR_STATS_OFFSET', if_true: files('qcom-sm8250-ddr-stats-offset.c'))
+system_ss.add(when: 'CONFIG_QCOM_SM8250_QCE_BAM', if_true: files('qcom-sm8250-qce-bam.c'))
 system_ss.add(when: 'CONFIG_QCOM_TCSR_MUTEX', if_true: files('qcom-tcsr-mutex.c'))
 system_ss.add(when: 'CONFIG_QCOM_SMEM_HANDOFF', if_true: files('qcom-smem-handoff.c'))
 system_ss.add(when: 'CONFIG_QCOM_AOP_MSGRAM', if_true: files('qcom-aop-msgram.c', 'qcom-aop-qmp.c'))
 system_ss.add(when: 'CONFIG_QCOM_REFGEN', if_true: files('qcom-refgen.c'))
 system_ss.add(when: 'CONFIG_QCOM_GPU_CX_GDSC', if_true: files('qcom-gpu-cx-gdsc.c'))
 system_ss.add(when: 'CONFIG_QCOM_SPMI_PMIC_ARB', if_true: files('qcom-spmi-pmic-arb.c'))
+system_ss.add(when: 'CONFIG_QCOM_SM8250_SPMI_DEBUG_FUSE', if_true: files('qcom-sm8250-spmi-debug-fuse.c'))
 
 system_ss.add(when: 'CONFIG_QCOM_GDSC', if_true: files('qcom-gdsc.c'))
 system_ss.add(when: 'CONFIG_QCOM_CAMERA_GDSC', if_true: files('qcom-camera-gdsc.c'))
@@ -207,3 +209,6 @@ system_ss.add(when: 'CONFIG_QCOM_CPUFREQ_HW', if_true: files('qcom-cpufreq-hw.c'
 system_ss.add(when: 'CONFIG_QCOM_DEVFREQ_FW', if_true: files('qcom-devfreq-fw.c'))
 
 system_ss.add(when: 'CONFIG_QCOM_NOC_SBM', if_true: files('qcom-noc-sbm.c'))
+system_ss.add(when: 'CONFIG_QCOM_SM8250_GENI_I2C', if_true: files('qcom-sm8250-geni-i2c.c'))
+
+system_ss.add(when: 'CONFIG_TB371FC_DSU_PMU', if_true: files('tb371fc-dsu-pmu.c'))

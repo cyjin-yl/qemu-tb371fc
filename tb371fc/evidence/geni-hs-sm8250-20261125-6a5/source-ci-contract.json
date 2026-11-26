@@ -1,0 +1,91 @@
+{
+  "generator_unit": {
+    "command": [
+      "python3",
+      "-I",
+      "-S",
+      "-B",
+      "tb371fc/scripts/test_geni_hs_sm8250_generation.py"
+    ],
+    "expected_exit_code": 0,
+    "expected_test_count": 49
+  },
+  "schema": "tb371fc-geni-hs-sm8250-source-ci-contract-v1",
+  "scope": "Source generation and parser tests only; no compiled model, native boot, physical SE6 identity, or Android acceptance is asserted.",
+  "source_generation": {
+    "command": [
+      "python3",
+      "-I",
+      "-S",
+      "-B",
+      "tb371fc/scripts/verify_geni_hs_sm8250_generation.py",
+      "--out",
+      "<new-output-directory>"
+    ],
+    "expected_exit_code": 0,
+    "expected_generated_contract": {
+      "clock_binding_count": 3,
+      "constant_count": 12,
+      "constants": {
+        "GENI_HS_CFG_REVISION": 8,
+        "GENI_HS_DMA_RX_IRQ_MASK": 30719,
+        "GENI_HS_DMA_TX_IRQ_MASK": 16399,
+        "GENI_HS_FIFO_BYTES": 64,
+        "GENI_HS_MAIN_FW_REVISION": 513,
+        "GENI_HS_PROFILE_ID": 1195922225,
+        "GENI_HS_SECONDARY_FW_REVISION": 513,
+        "GENI_HS_SE_BASE": 10059776,
+        "GENI_HS_SE_WINDOW_BYTES": 16384,
+        "GENI_HS_WRAPPER_VERSION": 537198592,
+        "GENI_HS_WRAPPER_VERSION_ADDRESS": 10223620,
+        "GENI_HS_WRAPPER_WINDOW_BYTES": 4
+      },
+      "fifo_bytes": 64,
+      "negative_check_count": 51,
+      "output_count": 2,
+      "reference_input_count": 2,
+      "source_input_bytes": 810000,
+      "source_input_count": 19,
+      "window_count": 2
+    },
+    "expected_generated_paths": [
+      "hw/char/qcom-sm8250-geni-hs-data.inc",
+      "tb371fc/docs/geni-hs-sm8250-registers.json"
+    ],
+    "expected_list_lengths": {
+      "checks": 2,
+      "inputs": 19,
+      "negative_checks": 51,
+      "reference_inputs": 2
+    },
+    "expected_negative_counts": {
+      "complete-input-identity": 19,
+      "generated-output": 2,
+      "parser-contract": 19,
+      "reference-input-identity": 2,
+      "reference-scope": 9
+    },
+    "expected_scalar_fields": {
+      "devices_ssh_qemu_or_native_used": false,
+      "generator_exit_code": 0,
+      "generator_stderr_bytes": 0,
+      "passed": true,
+      "private_binary_review_publicly_reproduced": false,
+      "public_source_pins_verified": true,
+      "reference_input_pins_verified": true,
+      "schema": "tb371fc-geni-hs-sm8250-source-generation-v1"
+    },
+    "optional_local_source_argument": [
+      "--source-root",
+      "<directory-containing-all-19-pinned-source-files>"
+    ],
+    "required_absent_fields": [
+      "error"
+    ],
+    "required_item_predicates": {
+      "checks": "every item has passed === true",
+      "negative_checks": "every item has rejected === true"
+    },
+    "result_file": "result.json"
+  }
+}

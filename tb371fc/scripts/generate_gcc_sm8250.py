@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0-only
-"""Generate SM8250 GCC descriptors with pinned Kona branch/mux supplements.
+"""Generate SM8250 GCC descriptors with pinned Kona control supplements.
 
 The parser deliberately accepts one audited source revision only. It extracts
 register facts, not arbitrary C. Run in the development container:
   python3 tb371fc/scripts/generate_gcc_sm8250.py /path/to/linux-6.12.114 \\
     --vendor-gcc /path/to/pinned/gcc-kona.c \\
-    --vendor-branch /path/to/pinned/clk-branch.c
+    --vendor-branch /path/to/pinned/clk-branch.c \\
+    --vendor-gdsc /path/to/pinned/gdsc-regulator.c
 """
 import argparse
 import hashlib
@@ -24,6 +25,10 @@ VENDOR_BRANCH_PATH = 'drivers/clk/qcom/clk-branch.c'
 VENDOR_BRANCH_SHA256 = '375830dc9cd0ecbc12ea018eee1d260d8ba724dc52f1ac8b3589a07bc75d08aa'
 VENDOR_BRANCH_URL = ('https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/'
                      'blob/' + VENDOR_REVISION + '/' + VENDOR_BRANCH_PATH)
+VENDOR_GDSC_PATH = 'drivers/clk/qcom/gdsc-regulator.c'
+VENDOR_GDSC_SHA256 = '41acd7aa326c656db5b9dbe57c5fe05f1783abf8a299aaf9f8d4c58b9ecea3d2'
+VENDOR_GDSC_URL = ('https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250/'
+                   'blob/' + VENDOR_REVISION + '/' + VENDOR_GDSC_PATH)
 PRIMARY = 'https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/'
 SYMBOLS = {'P_BI_TCXO': -1, 'P_SLEEP_CLK': -2, 'P_AUD_REF_CLK': -3,
            'P_GPLL0_OUT_MAIN': 0, 'P_GPLL0_OUT_EVEN': 1,
@@ -56,6 +61,40 @@ def definitions(source, typ):
     return [(m.group(1), m.group(2), source.count('\n', 0, m.start()) + 1)
             for m in re.finditer(pattern, source)]
 
+def gdsc_retain_field(source):
+    """Extract the pinned regulator driver's retained digital request field."""
+    macro = required(r'(?m)^#define[ \t]+RETAIN_FF_ENABLE_MASK[ \t]+'
+                     r'BIT\((\d+)\)[ \t]*$', source)
+    retain_bit = int(macro.group(1))
+    if retain_bit != 11:
+        raise ValueError('unexpected Kona GDSCR retain-FF field')
+    enable = required(r'static int gdsc_enable\([^)]*\)\s*\{([\s\S]*?)\n\}',
+                      source).group(1)
+    collapse = required(r'regmap_read\(sc->regmap, REG_OFFSET, &regval\);\s*'
+                        r'regval &= ~SW_COLLAPSE_MASK;\s*'
+                        r'regmap_write\(sc->regmap, REG_OFFSET, regval\);',
+                        enable)
+    poll = required(r'ret = poll_gdsc_status\(sc, ENABLED\);', enable)
+    retain = required(r'if \(sc->retain_ff_enable && '
+                      r'!\(regval & RETAIN_FF_ENABLE_MASK\)\) \{\s*'
+                      r'regval \|= RETAIN_FF_ENABLE_MASK;\s*'
+                      r'regmap_write\(sc->regmap, REG_OFFSET, regval\);\s*\}',
+                      enable)
+    if not collapse.end() < poll.start() < retain.start():
+        raise ValueError('unexpected Kona GDSCR enable/retain order')
+    disable = required(r'static int gdsc_disable\([^)]*\)\s*\{([\s\S]*?)\n\}',
+                       source).group(1)
+    required(r'regmap_read\(sc->regmap, REG_OFFSET, &regval\);\s*'
+             r'regval \|= SW_COLLAPSE_MASK;\s*'
+             r'regmap_write\(sc->regmap, REG_OFFSET, regval\);', disable)
+    if 'RETAIN_FF_ENABLE_MASK' in disable:
+        raise ValueError('unexpected Kona retain-FF disable behavior')
+    parse_dt = required(r'static int gdsc_parse_dt_data\([^)]*\)\s*'
+                        r'\{([\s\S]*?)\n\}', source).group(1)
+    required(r'sc->retain_ff_enable = of_property_read_bool\(dev->of_node,\s*'
+             r'"qcom,retain-regs"\);', parse_dt)
+    return retain_bit, source.count('\n', 0, macro.start()) + 1
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('linux', type=Path)
@@ -63,6 +102,8 @@ def main():
                     help='Exact pinned official OnePlus gcc-kona.c input')
     ap.add_argument('--vendor-branch', type=Path, required=True,
                     help='Exact pinned official OnePlus clk-branch.c input')
+    ap.add_argument('--vendor-gdsc', type=Path, required=True,
+                    help='Exact pinned official OnePlus gdsc-regulator.c input')
     ap.add_argument('--output-root', type=Path, default=Path(__file__).resolve().parents[2])
     args = ap.parse_args()
     driver = args.linux / 'drivers/clk/qcom/gcc-sm8250.c'
@@ -76,6 +117,10 @@ def main():
     if hashlib.sha256(branch_bytes).hexdigest() != VENDOR_BRANCH_SHA256:
         raise ValueError('clk-branch.c differs from the pinned official OnePlus source')
     branch_source = branch_bytes.decode('utf-8')
+    gdsc_bytes = args.vendor_gdsc.read_bytes()
+    if hashlib.sha256(gdsc_bytes).hexdigest() != VENDOR_GDSC_SHA256:
+        raise ValueError('gdsc-regulator.c differs from the pinned official OnePlus source')
+    gdsc_source = gdsc_bytes.decode('utf-8')
     hashes = {str(p.relative_to(args.linux)): hashlib.sha256(p.read_bytes()).hexdigest()
               for p in (driver, binding)}
     # These checks prevent a changed driver from silently producing partial data.
@@ -83,6 +128,7 @@ def main():
         raise ValueError('gcc-sm8250.c differs from the audited Linux 6.12.114 source')
     if hashes['include/dt-bindings/clock/qcom,gcc-sm8250.h'] != '34682c01e5b21bb13db125afa3504c73606c294c23cfb3a96f6ea52cdffd2ff7':
         raise ValueError('binding differs from the audited Linux 6.12.114 source')
+    retain_ff_bit, retain_ff_line = gdsc_retain_field(gdsc_source)
     ids = {name: int(value) for name, value in re.findall(r'^#define\s+(\w+)\s+(\d+)\s*$', header, re.M)}
     clock_array = required(r'static struct clk_regmap \*gcc_sm8250_clocks\[\] = \{([\s\S]*?)\n\};', source).group(1)
     clock_ids = {name: ids[symbol] for symbol, name in re.findall(r'\[(\w+)\]\s*=\s*&(\w+)\.clkr', clock_array)}
@@ -299,6 +345,9 @@ def main():
              for name, body, line in definitions(source, 'gdsc')]
     if len(resets) != 45 or len(gdscs) != 11:
         raise ValueError('unexpected reset/power binding count')
+    ufs_phy = next(d for d in gdscs if d['name'] == 'ufs_phy_gdsc')
+    if (ufs_phy['id'], ufs_phy['reg'], ufs_phy['retention']) != (4, 0x77004, False):
+        raise ValueError('unexpected UFS PHY GDSC register or power states')
     # Known addresses and write/RO masks: no catch-all MMIO backing store.
     regs = {}
     def add(reg, rw=0, ro=0):
@@ -336,6 +385,9 @@ def main():
     add(video_facts[0], retention_mask)
     for d in resets: add(d['reg'], d['mask'])
     for d in gdscs: add(d['reg'], 0xfff007, 0x80000000)
+    # Only this observed UFS PHY control word gains the vendor request bit.
+    # PWRSTS_OFF_ON and the existing digital power transitions are unchanged.
+    add(ufs_phy['reg'], 1 << retain_ff_bit)
     add(0x4d110, 3); add(0x71028, 3)
     for reg, (rw, ro) in regs.items():
         if rw & ro: raise ValueError('overlapping rw/ro bits at ' + hex(reg))
@@ -397,14 +449,28 @@ def main():
                                             register_owner=dict(path=VENDOR_PATH,
                                                                 sha256=VENDOR_SHA256,
                                                                 line=video_line),
-                                            scope='Digital request fields only; no retained payload or clock availability is inferred')],
+                                            scope='Digital request fields only; no retained payload or clock availability is inferred'),
+                                       dict(name='oneplus-kona-ufs-phy-retain-ff',
+                                            revision=VENDOR_REVISION,
+                                            path=VENDOR_GDSC_PATH, url=VENDOR_GDSC_URL,
+                                            sha256=VENDOR_GDSC_SHA256,
+                                            power_domain_ids=[ufs_phy['id']],
+                                            register_offset=ufs_phy['reg'],
+                                            write_mask=1 << retain_ff_bit,
+                                            field_bits=dict(retain_ff=retain_ff_bit),
+                                            macro_line=retain_ff_line,
+                                            dt_property='qcom,retain-regs',
+                                            register_owner=dict(path='drivers/clk/qcom/gcc-sm8250.c',
+                                                                sha256=hashes['drivers/clk/qcom/gcc-sm8250.c'],
+                                                                line=ufs_phy['line']),
+                                            scope='UFS PHY digital retain request only; no retained payload or new power state. Existing XO and virtual transition conditions still apply.')],
                     clocks=clocks, resets=resets, power_domains=gdscs,
                     registers=[dict(offset=reg, write_mask=rw, status_mask=ro) for reg, (rw, ro) in sorted(regs.items())])
     (args.output_root / 'tb371fc/docs/gcc-sm8250-registers.json').write_text(json.dumps(manifest, indent=2) + '\n')
     out = ['/* SPDX-License-Identifier: GPL-2.0-only */',
            '/* Generated register facts from Linux v6.12.114 gcc-sm8250.c.',
            ' * Source copyright (c) 2018-2020, The Linux Foundation. All rights reserved.',
-           ' * CPUSS, USB muxes and camera/MDSS/NPU/VIDEO retention use pinned Kona facts.',
+           ' * CPUSS, USB muxes, AHB retention and UFS PHY retain-FF use pinned Kona facts.',
            ' * Regenerate with tb371fc/scripts/generate_gcc_sm8250.py; see manifest.',
            ' */', 'static const GccClockDesc gcc_clocks[GCC_CLOCKS] = {']
     for d in clocks:

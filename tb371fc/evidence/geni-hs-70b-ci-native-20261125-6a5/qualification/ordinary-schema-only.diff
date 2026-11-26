@@ -1,0 +1,47 @@
+--- assemble_geni_70b387fb_qualification_bound_001.py
++++ assemble_geni_70b387fb_qualification_bound_002.py
+@@ -1224,7 +1224,43 @@
+           'compiled producer exact corrected source')
+     exact(compiled['component']['transport_helper_sha256'], sources['tb371fc/tests/geni_hs_test_transport.py']['sha256'],
+           'compiled transport helper current bytes')
+-    for key, count in {'ordinary_and_special': 23, 'completed_migrations': 2, 'profile_rejections': 2,
++    ordinary = compiled['ordinary_and_special']
++    need(type(ordinary) is dict, 'compiledGENI ordinary/special object')
++    exact(set(ordinary), {'group_count', 'process_count', 'ordinary', 'special_processes',
++          'actual_output_byte_streams_checked', 'both_engine_qom_state_checks',
++          'actual_irq_output_checked', 'gic_or_guest_interrupt_handling_verified',
++          'all_actual_qtest_commands_and_rejection_diagnostics_accounted'},
++          'compiledGENI ordinary/special exact fields')
++    exact({key: ordinary[key] for key in ('group_count', 'process_count',
++          'actual_output_byte_streams_checked', 'both_engine_qom_state_checks',
++          'actual_irq_output_checked', 'gic_or_guest_interrupt_handling_verified',
++          'all_actual_qtest_commands_and_rejection_diagnostics_accounted')},
++          {'group_count': 23, 'process_count': 24, 'actual_output_byte_streams_checked': True,
++           'both_engine_qom_state_checks': True, 'actual_irq_output_checked': True,
++           'gic_or_guest_interrupt_handling_verified': False,
++           'all_actual_qtest_commands_and_rejection_diagnostics_accounted': True},
++          'compiledGENI ordinary/special counts and evidence boundaries')
++    ordinary_names = [
++        'identity_and_pure_observation', 'exact_original_cold_probe_and_dma_masks',
++        'exact_mapping_and_neighbor_holes', 'tx_partial_word_real_bytes',
++        'core_irq_mask_aliases_and_w1c', 'rx_partial_empty_and_no_peer_invention',
++        'rx_backpressure_preserves_all_bytes', 'tx_fifo_overflow_and_clock_pause',
++        'commands_cancel_abort_and_overrun', 'three_clock_gates_and_real_irq_suppression',
++        'hwcg_request_removal_is_real', 'wrapper_reset_isolation_and_fixed_identity',
++        'two_engine_fifo_and_backend_isolation', 'strict_shapes_readonly_and_unknown_registers',
++        'unsupported_dma_transfer_has_no_effect', 'immutable_qom_properties',
++        'disconnected_backend_retains_pending', 'absent_backend_cannot_complete',
++        'real_socket_tx_backpressure_and_resume', 'zero_length_waits_for_engine_clock']
++    for key, count in {'ordinary': 20, 'special_processes': 4}.items():
++        need(type(ordinary[key]) is list and len(ordinary[key]) == count and
++             all(type(row) is dict for row in ordinary[key]), 'compiledGENI process list ' + key)
++    exact([[row['name'], row['fixture']] for row in ordinary['ordinary']],
++          [[name, f'ordinary-{index:02d}-{name}'] for index, name in enumerate(ordinary_names)],
++          'compiledGENI all20 ordered ordinary identities')
++    exact([row['fixture'] for row in ordinary['special_processes']],
++          ['default-omitted', 'explicit-off', 'paused-tcg', 'missing-clock-parent'],
++          'compiledGENI all4 ordered special process identities')
++    for key, count in {'completed_migrations': 2, 'profile_rejections': 2,
+                        'one_bit_rejections': 25, 'structural_rejections': 3}.items():
+         need(type(compiled[key]) is list and len(compiled[key]) == count, 'compiledGENI exact list ' + key)
+     cleanup = compiled['process_cleanup']

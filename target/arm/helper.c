@@ -4717,6 +4717,179 @@ static const ARMCPRegInfo minimal_ras_reginfo[] = {
 };
 
 /*
+ * The thirteen exact DSU encodings are exposed only by the board opt-in.
+ * HCR_EL2.TIDCP is checked by handle_sys before this access function.
+ * EL0 remains statically inaccessible. With EL3 absent, ACTLR_EL2[12]
+ * controls EL1 writes; CEID reads/write-ignored accesses have no such gate.
+ */
+static CPAccessResult tb371fc_dsu_access(CPUARMState *env,
+                                        const ARMCPRegInfo *ri, bool isread)
+{
+    ARMCPU *cpu = env_archcpu(env);
+    bool ceid = ri->crm == 6 && (ri->opc2 == 4 || ri->opc2 == 5);
+
+    if (!isread && !ceid && arm_current_el(env) == 1 &&
+        !(cpu->tb371fc_dsu_actlr_el2 & TB371FC_DSU_ACTLR_WRITE_ENABLE)) {
+        return CP_ACCESS_TRAP_EL2;
+    }
+    return CP_ACCESS_OK;
+}
+
+static uint64_t tb371fc_dsu_read(CPUARMState *env, const ARMCPRegInfo *ri)
+{
+    TB371FCDSUPMULink *link = env_archcpu(env)->tb371fc_dsu_link;
+
+    return link->read(link->opaque, (ri->crm << 3) | ri->opc2);
+}
+
+static void tb371fc_dsu_write(CPUARMState *env, const ARMCPRegInfo *ri,
+                               uint64_t value)
+{
+    TB371FCDSUPMULink *link = env_archcpu(env)->tb371fc_dsu_link;
+
+    link->write(link->opaque, (ri->crm << 3) | ri->opc2, value);
+}
+
+static uint64_t tb371fc_dsu_actlr_read(CPUARMState *env,
+                                       const ARMCPRegInfo *ri)
+{
+    return env_archcpu(env)->tb371fc_dsu_actlr_el2;
+}
+
+static void tb371fc_dsu_actlr_write(CPUARMState *env, const ARMCPRegInfo *ri,
+                                    uint64_t value)
+{
+    env_archcpu(env)->tb371fc_dsu_actlr_el2 =
+        value & TB371FC_DSU_ACTLR_WRITE_ENABLE;
+}
+
+static void tb371fc_dsu_actlr_reset(CPUARMState *env, const ARMCPRegInfo *ri)
+{
+    /* Explicit virtual boot policy, not a captured physical ACTLR value. */
+    env_archcpu(env)->tb371fc_dsu_actlr_el2 = TB371FC_DSU_ACTLR_WRITE_ENABLE;
+}
+
+static const ARMCPRegInfo tb371fc_dsu_actlr_reginfo = {
+    .name = "ACTLR_EL2", .state = ARM_CP_STATE_AA64,
+    .opc0 = 3, .opc1 = 4, .crn = 1, .crm = 0, .opc2 = 1,
+    .access = PL2_RW, .type = ARM_CP_OVERRIDE | ARM_CP_NO_RAW,
+    .readfn = tb371fc_dsu_actlr_read, .writefn = tb371fc_dsu_actlr_write,
+    .resetfn = tb371fc_dsu_actlr_reset,
+};
+
+/* Alias/control writes must never be replayed by generic CPU migration. */
+static const ARMCPRegInfo tb371fc_dsu_reginfo[] = {
+    { .name = "CLUSTERPMCR_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 15, .crm = 5, .opc2 = 0,
+      .access = PL1_RW, .accessfn = tb371fc_dsu_access,
+      .type = ARM_CP_IO | ARM_CP_NO_RAW,
+      .readfn = tb371fc_dsu_read, .writefn = tb371fc_dsu_write },
+    { .name = "CLUSTERPMCNTENSET_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 15, .crm = 5, .opc2 = 1,
+      .access = PL1_RW, .accessfn = tb371fc_dsu_access,
+      .type = ARM_CP_IO | ARM_CP_NO_RAW,
+      .readfn = tb371fc_dsu_read, .writefn = tb371fc_dsu_write },
+    { .name = "CLUSTERPMCNTENCLR_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 15, .crm = 5, .opc2 = 2,
+      .access = PL1_RW, .accessfn = tb371fc_dsu_access,
+      .type = ARM_CP_IO | ARM_CP_NO_RAW,
+      .readfn = tb371fc_dsu_read, .writefn = tb371fc_dsu_write },
+    { .name = "CLUSTERPMOVSSET_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 15, .crm = 5, .opc2 = 3,
+      .access = PL1_RW, .accessfn = tb371fc_dsu_access,
+      .type = ARM_CP_IO | ARM_CP_NO_RAW,
+      .readfn = tb371fc_dsu_read, .writefn = tb371fc_dsu_write },
+    { .name = "CLUSTERPMOVSCLR_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 15, .crm = 5, .opc2 = 4,
+      .access = PL1_RW, .accessfn = tb371fc_dsu_access,
+      .type = ARM_CP_IO | ARM_CP_NO_RAW,
+      .readfn = tb371fc_dsu_read, .writefn = tb371fc_dsu_write },
+    { .name = "CLUSTERPMSELR_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 15, .crm = 5, .opc2 = 5,
+      .access = PL1_RW, .accessfn = tb371fc_dsu_access,
+      .type = ARM_CP_IO | ARM_CP_NO_RAW,
+      .readfn = tb371fc_dsu_read, .writefn = tb371fc_dsu_write },
+    { .name = "CLUSTERPMINTENSET_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 15, .crm = 5, .opc2 = 6,
+      .access = PL1_RW, .accessfn = tb371fc_dsu_access,
+      .type = ARM_CP_IO | ARM_CP_NO_RAW,
+      .readfn = tb371fc_dsu_read, .writefn = tb371fc_dsu_write },
+    { .name = "CLUSTERPMINTENCLR_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 15, .crm = 5, .opc2 = 7,
+      .access = PL1_RW, .accessfn = tb371fc_dsu_access,
+      .type = ARM_CP_IO | ARM_CP_NO_RAW,
+      .readfn = tb371fc_dsu_read, .writefn = tb371fc_dsu_write },
+    { .name = "CLUSTERPMCCNTR_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 15, .crm = 6, .opc2 = 0,
+      .access = PL1_RW, .accessfn = tb371fc_dsu_access,
+      .type = ARM_CP_IO | ARM_CP_NO_RAW,
+      .readfn = tb371fc_dsu_read, .writefn = tb371fc_dsu_write },
+    { .name = "CLUSTERPMXEVTYPER_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 15, .crm = 6, .opc2 = 1,
+      .access = PL1_RW, .accessfn = tb371fc_dsu_access,
+      .type = ARM_CP_IO | ARM_CP_NO_RAW,
+      .readfn = tb371fc_dsu_read, .writefn = tb371fc_dsu_write },
+    { .name = "CLUSTERPMXEVCNTR_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 15, .crm = 6, .opc2 = 2,
+      .access = PL1_RW, .accessfn = tb371fc_dsu_access,
+      .type = ARM_CP_IO | ARM_CP_NO_RAW,
+      .readfn = tb371fc_dsu_read, .writefn = tb371fc_dsu_write },
+    { .name = "CLUSTERPMCEID0_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 15, .crm = 6, .opc2 = 4,
+      .access = PL1_RW, .accessfn = tb371fc_dsu_access,
+      .type = ARM_CP_IO | ARM_CP_NO_RAW,
+      .readfn = tb371fc_dsu_read, .writefn = tb371fc_dsu_write },
+    { .name = "CLUSTERPMCEID1_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 15, .crm = 6, .opc2 = 5,
+      .access = PL1_RW, .accessfn = tb371fc_dsu_access,
+      .type = ARM_CP_IO | ARM_CP_NO_RAW,
+      .readfn = tb371fc_dsu_read, .writefn = tb371fc_dsu_write },
+};
+
+/*
+ * Explicit TB371FC compatibility choice for an implementation with no Error
+ * Records (Arm RAS DDI0587B, 4.4).  Generic CPUs keep minimal_ras_reginfo's
+ * legal UNDEFINED choice.  This table does not emulate physical A77/DSU RAS:
+ * ERRIDR remains zero, selector writes do not select a record, and no error
+ * state, enable bits, addresses, payloads or interrupts can be created.
+ *
+ * Exact AArch64 encodings only.  EL permissions, TERR and FGT checks run before
+ * ARM_CP_CONST reads/ignored writes.  ERXFR remains read-only.  Keep these
+ * constants in the normal CPreg migration list so nonzero incoming values
+ * fail its existing write/readback validation; do not add NO_RAW or aliases.
+ */
+static const ARMCPRegInfo tb371fc_ras_zero_records_reginfo[] = {
+    { .name = "ERRSELR_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 5, .crm = 3, .opc2 = 1,
+      .access = PL1_RW, .accessfn = access_terr, .fgt = FGT_ERRSELR_EL1,
+      .type = ARM_CP_CONST, .resetvalue = 0 },
+    { .name = "ERXFR_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 5, .crm = 4, .opc2 = 0,
+      .access = PL1_R, .accessfn = access_terr, .fgt = FGT_ERXFR_EL1,
+      .type = ARM_CP_CONST, .resetvalue = 0 },
+    { .name = "ERXCTLR_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 5, .crm = 4, .opc2 = 1,
+      .access = PL1_RW, .accessfn = access_terr, .fgt = FGT_ERXCTLR_EL1,
+      .type = ARM_CP_CONST, .resetvalue = 0 },
+    { .name = "ERXSTATUS_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 5, .crm = 4, .opc2 = 2,
+      .access = PL1_RW, .accessfn = access_terr, .fgt = FGT_ERXSTATUS_EL1,
+      .type = ARM_CP_CONST, .resetvalue = 0 },
+    { .name = "ERXADDR_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 5, .crm = 4, .opc2 = 3,
+      .access = PL1_RW, .accessfn = access_terr, .fgt = FGT_ERXADDR_EL1,
+      .type = ARM_CP_CONST, .resetvalue = 0 },
+    { .name = "ERXMISC0_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 5, .crm = 5, .opc2 = 0,
+      .access = PL1_RW, .accessfn = access_terr, .fgt = FGT_ERXMISCN_EL1,
+      .type = ARM_CP_CONST, .resetvalue = 0 },
+    { .name = "ERXMISC1_EL1", .state = ARM_CP_STATE_AA64,
+      .opc0 = 3, .opc1 = 0, .crn = 5, .crm = 5, .opc2 = 1,
+      .access = PL1_RW, .accessfn = access_terr, .fgt = FGT_ERXMISCN_EL1,
+      .type = ARM_CP_CONST, .resetvalue = 0 },
+};
+
+/*
  * Return the exception level to which exceptions should be taken
  * via SVEAccessTrap.  This excludes the check for whether the exception
  * should be routed through AArch64.AdvSIMDFPAccessTrap.  That can easily
@@ -7481,6 +7654,10 @@ void register_cp_regs_for_features(ARMCPU *cpu)
               .resetvalue = 0 },
         };
         define_arm_cp_regs(cpu, auxcr_reginfo);
+        if (cpu->tb371fc_dsu_pmu) {
+            /* AA64 only: preserve the old AArch32 HACTLR entry. */
+            define_one_arm_cp_reg(cpu, &tb371fc_dsu_actlr_reginfo);
+        }
         if (cpu_isar_feature(aa32_ac2, cpu)) {
             define_arm_cp_regs(cpu, actlr2_hactlr2_reginfo);
         }
@@ -7596,8 +7773,14 @@ void register_cp_regs_for_features(ARMCPU *cpu)
     if (cpu_isar_feature(aa64_ssbs, cpu)) {
         define_one_arm_cp_reg(cpu, &ssbs_reginfo);
     }
+    if (cpu->tb371fc_dsu_pmu) {
+        define_arm_cp_regs(cpu, tb371fc_dsu_reginfo);
+    }
     if (cpu_isar_feature(any_ras, cpu)) {
         define_arm_cp_regs(cpu, minimal_ras_reginfo);
+        if (cpu->tb371fc_ras_zero_records_compat) {
+            define_arm_cp_regs(cpu, tb371fc_ras_zero_records_reginfo);
+        }
     }
 
     if (cpu_isar_feature(aa64_vh, cpu) ||

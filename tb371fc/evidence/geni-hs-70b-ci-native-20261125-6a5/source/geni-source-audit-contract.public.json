@@ -1,0 +1,1220 @@
+{
+  "document": {
+    "b5_actual_ci_known_failed": true,
+    "constant_order": [
+      "GENI_HS_SE_BASE",
+      "GENI_HS_SE_WINDOW_BYTES",
+      "GENI_HS_WRAPPER_VERSION_ADDRESS",
+      "GENI_HS_WRAPPER_WINDOW_BYTES",
+      "GENI_HS_MAIN_FW_REVISION",
+      "GENI_HS_SECONDARY_FW_REVISION",
+      "GENI_HS_WRAPPER_VERSION",
+      "GENI_HS_FIFO_BYTES",
+      "GENI_HS_PROFILE_ID",
+      "GENI_HS_DMA_TX_IRQ_MASK",
+      "GENI_HS_DMA_RX_IRQ_MASK",
+      "GENI_HS_CFG_REVISION"
+    ],
+    "constants": {
+      "GENI_HS_CFG_REVISION": 8,
+      "GENI_HS_DMA_RX_IRQ_MASK": 30719,
+      "GENI_HS_DMA_TX_IRQ_MASK": 16399,
+      "GENI_HS_FIFO_BYTES": 64,
+      "GENI_HS_MAIN_FW_REVISION": 513,
+      "GENI_HS_PROFILE_ID": 1195922225,
+      "GENI_HS_SECONDARY_FW_REVISION": 513,
+      "GENI_HS_SE_BASE": 10059776,
+      "GENI_HS_SE_WINDOW_BYTES": 16384,
+      "GENI_HS_WRAPPER_VERSION": 537198592,
+      "GENI_HS_WRAPPER_VERSION_ADDRESS": 10223620,
+      "GENI_HS_WRAPPER_WINDOW_BYTES": 4
+    },
+    "contract_derivation": "Literal source declarations and reviewed committed output identities read with ast.literal_eval and JSON only. No generator, verifier, producer, CI or QEMU executed.",
+    "counts": {
+      "clock_bindings": 3,
+      "constants": 12,
+      "generated_outputs": 2,
+      "negative_mutant_bytes": 1700682,
+      "negative_mutants": 51,
+      "public_input_bytes": 810000,
+      "public_inputs": 19,
+      "reference_inputs": 2,
+      "separate_reference_original_members": 0,
+      "unit_tests": 49,
+      "windows": 2
+    },
+    "execution_requires_next_reviewed_contract": false,
+    "expected_manifest": {
+      "clock_binding_count": 3,
+      "constants": {
+        "GENI_HS_CFG_REVISION": 8,
+        "GENI_HS_DMA_RX_IRQ_MASK": 30719,
+        "GENI_HS_DMA_TX_IRQ_MASK": 16399,
+        "GENI_HS_FIFO_BYTES": 64,
+        "GENI_HS_MAIN_FW_REVISION": 513,
+        "GENI_HS_PROFILE_ID": 1195922225,
+        "GENI_HS_SECONDARY_FW_REVISION": 513,
+        "GENI_HS_SE_BASE": 10059776,
+        "GENI_HS_SE_WINDOW_BYTES": 16384,
+        "GENI_HS_WRAPPER_VERSION": 537198592,
+        "GENI_HS_WRAPPER_VERSION_ADDRESS": 10223620,
+        "GENI_HS_WRAPPER_WINDOW_BYTES": 4
+      },
+      "generated_constant_count": 12,
+      "generated_output_count": 2,
+      "legacy_policy_and_lifecycle": {
+        "clock_connection_requires_unrealized_device": true,
+        "fifo_geometry_is_model_policy": true,
+        "globals_applied_in_device_post_init": true,
+        "legacy_fifo_bytes": 64,
+        "legacy_fifo_word_bits": 32,
+        "legacy_fifo_words": 16,
+        "legacy_mmio_bytes": 16384,
+        "migration_subsections_loaded_before_parent_post_load": true,
+        "source_contracts_are_not_compiled_or_runtime_acceptance": true
+      },
+      "producer_consumer_contract": {
+        "configuration_revision_byte": 8,
+        "ignored_firmware_high_byte": 3,
+        "later_vendor_nonconsole_startup_requires_unimplemented_dma": true,
+        "main_programming_offset": 4096,
+        "original_irq_helper_is_not_claimed_identical_to_vendor_helper": true,
+        "public_producer_consumer_interface_checked": true,
+        "public_vendor_source_is_whole_original_kernel_identity": false,
+        "revision_formula": "(UART_protocol << protocol_shift) | (reviewed_header_firmware_version & version_mask)",
+        "revision_low_byte": 1,
+        "revision_word": 513,
+        "secondary_programming_offset": 4100,
+        "sefw_header_bytes": 28,
+        "sefw_header_fields": {
+          "cfg_idx_offset": {
+            "bytes": 2,
+            "offset": 24
+          },
+          "cfg_size_in_items": {
+            "bytes": 2,
+            "offset": 22
+          },
+          "cfg_val_offset": {
+            "bytes": 2,
+            "offset": 26
+          },
+          "cfg_version": {
+            "bytes": 2,
+            "offset": 16
+          },
+          "core_version": {
+            "bytes": 4,
+            "offset": 8
+          },
+          "fw_offset": {
+            "bytes": 2,
+            "offset": 20
+          },
+          "fw_size_in_items": {
+            "bytes": 2,
+            "offset": 18
+          },
+          "fw_version": {
+            "bytes": 2,
+            "offset": 14
+          },
+          "magic": {
+            "bytes": 4,
+            "offset": 0
+          },
+          "serial_protocol": {
+            "bytes": 2,
+            "offset": 12
+          },
+          "version": {
+            "bytes": 4,
+            "offset": 4
+          }
+        },
+        "sefw_magic": 1464223059,
+        "transfer_mode_enums_are_source_specific": true,
+        "uart_protocol": 2,
+        "upstream_fifo_mode": 1,
+        "upstream_se_dma_mode": 2,
+        "vendor_fifo_mode": 1,
+        "vendor_se_dma_mode": 3,
+        "withheld_header_values_publicly_reproduced": false
+      },
+      "public_clock_bindings": {
+        "bindings": [
+          {
+            "external_parent_index": -1,
+            "external_parent_name": null,
+            "halt_register": 96044,
+            "hwcg_mask": 0,
+            "hwcg_register": 0,
+            "name": "gcc_qupv3_wrap0_s6_clk",
+            "parent_index": 100,
+            "qemu_internal_index": 99,
+            "vendor_dt_id": 100,
+            "vote_mask": 65536,
+            "vote_register": 335880
+          },
+          {
+            "external_parent_index": 55,
+            "external_parent_name": "gcc_qupv3_wrap_0_m_ahb_clk_parent",
+            "halt_register": 94212,
+            "hwcg_mask": 0,
+            "hwcg_register": 0,
+            "name": "gcc_qupv3_wrap_0_m_ahb_clk",
+            "parent_index": -4,
+            "qemu_internal_index": 131,
+            "vendor_dt_id": 132,
+            "vote_mask": 64,
+            "vote_register": 335880
+          },
+          {
+            "external_parent_index": 56,
+            "external_parent_name": "gcc_qupv3_wrap_0_s_ahb_clk_parent",
+            "halt_register": 94216,
+            "hwcg_mask": 2,
+            "hwcg_register": 94216,
+            "name": "gcc_qupv3_wrap_0_s_ahb_clk",
+            "parent_index": -4,
+            "qemu_internal_index": 132,
+            "vendor_dt_id": 133,
+            "vote_mask": 128,
+            "vote_register": 335880
+          }
+        ],
+        "clock_array_slots": 200,
+        "reset_array_slots": 45,
+        "reset_index": 24,
+        "reset_mask": 1,
+        "reset_register": 94208,
+        "vendor_ids_are_not_qemu_internal_indices": true
+      },
+      "public_dt": {
+        "clock_macros": [
+          "GCC_QUPV3_WRAP0_S6_CLK",
+          "GCC_QUPV3_WRAP_0_M_AHB_CLK",
+          "GCC_QUPV3_WRAP_0_S_AHB_CLK"
+        ],
+        "clock_names": [
+          "se-clk",
+          "m-ahb",
+          "s-ahb"
+        ],
+        "gcc_base": 1048576,
+        "gcc_window_bytes": 2031616,
+        "gic_spi": 607,
+        "iommu_flags": 0,
+        "iommu_sid": 1443,
+        "other_public_uart_bases": [
+          9994240,
+          11075584
+        ],
+        "se_base": 10059776,
+        "se_window_bytes": 16384,
+        "vendor_node_status": "disabled",
+        "wake_byte": 253,
+        "wake_gpio": 19,
+        "wake_gpio_or_dma_behavior_implemented_by_this_manifest": false,
+        "wake_irq_flags": 0,
+        "wrapper_base": 10223616,
+        "wrapper_dt_window_bytes": 8192
+      },
+      "public_register_definitions": {
+        "dma_rx_irq_defined_mask": 30719,
+        "dma_rx_irq_fields": {
+          "RX_DMA_DONE": 1,
+          "RX_EOT": 2,
+          "RX_FLUSH_DONE": 16,
+          "RX_GENI_CANCEL_IRQ": 16384,
+          "RX_GENI_GP_IRQ": 2016,
+          "RX_GENI_GP_IRQ_EXT": 12288,
+          "RX_RESET_DONE": 8,
+          "RX_SBE": 4
+        },
+        "dma_tx_irq_defined_mask": 16399,
+        "dma_tx_irq_fields": {
+          "TX_DMA_DONE": 1,
+          "TX_EOT": 2,
+          "TX_GENI_CANCEL_IRQ": 16384,
+          "TX_RESET_DONE": 8,
+          "TX_SBE": 4
+        },
+        "fields": {
+          "FW_REV_PROTOCOL_MSK": 65280,
+          "FW_REV_PROTOCOL_SHFT": 8,
+          "FW_REV_VERSION_MSK": 255,
+          "RX_FIFO_DEPTH_MSK": 4128768,
+          "RX_FIFO_DEPTH_SHFT": 16,
+          "RX_FIFO_WIDTH_MSK": 1056964608,
+          "RX_FIFO_WIDTH_SHFT": 24,
+          "TX_FIFO_DEPTH_MSK": 4128768,
+          "TX_FIFO_DEPTH_SHFT": 16,
+          "TX_FIFO_WIDTH_MSK": 1056964608,
+          "TX_FIFO_WIDTH_SHFT": 24
+        },
+        "offsets": {
+          "GENI_FW_REVISION_RO": 104,
+          "GENI_FW_S_REVISION_RO": 108,
+          "SE_DMA_RX_IRQ_EN": 3400,
+          "SE_DMA_RX_IRQ_EN_CLR": 3408,
+          "SE_DMA_RX_IRQ_EN_SET": 3404,
+          "SE_DMA_TX_IRQ_EN": 3144,
+          "SE_DMA_TX_IRQ_EN_CLR": 3152,
+          "SE_DMA_TX_IRQ_EN_SET": 3148,
+          "SE_GENI_DMA_MODE_EN": 600,
+          "SE_GENI_M_CMD0": 1536,
+          "SE_GENI_M_CMD_CTRL_REG": 1540,
+          "SE_GENI_M_IRQ_CLEAR": 1560,
+          "SE_GENI_M_IRQ_EN": 1556,
+          "SE_GENI_M_IRQ_EN_CLEAR": 1568,
+          "SE_GENI_M_IRQ_EN_SET": 1564,
+          "SE_GENI_M_IRQ_STATUS": 1552,
+          "SE_GENI_RX_FIFO_STATUS": 2052,
+          "SE_GENI_RX_FIFOn": 1920,
+          "SE_GENI_RX_RFR_WATERMARK_REG": 2068,
+          "SE_GENI_RX_WATERMARK_REG": 2064,
+          "SE_GENI_S_CMD0": 1584,
+          "SE_GENI_S_CMD_CTRL_REG": 1588,
+          "SE_GENI_S_IRQ_CLEAR": 1608,
+          "SE_GENI_S_IRQ_EN": 1604,
+          "SE_GENI_S_IRQ_EN_CLEAR": 1616,
+          "SE_GENI_S_IRQ_EN_SET": 1612,
+          "SE_GENI_S_IRQ_STATUS": 1600,
+          "SE_GENI_TX_FIFO_STATUS": 2048,
+          "SE_GENI_TX_FIFOn": 1792,
+          "SE_GENI_TX_WATERMARK_REG": 2060,
+          "SE_HW_PARAM_0": 3620,
+          "SE_HW_PARAM_1": 3624
+        },
+        "public_definitions_do_not_assert_all_registers_implemented": true,
+        "wrapper_version_fields": {
+          "HW_VER_MAJOR_MASK": 4026531840,
+          "HW_VER_MAJOR_SHFT": 28,
+          "HW_VER_MINOR_MASK": 268369920,
+          "HW_VER_MINOR_SHFT": 16,
+          "HW_VER_STEP_MASK": 65535
+        },
+        "wrapper_version_offset": 4
+      },
+      "reference_input_pins": [
+        {
+          "bytes": 1923,
+          "git_blob_sha1": "055a0c4d7f89fe749efc2030ec45db7d5f3847cc",
+          "path": "tb371fc/docs/geni-hs-sm8250-reference-policy.json",
+          "role": "policy",
+          "sha256": "6d1ed6d87381f2d6e7cbc8c11804e150ad6c3be9b5e8db84654dcb9accb0d85f"
+        },
+        {
+          "bytes": 3246,
+          "git_blob_sha1": "440e2217ac879ca823eb6eead4600ac67fa409d2",
+          "path": "tb371fc/docs/geni-hs-sm8250-private-producer-facts.json",
+          "role": "producer_facts",
+          "sha256": "1df0eb4cfd41cf8a42918407dba8e391a985164ecc9a1e513ca6b471c0bdfc80"
+        }
+      ],
+      "reference_policy": {
+        "aligned_access_bytes": 4,
+        "baud_timing_implemented": false,
+        "classification": "Explicit emulator reference policy; no physical reset or live-register claim.",
+        "configuration_revision_choice": "Low configuration-revision byte from the reviewed UART image; fixed reference identity, not firmware execution or live state.",
+        "default_enabled": false,
+        "device_type": "qcom-sm8250-geni-hs",
+        "dma_data_path_implemented": false,
+        "dma_irq_enable_masks": "Store all publicly defined TX/RX IRQ enable bits; SET/CLEAR changes masks only.",
+        "dma_status_or_completion_implemented": false,
+        "electrical_flow_control_implemented": false,
+        "enabled_property": "enabled-reference",
+        "fifo_geometry_classification": "Existing behavioral FIFO model policy; not captured silicon geometry.",
+        "fifo_word_bits": 32,
+        "fifo_words": 16,
+        "firmware_ram_execution_implemented": false,
+        "firmware_revision_choice": "Both views use the reviewed byte-producer result for the selected UART reference image.",
+        "physical_reset_retention_known": false,
+        "physical_se6_assignment_known": false,
+        "physical_se6_revision_known": false,
+        "physical_wrapper_version_known": false,
+        "private_raw_inputs_required_by_public_generator": false,
+        "profile_id": 1195922225,
+        "profile_id_ascii": "GHS1",
+        "radio_peer_implemented": false,
+        "reset_identity_retention": "Model policy only: mutable state resets while fixed reference identity remains.",
+        "revision_programming_to_ro_view": "Declared model contract supported by public producer/consumer interfaces; no execution or live alias readback claim.",
+        "schema": "tb371fc-geni-hs-sm8250-reference-policy-v1",
+        "unknown_register_policy": "transaction-error",
+        "wrapper_mapping_bytes": 4,
+        "wrapper_version_choice": 537198592,
+        "wrapper_version_choice_basis": "Compatibility profile equal to the reviewed private UART image core_version; not an observed wrapper register."
+      },
+      "sanitized_private_producer_facts": {
+        "classification": "Reviewed scalar facts and complete range hashes from withheld private inputs. Public generation checks their declared consistency; it cannot reproduce the private binary review.",
+        "complete_review_receipt": {
+          "bytes": 124117,
+          "sha256": "b1fef5f06a95e22f2e7417f5c2b6c18f3714d4a3a996bfde5d489150013b6984"
+        },
+        "geometry_and_wrapper": {
+          "live_wrapper_version_captured": false,
+          "physical_fifo_geometry_established": false,
+          "physical_reset_retention_established": false
+        },
+        "header_scalars": {
+          "configuration_version": 8,
+          "core_version": 537198592,
+          "firmware_low_byte_offset": 14,
+          "firmware_version": 769,
+          "protocol": 2,
+          "protocol_byte_offset": 12
+        },
+        "producer": {
+          "both_use_byte_loads_and_bitfield_insert": true,
+          "execution_or_se6_selection_proved": false,
+          "high_firmware_byte_used": false,
+          "main_programming_offset": 4096,
+          "main_word": 513,
+          "secondary_programming_offset": 4100,
+          "secondary_word": 513,
+          "write_to_readonly_alias_proved": false
+        },
+        "producer_code_range_pins": [
+          {
+            "bytes": 680,
+            "file_offset": 253312,
+            "role": "first_uart_loader",
+            "sha256": "b2b5f974f48eaad5ea77f32eb69a7ad11c41a505c30d03888d58e7fd21bdd12b"
+          },
+          {
+            "bytes": 44,
+            "file_offset": 388860,
+            "role": "first_uart_configuration_getter",
+            "sha256": "36a5d6f52637fc237a73c0691be73029633d391a65f07f71d8d9d2abea1a6d29"
+          },
+          {
+            "bytes": 680,
+            "file_offset": 673464,
+            "role": "second_uart_loader",
+            "sha256": "7e23a4da85032ff5d4ec8de1fb761a413b93aafd7ec43fa4326815d8ec03e82f"
+          },
+          {
+            "bytes": 44,
+            "file_offset": 703352,
+            "role": "second_uart_configuration_getter",
+            "sha256": "93d0f791f8638ae836c58e8f31eb5360d617f658bfaf8555e1afb1648b6be1f9"
+          }
+        ],
+        "raw_binary_disassembly_paths_serials_or_bootargs_included": false,
+        "schema": "tb371fc-geni-hs-sanitized-private-producer-facts-v1",
+        "selection": {
+          "exhaustive_whole_image_execution_claimed": false,
+          "observed_static_configuration_bases": [
+            9994240,
+            11075584
+          ],
+          "runtime_condition_captured": false,
+          "saved_binding_proves_revision_or_reset": false,
+          "saved_kernel_driver_binding_supports_uart_inference": true,
+          "se6_selection_established": false
+        },
+        "source_prefix": {
+          "bytes": 1048576,
+          "full_source_bytes_recorded": 3670016,
+          "full_source_independently_rehashed_by_this_reviewer": false,
+          "full_source_sha256_recorded": "eaf27cf49114d144282e86880c017fbadb3442df97bd30449e386f77e804da55",
+          "prefix_independently_rehashed_by_this_reviewer": true,
+          "range_offset": 0,
+          "sha256": "6e6ac1d3df3e3dd509acaa8779b458796920df83836713cfbb5845d54972a62d"
+        },
+        "summary_receipt": {
+          "bytes": 11353,
+          "sha256": "7d0e023f72e8a3d4cfed5a1fd3dff26dd422fca226c81237e3bb3427293bac64"
+        },
+        "uart_image_copies": [
+          {
+            "bytes": 2112,
+            "file_offset": 526696,
+            "sha256": "5780e84a10664769336f21c878bba4da3fb9b49f4261fd5692da87932237dcea"
+          },
+          {
+            "bytes": 2112,
+            "file_offset": 750752,
+            "sha256": "5780e84a10664769336f21c878bba4da3fb9b49f4261fd5692da87932237dcea"
+          }
+        ],
+        "uart_image_copies_identical": true
+      },
+      "schema": "tb371fc-geni-hs-sm8250-registers-v1",
+      "scope": {
+        "android_boot_claimed": false,
+        "default_enabled": false,
+        "default_off_mapped_bytes": 0,
+        "dma_data_path_or_completion_claimed": false,
+        "firmware_execution_claimed": false,
+        "physical_se6_firmware_state_known": false,
+        "private_binary_review_publicly_reproducible": false,
+        "source_generation_is_runtime_acceptance": false,
+        "strict_reference_fifo_model": true
+      },
+      "source_contract_ids": [
+        "current_gcc",
+        "current_gcc_data",
+        "current_gcc_h",
+        "current_uart",
+        "current_uart_h",
+        "qdev_clock",
+        "qdev_core",
+        "upstream_header",
+        "upstream_se",
+        "upstream_serial",
+        "vendor-serial",
+        "vendor_gcc",
+        "vendor_gcc_h",
+        "vendor_header",
+        "vendor_kona",
+        "vendor_platform_se",
+        "vendor_qupv3",
+        "vendor_se",
+        "vmstate_core"
+      ],
+      "source_input_bytes": 810000,
+      "source_input_count": 19,
+      "source_pins": [
+        {
+          "bytes": 29024,
+          "git_blob_sha1": "facf75a5aa64aa8638515a99a762d0319bd5bb5b",
+          "id": "current_gcc",
+          "local_name": "current_gcc.txt",
+          "repository": "cyjin-yl/qemu-tb371fc",
+          "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+          "sha256": "f9f0dc291e6a183298a0114082df1f5ea65a369dc4f1685dfc330996121da95a",
+          "source_path": "hw/misc/qcom-sm8250-gcc.c",
+          "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/hw/misc/qcom-sm8250-gcc.c"
+        },
+        {
+          "bytes": 63127,
+          "git_blob_sha1": "d0a9a8c7a44168309f22489a1c45074dbcec2de9",
+          "id": "current_gcc_data",
+          "local_name": "current_gcc_data.txt",
+          "repository": "cyjin-yl/qemu-tb371fc",
+          "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+          "sha256": "98e779ab6a57a72c88ee62ba22a5a52289a7873aac457fa0c378f86c6048f004",
+          "source_path": "hw/misc/qcom-sm8250-gcc-data.inc",
+          "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/hw/misc/qcom-sm8250-gcc-data.inc"
+        },
+        {
+          "bytes": 1340,
+          "git_blob_sha1": "6b5c796a60429b96b5e3e393c745df90ca511706",
+          "id": "current_gcc_h",
+          "local_name": "current_gcc_h.txt",
+          "repository": "cyjin-yl/qemu-tb371fc",
+          "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+          "sha256": "d1c18e0f20bbd792fa27de71ea34a13c31f3c023ef4952b8adce8d4c099f1667",
+          "source_path": "include/hw/misc/qcom-sm8250-gcc.h",
+          "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/include/hw/misc/qcom-sm8250-gcc.h"
+        },
+        {
+          "bytes": 22547,
+          "git_blob_sha1": "a1b805d30c7bcfe59bdd9a3390654f623a6ca1d4",
+          "id": "current_uart",
+          "local_name": "current_uart.txt",
+          "repository": "cyjin-yl/qemu-tb371fc",
+          "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+          "sha256": "ef1c5e6e9400f907f227327e995fbe25d4b7ca09bd88429100e146202e32aad9",
+          "source_path": "hw/char/qcom-geni-uart.c",
+          "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/hw/char/qcom-geni-uart.c"
+        },
+        {
+          "bytes": 1109,
+          "git_blob_sha1": "7ab464a234026dbf90c4f050faaa76609c83154f",
+          "id": "current_uart_h",
+          "local_name": "current_uart_h.txt",
+          "repository": "cyjin-yl/qemu-tb371fc",
+          "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+          "sha256": "3cdd539724bf4bf72052fb91d6e29f553aeeebfdcb31d9b4a443b8243aac1dc7",
+          "source_path": "include/hw/char/qcom-geni-uart.h",
+          "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/include/hw/char/qcom-geni-uart.h"
+        },
+        {
+          "bytes": 5316,
+          "git_blob_sha1": "861f78f94c64e5ef10825b7d561d474a3f7d04e1",
+          "id": "qdev_clock",
+          "local_name": "qdev_clock.txt",
+          "repository": "cyjin-yl/qemu-tb371fc",
+          "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+          "sha256": "a34d5f6b8902937e320e5dc3bda654d4d5c898c98ff939ec75a28a38484f9a91",
+          "source_path": "hw/core/qdev-clock.c",
+          "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/hw/core/qdev-clock.c"
+        },
+        {
+          "bytes": 25849,
+          "git_blob_sha1": "e2aab3d1fc61246ba2f1e147c0ff71c7c7712c55",
+          "id": "qdev_core",
+          "local_name": "qdev_core.txt",
+          "repository": "cyjin-yl/qemu-tb371fc",
+          "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+          "sha256": "fd64dedac988aebd53b11fa97ffa8ddc086e5ed116d1611b728667d90faa5195",
+          "source_path": "hw/core/qdev.c",
+          "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/hw/core/qdev.c"
+        },
+        {
+          "bytes": 16853,
+          "git_blob_sha1": "c5e6ab85df0999b1b6c1fd8975d074161c84c2b9",
+          "id": "upstream_header",
+          "local_name": "upstream_header.txt",
+          "repository": "torvalds/linux",
+          "revision": "75f2c0b3690702c90863c2e138cb5520670845ea",
+          "sha256": "d4bba63f2ecc744804be983b81f6e703bd3ddc37135d2edf34fc80397c83c411",
+          "source_path": "include/linux/soc/qcom/geni-se.h",
+          "url": "https://raw.githubusercontent.com/torvalds/linux/75f2c0b3690702c90863c2e138cb5520670845ea/include/linux/soc/qcom/geni-se.h"
+        },
+        {
+          "bytes": 51564,
+          "git_blob_sha1": "15636a8dc907a875d4c1bf9af6e60c99505d61cb",
+          "id": "upstream_se",
+          "local_name": "upstream_se.txt",
+          "repository": "torvalds/linux",
+          "revision": "75f2c0b3690702c90863c2e138cb5520670845ea",
+          "sha256": "95bd702fcf277b58075810089c2bf307aa21e72bd7006dc8b83b9f669affb90a",
+          "source_path": "drivers/soc/qcom/qcom-geni-se.c",
+          "url": "https://raw.githubusercontent.com/torvalds/linux/75f2c0b3690702c90863c2e138cb5520670845ea/drivers/soc/qcom/qcom-geni-se.c"
+        },
+        {
+          "bytes": 58179,
+          "git_blob_sha1": "1e39122ec09f4dc80b9495a5dd69d3b084147d47",
+          "id": "upstream_serial",
+          "local_name": "upstream_serial.txt",
+          "repository": "torvalds/linux",
+          "revision": "75f2c0b3690702c90863c2e138cb5520670845ea",
+          "sha256": "b49bd3b3a1f72a5fe6588ca4084100c454edc43272693f0be4457eaff333ae64",
+          "source_path": "drivers/tty/serial/qcom_geni_serial.c",
+          "url": "https://raw.githubusercontent.com/torvalds/linux/75f2c0b3690702c90863c2e138cb5520670845ea/drivers/tty/serial/qcom_geni_serial.c"
+        },
+        {
+          "bytes": 103712,
+          "git_blob_sha1": "87c58161b0bb7790acb561897628818fa834988c",
+          "id": "vendor-serial",
+          "local_name": "vendor-msm-geni-serial.c",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "sha256": "ce5476a19e9dcfe0824b5eba6d9f73e39ea76cd738441a67a40ac8a0ebd2026e",
+          "source_path": "drivers/tty/serial/msm_geni_serial.c",
+          "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/tty/serial/msm_geni_serial.c"
+        },
+        {
+          "bytes": 115577,
+          "git_blob_sha1": "f78629254926e67dc7646da3e5e69f9bc2472ef6",
+          "id": "vendor_gcc",
+          "local_name": "vendor_gcc.txt",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "sha256": "ed208678508c983d0989f1f135fac898c5a9a91c14af1fa42cd7ea2f24cd14cd",
+          "source_path": "drivers/clk/qcom/gcc-kona.c",
+          "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/clk/qcom/gcc-kona.c"
+        },
+        {
+          "bytes": 10232,
+          "git_blob_sha1": "2e74c2800db35b88b585e2e74256bf4b1e08078e",
+          "id": "vendor_gcc_h",
+          "local_name": "vendor_gcc_h.txt",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "sha256": "ec7b2a775a7f96a543c064c7fc733fb83ffa7e3dae3c4bb517200627ae5f7fed",
+          "source_path": "include/dt-bindings/clock/qcom,gcc-kona.h",
+          "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/include/dt-bindings/clock/qcom,gcc-kona.h"
+        },
+        {
+          "bytes": 30916,
+          "git_blob_sha1": "3e2888af87c3c64ee0cafe082df9980aea53956d",
+          "id": "vendor_header",
+          "local_name": "vendor_header.txt",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "sha256": "ff0313eaa597c87be8dc83fc7f9befc89ec0bdf26889f98aa1a5652ce980dff7",
+          "source_path": "include/linux/qcom-geni-se.h",
+          "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/include/linux/qcom-geni-se.h"
+        },
+        {
+          "bytes": 132499,
+          "git_blob_sha1": "e9651f09bd579616787894dc8514429063623b2d",
+          "id": "vendor_kona",
+          "local_name": "vendor_kona.txt",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+          "source_path": "arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+          "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/arch/arm64/boot/dts/vendor/qcom/kona.dtsi"
+        },
+        {
+          "bytes": 55444,
+          "git_blob_sha1": "d31e9bd4a781ecd42dca6efb1ca7873437f8b590",
+          "id": "vendor_platform_se",
+          "local_name": "vendor_platform_se.txt",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "sha256": "02c0accf53cb09f7f92261abb6532b8610539554f96bd3b81d753f4e4ae5c3bf",
+          "source_path": "drivers/platform/msm/qcom-geni-se.c",
+          "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/platform/msm/qcom-geni-se.c"
+        },
+        {
+          "bytes": 32816,
+          "git_blob_sha1": "8c1f34eba8be07c949b90e46ae31156555236f0c",
+          "id": "vendor_qupv3",
+          "local_name": "vendor_qupv3.txt",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "sha256": "6277002e4dc831d7d6744bb966723dc674793ae48f3f63488d6accba4f7f006d",
+          "source_path": "arch/arm64/boot/dts/vendor/qcom/kona-qupv3.dtsi",
+          "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/arch/arm64/boot/dts/vendor/qcom/kona-qupv3.dtsi"
+        },
+        {
+          "bytes": 23952,
+          "git_blob_sha1": "ee89ffb6dde84cacc0f37a82918461b8b20eb206",
+          "id": "vendor_se",
+          "local_name": "vendor_se.txt",
+          "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+          "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+          "sha256": "3c76494b56eac865eab70206b0103f76ee6f19bd870abb98f3a9d2db16cc4dd0",
+          "source_path": "drivers/soc/qcom/qcom-geni-se.c",
+          "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/soc/qcom/qcom-geni-se.c"
+        },
+        {
+          "bytes": 29944,
+          "git_blob_sha1": "9f49abda245eaf9053d7c1241f4a36e943cd54db",
+          "id": "vmstate_core",
+          "local_name": "vmstate_core.txt",
+          "repository": "cyjin-yl/qemu-tb371fc",
+          "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+          "sha256": "dc5aca380cef7f94867f700c87c9b46ddd25ef9fbed19bd6a1ae79279a1cd4a4",
+          "source_path": "migration/vmstate.c",
+          "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/migration/vmstate.c"
+        }
+      ],
+      "window_count": 2,
+      "wrapper_profile_version": {
+        "live_hardware_read_claimed": false,
+        "major": 2,
+        "minor": 5,
+        "step": 0
+      }
+    },
+    "generated_outputs": [
+      {
+        "bytes": 909,
+        "git_blob_sha1": "74d364f05a4c8f505ccc831f44ceaf4e89ed2b46",
+        "path": "hw/char/qcom-sm8250-geni-hs-data.inc",
+        "sha256": "4cc9babbdc75fd6006f39ce32a92b6161d1bcf2739de843005e02af19179b9a6"
+      },
+      {
+        "bytes": 25446,
+        "git_blob_sha1": "aadef0555ad2383290cb0ef123e7752c12475979",
+        "path": "tb371fc/docs/geni-hs-sm8250-registers.json",
+        "sha256": "e143022b5d3a678e3e93be4911af36c8bc81c3aebd2cbc5b58437137bda0a040"
+      }
+    ],
+    "negative_category_counts": {
+      "complete-input-identity": 19,
+      "generated-output": 2,
+      "parser-contract": 19,
+      "reference-input-identity": 2,
+      "reference-scope": 9
+    },
+    "parser_mutations": [
+      [
+        "current_gcc",
+        "\"hw-request\"",
+        "\"hw-request-removed\""
+      ],
+      [
+        "current_gcc_data",
+        "\"gcc_qupv3_wrap0_s6_clk\"",
+        "\"removed_wrap0_s6_clock\""
+      ],
+      [
+        "current_gcc_h",
+        "(#define GCC_CLOCKS 200)",
+        "\\1\\n#define GCC_CLOCKS 201"
+      ],
+      [
+        "current_uart",
+        "(GENI_FW_REV\\s*=\\s*)0x068",
+        "\\g<1>0x06c"
+      ],
+      [
+        "current_uart_h",
+        "(#define QCOM_GENI_UART_FIFO_SIZE\\s+)64",
+        "\\g<1>65"
+      ],
+      [
+        "qdev_clock",
+        "(void qdev_connect_clock_in\\([^{}]*\\)\\s*\\{\\s*)assert\\(!dev->realized\\);",
+        "\\1(void)dev;"
+      ],
+      [
+        "qdev_core",
+        "qdev_prop_set_globals\\(DEVICE\\(obj\\)\\);",
+        "(void)obj;"
+      ],
+      [
+        "upstream_header",
+        "(\\bGENI_SE_UART,)",
+        "\\1\\n GENI_SE_UART,"
+      ],
+      [
+        "upstream_se",
+        "(#define SE_GENI_FW_REVISION\\s+)0x1000",
+        "\\g<1>0x1008"
+      ],
+      [
+        "upstream_serial",
+        "proto\\s*!=\\s*GENI_SE_UART",
+        "proto != GENI_SE_SPI"
+      ],
+      [
+        "vendor-serial",
+        "(msm_port->ver_info.s_fw_ver\\s*=\\s*)get_se_s_fw",
+        "\\1get_se_m_fw"
+      ],
+      [
+        "vendor_gcc",
+        "(struct clk_branch gcc_qupv3_wrap0_s6_clk\\s*=\\s*\\{\\s*\\.halt_reg\\s*=\\s*)0x1772c",
+        "\\g<1>0x17730"
+      ],
+      [
+        "vendor_gcc_h",
+        "(#define GCC_QUPV3_WRAP0_S6_CLK[ \\t]+100\\b)",
+        "\\1\\n#define GCC_QUPV3_WRAP0_S6_CLK 101"
+      ],
+      [
+        "vendor_header",
+        "(#define FW_REV_PROTOCOL_MSK\\s*\\()GENMASK\\(15, 8\\)",
+        "\\1GENMASK(14, 8)"
+      ],
+      [
+        "vendor_kona",
+        "(clock_gcc:\\s*qcom,gcc@100000\\s*\\{[^{}]*?reg\\s*=\\s*<0x100000\\s+)0x1f0000",
+        "\\g<1>0x1e0000"
+      ],
+      [
+        "vendor_platform_se",
+        "(fw_ver_s\\s*=\\s*\\(\\(geni_read_reg\\(base,\\s*GENI_FW_S_REVISION_RO\\)\\s*&\\s*)FW_REV_VERSION_MSK",
+        "\\1FW_REV_PROTOCOL_MSK"
+      ],
+      [
+        "vendor_qupv3",
+        "(qupv3_se6_4uart:\\s*qcom,qup_uart@998000\\s*\\{\\s*compatible\\s*=\\s*)\"qcom,msm-geni-serial-hs\"",
+        "\\1\"qcom,msm-geni-console\""
+      ],
+      [
+        "vendor_se",
+        "(#define QUP_HW_VER_REG\\s+)0x4\\b",
+        "\\g<1>0x8"
+      ],
+      [
+        "vmstate_core",
+        "if\\s*\\(!vmstate_subsection_load\\(f, vmsd, opaque, errp\\)\\)",
+        "if (!removed_subsection_load(f, vmsd, opaque, errp))"
+      ]
+    ],
+    "prepared_for_source_head": "70b387fb064cdf2099e85dd89213a5ea7e2c398f",
+    "prepared_for_source_tree": "37bf696bc687422eac2bd967abda7d80af8e02b9",
+    "public_inputs": [
+      {
+        "bytes": 29024,
+        "git_blob_sha1": "facf75a5aa64aa8638515a99a762d0319bd5bb5b",
+        "id": "current_gcc",
+        "local_name": "current_gcc.txt",
+        "repository": "cyjin-yl/qemu-tb371fc",
+        "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+        "sha256": "f9f0dc291e6a183298a0114082df1f5ea65a369dc4f1685dfc330996121da95a",
+        "source_path": "hw/misc/qcom-sm8250-gcc.c",
+        "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/hw/misc/qcom-sm8250-gcc.c"
+      },
+      {
+        "bytes": 63127,
+        "git_blob_sha1": "d0a9a8c7a44168309f22489a1c45074dbcec2de9",
+        "id": "current_gcc_data",
+        "local_name": "current_gcc_data.txt",
+        "repository": "cyjin-yl/qemu-tb371fc",
+        "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+        "sha256": "98e779ab6a57a72c88ee62ba22a5a52289a7873aac457fa0c378f86c6048f004",
+        "source_path": "hw/misc/qcom-sm8250-gcc-data.inc",
+        "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/hw/misc/qcom-sm8250-gcc-data.inc"
+      },
+      {
+        "bytes": 1340,
+        "git_blob_sha1": "6b5c796a60429b96b5e3e393c745df90ca511706",
+        "id": "current_gcc_h",
+        "local_name": "current_gcc_h.txt",
+        "repository": "cyjin-yl/qemu-tb371fc",
+        "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+        "sha256": "d1c18e0f20bbd792fa27de71ea34a13c31f3c023ef4952b8adce8d4c099f1667",
+        "source_path": "include/hw/misc/qcom-sm8250-gcc.h",
+        "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/include/hw/misc/qcom-sm8250-gcc.h"
+      },
+      {
+        "bytes": 22547,
+        "git_blob_sha1": "a1b805d30c7bcfe59bdd9a3390654f623a6ca1d4",
+        "id": "current_uart",
+        "local_name": "current_uart.txt",
+        "repository": "cyjin-yl/qemu-tb371fc",
+        "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+        "sha256": "ef1c5e6e9400f907f227327e995fbe25d4b7ca09bd88429100e146202e32aad9",
+        "source_path": "hw/char/qcom-geni-uart.c",
+        "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/hw/char/qcom-geni-uart.c"
+      },
+      {
+        "bytes": 1109,
+        "git_blob_sha1": "7ab464a234026dbf90c4f050faaa76609c83154f",
+        "id": "current_uart_h",
+        "local_name": "current_uart_h.txt",
+        "repository": "cyjin-yl/qemu-tb371fc",
+        "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+        "sha256": "3cdd539724bf4bf72052fb91d6e29f553aeeebfdcb31d9b4a443b8243aac1dc7",
+        "source_path": "include/hw/char/qcom-geni-uart.h",
+        "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/include/hw/char/qcom-geni-uart.h"
+      },
+      {
+        "bytes": 5316,
+        "git_blob_sha1": "861f78f94c64e5ef10825b7d561d474a3f7d04e1",
+        "id": "qdev_clock",
+        "local_name": "qdev_clock.txt",
+        "repository": "cyjin-yl/qemu-tb371fc",
+        "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+        "sha256": "a34d5f6b8902937e320e5dc3bda654d4d5c898c98ff939ec75a28a38484f9a91",
+        "source_path": "hw/core/qdev-clock.c",
+        "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/hw/core/qdev-clock.c"
+      },
+      {
+        "bytes": 25849,
+        "git_blob_sha1": "e2aab3d1fc61246ba2f1e147c0ff71c7c7712c55",
+        "id": "qdev_core",
+        "local_name": "qdev_core.txt",
+        "repository": "cyjin-yl/qemu-tb371fc",
+        "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+        "sha256": "fd64dedac988aebd53b11fa97ffa8ddc086e5ed116d1611b728667d90faa5195",
+        "source_path": "hw/core/qdev.c",
+        "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/hw/core/qdev.c"
+      },
+      {
+        "bytes": 16853,
+        "git_blob_sha1": "c5e6ab85df0999b1b6c1fd8975d074161c84c2b9",
+        "id": "upstream_header",
+        "local_name": "upstream_header.txt",
+        "repository": "torvalds/linux",
+        "revision": "75f2c0b3690702c90863c2e138cb5520670845ea",
+        "sha256": "d4bba63f2ecc744804be983b81f6e703bd3ddc37135d2edf34fc80397c83c411",
+        "source_path": "include/linux/soc/qcom/geni-se.h",
+        "url": "https://raw.githubusercontent.com/torvalds/linux/75f2c0b3690702c90863c2e138cb5520670845ea/include/linux/soc/qcom/geni-se.h"
+      },
+      {
+        "bytes": 51564,
+        "git_blob_sha1": "15636a8dc907a875d4c1bf9af6e60c99505d61cb",
+        "id": "upstream_se",
+        "local_name": "upstream_se.txt",
+        "repository": "torvalds/linux",
+        "revision": "75f2c0b3690702c90863c2e138cb5520670845ea",
+        "sha256": "95bd702fcf277b58075810089c2bf307aa21e72bd7006dc8b83b9f669affb90a",
+        "source_path": "drivers/soc/qcom/qcom-geni-se.c",
+        "url": "https://raw.githubusercontent.com/torvalds/linux/75f2c0b3690702c90863c2e138cb5520670845ea/drivers/soc/qcom/qcom-geni-se.c"
+      },
+      {
+        "bytes": 58179,
+        "git_blob_sha1": "1e39122ec09f4dc80b9495a5dd69d3b084147d47",
+        "id": "upstream_serial",
+        "local_name": "upstream_serial.txt",
+        "repository": "torvalds/linux",
+        "revision": "75f2c0b3690702c90863c2e138cb5520670845ea",
+        "sha256": "b49bd3b3a1f72a5fe6588ca4084100c454edc43272693f0be4457eaff333ae64",
+        "source_path": "drivers/tty/serial/qcom_geni_serial.c",
+        "url": "https://raw.githubusercontent.com/torvalds/linux/75f2c0b3690702c90863c2e138cb5520670845ea/drivers/tty/serial/qcom_geni_serial.c"
+      },
+      {
+        "bytes": 103712,
+        "git_blob_sha1": "87c58161b0bb7790acb561897628818fa834988c",
+        "id": "vendor-serial",
+        "local_name": "vendor-msm-geni-serial.c",
+        "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+        "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+        "sha256": "ce5476a19e9dcfe0824b5eba6d9f73e39ea76cd738441a67a40ac8a0ebd2026e",
+        "source_path": "drivers/tty/serial/msm_geni_serial.c",
+        "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/tty/serial/msm_geni_serial.c"
+      },
+      {
+        "bytes": 115577,
+        "git_blob_sha1": "f78629254926e67dc7646da3e5e69f9bc2472ef6",
+        "id": "vendor_gcc",
+        "local_name": "vendor_gcc.txt",
+        "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+        "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+        "sha256": "ed208678508c983d0989f1f135fac898c5a9a91c14af1fa42cd7ea2f24cd14cd",
+        "source_path": "drivers/clk/qcom/gcc-kona.c",
+        "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/clk/qcom/gcc-kona.c"
+      },
+      {
+        "bytes": 10232,
+        "git_blob_sha1": "2e74c2800db35b88b585e2e74256bf4b1e08078e",
+        "id": "vendor_gcc_h",
+        "local_name": "vendor_gcc_h.txt",
+        "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+        "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+        "sha256": "ec7b2a775a7f96a543c064c7fc733fb83ffa7e3dae3c4bb517200627ae5f7fed",
+        "source_path": "include/dt-bindings/clock/qcom,gcc-kona.h",
+        "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/include/dt-bindings/clock/qcom,gcc-kona.h"
+      },
+      {
+        "bytes": 30916,
+        "git_blob_sha1": "3e2888af87c3c64ee0cafe082df9980aea53956d",
+        "id": "vendor_header",
+        "local_name": "vendor_header.txt",
+        "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+        "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+        "sha256": "ff0313eaa597c87be8dc83fc7f9befc89ec0bdf26889f98aa1a5652ce980dff7",
+        "source_path": "include/linux/qcom-geni-se.h",
+        "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/include/linux/qcom-geni-se.h"
+      },
+      {
+        "bytes": 132499,
+        "git_blob_sha1": "e9651f09bd579616787894dc8514429063623b2d",
+        "id": "vendor_kona",
+        "local_name": "vendor_kona.txt",
+        "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+        "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+        "sha256": "12b4b191b0f517b0c9fdd42c23ad428193ef71e63831bade996f9a18b88ece55",
+        "source_path": "arch/arm64/boot/dts/vendor/qcom/kona.dtsi",
+        "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/arch/arm64/boot/dts/vendor/qcom/kona.dtsi"
+      },
+      {
+        "bytes": 55444,
+        "git_blob_sha1": "d31e9bd4a781ecd42dca6efb1ca7873437f8b590",
+        "id": "vendor_platform_se",
+        "local_name": "vendor_platform_se.txt",
+        "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+        "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+        "sha256": "02c0accf53cb09f7f92261abb6532b8610539554f96bd3b81d753f4e4ae5c3bf",
+        "source_path": "drivers/platform/msm/qcom-geni-se.c",
+        "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/platform/msm/qcom-geni-se.c"
+      },
+      {
+        "bytes": 32816,
+        "git_blob_sha1": "8c1f34eba8be07c949b90e46ae31156555236f0c",
+        "id": "vendor_qupv3",
+        "local_name": "vendor_qupv3.txt",
+        "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+        "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+        "sha256": "6277002e4dc831d7d6744bb966723dc674793ae48f3f63488d6accba4f7f006d",
+        "source_path": "arch/arm64/boot/dts/vendor/qcom/kona-qupv3.dtsi",
+        "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/arch/arm64/boot/dts/vendor/qcom/kona-qupv3.dtsi"
+      },
+      {
+        "bytes": 23952,
+        "git_blob_sha1": "ee89ffb6dde84cacc0f37a82918461b8b20eb206",
+        "id": "vendor_se",
+        "local_name": "vendor_se.txt",
+        "repository": "OnePlusOSS/android_kernel_oneplus_sm8250",
+        "revision": "98719830b0de5584f5588bbe9f4c8304d97a64c6",
+        "sha256": "3c76494b56eac865eab70206b0103f76ee6f19bd870abb98f3a9d2db16cc4dd0",
+        "source_path": "drivers/soc/qcom/qcom-geni-se.c",
+        "url": "https://raw.githubusercontent.com/OnePlusOSS/android_kernel_oneplus_sm8250/98719830b0de5584f5588bbe9f4c8304d97a64c6/drivers/soc/qcom/qcom-geni-se.c"
+      },
+      {
+        "bytes": 29944,
+        "git_blob_sha1": "9f49abda245eaf9053d7c1241f4a36e943cd54db",
+        "id": "vmstate_core",
+        "local_name": "vmstate_core.txt",
+        "repository": "cyjin-yl/qemu-tb371fc",
+        "revision": "7d01e5e294b788f97a8120c2d34122ddb25e6343",
+        "sha256": "dc5aca380cef7f94867f700c87c9b46ddd25ef9fbed19bd6a1ae79279a1cd4a4",
+        "source_path": "migration/vmstate.c",
+        "url": "https://raw.githubusercontent.com/cyjin-yl/qemu-tb371fc/7d01e5e294b788f97a8120c2d34122ddb25e6343/migration/vmstate.c"
+      }
+    ],
+    "reference_inputs": [
+      {
+        "bytes": 1923,
+        "git_blob_sha1": "055a0c4d7f89fe749efc2030ec45db7d5f3847cc",
+        "path": "tb371fc/docs/geni-hs-sm8250-reference-policy.json",
+        "role": "policy",
+        "sha256": "6d1ed6d87381f2d6e7cbc8c11804e150ad6c3be9b5e8db84654dcb9accb0d85f"
+      },
+      {
+        "bytes": 3246,
+        "git_blob_sha1": "440e2217ac879ca823eb6eead4600ac67fa409d2",
+        "path": "tb371fc/docs/geni-hs-sm8250-private-producer-facts.json",
+        "role": "producer_facts",
+        "sha256": "1df0eb4cfd41cf8a42918407dba8e391a985164ecc9a1e513ca6b471c0bdfc80"
+      }
+    ],
+    "runtime_sources": [
+      {
+        "bytes": 46416,
+        "git_blob_sha1": "b14475d2d17541c6c40b4fd4fa88ab4e8552fe22",
+        "path": "tb371fc/scripts/gen_geni_hs_sm8250.py",
+        "sha256": "df246eeb7ed45b136cd795583bc90919fdf738234efcc16f63a301161ddca41c"
+      },
+      {
+        "bytes": 14241,
+        "git_blob_sha1": "66be9b0f96cc2d02d244954aea02fc02d3068a71",
+        "path": "tb371fc/scripts/verify_geni_hs_sm8250_generation.py",
+        "sha256": "e21afa9a748d11b2d68b7e201af49172dc59b0c2a76bf90d86895e7ec33e3348"
+      },
+      {
+        "bytes": 13852,
+        "git_blob_sha1": "0e54c850937a22b691b876df9a530ef7b82e9671",
+        "path": "tb371fc/scripts/test_geni_hs_sm8250_generation.py",
+        "sha256": "89bd210ab501315a389a2d77c50569ec843a14a302a05f9f8b404fb3b822afe1"
+      },
+      {
+        "bytes": 13848,
+        "git_blob_sha1": "93f8a5e2896edb162e8fc0a622dbb98d5f431f91",
+        "path": "tb371fc/scripts/source_download.py",
+        "sha256": "0e20fd7c67e28c6f355be520ecfc7773482abdaeb1e0bed57dce361b2b16f733"
+      },
+      {
+        "bytes": 93011,
+        "git_blob_sha1": "3941f270f42e8628c4f7cb720d014369987d6af9",
+        "path": "tb371fc/scripts/ci_device_tests.py",
+        "sha256": "affce15c868fbf2dd11d9f80d78736a601dfc634528f340f59b0ac6d1b9d62e9"
+      }
+    ],
+    "schema": "tb371fc-geni-source-independent-audit-contract-v1",
+    "scope_mutations": [
+      [
+        "default-enabled",
+        "policy",
+        [
+          "default_enabled"
+        ],
+        true
+      ],
+      [
+        "claimed-se6-selection",
+        "facts",
+        [
+          "selection",
+          "se6_selection_established"
+        ],
+        true
+      ],
+      [
+        "claimed-live-wrapper",
+        "policy",
+        [
+          "physical_wrapper_version_known"
+        ],
+        true
+      ],
+      [
+        "claimed-revision-alias-readback",
+        "facts",
+        [
+          "producer",
+          "write_to_readonly_alias_proved"
+        ],
+        true
+      ],
+      [
+        "wrong-firmware-low-byte",
+        "facts",
+        [
+          "header_scalars",
+          "firmware_version"
+        ],
+        770
+      ],
+      [
+        "wrong-fifo-policy",
+        "policy",
+        [
+          "fifo_words"
+        ],
+        32
+      ],
+      [
+        "claimed-dma-completion",
+        "policy",
+        [
+          "dma_status_or_completion_implemented"
+        ],
+        true
+      ],
+      [
+        "wrong-protocol-scalar",
+        "facts",
+        [
+          "header_scalars",
+          "protocol"
+        ],
+        3
+      ],
+      [
+        "wrong-static-selected-base",
+        "facts",
+        [
+          "selection",
+          "observed_static_configuration_bases"
+        ],
+        [
+          10059776,
+          11075584
+        ]
+      ]
+    ],
+    "unit_method_names": [
+      "test_bit_and_genmask",
+      "test_block_trailing_space",
+      "test_boolean_not_an_integer",
+      "test_braces_in_string_and_comment",
+      "test_c_unsigned_suffixes",
+      "test_changed_header_field_width_rejected",
+      "test_comment_definition_ignored",
+      "test_complete_rx_mask",
+      "test_continued_macro",
+      "test_cyclic_define_rejected",
+      "test_default_off_policy",
+      "test_dma_completion_claim_rejected",
+      "test_duplicate_define_rejected",
+      "test_duplicate_dt_node_rejected",
+      "test_duplicate_enum_member_rejected",
+      "test_duplicate_function_rejected",
+      "test_duplicate_property_rejected",
+      "test_extra_producer_write_rejected",
+      "test_firmware_high_byte_does_not_change_word",
+      "test_firmware_low_byte_disagreement_rejected",
+      "test_fractional_quotient",
+      "test_full_bytes_not_only_parsed_prefix_are_pinned",
+      "test_hardware_alias_readback_claim_rejected",
+      "test_identity_check_precedes_decode",
+      "test_implicit_and_explicit_enum",
+      "test_initializer_nested_commas",
+      "test_initializer_unbalanced_rejected",
+      "test_missing_define_rejected",
+      "test_missing_generated_output_rejected",
+      "test_mutated_generated_output_rejected",
+      "test_named_dt_node_avoids_other_same_address",
+      "test_negative_clock_parent",
+      "test_physical_selection_claim_rejected",
+      "test_physical_wrapper_claim_rejected",
+      "test_programming_offset_disagreement_rejected",
+      "test_protocol_disagreement_rejected",
+      "test_public_layout_and_private_offset_crosscheck",
+      "test_python_call_not_executed",
+      "test_raw_binary_inclusion_claim_rejected",
+      "test_real_definition_not_if_call",
+      "test_recursive_named_definitions",
+      "test_reversed_mask",
+      "test_reviewed_header_0301_produces_0201",
+      "test_shift_out_of_range",
+      "test_unsupported_dt_cell_count_rejected",
+      "test_unterminated_block_rejected",
+      "test_utf8_not_normalized_before_hashing",
+      "test_vendor_and_upstream_dma_numbers_are_distinct",
+      "test_wrong_git_blob_is_rejected_even_with_correct_sha256"
+    ]
+  },
+  "original_evidence": {
+    "alias": "evidence://source/geni-source-audit-contract.public.json",
+    "bytes": 47709,
+    "git_blob_sha1": "88532770d2093337b9c7402b6e00557243ec01ea",
+    "sha256": "1c9f71d5a9e96b81ad12affd89e34609f6a3d0b840afad13c6a2710beab6a9ed"
+  },
+  "schema": "tb371fc-public-derived-evidence-document-v1",
+  "transformation": "Original JSON values retained; workstation locators replaced by aliases; canonical JSON and this wrapper added. Original hashes identify retained originals."
+}

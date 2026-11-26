@@ -59,6 +59,7 @@ struct QcomNpuGdscState {
     qemu_irq power[QCOM_NPU_GDSC_DOMAINS];
     qemu_irq state_known[QCOM_NPU_GDSC_DOMAINS];
     bool enabled_reference;
+    bool unknown_feedback_pending;
     bool ready;
 
     /* 36 immutable wire bytes precede all runtime and per-domain state. */
@@ -186,7 +187,7 @@ static MemTxResult npu_read(void *opaque, hwaddr offset, uint64_t *value,
     if (offset || size != QCOM_NPU_GDSC_REGISTER_BYTES) {
         return npu_reject(w, offset, size, false, 0, "access-shape");
     }
-    if (!power_known(s, d)) {
+    if (!power_known(s, d) && !s->unknown_feedback_pending) {
         return npu_reject(w, offset, size, false, 0,
                           "power-feedback-unknown");
     }
@@ -443,7 +444,8 @@ static void npu_realize(DeviceState *dev, Error **errp)
 {
     QcomNpuGdscState *s = QCOM_NPU_GDSC(dev);
 
-    s->enabled_profile = s->enabled_reference;
+    s->enabled_profile = s->enabled_reference ?
+                         (s->unknown_feedback_pending ? 2 : 1) : 0;
     s->ready = true;
     npu_reset_enter(OBJECT(s), RESET_TYPE_COLD);
     npu_publish(s);
@@ -530,6 +532,8 @@ static void npu_init(Object *obj)
 static const Property npu_properties[] = {
     DEFINE_PROP_BOOL("enabled-reference", QcomNpuGdscState,
                      enabled_reference, false),
+    DEFINE_PROP_BOOL("unknown-feedback-pending", QcomNpuGdscState,
+                     unknown_feedback_pending, false),
 };
 
 static void npu_class_init(ObjectClass *klass, const void *data)
