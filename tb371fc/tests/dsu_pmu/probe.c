@@ -265,7 +265,11 @@ void probe_main(u64 id)
     r->cntfrq=read_reference_frequency();r->actlr_initial=read_actlr();
     if(id>=8||v!=8||r->cntfrq==0)fatal(0x500);
     if(id==0){for(unsigned i=0;i<8;i++)CONTROL[8+i]=~0UL;CONTROL[8]=0;
-        for(unsigned i=1;i<8;i++)CONTROL[8+i]=cpu_on(i);barrier();}
+        for(unsigned i=1;i<8;i++){
+            CONTROL[8+i]=cpu_on(i);
+        }
+        barrier();
+    }
     u64 previous=0;
     for(;;){
         u64 epoch=CONTROL[0];if(epoch==0||epoch==previous){yield();continue;}
