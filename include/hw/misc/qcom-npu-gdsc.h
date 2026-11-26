@@ -30,7 +30,10 @@ qcom_npu_gdsc_domains[QCOM_NPU_GDSC_DOMAINS];
  * unknown and unconnected in the board; no RPMh resource is selected.
  * A collapsed software request resolves known-off even with unknown supply.
  * An asserted software request has unknown feedback until the parent is
- * explicitly known. Unknown feedback returns a transaction error, never ON.
+ * explicitly known. The default strict profile rejects unknown-feedback reads.
+ * The explicit unknown-feedback-pending option instead returns readable control
+ * with POWER_ON clear until confirmed. It does not make unknown power known-off.
+ * This option is default-off and is bound by the existing migration profile word.
  * The actual DT does not declare hardware mode: HW_CONTROL writes fail and
  * the retained hw-request-known/request inputs cannot enable that mode.
  * Protocol reset preserves external inputs and restores SW_COLLAPSE=1.

@@ -2,11 +2,14 @@
 
 `qcom-npu-gdsc` owns only the four-byte control word at `0x09981004`.
 It is a separate device from NPUCC, camera and MDSS, and its default-disabled
-profile returns transaction errors. Select the reference explicitly with:
+profile returns transaction errors. Select the legacy strict reference explicitly with:
 
 ```sh
 -global qcom-npu-gdsc.enabled-reference=on
 ```
+
+The `unknown-feedback-pending` option defaults to `off`, preserving the strict
+unknown-feedback behavior. Its separate opt-in is described below.
 
 The reference starts with SW_COLLAPSE asserted. Its parent remains unknown:
 the actual DT does not declare a supply, and the board does not infer one
@@ -97,7 +100,9 @@ Software mode always has a known request from SW_COLLAPSE. A known-off
 parent or a deasserted software request establishes known-off. Known-on
 requires an explicitly known-on parent and an asserted request. With an
 unknown parent, clearing SW_COLLAPSE records the request but leaves feedback
-unknown; reading GDSCR returns `MEMTX_ERROR`, not a successful ON status.
+unknown. In the legacy strict profile, reading GDSCR returns `MEMTX_ERROR`.
+The optional pending profile returns the stored controls with POWER_ON clear
+until power is confirmed; this is not a known-off power-state assertion.
 
 The board leaves `parent-known` and `parent-on` GPIOs unconnected. They exist
 for a future evidenced provider and explicit test fixtures; no command-line
@@ -109,6 +114,68 @@ values survive device reset, while control returns to SW_COLLAPSE=1.
 low. Pure QOM getters observe the request, input knowledge and derived
 feedback without executing or repairing a transition. An asserted stale
 input value with its knowledge flag low cannot establish power availability.
+
+## Explicit pending readback policy
+
+Enable the separate virtual interface with both options:
+
+```sh
+-global qcom-npu-gdsc.enabled-reference=on
+-global qcom-npu-gdsc.unknown-feedback-pending=on
+```
+
+This changes access completion for an enabled, aligned four-byte read whose
+power feedback is unknown. The read returns the complete stored control word;
+POWER_ON is set only by the unchanged `powered` predicate, which requires an
+explicitly known-on parent and an asserted, known request. With an asserted
+software request and an unknown parent, `state-known=false`, `powered=false`,
+and both GPIO outputs remain low. Collapsing or resetting the domain still
+establishes known-off through the unchanged three-state predicate.
+It is not converted to a known-off parent or a supplied rail. Reads do not
+change inputs, controls, knowledge, GPIO levels, virtual time or clock rates.
+
+Disabled references still reject access even with the pending option set.
+The write mask, undeclared hardware-mode rejection, exact four-byte window,
+unsupported sizes, neighboring holes and all sibling controllers are unchanged.
+No completion timer, physical power transition, retained memory, firmware,
+DMA or NPU execution is added. An explicit known-parent test fixture continues
+to behave exactly as it does in the strict profile.
+
+The fixed vendor driver's enable path clears SW_COLLAPSE, reads back the
+control word as a barrier, then polls POWER_ON. If it never sees POWER_ON, it
+has a bounded timeout and returns an error; the no-auxiliary-status path also
+waits its configured bound and reads the final status before returning. The
+100-us value is driver metadata, not an invented transition latency. Pending
+readback allows that software failure path to remain accessible without
+asserting power availability. It does not claim that physical silicon always
+permits a register access when its supply is unknown.
+
+The reason to make this a separate profile is an actual later observation:
+source `3803138af99cc2c9d227127c15f4de8a3e0d124a`, artifact `15070246969`,
+reached PID 1's `npu_probe` -> `npu_enable_core_power` -> `gdsc_enable` path.
+At guest 5.524890 s, a mapped READ32 at `0x09981004` was rejected by the strict
+model with `power-feedback-unknown`, followed by a synchronous external abort.
+The diagnostic's zero value is not a successful register read. This observation
+does not establish the physical parent state, an NPU data path, Android startup,
+or a successful pending-profile run.
+
+The [original-function proof](../evidence/npu-pending-20261126-3803138/original-control-path.json)
+binds all four complete production slices (7,064 bytes / 1,766 decoded
+instructions) and the complete actual same-name symbol candidates. The selected
+`gdsc_enable` uniquely matches the observed `0x560` extent; another same-name
+function is `0x308` bytes and is not selected. The actual `+0x278` caller point
+is the readback after clearing collapse, before the first delay or poll.
+The later original poll checks bit 31 and decrements its configured bound.
+Its no-auxiliary timeout branch returns `-110`. If the regulator API returns
+that negative error, the original NPU power and probe callers preserve it;
+the probe skips its subsequent NPU core-register read and returns an error.
+
+The two intervening regulator-core function bodies and the production timeout
+initialization are outside those four slices. The 100-us default is from the
+fixed vendor source and absence of a DT override, not a measured production
+timeout. No static path claim is a successful pending-profile native result.
+The consumer's separate `vdd_cx` regulator is not a declared parent edge for
+its `vdd` GDSC, and this option does not connect either supply to a new input.
 
 ## Ownership and NPU_CFG_AHB requests
 
@@ -140,7 +207,7 @@ bytes. Fixed-width integers use the normal big-endian migration encoding.
 
 | Offset | Bytes | Meaning |
 | --- | --- | --- |
-| 0 | 4 | Enabled profile, equal on source and destination |
+| 0 | 4 | Profile: 0 disabled, 1 legacy strict, 2 explicit pending; equal at both ends |
 | 4 | 4 | Identity `0x4e504731` (`NPG1`) |
 | 8 | 4 | Domain count 1 |
 | 12 | 4 | Register size 4 |
@@ -156,6 +223,13 @@ bytes. Fixed-width integers use the normal big-endian migration encoding.
 | 54 | 4 | Driver polling bound 100 us, metadata only |
 | 58 | 4 | Writable control |
 | 62..63 | 2 | Hardware-request-known and hardware-request inputs |
+
+The pending option changes only the existing profile word to 2 when the
+reference is enabled. Disabled devices remain profile 0 even if the option is
+set. Identity `NPG1`, version 1, all field order and the complete 64-byte layout
+remain unchanged. Profile 1 and profile 2 reject each other in both directions;
+profile 0/1 without this option retains its original wire meaning. The option
+is immutable after realization and cannot silently change a restored stream.
 
 Equality guards bind every fixed identity and geometry field. Incoming
 state first withdraws output validity and power; the whole payload and
@@ -182,8 +256,13 @@ must change camera/MDSS while leaving NPU's parent unknown. Migration checks
 observe target QOM and output state before target MMIO or `cont`, including
 an in-flight RPMh completion that still cannot invent an NPU supply.
 
-The new CI plan is 80 component/parser gates plus five Linux integration
-gates. Separate active and runtime-suspended Linux UFS transfers, A77 and
+The initial NPU increment used 80 component/parser gates plus five Linux
+integration gates. Its strict 21-check gate remains intact in subsequent CI.
+The independent `npu-gdsc-pending-reference` gate
+([test_npu_gdsc_pending.py](../tests/test_npu_gdsc_pending.py)) covers the new
+profile without weakening that legacy gate: full control readback while feedback stays unknown, actual
+power/validity outputs, unchanged width/write rejection, reset, same-profile
+complete 64-byte restore, and both profile 1/2 mismatch directions. Separate active and runtime-suspended Linux UFS transfers, A77 and
 PCI UFS regressions remain required. Source validation and test registration
 are not a compiled pass. A matching compiled receipt and a new unchanged-input
 native run are needed before claiming that the observed NPU abort is past.

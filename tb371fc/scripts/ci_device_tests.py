@@ -29,6 +29,11 @@ from geni_i2c_ci_contract import (
     EXPECTED_LENGTHS as GENI_I2C_EXPECTED_LENGTHS, judge_geni_i2c_details,
 )
 
+from npu_gdsc_pending_ci_contract import (
+    NAME as NPU_PENDING_NAME, EXPECTED_VALUES as NPU_PENDING_EXPECTED_VALUES,
+    EXPECTED_LENGTHS as NPU_PENDING_EXPECTED_LENGTHS, judge_npu_gdsc_pending_details,
+)
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -1358,6 +1363,11 @@ def plan(args, runtime):
                output="--out", result="file", count=76, timeout=600,
                expected=GENI_I2C_EXPECTED_VALUES,
                expected_lengths=GENI_I2C_EXPECTED_LENGTHS)
+    if args.suite in ("all", "components"):
+        device(NPU_PENDING_NAME, "test_npu_gdsc_pending.py",
+               output="--out", result="file", count=26, timeout=360,
+               expected=NPU_PENDING_EXPECTED_VALUES,
+               expected_lengths=NPU_PENDING_EXPECTED_LENGTHS)
     return cases
 
 
@@ -1561,6 +1571,7 @@ def judge(case, stdout):
     judge_qce_details(case, data)
     judge_spmi_debug_fuse_details(case, data)
     judge_geni_i2c_details(case, data)
+    judge_npu_gdsc_pending_details(case, data)
     return details
 
 
