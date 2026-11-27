@@ -41,7 +41,14 @@ REQUIRED = [
 ]
 
 
+if not __debug__:
+    raise SystemExit('Acceptance requires assertions; do not use -O.')
+
+
 class TmcRig(Rig):
+    # A fresh QTest process starts at zero. Store only actual clock responses.
+    clock_ns = 0
+
     def read_tmc(self, offset, *, base=ETF, width='l'):
         self.count['device_mmio'] += 1
         return int(self.qt(f'read{width} {base + offset:#x}')[0], 0)
@@ -55,23 +62,34 @@ class TmcRig(Rig):
         assert self.read_tmc(LSR, base=base) == 1
 
     def step(self, ns):
-        return int(self.qt(f'clock_step {ns}')[0], 0)
+        assert ns > 0, 'clock_step requires a strictly positive advance'
+        actual = int(self.qt(f'clock_step {ns}')[0], 0)
+        assert actual == self.clock_ns + ns
+        self.clock_ns = actual
+        return actual
+
+    def set_clock(self, ns):
+        actual = int(self.qt(f'clock_set {ns}')[0], 0)
+        assert actual == ns
+        self.clock_ns = actual
+        return actual
 
 
 def save(rig, path):
+    clock_ns = rig.clock_ns
     rig.monitor('stop')
     assert rig.monitor('query-status')['running'] is False
     rig.monitor('migrate', file_channels(path))
     assert rig.migrate_wait()['status'] == 'completed'
     return dict(path=str(path), bytes=path.stat().st_size, sha256=sha(path),
-                qtest_clock_ns=rig.step(0))
+                qtest_clock_ns=clock_ns)
 
 
 def load(rig, path, clock_ns):
     # QTest owns a per-process synthetic clock. Align it before loading the
     # actual VMState absolute timer deadline; do not edit the stream.
-    assert rig.step(0) == 0
-    assert rig.step(clock_ns) == clock_ns
+    assert rig.set_clock(0) == 0
+    assert rig.set_clock(clock_ns) == clock_ns
     rig.monitor('migrate-incoming', file_channels(path))
     assert rig.migrate_wait()['status'] == 'completed'
 
@@ -103,7 +121,8 @@ def main():
     out.mkdir(parents=True, exist_ok=False)
     (out / 'streams').mkdir()
     report = dict(schema='tb371fc-coresight-tmc-v1', passed=False,
-                  qemu_sha256=sha(args.qemu), checks=[], processes=[],
+                  qemu_sha256=sha(args.qemu), test_sha256=sha(__file__),
+                  checks=[], processes=[],
                   migrations=[], access_rejections=[],
                   original_android_executed=False, guest_cpu_executed=False,
                   atb_producer_present=False, axi_trace_implemented=False,
@@ -393,6 +412,7 @@ def main():
         assert len(report['processes']) == 3
         assert all(p['counters']['qom_set'] == 0 for p in report['processes'])
         assert sha(args.qemu) == report['qemu_sha256']
+        assert sha(__file__) == report['test_sha256']
         check(REQUIRED[15], processes=3, forced_cleanup=False)
         assert [x['name'] for x in report['checks']] == REQUIRED
         report['passed'] = True
@@ -401,8 +421,10 @@ def main():
         report['traceback'] = traceback.format_exc()
     finally:
         put_json(out / 'result.json', report)
+    if not report['passed']:
+        print(report.get('traceback', report.get('error', 'Unknown failure')))
     print(json.dumps(dict(passed=report['passed'], checks=len(report['checks']),
-                          report=str(out / 'result.json'))))
+                          error=report.get('error'), report=str(out / 'result.json'))))
     return 0 if report['passed'] else 1
 
 
