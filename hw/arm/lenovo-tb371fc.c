@@ -58,6 +58,7 @@
 #include "hw/misc/qcom-noc-qos.h"
 #include "hw/misc/qcom-pshold.h"
 #include "hw/misc/qcom-dcc.h"
+#include "hw/misc/arm-coresight-tmc.h"
 #include "hw/misc/qcom-ipcc.h"
 #include "hw/misc/qcom-qsee-irq.h"
 #include "hw/misc/qcom-sm8250-spss-irq-mask.h"
@@ -1764,6 +1765,33 @@ static void tb371fc_create_tbu(TB371FCMachineState *s)
 
 
 
+static void tb371fc_create_coresight_tmc(TB371FCMachineState *s)
+{
+    static const struct {
+        const char *name;
+        hwaddr base;
+        uint32_t configuration;
+    } tmc[] = {
+        { "tmc-etf", 0x06b05000, ARM_TMC_ETF },
+        { "tmc-etr", 0x06048000, ARM_TMC_ETR },
+    };
+    unsigned i;
+
+    /*
+     * Original DT addresses and part 0x961. The ETF has a documented reference
+     * RAM/control profile. ETR debug authentication is disabled until an AXI
+     * trace data path exists. There is no fabricated ATB producer or IRQ.
+     */
+    for (i = 0; i < ARRAY_SIZE(tmc); i++) {
+        DeviceState *dev = qdev_new(TYPE_ARM_CORESIGHT_TMC);
+
+        object_property_add_child(OBJECT(s), tmc[i].name, OBJECT(dev));
+        qdev_prop_set_uint32(dev, "configuration", tmc[i].configuration);
+        sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, tmc[i].base);
+    }
+}
+
 static void tb371fc_create_boot_resources(TB371FCMachineState *s)
 {
     DeviceState *pshold = qdev_new(TYPE_QCOM_PSHOLD);
@@ -2143,6 +2171,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_tsens(s);
     tb371fc_create_watchdog(s);
     tb371fc_create_boot_resources(s);
+    tb371fc_create_coresight_tmc(s);
     tb371fc_create_smmus(s);
     tb371fc_create_tbu(s);
     if (s->enable_ufs) {
