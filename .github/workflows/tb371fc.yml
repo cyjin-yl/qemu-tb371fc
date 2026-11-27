@@ -79,6 +79,13 @@ jobs:
             --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
             --out "$RUNNER_TEMP/tb371fc-results/coresight-replicator" \
             2>&1 | tee "$RUNNER_TEMP/tb371fc-results/coresight-replicator.log"
+      - name: Check CoreSight STM probe, disabled authentication and checkpoints
+        run: |
+          set -euo pipefail
+          python3 tb371fc/tests/test_coresight_stm.py \
+            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            --out "$RUNNER_TEMP/tb371fc-results/coresight-stm" \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/coresight-stm.log"
       - name: Run quiescent UFS process checkpoints and rejection gates
         run: |
           set -euo pipefail
@@ -146,6 +153,7 @@ jobs:
             ${{ runner.temp }}/tb371fc-results/
             !${{ runner.temp }}/tb371fc-results/coresight-tmc/streams/*.mig
             !${{ runner.temp }}/tb371fc-results/coresight-replicator/streams/*.mig
+            !${{ runner.temp }}/tb371fc-results/coresight-stm/streams/*.mig
             !${{ runner.temp }}/tb371fc-results/linux-ufs-migration/checkpoint.migration
             !${{ runner.temp }}/tb371fc-results/linux-ufs-migration/disk.raw
             !${{ runner.temp }}/tb371fc-results/linux-ufs-pm-migration/checkpoint.migration

@@ -60,6 +60,7 @@
 #include "hw/misc/qcom-dcc.h"
 #include "hw/misc/arm-coresight-tmc.h"
 #include "hw/misc/arm-coresight-replicator.h"
+#include "hw/misc/arm-coresight-stm.h"
 #include "hw/misc/qcom-ipcc.h"
 #include "hw/misc/qcom-qsee-irq.h"
 #include "hw/misc/qcom-sm8250-spss-irq-mask.h"
@@ -1766,6 +1767,21 @@ static void tb371fc_create_tbu(TB371FCMachineState *s)
 
 
 
+static void tb371fc_create_coresight_stm(TB371FCMachineState *s)
+{
+    DeviceState *dev = qdev_new(TYPE_ARM_CORESIGHT_STM);
+
+    /*
+     * Original full-DTB part 0x962 control and stimulus apertures.
+     * All four debug authentication inputs are fixed low in this reference
+     * profile; stimulus writes are accepted and dropped, without ATB output.
+     */
+    object_property_add_child(OBJECT(s), "stm", OBJECT(dev));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, 0x06002000);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 1, 0x16280000);
+}
+
 static void tb371fc_create_coresight_replicators(TB371FCMachineState *s)
 {
     static const struct {
@@ -2199,6 +2215,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_boot_resources(s);
     tb371fc_create_coresight_tmc(s);
     tb371fc_create_coresight_replicators(s);
+    tb371fc_create_coresight_stm(s);
     tb371fc_create_smmus(s);
     tb371fc_create_tbu(s);
     if (s->enable_ufs) {
