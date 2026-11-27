@@ -209,6 +209,7 @@ struct TB371FCMachineState {
     MemoryRegion qtest_tbu_dma_alias[QCOM_SM8250_TBU_COUNT];
     bool enable_ufs;
     bool counter_exact;
+    uint32_t hyp_timer_ppi;
     bool ras_zero_records_compat;
     bool dsu_pmu_cycle_only;
     bool prng_virtual;
@@ -807,7 +808,7 @@ static void tb371fc_create_fdt(TB371FCMachineState *s)
                            1, TB371FC_PPI_SEC_TIMER, 8,
                            1, TB371FC_PPI_PHYS_TIMER, 8,
                            1, TB371FC_PPI_VIRT_TIMER, 8,
-                           1, TB371FC_PPI_HYP_TIMER, 8);
+                           1, s->hyp_timer_ppi, 8);
     qemu_fdt_setprop(fdt, "/timer", "always-on", NULL, 0);
 
     tb371fc_add_mmio_timer_fdt(fdt);
@@ -947,7 +948,7 @@ static void tb371fc_create_gic(TB371FCMachineState *s)
     } timer_irqs[] = {
         { GTIMER_PHYS, TB371FC_PPI_PHYS_TIMER },
         { GTIMER_VIRT, TB371FC_PPI_VIRT_TIMER },
-        { GTIMER_HYP, TB371FC_PPI_HYP_TIMER },
+        { GTIMER_HYP, s->hyp_timer_ppi },
         { GTIMER_SEC, TB371FC_PPI_SEC_TIMER },
     };
 
@@ -2326,6 +2327,36 @@ static void tb371fc_set_counter_exact(Object *obj, bool value, Error **errp)
     s->counter_exact = value;
 }
 
+static void tb371fc_get_hyp_timer_ppi(Object *obj, Visitor *v,
+                                      const char *name, void *opaque,
+                                      Error **errp)
+{
+    uint64_t ppi = TB371FC_MACHINE(obj)->hyp_timer_ppi;
+
+    visit_type_uint64(v, name, &ppi, errp);
+}
+
+static void tb371fc_set_hyp_timer_ppi(Object *obj, Visitor *v,
+                                      const char *name, void *opaque,
+                                      Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+    uint64_t ppi;
+
+    if (s->xo) {
+        error_setg(errp, "hyp-timer-ppi is fixed after machine creation");
+        return;
+    }
+    if (!visit_type_uint64(v, name, &ppi, errp)) {
+        return;
+    }
+    if (ppi != 10 && ppi != TB371FC_PPI_HYP_TIMER) {
+        error_setg(errp, "hyp-timer-ppi must be 10 or 12");
+        return;
+    }
+    s->hyp_timer_ppi = ppi;
+}
+
 static void tb371fc_get_kernel_load_base(Object *obj, Visitor *v,
                                          const char *name, void *opaque,
                                          Error **errp)
@@ -2610,6 +2641,7 @@ static void tb371fc_instance_init(Object *obj)
     s->tbu_profile = g_strdup("off");
     s->rpmh_boot_configured = true;
     s->counter_exact = true;
+    s->hyp_timer_ppi = TB371FC_PPI_HYP_TIMER;
     s->ras_zero_records_compat = false;
     s->dsu_pmu_cycle_only = false;
     s->prng_virtual = false;
@@ -2714,6 +2746,11 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
     object_class_property_set_description(oc, "counter-exact",
         "Exact 19.2 MHz rational counters (default on); off retains legacy "
         "integer-nanosecond timing for component compatibility tests");
+    object_class_property_add(oc, "hyp-timer-ppi", "uint64",
+        tb371fc_get_hyp_timer_ppi, tb371fc_set_hyp_timer_ppi, NULL, NULL);
+    object_class_property_set_description(oc, "hyp-timer-ppi",
+        "EL2 physical timer PPI: 12 (stock DT default), or explicit 10 "
+        "for Linux DT compatibility; no physical routing measurement");
     object_class_property_add(oc, "kernel-load-base", "uint64",
         tb371fc_get_kernel_load_base, tb371fc_set_kernel_load_base, NULL, NULL);
     object_class_property_set_description(oc, "kernel-load-base",
