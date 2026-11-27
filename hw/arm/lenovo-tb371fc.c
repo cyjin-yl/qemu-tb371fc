@@ -861,7 +861,8 @@ static void *tb371fc_get_dtb(const struct arm_boot_info *info, int *size)
     TB371FCMachineState *s = container_of(info, TB371FCMachineState, bootinfo);
 
     *size = s->fdt_size;
-    return MACHINE(s)->fdt;
+    /* The loader may free this buffer when an ELF leaves no room for it. */
+    return g_memdup2(MACHINE(s)->fdt, *size);
 }
 
 static const CPUArchIdList *tb371fc_possible_cpu_arch_ids(MachineState *ms)
