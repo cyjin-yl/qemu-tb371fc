@@ -23,6 +23,8 @@
 #include "system/block-backend.h"
 #include "ufs.h"
 
+#define PHY_RX0_INTERFACE_MODE 0x734
+#define PHY_RX1_INTERFACE_MODE 0xb34
 #define PHY_START       0xc00
 #define PHY_POWER       0xc04
 #define PHY_RESET       0xc08
@@ -296,6 +298,16 @@ static const QcomUfsPhyRegister *qcom_ufs_phy_reg(hwaddr offset)
     return NULL;
 }
 
+static bool qcom_ufs_phy_preclock_control(hwaddr offset)
+{
+    /*
+     * The vendor power-control sequence programs these controls before it
+     * enables ref/aux clocks. Register access does not make the PHY ready.
+     */
+    return offset == PHY_RX0_INTERFACE_MODE ||
+           offset == PHY_RX1_INTERFACE_MODE || offset == PHY_POWER;
+}
+
 static MemTxResult qcom_ufs_phy_read(void *opaque, hwaddr offset,
                                    uint64_t *value, unsigned size,
                                    MemTxAttrs attrs)
@@ -304,7 +316,8 @@ static MemTxResult qcom_ufs_phy_read(void *opaque, hwaddr offset,
 
     *value = 0;
     if (!s->power_on || s->reset_held ||
-        !clock_get_hz(s->ref_clk) || !clock_get_hz(s->phy_aux_clk)) {
+        (!qcom_ufs_phy_preclock_control(offset) &&
+         (!clock_get_hz(s->ref_clk) || !clock_get_hz(s->phy_aux_clk)))) {
         return MEMTX_ERROR;
     }
     if (!qcom_ufs_phy_reg(offset)) {
@@ -323,7 +336,8 @@ static MemTxResult qcom_ufs_phy_write(void *opaque, hwaddr offset,
     QcomSm8250UfsState *s = opaque;
 
     if (!s->power_on || s->reset_held ||
-        !clock_get_hz(s->ref_clk) || !clock_get_hz(s->phy_aux_clk)) {
+        (!qcom_ufs_phy_preclock_control(offset) &&
+         (!clock_get_hz(s->ref_clk) || !clock_get_hz(s->phy_aux_clk)))) {
         return MEMTX_ERROR;
     }
     if (!qcom_ufs_phy_reg(offset) || offset == PHY_READY || value > 0xff) {

@@ -39,6 +39,7 @@ static const QcomUfsPhyRegister qcom_ufs_phy_registers[] = {
     { 0x644, true }, /* QSERDES_V4_RX_UCDR_PI_CONTROLS */
     { 0x648, true }, /* QSERDES_V4_RX_UCDR_PI_CTRL2 */
     { 0x680, true }, /* QSERDES_V4_RX_RX_TERM_BW */
+    { 0x6dc, false }, /* QSERDES_V4_RX_GM_CAL */
     { 0x6e8, false }, /* QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL1 */
     { 0x6ec, true }, /* QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL2 */
     { 0x6f0, true }, /* QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL3 */
@@ -52,6 +53,7 @@ static const QcomUfsPhyRegister qcom_ufs_phy_registers[] = {
     { 0x720, true }, /* QSERDES_V4_RX_SIGDET_LVL */
     { 0x724, true }, /* QSERDES_V4_RX_SIGDET_DEGLITCH_CNTRL */
     { 0x728, true }, /* QSERDES_V4_RX_RX_BAND */
+    { 0x734, false }, /* QSERDES_V4_RX_RX_INTERFACE_MODE */
     { 0x770, true }, /* QSERDES_V4_RX_RX_MODE_00_LOW */
     { 0x774, true }, /* QSERDES_V4_RX_RX_MODE_00_HIGH */
     { 0x778, true }, /* QSERDES_V4_RX_RX_MODE_00_HIGH2 */
@@ -67,6 +69,7 @@ static const QcomUfsPhyRegister qcom_ufs_phy_registers[] = {
     { 0x7a0, true }, /* QSERDES_V4_RX_RX_MODE_10_HIGH2 */
     { 0x7a4, true }, /* QSERDES_V4_RX_RX_MODE_10_HIGH3 */
     { 0x7a8, true }, /* QSERDES_V4_RX_RX_MODE_10_HIGH4 */
+    { 0x7bc, false }, /* QSERDES_V4_RX_DCC_CTRL1 */
     { 0x884, true }, /* QSERDES_V4_TX_LANE_MODE_1 */
     { 0x8b8, true }, /* QSERDES_V4_TX_TRAN_DRVR_EMP_EN */
     { 0x8d8, true }, /* QSERDES_V4_TX_PWM_GEAR_1_DIVIDER_BAND0_1 */
@@ -81,6 +84,7 @@ static const QcomUfsPhyRegister qcom_ufs_phy_registers[] = {
     { 0xa44, true }, /* QSERDES_V4_RX_UCDR_PI_CONTROLS */
     { 0xa48, true }, /* QSERDES_V4_RX_UCDR_PI_CTRL2 */
     { 0xa80, true }, /* QSERDES_V4_RX_RX_TERM_BW */
+    { 0xadc, false }, /* QSERDES_V4_RX_GM_CAL */
     { 0xae8, false }, /* QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL1 */
     { 0xaec, true }, /* QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL2 */
     { 0xaf0, true }, /* QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL3 */
@@ -94,6 +98,7 @@ static const QcomUfsPhyRegister qcom_ufs_phy_registers[] = {
     { 0xb20, true }, /* QSERDES_V4_RX_SIGDET_LVL */
     { 0xb24, true }, /* QSERDES_V4_RX_SIGDET_DEGLITCH_CNTRL */
     { 0xb28, true }, /* QSERDES_V4_RX_RX_BAND */
+    { 0xb34, false }, /* QSERDES_V4_RX_RX_INTERFACE_MODE */
     { 0xb70, true }, /* QSERDES_V4_RX_RX_MODE_00_LOW */
     { 0xb74, true }, /* QSERDES_V4_RX_RX_MODE_00_HIGH */
     { 0xb78, true }, /* QSERDES_V4_RX_RX_MODE_00_HIGH2 */
@@ -109,15 +114,23 @@ static const QcomUfsPhyRegister qcom_ufs_phy_registers[] = {
     { 0xba0, true }, /* QSERDES_V4_RX_RX_MODE_10_HIGH2 */
     { 0xba4, true }, /* QSERDES_V4_RX_RX_MODE_10_HIGH3 */
     { 0xba8, true }, /* QSERDES_V4_RX_RX_MODE_10_HIGH4 */
+    { 0xbbc, false }, /* QSERDES_V4_RX_DCC_CTRL1 */
     { 0xc00, false }, /* QPHY_V4_PCS_UFS_PHY_START */
     { 0xc04, false }, /* QPHY_V4_PCS_UFS_POWER_DOWN_CONTROL */
     { 0xc08, false }, /* QPHY_V4_PCS_UFS_SW_RESET */
+    { 0xc0c, false }, /* QPHY_V4_PCS_UFS_TIMER_20US_CORECLK_STEPS_MSB */
+    { 0xc10, false }, /* QPHY_V4_PCS_UFS_TIMER_20US_CORECLK_STEPS_LSB */
+    { 0xc2c, false }, /* QPHY_V4_PCS_UFS_PLL_CNTL */
     { 0xc30, true }, /* QPHY_V4_PCS_UFS_TX_LARGE_AMP_DRV_LVL */
     { 0xc38, true }, /* QPHY_V4_PCS_UFS_TX_SMALL_AMP_DRV_LVL */
     { 0xc60, false }, /* QPHY_V4_PCS_UFS_BIST_FIXED_PAT_CTRL */
+    { 0xc74, false }, /* QPHY_V4_PCS_UFS_TX_HSGEAR_CAPABILITY */
+    { 0xcb4, false }, /* QPHY_V4_PCS_UFS_RX_HSGEAR_CAPABILITY */
     { 0xd24, true }, /* QPHY_V4_PCS_UFS_DEBUG_BUS_CLKSEL */
     { 0xd50, true }, /* QPHY_V4_PCS_UFS_RX_MIN_HIBERN8_TIME */
     { 0xd58, true }, /* QPHY_V4_PCS_UFS_RX_SIGDET_CTRL2 */
+    { 0xd60, false }, /* QPHY_V4_PCS_UFS_TX_PWM_GEAR_BAND */
+    { 0xd68, false }, /* QPHY_V4_PCS_UFS_TX_HS_GEAR_BAND */
     { 0xd80, false }, /* QPHY_V4_PCS_UFS_READY_STATUS */
     { 0xdd8, true }, /* QPHY_V4_PCS_UFS_TX_MID_TERM_CTRL1 */
     { 0xde0, true }, /* QPHY_V4_PCS_UFS_MULTI_LANE_CTRL1 */
