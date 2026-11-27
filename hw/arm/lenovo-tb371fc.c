@@ -88,6 +88,7 @@
 #include "hw/misc/qcom-sm8250-spmi-debug-fuse.h"
 #include "hw/gpio/qcom-tb371fc-tlmm.h"
 #include "hw/misc/qcom-sm8250-rpmh.h"
+#include "hw/misc/qcom-sm8250-sde-rsc.h"
 #include "hw/ufs/qcom-sm8250-ufs.h"
 #include "hw/timer/arm-arch-timer-mmio.h"
 #include "hw/timer/qcom-mpm2-sleep-counter.h"
@@ -210,6 +211,7 @@ struct TB371FCMachineState {
     char *aop_profile;
     char *tbu_profile;
     bool rpmh_boot_configured;
+    bool sde_rsc_init_reference;
     MemoryRegion qtest_dma_alias;
     MemoryRegion qtest_tbu_dma_alias[QCOM_SM8250_TBU_COUNT];
     bool enable_ufs;
@@ -1042,6 +1044,24 @@ static void tb371fc_create_rpmh(TB371FCMachineState *s)
     clock_set_source(s->xo, qdev_get_clock_out(dev, "bi_tcxo"));
 }
 
+static void tb371fc_create_sde_rsc(TB371FCMachineState *s)
+{
+    DeviceState *dev;
+
+    if (!s->sde_rsc_init_reference) {
+        return;
+    }
+    if (!s->rpmh) {
+        error_report("tb371fc: sde-rsc-init-reference requires RPMh enabled");
+        exit(1);
+    }
+    dev = qdev_new(TYPE_QCOM_SM8250_SDE_RSC);
+    object_property_add_child(OBJECT(s), "sde-rsc", OBJECT(dev));
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+    /* Original-DT wrapper plus only non-TCS subwindows of the shared DRV. */
+    qcom_sm8250_sde_rsc_map(dev, 0x0af20000, 0x0af30000);
+}
+
 static void tb371fc_create_gpu_cx_gdsc(TB371FCMachineState *s)
 {
     DeviceState *gdsc = qdev_new(TYPE_QCOM_GPU_CX_GDSC);
@@ -1596,6 +1616,7 @@ static void tb371fc_create_gcc(TB371FCMachineState *s)
     clock_set_hz(s->sleep, TB371FC_SLEEP_HZ);
     clock_set_hz(s->fabric, s->bootstrap_fabric_hz);
     tb371fc_create_rpmh(s);
+    tb371fc_create_sde_rsc(s);
 
     object_initialize_child(OBJECT(s), "gcc", &s->gcc,
                             TYPE_QCOM_SM8250_GCC);
@@ -2755,6 +2776,23 @@ static void tb371fc_set_rpmh_boot(Object *obj, bool value, Error **errp)
     s->rpmh_boot_configured = value;
 }
 
+static bool tb371fc_get_sde_rsc_init_reference(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->sde_rsc_init_reference;
+}
+
+static void tb371fc_set_sde_rsc_init_reference(Object *obj, bool value,
+                                              Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "sde-rsc-init-reference is fixed after machine creation");
+        return;
+    }
+    s->sde_rsc_init_reference = value;
+}
+
 static void tb371fc_instance_init(Object *obj)
 {
     TB371FCMachineState *s = TB371FC_MACHINE(obj);
@@ -2768,6 +2806,7 @@ static void tb371fc_instance_init(Object *obj)
     s->aop_profile = g_strdup("none");
     s->tbu_profile = g_strdup("off");
     s->rpmh_boot_configured = true;
+    s->sde_rsc_init_reference = false;
     s->counter_exact = true;
     s->hyp_timer_ppi = TB371FC_PPI_HYP_TIMER;
     s->ras_zero_records_compat = false;
@@ -2865,6 +2904,11 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
         "off (default), explicit reference command-db, or file");
     object_class_property_add_str(oc, "rpmh-cmd-db",
         tb371fc_get_rpmh_cmd_db, tb371fc_set_rpmh_cmd_db);
+    object_class_property_add_bool(oc, "sde-rsc-init-reference",
+        tb371fc_get_sde_rsc_init_reference, tb371fc_set_sde_rsc_init_reference);
+    object_class_property_set_description(oc, "sde-rsc-init-reference",
+        "Opt-in SDE RSC v3 initialization storage (default off); requires RPMh, "
+        "no solver, timer execution, display power collapse or bandwidth ACK");
     object_class_property_add_bool(oc, "rpmh-boot-configured",
         tb371fc_get_rpmh_boot, tb371fc_set_rpmh_boot);
     object_class_property_set_description(oc, "rpmh-boot-configured",
