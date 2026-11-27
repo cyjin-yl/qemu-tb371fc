@@ -1,0 +1,69 @@
+{
+  "schema": "tb371fc-offline-generation2-resume-publication-validation-v1",
+  "recorded_utc": "2026-11-25T01:28:20.191117+00:00",
+  "scope": "reviewed offline core; no production transport, identity hookup, inventory audit, completion or ready publisher",
+  "production_ready": false,
+  "deployed_to_physical_source": false,
+  "core_unchanged_from_independent_review": true,
+  "only_test_logic_change": "HISTORY location must be provided through TB371FC_RESUME_HISTORY; all other AST nodes identical",
+  "tests": {
+    "run": 9,
+    "failures": 0,
+    "errors": 0,
+    "elapsed_seconds": 0.894,
+    "synthetic_source_bytes": 65536,
+    "synthetic_ranges": 16,
+    "range_bytes": 4096,
+    "receipt_sha256": "5a55f4ea300a30c5f56b9e6ae339b5469a3c03310ec645cc6d7ee441205dc658",
+    "historical_inputs_unchanged": true,
+    "synthetic_regular_files_only": true
+  },
+  "prior_independent_review": {
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "receipt_sha256": "82f835b7d2716b181d7c9b09e6cd3c756681ff98cc5098441e0180901e75196f",
+    "receipt_included": false
+  },
+  "files": {
+    "resume_core.py": {
+      "bytes": 21700,
+      "sha256": "812a0fdd379cd054889276d5b0c33f9c6ff808cb88d938e9bd26e61aa8351c7c"
+    },
+    "test_resume_core.py": {
+      "bytes": 17934,
+      "sha256": "42ca141f8162ef37bd2a4888b8f0a56928862fdc0fb4ca3d13e1d148448fc510"
+    },
+    "fixture_receiver.py": {
+      "bytes": 2933,
+      "sha256": "4fab6b49964d128069607927687df9f55886120d57ead0bf42a4be5d74e71a3b"
+    },
+    "lock_probe.py": {
+      "bytes": 684,
+      "sha256": "246c29b70fd2f89d1f2897e96345d86e20b64648585c6f5bafa779dd03be9738"
+    }
+  },
+  "operations": {
+    "assembly_started": false,
+    "physical_device_access": false,
+    "ssh_started": false
+  },
+  "claims": {
+    "capture_restarted": false,
+    "live_original_source_reread": false,
+    "generation2_complete_written": false,
+    "ready_written": false,
+    "full_luns_verified": false,
+    "snapshot_consistent": false,
+    "pristine_factory_images": false,
+    "restore_tested": false,
+    "android_boot_tested": false
+  },
+  "required_production_integration": [
+    "exact live source identity and original source-side one-writer exclusion",
+    "locked byte verification of all 82 historical jobs",
+    "reviewed explicit source/receiver transport and error propagation",
+    "durable preservation on the actual target filesystem",
+    "107 job / 108 manifest / 1842 chunk byte-complete final barriers and six-LUN assembly readback"
+  ]
+}
