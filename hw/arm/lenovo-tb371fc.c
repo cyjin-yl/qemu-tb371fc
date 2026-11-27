@@ -59,6 +59,7 @@
 #include "hw/misc/qcom-pshold.h"
 #include "hw/misc/qcom-dcc.h"
 #include "hw/misc/arm-coresight-tmc.h"
+#include "hw/misc/arm-coresight-replicator.h"
 #include "hw/misc/qcom-ipcc.h"
 #include "hw/misc/qcom-qsee-irq.h"
 #include "hw/misc/qcom-sm8250-spss-irq-mask.h"
@@ -1765,6 +1766,31 @@ static void tb371fc_create_tbu(TB371FCMachineState *s)
 
 
 
+static void tb371fc_create_coresight_replicators(TB371FCMachineState *s)
+{
+    static const struct {
+        const char *name;
+        hwaddr base;
+    } replicator[] = {
+        { "replicator-qdss", 0x06046000 },
+        { "replicator-swao", 0x06b06000 },
+    };
+    size_t i;
+
+    /*
+     * Original full-DTB AMBA instances, each with part ID 0x000bb909.
+     * Model their independent APB control/claim state; no ATB source is
+     * attached and no trace-routing capability is inferred from a probe.
+     */
+    for (i = 0; i < ARRAY_SIZE(replicator); i++) {
+        DeviceState *dev = qdev_new(TYPE_ARM_CORESIGHT_REPLICATOR);
+
+        object_property_add_child(OBJECT(s), replicator[i].name, OBJECT(dev));
+        sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, replicator[i].base);
+    }
+}
+
 static void tb371fc_create_coresight_tmc(TB371FCMachineState *s)
 {
     static const struct {
@@ -2172,6 +2198,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_watchdog(s);
     tb371fc_create_boot_resources(s);
     tb371fc_create_coresight_tmc(s);
+    tb371fc_create_coresight_replicators(s);
     tb371fc_create_smmus(s);
     tb371fc_create_tbu(s);
     if (s->enable_ufs) {
