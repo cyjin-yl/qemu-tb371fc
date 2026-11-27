@@ -129,12 +129,19 @@ class Guest:
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             text = self.text()
-            if any(marker in line and line.endswith("\n")
-                   for line in text.splitlines(keepends=True)):
+            exited = self.process.poll() is not None
+            if exited:
+                # The process may finish writing after the first log read.
+                text = self.text()
+            lines = [line for line in text.splitlines(keepends=True)
+                     if line.endswith("\n")]
+            if any(marker in line for line in lines):
                 return text
-            require(self.process.poll() is None,
+            require(not exited,
                     f"{self.name} exited before {marker!r}: {self.process.returncode}")
-            require("TB371FC_UFS_MIGRATION_RESULT " not in text,
+            # A RESULT prefix without its newline is still being written.
+            require(not any("TB371FC_UFS_MIGRATION_RESULT " in line
+                            for line in lines),
                     f"{self.name} ended before {marker!r}")
             time.sleep(0.05)
         raise TimeoutError(f"{self.name} did not emit {marker!r}")
