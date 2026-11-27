@@ -182,7 +182,7 @@ static MemTxResult tmc_read(void *opaque, hwaddr offset, uint64_t *value,
         break;
     case TMC_BUFWM: *value = s->watermark; break;
     case TMC_FFSR:
-        *value = !!(s->ffcr & TMC_FLUSHMAN) |
+        *value = ((s->ffcr & TMC_FLUSHMAN) ? 1 : 0) |
                  ((!s->ctl || s->stopped) ? 2 : 0);
         break;
     case TMC_FFCR: *value = s->ffcr; break;
