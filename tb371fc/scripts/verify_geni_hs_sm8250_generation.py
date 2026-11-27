@@ -235,9 +235,14 @@ def run(args):
     return 0 if report['passed'] else 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--out', type=Path, required=True)
-    parser.add_argument('--source-root', type=Path,
-                        help='Optional local cache; complete length/SHA256/Git blob validation remains mandatory')
+    parser.add_argument("--out", type=Path, required=True)
+    sources = parser.add_mutually_exclusive_group()
+    sources.add_argument("--source-root", type=Path,
+                         help="Local complete pinned inputs; defaults to the repository source bundle")
+    sources.add_argument("--network-source", dest="source_root",
+                         action="store_const", const=None,
+                         help="Use the existing pinned HTTPS downloader and its unchanged retry policy")
+    parser.set_defaults(source_root=ROOT / "tb371fc/source-inputs/geni-hs-sm8250")
     raise SystemExit(run(parser.parse_args()))
