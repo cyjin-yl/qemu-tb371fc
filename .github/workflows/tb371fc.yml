@@ -93,6 +93,13 @@ jobs:
             --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
             --out "$RUNNER_TEMP/tb371fc-results/coresight-tpda" \
             2>&1 | tee "$RUNNER_TEMP/tb371fc-results/coresight-tpda.log"
+      - name: Check CoreSight TPDM zero-dataset management and checkpoints
+        run: |
+          set -euo pipefail
+          python3 tb371fc/tests/test_coresight_tpdm.py \
+            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            --out "$RUNNER_TEMP/tb371fc-results/coresight-tpdm" \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/coresight-tpdm.log"
       - name: Run quiescent UFS process checkpoints and rejection gates
         run: |
           set -euo pipefail
@@ -162,6 +169,7 @@ jobs:
             !${{ runner.temp }}/tb371fc-results/coresight-replicator/streams/*.mig
             !${{ runner.temp }}/tb371fc-results/coresight-stm/streams/*.mig
             !${{ runner.temp }}/tb371fc-results/coresight-tpda/streams/*.mig
+            !${{ runner.temp }}/tb371fc-results/coresight-tpdm/streams/*.mig
             !${{ runner.temp }}/tb371fc-results/linux-ufs-migration/checkpoint.migration
             !${{ runner.temp }}/tb371fc-results/linux-ufs-migration/disk.raw
             !${{ runner.temp }}/tb371fc-results/linux-ufs-pm-migration/checkpoint.migration

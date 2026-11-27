@@ -62,6 +62,7 @@
 #include "hw/misc/arm-coresight-replicator.h"
 #include "hw/misc/arm-coresight-stm.h"
 #include "hw/misc/qcom-coresight-tpda.h"
+#include "hw/misc/qcom-coresight-tpdm.h"
 #include "hw/misc/qcom-ipcc.h"
 #include "hw/misc/qcom-qsee-irq.h"
 #include "hw/misc/qcom-sm8250-spss-irq-mask.h"
@@ -213,6 +214,7 @@ struct TB371FCMachineState {
     MemoryRegion qtest_tbu_dma_alias[QCOM_SM8250_TBU_COUNT];
     bool enable_ufs;
     bool counter_exact;
+    uint32_t hyp_timer_ppi;
     bool ras_zero_records_compat;
     bool dsu_pmu_cycle_only;
     bool prng_virtual;
@@ -811,7 +813,7 @@ static void tb371fc_create_fdt(TB371FCMachineState *s)
                            1, TB371FC_PPI_SEC_TIMER, 8,
                            1, TB371FC_PPI_PHYS_TIMER, 8,
                            1, TB371FC_PPI_VIRT_TIMER, 8,
-                           1, TB371FC_PPI_HYP_TIMER, 8);
+                           1, s->hyp_timer_ppi, 8);
     qemu_fdt_setprop(fdt, "/timer", "always-on", NULL, 0);
 
     tb371fc_add_mmio_timer_fdt(fdt);
@@ -864,7 +866,8 @@ static void *tb371fc_get_dtb(const struct arm_boot_info *info, int *size)
     TB371FCMachineState *s = container_of(info, TB371FCMachineState, bootinfo);
 
     *size = s->fdt_size;
-    return MACHINE(s)->fdt;
+    /* The loader may free this buffer when an ELF leaves no room for it. */
+    return g_memdup2(MACHINE(s)->fdt, *size);
 }
 
 static const CPUArchIdList *tb371fc_possible_cpu_arch_ids(MachineState *ms)
@@ -951,7 +954,7 @@ static void tb371fc_create_gic(TB371FCMachineState *s)
     } timer_irqs[] = {
         { GTIMER_PHYS, TB371FC_PPI_PHYS_TIMER },
         { GTIMER_VIRT, TB371FC_PPI_VIRT_TIMER },
-        { GTIMER_HYP, TB371FC_PPI_HYP_TIMER },
+        { GTIMER_HYP, s->hyp_timer_ppi },
         { GTIMER_SEC, TB371FC_PPI_SEC_TIMER },
     };
 
@@ -1768,6 +1771,34 @@ static void tb371fc_create_tbu(TB371FCMachineState *s)
 
 
 
+static void tb371fc_create_coresight_tpdms(TB371FCMachineState *s)
+{
+    static const hwaddr base[] = {
+        0x06830000, 0x06840000, 0x06844000, 0x0684c000, 0x06850000,
+        0x06870000, 0x06900000, 0x06980000, 0x06981000, 0x069c0000,
+        0x069d0000, 0x06ac0000, 0x06b09000, 0x06b0a000, 0x06c08000,
+        0x06c28000, 0x06c29000, 0x06c40000, 0x06c41000, 0x06c47000,
+        0x06c60000, 0x06e00000, 0x06e10000, 0x06e20000, 0x07860000,
+        0x07861000, 0x078a0000, 0x078b0000,
+    };
+    unsigned i;
+
+    /*
+     * Original full-DTB reg cells: 25 enabled and three disabled hardware
+     * nodes. The dummy TPDM node has no reg and is not mapped. This virtual
+     * management subset advertises no collection datasets; the unchanged
+     * DT AMBA match overrides do not determine hardware PIDR0 capabilities.
+     */
+    for (i = 0; i < ARRAY_SIZE(base); i++) {
+        DeviceState *dev = qdev_new(TYPE_QCOM_CORESIGHT_TPDM);
+        g_autofree char *name = g_strdup_printf("tpdm%u", i);
+
+        object_property_add_child(OBJECT(s), name, OBJECT(dev));
+        sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, base[i]);
+    }
+}
+
 static void tb371fc_create_coresight_tpdas(TB371FCMachineState *s)
 {
     static const hwaddr base[] = {
@@ -2240,6 +2271,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_coresight_replicators(s);
     tb371fc_create_coresight_stm(s);
     tb371fc_create_coresight_tpdas(s);
+    tb371fc_create_coresight_tpdms(s);
     tb371fc_create_smmus(s);
     tb371fc_create_tbu(s);
     if (s->enable_ufs) {
@@ -2421,6 +2453,36 @@ static void tb371fc_set_counter_exact(Object *obj, bool value, Error **errp)
         return;
     }
     s->counter_exact = value;
+}
+
+static void tb371fc_get_hyp_timer_ppi(Object *obj, Visitor *v,
+                                      const char *name, void *opaque,
+                                      Error **errp)
+{
+    uint64_t ppi = TB371FC_MACHINE(obj)->hyp_timer_ppi;
+
+    visit_type_uint64(v, name, &ppi, errp);
+}
+
+static void tb371fc_set_hyp_timer_ppi(Object *obj, Visitor *v,
+                                      const char *name, void *opaque,
+                                      Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+    uint64_t ppi;
+
+    if (s->xo) {
+        error_setg(errp, "hyp-timer-ppi is fixed after machine creation");
+        return;
+    }
+    if (!visit_type_uint64(v, name, &ppi, errp)) {
+        return;
+    }
+    if (ppi != 10 && ppi != TB371FC_PPI_HYP_TIMER) {
+        error_setg(errp, "hyp-timer-ppi must be 10 or 12");
+        return;
+    }
+    s->hyp_timer_ppi = ppi;
 }
 
 static void tb371fc_get_kernel_load_base(Object *obj, Visitor *v,
@@ -2707,6 +2769,7 @@ static void tb371fc_instance_init(Object *obj)
     s->tbu_profile = g_strdup("off");
     s->rpmh_boot_configured = true;
     s->counter_exact = true;
+    s->hyp_timer_ppi = TB371FC_PPI_HYP_TIMER;
     s->ras_zero_records_compat = false;
     s->dsu_pmu_cycle_only = false;
     s->prng_virtual = false;
@@ -2811,6 +2874,11 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
     object_class_property_set_description(oc, "counter-exact",
         "Exact 19.2 MHz rational counters (default on); off retains legacy "
         "integer-nanosecond timing for component compatibility tests");
+    object_class_property_add(oc, "hyp-timer-ppi", "uint64",
+        tb371fc_get_hyp_timer_ppi, tb371fc_set_hyp_timer_ppi, NULL, NULL);
+    object_class_property_set_description(oc, "hyp-timer-ppi",
+        "EL2 physical timer PPI: 12 (stock DT default), or explicit 10 "
+        "for Linux DT compatibility; no physical routing measurement");
     object_class_property_add(oc, "kernel-load-base", "uint64",
         tb371fc_get_kernel_load_base, tb371fc_set_kernel_load_base, NULL, NULL);
     object_class_property_set_description(oc, "kernel-load-base",

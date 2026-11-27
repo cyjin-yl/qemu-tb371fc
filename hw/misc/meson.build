@@ -170,7 +170,7 @@ system_ss.add(when: 'CONFIG_SBSA_REF', if_true: files('sbsa_ec.c'))
 system_ss.add(when: 'CONFIG_LASI', if_true: files('lasi.c'))
 
 system_ss.add(when: 'CONFIG_QCOM_SM8250_GCC', if_true: files('qcom-sm8250-gcc.c'))
-system_ss.add(when: 'CONFIG_LENOVO_TB371FC', if_true: files('qcom-sm8250-prng.c', 'arm-coresight-tmc.c', 'arm-coresight-replicator.c', 'arm-coresight-stm.c', 'qcom-coresight-tpda.c'))
+system_ss.add(when: 'CONFIG_LENOVO_TB371FC', if_true: files('qcom-sm8250-prng.c', 'arm-coresight-tmc.c', 'arm-coresight-replicator.c', 'arm-coresight-stm.c', 'qcom-coresight-tpda.c', 'qcom-coresight-tpdm.c'))
 system_ss.add(when: 'CONFIG_QCOM_SM8250_GPUCC', if_true: files('qcom-sm8250-gpucc.c'))
 system_ss.add(when: 'CONFIG_QCOM_SM8250_NPUCC', if_true: files('qcom-sm8250-npucc.c'))
 system_ss.add(when: 'CONFIG_QCOM_SM8250_CAMCC', if_true: files('qcom-sm8250-camcc.c'))
