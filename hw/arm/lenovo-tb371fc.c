@@ -61,6 +61,7 @@
 #include "hw/misc/arm-coresight-tmc.h"
 #include "hw/misc/arm-coresight-replicator.h"
 #include "hw/misc/arm-coresight-stm.h"
+#include "hw/misc/qcom-coresight-tpda.h"
 #include "hw/misc/qcom-ipcc.h"
 #include "hw/misc/qcom-qsee-irq.h"
 #include "hw/misc/qcom-sm8250-spss-irq-mask.h"
@@ -1767,6 +1768,28 @@ static void tb371fc_create_tbu(TB371FCMachineState *s)
 
 
 
+static void tb371fc_create_coresight_tpdas(TB371FCMachineState *s)
+{
+    static const hwaddr base[] = {
+        0x06004000, 0x069c1000, 0x06ac1000, 0x06b08000, 0x07863000,
+    };
+    unsigned i;
+
+    /*
+     * Original full-DTB AMBA part 0x000bb969 instances. The management model
+     * keeps both non-invasive authentication classes disabled; no TPDA
+     * aggregation, configuration or successful probe is claimed.
+     */
+    for (i = 0; i < ARRAY_SIZE(base); i++) {
+        DeviceState *dev = qdev_new(TYPE_QCOM_CORESIGHT_TPDA);
+        g_autofree char *name = g_strdup_printf("tpda%u", i);
+
+        object_property_add_child(OBJECT(s), name, OBJECT(dev));
+        sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
+        sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, base[i]);
+    }
+}
+
 static void tb371fc_create_coresight_stm(TB371FCMachineState *s)
 {
     DeviceState *dev = qdev_new(TYPE_ARM_CORESIGHT_STM);
@@ -2216,6 +2239,7 @@ static void tb371fc_init(MachineState *ms)
     tb371fc_create_coresight_tmc(s);
     tb371fc_create_coresight_replicators(s);
     tb371fc_create_coresight_stm(s);
+    tb371fc_create_coresight_tpdas(s);
     tb371fc_create_smmus(s);
     tb371fc_create_tbu(s);
     if (s->enable_ufs) {
