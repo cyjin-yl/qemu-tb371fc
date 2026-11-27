@@ -75,7 +75,22 @@ def verify_apertures(rig, out):
         rows.append((int(match[1], 16), int(match[2], 16)))
     expected = {(base, base + 0xfff) for base in BASES}
     assert rows and set(rows) == expected, rows
+    # Probe each side of the final bank separately. QEMU deliberately does
+    # not clamp full-width MMIO transactions at MemoryRegion boundaries.
+    before_state = rig.state()
+    neighbors = []
+    for address in (BASES[-1] - 4, BASES[-1] + 0x1000):
+        prior = rig.stderr()
+        rig.count['device_mmio'] += 1
+        rig.qt(f'readl {address:#x}')
+        added = rig.stderr()[len(prior):]
+        assert f'Invalid read at addr {address:#x}'.lower() in added.lower(), added
+        assert 'qcom-coresight-tpda: rejected' not in added
+        assert rig.state() == before_state
+        neighbors.append(dict(address=hex(address), size=4,
+                              diagnostic=added.strip()))
     return dict(regions=[[hex(a), hex(b)] for a, b in sorted(expected)],
+                boundary_rejections=neighbors,
                 flatmap=dict(path=str(path), bytes=path.stat().st_size,
                              sha256=sha(path)))
 
@@ -231,17 +246,18 @@ def main():
             for offset, write, width in cases:
                 report['access_rejections'].append(
                     reject(source, BASES[0], offset, write=write, width=width))
-            # Cross the actual final APB word into the following unassigned
-            # address via AddressSpace, not a direct callback. The implemented
-            # last word is immutable CIDR3, so neither the first part nor any
-            # mutable TPDA state may change.
+            # Request eight bytes across the actual final APB word through
+            # AddressSpace. MMIO translation retains the full width, so the
+            # model must reject all eight bytes without partial state changes.
+            # The independent neighbor reads above prove the unassigned edges.
             boundary = reject(source, BASES[-1], 0xffc, write=True, width='q',
                               value=0xfeedfacec5acce55)
-            assert 'size=4' in boundary['diagnostic']
-            assert f'Invalid write at addr {BASES[-1] + 0x1000:#x}'.lower() in \
-                   boundary['diagnostic'].lower()
+            assert boundary['diagnostic'] == \
+                'qcom-coresight-tpda: rejected write offset=0xffc size=8'
             assert r(0xffc, base=BASES[-1]) == 0xb1
             boundary['crosses_aperture'] = True
+            boundary['dispatch_size'] = 8
+            boundary['adjacent_region_dispatched'] = False
             report['access_rejections'].append(boundary)
             assert len(report['access_rejections']) == 48
             check(REQUIRED[5], strict_rejected_accesses=46,

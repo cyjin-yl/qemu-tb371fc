@@ -120,7 +120,10 @@ transport and real AddressSpace MMIO entry points. It requires nine scenarios:
 5. Software-lock protection, including a rejected wide LAR write that must not
    partially unlock the component.
 6. Forty-six strict-access rejection cases plus a real 64-bit write crossing
-   the last APB word into the unassigned address beyond the aperture.
+   the last APB word. QEMU's MMIO translation preserves the full access width
+   across the aperture edge; the model rejects all eight bytes without a
+   partial write. Two separate reads immediately outside that bank prove the
+   actual unassigned AddressSpace paths on both sides.
    Together with the locked wide-access case, 48 rejected accesses are required;
    no mutable TPDA state or component identity may change.
 7. System reset of all five instances.
@@ -133,6 +136,15 @@ The test preserves the raw protocol and stdio receipts and hashes the actual
 memory-map output. It reports that it did not execute a guest CPU or the
 original Linux probe. Its migration coverage is an unmodified checkpoint and
 continued operation; it does not claim malformed-stream rejection testing.
+
+The first PR56 CI attempt built the model and reached the crossing-access
+test, then failed a test assumption that QEMU would split this MMIO write into
+two 32-bit accesses. The retained diagnostic instead records a single rejected
+8-byte write at offset 0xffc. This matches the explicit MMIO rule in
+system/physmem.c:address_space_translate_internal; only RAM translations are
+clamped to the section's remaining length. The corrected test retains the real
+crossing transaction and adds independent neighbor reads; it does not change
+the device model or treat the failed CI run as qualified.
 
 CI adds this gate without changing the original core, TMC, replicator, STM,
 Linux, A77 or shared-PCI gates. Raw migration streams are excluded from the
