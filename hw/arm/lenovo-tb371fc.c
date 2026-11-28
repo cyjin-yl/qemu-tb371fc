@@ -217,6 +217,7 @@ struct TB371FCMachineState {
     bool enable_ufs;
     bool counter_exact;
     uint32_t hyp_timer_ppi;
+    bool stm_legacy_devarch_reference;
     bool ras_zero_records_compat;
     bool dsu_pmu_cycle_only;
     bool prng_virtual;
@@ -1852,6 +1853,8 @@ static void tb371fc_create_coresight_stm(TB371FCMachineState *s)
      * profile; stimulus writes are accepted and dropped, without ATB output.
      */
     object_property_add_child(OBJECT(s), "stm", OBJECT(dev));
+    qdev_prop_set_bit(dev, "legacy-devarch-reference",
+                      s->stm_legacy_devarch_reference);
     sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
     sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, 0x06002000);
     sysbus_mmio_map(SYS_BUS_DEVICE(dev), 1, 0x16280000);
@@ -2506,6 +2509,24 @@ static void tb371fc_set_hyp_timer_ppi(Object *obj, Visitor *v,
     s->hyp_timer_ppi = ppi;
 }
 
+static bool tb371fc_get_stm_legacy_devarch_reference(Object *obj, Error **errp)
+{
+    return TB371FC_MACHINE(obj)->stm_legacy_devarch_reference;
+}
+
+static void tb371fc_set_stm_legacy_devarch_reference(Object *obj, bool value,
+                                                    Error **errp)
+{
+    TB371FCMachineState *s = TB371FC_MACHINE(obj);
+
+    if (s->xo) {
+        error_setg(errp, "stm-legacy-devarch-reference is fixed after "
+                   "machine creation");
+        return;
+    }
+    s->stm_legacy_devarch_reference = value;
+}
+
 static void tb371fc_get_kernel_load_base(Object *obj, Visitor *v,
                                          const char *name, void *opaque,
                                          Error **errp)
@@ -2809,6 +2830,7 @@ static void tb371fc_instance_init(Object *obj)
     s->sde_rsc_init_reference = false;
     s->counter_exact = true;
     s->hyp_timer_ppi = TB371FC_PPI_HYP_TIMER;
+    s->stm_legacy_devarch_reference = false;
     s->ras_zero_records_compat = false;
     s->dsu_pmu_cycle_only = false;
     s->prng_virtual = false;
@@ -2923,6 +2945,12 @@ static void tb371fc_class_init(ObjectClass *oc, const void *data)
     object_class_property_set_description(oc, "hyp-timer-ppi",
         "EL2 physical timer PPI: 12 (stock DT default), or explicit 10 "
         "for Linux DT compatibility; no physical routing measurement");
+    object_class_property_add_bool(oc, "stm-legacy-devarch-reference",
+        tb371fc_get_stm_legacy_devarch_reference,
+        tb371fc_set_stm_legacy_devarch_reference);
+    object_class_property_set_description(oc, "stm-legacy-devarch-reference",
+        "Opt in to a virtual zero read at the legacy STM's reserved 0xfbc "
+        "location (default off); not a silicon identity or trace capability");
     object_class_property_add(oc, "kernel-load-base", "uint64",
         tb371fc_get_kernel_load_base, tb371fc_set_kernel_load_base, NULL, NULL);
     object_class_property_set_description(oc, "kernel-load-base",
