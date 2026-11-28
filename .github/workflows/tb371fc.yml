@@ -114,6 +114,13 @@ jobs:
             --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
             --out "$RUNNER_TEMP/tb371fc-results/sde-rsc" \
             2>&1 | tee "$RUNNER_TEMP/tb371fc-results/sde-rsc.log"
+      - name: Check explicit GPU QFPROM nvmem cells and immutable checkpoints
+        run: |
+          set -euo pipefail
+          python3 tb371fc/tests/test_qfprom_gpu.py \
+            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            --out "$RUNNER_TEMP/tb371fc-results/qfprom-gpu" \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/qfprom-gpu.log"
       - name: Run quiescent UFS process checkpoints and rejection gates
         run: |
           set -euo pipefail
@@ -186,6 +193,7 @@ jobs:
             !${{ runner.temp }}/tb371fc-results/coresight-tpda/streams/*.mig
             !${{ runner.temp }}/tb371fc-results/coresight-tpdm/streams/*.mig
             !${{ runner.temp }}/tb371fc-results/sde-rsc/streams/*.mig
+            !${{ runner.temp }}/tb371fc-results/qfprom-gpu/streams/*.mig
             !${{ runner.temp }}/tb371fc-results/linux-ufs-migration/checkpoint.migration
             !${{ runner.temp }}/tb371fc-results/linux-ufs-migration/disk.raw
             !${{ runner.temp }}/tb371fc-results/linux-ufs-pm-migration/checkpoint.migration

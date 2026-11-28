@@ -195,6 +195,7 @@ system_ss.add(when: 'CONFIG_QCOM_REFGEN', if_true: files('qcom-refgen.c'))
 system_ss.add(when: 'CONFIG_QCOM_GPU_CX_GDSC', if_true: files('qcom-gpu-cx-gdsc.c'))
 system_ss.add(when: 'CONFIG_QCOM_SPMI_PMIC_ARB', if_true: files('qcom-spmi-pmic-arb.c'))
 system_ss.add(when: 'CONFIG_QCOM_SM8250_SPMI_DEBUG_FUSE', if_true: files('qcom-sm8250-spmi-debug-fuse.c'))
+system_ss.add(when: 'CONFIG_QCOM_SM8250_QFPROM_GPU', if_true: files('qcom-sm8250-qfprom-gpu.c'))
 
 system_ss.add(when: 'CONFIG_QCOM_GDSC', if_true: files('qcom-gdsc.c'))
 system_ss.add(when: 'CONFIG_QCOM_CAMERA_GDSC', if_true: files('qcom-camera-gdsc.c'))
