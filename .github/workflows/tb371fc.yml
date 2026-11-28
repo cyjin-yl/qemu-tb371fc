@@ -86,6 +86,13 @@ jobs:
             --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
             --out "$RUNNER_TEMP/tb371fc-results/coresight-stm" \
             2>&1 | tee "$RUNNER_TEMP/tb371fc-results/coresight-stm.log"
+      - name: Check opt-in STM legacy DEVARCH compatibility and profile isolation
+        run: |
+          set -euo pipefail
+          python3 tb371fc/tests/test_stm_legacy_devarch.py \
+            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-aarch64" \
+            --out "$RUNNER_TEMP/tb371fc-results/stm-legacy-devarch" \
+            2>&1 | tee "$RUNNER_TEMP/tb371fc-results/stm-legacy-devarch.log"
       - name: Check CoreSight TPDA authentication denial and checkpoints
         run: |
           set -euo pipefail
@@ -175,6 +182,7 @@ jobs:
             !${{ runner.temp }}/tb371fc-results/coresight-tmc/streams/*.mig
             !${{ runner.temp }}/tb371fc-results/coresight-replicator/streams/*.mig
             !${{ runner.temp }}/tb371fc-results/coresight-stm/streams/*.mig
+            !${{ runner.temp }}/tb371fc-results/stm-legacy-devarch/streams/*.mig
             !${{ runner.temp }}/tb371fc-results/coresight-tpda/streams/*.mig
             !${{ runner.temp }}/tb371fc-results/coresight-tpdm/streams/*.mig
             !${{ runner.temp }}/tb371fc-results/sde-rsc/streams/*.mig

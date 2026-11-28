@@ -13,11 +13,13 @@
  */
 #include "qemu/osdep.h"
 #include "hw/misc/arm-coresight-stm.h"
+#include "hw/core/qdev-properties.h"
 #include "migration/vmstate.h"
 #include "qemu/log.h"
 #include "qemu/module.h"
 
 #define STM_PROFILE 0x53544d01U
+#define STM_LEGACY_DEVARCH_PROFILE 0x53544d02U
 #define STM_UNLOCK  0xc5acce55U
 
 #define STM_DMASTART  0xc04
@@ -59,6 +61,7 @@
 #define STM_LAR       0xfb0
 #define STM_LSR       0xfb4
 #define STM_AUTH      0xfb8
+#define STM_LEGACY_DEVARCH 0xfbc
 #define STM_DEVID     0xfc8
 #define STM_DEVTYPE   0xfcc
 
@@ -78,6 +81,7 @@ struct ArmCoresightSTMState {
     MemoryRegion stimulus;
 
     uint32_t profile;
+    bool legacy_devarch_reference;
     uint32_t heer;
     uint32_t heter;
     uint32_t hemcr;
@@ -167,6 +171,16 @@ static MemTxResult stm_read(void *opaque, hwaddr offset, uint64_t *value,
     ArmCoresightSTMState *s = opaque;
 
     *value = 0;
+    /*
+     * IHI 0054A reserves 0xfbc; DDI 0444A does not guarantee its behavior.
+     * This opt-in virtual compatibility choice lets a newer AMBA bus read
+     * a zero architecture identity. It is not a silicon value or a RAZ
+     * requirement. No neighboring reserved location is made readable.
+     */
+    if (offset == STM_LEGACY_DEVARCH && size == 4 &&
+        s->legacy_devarch_reference) {
+        return MEMTX_OK;
+    }
     if (size != 4 || !stm_register(offset)) {
         return stm_reject(offset, size, false);
     }
@@ -223,6 +237,10 @@ static MemTxResult stm_write(void *opaque, hwaddr offset, uint64_t value,
     ArmCoresightSTMState *s = opaque;
     uint32_t data = value;
 
+    /* Reject even zero writes before the software-lock suppression path. */
+    if (offset == STM_LEGACY_DEVARCH) {
+        return stm_reject(offset, size, true);
+    }
     if (size != 4 || !stm_register(offset)) {
         return stm_reject(offset, size, true);
     }
@@ -411,6 +429,15 @@ static const VMStateDescription vmstate_stm = {
     },
 };
 
+static void stm_realize(DeviceState *dev, Error **errp)
+{
+    ArmCoresightSTMState *s = ARM_CORESIGHT_STM(dev);
+
+    /* The existing equality field rejects either mixed-profile direction. */
+    s->profile = s->legacy_devarch_reference ? STM_LEGACY_DEVARCH_PROFILE :
+                                              STM_PROFILE;
+}
+
 static void stm_init(Object *obj)
 {
     ArmCoresightSTMState *s = ARM_CORESIGHT_STM(obj);
@@ -425,13 +452,20 @@ static void stm_init(Object *obj)
     sysbus_init_mmio(SYS_BUS_DEVICE(s), &s->stimulus);
 }
 
+static const Property stm_properties[] = {
+    DEFINE_PROP_BOOL("legacy-devarch-reference", ArmCoresightSTMState,
+                     legacy_devarch_reference, false),
+};
+
 static void stm_class_init(ObjectClass *klass, const void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
 
     dc->desc = "32-bit CoreSight STM reference with debug authentication off";
     dc->user_creatable = false;
+    dc->realize = stm_realize;
     dc->vmsd = &vmstate_stm;
+    device_class_set_props(dc, stm_properties);
     device_class_set_legacy_reset(dc, stm_reset);
 }
 
